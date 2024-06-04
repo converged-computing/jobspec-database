@@ -1,0 +1,55 @@
+#!/bin/bash
+#PBS -l select=1:system=polaris
+#PBS -l place=scatter
+#PBS -l walltime=0:10:00
+#PBS -l filesystems=home
+#PBS -q debug
+#PBS -A radix-io
+
+export MOBJECT_CLUSTER_FILE=mobject.ssg
+
+IOR_TRANSFER_SIZE="64k"
+IOR_BLOCK_SIZE="128k"
+
+set -eu
+
+# Change to working directory
+cd ${PBS_O_WORKDIR}
+
+# note: disable registration cache for verbs provider for now; see
+#       discussion in https://github.com/ofiwg/libfabric/issues/5244
+export FI_MR_CACHE_MAX_COUNT=0
+# use shared recv context in RXM; should improve scalability
+export FI_OFI_RXM_USE_SRX=1
+
+echo "Setting up spack"
+source $HOME/spack/share/spack/setup-env.sh
+echo "Activating env"
+spack env activate mochi-env
+spack find -fN
+
+# Just in case...
+spack load ior+mobject
+
+NNODES=`wc -l < $PBS_NODEFILE`
+NRANKS_PER_NODE=32
+
+NRANKS=$(( NNODES * NRANKS_PER_NODE ))
+
+echo "Starting server"
+
+# Start Mochi server in background via Bedrock using an example configuration and Verbs as the provider
+mpiexec -n 1 bedrock -c mobject_bedrock.json verbs:// &
+
+# Give the server a chance to setup
+sleep 5
+
+echo "Running IOR"
+
+# Run IOR on 1 node with 32 ranks
+#mpiexec -n ${NRANKS} --ppn ${NRANKS_PER_NODE} ior -a RADOS -t ${IOR_TRANSFER_SIZE} -b ${IOR_BLOCK_SIZE} --rados.user=foo --rados.pool=bar --rados.conf=baz
+mpiexec -n ${NRANKS} ior -a RADOS -t ${IOR_TRANSFER_SIZE} -b ${IOR_BLOCK_SIZE} --rados.user=foo --rados.pool=bar --rados.conf=baz
+
+# Tear down bedrock server
+bedrock-shutdown -s $MOBJECT_CLUSTER_FILE verbs://
+

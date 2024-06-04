@@ -1,0 +1,23 @@
+#!/bin/sh
+#SBATCH -o /scratch/users/ladmon/ML/results/%A_%a_terminal.out #STDOUT                 
+#SBATCH --ntasks=1  
+#SBATCH --time=24:00:00
+#SBATCH --cpus-per-task=2          
+#SBATCH --mail-type=END,FAIL    # Mail events (NONE, BEGIN, END, FAIL, ALL)
+#SBATCH --mail-user=ladmon@stanford.edu
+#SBATCH --array=1-100         # Array range
+
+ml py-tensorflow/2.6.2_py36
+module load gcc/10.1.0
+export LIBRARY_PATH=$LIBRARY_PATH:~/libtensorflow2/lib
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:~/libtensorflow2/lib
+export TF_CPP_MIN_LOG_LEVEL=3 #turn off verbosity
+
+prob=$(python -c "print("$SLURM_ARRAY_TASK_ID"/100.0*0.18)")
+python3.6 "create_model.py" -p $prob
+
+echo "----------------------------------"
+echo "id:" "$SLURM_ARRAY_JOB_ID" "$SLURM_ARRAY_TASK_ID"
+echo "cpu per task" "$SLURM_CPUS_PER_TASK"
+echo "nodelist" "$SLURM_JOB_NODELIST"
+echo "cluster name:" "$SLURM_CLUSTER_NAME"

@@ -1,0 +1,76 @@
+#!/bin/bash
+
+# Set the number of processing elements (PEs) or cores
+# Set the number of PEs per node
+#PBS -l nodes=1:ppn=8:xk
+
+# Set the wallclock time
+#PBS -l walltime=0:45:00
+
+# Use shifter queue
+#PBS -l gres=shifter
+
+# Set the PBS_JOBNAME
+#PBS -N preprocessing
+
+# Set the job stdout and stderr
+#PBS -e "${PBS_JOBNAME}.${PBS_JOBID}.err"
+#PBS -o "${PBS_JOBNAME}.${PBS_JOBID}.out"
+
+# Set email notification on termination (e) or abort (a)
+#PBS -m a
+#PBS -M matthew.feickert@cern.ch
+
+# Set allocation to charge
+#PBS -A bbdz
+
+# Ensure modern bash
+module load bash
+# Ensure shifter enabled
+module load shifter
+
+FINAL_STATE="ll"
+PHYSICS_PROCESS="drell-yan_${FINAL_STATE}"
+CODE_BASE_PATH="/mnt/a/${HOME}/MadGraph5-simulation-configs"
+
+USER_SCRATCH="/mnt/c/scratch/sciteam/${USER}"
+OUTPUT_BASE_PATH="${USER_SCRATCH}/${PHYSICS_PROCESS}/${PBS_JOBNAME}"
+OUTPUT_PATH="${OUTPUT_BASE_PATH}/${PBS_JOBID}"
+mkdir -p "${OUTPUT_PATH}"
+
+# $HOME is /u/sciteam/${USER}
+SHIFTER_IMAGE="scailfin/delphes-python-centos:3.5.0"
+shifterimg pull "${SHIFTER_IMAGE}"
+
+# INPUT_FILE passed through by qsub -v in run_delphes.sh
+if [ -z "${INPUT_FILE}" ]; then
+  echo "# ERROR: Variable INPUT_FILE is required to be set"
+  exit 1
+fi
+OUTPUT_FILE="preprocessing_output.root"
+
+# The need to edit the contents of LD_LIBRARY_PATH is to remove NVIDIA libraries
+# that place versions of libOpenGL in LD_LIBRARY_PATH that conflict with the
+# Delphes Docker image and give a symbol lookup error.
+# c.f. https://bluewaters.ncsa.illinois.edu/shifter#remarks-on-running-apps
+# c.f. https://jira.ncsa.illinois.edu/browse/BWAPPS-7234
+aprun \
+  --bypass-app-transfer \
+  --pes-per-node 1 \
+  --cpu-binding none \
+  -- shifter \
+    --clearenv \
+    --image="${SHIFTER_IMAGE}" \
+    --volume="${OUTPUT_PATH}":/root/data \
+    --volume=/mnt/a/"${HOME}":/mnt/a/"${HOME}" \
+    --env CODE_BASE_PATH="${CODE_BASE_PATH}" \
+    --env INPUT_FILE="${INPUT_FILE}" \
+    --env OUTPUT_PATH="${OUTPUT_PATH}" \
+    --env OUTPUT_FILE="${OUTPUT_FILE}" \
+    --workdir=/root/data \
+    -- /bin/bash -c 'export LD_LIBRARY_PATH=$(echo -e "${LD_LIBRARY_PATH//\:/\\n}" | grep -v /opt/cray/nvidia/390.46-1_1.0502.2481.1.1.gem/lib64 | tr "\n" ":") && \
+        export PATH="/usr/local/venv/bin:${PATH}" && \
+        printf "\n# printenv:\n" && printenv && printf "\n\n" && \
+        cp -r "${CODE_BASE_PATH}"/preprocessing "${OUTPUT_PATH}" && \
+        cd preprocessing && \
+        time bash run_preprocessing.sh "${INPUT_FILE}" "${OUTPUT_FILE}"'

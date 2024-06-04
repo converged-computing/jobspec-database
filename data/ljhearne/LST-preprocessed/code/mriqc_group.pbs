@@ -1,0 +1,37 @@
+#!/bin/bash
+
+# This code executes the group level MRIQC processing. It should be
+# performed after the individual MRIQC processing is completed. It
+# actually uses basically no resources so could be run on a small
+# machine if more convenient
+
+#PBS -N LST7T_mriqc_group
+#PBS -l mem=10gb,walltime=1:00:00,ncpus=1
+#PBS -m abe
+#PBS -M luke.hearne@qimrberghofer.edu.au
+#PBS -o /mnt/lustre/working/lab_lucac/shared/projects/LST7T/scratch/batch
+#PBS -e /mnt/lustre/working/lab_lucac/shared/projects/LST7T/scratch/batch
+#PBS -k eod
+
+# project directory
+proj_dir=/mnt/lustre/working/lab_lucac/shared/projects/LST7T/
+
+# paths
+bids_dir=${proj_dir}data/bids/
+out_dir=${proj_dir}data/derivatives/mriqc/
+work_dir=${proj_dir}scratch/mriqc/group/
+
+# container
+mriqc_con=/mnt/lustre/working/lab_lucac/shared/x_mriqc_containers/mriqc-0.16.1.simg
+
+# load modules
+module load singularity/3.7.1
+
+# run proxy script
+source ~/.proxy
+
+# run mriqc via singularity
+singularity run --cleanenv ${mriqc_con} ${bids_dir} ${out_dir} group -w ${work_dir}
+
+# unload module
+module unload singularity/3.7.1

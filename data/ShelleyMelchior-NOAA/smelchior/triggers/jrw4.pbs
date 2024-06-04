@@ -1,0 +1,95 @@
+#!/bin/sh
+#PBS -N rw4_%JTYP%_%PDY%_%CC%_%DESC%
+#PBS -j oe
+#PBS -S /bin/bash
+#PBS -l walltime=00:30:00 
+#PBS -A OBSPROC-DEV
+#PBS -q dev_transfer
+#PBS -l select=1:ncpus=1:mem=1GB
+#PBS -l debug=true
+
+##PBS -N gdas_rw4_test
+##PBS -o /lfs/h2/emc/obsproc/noscrub/Steve.Stegall/COMDIR/CRONLOG/%JTYP%_%PDY%_%DESC%%CC%.o%J
+##PBS -e /lfs/h2/emc/obsproc/noscrub/Steve.Stegall/COMDIR/CRONLOG/%JTYP%_%PDY%_%DESC%%CC%.o%J
+##PBS -o /lfs/h2/emc/obsproc/noscrub/Steve.Stegall/COMDIR/CRONLOG/gdas_rw4_test_20210821_13
+##PBS -e /lfs/h2/emc/obsproc/noscrub/Steve.Stegall/COMDIR/CRONLOG/gdas_rw4_test_20210821_13
+
+
+##############################################
+# Submit notes:
+# runs HH:20 where HH=01,13
+# For specific PDY:
+# > jtyp=gdas cyc=`date -u +%H` PDY=20191201 desc=rw4 cycqsub jrw4.pbs
+# For latest/current PDY:
+# > jtyp=gdas cyc=`date -u +%H` PDY=`date +\%Y\%m\%d` desc=rw1 cycqsub jrw4.pbs
+# cycqsub location: /u/shelley.melchior/bin
+##############################################
+
+set -xu
+
+export envir=prod
+JTYP=%JTYP%           # gdas
+DESC='rw4'            # reset to rw4
+export PDY=%PDY%
+export cyc=%CC%
+
+userROOT=/lfs/h2/emc/obsproc/noscrub/$USER
+
+export sfcship_ver_pckg=v1.1.0
+export sfcship_ver=v1.1
+export HOMEsfcship=$PACKAGEROOT/sfcship.${sfcship_ver_pckg}  # NCO prod
+#export HOMEsfcship=$userROOT/install/sfcship                # local/dev
+
+VERSION_FILE=$HOMEsfcship/versions/run.ver
+if [ -f $VERSION_FILE ]; then
+  . $VERSION_FILE
+else
+  echo "Need version info ... Exiting"
+  exit 7
+fi
+
+# load the modules specified in $VERSION_FILE
+module load intel/${intel_ver}
+module load libjpeg/${libjpeg_ver}
+module load grib_util/${grib_util_ver}
+module load bufr_dump/${bufr_dump_ver}
+
+#commented out until devprodtest.sh is updated for WCOSS2
+#sourcedir="/lfs/h2/emc/obsproc/noscrub/$USER/gitwkspc"
+#echo "begin source"
+#. $sourcedir/devprodtest.sh $$
+#echo "end source"
+
+#module load envvar/1.0
+#module load PrgEnv-intel/8.1.0
+#module load craype/2.7.8
+#module load cray-mpich/8.1.4
+
+module list
+
+#module load prod_envir/1.0.3     # venus & mars #(commentet out until sure if needed on WCOSS2)
+#module load w3nco/${w3nco_ver:?}
+#module load bufr/${bufr_ver:?}
+#module load w3emc/${w3emc_ver:?}
+#module load bacio/${bacio_ver:?}
+
+#module use /apps/ops/test/nco/modulefiles/core
+
+#I think CNVGRIB and GRBINDX are set in module load grib_util/1.2.3.  Need to confirm.
+#see in: /apps/ops/prod/libs/modulefiles/compiler/intel/19.1.3.304/grib_util/1.2.3.lua
+#export CNVGRIB=/gpfs/dell1/nco/ops/nwprod/grib_util.v1.0.6/exec/cnvgrib
+#export GRBINDEX=/u/Jiarui.Dong/bin/grbindex
+
+export MAPHOUR=$cyc
+export job=${DESC}$cyc
+export jobid=$job.$PBS_JOBID
+
+export DATAROOT=/lfs/h2/emc/stmp/$USER/raws/sfcship
+export COMROOT=/lfs/h2/emc/stmp/$USER/CRON/sfcship
+#export COMOUT=$COMROOT/com
+
+export KEEPDATA=YES
+
+${HOMEsfcship}/jobs/JRW4
+
+exit

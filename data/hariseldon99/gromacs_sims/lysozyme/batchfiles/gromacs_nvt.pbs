@@ -1,0 +1,90 @@
+#!/bin/bash
+#----------------------------------------------------------
+# Job name
+#PBS -N mpi
+# queue select
+#PBS -q workq
+# Name of stdout output file (default)
+#PBS -o mpi.out 
+# stdout output file
+#PBS -j oe
+# Total number of nodes and MPI tasks/node requested
+#PBS -l select=1:mpiprocs=24
+#PBS -l place=scatter
+#PBS -l walltime=00:55:00 
+#----------------------------------------------------------
+
+#Suppress spurious infiniband-related errors
+export MPI_MCA_mca_base_component_show_load_errors=0
+export PMIX_MCA_mca_base_component_show_load_errors=0
+
+#Use openmp. Set to false to switch to MPI
+export USE_OPENMP=false
+
+#Start time
+start=`date +%s.%N`
+
+#Load basic OHPC tools
+module load ohpc
+
+# Change to submission directory
+cd $PBS_O_WORKDIR
+
+#Activate GROMACS
+source /opt/gromacs-2022.4/bin/GMXRC
+
+echo "Starting"
+echo '---------------------------------------------'
+num_proc=`wc -l $PBS_NODEFILE | awk '{print $1}'`
+echo 'num_proc='$num_proc
+echo '---------------------------------------------'
+cat $PBS_NODEFILE
+echo '---------------------------------------------'
+
+export NVT=nvt
+export GROFILE=em.gro
+export MDPFILE=nvt.mdp
+export TOPOL_FILE=topol.top
+
+#Preprocessing 
+#gmx_mpi grompp -f $MDPFILE -c $GROFILE -r $GROFILE -p $TOPOL_FILE -o ${NVT}.tpr
+
+if [ "$USE_OPENMP" = true ]
+then
+    export OMP_NUM_THREADS=$num_proc
+    export MPI_NUM_PROCS=1
+else
+    export OMP_NUM_THREADS=1
+    export MPI_NUM_PROCS=$num_proc
+fi
+
+#Actual NVT Dynamics: Note that, in ku cluster, gmx is compiled such that mpirun needs to be called explicitly
+mpirun -np $MPI_NUM_PROCS -hostfile $PBS_NODEFILE gmx_mpi mdrun -pin on -ntomp $OMP_NUM_THREADS -v -deffnm $NVT
+
+#End time
+end=`date +%s.%N`
+
+echo "OMP_NUM_THREADS= "$OMP_NUM_THREADS", MPI_NUM_PROCS= "$MPI_NUM_PROCS
+export RUNTIME=$( echo "$end - $start" | bc -l )
+echo '---------------------------------------------'
+echo "Runtime: "$RUNTIME" sec"
+echo '---------------------------------------------'
+#----------------------------------------------------------
+# Communicate job status to a telegram bot
+#----------------------------------------------------------
+# <-Create a telegram bot 
+# <-Get TOKEN, CHATID from botfather
+# <-See https://www.cytron.io/tutorial/how-to-create-a-telegram-bot-get-the-api-key-and-chat-id
+# <-Put them into two environment variables TOKEN and CHATID 
+# <-Store them in a config file and source it like below
+#----------------------------------------------------------
+
+source ${PBS_O_HOME}/.config/telegram/telegram.conf
+
+LOGIN_NODE=kuhpchn
+SSHBIN=/usr/bin/ssh
+URL="https://api.telegram.org/bot${TOKEN}/sendMessage"
+# Generate the telegram message  text
+TEXT="${bell} PBS Job ${PBS_JOBNAME} exiting @ ${HOSTNAME}:${PBS_O_WORKDIR}. Job ID: ${PBS_JOBID}"
+CMD='curl -s --max-time 10 --retry 5 --retry-delay 2 --retry-max-time 10  -d '\""chat_id=${CHATID}&text=${TEXT}&disable_web_page_preview=true&parse_mode=markdown"\"" ${URL}"
+$SSHBIN $LOGIN_NODE $CMD

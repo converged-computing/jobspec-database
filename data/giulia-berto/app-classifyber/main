@@ -1,0 +1,42 @@
+#!/bin/bash
+#PBS -k o
+#PBS -l nodes=1:ppn=16,vmem=32gb,walltime=08:00:00
+
+[ $PBS_O_WORKDIR ] && cd $PBS_O_WORKDIR
+
+export SINGULARITYENV_WORKDIR=$(pwd)
+
+## modules
+echo "Loading modules"
+module unload python
+module load dipy/dev
+module load nodejs
+module load singularity
+echo "Finished loading modules"
+
+export PYTHONPATH=/N/u/brlife/git/nibabel:$PYTHONPATH
+
+echo "setting miniconda path..."
+unset PYTHONPATH
+export PATH=/N/u/gberto/Karst/miniconda2/bin:$PATH 
+
+set -e
+set -x
+
+#execute app
+./run.sh
+
+ret=$?
+if [ ! $ret -eq 0 ]; then
+	exit $ret
+fi
+
+#removing files
+rm *.nii.gz -f
+rm *.tck
+rm -r tractograms_directory -f
+rm -r examples_directory* -f
+rm kdt -f
+rm prototypes.npy -f
+
+echo "Complete"

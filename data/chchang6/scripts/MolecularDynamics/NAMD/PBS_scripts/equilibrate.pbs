@@ -1,0 +1,31 @@
+#!/bin/bash --login
+
+#PBS -N eq_
+#PBS -q Std
+#PBS -l nodes=4:ppn=2
+#PBS -l walltime=24:00:00
+#PBS -m abe
+#PBS -M user.name@domain.name
+#PBS -e ./equil.pbs.err
+#PBS -o ./equil.pbs.out
+
+module load namd2
+
+NAME="solv"
+PSFFILE=""
+
+cd $PBS_O_WORKDIR
+
+# Copy working files to scratch directory
+for x in namdinclude.tcl clusters_new.par CHARMM_22prot_27lip.par
+do
+   cp ~/NAMD/common/$x $PBS_TMPDIR
+done
+cp equilibrate.namd ${NAME}eq_in.* $PSFFILE $PBS_TMPDIR
+# Change to local scratch
+cd $PBS_TMPDIR
+chmod 400 clusters_new.par
+# Run NAMD
+mpirun `which namd2` equilibrate.namd >> $PBS_O_WORKDIR/${NAME}eq_out.log
+# Copy output files to home directory
+cp *_out.* $PBS_O_WORKDIR

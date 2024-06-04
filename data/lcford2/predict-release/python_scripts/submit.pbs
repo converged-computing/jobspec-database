@@ -1,0 +1,49 @@
+#!/bin/bash
+### set the number of nodes
+### set the number of PEs per node
+#PBS -l nodes=5:ppn=1
+
+### set the wallclock time
+#PBS -l walltime=24:00:00
+
+### set the job name
+#PBS -N tclr_simul
+
+### set the queue
+#PBS -q high
+
+### set the job stdout and stderr
+#PBS -e ./qsub_output/$PBS_JOBNAME.$PBS_JOBID.err
+#PBS -o ./qsub_output/$PBS_JOBNAME.$PBS_JOBID.out
+
+### set email notification
+#PBS -m bea
+#PBS -M 
+### In case of multiple allocations, select which one to charge
+### Set umask so users in my group can read job stdout and stderr files
+##PBS -W umask=0027
+
+### tell pbs to load current environment
+#PBS -V
+
+# If you launched the job in a directory prepared for the job to run within,
+# you'll want to cd to that directory
+# [uncomment the following line to enable this]
+cd $PBS_O_WORKDIR
+
+### launch the application
+### redirecting stdin and stdout if needed
+### set OMP_NUM_THREADS and the depth accordingly
+
+### NOTE: (the "in" file must exist for input)
+
+# export OMP_NUM_THREADS=16
+
+# source activate mpi-env
+
+# ./run_tclr_model.sh
+
+# NUM_CORES
+NUM_CORES=`wc -l < $PBS_NODEFILE`
+
+remora mpirun -n $NUM_CORES  -ppn 1 python run_tclr_model.py

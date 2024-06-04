@@ -1,0 +1,25 @@
+#!/bin/bash
+#  runs bcbio for an array of projects listed in projects.txt
+#  run with qsub -t 1-500%100 bcbio.array.pbs
+#  check jobs with qstat -nt1 | grep naum
+#  100 is maximum reasonable amount of running jobs in the array, cluster has 316 nodes in total
+
+#PBS -l walltime=240:00:00,nodes=1:ppn=5
+#PBS -joe .
+#PBS -d .
+#PBS -l vmem=50g,mem=50g
+
+echo "START: " `date`
+
+hostname
+
+project=`cat projects.txt | head -n $PBS_ARRAYID | tail -n1`
+
+cd ${project}/work
+
+bcbio_nextgen.py ../config/${project}.yaml -n 5
+
+echo "END: " `date`
+
+
+cd ../../

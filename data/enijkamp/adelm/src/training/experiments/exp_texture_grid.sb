@@ -1,0 +1,14 @@
+#!/bin/bash
+#SBATCH --job-name="exp_texture_grid"
+#SBATCH --output="exp_texture_grid.%j.%N.out"
+#SBATCH --partition=gpu-shared
+#SBATCH --ntasks-per-node=6
+#SBATCH --export=ALL
+#SBATCH --gres=gpu:k80:1
+#SBATCH -t 02:00:00
+#SBATCH -A sds154
+
+#ibrun in verbose mode will give binding detail
+
+module load matlab
+matlab -nodisplay -nosplash -nojvm -r "exp_texture_grid()"

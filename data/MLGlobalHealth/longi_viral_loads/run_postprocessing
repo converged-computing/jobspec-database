@@ -1,0 +1,141 @@
+#!/bin/bash
+ABSOLUTE_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/$(basename "${BASH_SOURCE[0]}")"
+ABSOLUTE_PATH="$(dirname $ABSOLUTE_PATH)"
+
+if [[ "$1" == "h" || "$1" == "-h" || "$1" == "-help" || "$1" == "--help" ]]; then
+    echo "Usage: ./run_postprocessing OPTION1=value1 OPTION2=value2 ..."
+    echo "OPTIONs:"
+    echo "    VL      : viremic viral load threshold           [default: 1000]"
+    echo "    STANWAY : either (r)stan or cmdstan              [default: cmdstan]"
+    echo "    ALPHA   : sd for alpha prior in GP               [default: 1]"
+    echo "    SHARE   : whether gp hyper needs sharing         [default: TRUE]"
+    echo "    DEPENDS : list of queue id this job depends on   [default: ]"
+    echo "    LOCAL   : run the analysis locally?              [default: TRUE]"
+    echo "    INDIR   : directory where github directory is located"
+    echo "    OUTDIR  : directory where output will be saved"
+    exit 0
+fi
+
+for ARGUMENT in "$@"
+do
+   KEY=$(echo $ARGUMENT | cut -f1 -d=)
+
+   KEY_LENGTH=${#KEY}
+   VALUE="${ARGUMENT:$KEY_LENGTH+1}"
+
+   echo "export $KEY=$VALUE"
+   export "$KEY"="$VALUE"
+done
+
+# default options
+VL="${VL:-1000}" 
+FTP="${FTP:-FALSE}"
+ALPHA="${ALPHA:-1}"
+SHARE="${SHARE:-FALSE}"
+STANWAY="${STANWAY:-cmdstan}"
+INDIR="${INDIR:-$ABSOLUTE_PATH}"
+OUTDIR="${OUTDIR:-/rds/general/user/ab1820/home/projects/2022/longvl}"
+LOCAL="${LOCAL:-TRUE}"
+
+#################
+# OPTION CHECKS #
+#################
+
+# stop if STANWAY is not stan or cmdstan
+if [[ ! "$STANWAY" =~ ^(stan|cmdstan)$ ]]; then
+    echo "STANWAY must be either stan (rstan) or cmdstan (cmdstanr)."
+    exit 1
+fi
+# stop if SHARE is not True, TRUE, T, False, FALSE, F
+if [[ ! "$SHARE" =~ ^(TRUE|FALSE)$ ]]; then
+    echo "SHARE must be either TRUE or FALSE."
+    exit 1
+fi
+echo "Selected options:"
+echo "  VL = $VL"
+echo "  STANWAY = $STANWAY"
+echo "  INDIR = $INDIR"
+echo "  OUTDIR = $OUTDIR"
+echo "  SHARE = $SHARE"
+echo "  LOCAL = $LOCAL"
+
+# "build" jobname and envname
+ENVNAME="longivl"
+ALPHA2=$(echo "$ALPHA" | sed 's/\.//')
+if [[ "$SHARE" == "TRUE" ]]; then
+    ALPHA2="${ALPHA2}sharedhyper"
+fi
+JOBNAME="alpha${ALPHA2}_vl_$VL"
+if [[ "$STANWAY" == "cmdstan" ]]; then
+	JOBNAME="${STANWAY}_${JOBNAME}"
+	ENVNAME="${ENVNAME}_cmdstan"
+fi
+if [[ "$FTP" == "TRUE" ]]; then
+    JOBNAME="$JOBNAME"_firstpart
+fi
+echo "  JOBNAME = $JOBNAME"
+
+HEAD="#!/bin/sh
+#PBS -l walltime=24:00:00
+#PBS -l select=1:ncpus=1:ompthreads=1:mem=99gb
+#PBS -j oe
+#PBS -N p-$JOBNAME
+module load anaconda3/personal
+source activate $ENVNAME
+
+set -euo pipefail
+"
+
+SUBMIT_CMD="qsub"
+
+if [[ "$LOCAL" == "TRUE" ]]; then
+    HEAD="#!/bin/sh
+    conda activate $ENVNAME"
+    SUBMIT_CMD="sh"
+fi
+
+
+
+cat > $OUTDIR/bash-$JOBNAME-joint_postprocessing.pbs <<EOF
+$HEAD
+INDIR=$INDIR
+OUTDIR=$OUTDIR
+JOBNAME=$JOBNAME
+#
+# only add the joint prefix if $SHARE is FALSE: 
+JOBNAME_JOINT="$JOBNAME"
+if [[ "$SHARE" == "FALSE" ]]; then
+    JOBNAME_JOINT="$JOBNAME"_joint
+fi
+
+  
+Rscript \$INDIR/scripts/VL_jointpostprocessing.R \\
+    --viremic-viral-load $VL \\
+    --jobname \$JOBNAME \\
+    --outdir \$OUTDIR/\${JOBNAME_JOINT} \\
+    --indir \$OUTDIR \\
+    --shared-hyper $SHARE
+
+Rscript \$INDIR/scripts/VL_make_paper_figures.R \\
+    --viremic-viral-load $VL \\
+    --jobname \$JOBNAME \\
+    --outdir \$OUTDIR/\${JOBNAME_JOINT} \\
+    --indir \$OUTDIR \\
+    --shared-hyper $SHARE
+
+Rscript -e "
+rmarkdown::render(
+    '\$INDIR/scripts/VL_postprocessing_make_report.Rmd',
+    params=list(indir='\$OUTDIR', jobid='\$JOBNAME'),
+    output_dir='\$OUTDIR/\${JOBNAME_JOINT}')
+"
+
+EOF
+
+cd $OUTDIR
+
+if [[ ! -z "$DEPENDS" ]]; then
+    DEPENDS="-W depend=afterok:$DEPENDS"
+fi
+
+$SUBMIT_CMD $DEPENDS bash-$JOBNAME-joint_postprocessing.pbs

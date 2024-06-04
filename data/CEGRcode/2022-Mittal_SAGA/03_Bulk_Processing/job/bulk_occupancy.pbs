@@ -1,0 +1,179 @@
+#!/bin/bash
+#PBS -l nodes=1:ppn=4
+#PBS -l pmem=14gb
+#PBS -l walltime=01:00:00
+#PBS -A open
+#PBS -o logs/bulk_occupancy.log.out
+#PBS -e logs/bulk_occupancy.log.err
+#PBS -t 1-512
+
+module load gcc
+module load samtools
+module load anaconda3
+source activate mittal
+
+# Cross all BAM files across appropriate reference points to create occupancy scores for every gene
+
+# Fill in placeholder constants with your directories
+WRK=/path/to/2022-Mittal_SAGA
+ORIGINAL_SCRIPTMANAGER=/path/to/ScriptManager-v0.13.jar
+ORIGINAL_SCRIPTMANAGER=$WRK/bin/ScriptManager-v0.13.jar
+BAMDIR=$WRK/data/BAM
+LIBRARY=$WRK/OCCUPANCY
+
+# Reference sets
+EKNUC=$WRK/data/RefPT-YEP/ElevenK_features_+1Nuc_200bp.bed
+EKUAS=$WRK/data/RefPT-YEP/ElevenK_features_STM_200bp.bed
+EKSUA7=$WRK/data/RefPT-YEP/ElevenK_features_Sua7_200bp.bed
+EKTSSS=$WRK/data/RefPT-YEP/TSS_0-500.bed
+
+# Script shortcuts
+BIN=$WRK/bin
+SCRIPTMANAGER=$BIN/ScriptManager-v0.13-$PBS_ARRAYID.jar
+SUM=$BIN/sum_Row_CDT.pl
+UPDATES=$BIN/update_BED_score_with_TAB_score.pl
+
+cd $WRK
+[ -d $LIBRARY ] || mkdir $LIBRARY
+cp $ORIGINAL_SCRIPTMANAGER $SCRIPTMANAGER
+
+# Determine BAM file for the current job array index
+BAMFILE=`ls $BAMDIR/*.bam | head -n $PBS_ARRAYID | tail -1`
+BAM=`basename $BAMFILE ".bam"`
+TYPE=`echo $BAM |cut -d"_" -f2`
+[ -f $BAMFILE.bai ] || samtools index $BAMFILE
+
+occupancy200 () {
+	BEDFILE=$1
+	BAMFILE=$2
+	DIR=$3
+	BASE=$4
+
+	[[ -d $DIR/CDT ]] || mkdir $DIR/$REF/CDT
+	[[ -d $DIR/TagCounts ]] || mkdir $DIR/TagCounts
+	[[ -d $DIR/NormCounts ]] || mkdir $DIR/NormCounts
+
+	FACTOR=`grep 'Scaling factor' $WRK/data/NormalizationFactors/$BAM\_NCISb_ScalingFactors.out | awk -F" " '{print $3}'`
+
+	# Tag Pileup
+	java -jar $SCRIPTMANAGER read-analysis tag-pileup $BEDFILE $BAMFILE --cpu 4 -M $DIR/CDT/$BASE
+
+	# Merge offset slices from anti and sense
+	paste <(cut -f1,2,16-116 $DIR/CDT/$BASE\_sense.cdt) <(cut -f47-147 $DIR/CDT/$BASE\_anti.cdt) > $DIR/CDT/$BASE\_merge.cdt
+	perl $SUM $DIR/CDT/$BASE\_merge.cdt $DIR/CDT/$BASE\_merge.tab
+	perl $UPDATES $BEDFILE $DIR/CDT/$BASE\_merge.tab $DIR/TagCounts/$BASE-TagCount.tab
+
+	java -jar $SCRIPTMANAGER read-analysis scale-matrix $DIR/CDT/$BASE\_merge.cdt -s $FACTOR -o $DIR/CDT/$BASE\_mergeNormalized.cdt
+	perl $SUM $DIR/CDT/$BASE\_mergeNormalized.cdt $DIR/CDT/$BASE\_norm.tab
+	perl $UPDATES $BEDFILE $DIR/CDT/$BASE\_norm.tab $DIR/NormCounts/$BASE-NormCount.tab
+
+	# Clean-up
+	#rm CDT NORMALIZED TAB BED
+}
+
+nuc_occupancy () {
+	BEDFILE=$1
+	BAMFILE=$2
+	DIR=$3
+	BASE=$4
+
+	[[ -d $DIR/CDT ]] || mkdir $DIR/$REF/CDT
+	[[ -d $DIR/TagCounts ]] || mkdir $DIR/TagCounts
+	[[ -d $DIR/NormCounts ]] || mkdir $DIR/NormCounts
+
+	FACTOR=`grep 'Scaling factor' $WRK/data/NormalizationFactors/$BAM\_NFRw_ScalingFactors.out | awk -F" " '{print $3}'`
+
+	# Tag Pileup
+	java -jar $SCRIPTMANAGER read-analysis tag-pileup $BEDFILE $BAMFILE --cpu 4 -M $DIR/CDT/$BASE
+
+	# Merge offset slices from anti and sense
+	paste <(cut -f1,2,16-116 $DIR/CDT/$BASE\_sense.cdt) <(cut -f47-147 $DIR/CDT/$BASE\_anti.cdt) > $DIR/CDT/$BASE\_merge.cdt
+	perl $SUM $DIR/CDT/$BASE\_merge.cdt $DIR/CDT/$BASE\_merge.tab
+	perl $UPDATES $BEDFILE $DIR/CDT/$BASE\_merge.tab $DIR/TagCounts/$BASE-TagCount.tab
+
+	java -jar $SCRIPTMANAGER read-analysis scale-matrix $DIR/CDT/$BASE\_merge.cdt -s $FACTOR -o $DIR/CDT/$BASE\_mergeNormalized.cdt
+	perl $SUM $DIR/CDT/$BASE\_mergeNormalized.cdt $DIR/CDT/$BASE\_norm.tab
+	perl $UPDATES $BEDFILE $DIR/CDT/$BASE\_norm.tab $DIR/NormCounts/$BASE-NormCount.tab
+
+	# Clean-up
+	#rm CDT NORMALIZED TAB BED
+}
+
+
+rna_occupancy () {
+	BEDFILE=$1
+	BAMFILE=$2
+	DIR=$3
+	BASE=$4
+
+	[[ -d $DIR/CDT ]] || mkdir $DIR/$REF/CDT
+	[[ -d $DIR/TagCounts ]] || mkdir $DIR/TagCounts
+	[[ -d $DIR/NormCounts ]] || mkdir $DIR/NormCounts
+
+
+	#FACTOR=`grep 'Scaling factor' $WRK/data/NormalizationFactors/$BAM\_NCISb_ScalingFactors.out | awk -F" " '{print $3}'`
+	FACTOR=`grep 'Scaling factor' $WRK/data/NormalizationFactors/$BAM\_Totalb_ScalingFactors.out | awk -F" " '{print $3}'`
+	echo $FACTOR
+	# Tag Pileup
+	java -jar $SCRIPTMANAGER read-analysis tag-pileup $BEDFILE $BAMFILE --cpu 4 -M $DIR/CDT/$BASE
+
+	# Merge offset slices from anti and sense
+	perl $SUM $DIR/CDT/$BASE\_sense.cdt $DIR/CDT/$BASE\_sense.tab
+	perl $UPDATES $BEDFILE $DIR/CDT/$BASE\_sense.tab $DIR/TagCounts/$BASE-TagCount.tab
+
+	java -jar $SCRIPTMANAGER read-analysis scale-matrix $DIR/CDT/$BASE\_sense.cdt -s $FACTOR -o $DIR/CDT/$BASE\_senseNormalized.cdt
+	perl $SUM $DIR/CDT/$BASE\_senseNormalized.cdt $DIR/CDT/$BASE\_norm.tab
+	perl $UPDATES $BEDFILE $DIR/CDT/$BASE\_norm.tab $DIR/NormCounts/$BASE-NormCount.tab
+
+	# Clean-up
+	#rm CDT NORMALIZED TAB BED
+}
+
+# Process BAM file based on the target value
+
+if [ $TYPE == "H2B" ] || [ $TYPE == "H2BK123ub" ] || [ $TYPE == "H2AZ" ] || \
+    [ $TYPE == "H3" ] || [ $TYPE == "H3K4me3" ] || [ $TYPE == "H3K9ac" ] || [ $TYPE == "H3K9me2" ] || [ $TYPE == "H3K9me3" ] || [ $TYPE == "H3K14ac" ] || \
+    [ $TYPE == "H3K27ac" ] || [ $TYPE == "H3K36me3" ] || [ $TYPE == "H3K79me3" ] || \
+    [ $TYPE == "H4"] || [ $TYPE == "H4R3me2" ] || [ $TYPE == "H4K8ac" ] || [ $TYPE == "H4K12ac" ] || [ $TYPE == "H4K16ac" ] || [ $TYPE == "H4K20me1" ];
+then
+	echo "Run occupancy200 on +1Nuc"
+	BEDFILE=$EKNUC
+	BED=`basename $BEDFILE ".bed"`
+	BASE=$BAM\_$BED\_read1
+	ODIR=$LIBRARY/$BED
+	[ -d $ODIR ] || mkdir $ODIR
+	nuc_occupancy $BEDFILE $BAMFILE $ODIR $BASE
+	echo "Run occupancy200 on UAS"
+	BEDFILE=$EKUAS
+	BED=`basename $BEDFILE ".bed"`
+	BASE=$BAM\_$BED\_read1
+	ODIR=$LIBRARY/$BED
+	[ -d $ODIR ] || mkdir $ODIR
+	nuc_occupancy $BEDFILE $BAMFILE $ODIR $BASE
+elif [[ $TYPE == "polyA-RNA" ]];
+then
+	echo "Run RNA occupancy"
+	BEDFILE=$EKTSSS
+	BED=`basename $BEDFILE ".bed"`
+	BASE=$BAM\_$BED\_read1
+	ODIR=$LIBRARY/$BED
+	[ -d $ODIR ] || mkdir $ODIR
+	rna_occupancy $BEDFILE $BAMFILE $ODIR $BASE
+else
+	echo "Run occupancy200 on Sua7"
+	BEDFILE=$EKSUA7
+	BED=`basename $BEDFILE ".bed"`
+	BASE=$BAM\_$BED\_read1
+	ODIR=$LIBRARY/$BED
+	[ -d $ODIR ] || mkdir $ODIR
+	occupancy200 $BEDFILE $BAMFILE $ODIR $BASE
+	echo "Run occupancy200 on UAS"
+	BEDFILE=$EKUAS
+	BED=`basename $BEDFILE ".bed"`
+	BASE=$BAM\_$BED\_read1
+	ODIR=$LIBRARY/$BED
+	[ -d $ODIR ] || mkdir $ODIR
+	occupancy200 $BEDFILE $BAMFILE $ODIR $BASE
+fi
+
+rm $SCRIPTMANAGER

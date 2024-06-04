@@ -1,0 +1,73 @@
+#!/bin/bash
+#PBS -l select=2:system=polaris
+#PBS -l place=scatter
+#PBS -l walltime=0:15:00
+#PBS -l filesystems=home
+#PBS -q debug
+#PBS -A radix-io
+
+export OUTPUT_FILE=margo-regression.output
+echo "" > $OUTPUT_FILE
+echo "################################" >> $OUTPUT_FILE
+echo "## MARGO-REGRESSION JOB RESULTS:" >> $OUTPUT_FILE
+echo "" >> $OUTPUT_FILE
+
+if [ -n "$CI_PROJECT_DIR" ]; then
+    # we appear to be running a gitlab-ci action
+    . $CI_PROJECT_DIR/sandbox/spack/share/spack/setup-env.sh
+    export EXE_PATH="$CI_PROJECT_DIR/sandbox/install/bin/"
+elif [ -n "$SANDBOX" ]; then
+    # we appear to be running from the run-regression.sh script
+    . $SANDBOX/spack/share/spack/setup-env.sh
+    # Change to working directory; jobs are launched in place
+    cd ${PBS_O_WORKDIR}
+    export EXE_PATH="./"
+else
+    # can't tell what's going on
+    echo "ERROR: neither the CI_PROJECT_DIR (for gitlab-ci execution) or the SANDBOX"
+    echo "       (for manual command line execution) variable are set."
+    exit 1
+fi
+
+spack env activate mochi-regression >> $OUTPUT_FILE
+spack find -vN >> $OUTPUT_FILE
+
+# echo "## MPI (one way, double the latency for round trip):"
+# mpiexec -f $COBALT_NODEFILE -n 2 ./osu_latency
+
+sleep 1
+
+echo "## Margo CXI (round trip):" >> $OUTPUT_FILE
+mpiexec -n 2 $EXE_PATH/margo-p2p-latency -i 100000 -n cxi:// >> $OUTPUT_FILE
+echo "## Margo CXI (bw, 1MiB):" >> $OUTPUT_FILE
+mpiexec -n 2 $EXE_PATH/margo-p2p-bw -x 1048576 -n cxi:// -c 1 -D 20 >> $OUTPUT_FILE
+echo "## Margo CXI (bw, 1MiB, 8x concurrency):" >> $OUTPUT_FILE
+mpiexec -n 2 $EXE_PATH/margo-p2p-bw -x 1048576 -n cxi:// -c 8 -D 20 >> $OUTPUT_FILE
+echo "## Margo CXI (bw, 8MiB):" >> $OUTPUT_FILE
+mpiexec -n 2 $EXE_PATH/margo-p2p-bw -x 8388608 -n cxi:// -c 1 -D 20 >> $OUTPUT_FILE
+echo "## Margo CXI (bw, 8MiB, 8x concurrency):" >> $OUTPUT_FILE
+mpiexec -n 2 $EXE_PATH/margo-p2p-bw -x 8388608 -n cxi:// -c 8 -D 20 >> $OUTPUT_FILE
+echo "## Margo CXI (bw, 1MB unaligned):" >> $OUTPUT_FILE
+mpiexec -n 2 $EXE_PATH/margo-p2p-bw -x 1000000 -n cxi:// -c 1 -D 20 >> $OUTPUT_FILE
+echo "## Margo CXI (bw, 1MB unaligned, 8x concurrency):" >> $OUTPUT_FILE
+mpiexec -n 2 $EXE_PATH/margo-p2p-bw -x 1000000 -n cxi:// -c 8 -D 20 >> $OUTPUT_FILE
+
+sleep 1
+
+echo "" >> $OUTPUT_FILE
+
+echo "## Margo CXI (round trip, Hg busy spin):" >> $OUTPUT_FILE
+mpiexec -n 2 $EXE_PATH/margo-p2p-latency -i 10000 -n cxi:// -t 0,0 >> $OUTPUT_FILE
+echo "## Margo CXI (bw, 1MiB, Hg busy spin):" >> $OUTPUT_FILE
+mpiexec -n 2 $EXE_PATH/margo-p2p-bw -x 1048576 -n cxi:// -c 1 -D 20 -t 0,0 >> $OUTPUT_FILE
+echo "## Margo CXI (bw, 1MiB, 8x concurrency, Hg busy spin):" >> $OUTPUT_FILE
+mpiexec -n 2 $EXE_PATH/margo-p2p-bw -x 1048576 -n cxi:// -c 8 -D 20 -t 0,0 >> $OUTPUT_FILE
+echo "## Margo CXI (bw, 8MiB, Hg busy spin):" >> $OUTPUT_FILE
+mpiexec -n 2 $EXE_PATH/margo-p2p-bw -x 8388608 -n cxi:// -c 1 -D 20 -t 0,0 >> $OUTPUT_FILE
+echo "## Margo CXI (bw, 8MiB, 8x concurrency, Hg busy spin):" >> $OUTPUT_FILE
+mpiexec -n 2 $EXE_PATH/margo-p2p-bw -x 8388608 -n cxi:// -c 8 -D 20 -t 0,0 >> $OUTPUT_FILE
+echo "## Margo CXI (bw, 1MB unaligned, Hg busy spin):" >> $OUTPUT_FILE
+mpiexec -n 2 $EXE_PATH/margo-p2p-bw -x 1000000 -n cxi:// -c 1 -D 20 -t 0,0 >> $OUTPUT_FILE
+echo "## Margo CXI (bw, 1MB unaligned, 8x concurrency, Hg busy spin):" >> $OUTPUT_FILE
+mpiexec -n 2 $EXE_PATH/margo-p2p-bw -x 1000000 -n cxi:// -c 8 -D 20 -t 0,0 >> $OUTPUT_FILE
+

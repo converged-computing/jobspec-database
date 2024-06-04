@@ -1,0 +1,79 @@
+#!/bin/bash
+#----------------------------------------------------------
+# Job name
+#PBS -N gyr_mpi
+# queue select
+#PBS -q workq
+# Name of stdout output file (default)
+#PBS -o gyr_mpi.out 
+# stdout output file
+#PBS -j oe
+# Total number of nodes and MPI tasks/node requested
+#PBS -l select=1:mpiprocs=24
+#PBS -l place=scatter
+#PBS -l walltime=24:00:00 
+#----------------------------------------------------------
+
+#Suppress spurious infiniband-related errors
+export MPI_MCA_mca_base_component_show_load_errors=0
+export PMIX_MCA_mca_base_component_show_load_errors=0
+
+#Use openmp. Set to false to switch to MPI
+export USE_OPENMP=false
+
+#Start time
+start=`date +%s.%N`
+
+#Load basic OHPC tools
+module load ohpc
+
+# Change to submission directory
+cd $PBS_O_WORKDIR
+
+#Activate GROMACS
+source /opt/gromacs-2022.4/bin/GMXRC
+
+echo starting
+echo '---------------------------------------------'
+num_proc=`wc -l $PBS_NODEFILE | awk '{print $1}'`
+echo 'num_proc='$num_proc
+echo '---------------------------------------------'
+cat $PBS_NODEFILE
+echo '---------------------------------------------'
+
+# Change these to something relevant
+export MDNAME=gyrate_100ns
+export TPRFILE=md100ns.tpr
+export XTCFILE=md100ns_center.xtc
+export TOPOLFILE=topol.top
+
+#Postprocessing
+printf "1" |gmx_mpi gyrate -s ${TPRFILE} -f ${XTCFILE} -o ${MDNAME}.xvg
+
+#End time
+end=`date +%s.%N`
+
+echo "OMP_NUM_THREADS= "$OMP_NUM_THREADS", MPI_NUM_PROCS= "$MPI_NUM_PROCS
+export RUNTIME=$( echo "$end - $start" | bc -l )
+echo '---------------------------------------------'
+echo "Runtime: "$RUNTIME" sec"
+echo '---------------------------------------------'
+#----------------------------------------------------------
+# Communicate job status to a telegram bot
+#----------------------------------------------------------
+# <-Create a telegram bot 
+# <-Get TOKEN, CHATID from botfather
+# <-See https://www.cytron.io/tutorial/how-to-create-a-telegram-bot-get-the-api-key-and-chat-id
+# <-Put them into two environment variables TOKEN and CHATID 
+# <-Store them in a config file and source it like below
+#----------------------------------------------------------
+
+source ${PBS_O_HOME}/.config/telegram/telegram.conf
+
+LOGIN_NODE=kuhpchn
+SSHBIN=/usr/bin/ssh
+URL="https://api.telegram.org/bot${TOKEN}/sendMessage"
+# Generate the telegram message  text
+TEXT="${bell} Hello Arka, PBS Job ${PBS_JOBNAME} finished @ ${HOSTNAME}:${PBS_O_WORKDIR}. Job ID: ${PBS_JOBID}"
+CMD='curl -s --max-time 10 --retry 5 --retry-delay 2 --retry-max-time 10  -d '\""chat_id=${CHATID}&text=${TEXT}&disable_web_page_preview=true&parse_mode=markdown"\"" ${URL}"
+$SSHBIN $LOGIN_NODE $CMD

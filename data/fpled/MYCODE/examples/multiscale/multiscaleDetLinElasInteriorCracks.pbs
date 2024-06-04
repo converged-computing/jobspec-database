@@ -1,0 +1,104 @@
+#!/bin/sh
+
+# To start this job : qsub multiscaleDetLinElasInteriorCracks.pbs
+
+# Shell
+#PBS -S /bin/sh
+
+# Job name (up to 15 characters in length, no blank space, start with alphanumeric character)
+#PBS -N detlelasincrack
+
+# Interactive mode
+##PBS -I -X
+
+# List of resources allocated
+# Numbers of nodes ('nodes' or 'select') and processor cores (cpus) per node ('ppn' or 'ncpus') required.
+# Total number of cores available to the job will be nodes*ppn.
+# Numbers of chunk (select) and number of cpus per chunk (ncpus) required.
+# Maximum amount of physical memory ('mem') (per node if 'select') required. This should usually be less than nodes*64000mb.
+# Maximum amount of wall-clock (real) time ('walltime') requested (pattern hhh:mm:ss).
+# If select=1, place=pack; else, place=scatter
+# If nodes, only for 'long' queue
+# Maximum number of local workers available with Parallel Computing Toolbox -
+# the limit was 4; this changed to 8 in R2009a; and to 12 in R2011b
+#PBS -l select=1:ncpus=12:mem=5gb,place=pack
+##PBS -l nodes=1:ppn=12,mem=60gb
+#PBS -l walltime=00:30:00
+
+# Destination : queue, @server, or queue@server
+# 'centos65', 'medium', 'long', 'heavy', 'superheavy', 'gpu', 'compil', or 'cuda'
+#PBS -q centos65
+
+# File name for standard output
+#PBS -o multiscaleDetLinElasInteriorCracks.out
+
+# File name for standard error
+#PBS -e multiscaleDetLinElasInteriorCracks.err
+
+# Keep (or retain) standard output and error streams on execution host
+##PBS -k oe
+
+# Join option : merge standard output and error streams into a single file
+##PBS -j oe
+
+# Mail options : send mail to the user when the job ends or aborts (with an error)
+# (add 'b' to receive mail at the beginning of execution; use 'n' on its own to turn off messages completely)
+#PBS -m ae
+#PBS -M florent.pled@univ-paris-est.fr
+
+# Rerunable job (use 'n' if not)
+#PBS -r y
+
+# Export all environment variables to the job
+#PBS -V
+JOBID=${PBS_JOBID%%.*}
+MATLAB_FILENAME=multiscaleDetLinElasInteriorCracks
+LOG_FILENAME=$PBS_O_WORKDIR/$MATLAB_FILENAME.$JOBID.log
+
+# Change directories to working directory (default is home)
+cd $PBS_O_WORKDIR
+
+# Start job
+echo " "
+echo "Job started on `hostname` at `date`"
+echo " "
+
+echo '--------------------------------------------------------------------------------'
+echo 'Environment variables - submission machine'
+echo '--------------------------------------------------------------------------------'
+echo "system                              : $PBS_O_SYSTEM "
+echo "execution host                      : $PBS_O_HOST "
+echo "login name                          : $PBS_O_LOGNAME "
+# echo "current home directory              : $PBS_O_HOME "
+echo "working directory (absolute path)   : $PBS_O_WORKDIR "
+# echo "path                                : $PBS_O_PATH "
+# echo "shell                               : $PBS_O_SHELL "
+# echo "language                            : $PBS_O_LANG "
+# echo "mail                                : $PBS_O_MAIL "
+# echo "original queue (job submission)     : $PBS_O_QUEUE "
+# echo "user name (job owner)               : $USER "
+# echo "host machine name                   : $HOSTNAME "
+echo '--------------------------------------------------------------------------------'
+echo 'Environment variables - execution job'
+echo '--------------------------------------------------------------------------------'
+echo "environment                         : $PBS_ENVIRONMENT "
+echo "job identifier                      : $PBS_JOBID "
+echo "job name                            : $PBS_JOBNAME "
+# echo "job directory                       : $PBS_JOBNDIR "
+# echo "node file                           : $PBS_NODEFILE "
+echo "number of nodes                     : $(wc -l < "$PBS_NODEFILE") "
+echo "list of nodes                       : $(cat "$PBS_NODEFILE") "
+echo "number of cpus                      : $NCPUS "
+echo "queue (job execution)               : $PBS_QUEUE "
+echo '--------------------------------------------------------------------------------'
+# printenv
+# echo '--------------------------------------------------------------------------------'
+
+# Run Matlab job
+/usr/local/bin/matlab -nodesktop -nosplash -r $MATLAB_FILENAME -logfile $LOG_FILENAME
+
+# End job
+echo " "
+echo "Job ended at `date`"
+
+exit

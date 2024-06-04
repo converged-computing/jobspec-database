@@ -1,0 +1,64 @@
+#!/bin/bash  
+#SBATCH --array={{ slurm_array_list|join(',') }}
+#SBATCH --nice={{ priority }}
+#SBATCH -N {{ tile_x }}-{{ tile_x * tile_y }}
+#SBATCH{% if slots %} -n {{ slots }}{% else %} --exclusive{% endif %}
+{%- if rerun_on_error %}
+#SBATCH --requeue
+{%- endif %}
+{%- if job_on_hold %}
+#SBATCH -H
+{%- endif %}
+{%- if req_tmpdir %}
+#SBATCH --tmp={{ req_tmpdir* 1024 }}
+{%- endif %}
+{%- if req_memory %}
+#SBATCH --mem={{ req_memory* 1024 }}
+{%- endif %}
+{%- if req_license %}
+#SBATCH -L {{ req_license.split('=') | join(':') }}
+{%- endif %}
+{%- if slurm_aftercorr %}
+#SBATCH -d aftercorr:{{ slurm_aftercorr|join(',') }}
+{%- endif %}
+{%- if email_list %}
+#SBATCH --mail-user={{ email_list|join(',') }}
+{%- endif %}
+{%- if queue %}
+#SBATCH -p {{ queue }}
+{%- endif %}
+
+HAFARM_VERSION={{ env['REZ_HAFARM_VERSION'] }}
+OUTPUT_PICTURE="{{ output_picture }}"
+echo Job start: `date`
+echo Machine name: ${HOSTNAME}
+echo User    name: ${USER}
+echo Slots:        $NSLOTS
+echo Memory stats: `egrep 'Mem|Cache|Swap' /proc/meminfo`
+echo Scene file  : {{ scene_file }}
+
+{%- if pre_render_script %}
+{{ pre_render_script }}
+{%- endif %}
+
+for tile in `seq 0 {{ (tile_x * tile_y)-1 }}`; do
+	output_image=`printf '{{ output_picture }}' ${tile}`
+	srun -N 1 --ntasks 1 --exclusive sh -c "{{ command }} -t count={{ tile_x }}x{{ tile_y }},index=${tile} {{ command_arg|join(' ') }} {{ scene_file }} $output_image " &
+	pids[${i}]=$!
+done
+
+for pid in ${pids[*]}; do
+	wait $pid
+done
+
+exit_code=0
+
+{%- if post_render_script %}
+{{ post_render_script }}
+{%- endif %}
+
+echo Job ends: `date`
+echo Render target: "{{ output_picture }}"
+echo Commands was: "{{ command }} -t count={{ tile_x }}x{{ tile_y }},index=${tile},suffix={{ tile_suffix }} {{ command_arg|join(' ') }} {{ scene_file }} {{ output_picture }}"
+
+exit $exit_code

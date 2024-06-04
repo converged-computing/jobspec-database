@@ -1,0 +1,43 @@
+#! /bin/bash --login
+
+#PBS -N GB_HydA2HSD
+#PBS -q Std
+#PBS -l nodes=2:ppn=2
+#PBS -l walltime=01:00:00
+#PBS -m abe
+#PBS -M user.name@domain.name
+#PBS -o pbs.charmm.out
+#PBS -e pbs.charmm.err
+
+#Because charmm uses shared libraries, add charmm to your default
+#module list before running by typing the following:
+
+#module initswitch charmm/32b2 charmm/31b1
+ulimit -s unlimited
+
+cd $PBS_O_WORKDIR
+
+#simple serial charmm job
+#charmm < GB.inp > GBminimization.out.$PBS_JOBID
+
+cp ../CHARMM_22PROT+HYDFERR.RTF ../CHARMM_22PROT+HYDFERR.PRM $PBS_TMPDIR/.
+cp hyda2hsd_dowsed_charmm.psf GB.INP gbmin_in.pdb $PBS_TMPDIR
+cd $PBS_TMPDIR
+
+# example: run an MPI job
+cat > stream.inp << EOF
+* Generalized Born minimization of NAMD-equilibrated structure for internal
+* energies and input into APBS. CHC
+*
+stream @stream
+stop
+EOF
+
+export input="stream=GB.INP"
+
+#which charmm.mpi.xxlarge
+mpicmd charmm.mpi.xxlarge $input < stream.inp > GBminimization.out
+
+rm $PBS_TMPDIR/*.RTF $PBS_TMPDIR/*.PRM $PBS_TMPDIR/*.psf
+rm $PBS_TMPDIR/GB.INP $PBS_TMPDIR/gbmin_in.pdb
+cp $PBS_TMPDIR/* $PBS_O_WORKDIR/.

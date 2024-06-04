@@ -1,0 +1,227 @@
+#!/bin/sh
+#PBS -l select=32:system=polaris
+#PBS -l place=scatter
+#PBS -l walltime=6:00:00
+#PBS -l filesystems=home:eagle
+#PBS -q prod
+#PBS -A FoundEpidem
+#PBS -M awells@anl.gov
+#PBS -N 33M-262K
+
+# Controlling the output of your application
+# UG Sec 3.3 page UG-40 Managing Output and Error Files
+# By default, PBS spools your output on the compute node and then uses scp to move it the
+# destination directory after the job finishes.  Since we have globally mounted file systems
+# it is highly recommended that you use the -k option to write directly to the destination
+# the doe stands for direct, output, error
+#PBS -k doe
+#PBS -o /lus/eagle/projects/candle_aesp/azton/GenomeLM/genomelm/runlog.out
+#PBS -e /lus/eagle/projects/candle_aesp/azton/GenomeLM/genomelm/runlog.err
+
+cd $PBS_O_WORKDIR
+DIR=$PBS_O_WORKDIR
+module load conda/2023-10-04
+module load gcc/11.2.0
+conda activate /lus/eagle/projects/candle_aesp/azton/conda-env/megatron-ds
+
+# module load cudatoolkit-standalone/11.8.0
+# conda activate /lus/eagle/projects/FoundEpidem/azton/conda_env/10-04
+export LD_LIBRARY_PATH=/lus/eagle/projects/candle_aesp/azton/conda-env/megatron-ds/lib:$LD_LIBRARY_PATH
+
+echo PYTHON:
+python --version
+echo PYTORCH:
+python <<< "import torch; print(torch.__version__)"
+
+export HTTP_PROXY=http://proxy.alcf.anl.gov:3128
+export HTTPS_PROXY=http://proxy.alcf.anl.gov:3130
+export http_proxy=http://proxy.alcf.anl.gov:3128
+export https_proxy=http://proxy.alcf.anl.gov:3128
+git config --global http.proxy http://proxy.alcf.anl.gov:3128
+echo "Set HTTP_PROXY and to $HTTP_PROXY"
+
+# Set ADDR and PORT for communication
+master_node=$(cat $PBS_NODEFILE| head -1)
+export MASTER_ADDR=$(host $master_node | head -1 | awk '{print $4}')
+echo "MASTER NODE ${master_node} :: MASTER_ADDR ${MASTER_ADDR}"
+export MASTER_PORT=23450
+cat $PBS_NODEFILE > hostfile
+sed -e 's/$/ slots=4/' -i hostfile
+echo "PATH=${PATH}" >> .deepspeed_env
+echo "LD_LIBRARY_PATH=${LD_LIBRARY_PATH}" >> .deepspeed_env
+echo "http_proxy=${http_proxy}" >> .deepspeed_env
+echo "https_proxy=${https_proxy}" >> .deepspeed_env
+#cuda tuning
+# export NCCL_NET_GDR_LEVEL=PHB
+export CUDA_VISIBLE_DEVICES=0,1,2,3
+export CUDA_DEVICE_MAX_CONNECTIONS=1
+# export MPICH_GPU_SUPPORT_ENABLED=1
+export NNODES=`wc -l < $PBS_NODEFILE`
+export NRANKS_PER_NODE=4
+
+NTOTRANKS=$(( NNODES * NRANKS_PER_NODE ))
+echo "NUM_OF_NODES= ${NNODES} TOTAL_NUM_RANKS= ${NTOTRANKS} RANKS_PER_NODE= ${NRANKS_PER_NODE}"
+echo < $PBS_NODEFILE
+echo "TASK NUM = ${PBS_TASKNUM}"
+
+ulimit -s unlimited
+
+logdir="pretrain_bert_NTT"
+DIR=`pwd`
+DATETIME=`date +'date_%y-%m-%d_time_%H-%M-%S'`
+mkdir -p ${DIR}/${logdir}
+
+SEQ_LEN=131072
+USE_FLASH_ATTN=1
+MICRO_BATCH=1
+GAS=1
+WORLD_SIZE=$NTOTRANKS
+GLOBAL_BATCH=$((MICRO_BATCH*WORLD_SIZE*GAS))
+# this is 4e-4 * sqrt(WORLD_SIZE/64)
+INIT_LR=4e-4
+# find these in args.sh now...
+# export SP_TYPE="ds"
+# export SPSIZE=1
+# export PPSIZE=1
+# export MPSIZE=2
+USE_SEQUENCE_PARALLEL=1
+# SPSIZE refers specifically to deepspeed SP
+SPSIZE=8
+# PP doesnt work with bert currently.  Tied layers are incompatible...
+PPSIZE=1
+# MP is megatrons pseudo SP
+MPSIZE=1
+NLAYERS=8
+HIDDEN=768
+ATEN_HEADS=8
+ZERO_STAGE=1
+# for SL1024, 900B tokens total, have ns=878906250 samples.  
+# training iterations = 878906250 / GLOBAL_BATCH
+NUM_SAMPLES=$((900000000000 / SEQ_LEN))
+TRAIN_ITER=$((NUM_SAMPLES / GLOBAL_BATCH))
+
+LOG="BERT_SP${SPSIZE}_MP${MPSIZE}_PP${PPSIZE}_NL${NLAYERS}_H${HIDDEN}_A${ATEN_HEADS}_L${SEQ_LEN}_ZERO${ZERO_STAGE}_FLASH${USE_FLASH_ATTN}_NN${NTOTRANKS}"
+
+TENSORBOARD_DIR=./runlogs/tensorboard
+WANDB_GROUP='33m-scalerun'
+WANDB_RESUME=0
+reload_path='/lus/eagle/projects/RL-fold/azton/mega-genomes/checkpoints/BERT_SP1_MP1_PP1_NL8_H768_A8_L1024_ZERO1_FLASH1_NN128'
+# LOAD_OPT="--load ${reload_path} "
+if [ -n "$LOAD_OPT" ]; then
+    WANDB_RESUME=1
+fi
+
+# ┏━━━━━━━━━━━━┓
+# ┃ Data paths ┃
+# ┗━━━━━━━━━━━━┛
+DATA_PATH=
+DATA_DIR="/lus/eagle/projects/RL-fold/azton/genomes/NTT/megatron-bins/ncbi_fixed_6mer_splitds_"
+# DATA_PATH="${DATA_DIR}/codon_3mer_0_text_d"
+for i in $(seq 0 10); do
+  DATA_PATH="0.1 ${DATA_DIR}${i}_text_document"
+done
+# DATA_PATH="1.0 /lus/eagle/projects/RL-fold/azton/genomes/NTT/megatron-bins/fixed_6mer_full_text_document"
+VOCAB_FILE=/lus/eagle/projects/candle_aesp/azton/GenomeLM/genomelm/tokenizer_files/6-mer-tokenizer.json
+DATA_LOAD_ARGS="--data-path $DATA_PATH \
+                --dataloader-type single \
+                --vocab-file $VOCAB_FILE"
+                # --merge-file $MERGE_FILE
+
+
+CPU_OPTIM=" --cpu-optimizer"
+DS_CONFIG=./ds_config_zero3.json
+ds_args=""
+ds_args=" --deepspeed ${ds_args}"
+# ds_args=" --deepspeed_mpi ${ds_args}"
+ds_args=" --deepspeed_config=$DS_CONFIG ${ds_args}"
+ds_args=" --zero-stage=$ZERO_STAGE ${ds_args}"
+ds_args=" --deepspeed-activation-checkpointing ${ds_args}"
+if [[ "$SPSIZE" -gt 1 ]]; then
+    ds_args=" --sequence-parallel-size ${SPSIZE} ${ds_args}"
+fi
+# if [[ "$PPSIZE" == 1 ]]; then
+ds_args="--no-pipeline-parallel ${ds_args}"
+# else
+#   ds_args=" --pipeline-model-parallel-size ${PPSIZE} ${ds_args}"
+# fi
+#   if [[ "$USE_ACTIVATION_CHECKPOINTING" == 1 ]]; then
+ds_args=" --deepspeed-activation-checkpointing ${ds_args}"
+#   fi
+# genome-k-window sets the sliding window size; it controls the sliding window masking
+# and activates the genome_dataset.  If not sliding, use --genome-k-window 1
+gpt_args=(
+gpt_args=(
+  "--bert-no-binary-head"
+  "--genome-k-window 6"
+  "--genome-sliding-window 1"
+  "--tokenizer-type GenomeTokenizer"
+  "--save checkpoints/${LOG}/"
+  "--vocab-size 4104"
+  "--make-vocab-size-divisible-by 128"
+  "--seed 8675309"
+  "--DDP-impl local"
+  "--use-contiguous-buffers-in-local-ddp"
+  "--pipeline-model-parallel-size ${PPSIZE}"
+  "--tensor-model-parallel-size ${MPSIZE}"
+  "--sequence-parallel-size ${SPSIZE}"
+  "--num-layers ${NLAYERS}"
+  "--hidden-size ${HIDDEN}"
+  "--num-attention-heads ${ATEN_HEADS}"
+  "--micro-batch-size ${MICRO_BATCH}"
+  "--global-batch-size ${GLOBAL_BATCH}"
+  "--seq-length ${SEQ_LEN}"
+  "--max-position-embeddings ${SEQ_LEN}"
+  "--use-rotary-position-embeddings"
+  "--bf16"
+  "--loss-scale 2"
+  "--no-log-loss-scale-to-tensorboard"
+  "--train-iters ${TRAIN_ITER}"
+  "--lr-decay-iters 320000"
+  "--num-workers 12"
+  "--data-impl mmap"
+  "--data-parallel-random-init"
+  "--split 930,50,20"
+  "--distributed-backend nccl"
+  "--lr ${INIT_LR}"
+  "--lr-decay-style cosine"
+  "--min-lr 1.0e-7"
+  "--weight-decay 1e-1"
+  "--clip-grad 1.0"
+  "--lr-warmup-fraction .01"
+  "--log-interval 1"
+  "--save-interval 150"
+  "--eval-interval 1000"
+  "--eval-iters 100"
+  "--override-opt_param-scheduler"
+  "--tensorboard-dir ${TENSORBOARD_DIR}/${LOG}/"
+  "--log-timers-to-tensorboard"
+  "--tensorboard-log-interval 10"
+  "--no-async-tensor-model-parallel-allreduce"
+)
+)
+
+gpt_args="${gpt_args[*]} $DATA_LOAD_ARGS"
+gpt_args="${gpt_args} $CPU_OPTIM"
+gpt_args="${gpt_args} $LOAD_OPT"
+gpt_args="$gpt_args \
+    --checkpoint-activations \
+    --partition-activations \
+    --checkpoint-num-layers 1 "
+if [[ "$USE_SEQUENCE_PARALLEL" > 0 ]]; then
+    gpt_args="$gpt_args --sequence-parallel "
+fi
+if [[ "$USE_FLASH_ATTN" == 1 ]]; then
+    gpt_args="$gpt_args --use-flash-attn "
+fi
+gpt_args="$gpt_args $ds_args"
+cat $PBS_NODEFILE > hostfile
+sed -e 's/$/ slots=4/' -i hostfile
+echo "PATH=${PATH}" >> .deepspeed_env
+echo "LD_LIBRARY_PATH=${LD_LIBRARY_PATH}" >> .deepspeed_env
+echo "http_proxy=${http_proxy}" >> .deepspeed_env
+echo "https_proxy=${https_proxy}" >> .deepspeed_env
+echo "CUDA_DEVICE_MAX_CONNECTIONS=${CUDA_DEVICE_MAX_CONNECTIONS}" >> .deepspeed_env
+
+# deepspeed --hostfile=hostfile
+mpiexec -n ${NTOTRANKS} -ppn ${NRANKS_PER_NODE} --cpu-bind verbose,list:0,16,32,48 --hostfile ${PBS_NODEFILE} \
+    python -u /lus/eagle/projects/candle_aesp/azton/megatron-xlong/pretrain_bert.py ${gpt_args} >> ${logdir}/${LOG}.out 2>&1

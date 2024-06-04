@@ -1,0 +1,37 @@
+#!/bin/bash
+
+#PBS -l nodes=1:ppn=20,walltime=24:00:00
+#PBS -N est
+#PBS -A ghp3_a_g_sc_default
+#PBS -m abe
+#PBS -M cxb585@psu.edu
+#PBS -e localhost:${PBS_O_WORKDIR}/${PBS_JOBNAME}.e${PBS_JOBID}
+#PBS -o localhost:${PBS_O_WORKDIR}/${PBS_JOBNAME}.o${PBS_JOBID}
+
+# ------------------------------------------------------------------------------
+# Variables
+# ------------------------------------------------------------------------------
+
+# Example:
+# qsub -v PARAM_d=1000,PARAM_s=1000,PARAM_i=25 pbs/call_est.pbs
+
+working_dir=$PBS_O_WORKDIR
+export PATH=$PATH:$HOME/bin
+
+export PYTHONPATH=/usr/global/python/3.3.2/lib/python3.3/site-packages:/storage/home/cxb585/local_python:/storage/home/cxb585/local_python
+
+export PATH=$PATH:/storage/home/cxb585/local_python/
+
+module load python/3.3.2
+
+# module load boost
+
+# ----------------------------------------------------------------------------------------
+# --- Call snakemake
+# ----------------------------------------------------------------------------------------
+
+cd $working_dir
+
+sh scripts/run_estimator_all_PODs_in_parallel.sh $PARAM_d $PARAM_s $PARAM_i 1000
+
+exit

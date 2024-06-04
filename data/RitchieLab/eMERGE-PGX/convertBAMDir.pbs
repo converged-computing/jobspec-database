@@ -1,0 +1,231 @@
+#!/bin/bash
+
+####### RITCHIELAB PBS TEMPLATE FILE
+#
+# Make a copy this script to use as the basis for your own script.
+#
+# Most of the available PBS options are described below, with a default
+# or example setting.  Lines starting with "##PBS" are ignored; to enable
+# them, remove the second #.
+#
+# Put your own job commands inside the marked off section near the bottom,
+# leaving the commands above and below it in place.  In order to avoid an
+# excessive IO burden on the network filesystem, it is best to copy your
+# input data to the provided ${TMPDIR}, generate any output there, and then
+# copy the final results back to the group directory.
+
+
+####### user-assigned job name; avoid special characters besides _.-
+#PBS -N convert_bam
+
+####### email address to send notifications to: user@host[,user@host[...]]
+#PBS -M jrw32@psu.edu
+
+####### types of email notifications to send: [a]bort, [b]egin, [e]nd, [n]one
+#PBS -m bae
+
+####### restart job from the beginning if it crashes (will overwrite previous output!): [y]es, [n]o
+#PBS -r y
+
+####### special queue name (we have "lionxf-mdr23" on LionXF only)
+####### leave this out to let our qsub wrapper detect and use any available priority queue
+##PBS -q queuename
+
+####### run as an array job with these (numeric) ID numbers
+##PBS -t 0,1,2-7
+
+####### Allow others in the group to see the output
+#PBS -W umask=0027
+
+####### Throttle jobs by using a virtual resource (LionXF ONLY)
+####### N can be any of 1,2,3,4,5
+####### M is the amount of capacity to consume per job (max capacity is 1000)
+##PBS -l gres=ritchielab_N:M
+
+####### number of cluster nodes and/or processors to use (ACCRE:always append ":x86")
+#######   "nodes=X:ppn=Y"  for Y cores each on X different nodes
+#######   "nodes=X"        for X cores on any (or the same) node
+#PBS -l nodes=1:ppn=4
+
+####### maximum per-job memory (total shared by all cores/nodes)
+#PBS -l mem=12gb
+
+####### maximum per-core memory
+#PBS -l pmem=12gb
+
+####### maximum job execution time (real time, not just CPU time): DD:HH:MM:SS
+#PBS -l walltime=24:00:00
+
+####### output filename (default:"<script.pbs>.o<jobid>")
+##PBS -o output.file
+
+####### combine output streams: std[o]ut, std[e]rr
+#PBS -j oe
+
+####### these env vars are available when the job runs:
+#######   PBS_JOBNAME    user-assigned job name as provided at submission
+#######   PBS_O_HOST     name of the host on which qsub was run
+#######   PBS_O_LOGNAME  name of user who submitted the job
+#######   PBS_O_HOME     absolute path of the home directory of the user who submitted the job
+#######   PBS_O_WORKDIR  absolute path from which the job was submitted
+#######   PBS_O_QUEUE    name of the scheduling queue to which the job was submitted
+#######   PBS_SERVER     name of the host to which qsub submitted the job
+#######   PBS_QUEUE      name of the scheduling queue from which the job is being run
+#######   PBS_JOBID      unique job number assigned by the scheduler
+#######   PBS_NODEFILE   filename containing the names of nodes assigned to the job
+#######   PBS_ARRAYID    array identifier for this sub-job within an array job
+#######   TMPDIR         absolute path of temp directory on the assigned node's local disk (not GPFS) -- not provided by ACCRE!
+
+if test -z "{PBS_JOBID}"; then
+
+TMPDIR="/tmp"
+
+else
+
+# build PBS_BASEID from PBS_JOBID (minus array/queue labels) and PBS_QUEUE
+PBS_BASEID=$(echo "${PBS_JOBID}" | grep -Po "^[0-9]+")
+if [[ -z "${PBS_BASEID}" ]]; then echo "WARNING: unable to identify PBS_BASEID from PBS_JOBID '${PBS_JOBID}'"; fi
+PBS_BASEID="${PBS_BASEID}.${PBS_QUEUE}"
+
+# create a temp directory in $TMPDIR if provided, otherwise /tmp or ~/group/tmp
+for d in "${TMPDIR}" "/tmp" "${RITCHIELAB_GROUP_DIR}/tmp"; do
+	TMPDIR="${d}/ritchie_lab.pbstmp.${PBS_JOBID}"
+	[[ -d "${d}" ]] && mkdir "${TMPDIR}" && break
+done
+if [[ ! -d "${TMPDIR}" ]]; then echo "ERROR: unable to create temp directory in \$TMPDIR, '/tmp' or '~/group/tmp'"; exit 1; fi
+
+# PBS always starts scripts in $HOME but most folks expect the script to run in the directory it was submitted from
+cd "${PBS_O_WORKDIR}"
+
+fi
+
+####### v---- JOB COMMANDS BELOW ----v
+
+
+ANALYSIS_FILE_DIR="/gpfs/group1/m/mdr23/datasets/GATK/2.5"
+
+REF_GENOME="$ANALYSIS_FILE_DIR/human_g1k_v37_decoy.fasta"
+
+if test -z "$OUT_DIR"; then
+	OUT_DIR="$PWD"
+fi
+
+if test -z "$BAM_DIR"; then
+	echo "Error: variable 'BAM_DIR' must be defined!  Use -v argument to qsub to define it!"
+	exit 2
+fi
+
+BAM_ARRAY=( $(ls -1 $BAM_DIR/*.bam) )
+BAM_FILE=${BAM_ARRAY[$((PBS_ARRAYID - 1))]}
+BAI_FILE="$(echo $BAM_FILE | sed 's/m$/i/')"
+
+BASE_FN="$(echo $BAM_FILE | sed -e 's/\.[^.]*$//' -e 's|^.*/||g')"
+
+# Test to see if the input BAM is indexed, please
+if test ! -f "$BAI_FILE"; then
+	samtools index "$BAM_FILE" "$BAI_FILE"
+fi
+
+# get the RG header info
+READ_HEADER=$(samtools view -H "$BAM_FILE" | grep "^@RG")
+
+# sort the BAM file
+samtools sort -n "$BAM_FILE" "$TMPDIR/$BASE_FN.sorted"
+
+# convert paired-end fastq
+bedtools bamtofastq -i "$TMPDIR/$BASE_FN.sorted.bam" -fq "$TMPDIR/$BASE_FN.1.fastq" -fq2 "$TMPDIR/$BASE_FN.2.fastq"
+#ls -alh "$TMPDIR"
+
+# convert BAM to FASTQ
+#bamtools convert -in $BAM_FILE -format fastq > "$TMPDIR/$BASE_FN.fastq"
+
+# align FASTQ to our default reference a la CIDR pipeline
+bwa aln \
+-t 4 \
+-q 15 \
+$REF_GENOME \
+"$TMPDIR/$BASE_FN.1.fastq" \
+-f "$TMPDIR/$BASE_FN.1.sai"
+
+ls -alh "$TMPDIR"
+
+bwa aln \
+-t 4 \
+-q 15 \
+$REF_GENOME \
+"$TMPDIR/$BASE_FN.2.fastq" \
+-f "$TMPDIR/$BASE_FN.2.sai"
+
+#ls -alh "$TMPDIR"
+
+bwa sampe \
+-r "$READ_HEADER" \
+$REF_GENOME \
+"$TMPDIR/$BASE_FN.1.sai" \
+"$TMPDIR/$BASE_FN.2.sai" \
+"$TMPDIR/$BASE_FN.1.fastq" \
+"$TMPDIR/$BASE_FN.2.fastq" \
+| MergeSamFiles \
+INPUT=/dev/stdin \
+OUTPUT="$TMPDIR/$BASE_FN.original.bam" \
+COMPRESSION_LEVEL=0 \
+VALIDATION_STRINGENCY=SILENT \
+SORT_ORDER=coordinate \
+USE_THREADING=true
+
+MarkDuplicates \
+INPUT="$TMPDIR/$BASE_FN.original.bam" \
+OUTPUT="$TMPDIR/$BASE_FN.dup.bam" \
+VALIDATION_STRINGENCY=SILENT \
+METRICS_FILE="$TMPDIR/$BASE_FN.picard.duplicates.txt" \
+CREATE_INDEX=true
+
+GenomeAnalysisTK-2.7-4 \
+-T RealignerTargetCreator \
+-I "$TMPDIR/$BASE_FN.dup.bam" \
+-R $REF_GENOME \
+-known $ANALYSIS_FILE_DIR/Mills_and_1000G_gold_standard.indels.b37.vcf \
+-known $ANALYSIS_FILE_DIR/1000G_phase1.indels.b37.vcf \
+-o "$TMPDIR/$BASE_FN.intervals" \
+-nt 4
+
+GenomeAnalysisTK-2.7-4 \
+-T IndelRealigner \
+-I "$TMPDIR/$BASE_FN.dup.bam" \
+-R $REF_GENOME \
+-known $ANALYSIS_FILE_DIR/Mills_and_1000G_gold_standard.indels.b37.vcf \
+-known $ANALYSIS_FILE_DIR/1000G_phase1.indels.b37.vcf \
+-targetIntervals "$TMPDIR/$BASE_FN.intervals" \
+-o "$TMPDIR/$BASE_FN.realign.bam"
+
+GenomeAnalysisTK-2.7-4 \
+-T BaseRecalibrator \
+-I "$TMPDIR/$BASE_FN.realign.bam" \
+-R $REF_GENOME \
+-knownSites $ANALYSIS_FILE_DIR/Mills_and_1000G_gold_standard.indels.b37.vcf \
+-knownSites $ANALYSIS_FILE_DIR/1000G_phase1.indels.b37.vcf \
+-knownSites $ANALYSIS_FILE_DIR/dbsnp_137.b37.vcf.gz \
+-dt NONE \
+-o "$TMPDIR/$BASE_FN.bqsr" \
+-nct 4
+
+GenomeAnalysisTK-2.7-4 \
+-T PrintReads \
+-R $REF_GENOME \
+-I "$TMPDIR/$BASE_FN.realign.bam" \
+-BQSR "$TMPDIR/$BASE_FN.bqsr" \
+-baq RECALCULATE \
+-dt NONE \
+-EOQ \
+-o "$OUT_DIR/$BASE_FN.bam" \
+-nct 4
+
+
+####### ^---- JOB COMMANDS ABOVE ----^
+
+# clean up TMPDIR (but preserve previous exit code)
+CODE=$?
+if test ! -z "{PBS_JOBID}"; then
+rm -rf "${TMPDIR}"
+fi
+exit $CODE

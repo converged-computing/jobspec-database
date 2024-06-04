@@ -1,0 +1,46 @@
+#!/bin/bash
+<%
+## Check some resources and set sane defaults
+resources$walltime = resources$walltime
+resources$memory = resources$memory
+resources$ncpus = if (is.null(resources$ncpus)) 1L else asInt(resources$ncpus, lower = 1L)
+resources$modules = if (is.null(resources$modules)) character(0L) else assertCharacter(resources$modules, any.missing = FALSE)
+resources$omp.threads = if (is.null(resources$omp.threads)) 1L else asInt(resources$omp.threads, lower = 1L)
+resources$blas.threads = if (is.null(resources$blas.threads)) 1L else asInt(resources$blas.threads, lower = 1L)
+
+
+## first string of queue, selected by walltime
+#walltimes = 3600L * c(1L, 8L, 48L, 672L)
+#queue = c("short", "med", "long", "ultralong")[wf(resources$walltime <= walltimes)]
+
+## very ugly hack because we cannot log to data (nobackup) filesystem on lido,
+## only home fs is available
+## unfortunately there seems to be no generic solution
+## does log path start with /data/?
+log.file = log.file
+if (length(grep("^/data/", log.file)) > 0L) {
+  ## strip that
+  log.file = substr(log.file, 7L, nchar(log.file))
+  ## find next forward slash
+  i = regexpr("/", log.file)
+  if (i != -1) {
+    ## this must be "user": e.g. /data/bischl/...
+    user = substr(log.file, 1L, i-1L)
+    ## put together
+    log.file = sprintf("/home/%s/nobackup%s", user, substr(log.file, i, nchar(log.file)))
+  }
+}
+-%>
+
+#PBS -N <%= job.hash %>
+#PBS -o <%= log.file %>
+#PBS -l walltime=<%= resources$walltime %>,nodes=<%=resources$nodes%>:ppn=1,vmem=<%= resources$memory %>
+#PBS -j oe
+<%= if (array.jobs) sprintf("#PBS -t 1-%i", nrow(jobs)) else "" %>
+#PBS -V  
+
+## export value of DEBUGME environemnt var to slave
+export DEBUGME=<%= Sys.getenv("DEBUGME") %>
+
+## run R
+Rscript -e 'batchtools::doJobCollection("<%= uri %>")'

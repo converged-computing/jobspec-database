@@ -1,0 +1,36 @@
+#!/bin/bash -l
+#SBATCH --nodes 1            # Node PER JOB !
+#SBATCH --ntasks-per-node 1  # MPI sense -> just 1.
+#SBATCH --cpus-per-task 36   # No more than the number of CPU in a node. CPU <- coeur dans slurm
+#SBATCH --mem 180G          # Per node
+#SBATCH --time 15-0          #J-H:m:s
+#SBATCH --array=0-11         # Index are choosen by me (can relaunch) before 0-1
+#SBATCH --qos=fortnight           # Echo is authorized to launch week-long job
+
+N=${SLURM_ARRAY_TASK_ID}
+
+export MDL_DAYS=150
+export MDL_NNODES=107
+export F_DIR="`date +%Y-%m-%d`-${MDL_NNODES}_${MDL_DAYS}/"
+export F_PREFIX="week"
+mkdir -p $F_DIR
+
+module purge
+module restore COVID_OCP
+source $HOME/venvs/$SYS_TYPE/bin/activate
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$HOME/src/hsl/20190503_${SYS_TYPE}/lib
+export LD_PRELOAD=$MKLROOT/lib/intel64/libmkl_rt.so
+
+# If one job per node
+export OMP_NUM_THREADS=$SLURM_CPUS_PER_TASK
+srun python -u main.py -s ${SLURM_ARRAY_TASK_ID} -t $MDL_DAYS -n $MDL_NNODES -f $F_PREFIX -d $F_DIR --use_matlab False --optimize True > ${F_DIR}out${SLURM_ARRAY_TASK_ID}.txt 2>&1 &
+
+# If two jobs per nodes
+#export OMP_NUM_THREADS=$(( $SLURM_CPUS_PER_TASK / 2 ))
+#export TASK_ID0=$(( ${SLURM_ARRAY_TASK_ID} * 2 + 0 ))
+#export TASK_ID1=$(( ${SLURM_ARRAY_TASK_ID} * 2 + 1 ))
+
+#srun -c $OMP_NUM_THREADS  --mem-per-cpu=5G -m '*:block:*' python -u main.py -s $TASK_ID0 -t $MDL_DAYS -n $MDL_NNODES -f $F_PREFIX -d $F_DIR --use_matlab False --optimize True > ${F_DIR}out$TASK_ID0.txt 2>&1 &  # is conflicting
+#srun -c $OMP_NUM_THREADS  --mem-per-cpu=5G -m '*:block:*' python -u main.py -s $TASK_ID1 -t $MDL_DAYS -n $MDL_NNODES -f $F_PREFIX -d $F_DIR --use_matlab False --optimize True > ${F_DIR}out$TASK_ID1.txt 2>&1 &
+
+wait  # so it waits for both

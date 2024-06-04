@@ -1,0 +1,73 @@
+#!/bin/bash
+#PBS -l select=1:system=polaris
+#PBS -l place=scatter
+#PBS -l walltime=0:10:00
+#PBS -l filesystems=home
+#PBS -q debug
+#PBS -A radix-io
+
+export MOBJECT_CLUSTER_FILE=mobject.ssg
+export HDF5_RADOS_POOL="test_pool"
+
+IOR_TRANSFER_SIZE="1m"
+IOR_BLOCK_SIZE="32m"
+
+set -eu
+
+# Change to working directory
+cd ${PBS_O_WORKDIR}
+
+# note: disable registration cache for verbs provider for now; see
+#       discussion in https://github.com/ofiwg/libfabric/issues/5244
+export FI_MR_CACHE_MAX_COUNT=0
+# use shared recv context in RXM; should improve scalability
+export FI_OFI_RXM_USE_SRX=1
+
+echo "Setting up spack"
+source $HOME/spack/share/spack/setup-env.sh
+echo "Activating env"
+spack env activate mochi-env
+spack find -fN
+
+# Just in case...
+spack load ior@develop+hdf5 ^hdf5@develop-1.13
+spack load hdf5-rados ^mobject@develop
+
+NNODES=`wc -l < $PBS_NODEFILE`
+NRANKS_PER_NODE=32
+
+NRANKS=$(( NNODES * NRANKS_PER_NODE ))
+
+echo "Starting server"
+
+# Start Mochi server in background via Bedrock using an example configuration and Verbs as the provider
+mpiexec -n 1 bedrock -c mobject_bedrock.json verbs:// &
+
+# Give the server a chance to setup
+sleep 5
+
+# Export environment variables to load HDF5 RADOS VOL connector
+export HDF5_VOL_CONNECTOR="rados"
+export HDF5_PLUGIN_PATH="`spack location -i hdf5-rados`/lib"
+
+echo "Set HDF5 plugin path to `spack location -i hdf5-rados`/lib"
+
+echo "Running IOR"
+
+# Run IOR on 1 node with 32 ranks
+
+# Avoid using HDF5 chunk size option until RADOS VOL can be run against latest IOR development branch
+#mpiexec -n ${NRANKS} ior -a HDF5 -t ${IOR_TRANSFER_SIZE} -b ${IOR_BLOCK_SIZE} --hdf5.chunkSize=8192
+
+mpiexec -n ${NRANKS} ior -a HDF5 -t ${IOR_TRANSFER_SIZE} -b ${IOR_BLOCK_SIZE} -E -k
+
+# There currently appears to be an issue where an installation of IOR that has both
+# The RADOS and HDF5 backends enabled might require one to set the RADOS backend's
+# required arguments even when using the HDF5 backend. If IOR fails with the above
+# command with output stating that some required arguments are missing, the above
+# command should be commented out and the following command should be used instead
+#mpiexec -n ${NRANKS} ior -a HDF5 -t ${IOR_TRANSFER_SIZE} -b ${IOR_BLOCK_SIZE} -E -k --rados.user=foo --rados.pool=bar --rados.conf=baz
+
+# Tear down bedrock server
+bedrock-shutdown -s $MOBJECT_CLUSTER_FILE verbs://
+

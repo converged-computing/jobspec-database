@@ -1,0 +1,23 @@
+#!/bin/bash
+#PBS -l select=1:ncpus=4:mem=40gb:ngpus=1:gpu_type=RTX6000
+#PBS -l walltime=24:00:00
+#PBS -N crnn_0729_single
+#PBS -o pbs_log/
+#PBS -e pbs_log/
+ 
+cd $PBS_O_WORKDIR
+echo "PBS_O_WORKDIR" is $PBS_O_WORKDIR
+
+module load anaconda3/personal
+
+
+export PATH='/rds/general/user/xc2322/home/anaconda3/envs/test_py38/bin/':$PATH
+which python
+
+# grant authority
+nvidia-smi
+
+
+python /rds/general/user/xc2322/home/git_projects/MRI_CRNN/main_crnn.py --model_name='0729_crnn_single' --dataset_index=1
+
+# python /rds/general/user/xc2322/home/git_projects/MRI_CRNN/main_crnn.py --dataset_index=1

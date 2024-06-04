@@ -1,0 +1,29 @@
+#! /bin/bash
+
+#PBS -l nodes=3:ppn=12
+#PBS -l pmem=20gb
+#PBS -l walltime=24:00:00
+#PBS -j oe
+#PBS -o EEJKT_bootstrap_output
+#PBS -A i04_e_g_sc_default 
+
+cd $PBS_O_WORKDIR
+# echo $seed
+
+# Run the job
+
+LD_LIBRARY_PATH=/opt/aci/sw/matlab/R2021a/bin/glnxa64/
+LD_PRELOAD=/opt/aci/sw/knitro/9.1.0/lib/libknitro.so
+
+module purge
+module use /gpfs/group/i04/default/sw/modules
+module load matlab/R2021a
+
+matlab -nodisplay -nosplash -r "bootstrap" -logfile EEJKT_bootstrap.log 
+
+# Finish up
+echo " "
+echo "Job Ended at `date`"
+echo " "
+
+

@@ -1,0 +1,31 @@
+#!/bin/bash -l
+#PBS -l nodes=1:ppn=4
+#PBS -l walltime=00:30:00
+#PBS -l pmem=20gb
+#PBS -A default_project
+#PBS -m abe -M vasileios.lemonidis@student.kuleuven.be
+
+module purge
+module load matlab/R2019a
+
+cd $PBS_O_WORKDIR
+
+export DATA_ROOT=$VSC_DATA/Thesis/SAMPLE_DATA/
+export DATASET_INDEX=2
+export RESULTS_ROOT=$VSC_DATA/Thesis/results/
+export SCRATCH_ROOT=$VSC_SCRATCH/Thesis/
+export THREADS=4
+
+# use temporary directory (not $HOME) for (mostly useless) MATLAB log files
+# subdir in $TMPDIR (if defined, or /tmp otherwise)
+export MATLAB_LOG_DIR=$(mktemp -d -p ${TMPDIR:-/tmp})
+
+# configure MATLAB Compiler Runtime cache location & size (1GB)
+# use a temporary directory in /dev/shm (i.e. in memory) for performance reasons
+export MCR_CACHE_ROOT=$(mktemp -d -p /dev/shm)
+export MCR_CACHE_SIZE=1024MB
+
+
+installation="$(dirname $(dirname $(which matlab)))"
+./run_demoBrainAsymmetryHierarchicalClustering.sh $installation > hierarchical.log
+

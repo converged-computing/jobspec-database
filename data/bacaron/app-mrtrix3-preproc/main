@@ -1,0 +1,17 @@
+#!/bin/bash
+#PBS -l nodes=1:ppn=8,walltime=16:00:00
+#PBS -N bl_mrtrix3_preproc
+#PBS -l vmem=16gb
+
+#needed for bridges
+#moved to resource ENV so that this won't break stampede2
+##SBATCH --gres=gpu:p100:1
+
+#module load cuda/8.0 #for bridges
+
+set -x
+set -e
+
+export SINGULARITYENV_OMP_NUM_THREADS=$OMP_NUM_THREADS
+time singularity exec -e --nv docker://brainlife/mrtrix3:3.0.0 ./mrtrix3_preproc.sh
+

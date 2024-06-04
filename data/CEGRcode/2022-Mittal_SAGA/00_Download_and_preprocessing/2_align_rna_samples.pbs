@@ -1,0 +1,46 @@
+#!/bin/bash
+#PBS -l nodes=1:ppn=4
+#PBS -l pmem=16gb
+#PBS -l walltime=00:30:00
+#PBS -A open
+#PBS -o logs/hs-align.data.log.out
+#PBS -e logs/hs-align.data.log.err
+#PBS -t 1-25
+
+# Depedencies
+#hisat2
+#samtools
+
+module load anaconda3
+source activate rna
+module load gcc/8.3.1 
+module load bowtie2/2.4.2 
+module load samtools
+
+# FIRST CHANGE PATH TO EXECUTE
+YGENOME=/path/to/GENOMES/sacCer3.fa
+WRK=/path/to/2022-Mittal_SAGA
+FQDIR=$WRK/data/RNA-FASTQ
+BAMDIR=$WRK/data/BAM
+
+cd $WRK
+[ -d logs ] || mkdir logs
+[ -d $BAMDIR ] || mkdir $BAMDIR
+
+# Determine FASTQ file for the current job array index
+FQ1=`ls $FQDIR/*_R1.fastq.gz | head -n $PBS_ARRAYID | tail -1`
+BASE=`basename $FQ1 "_R1.fastq.gz"`
+FQ=$FQDIR/$BASE
+BAM=$BAMDIR/$BASE\_hisat2
+
+echo "($PBS_ARRAYID) Aligned $BASE reads with hisat > $BAM"
+hisat2 -I 10 -X 700 --very-sensitive --no-unal --no-mixed --no-discordant -p 4 \
+	-x $YGENOME -1 $FQ\_R1.fastq.gz -2 $FQ\_R2.fastq.gz \
+	| samtools sort \
+	> $BAM.bam
+
+echo "($PBS_ARRAYID) Indexing..."
+samtools index $BAM.bam
+
+echo "($PBS_ARRAYID) Complete!"
+

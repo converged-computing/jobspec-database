@@ -1,0 +1,1586 @@
+#!/bin/bash
+#This script is used to automate the generation of the KASCADE veritas Te, 
+# ShwrVBF and VBF files
+# By:
+# Glenn Sembroski
+# Dept. of Physics and Astronomy
+# Purdue University
+# sembrosk@purdue.edu
+##########################################################################
+
+# This will loop over all combinations of $4(Zn) and $5(Az) entries
+
+LimitSubmissions=enabled      #Enable if you want to generate limit number of 
+                              #shower submitted to a queue.
+#Cleanup=enabled                
+
+#DisableSleep=enabled           #Don't wait for files to finish. ususally use 
+                                #only when we have a a group of small runs of 
+                                #GenerateTeFiles and want to load up the 
+                                #cluster
+#CheckByPBS=enabled
+#ExitOnTeCreationFailure=enabled  
+
+JobArray=enabled             #For Cori right now 
+
+############################################################
+# Force the Check files to match shower entry numberes to those used in 
+#ksProduction.scr
+############################################################
+EntryGEStart=1          #Gammas and Electrons 
+                        #This for the checks and for TE gen only for now.
+#EntryGEStart=43 #36550GeV
+EntryGEStart=45 #52265GeV
+
+#EntryGEEnd=43  #36550GeV
+EntryGEEnd=45  #52265GeV
+
+
+EntryPStart=1
+#EntryPStart=17      #350 GeV     #GroupA start
+#EntryPStart=18      #418 GeV
+#EntryPStart=19      #500 GeV
+#EntryPStart=26      #1748 GeV
+#ntryPStart=30      #3575 GeV      #group B start
+#EntryPStart=45      #52265 GeV
+
+#EntryPEnd=20       #598GeV
+#EntryPEnd=21       #715GeV
+#EntryPEnd=22       #855 GeV
+#EntryPEnd=23       #1022 GeV
+#EntryPEnd=25       #1462 GeV
+#EntryPEnd=26       #1787 GeV
+#EntryPEnd=29       #2990         #group A end
+#EntryPEnd=30       #3575       
+#EntryPEnd=31       #4275
+#EntryPEnd=32       #5112GeV
+#EntryPEnd=35       #8741GeV
+#EntryPEnd=38       #14948 GeV
+#EntryPEnd=39       #17975 GeV
+EntryPEnd=45       #52265 GeV    #group B end
+
+EntryHe4Start=5
+#EntryHe4Start=17    #350 GeV     #group A start
+#EntryHe4Start=18    #418 GeV  
+#EntryHe4Start=19    #500 GeV
+#EntryHe4Start=26    #1748 GeV
+#ntryHe4Start=30    #3575 GeV       #group B start
+
+
+#EntryHe4End=15     #244.5GeV
+#EntryHe4End=18     #418 GeV
+#EntryHe4End=20     #598GeV
+#EntryHe4End=21     #715GeV
+#EntryHe4End=23     #1022 GeV
+#EntryHe4End=24     #1223 GeV
+#EntryHe4End=25     #1462 GeV
+#EntryHe4End=29     #2990         #group A end
+#EntryHe4End=30     #3575       
+#EntryHe4End=31     #4275
+#EntryHe4End=32     #5112 GeV
+#EntryHe4End=35     #8741 GeV
+#EntryHe4End=38     #14948 GeV
+#EntryHe4End=40     #21375 GeV
+EntryHe4End=45     #52265 GeV      #groupB end
+
+
+PTYPE=$2
+echo PTYPE: $PTYPE
+
+if [ ${PTYPE:0:2} = "CR" ]; then
+  if [ "$PTYPE" = "CRA" ]; then
+    EntryPStart=17
+    EntryPEnd=29
+    EntryHe4Start=17
+    EntryHe4End=29
+  elif [ "$PTYPE" = "CRB" ]; then
+    EntryPStart=30
+    EntryPEnd=45
+    EntryHe4Start=30
+    EntryHe4End=45
+  elif [ "${PTYPE:0:3}" = "CRC" ]; then
+    ENTRY=${PTYPE##CRC}
+    if [ -n $ENTRY ]; then   #Its a single enrty spec. Ex CRC26.
+      EntryPStart=$ENTRY
+      EntryPEnd=$ENTRY
+      EntryHe4Start=$ENTRY
+      EntryHe4End=$ENTRY
+      DEFSHWRFLAG="CRC" 
+      echo 'KSAuto: Single CRC Entry Specified'
+    else
+      echo 'KSAuto: Fatal-No entry given for CRC spec.'
+      exit
+    fi
+  elif [ -n ${PTYPE##CR} ]; then  #If no range defulat to inital spec.
+    ENTRYRANGE=${PTYPE##CR}   #get the range if there is one
+    EntryPStart=${ENTRYRANGE%%-*}
+    EntryHe4Start=${ENTRYRANGE%%-*}
+    EntryPEnd=${ENTRYRANGE##*-}
+    EntryHe4End=${ENTRYRANGE##*-}
+    #Now do a check that they indeed were set.
+    if [ ! -n "EntryPStart" ] || [ ! -n "$EntryPEnd" ]; then
+      echo VAAuto:Fatal--EntryRange improperly defined: #PTYPE
+      echo VAAuto: Should be of the form CR1-25 oe CR4-4
+      exit 
+    fi
+    echo 'KSAuto: Limited EntryRanges Specified'
+  fi
+  echo EntryPStart: $EntryPStart        #If no range defulat to inital spec(at top).
+  echo EntryHe4Start: $EntryHe4Start
+  echo EntryPEnd: $EntryPEnd
+  echo EntryHe4End: $EntryHe4End
+fi
+
+if [ "$PTYPE" = "P" ]; then
+ EntryGEStart=$EntryPStart
+ EntryGEEnd=$EntryPEnd
+fi
+if [ "$PTYPE" = "He4_" ]; then
+ EntryGEStart=$EntryHe4Start
+ EntryGEEnd=$EntryHe4End
+fi
+
+#############################################################
+function commandEnable()
+{
+  if [ "$1" = "ListCommands" ]; then
+    usage
+    echo '***KSAuto.scr Valid Commands:'
+    echo '    #------------------------      #------------------------ '  
+    echo '    # KASCADE ksTrigger TE Files   # VBF Shower File Generation'
+    echo '    #  Uses arguments $1-$7        # Uses arguments $1-${10}'  
+    echo '    #------------------------      #------------------------ '
+    echo '    GenerateTeFiles                BuildMDLAomegaConfig'
+    echo '    HTARTeFilesFromArchive         GenerateShowerVBFFiles'
+    echo '    CheckGeneratedTeFiles          CheckGeneratedShwrVBFFiles'
+    echo '    HTARTeFilesToArchive           HTARShowerVBFFilesFromArchive'
+    echo '    CheckHTARTeFiles(inoperative)  HTARShowerVBFFilesToArchive'
+    echo
+    echo '    #------------------------'
+    echo '    # VBF files'
+    echo '    #  Uses arguments $1-${10}'
+    echo '    #------------------------'
+    echo '    GenerateZnAzVBFFile'
+    echo
+    exit
+  else
+    if [ "$1" = "GenerateTeFiles" ]; then eval $1=enable; return 0; fi;
+    if [ "$1" = "HTARTeFilesFromArchive" ]; then eval $1=enable; return 0; fi;
+    if [ "$1" = "CheckGeneratedTeFiles" ]; then eval $1=enable; return 0; fi;  
+    if [ "$1" = "HTARTeFilesToArchive" ]; then eval $1=enable; return 0; fi;     
+    if [ "$1" = "CheckHTARTeFiles" ]; then eval $1=enable; return 0; fi;
+    if [ "$1" = "BuildMDLAomegaConfig" ]; then eval $1=enable; return 0; fi;
+    if [ "$1" = "GenerateShowerVBFFiles" ]; then eval $1=enable; return 0; fi;         
+    if [ "$1" = "CheckGeneratedShwrVBFFiles" ]; then eval $1=enable; return 0; fi;       
+    if [ "$1" = "HTARShowerVBFFilesFromArchive" ]; then eval $1=enable; return 0; fi;       
+    if [ "$1" = "HTARShowerVBFFilesToArchive" ]; then eval $1=enable; return 0; fi;  
+    if [ "$1" = "GenerateZnAzVBFFile" ]; then eval $1=enable; return 0; fi;
+    echo ' KSAuto: Invalid Command: '$1
+    echo ' KSAuto: Do "./KSAuto ListCommands" for a list of valid commands.'
+    exit
+  fi
+}
+###########################################################################
+
+function usage()
+{
+  echo '***KSAuto.scr: Usage:'
+  echo '  $1: Command. Do "KSAuto.scr ListCommands" to see list.'
+  echo '  $2 Type spec: Ex: G, P, He4_, CR, CRA, CRB, CRC27, CR26-30 or E'
+  echo '  $3 Season spec: Winter (ATM21) Summer (ATM22) Ex: W or S'
+  echo '  $4 ArraySpec: Whipple, OldArray, NewArray, UpgradeArray. Ex: W, OA, NA or UA'
+  echo '  $5 Zn List: Ex: 1,10,20,30,40,50,60,70 or "All"'
+  echo '  $6 Az List: Ex: 0,45,90,135,180,225,270,315 or "All"'
+  echo '  $7 Threshold Spec (+MoonFilter opt): Ex:  45mv or 50mv or M50mv of M25mv'
+  echo '  $8 MDL Spec for VBF files: Ex: MDL12UA or MDL15NA of MDL8OA'
+  echo '  $9 Tele-Detector Config(ksAomega*.config): Ex:  ABCD or wxyz'
+  echo '  ${10} Data Reference File (in lcl dir): Ex:  64594StdCuts.root or 63559.root'
+  echo
+  echo '  Ex: ./KSAuto.scr GenerateTeFiles G W UA 20 All 45mv MDL12UA WXYZ 64954.root'
+  echo
+}
+###########################################################################
+
+function CheckQsubSubmissions()
+#$1  Max HTAR Qsubs active at one time
+#$2  Running qsub List File name
+{
+  #############################################################
+  # File RunningQsubListFile is a list of the names of the sgeFile.Done files 
+  # that will be generated when the various running .qsub jobs complete.
+  # Until the jobs complete the *.Done don't exist.  We count the not existing
+  # files. If less than $1 files don't exist  which means the jobs are still 
+  # active, we sleep for 60 seconds and try again. When a *.Done is  found to 
+  # exist it is removed from the RunningQsubListFile file and this function 
+  # returns so a new submission can be made. Other wise the code just sits 
+  # here sleeping for 60 sec between checks.
+  ################################################################
+  RunningQsubListFile=$2   
+  RunningQsubListTmp=$2'.tmp'
+  if [ ! -e "$RunningQsubListFile" ]; then  #empty (just starting up)
+     echo no $RunningQsubListFile
+     return
+  fi
+  if [ -e "$RunningQsubListTmp" ]; then
+      rm -v $RunningQsubListTmp
+  fi
+
+  #echo $2':'
+  #cat $2
+
+  let count=$1
+  while test "$count" -ge  $1 
+   do
+   let count=0
+   {
+    while read QsublogFile
+     do
+	if [ -e "$QsublogFile" ]; then
+	    rm $QsublogFile
+	else
+	    count=$((count+1))
+            #echo count During: $count
+	    echo $QsublogFile >>$RunningQsubListTmp
+        fi
+     done
+   }<$RunningQsubListFile
+
+   if [ -e "$RunningQsubListTmp" ]; then
+     cp $RunningQsubListTmp  $RunningQsubListFile
+     rm $RunningQsubListTmp
+   else
+     rm $RunningQsubListTmp
+     #echo empty count: $count
+   fi
+   #echo countAfter: $count
+
+   if [ $count -ge $1 ]; then       #We are full, wait a bit and try again
+     sleep 120
+   fi
+  done
+}
+####################################################################
+
+function checkRunningJobs()
+#$1 Job ID List
+#$2 Zn_Az
+{
+  RunningList=RunningList$2'.dat'
+  SingleRunList=singleRunList$2'dat'
+
+  if [ -s $RunningList ]; then
+      rm $RunningList
+  fi
+  {
+    while  read jobID;  do
+      qstat $jobID &>$SingleRunList
+      cat $SingleRunList | grep -v Unknown >>$RunningList
+    done
+  } <$1
+
+  rm $SingleRunList
+  if [ -s  $RunningList ]; then
+    rm $RunningList
+    return 1
+  else
+    rm $RunningList
+    return 0
+  fi
+}
+###########################################################################
+
+function checkFilesExist()
+#$1 FileDir
+#$2 TeName
+#$3 Particle type
+#$4 File Type (TE or VBF)
+#$5 EntryStart
+#$6 EntryEnd
+#$7 Threshold speck (for file type VBF only)
+#$8 Alternate File Dir ( used for ShowerVBF only, "dummy" otherwise)
+#$9 Special flag for DefineShowers in KSAutoFileCheck (MDL, CRC etc)
+{
+  #echo checkFilesExist:args:1: $1' 2:' $2 ' 3:'$3' 4:' $4' 5:' $5' 6:' $6' 7:' $7
+ 
+  cd $lcl
+  FileDir=$1
+  TeName=$2
+  Particle=$3
+  FileType=$4
+  EntryStart=$5
+  EntryEnd=$6
+  Threshold=$7
+  FileDirAlt=$8
+  SPECIALFLAG=$9
+  #Check we actually got some files (ie made the Directory)
+  if [ ! -d $FileDir ]; then
+      echo 'KSAuto: Directory '$FileDir' does not exist!'
+      if [ "$FileDirAlt" != "dummy" ]; then
+	  if [ ! -d $FileDirAlt ]; then
+	      echo 'KSAuto: Alternate Directory '$FileDirAlt' does not exist!'
+	      echo 'KSAuto: Apparently no ' $4 ' files were generated!'
+	      echo 'KSAuto: *************Exiting. Cluster failure?********'
+	      exit
+	  else
+	      FileDir=$FileDirAlt
+	  fi
+      else
+	  echo 'KSAuto: Apparently no ' $4 ' files were generated!'
+	  echo 'KSAuto: *************Exiting. Cluster failure?********'
+	  exit
+     fi
+  fi
+  
+  #We no long use a List but let the KSAutoFileCheckOK.scr script generate 
+  #its own list to check
+        ##Get a list of the files into Check$ZnAz.txt
+  #But we do need a file name for the results.
+  CheckListFiles='Check'$ZnAz'.txt'
+  echo CheckListFiles: $CheckListFiles
+
+  #ls |xargs -n1 >$lcl'/'$CheckListFiles
+  cd $lcl
+
+  #checking this directory  for all files that should be there takes 5 - 10 min
+  #thus , to insure we don't over run the 30 min time limit
+  #we will have to submit the te file check and sleep until it finishes
+  echo 'KSAuto: Checking for all '$FileType' files in: '$FileDir
+       
+  Result=$CheckListFiles'.Result'
+  if [ -e "$Result" ]; then
+      rm $Result
+  fi
+  
+  CheckList $CheckListFiles $TeName $Particle $FileType $EntryStart $EntryEnd $Threshold $FileDir $SPECIALFLAG
+       
+  date
+  cd $lcl
+  if [ -s $Result ]; then
+     cat  $Result
+     iFilesNotFound=$(cat $Result | wc -l)
+     if [ -n "$ExitOnTeCreationFailure" ]; then
+       echo 'KSAuto: Exiting on File check failure'
+       echo 'KSAuto: Goodbye'
+       exit
+     fi
+     return 1
+  else
+     echo 'KSAuto: All files in Directory: '$FileDir' are present!'
+     return 0
+  fi
+}
+#############################################################################
+
+function CheckList()
+
+#$1 File name (with .Results added  to save bad files names in
+#$2 is base name of all files.ex: WVG10_315Deg2D
+#$3 Particle type (P He4_ G or E)
+#$4 File Type ( TE or VBF)
+#$5 EntryStart
+#$6 EntryEnd
+#$7 Threshold  VBF only Ex: 45mv or 50mv (needed only for FileType= VBF)
+#$8 File Dir 
+#$9 SpecialFlag for DefineFiles
+  #echo CheckkList:Args:1: $1' 2:' $2 ' 3:'$3' 4:' $4' 5:' $5' 6:' $6' 7:' $7 ' 8:' $8 ' 9:' $9
+{  FileList=$1
+  TeName=$2
+  Particle=$3
+  FileType=$4
+  EntryStart=$5
+  EntryEnd=$6
+  Threshold=$7
+  FILEDIR=$8
+  SPECIALFLAG=$9
+  if [ -n "$CheckByPBS" ]; then
+    #build a submission .pbs file
+    sgeFile=$lcl'/'$TeName'Check'$FileType'.pbs'
+    if [ ! -n "$FUSION" ]; then
+      echo "#"PBS $QUEUE                                        >$sgeFile
+    fi
+    echo "#"PBS -l walltime=01:00:00                              >>$sgeFile
+    echo "#PBS " $MEMREQUEST                                      >>$sgeFile
+    if [ -n "$PURDUE" ]; then
+      echo "#"PBS -l nodes=1:ppn=1                                >>$sgeFile
+      echo "#"PBS -l naccesspolicy=shared                         >>$sgeFile
+      echo module load devel                                      >>$sgeFile
+    fi
+    if [ -n "$PURDUE" ]; then
+      echo source /etc/profile                                    >>$sgeFile
+      echo module load gcc/4.7.2                                  >>$sgeFile
+    fi
+    echo cd $lcl                                                  >>$sgeFile
+    echo $lcl/KSAutoFileCheck.scr $lcl'/'$FileList $TeName \\     >>$sgeFile
+    echo $Particle $FileType $EntryStart $EntryEnd $Threshold \\  >>$sgeFile
+    echo $FILEDIR $SPECIALFLAG                                    >>$sgeFile
+    chmod 700 $sgeFile
+
+    $QSUB -e $sgeFile'.err' -o $sgeFile'.log' $sgeFile >$CHECKLOG
+
+    CHECKLOG=$lcl'/'$FileType'Check'$ZnAz'.log'
+    CLOG=$FileType'C'$ZnAz'.log'
+    cat $CHECKLOG | grep $JobIDHost >$CLOG
+    #rm $CHECKLOG
+    echo "KSAuto: Running KSAutoFileCheck on PBS: Entries: " $EntryStart "-" $EntryEnd
+    echo "KSAuto: Sleeping until CheckFile finishes. "
+    runsNotDone=1
+    while test $runsNotDone -eq 1 
+      do
+       sleep 60s
+       checkRunningJobs $CLOG $ZnAz
+       let runsNotDone=$?
+      done
+    #rm $CLOG
+    #rm $sgeFile
+    return
+  else
+   #Run interactivly
+   cd $lcl
+   echo "KSAuto: Running KSAutoFileCheck interactivly: Entries: " $EntryStart "-" $EntryEnd
+
+   $lcl/KSAutoFileCheck.scr $lcl'/'$FileList $TeName $Particle $FileType $EntryStart $EntryEnd $Threshold  $FILEDIR $SPECIALFLAG
+   return
+  fi
+} 
+#########################################################################
+
+function SubmitHtarToArchive()
+{
+  #$1 directory that holds directory we want to archive to
+  #$2 Directory we want to archive from
+  #$3 Specific Shower directory we want to archive)
+  #$4 Alternate  Specific Shower directory we want to archive
+  #$5 List of files to look for to determine completion.
+  #$6 Max HTAR programs to run at a time
+
+  Dst=$1    #Archive directory
+  SourceDir=$2         #Disk Base Directory
+  ShDr=$3           #filename (Directiory to archive)
+  QsubDoneList=$5
+  MaxHTARQsubs=$6
+  ALTSHDR=$4
+  echo Dst: $Dst
+  echo SourceDir: $SourceDir
+  echo ShDr: $ShDr
+  echo ALTSHDR: $ALTSHDR
+  #################################
+  #Wait for room for next file in queue
+  #################################
+  
+  if [ -n  "$LimitSubmissions" ]; then
+    CheckQsubSubmissions  $MaxHTARQsubs  $QsubDoneList 
+  fi 
+
+  local=$PWD
+  cd $SourceDir 
+  pwd
+  if [ ! -e "$ShDr" ]; then
+    echo 'KSAuto: '$SourceDir'/'$ShDr' Does not exist'
+    if [ -n $4 ]; then
+      if [ -e "$ALTSHDR" ]; then
+        ShDr=$ALTSHDR
+        echo 'KSAuto: Switching to '$SourceDir'/'$ShDr
+      else
+        echo 'KSAuto: '$SourceDir'/'$ShDr' Also does not exist. Exciting'
+        cd $local
+        exit
+        fi
+    else
+      cd $local
+      exit
+    fi
+  fi
+  cd $local
+
+  #build a submission .pbs file
+
+  ###########################################
+  # special for CORI and EDSION  htar/hsi transfer  queue
+  ###########################################
+  if [ -n "$CORI" ]; then
+	QSUB='sbatch -M escori'
+  fi
+
+  sgeFile=$ShDr'HTAR.pbs'
+  sgeDoneFile=$sgeFile'.Done'
+  if [ -n  "$LimitSubmissions" ] || [ -e "$sgeDoneFile" ]; then
+      rm $sgeDoneFile
+  fi
+
+  sgeFile=$lcl'/'$sgeFile
+  echo KSAuto: SubmitHtarToArchive:sgeFile: $sgeFile
+
+  echo "#"!/bin/bash -l                         >$sgeFile
+  if [ -n "$CORI" ] ; then
+    echo "#"SBATCH -q xfer                     >>$sgeFile
+    echo "#"SBATCH $WALLTIME                   >>$sgeFile
+  else
+    echo "#"PBS $QUEUE                         >>$sgeFile
+    echo "#"PBS $WALLTIME                      >>$sgeFile
+    echo "#PBS " $MEMREQUEST                   >>$sgeFile
+    if [ -n "$PURDUE" ]; then  
+      echo source /etc/profile                 >>$sgeFile
+      echo module load gcc/4.7.2               >>$sgeFile
+    fi
+  fi
+  echo cd $SourceDir                           >>$sgeFile
+  echo htar -cvf  $Dst'/'$ShDr'.tar  ./'$ShDr  >>$sgeFile
+
+  if [ -n "$LimitSubmissions" ]; then
+    echo adding: $sgeDoneFile
+    echo $sgeDoneFile >>$QsubDoneList #add the next one
+    echo 'echo Done >'$sgeDoneFile             >>$sgeFile
+  fi
+  chmod 700 $sgeFile
+  HTARLOG=$local'/KSHTAR'$ZnAz'To.log'
+  echo KSAuto: SubmitHtarToArchive:HTARLog: $HTARLOG
+
+  $QSUB -e $ShDr'HTARTo.pbs.err' -o $ShDr'HTARTo.pbs.log' $sgeFile >$HTARLOG
+  cd $local
+}
+#########################################################################
+
+function SubmitHtarFromArchive()
+{
+  #$1 Archive directory where our tar file exists
+  #$2 Destination directory where we want to unTar into.
+  #$3 name of the Tar file we want to untar(without .tar extention).
+  #$4 List of files to look for to determine completion.
+  #$5 Max HTAR programs to run at a time
+
+  local=$PWD
+
+  ArchiveDir=$1          #Archive direxctory
+  DstDir=$2      #Base Disk directory
+  Source=$3              #Base Tar file name
+  SourceTarFile=$3'.tar'
+  QsubDoneList=$4
+  MaxHTARQsubs=$5
+
+  echo 'Src: '$ArchiveDir'/'$SourceTarFile 
+
+  #################################
+  #Wait for romm for next file in queue
+  #################################
+  
+  if [ -n  "$LimitSubmissions" ]; then
+    CheckQsubSubmissions  $MaxHTARQsubs  $QsubDoneList 
+  fi 
+
+  #build a submission .pbs file
+  if [ -n "$CORI" ]; then
+	QSUB='sbatch -M escori'
+  fi
+  
+  sgeFile=$Source'From.pbs'
+  sgeDoneFile=$sgeFile'.Done'
+  if [ -n  "$LimitSubmissions" ] || [ -e "$sgeDoneFile" ]; then
+      rm $sgeDoneFile
+  fi
+  sgeFile=$lcl'/'$sgeFile
+  echo "#"!/bin/bash -l                                       >$sgeFile
+  if [ -n "$CORI" ] ; then
+    echo "#"SBATCH -q xfer                                   >>$sgeFile
+    echo "#"SBATCH $WALLTIME                                 >>$sgeFile
+  else
+    echo "#"PBS  $QUEUE                                      >>$sgeFile
+    echo "#"PBS  $WALLTIME                                   >>$sgeFile
+    echo "#PBS " $MEMREQUEST                                 >>$sgeFile
+    if [ -n "$PURDUE" ]; then
+      echo source /etc/profile                               >>$sgeFile
+      echo module load gcc/4.7.2                             >>$sgeFile
+    fi
+  fi
+  echo cd $DstDir                                            >>$sgeFile
+  echo htar -xvf  $ArchiveDir'/'$SourceTarFile   \\          >>$sgeFile
+  echo '>'$local'/'$Source'.log'                             >>$sgeFile
+
+  if [ -n "$LimitSubmissions" ]; then
+    echo adding: $sgeDoneFile
+    echo $sgeDoneFile >>$QsubDoneList #add the next one
+    echo 'echo Done >'$sgeDoneFile                           >>$sgeFile
+  fi
+  chmod 700 $sgeFile
+  HTARLOG=$local'/KSHTAR'$ZnAz'From.log'
+  $QSUB -e $Source'HTARFrom.pbs.err' -o $Source'HTARFrom.pbs.log' $sgeFile >$HTARLOG
+  cd $lcl
+}
+##########################################################################
+
+function SubmitQsubJobs()
+#################################################
+#$1  List of .qsub jobs to submit
+#$2  file with all the names of the *.qsub.Done files the submitted jobs will 
+#    write when they finish
+#$3  Maximum jobs to have running or waiting to run in the queue
+# Due to differences in memory requirments for Te and ShowerrVBF jobs we also
+# use the defined string MEMREQUEST. If exists is uaually has a value like
+#  MEMREQUEST=' -l pvmem=30GB '
+{
+  QsubList=$1
+  QsubDoneList=$2
+  MaxQsubs=$3
+
+  if [ -e "$QsubDoneList" ]; then
+    rm $QsubDoneList
+  fi
+
+  if [[ -n "$CORI"  ] && [ -n "$JobArray" ]; then
+    ##############################################################
+    # If we are on Cori and JobArrays are enabled we need to take 
+    # each file 
+    # from the QsubList, remove all the SBATCH commands and give each of 
+    # these new files an indexed name(unique also) so that they can be 
+    # called in a job array submission
+    ############################################################## 
+    GetUniqueNumber           #UNIQUE will idintify this run
+    sgeFile=KS$UNIQUE.ja      #Job array submission file name
+    echo 'KSAuto: Job Array Generartion. Job Array File Name: ' $sgeFile
+    let sbIndex=0             $Job array index
+    {
+     while read  sgeFileFull
+      do
+       #Remove SBATCH lines and give file indexed name
+       let sbIndex="sbIndex+1"
+	   if [ "$sbIndex" -eq "1" ]; then
+	     sgeIndexPath=${sgeFileFull%/*}   #want same dir as input files
+	   fi
+       sgeIndexFile=$sgeIndexPath'/'$sgeFile'-'$sbIndex
+	   sed '/SBATCH/d' <$sgeFileFull >$sgeIndexFile  #Removes SBATCH lines
+       chmod 700 $sgeIndexFile
+      done
+    }<$QsubList
+     
+    #Now build and submit Jobarray SBATCH file
+    SgeFilePBSCmds $sgeFile
+
+    echo "#"SBATCH --array=1-$sbIndex                       >>$sgeFile
+    echo $sgeIndexPath'/'$sgeFile'-'\$'SLURM_ARRAY_TASK_ID' >>$sgeFile  
+      
+    chmod 775 $sgeFile
+    $QSUB -e $sgeFile'.err' -o $sgeFile'.log' $sgeFile
+  else
+    ###################################################################
+    # Normal submission from the QsubList  
+    ###################################################################
+    { 
+     while read sgeFileFull
+      do
+        CheckQsubSubmissions  $MaxQsubs $QsubDoneList 
+                                     #Gets here when we can submit the next job
+        sgeFile=${sgeFileFull##*/}
+        echo $sgeFile
+        local sgeDoneFile=$sgeFileFull'.Done'
+        if [ -e "$sgeDoneFile" ]; then
+          rm $sgeDoneFile
+        fi
+        echo adding: $sgeDoneFile
+	    echo $sgeDoneFile >>$QsubDoneList #add the next one
+       
+        $QSUB $MEMREQUEST -e $sgeFile'.err' -o $sgeFile'.log' $sgeFileFull 
+        #For Purdue pause between submissions
+        if [ -n "$PURDUE" ] ; then
+          sleep 2
+        fi
+      done
+    }<$QsubList
+  fi
+}
+###########################################################################
+
+
+############################################################################
+# Main
+############################################################################
+
+###########################################
+# First check to see that KASCAEE is loaded
+###########################################
+if [ ! -n "$KASCADE" ]; then
+   module load KASCADE
+   module list
+   if [ ! -n "$KASCADE" ]; then
+      echo 'KSAuto: Fatal--Unalble to module load KASCADE susessfully!'
+      exit
+   fi
+fi
+
+##################
+# Bring in GetUniqueNumber function
+##################
+if [ ! -e UtilityFunctions.scr ]; then
+    cp $KASCADEBASE/scripts/UtilityFunctions.scr ./
+fi
+source UtilityFunctions.scr
+
+if [ ! -n "$1" ]; then
+  usage
+  commandEnable "ListCommands"   #List all commands and exits
+fi
+
+commandEnable $1   #This will enable the specified command or exit if its not a 
+                   #known command.
+SPECPART=$2 
+SPECSEA=$3
+SPECCFG=$4
+SPECZN=$5
+SPECAZ=$6
+SPECTHR=$7
+SPECMDL=$8
+ARRAYCONFIG=$9
+REFDATAFILE=${10}
+
+
+if  [ ${SPECPART:0:2} = "CR" ]; then
+    SPECPART="CR"
+fi
+
+echo SPECPART: $SPECPART
+
+lcl=$PWD
+source /etc/profile
+
+
+SetupForHost              #From UtilitiesFunctions.scr
+
+
+if [ -n "$CORI" ]; then
+  VDirBase=$SCRATCH'/simulations/veritas/'
+  JobIDHost='cori'
+  WALLTIME='-t 12:00:00'
+  if [ -n "$LimitSubmissions" ]; then	
+    let MaxQsubs=$SUBMITLIMIT
+    let MaxHTARQsubs=8
+  fi
+fi
+
+if [ -n "$BELL" ]; then  
+  VDirBase=$SCRATCH'/simulations/veritas/'
+  JobIDHost='bell-adm'
+  if [ -n "$LimitSubmissions" ]; then
+     let MaxQsubs=$SUBMITLIMIT
+     let MaxHTARQsubs=9  
+  fi
+fi
+
+
+if [ -n "$FUSION" ]; then 
+  ##############################################################
+  # Fusion has no Archive so none of the HTAR using options are viable  
+  ############################################################## 
+  echo ***ANL Fusion Cluster***
+  if [ -n "$HTARTeFilesFromArchive" ] || [ -n "$HTARTeFilesToArchive" ]  || [ -n "$CheckHTARTeFiles" ]  || [ -n "$HTARShowerVBFFilesFromArchiv" ]e  || [ -n "$HTARShowerVBFFilesToArchive" ]; then
+    echo KSAuto: Fatal-Fusion has no Archive so none of the HTAR using options are viable
+    exit
+  fi
+  VDirBase=$SCRATCH'/simulations/veritas/'
+  JobIDHost='fmgt2'
+  #No queue specification necessary for Fusion. It figures it out.
+  if [ -n "$LimitSubmissions" ]; then
+     let MaxQsubs=$SUBMITLIMIT
+     #No Archive for fusion.
+  fi
+fi
+
+if [ -n "$LimitSubmissions" ]; then
+ echo "KSAuto: Overall qsub active submissions being limited to "$MaxQsubs 
+ echo "KSAuto: Overall HTAR active submissions being limited to "$MaxHTARQsubs
+fi
+
+#######################################################################
+
+TELESPEC=$SPECCFG
+
+if [ "$TELESPEC" = "W" ]; then   #Whipple telescope (not really implimented, 
+   DirPSF=V190
+   TELCONFIG=W
+fi
+if [ "$TELESPEC" = "OA" ]; then  #Old Veritas Array (Before T1 move, Old PMTs,
+   TELCONFIG=O
+   DirPSF=V330
+fi
+if [ "$TELESPEC" = "NA" ]; then  #New Veritas Array (after T1 move, Old PMTs,
+   DirPSF=V190
+   TELCONFIG=N
+fi
+if [ "$TELESPEC" = "UA" ]; then #Upgrade Veritas Array (after T1 move, New PMTs,
+   DirPSF=V190                   #with new  V190 PSF)
+   TELCONFIG=U
+fi
+
+if  [ ! -n "$TELCONFIG" ]; then
+ echo ' KSAuto: Illegal Array Specification: ' $TELESPEC 'Can be OA or NA or UA only.'
+ exit
+fi
+
+
+
+Threshold=$SPECTHR
+MoonFilterSpec=${Threshold:0:1}  #Get leading M if there is one
+
+if [ "$MoonFilterSpec" = "M" ];then    #Moon filter else $MOON is blank.
+   MOON=M
+   Threshold=${Threshold:1}      #Strip off the M
+fi
+
+#Check if this is for 2D offsets, blank if not
+if [ "$SPECPART" = "G" ] || [ "$SPECPART" = "E" ]; then
+ WblFilterSpec="2D"
+ EnergyStart=$EntryGEStart
+ EnergyEnd=$EntryGEEnd
+fi
+
+if [ "$SPECPART" = "P" ]; then 
+ EnergyStart=$EntryPStart     #CR hadled seperatly in GenerateTE
+ EnergyEnd=$EntryPEnd
+fi
+
+if  [ "$SPECPART" = "He4_" ]; then
+ EnergyStart=$EntryHe4Start     #CR hadled seperatly in GenerateTE
+ EnergyEnd=$EntryHe4End
+fi
+
+
+WblFilterSpec=$WblFilterSpec$MOON    #Add the M if needed or all could even be blank
+
+#To find the Zn amd AZ combinations first put $SPECZN and $SPECAZ into arrays
+#This is tricky. We save away the present Internal Filed Seperator and then
+# set IFS to a comma. We then use the -a option with the read command to 
+# read in our stings into arrays. Then we restore the IFS.
+
+SAVEIFS=$IFS
+if [ $SPECZN = "All" ]; then
+  Zenith=([0]=1 10 20 30 40 50 60 70)
+else  
+  IFS=, read -a Zenith <<< "$SPECZN"
+fi
+
+
+if [ $SPECAZ = "All" ]; then
+  Azimuth=([0]=0 45 90 135 180 225 270 315)
+else  
+  IFS=, read -a Azimuth <<< "$SPECAZ"
+fi
+
+IFS=$SAVEIFS
+
+if [ ! -e "$lcl/KSAutoFileCheck.scr" ]; then
+  cp -v $KASCADEBASE'/scripts/KSAutoFileCheck.scr' $lcl
+fi
+
+if [ -n "$LimitSubmissions" ]; then
+  GetUniqueNumber
+  QsubLogs='Running'$SPECSEA$TELCONFIG$UNIQUE'KASCADEQsubLogs.txt'
+  QsubHTARLogs=$lcl'/Running'$UNIQUE'HTARLogs.txt'
+  if [ -n "$GenerateTeFiles" ] || [ -n "$GenerateShowerVBFFiles" ]; then
+    QsubFileNameList='KS'$SPECSEA$TELCONFIG$UNIQUE'AutoqsubList'
+    echo QsubFileNameList: $QsubFileNameList
+    if [ -e "$QsubFileNameList" ]; then
+	rm $QsubFileNameList
+    fi
+    if [ -e "$QsubLogs" ]; then
+      rm $QsubLogs                     #Just some cleanup if previous run died.
+    fi
+  else
+    if [ -e "$QsubHTARLogs" ]; then
+      rm $QsubHTARLogs                #Just some cleanup if previous run died.
+    fi
+  fi
+fi
+
+if [ -n "$GenerateTeFiles" ]; then
+  KSPROD=$lcl'/ksProduction.scr'
+  if  [ ! -e "$KSPROD" ]; then
+    echo 'KSAuto: Bringing in a new ksProduction.scr'
+    cp -v $KASCADEBASE/scripts/ksProduction.scr $KSPROD
+  fi
+fi
+if [ -n "$GenerateShowerVBFFiles" ]; then
+  KSPROD=$lcl'/../simulations/veritas/ksProduction.scr'
+  if  [ ! -e "$KSPROD" ]; then
+    echo 'KSAuto: Bringing in a new ksProduction.scr'
+    cp -v $KASCADEBASE/scripts/ksProduction.scr $KSPROD
+  fi
+fi
+
+#########################################################################
+#now we loop
+#Zenith
+let izn=0
+let iznEnd=${#Zenith[@]}
+let iFilesNotFound=0
+while test $izn -lt $iznEnd
+  do
+
+   #Iterate through Azimuth
+   let kaz=0
+   let kazEnd=${#Azimuth[@]}
+   while test $kaz -lt $kazEnd
+    do
+     #Make   Zn_Az string
+     if test ${Azimuth[$kaz]} = "0"
+      then
+       ZnAz=${Zenith[$izn]}'Deg'
+     else
+       ZnAz=${Zenith[$izn]}'_'${Azimuth[$kaz]}'Deg'
+     fi
+# *****************************************************************************
+#  Now all the things we can do for a particular Zn_AZ
+# *****************************************************************************
+     #make up our ksProduction designation
+     ksProdSpec=$SPECSEA$TELCONFIG$SPECPART$ZnAz$WblFilterSpec$Threshold'1234M2'
+
+     if [ -n "$GenerateTeFiles" ]; then
+       echo '##########################################################'
+       echo '# GenerateTeFiles '
+       echo '##########################################################'
+
+       cd $lcl
+       date
+
+       Sort='Sort'
+
+       ####################################################################
+       #Make sure ksallVBF.scr is set up correctly to generate Te files
+       ####################################################################
+       cp $KASCADEBASE/scripts/ksallVBF.scr ksallVBF$ZnAz'.scr'
+       chmod 775  ksallVBF$ZnAz'.scr'
+
+       sed '/#KascadeEnable=enable/s/#Kascade/Kascade/g' \
+                                                  <ksallVBF$ZnAz'.scr' >tmp1
+       sed '/#LightEnable=enable/s/#Light/Light/g'               <tmp1 >tmp2
+       sed '/#PeSortMergeEnable=enable/s/#PeSort/PeSort/g'       <tmp2 >tmp1
+       sed '/#TriggerEnable=enable/s/#Trigger/Trigger/g'         <tmp1 >tmp2
+       sed '/AomegaEnable=enable/s/Aomega/#Aomega/g'             <tmp2 >tmp1
+       sed '/ArrayTrigEnable=enable/s/Array/#Array/g'            <tmp1 >tmp2
+       sed '/#Production=enable/s/#Production/Production/g'      <tmp2 >tmp1
+       echo TELESPEC: $TELESPEC
+       if [ "$TELESPEC" = "OA" ]; then
+         echo Using OldArray tel positions
+         sed '/Fall09ArrayPositions=enable/s/Fall/#Fall/g' <tmp1 >tmp2
+       else
+        echo Using NewArray tel Positions
+	sed '/#Fall09ArrayPositions=enable/s/#Fall/Fall/g' <tmp1 >tmp2
+       fi
+       sed '/#RemoveSingleVBFEnable=enable/s/#Remove/Remove/g'   <tmp2 >tmp1
+       sed '/#CleanupEnable=enable/s/#Cleanup/Cleanup/g'         <tmp1 >tmp2
+       sed '/#DebugPrintEnable=enable/s/#Debug/Debug/g'          <tmp2 >tmp1
+       sed '/#VBFOutputToDetectorSpecDir=enable/s/#VBF/VBF/g'    <tmp1 >ksallVBF$ZnAz'.scr'
+       chmod 775  ksallVBF$ZnAz'.scr'
+       rm tmp1
+       rm tmp2
+       ####################################################################
+ 
+        if [ "$SPECPART" = "CR" ]; then
+            echo "KSAuto: Submitting ksProduction for " $ksProdSpec" Energy entries: P:"  $EntryPStart 'to' $EntryPEnd 'and He4:' $EntryHe4Start 'to' $EntryHe4End
+            echo Special Flag = $DEFSHWRFLAG
+	else
+            echo "KSAuto: Submitting ksProduction for " $ksProdSpec" Energy entries "$EnergyStart" to "$EnergyEnd
+       fi
+ 
+       echo "KSAuto: This submission takes a few minuts"
+
+       if [ -n LimitSubmissions ]; then     #We submit max number of jobs and 
+                                            #wait until to submit more in our 
+                                            #list
+	   if [ -e $QsubFileNameList ]; then
+	      rm $QsubFileNameList
+           fi
+
+	   if [ "$SPECPART" = "CR" ]; then
+             ./ksProduction.scr $ksProdSpec ksallVBF$ZnAz'.scr' $Sort $QsubFileNameList $EntryPStart $EntryPEnd $EntryHe4Start $EntryHe4End $DEFSHWRFLAG
+           else
+             ./ksProduction.scr $ksProdSpec ksallVBF$ZnAz'.scr' $Sort $QsubFileNameList $EnergyStart $EnergyEnd
+           fi                     #Above will fill the list file 
+                                  # $QsubFileNameList with the names of the 
+                                  # .qsub files to run(but it won't run them)
+                                  #Below will run them with a max of $MaxQsubs
+                                  # in the queue at one time, submitting more 
+                                  # as it can
+          
+           SubmitQsubJobs  $QsubFileNameList $QsubLogs $MaxQsubs
+       
+       else
+           ./ksProduction.scr $ksProdSpec ksallVBF$ZnAz'.scr'
+       fi
+     fi
+     #######################################################################
+ 
+     TeName=$SPECSEA$TELCONFIG$SPECPART$ZnAz$WblFilterSpec
+     if [ "$SPECPART" = "G" ] ; then
+           ParticleDir='gammas'
+     fi
+     if [ "$SPECPART" = "E" ] ; then
+           ParticleDir='electrons'
+     fi
+     if [ "$SPECPART" = "P" ] ; then
+           ParticleDir='protons'
+     fi
+     if [ "$SPECPART" = "He4_" ] ; then
+           ParticleDir='he4'
+     fi
+     
+     if [ "$SPECPART" = "CR" ] ; then
+       PSFDirP=$VDirBase'/protons/'$DirPSF 
+       PSFDirHe4=$VDirBase'/he4/'$DirPSF 
+       PSFDir=$PSFDirP
+       TeNameP=$SPECSEA$TELCONFIG'P'$ZnAz$WblFilterSpec
+       TeNameHe4=$SPECSEA$TELCONFIG'He4_'$ZnAz$WblFilterSpec
+       TeName=$TeNameP
+
+       ShowerVBFProtonDir=$TeNameP$Threshold'1234M2'$SPECSEA$ARRAYCONFIG
+       ShowerVBFProtonDirAlt=$TeNameP$Threshold'1234M2'$SPECSEA$SPECMDL
+       ShowerPDir=$VDirBase'/protons/'$ShowerVBFProtonDir
+       ShowerPDirAlt=$VDirBase'/protons/'$ShowerVBFProtonDirAlt
+
+       ShowerVBFHe4Dir=$TeNameHe4$Threshold'1234M2'$SPECSEA$ARRAYCONFIG
+       ShowerVBFHe4DirAlt=$TeNameHe4$Threshold'1234M2'$SPECSEA$SPECMDL
+       ShowerHe4Dir=$VDirBase'/he4/'$ShowerVBFHe4Dir
+       ShowerHe4DirAlt=$VDirBase'/he4/'$ShowerVBFHe4DirAlt
+
+     else
+       PSFDir=$VDirBase'/'$ParticleDir'/'$DirPSF
+       TeName=$SPECSEA$TELCONFIG$SPECPART$ZnAz$WblFilterSpec
+       ShowerVBFDir=$TeName$Threshold'1234M2'$SPECSEA$ARRAYCONFIG
+       ShowerVBFDirAlt=$TeName$Threshold'1234M2'$SPECSEA$SPECMDL
+       ShowerDir=$VDirBase'/'$ParticleDir'/'$ShowerVBFDir
+       ShowerDirAlt=$VDirBase'/'$ParticleDir'/'$ShowerVBFDirAlt
+
+     fi
+   
+     if [ -n "$PURDUE" ]; then
+         HtarDir="/archive/fortress/group/veritas/simulations/"
+     fi     
+
+     if [ -n "$NERSCorARGN" ]; then
+         HtarDir="/nersc/projects/veritas/simulations/"
+     fi     
+ 
+
+     if [ -n "$HTARTeFilesFromArchive" ]; then
+       echo '##########################################################'
+       echo '# HTARTeFilesFromArchive'
+       echo '##########################################################'
+       #In order to not have this task (KSAuto.scr) be killed because it
+       #runs too long, we have to submit this htar command to the cluster.
+       ###############################################################
+       # Since the if QsubHTARLogs $MaxHTARQsubs variable are not defined 
+       #(ie are blank)  if LimitSubmissions is not enabled we really don't 
+       # need the following test but it does make things clearer
+       ################################################################
+
+       if [ -n "$LimitSubmissions" ]; then
+         ########################################
+         # Now for CR do P and He4
+         ########################################
+	ArchiveSrc=$HtarDir$SPECSEA$TELCONFIG$SPECPART$WblFilterSpec'TE/'
+
+         if [ "$SPECPART" = "CR" ] ; then
+           SubmitHtarFromArchive $ArchiveSrc $PSFDirP $TeNameP $QsubHTARLogs $MaxHTARQsubs
+           SubmitHtarFromArchive $ArchiveSrc $PSFDirHe4 $TeNameHe4 $QsubHTARLogs $MaxHTARQsubs
+         else
+           ############################
+           # Only G or E or P or He4
+           # P or He4 dest is "CR" directory
+           ############################
+           if [ "$SPECPART" = "P" ] ||  [ "$SPECPART" = "He4_" ]; then
+	     ArchiveSrc=$HtarDir$SPECSEA$TELCONFIG'CR'$WblFilterSpec'TE/'
+             SubmitHtarFromArchive  $ArchiveSrc $PSFDir $TeName $QsubHTARLogs $MaxHTARQsubs
+           else
+             SubmitHtarFromArchive $ArchiveSrc $PSFDir $TeName $QsubHTARLogs $MaxHTARQsubs
+           fi
+         fi
+       else
+         SubmitHtarFromArchive $ArchiveSrc $PSFDir $TeName 
+       fi
+     fi
+     #####################################################################
+
+     if [ -n "$CheckGeneratedTeFiles" ]; then
+       echo '##########################################################'
+       echo '# CheckGeneratedTeFiles '
+       echo '##########################################################'
+
+       cd $lcl
+       date
+
+       if [ "$SPECPART" = "CR" ] ; then
+         checkFilesExist $PSFDirP'/'$TeNameP $TeNameP 'P' 'TE' $EntryPStart $EntryPEnd $Threshold 'dummy' $DEFSHWRFLAG
+         PFilesMissing=$?
+         if [ "$PFilesMissing" -ne "1" ]; then
+            echo 'KSAuto: All Required Te files present in '$TeNameP' directory'
+         fi
+
+         checkFilesExist $PSFDirHe4'/'$TeNameHe4 $TeNameHe4 'He4_' 'TE' $EntryHe4Start $EntryHe4End $Threshold 'dummy' $DEFSHWRFLAG
+         He4FilesMissing=$?
+         if [ "$He4FilesMissing" -ne "1" ]; then
+            echo 'KSAuto: All  Required Te files present in '$TeNameHe4' directory'
+         fi
+
+	 if [ "$PFilesMissing" -eq "1" ] || [ "$He4FilesMissing" -eq "1" ]; 
+         then
+	    FilesMissing="1"
+         fi
+       else
+         checkFilesExist $PSFDir'/'$TeName $TeName $SPECPART 'TE' $EntryGEStart $EntryGEEnd $Threshold 'dummy' $DEFSHWRFLAG
+         FilesMissing=$?
+         if [ "$FilesMissing" -ne "1" ]; then
+            echo 'KSAuto: All  Required Te files present in '$TeName' directory'
+         fi
+       fi
+
+       if [ "$FilesMissing" == "1" ]; then
+         echo 'KSAuto: '$iFilesNotFound' files not created.'
+         if [ -n "$ExitOnTeCreationFailure" ]; then
+           echo 'KSAuto: *************Missing files***********'
+           echo 'KSAuto: Exiting on File check failure'
+           echo 'KSAuto: Goodbye'
+           cd $lcl
+	   exit
+         fi
+       fi
+     fi
+   #########################################################################
+
+     if [ -n "$HTARTeFilesToArchive" ]; then
+       echo '##########################################################'
+       echo '# HTARTeFilesToArchive'
+       echo '##########################################################'
+       cd $lcl
+       date
+
+       #In order to not have this task (KSAuto.scr) be killed because it
+       #runs too long, we have to submit this htar command to the cluster.
+       ###############################################################
+       # Since the if QsubHTARLogs $MaxHTARQsubs variable are not defined 
+       #(ie are blank)  if LimitSubmissions is not enabled we really don't 
+       # need the following test but it does make things clearer
+       ################################################################
+
+       if [ -n "$LimitSubmissions" ]; then
+	  QLOGS=$QsubHTARLogs         
+          MQSUBS=$MaxHTARQsubs
+          #Othersiwe they are blank.
+       fi
+
+       ArchiveDst=$HtarDir$SPECSEA$TELCONFIG$SPECPART$WblFilterSpec'TE/'
+
+       ########################################
+       # Now for CR do P and He4 
+       ########################################
+       if [ "$SPECPART" = "CR" ] ; then
+         #Note:TeNameP used second time (arg $4) for Alt loc (cause something has to go there!)
+         SubmitHtarToArchive $ArchiveDst $PSFDirP $TeNameP $TeNameP $QsubHTARLogs $MaxHTARQsubs
+         SubmitHtarToArchive $ArchiveDst  $PSFDirHe4 $TeNameHe4 $TeNameHe4 $QsubHTARLogs $MaxHTARQsubs
+       else
+         ############################
+         # Only G or E or P or He4
+         # P or He4 dest is "CR" directory
+         ############################
+         if [ "$SPECPART" = "P" ] ||  [ "$SPECPART" = "He4_" ]; then
+           ArchiveDst=$HtarDir$SPECSEA$TELCONFIG'CR'$WblFilterSpec'TE/'
+           SubmitHtarToArchive  $ArchiveDst $PSFDir $TeName $TeName $QsubHTARLogs $MaxHTARQsubs
+         else
+              SubmitHtarToArchive $ArchiveDst $PSFDir $TeName $TeName $QsubHTARLogs $MaxHTARQsubs
+         fi
+       fi
+
+     fi
+     #########################################################################
+
+
+     if [ -n "$CheckHTARTeFiles" ]; then
+       echo '##########################################################'
+       echo '# CheckHTARTeFiles '
+       echo '##########################################################'
+       cd $lcl
+       date
+       ###############################################
+       #Only good for gammas and electrons
+       ########################################
+       #####################################
+       echo 'Due to changes in CheckList this command is inoperative.'
+       echo 'Sorry!'
+       exit
+
+
+       #Get a list of the files into CheckTe.txt
+       TEDIR=$HtarDir$TeName'.tar'
+       echo 'KSAuto: Get listing of htar file: '$TEDIR
+       TeFileList=TeFileList$ZnAz
+       htar -tf $TEDIR >$TeFileList
+
+       #go through this file and edit the names so that only the filename 
+       #part remains
+       CheckTeFile=CheckTeHTAR$ZnAz'.txt'
+       rm $CheckTeFile
+    
+       #echo 'Make file CheckTe.txt with only file names'
+       {
+         while read string
+           do
+             HtarFileName=${string##*/}
+             # make sure its a filename
+             if [ "${HtarFileName%%GeV*}" = "$TeName" ]; then
+               echo $HtarFileName >>$CheckTeFile
+             fi   
+           done
+        }<$TeFileList
+       #checking this list for all files that should be there takes 5 - 10 min
+       #thus , to insure we don't over run the 30 min time limit
+       #we will have to submit the te file check and sleep until it finishes
+       echo 'KSAuto: Checking for all te files in: '$TEDIR
+       
+       CheckList $CheckTeFile $TeName $SPECPART $EntryGEStart $EntryGEEnd $TEDIR
+       
+       date
+       cd $lcl
+       if [ -s $CheckTeFile'.Result' ]; then
+         cat  $CheckTeFile'.Result'
+         if [ -n "$ExitOnTeCreationFailure" ]; then
+           echo 'KSAuto: ***Exiting on File check failure***'
+           echo 'KSAuto: Goodbye'
+	   exit
+         fi
+       else
+         echo 'KSAuto: All files present in htar file '$TEDIR
+       fi
+     fi
+     ######################################################################
+
+     if [ -n "$BuildMDLAomegaConfig" ]; then
+	 echo '##########################################################'
+	 echo '# BuildMDLAomegaConfig '
+	 echo '##########################################################'
+	 echo 'KSAuto: Generating ksAomega config files from '$SPECMDL'.dat'
+
+	 cd $KASCADEBASE/inputs
+	 rm -f tmp1
+         rm -f tmp2
+         rm -f Base.config
+
+	 tConfig=$ARRAYCONFIG
+	 T1=${tConfig:0:1}
+	 T2=${tConfig:1:1}
+	 T3=${tConfig:2:1}
+	 T4=${tConfig:3:1}
+	 ../bin/ksAomega -save_config_and_exit=Base.config
+
+         ##############################################################
+         # now update each file with sed commands
+         ##############################################################
+ 
+         ################################################################
+         #Read in the $SPECMDL.txt file and set params
+         ################################################################
+         echo 'KSAuto: Setting ksAomega'$TELCONFIG$Threshold'('$ARRAYCONFIG').config files to '$SPECMDL'.dat values'
+		 
+         if [ "$TELCONFIG" = "N" ] ||  [ "$TELCONFIG" = "O" ]; then
+	       LightConeEff=0.45
+         else
+	       LightConeEff=0.80
+         fi
+         echo 'KSAuto: Setting ksAomega config LightCone Eff to: ' $LightConeEff
+         
+         MDLFILE=$lcl'/'$SPECMDL".dat"
+	     if [ !  -e "$MDLFILE" ]; then
+             MDLKASFILE=$KASCADEBASE'/inputs/'$SPECMDL".dat"
+	     if [ ! -e "$MDLKASFILE" ]; then
+                echo 'KSAUTO: Fatal-Can not find files ' $MDLFILE ' or ' $MDLKASFILE
+		exit
+             else
+		 cp -v $MDLKASFILE $MDLFILE
+             fi
+         fi
+
+	 PFile=$lcl'/../simulations/veritas/'$REFDATAFILE
+	 if [ ! -e "$PFile" ]; then
+	     echo 'KSAuto: fatal - Can not find file ' $PFile
+	     exit
+         fi
+	 {
+	     while read tel threshold noise eff gain 
+	       do
+	sed '/DiscriminatorThreshold/s/10/'$threshold'/g' <Base.config  >tmp1
+	       sed '/NoiseRate/s/12.5/'$noise'/g'                <tmp1  >tmp2
+	       sed '/Efficiency/s/1/'$eff'/g'                    <tmp2 >tmp1
+	       sed '/DigitalCountsPerPE/s/4.2/'$gain'/g'         <tmp1 >tmp2
+	       sed '/Telescope "T1"/s/T1/'$tel'/g'               <tmp2 >tmp1
+	       sed '/PixelStatsFileName " "/s:" ":"'$PFile'":g'  <tmp1 >tmp2
+           sed '/LightConeCon/s/0.35/'$LightConeEff'/g'      <tmp2 >tmp1
+	       sed '/BadPixelSupression/s/ON/OFF/g'              <tmp1 >tmp2
+	       if [ "$TELCONFIG" = "U" ]; then
+		     sed '/SinglePeRiseTimeNS/s/0/1.7/g'           <tmp2 >tmp1
+		     sed '/SinglePeFallTimeNS/s/0/4.75/g'          <tmp1 >tmp2
+	       else
+		     sed '/SinglePeRiseTimeNS/s/0/3.2/g'           <tmp2 >tmp1
+		     sed '/SinglePeFallTimeNS/s/0/8.5/g'           <tmp1 >tmp2
+	       fi
+	       sed '5 a \#This is special for tel '$tel'.'<tmp2 >$tel'.config'
+	     done
+	     }<$MDLFILE
+
+	 mv  -f T1.config ksAomega$TELCONFIG$Threshold$T1'.config'
+	 mv  -f T2.config ksAomega$TELCONFIG$Threshold$T2'.config'
+	 mv  -f T3.config ksAomega$TELCONFIG$Threshold$T3'.config'
+	 mv  -f T4.config ksAomega$TELCONFIG$Threshold$T4'.config'
+	 rm tmp1
+         rm tmp2
+         rm Base.config
+	 cd $lcl
+     fi
+
+     #########################################################################
+     if [ -n "$GenerateShowerVBFFiles" ]; then
+       echo '##########################################################'
+       echo '# GenerateShowerVBFFiles '
+       echo '##########################################################'
+
+       cd $lcl'/../simulations/veritas/'
+       date
+       if [ -n "$Cleanup" ]; then
+         echo '##########################################################'
+         echo '# GenerateShowerVBFFiles:Cleanup '
+         echo '##########################################################'
+         echo 'KSAuto:  Removing *.err,*.pbs and moving k*.log to ./log/' 
+         rm *.err
+         rm *.pbs
+         mv *.log ./log/
+
+       	 #Following reduces file count so we don't exceed our file number quota
+         DATE=$(date +%F.%H.%M.%S)
+         LogFile='simulationVeritasLogDir'$DATE.tar
+         tar -cvf $LogFile ./log/* >'simulationVeritasLogDir'$DATE.log
+         rm ./log/*
+       fi
+
+       cd $lcl'/../simulations/veritas/'
+
+       ####################################################################
+       #Make sure ksallVBF.scr is set up correctly to generate VBF shower files
+       ####################################################################
+       cp $KASCADEBASE/scripts/ksallVBF.scr ksallVBF$ZnAz'.scr'
+       chmod 775  ksallVBF$ZnAz'.scr'
+
+       sed '/KascadeEnable=enable/s/Kascade/#Kascade/g' \
+                                                <ksallVBF$ZnAz'.scr' >tmp1
+       sed '/LightEnable=enable/s/Light/#Light/g'                <tmp1 >tmp2
+       sed '/PeSortMergeEnable=enable/s/PeSort/#PeSort/g'        <tmp2 >tmp1
+       sed '/TriggerEnable=enable/s/Trigger/#Trigger/g'          <tmp1 >tmp2
+       sed '/#AomegaEnable=enable/s/#Aomega/Aomega/g'            <tmp2 >tmp1
+       sed '/#ArrayTrigEnable=enable/s/#Array/Array/g'           <tmp1 >tmp2
+       sed '/#Production=enable/s/#Production/Production/g'      <tmp2 >tmp1
+       echo TELESPEC: $TELESPEC
+       if [ "$TELESPEC" = "OA" ]; then
+	 echo using OldArray tell positions
+         sed '/Fall09ArrayPositions=enable/s/Fall/#Fall/g'  <tmp1 >tmp2
+       else
+	 echo Using NewArray tel positions
+         sed '/#Fall09ArrayPositions=enable/s/#Fall/Fall/g' <tmp1 >tmp2
+       fi
+       sed '/#RemoveSingleVBFEnable=enable/s/#Remove/Remove/g'   <tmp2 >tmp1
+       sed '/#CleanupEnable=enable/s/#Cleanup/Cleanup/g'         <tmp1 >tmp2
+       sed '/#DebugPrintEnable=enable/s/#Debug/Debug/g'          <tmp2 >tmp1
+       sed '/#VBFOutputToDetectorSpecDir=enable/s/#VBF/VBF/g'    <tmp1 >ksallVBF$ZnAz'.scr'
+       chmod 775  ksallVBF$ZnAz'.scr'
+       rm tmp1
+       rm tmp2
+       ####################################################################
+       echo "KSAuto: Submitting ksProduction with Energy entries "$EnergyStart" to "$EnergyEnd
+       echo 'KSAuto: Process ksAomega*.config: ' $ARRAYCONFIG ' through ksAomega and ksArrayTrig'
+       date
+       
+       NoSort='NoSort'
+
+       #make up our ksProduction designation
+       Spec=$ksProdSpec$ARRAYCONFIG
+
+       if [ -n LimitSubmissions ]; then     #We submit max number of jobs and 
+                                            #wait until to submit more in our 
+                                            #list
+	  if [ -e $QsubFileNameList ]; then
+	    rm $QsubFileNameList
+          fi
+
+	 if [ "$SPECPART" = "CR" ]; then
+             ./ksProduction.scr $Spec ksallVBF$ZnAz'.scr' $NoSort $QsubFileNameList $EntryPStart $EntryPEnd $EntryHe4Start $EntryHe4End $DEFSHWRFLAG
+         else
+             ./ksProduction.scr $Spec ksallVBF$ZnAz'.scr' $NoSort $QsubFileNameList $EnergyStart $EnergyEnd
+         fi                     #Above will fill the list file 
+                                  # $QsubFileNameList with the names of the 
+                                  # .qsub files to run(but it won't run them)
+                                  #Below will run them with a max of $MaxQsubs
+                                  # in the queue at one time, submitting more 
+                                  # as it can
+          SubmitQsubJobs  $QsubFileNameList $QsubLogs $MaxQsubs
+       else
+          ./ksProduction.scr  $Spec ksallVBF$ZnAz'.scr' 
+       fi
+       echo "KSAuto: VBF shower file generation complete"
+       cd $lcl
+     fi
+     #######################################################################
+
+
+
+     if [ -n "$CheckGeneratedShwrVBFFiles" ]; then
+       echo '##########################################################'
+       echo '# CheckGeneratedShwrVBFFiles '
+       echo '##########################################################'
+
+       cd $lcl
+       date
+
+
+       if [ "$SPECPART" = "CR" ] ; then
+         checkFilesExist $ShowerPDir  $TeNameP 'P' 'VBF' $EntryPStart $EntryPEnd $Threshold $ShowerPDirAlt $DEFSHWRFLAG
+         PFilesMissing=$?
+         if [ "$PFilesMissing" -ne "1" ]; then
+            echo 'KSAuto: All Required Shower VBF files present in '$TeNameP' directory'
+         fi
+
+         checkFilesExist $ShowerHe4Dir $TeNameHe4 'He4_' 'VBF' $EntryHe4Start $EntryHe4End $Threshold $ShowerHe4DirAlt $DEFSHWRFLAG
+         He4FilesMissing=$?
+         if [ "$He4FilesMissing" -ne "1" ]; then
+            echo 'KSAuto: All Required Shower VBF files present in '$TeNameHe4' directory'
+         fi
+
+	 if [ "$PFilesMissing" -eq "1" ] || [ "$He4FilesMissing" -eq "1" ]; 
+         then
+	    FilesMissing=1
+         fi
+       else
+         checkFilesExist $ShowerDir $TeName $SPECPART 'VBF' $EntryGEStart $EntryGEEnd $Threshold $ShowerDirAlt $DEFSHWRFLAG
+         FilesMissing=$?
+         if [ "$FilesMissing" -ne "1" ]; then
+            echo 'KSAuto: All Required '$FileType' files present in '$ShowerDir
+         fi
+       fi
+
+       if [ "$FilesMissing" = "1" ]; then
+         echo 'KSAuto: '$iFilesNotFound' files not created.'
+         if [ -n "$ExitOnTeCreationFailure" ]; then
+           echo 'KSAuto: *************Missing files***********'
+           echo 'KSAuto: Exiting on File check failure'
+           echo 'KSAuto: Goodbye'
+           cd $lcl
+	   exit
+         fi
+       fi
+     fi
+     #########################################################################
+
+
+     if [ -n "$HTARShowerVBFFilesFromArchive" ]; then
+       echo '##########################################################'
+       echo '# HTARShowerVBFFilesFromArchive'
+       echo '##########################################################'
+         #In order to not have this task (KSAuto.scr) be killed because it
+         #runs too long, we have to submit this htar command to the cluster.
+   
+       cd $lcl'/../simulations/veritas/'
+       date
+       ###############################################################
+       # Note that the QsubHTARLogs and MaxHTARQsubs variables are not defined 
+       #(ie are blank) if LimitSubmissions is not enabled
+       ################################################################
+
+       ArchiveSrc=$HtarDir$SPECSEA$TELCONFIG$SPECPART$SPECMDL'VBFShowers/'
+       if [  "$SPECPART" = "P" ] ||  [ "$SPECPART" = "He4_" ]; then
+         ArchiveSrc=$HtarDir$SPECSEA$TELCONFIG'CR'$SPECMDL'VBFShowers/'
+       fi
+
+       if [ "$SPECPART" = "CR" ] ; then
+         SubmitHtarFromArchive $ArchiveSrc $VDirBase'/protons/' $ShowerVBFProtonDirAlt  $QsubHTARLogs $MaxHTARQsubs
+         echo "KSAuto: htar " $ShowerVBFProtonDir" to archive complete."
+	 SubmitHtarFromArchive $ArchiveSrc $VDirBase'/he4/' $ShowerVBFHe4DirAlt $QsubHTARLogs $MaxHTARQsubs
+         echo "KSAuto: htar "$ShowerVBFHe4DirAlt" to archive complete."
+
+       else
+	ShowerMDLDir=$SPECSEA$TELCONFIG$SPECPART$ZnAz$WblFilterSpec$Threshold'1234M2'$SPECSEA$SPECMDL
+        SubmitHtarFromArchive $ArchiveSrc $VDirBase'/'$ParticleDir'/' $ShowerMDLDir $QsubHTARLogs $MaxHTARQsubs
+
+       fi
+    fi
+     #########################################################################
+  #$1 Archive directory wqhere our tar file exists
+  #$2 name of the Tar file we want to untar(without .tar extention).
+  #$3 Destination directory where we want to unTar into.
+
+
+     #Following only works for G and E and CR so far!
+     if [ -n "$GenerateZnAzVBFFile" ]; then
+       echo '##########################################################'
+       echo '# GenerateZnAzVBFFile '
+       echo '##########################################################'
+       KSWEROCK=$lcl'/ksWeRock.scr'
+       if [ ! -e "$KSWEROCK" ]; then	
+	   cp -v $KASCADEBASE'/scripts/ksWeRock.scr' .
+       fi
+
+       SVDir=$lcl'/../simulations/veritas/'
+       cd $SVDir
+
+       ProcessAll='ProcessAll'
+      
+       if [ ! -e "$ProcessAll" ]; then
+	 cp -v $KASCADEBASE'/scripts/'$ProcessAll .
+       fi
+       if [ "$SPECPART" = "CR" ] ; then
+         $SVDir'/'$ProcessAll $SPECPART  $VDirBase $ZnAz $Threshold $SPECSEA$TELCONFIG $SPECMDL $ARRAYCONFIG >$ProcessAll$ZnAz'.log'
+       fi
+
+       if [ "$SPECPART" = "G" ] || [ "$SPECPART" = "E" ] ; then
+         $SVDir'/'$ProcessAll $SPECPART $VDirBase $ZnAz $Threshold $SPECSEA$TELCONFIG $SPECMDL $ARRAYCONFIG >$ProcessAll$ZnAz'.log'
+       fi
+       date
+       echo "KSAuto:" $ProcessAll" VBF file generation for" $SPECPART "complete"
+     fi
+     ########################################################################
+
+
+     if [ -n "$HTARShowerVBFFilesToArchive" ]; then
+       echo '##########################################################'
+       echo '# HTARShowerVBFFilesToArchive'
+       echo '##########################################################'
+         #In order to not have this task (KSAuto.scr) be killed because it
+         #runs too long, we have to submit this htar command to the cluster.
+       ###############################################################
+       # Note that the QsubHTARLogs and MaxHTARQsubs variables are not defined 
+       #(ie are blank) if LimitSubmissions is not enabled
+       ################################################################
+   
+       cd $lcl'/../simulations/veritas/'
+       date
+       ArchiveDst=$HtarDir$SPECSEA$TELCONFIG$SPECPART$SPECMDL'VBFShowers/'
+       if [  "$SPECPART" = "P" ] ||  [ "$SPECPART" = "He4_" ]; then
+         ArchiveDst=$HtarDir$SPECSEA$TELCONFIG'CR'$SPECMDL'VBFShowers/'
+       fi
+
+       if [ "$SPECPART" = "CR" ] ; then
+         SubmitHtarToArchive $ArchiveDst $VDirBase'/protons/' $ShowerVBFProtonDir $ShowerVBFProtonDirAlt $QsubHTARLogs $MaxHTARQsubs
+         echo 'KSAuto: Submission of htar ' $ShowerVBFProtonDir 'or' $ShowerVBFProtonDirAlt 'to archive complete.'
+
+	 SubmitHtarToArchive $ArchiveDst $VDirBase'/he4/' $ShowerVBFHe4Dir $ShowerVBFHe4DirAlt $QsubHTARLogs $MaxHTARQsubs 
+         echo 'KSAuto:  Submission of htar ' $ShowerVBFHe4Dir 'or' $ShowerVBFHe4DirAlt 'to archive complete.'
+
+       else
+        ShowerMDLDir=$SPECSEA$TELCONFIG$SPECPART$ZnAz$WblFilterSpec$Threshold'1234M2'$SPECSEA$SPECMDL
+        SubmitHtarToArchive $ArchiveDst $VDirBase'/'$ParticleDir'/'  $ShowerMDLDir $ShowerMDLDir $QsubHTARLogs $MaxHTARQsubs
+
+       fi
+       cd $lcl
+    fi
+
+     #########################################################################
+     #Should all be done now. Go on to next combo. This all could take a
+     #couple of weeks or so
+     date
+     kaz=$((kaz+1))
+    done
+   izn=$((izn+1))
+  done
+date
+echo 'KSAuto: All done!--Good bye!'
+
+###########################################################################

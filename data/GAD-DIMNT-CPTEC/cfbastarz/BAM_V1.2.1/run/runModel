@@ -1,0 +1,494 @@
+#! /bin/bash
+
+#-------------------------------------------------------------------------------------------------#
+#                         Brazilian global Atmospheric Model - BAM_V1.2.1                         #
+#-------------------------------------------------------------------------------------------------#
+# Descrição:                                                                                      #
+#     Script para executar o modelo BAM                                                           #
+#                                                                                                 #
+# Uso:                                                                                            #
+#     ./runModel <opções>                                                                         #
+#                                                                                                 #
+# Exemplo:                                                                                        #
+#     ./runModel -t 126 -l 28 -np 48 -d 4 -N 6 -I 2012123118 -W 2013010118 -F 2013010118 \        #
+#                -ts 6 -p SMT -s sstwkl                                                           #
+#                                                                                                 #
+# Opções:                                                                                         #
+#     * -t < val>: truncamento [default: 62]                                                      #
+#     * -l  <val>: número de níveis [default: 28]                                                 #
+#     * -p  <val>: prefixo dos arquivos do BAM (condição inicial e previsões) [default: NMC]      #
+#     * -np <val>: número de processadores [default: 72]                                          #
+#     * -N  <val>: número de nós [default: 24]                                                    #
+#     * -d  <val>: número de tarefas por processos MPI [default: 1]                               #
+#     * -I  <val>: data da condição inicial (cold start)                                          #
+#     * -F  <val>: data da previsão final                                                         #
+#     * -W  <val>: data da condição inicial (warm start)                                          #
+#     * -i  <val>: tipo de inicialização [default: 2]                                             #
+#     * -s  <val>: arquivo de temperatura da superfície do mar [default: sstwkl]                  #
+#     * -ts <val>: passo de tempo da previsão [default: 6]                                        #
+#     * -r  <val>: escreve os arquivos de restart [default: .FALSE.]                              #
+#     * -tr <val>: passo de tempo do restart [default: 6]                                         #
+#     * -hold....: submete o processo e aguarda o usuário alterar o status do job com o comando   #
+#                   qrls <número_do_job> (opcional, indicar "hold" ou não)                        #
+#                                                                                                 #
+# Notas sobre a opção '-i' (inicialização):                                                       #
+#     *  2: inicialização diabática e com modos normais (cold start)                              #
+#     *  1: inicialização diabática e sem modos normais (cold start)                              #
+#     *  0: inicialização adiabática e sem modos normais (warm start)                             #
+#     * -1: inicialização diabática e sem modos normais, com as variáveis de superfície lidas     #
+#           ao invés de inicializadas                                                             #
+#     * -2: inicialização diabática (cold start da atmosfera, convecção, radiação e nuvens;       #
+#           warm start da superfície)                                                             #
+#     * -3: inicialização diabática (cold start da atmosfera; warm start da convecção, radiação e #
+#           nuvens e superfície)                                                                  #
+#                                                                                                 #
+# Notas sobre a opção '-s' (temperatura da superfície do mar):                                    #
+#     * sstaoi: climatologia da TSM por interpolação ótima                                        #
+#     * sstanp: climatologia da TSM por interpolação ótima mais a anomalia de TSM persistida      #
+#     * sstwkl: média móvel semanal da TSM                                                        #
+#     * sstwkd: média móvel semanal da TSM (arquivo de acesso direto)                             #
+#     * sstmtd: média móvel mensal da TSM (arquivo de acesso direto)                              #
+#     * sstdyd: média móvel diária da TSM (arquivo de acesso direto)                              #
+#                                                                                                 #
+# Revisões:                                                                                       #
+#     * 22-11-2016: de Mattos, J. G. Z. - código inicial                                          #
+#     * 17-02-2020: Bastarz, C. F.      - revisão geral para a consolidação da versão e algumas   #
+#                                         melhorias                                               #
+#                                                                                                 #
+# DMD/CPTEC/INPE, 2019                                                                            #
+#-------------------------------------------------------------------------------------------------#
+
+#
+# Funções comuns
+#
+usageprincipal()
+{
+  echo ""
+  echo -e "\033[34;1m Brazilian global Atmospheric Model - BAM_V1.2.1\033[m"
+  echo ""
+  echo " Descrição:"
+  echo "     Script para executar o modelo BAM"
+  echo ""
+  echo " Uso:"
+  echo "     ./runModel <opções>"
+  echo ""
+  echo " Exemplo:"
+  echo "     ./runModel -t 126 -l 28 -np 48 -d 4 -N 6 -I 2012123118 -W 2013010118 -F 2013010118 -ts 6 -p SMT -s sstwkl"
+  echo ""
+  echo " Opções:"
+  echo "     * -t < val>: truncamento [default: 62]"
+  echo "     * -l  <val>: número de níveis [default: 28]"
+  echo "     * -p  <val>: prefixo dos arquivos do BAM (condição inicial e previsões) [default: NMC]"
+  echo "     * -np <val>: número de processadores [default: 72]"
+  echo "     * -N  <val>: número de nós [default: 24]"
+  echo "     * -d  <val>: número de tarefas por processos MPI [default: 1]"
+  echo "     * -I  <val>: data da condição inicial (cold start)"
+  echo "     * -F  <val>: data da previsão final"
+  echo "     * -W  <val>: data da condição inicial (warm start)"
+  echo "     * -i  <val>: tipo de inicialização [default: 2]"
+  echo "     * -s  <val>: arquivo de temperatura da superfície do mar [default: sstwkl]"
+  echo "     * -ts <val>: passo de tempo da previsão [default: 6]"
+  echo "     * -r  <val>: escreve os arquivos de restart [default: .FALSE.]"
+  echo "     * -tr <val>: passo de tempo do restart [default: 6]"
+  echo ""
+  echo -e "\033[33;1m DMD/CPTEC/INPE, 2019 \033[m"
+  echo ""    
+}
+
+subwrd()
+{
+  str=$(echo "${@}" | awk '{ for (i=1; i<=NF-1; i++) printf("%s ",$i)}')
+  n=$(echo "${@}" | awk '{ print $NF }')
+  echo "${str}" | awk -v var=${n} '{print $var}'
+}
+
+#
+# Pegando as opções que foram passadas pela linha de comando
+#
+if [ $# -eq 0 ]
+then
+  usageprincipal
+  exit 0
+else
+  i=1
+  flag=0
+  while [ 1 ]
+  do
+    arg=$(echo "${@}" | awk -v var=${i} '{print $var}')
+    i=$((i+1))
+  
+    if [ -z ${arg} ];then break; fi
+  
+    while [ 1 ]
+    do
+      if [ ${arg} = '-t' ]   ; then TRC=$(subwrd ${@} ${i})              ; i=$((i+1)); break ; fi
+      if [ ${arg} = '-l' ]   ; then LV=$(subwrd ${@} ${i})               ; i=$((i+1)); break ; fi
+      if [ ${arg} = '-p' ]   ; then PREFIX=$(subwrd ${@} ${i})           ; i=$((i+1)); break ; fi
+      if [ ${arg} = '-I' ]   ; then LABELI=$(subwrd ${@} ${i})           ; i=$((i+1)); break ; fi
+      if [ ${arg} = '-W' ]   ; then LABELW=$(subwrd ${@} ${i})           ; i=$((i+1)); break ; fi
+      if [ ${arg} = '-F' ]   ; then LABELF=$(subwrd ${@} ${i})           ; i=$((i+1)); break ; fi
+      if [ ${arg} = '-i' ]   ; then INITLZ=$(subwrd ${@} ${i})           ; i=$((i+1)); break ; fi
+      if [ ${arg} = '-s' ]   ; then NMSST=$(subwrd ${@} ${i})            ; i=$((i+1)); break ; fi
+      if [ ${arg} = '-ts' ]  ; then DHFCT=$(subwrd ${@} ${i})            ; i=$((i+1)); break ; fi
+      if [ ${arg} = '-tr' ]  ; then DHRES=$(subwrd ${@} ${i})            ; i=$((i+1)); break ; fi
+      if [ ${arg} = '-r' ]   ; then GENRES='.TRUE.'                      ; i=$((i+0)); break ; fi
+      if [ ${arg} = '-np' ]  ; then MPITasks=$(subwrd ${@} ${i})         ; i=$((i+1)); break ; fi
+      if [ ${arg} = '-N' ]   ; then TasksPerNode=$(subwrd ${@} ${i})     ; i=$((i+1)); break ; fi
+      if [ ${arg} = '-d' ]   ; then ThreadsPerMPITask=$(subwrd ${@} ${i}); i=$((i+1)); break ; fi
+      if [ ${arg} = '-hold' ]; then hold='-h'                            ; i=$((i+1)); break ; fi
+  
+      if [ ${arg} = '-h' ]   ; then usageprincipal                       ; i=$((i+0)); exit 0; fi
+  
+      flag=1
+      i=$((i-1))
+  
+      break
+    done
+    if [ ${flag} -eq 1 ]; then break; fi
+  done
+fi
+
+#
+# Ajuste das variáveis de ambiente
+#
+LOCALDIR=$(dirname $(readlink -e ${0})) # Local (path) onde está este script
+
+CASE=$(echo ${TRC} ${LV} | awk '{ printf("TQ%4.4dL%3.3d\n",$1,$2)  }')
+PATHA=$(pwd)
+
+export FILEENV=$(find -L ${PATHA} -name EnvironmentalVariablesMCGA -print)
+export PATHENV=$(dirname ${FILEENV})
+export PATHBASE=$(cd ${PATHENV}; cd ../; pwd)
+
+. ${FILEENV} ${CASE} ${PREFIX}
+
+# Truncamento
+if [ -z ${TRC} ]
+then
+  TRC=62
+fi
+
+# Número de niveis verticais
+if [ -z ${LV} ]
+then
+  LV=28
+fi
+
+# Prefixo dos arquivos
+if [ -z ${PREFIX} ]
+then
+  PREFIX=CPT
+fi
+
+# Tipo de inicialização
+if [ -z ${INITLZ} ]
+then
+  INITLZ=2
+fi
+
+# Data da Condição Inicial (cold start)
+if [ -z ${LABELI} ]
+then
+  if [ ! -z ${LABELW} ]
+  then
+    LABELI=${LABELW}
+    echo -e "\033[32;1m LABELI not set \033[m"
+    echo -e "\033[32;1m using LABELI=LABELW \033[m"
+  else
+    echo -e "\033[31;1m LABELI or LABELW not set \033[m"
+    exit 1
+  fi
+fi
+
+# Data final das previsões
+if [ -z ${LABELF} ]
+then
+  echo -e "\033[31;1m LABELF not set \033[m"
+  exit 1
+fi
+
+# Data da Condição Inicial (warm start)
+# Caso não for definida:
+# Se for cold start (INITLZ=2)
+#     LABELW=LABELF
+# Se for warm start (INITLZ=0)
+#     LABELW=LABELI
+if [ -z ${LABELW} ]
+then
+  if [ ${INITLZ} -eq 2 ]
+  then
+    LABELW=${LABELF}
+  else
+    LABELW=${LABELI}
+  fi
+fi
+
+# Arquivo de SST
+if [ -z ${NMSST} ]
+then
+  NMSST='sstwkl'
+fi
+
+# TimeStep da Previsão
+if [ -z ${DHFCT} ]
+then
+  DHFCT=6
+fi
+
+# Genetate Restart Files
+if [ -z ${GENRES} ]
+then
+  GENRES='.FALSE.'
+fi
+
+# TimeStep do Restart
+if [ -z ${DHRES} ]
+then
+  DHRES=6
+fi
+
+# Número de processadores que serao utilizados no Job
+if [ -z ${MPITasks} ]
+then
+  MPITasks=72
+fi
+
+# Número de processadores utilizados por tarefas MPI
+if [ -z ${TasksPerNode} ]
+then
+  TasksPerNode=24
+fi
+
+# Número de processadores utilizados por tarefas OpenMP
+if [ -z ${ThreadsPerMPITask} ]
+then
+  ThreadsPerMPITask=1
+fi
+
+#
+# Definindo TimeStep/Imax/JMax do BAM dependente do Truncamento
+#
+case ${TRC} in
+  21)   TimeStep=3600; IMax=64  ; JMax=32  ;;
+  31)   TimeStep=1800; IMax=96  ; JMax=48  ;;
+  42)   TimeStep=1800; IMax=128 ; JMax=64  ;;
+  62)   TimeStep=900 ; IMax=192 ; JMax=96  ;;
+  106)  TimeStep=900 ; IMax=320 ; JMax=160 ;;
+  126)  TimeStep=600 ; IMax=384 ; JMax=192 ;;
+  133)  TimeStep=600 ; IMax=400 ; JMax=200 ;;
+  159)  TimeStep=600 ; IMax=480 ; JMax=240 ;;
+  170)  TimeStep=450 ; IMax=512 ; JMax=256 ;;
+  213)  TimeStep=300 ; IMax=640 ; JMax=320 ;;
+  254)  TimeStep=255 ; IMax=768 ; JMax=384 ;;
+  299)  TimeStep=200 ; IMax=900 ; JMax=450 ;;
+  319)  TimeStep=225 ; IMax=960 ; JMax=480 ;;
+  341)  TimeStep=200 ; IMax=1024; JMax=512 ;;
+  382)  TimeStep=180 ; IMax=1152; JMax=576 ;;
+  511)  TimeStep=150 ; IMax=1536; JMax=768 ;;
+  533)  TimeStep=150 ; IMax=1600; JMax=800 ;;
+  666)  TimeStep=240 ; IMax=2000; JMax=1000;;
+  863)  TimeStep=150 ; IMax=2592; JMax=1296;;
+  1279) TimeStep=20  ; IMax=3840; JMax=1920;;
+  1332) TimeStep=20  ; IMax=4000; JMax=2000;;
+  *) echo -e "\033[32;1m Truncamento desconhecido ${TRC}\033[m"
+esac
+
+#
+# Data do restart
+#
+LABELR=$(date -u -d "${LABELI:0:4}-${LABELI:4:2}-${LABELI:6:2} ${LABELI:8:2}:00:00 UTC +6 hour" +"%Y%m%d%H")
+
+#
+# Formata a resolução espectral como TQXXXXLYYY
+#
+MRES=$(printf "TQ%04dL%03d" ${TRC} ${LV}) 
+
+#
+# Variáveis da máquina
+#
+walltime=00:10:00
+queue=batch
+queue_name="BAM${TRC}"
+
+#
+# Diretórios das simulações
+#
+BAMRUN=${PATHBASE}/model/exec_${PREFIX}${LABELI}
+BAMEXE=${PATHBASE}/model/exec/ParModel_MPI
+BAMSCP=${BAMRUN}/qsub_bam.qsb
+BAMLOG=${BAMRUN}/setout/Print.model.${LABELI}.${LABELF}.${tmstp}.MPI${MPITasks}.out
+
+PATHIN=${PATHBASE}/model/datain
+PATHOU=${DK}/model/dataout/${MRES}/${LABELI}
+RSTIN=${DK}/model/dataout/${MRES}/${LABELI}/RST
+RSTOU=${DK}/model/dataout/${MRES}/${LABELR}/RST
+
+#
+# Arquivo para a inicialização por modos normais não lineares
+#
+file=${PATHIN}/$(printf "NMI.T%04gL%03g" ${TRC} ${LV})
+if [ -e ${file} ]
+then
+  EIGENINIT='.FALSE.'
+else
+  EIGENINIT='.TRUE.'
+fi
+
+#
+# O arquivo mwaves.TXXXXGYYYYY (ASCII e sequencial) contém a quantidade de ondas por latitude 
+# para integrações com truncamento XXXX e número de latitudes YYYYY apenas no caso 
+# da grade reduzida. É desnecessário para a grade regular pois todas as latitudes contém 
+# o mesmo numero de ondas
+#
+file=${PATHIN}/$(printf "mwaves.T%04gG%05g" ${TRC} ${JMax})
+if [ ! -e ${file} ]
+then
+  MGIVEN='.FALSE.'
+else
+  MGIVEN='.TRUE.'
+fi
+
+#
+# O arquivo gaussp.GYYYYY (binário e sequencial) contém pontos e pesos Gaussianos (arrays CosGaussColat
+# e GaussWeights da rotina Utils.f90) para grades com YYYYY latitudes (regular ou reduzida)
+#
+file=${PATHIN}/$(printf "gaussp.G%05g" ${JMax})
+if [ ! -e ${file} ]
+then
+  GAUSSGIVEN='.FALSE.'
+else
+  GAUSSGIVEN='.TRUE.'
+fi 
+
+#
+# Cria os diretórios para a execução do modelo
+#
+if [ -e ${BAMRUN} ]
+then
+  rm -fr ${BAMRUN}
+else
+  mkdir -p ${BAMRUN}
+fi
+
+if [ ! -e ${BAMRUN}/setout ]
+then
+  mkdir -p ${BAMRUN}/setout
+fi
+
+#
+# Cria os diretórios para as saídas do modelo
+#
+
+# Arquivos de previsão
+if [ ! -e ${PATHOU} ]
+then
+  mkdir -p ${PATHOU}
+fi
+
+# Arquivos de restart
+if [ ! -e ${RSTOU} ]
+then
+  mkdir -p ${RSTOU}
+fi
+
+#
+# Copia o executável do modelo para o diretório onde será executado
+#
+cp -pfr ${BAMEXE} ${BAMRUN}/
+
+#
+# Altera o namelist MODELIN com as configurações da simulação
+#
+sed -e "s;#TRUNC#;${TRC};g"                                                   \
+    -e "s;#NLEV#;${LV};g"                                                     \
+    -e "s;#DELT#;${TimeStep};g"                                               \
+    -e "s;#LABELI#;${LABELI:8:2},${LABELI:6:2},${LABELI:4:2},${LABELI:0:4};g" \
+    -e "s;#LABELW#;${LABELW:8:2},${LABELW:6:2},${LABELW:4:2},${LABELW:0:4};g" \
+    -e "s;#LABELF#;${LABELF:8:2},${LABELF:6:2},${LABELF:4:2},${LABELF:0:4};g" \
+    -e "s;#DHFCT#;${DHFCT};g"                                                 \
+    -e "s;#DHRES#;${DHRES};g"                                                 \
+    -e "s;#GENRES#;${GENRES};g"                                               \
+    -e "s;#PREFIX#;${PREFIX};g"                                               \
+    -e "s;#NMSST#;${NMSST};g"                                                 \
+    -e "s;#PATHIN#;${PATHIN};g"                                               \
+    -e "s;#PATHOU#;${PATHOU};g"                                               \
+    -e "s;#RSTIN#;${RSTIN};g"                                                 \
+    -e "s;#RSTOU#;${RSTOU};g"                                                 \
+    -e "s;#EIGENINIT#;${EIGENINIT};g"                                         \
+    -e "s;#MGIVEN#;${MGIVEN};g"                                               \
+    -e "s;#GAUSSGIVEN#;${GAUSSGIVEN};g"                                       \
+    -e "s;#INITLZ#;${INITLZ};g"                                               \
+    ${LOCALDIR}/MODELIN.template > ${BAMRUN}/MODELIN
+
+#
+# Cria o script de submissão do modelo
+#
+cat << EOF > ${BAMSCP}
+#!/bin/bash -x
+#SBATCH --output=${BAMRUN}/setout/Out.model.${PREFIX}.${LABELI}.${tmstp}.MPI${MPITasks}.out
+#SBATCH --error=${BAMRUN}/setout/Out.model.${PREFIX}.${LABELI}.${tmstp}.MPI${MPITasks}.err
+#SBATCH --time=${walltime}
+#SBATCH --tasks-per-node=${MPITasks}
+#SBATCH --nodes=${TasksPerNode}
+#SBATCH --job-name=singularity-${queue_name}
+#SBATCH --partition=${queue}
+
+
+####!/bin/bash
+####PBS -o ${HSTMAQ}:${BAMRUN}/setout/Out.model.${PREFIX}.${LABELI}.${tmstp}.MPI${MPITasks}.out
+####PBS -j oe
+####PBS -l walltime=${walltime}
+####PBS -l mppwidth=${MPITasks}
+####PBS -l mppnppn=${TasksPerNode}
+####PBS -l mppdepth=${ThreadsPerMPITask}
+####PBS -V
+####PBS -S /bin/bash
+####PBS -N ${queue_name}
+####PBS -q ${queue}
+####PBS -A ${QUOTA}
+
+ulimit -s unlimited
+ulimit -c unlimited
+
+# EGEON GNU
+module purge
+module load gnu9/9.4.0
+module load ucx/1.11.2
+module load openmpi4/4.1.1
+module load netcdf/4.7.4
+module load netcdf-fortran/4.5.3
+module load phdf5/1.10.8
+module load hwloc
+module load libfabric/1.13.0
+module load singularity
+
+export HUGETLB_MORECORE=yes
+export HUGETLB_ELFMAP=W
+export HUGETLB_FORCE_ELFMAP=yes+
+export MPICH_ENV_DISPLAY=1
+export HUGETLB_DEFAULT_PAGE_SIZE=2m
+export OMP_NUM_THREADS=${ThreadsPerMPITask}
+
+cd ${BAMRUN}
+
+cat /etc/passwd > /mnt/beegfs/carlos.bastarz/BAM_V1.2.1/model/exec_SMT2020021700/setout/passwd
+
+#/usr/bin/time -v aprun -n ${MPITasks} -N ${TasksPerNode} -d ${ThreadsPerMPITask} ${BAMRUN}/$(basename ${BAMEXE}) > ${BAMLOG} 2>&1
+#srun -n ${MPITasks} -N ${ThreadsPerMPITask} ${BAMRUN}/$(basename ${BAMEXE}) > ${BAMLOG} 2>&1
+/opt/ohpc/pub/libs/singularity/3.7.1/bin/singularity -d --bind /mnt/beegfs/carlos.bastarz:/mnt/beegfs/carlos.bastarz exec /mnt/beegfs/carlos.bastarz/containers/ubuntu_remix_latest-gcc_4.8.5.sif mpirun -n ${MPITasks} -N ${ThreadsPerMPITask} ${BAMRUN}/$(basename ${BAMEXE}) > ${BAMLOG} 2>&1
+#mpirun -n ${MPITasks} -N ${ThreadsPerMPITask} /opt/ohpc/pub/libs/singularity/3.7.1/bin/singularity -d --bind /mnt/beegfs/carlos.bastarz:/mnt/beegfs/carlos.bastarz exec /mnt/beegfs/carlos.bastarz/containers/ubuntu_remix_latest-gcc_4.8.5.sif ${BAMRUN}/$(basename ${BAMEXE}) > ${BAMLOG} 2>&1
+#mpirun -n ${MPITasks} -N ${ThreadsPerMPITask} /opt/ohpc/pub/libs/singularity/3.7.1/bin/singularity -d exec /mnt/beegfs/carlos.bastarz/containers/ubuntu_remix_latest-gcc_4.8.5.sif --bind /mnt/beegfs/carlos.bastarz:/mnt/beegfs/carlos.bastarz ${BAMRUN}/$(basename ${BAMEXE}) > ${BAMLOG} 2>&1
+#srun -n ${MPITasks} -N ${ThreadsPerMPITask} /opt/ohpc/pub/libs/singularity/3.7.1/bin/singularity -d exec /mnt/beegfs/carlos.bastarz/containers/ubuntu_remix_latest-gcc_4.8.5.sif --bind /mnt/beegfs/carlos.bastarz:/mnt/beegfs/carlos.bastarz ${BAMRUN}/$(basename ${BAMEXE}) > ${BAMLOG} 2>&1
+#/opt/ohpc/pub/libs/singularity/3.7.1/bin/singularity -d --bind /mnt/beegfs/carlos.bastarz:/mnt/beegfs/carlos.bastarz exec /mnt/beegfs/carlos.bastarz/containers/ubuntu_remix_latest-gcc_4.8.5.sif srun -n ${MPITasks} -N ${ThreadsPerMPITask} ${BAMRUN}/$(basename ${BAMEXE}) > ${BAMLOG} 2>&1
+
+echo "" > ${BAMRUN}/monitor.bam
+EOF
+
+cd ${BAMRUN}
+#${QSUB} ${hold} ${BAMSCP}
+${QSUB} ${BAMSCP}
+
+until [ -e ${BAMRUN}/monitor.bam ]; do sleep 1s; done
+rm -fr ${BAMRUN}/monitor.bam
+
+exit 0

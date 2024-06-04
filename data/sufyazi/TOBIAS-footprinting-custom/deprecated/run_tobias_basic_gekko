@@ -1,0 +1,49 @@
+#!/usr/bin/env bash
+# shellcheck disable=SC1091
+# shellcheck disable=SC2153
+# This script is used to run the job on the cluster.
+
+#PBS -N 20230703_tobias_test
+#PBS -P sbs_liyh
+
+#PBS -q q256_free
+#PBS -l select=1:ncpus=16:mpiprocs=16:mem=32gb
+#PBS -l walltime=8:00:00
+
+#PBS -m bea
+#PBS -M suffi.azizan@ntu.edu.sg
+
+#PBS -o /home/suffi.azizan/scratchspace/pipeline_scripts/tobias_snakemake_scripts/pbs_oe
+#PBS -e /home/suffi.azizan/scratchspace/pipeline_scripts/tobias_snakemake_scripts/pbs_oe
+#PBS -j oe
+
+
+set -e
+# Load modules
+module purge
+module load r/gcc6/4.2.0
+
+# load conda environment
+eval "$(conda shell.bash hook)"
+conda activate snakemake_tobias
+
+# check mode parameter
+
+runmode=$MODE
+
+# if mode equals to "dnase", run the following
+if [[ "$runmode" == "dnase" ]]; then
+    # run bias correction
+    TOBIAS ATACorrect -b /home/suffi.azizan/scratchspace/outputs/tobias-io/128T8B4-AML_vs_T04OBGX-mono/128T8B4-AML/dedup_bams/128T8B4_sample2/align/rep1/C20FWACXX_lane3_4174_CAGATC_L003_R1.trim.srt.nodup.no_chrM_MT.bam -g /home/suffi.azizan/scratchspace/inputs/genomes/GRCh38_no_alt_GCA_000001405.15.fasta -p /home/suffi.azizan/scratchspace/outputs/tobias-io/128T8B4-AML_vs_T04OBGX-mono/128T8B4-AML/merged_peaks/merged_sample2/merged_peaks_128T8B4-AML_sample2_3cols.bed --blacklist /home/suffi.azizan/scratchspace/inputs/genomes/hg38-blacklist.v2.bed --read_shift 0 0 --k_flank 6 --outdir /home/suffi.azizan/scratchspace/outputs/tobias-io/128T8B4-AML_vs_T04OBGX-mono/tobias_outputs/dnase-test-run-16cores-gekko --prefix "128T8B4-dnaseq-fp-sample2" --cores 16 &> /home/suffi.azizan/scratchspace/pipeline_scripts/footprinting-workflow-scripts/logs/tobias_basic_dnase-atacorrect-16cores-retest-gekko.log
+    # score bigwigs
+    TOBIAS ScoreBigwig --signal /home/suffi.azizan/scratchspace/outputs/tobias-io/128T8B4-AML_vs_T04OBGX-mono/tobias_outputs/dnase-test-run-16cores-gekko/128T8B4-dnaseq-fp-sample2_corrected.bw --regions /home/suffi.azizan/scratchspace/outputs/tobias-io/128T8B4-AML_vs_T04OBGX-mono/128T8B4-AML/merged_peaks/merged_sample2/merged_peaks_128T8B4-AML_sample2_3cols.bed --output /home/suffi.azizan/scratchspace/outputs/tobias-io/128T8B4-AML_vs_T04OBGX-mono/tobias_outputs/dnase-test-run-16cores-gekko/128T8B4-dnaseq-fp-sample2_footprints.bw --cores 16 &> /home/suffi.azizan/scratchspace/pipeline_scripts/footprinting-workflow-scripts/logs/tobias_basic_dnase-scorebw-16cores-retest-gekko.log
+    # call footprints
+    TOBIAS BINDetect --motifs /home/suffi.azizan/scratchspace/pipeline_scripts/footprinting-workflow-scripts/motif-guided/joined_filt_combined_motifs.jaspar --signals /home/suffi.azizan/scratchspace/outputs/tobias-io/128T8B4-AML_vs_T04OBGX-mono/tobias_outputs/dnase-test-run-16cores-gekko/128T8B4-dnaseq-fp-sample2_footprints.bw --genome /home/suffi.azizan/scratchspace/inputs/genomes/GRCh38_no_alt_GCA_000001405.15.fasta --peaks /home/suffi.azizan/scratchspace/outputs/tobias-io/128T8B4-AML_vs_T04OBGX-mono/128T8B4-AML/merged_peaks/merged_sample2/merged_peaks_128T8B4-AML_sample2_3cols.bed --outdir /home/suffi.azizan/scratchspace/outputs/tobias-io/128T8B4-AML_vs_T04OBGX-mono/tobias_outputs/dnase-test-run-16cores-gekko/bindetect_outputs --skip-excel --cores 16 &> /home/suffi.azizan/scratchspace/pipeline_scripts/footprinting-workflow-scripts/logs/tobias_basic_dnase-bindetect-16cores-retest-gekko.log
+elif [[ "$runmode" == "atac" ]]; then
+    # run bias correction
+    TOBIAS ATACorrect -b test.bam -g /home/suffi.azizan/scratchspace/inputs/genomes/GRCh38_no_alt_GCA_000001405.15.fasta -p test.bed --blacklist /home/suffi.azizan/scratchspace/inputs/genomes/hg38-blacklist.v2.bed --outdir test_output --prefix "test-fp-sampleX" --cores 16 &> /home/suffi.azizan/scratchspace/pipeline_scripts/footprinting-workflow-scripts/logs/tobias_basic_atac-atacorrect-16cores-retest-gekko.log
+    # score bigwigs
+    TOBIAS ScoreBigwig --signal test_output/test-fp-sampleX_corrected.bw --regions test.bed --output test_output/test-fp-sampleX_footprints.bw --cores 16 &> /home/suffi.azizan/scratchspace/pipeline_scripts/footprinting-workflow-scripts/logs/tobias_basic_atac-scorebw-16cores-retest-gekko.log
+    # call footprints
+    TOBIAS BINDetect --motifs /home/suffi.azizan/scratchspace/pipeline_scripts/footprinting-workflow-scripts/motif-guided/joined_filt_combined_motifs.jaspar --signals test_output/test-fp-sampleX_corrected.bw --genome /home/suffi.azizan/scratchspace/inputs/genomes/GRCh38_no_alt_GCA_000001405.15.fasta --peaks test.bed --outdir test_output/bindetect_output --skip-excel --cores 16 &> /home/suffi.azizan/scratchspace/pipeline_scripts/footprinting-workflow-scripts/logs/tobias_basic_atac-bindetect-16cores-retest-gekko.log
+fi

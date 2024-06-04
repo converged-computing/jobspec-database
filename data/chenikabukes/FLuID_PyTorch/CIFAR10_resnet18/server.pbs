@@ -1,0 +1,21 @@
+#!/bin/bash
+ 
+#PBS -l walltime=25:00:00,select=1:ncpus=1:mem=72gb
+#PBS -N cifarServer
+#PBS -A 
+#PBS -m abe
+#PBS -M 
+#PBS -o server_output.txt
+#PBS -e server_error.txt
+ 
+################################################################################
+ 
+module load gcc
+module load cuda
+
+echo $PBS_NODEFILE;cat $PBS_NODEFILE
+
+echo ${PYTHONPATH}
+cd $PBS_O_WORKDIR
+
+./run_cifar.sh 0

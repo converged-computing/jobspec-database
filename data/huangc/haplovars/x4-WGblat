@@ -1,0 +1,115 @@
+#!/bin/bash
+#PBS -m abe
+#PBS -l nodes=1:ppn=20,vmem=20gb,walltime=2:00:00
+#PBS -M ${EMAIL}
+#PBS -N x4-WGblat
+#PBS -j oe
+
+module add python
+module add blat
+
+# Aims: To investigate the Whole-Genome (WG) insertion/deletion (indel) profile of rice genomic samples under TALEN treatment.
+# Author: Chun-Yuan Huang, Ph.D.
+# Last Update: 2/12/2016
+
+##-------------------------------------------
+## Workflow description:
+#1. Blat of sample contigs (by SOAP-denovo assembly) against WG reference.
+#   To speed up the blat step, sample contigs are splitted into several parts to run blat in parallel.
+#2. Generate filtered blat hits table for contigs that contain gaps whose total length
+#   larger than the defined size (e.g. GAP_MINSIZE=100, defined in the source file).
+#3. Calculate the Q_gapStarts, Q_gapSizes, T_gapStarts and T_gapSizes based on each gap using the block info
+#   from the Blat result, where Q is for Query (the samples) and T is for Target (the reference genome)
+#4. Generate indel tables for each insertion and deletion.
+#5. Make indel summary table that combines same indels from all samples in each row based on the indel features
+#6. Use the indel summary table to retrieve indel sequences.
+
+
+cd $PBS_O_WORKDIR
+source ./0SOURCE
+# include the TRegGA.source
+TRegGA_DIR=`dirname $PWD`
+source ${TRegGA_DIR}/TRegGA.source
+
+# \cp ${run_DIR}/findbySNP/sample.foundbySNP .
+CULTIVAR=`cut -d"|" -f1 sample.foundbySNP | awk 1 ORS=" "`
+SYNONYM=`cut -d"|" -f3 sample.foundbySNP | awk 1 ORS=" "`
+SAMPLE=`cut -d"|" -f3 sample.foundbySNP | awk 1 ORS=" "`
+
+#-----
+#0. Prepare the Blat reference sequence according to TRegGA parameters REFERENCE, FROM, TO.
+cd ${prereq_DIR}
+# python ${bin_DIR}/getTarget.py ${REFSEQ} ${REFERENCE}_${FROM}_${TO} ${FROM} ${TO}
+sed -i "s/^>${REFSEQNAME}/>${REFSEQNAME}_${FROM}_${TO}/" ${REFERENCE}_${FROM}_${TO}.fasta
+
+#-----
+#1. Blat of sample contigs (by SOAP-denovo assembly) against reference on REFERENCE, FROM, TO.
+# psl header is below. rep_match is Number of matching bases that are part of repeats. \
+# Q is for Query, T is for Target, or Sample/Reference in Blastn.
+# block_count is Number of blocks in the alignment. blockSizes is Comma-separated list of sizes of each block.
+# match(#1), mis-match(#2), rep_match(#3), nCount(#4), Q_gap_count(#5), Q_gap_bases(#6), T_gap_count(#7), T_gap_bases(#8),
+# strand(#9), Q_name(#10), Q_size(#11), Q_start(#12), Q_end(#13), T_name(#14), T_size(#15), T_start(#16), T_end(#17),
+# block_count(#18), blockSizes(#19), qStarts(#20), tStarts(#21).
+# psl have gap info in fields #5 (Q_gap_count), #6 (Q_gap_bases), #7 (T_gap_count), #8 (T_gap_bases)
+# psl can be further simplified to the best representatives using pslReps
+
+cd ${WORK_DIR}
+for i in ${SAMPLE}
+do
+QUERY=${i}-${SEQ}
+QUERYNAME=${i}.${SEQNAME}
+
+echo "
+#!/bin/bash
+
+# index QUERY for blast database
+cd ${prereq_DIR}
+# ln -s ${denovo_DIR}/${i}/${i}-SOAP/${i}-soap.contig .
+ln -s ${denovo_DIR}/${i}/${i}-soap.contig .
+# makeblastdb -in ${i}-soap.contig -dbtype nucl -out DB_${i}_contig -parse_seqids
+
+# split sample into parts
+\rm -rf ${QUERY}.*
+gt splitfasta -numfiles ${PARTS} ${QUERY}
+
+# run blat of sample parts in parallel
+cd ${run_DIR}
+mkdir -p DFPs
+cd DFPs
+\cp ${WORK_DIR}/sample.foundbySNP .
+
+for ((k=1; k<=${PARTS}; k++))
+do
+blat -t=dna -q=dna -out=psl -minIdentity=${PERC_IDENTITY} -minScore=${MIN_SCORE} -mask=lower \
+${prereq_DIR}/${REFERENCE}_${FROM}_${TO}.fasta ${prereq_DIR}/${QUERY}.\$k blat.${DB_REFSEQ}.${QUERYNAME}.\$k.psl &
+done
+
+# wait until all blat processes are finished
+wait
+
+# Combine all parts back into one file
+cd ${run_DIR}/DFPs
+\rm -f blat.${DB_REFSEQ}.${QUERYNAME}.psl
+\rm -f blat.${DB_REFSEQ}.${QUERYNAME}.Reps.psl
+\rm -f blat.${DB_REFSEQ}.${QUERYNAME}.Reps.psr
+
+for ((k=1; k<=${PARTS}; k++))
+do
+tail -n+6 blat.${DB_REFSEQ}.${QUERYNAME}.\$k.psl |\
+cat - >> blat.${DB_REFSEQ}.${QUERYNAME}.psl
+done
+
+# Put back the header for the Reps.psl file
+head -5 blat.${DB_REFSEQ}.${QUERYNAME}.1.psl |\
+cat - blat.${DB_REFSEQ}.${QUERYNAME}.psl > tmp && \
+\mv tmp blat.${DB_REFSEQ}.${QUERYNAME}.psl
+
+# Filter for only the representative records
+pslReps -singleHit blat.${DB_REFSEQ}.${QUERYNAME}.psl blat.${DB_REFSEQ}.${QUERYNAME}.Reps.psl \
+blat.${DB_REFSEQ}.${QUERYNAME}.Reps.psr
+
+" > WGblat_${i}-on-${REFERENCE}_${FROM}_${TO}.sh
+sh WGblat_${i}-on-${REFERENCE}_${FROM}_${TO}.sh 2>err_WGblat_${i} &
+
+done
+

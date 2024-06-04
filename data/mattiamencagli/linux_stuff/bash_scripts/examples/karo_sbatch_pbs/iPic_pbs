@@ -1,0 +1,39 @@
+#!/bin/bash
+### innanzitutto: PORCODDIO PBS
+#PBS -A DD-23-44
+#PBS -q qcpu
+########PBS -q qgpu_eurohpc
+########PBS -l select=1:ngpus=8:mpiprocs=128  
+#PBS -l select=1:mpiprocs=4  
+#PBS -l walltime=00:30:00
+#PBS -N iPic3D
+#PBS -m n
+#PBS -M m.mencagli@cineca.it
+
+## load modules
+source ${HOME}/modules_files/iPic_mod
+
+## print gpu info
+#nvidia-smi
+
+scorep="no"
+coils="yes"
+
+if [ ${scorep} = "yes" ]; then
+	# compile iPic
+	cd ${HOME}/programming/iPic3D/build
+	rm * -rf
+	mkdir data
+	## compile iPic standard
+	cmake ..
+	## compile iPic with scorep
+	SCOREP_WRAPPER=off cmake .. -DCMAKE_CXX_COMPILER=scorep-g++
+	export SCOREP_ENABLE_TRACING=true
+	# make
+	make -j
+	mpirun -np 4 ./iPic3D ../inputfiles/GEM.inp
+elif [ ${coils} = "yes" ]; then
+	cd /scratch/project/dd-23-44/mmencagl/iPic3D/build	
+	mpirun -np 4 ./iPic3D ../inputfiles/GEM_forCoils.inp
+fi
+

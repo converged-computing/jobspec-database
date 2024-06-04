@@ -73,7 +73,7 @@ def main():
     args, _ = parser.parse_known_args()
 
     # Output file name is the date
-    date = str(datetime.now())
+    date = datetime.now().strftime("%Y-%m-%d")
     outfile = f"raw-links-{date}.json"
     if not os.path.exists(args.outdir):
         os.makedirs(args.outdir)
@@ -94,20 +94,24 @@ def main():
     # Allow timeout
     driver.set_page_load_timeout(10)
 
+    # These are different job submission directives
+    directives = [
+        "SBATCH",
+        "PBATCH",
+        "PBS",
+        "OAR",
+        "FLUX",
+    ]
+
     # Let's do a matrix across analyses and then HPC terms
     # This might give duplicates, which is OK
     hpc_terms = [
         "gpu",
-        "cores",
         "array",
-        "pwd",
-        "mem",
         "module",
         "mpi",
-        "mpirun",
         "cuda",
         "intel",
-        "smi",
     ]
 
     # We can only get 100 results per set of terms. Boo
@@ -119,7 +123,6 @@ def main():
         "rust",
         "spack",
         "easybuild",
-        "stream",
         "resnet",
         "pytorch",
         "nvidia",
@@ -130,6 +133,16 @@ def main():
         "maestro",
         "snakemake",
         "nextflow",
+        "dask",
+        "kube",
+        "docker",
+        "singularity",
+        "julia",
+        "matlab",
+        "nccl",
+        "ray",
+        "fio",
+        "ior",
     ]
 
     # Create matrix of combined terms
@@ -138,44 +151,52 @@ def main():
         for hpc_term in hpc_terms:
             terms.append(f"{app_term}+{hpc_term}")
 
-    for term in terms:
-        if term in links:
-            continue
+    for directive in directives:
+        directive_url = f"https://github.com/search?q=%22%23{directive}%22"
+        for term in terms:
+            uid = f"{directive}-{term}"
+            if uid in links:
+                continue
 
-        print(f"⭐️ NEW TERM: {term}")
-        base_url = f"https://github.com/search?q=%22%23SBATCH%22+{term}++language%3AShell&type=code"
-        links[term] = []
+            print(f"⭐️ NEW TERM: {term}")
+            base_url = f"{directive_url}+{term}++language%3AShell&type=code"
+            links[uid] = []
 
-        page = 1
-        while True:
-            print(f"Parsing page {page}")
-            url = f"{base_url}&p={page}"
-            driver.get(url)
+            page = 1
+            while True:
+                print(f"Parsing page {page}")
+                url = f"{base_url}&p={page}"
+                driver.get(url)
 
-            # Sleep at least one second
-            sleep(random.choice(range(0, 1000)) * 0.001 + 1)
+                # Sleep at least one second
+                sleep(random.choice(range(0, 1000)) * 0.001 + 1)
 
-            # This gets the whole page - this is easier to parse than with selenium
-            body = driver.execute_script("return document.documentElement.outerHTML;")
+                # This gets the whole page - this is easier to parse than with selenium
+                body = driver.execute_script(
+                    "return document.documentElement.outerHTML;"
+                )
 
-            # Use beautiful soup to parse it
-            soup = BeautifulSoup(body, "html.parser")
+                # Use beautiful soup to parse it
+                soup = BeautifulSoup(body, "html.parser")
 
-            # Find all the direct links to save
-            new_links = soup.findAll(
-                "a", attrs={"data-testid": "link-to-search-result"}
-            )
+                # Find all the direct links to save
+                new_links = soup.findAll(
+                    "a", attrs={"data-testid": "link-to-search-result"}
+                )
 
-            if not new_links:
-                break
+                if not new_links:
+                    break
 
-            for link in new_links:
-                links[term].append(link.get("href"))
+                for link in new_links:
+                    links[uid].append(link.get("href"))
 
-            # Save the results as we go
-            utils.write_json(links, save_to)
-            page += 1
-            print(f"Found {len(links)} total job file links (saving incrementally)")
+                # Save the results as we go
+                utils.write_json(links, save_to)
+                page += 1
+                print(f"Found {len(links)} total job file links (saving incrementally)")
+
+    # One more save...
+    utils.write_json(links, save_to)
 
     print("CHECK RESULTS")
     import IPython

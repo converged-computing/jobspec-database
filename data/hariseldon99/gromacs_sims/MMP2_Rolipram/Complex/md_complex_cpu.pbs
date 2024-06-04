@@ -1,0 +1,67 @@
+#!/bin/bash
+#----------------------------------------------------------
+# Job name
+#PBS -N MD-Complex
+# queue select
+#PBS -q workq
+#PBS -l select=1:mpiprocs=24
+# Name of stdout output file (default)
+#PBS -o md_complex.out 
+# stdout output file
+#PBS -j oe
+#PBS -l walltime=168:00:00 
+#----------------------------------------------------------
+
+# Suppress spurious infiniband-related errors
+export MPI_MCA_mca_base_component_show_load_errors=0
+export PMIX_MCA_mca_base_component_show_load_errors=0
+#Start time
+start=`date +%s.%N`
+# Change to submission directory
+cd $PBS_O_WORKDIR
+#Load basic OHPC tools
+module load ohpc
+#Load cuda
+module load cuda
+#Load singularity
+module load singularity
+
+echo "Starting"
+echo '---------------------------------------------'
+
+export MDNAME=md_0_100
+
+num_proc=`wc -l $PBS_NODEFILE | awk '{print $1}'`
+
+#Actual MD Dynamics: 
+source /opt/gromacs-2022.4/bin/GMXRC
+mpirun -np $num_proc -hostfile $PBS_NODEFILE gmx_mpi mdrun -pin on -v -deffnm $MDNAME
+
+
+#End time
+end=`date +%s.%N`
+
+echo "MPI_NUM_PROCS= "$num_procs
+export RUNTIME=$( echo "$end - $start" | bc -l )
+echo '---------------------------------------------'
+echo "Runtime: "$RUNTIME" sec"
+echo '---------------------------------------------'
+#----------------------------------------------------------
+# Communicate job status to a telegram bot
+#----------------------------------------------------------
+# <-Create a telegram bot 
+# <-Get TOKEN, CHATID from botfather
+# <-See https://www.cytron.io/tutorial/how-to-create-a-telegram-bot-get-the-api-key-and-chat-id
+# <-Put them into two environment variables TOKEN and CHATID 
+# <-Store them in a config file and source it like below
+#----------------------------------------------------------
+
+source ${HOME}/.config/telegram/telegram.conf
+
+LOGIN_NODE=kuhpchn
+SSHBIN=/usr/bin/ssh
+URL="https://api.telegram.org/bot${TOKEN}/sendMessage"
+# Generate the telegram message  text
+TEXT="${bell} Local Job launched on ${start} exiting @ ${HOSTNAME}:${PWD}"
+CMD='curl -s --max-time 10 --retry 5 --retry-delay 2 --retry-max-time 10  -d '\""chat_id=${CHATID}&text=${TEXT}&disable_web_page_preview=true&parse_mode=markdown"\"" ${URL}"
+$SSHBIN $LOGIN_NODE $CMD

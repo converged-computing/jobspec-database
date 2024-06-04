@@ -1,0 +1,34 @@
+#!/bin/bash
+
+#PBS -l walltime=5:00:00,select=1:ncpus=1:mem=4gb
+#PBS -J 1-8
+#PBS -N count_gp
+#PBS -M nicholas.mateyko@ubc.ca
+#PBS -m abe
+#PBS -A st-cdeboer-1
+#PBS -o output_^array_index^.txt
+#PBS -e error_^array_index^.txt
+ 
+################################################################################
+ 
+cd $PBS_O_WORKDIR
+source /arc/software/spack/opt/spack/linux-centos7-x86_64/gcc-5.4.0/miniconda3-4.6.14-f4hr756q34tvp7nsjn7hovq46fomaww6/etc/profile.d/conda.sh
+conda activate gibspred
+
+set -e
+logDir="log"
+dataDir="/arc/project/st-cdeboer-1/nick/GibsonPrediction/data/consensus"
+taskDir="/arc/project/st-cdeboer-1/nick/GibsonPrediction/scripts/count_tasks_low_complexity.txt"
+idx=$PBS_ARRAY_INDEX
+sample=$(awk -v ArrayTaskID=$idx '$1==ArrayTaskID {print $2}' $taskDir)
+mkdir -p log 
+
+if [ ! -e $logDir/$idx.count.done ]
+then
+        /arc/project/st-cdeboer-1/nick/GibsonPrediction/scripts/count_reads.py \
+        -i $dataDir/${sample}_trimmed.txt.gz -o $sample -l $sample.log.txt -t 5 -m cluster
+        
+        touch $logDir/$idx.count.done
+else
+        echo Already performed count of sample $idx
+fi

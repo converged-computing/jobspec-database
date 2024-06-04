@@ -1,0 +1,23 @@
+#!/bin/sh
+# An example for hybrid mpi-openmp job with intel compilers
+#PBS -N pic
+#PBS -M noone@mail.ustc.edu.cn
+#PBS -o job.log
+#PBS -e job.err
+#PBS -q batch
+#PBS -l walltime=10000:00:00
+#PBS -l nodes=2:ppn=48
+cd $PBS_O_WORKDIR
+echo Begin Time `date`
+echo Directory is $PWD
+spack env activate smilei-oneapi
+MPI_RANKS_PER_NODE=2
+export HOSTS=`sort -u $PBS_NODEFILE | paste -s -d,`
+export OMP_NUM_THREADS=$(($PBS_NUM_PPN / $MPI_RANKS_PER_NODE))
+export OMP_SCHEDULE=dynamic
+export OMP_PROC_BIND=true
+export I_MPI_PIN_DOMAIN=omp
+mpirun -hosts $HOSTS \
+    -perhost $MPI_RANKS_PER_NODE \
+    $HOME/Smilei/build/smilei-oneapi/smilei test.py
+echo End Time `date`

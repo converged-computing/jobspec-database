@@ -1,0 +1,34 @@
+#!/bin/bash
+#PBS -l select=1:ncpus=4:mem=40gb:ngpus=1:gpu_type=RTX6000
+#PBS -l walltime=24:00:00
+#PBS -N red-cnn-aiden-0618-test
+#PBS -o pbs_log/
+#PBS -e pbs_log/
+ 
+cd $PBS_O_WORKDIR
+echo "PBS_O_WORKDIR" is $PBS_O_WORKDIR
+
+module load anaconda3/personal
+
+
+export PATH='/rds/general/user/xc2322/home/anaconda3/envs/test_py38/bin/':$PATH
+which python
+
+# grant authority
+nvidia-smi
+
+
+python /rds/general/user/xc2322/home/git_projects/RED-CNN-Baseline/main.py --mode='train' --exp_code='chest_fedavg_adapter_1' --yaml_path='adapter.yaml' --peft=1 --pretrained_ckpt='save/pretrain/REDCNN_100epoch_fed_avg.ckpt' --lr=1e-6
+
+python /rds/general/user/xc2322/home/git_projects/RED-CNN-Baseline/main.py --mode='train' --exp_code='chest_fedavg_adapter_2' --yaml_path='adapter.yaml' --peft=2 --pretrained_ckpt='save/pretrain/REDCNN_100epoch_fed_avg.ckpt' --lr=1e-6
+
+python /rds/general/user/xc2322/home/git_projects/RED-CNN-Baseline/main.py --mode='train' --exp_code='chest_fedavg_halfft' --yaml_path='adapter.yaml' --half_ft --pretrained_ckpt='save/pretrain/REDCNN_100epoch_fed_avg.ckpt' --lr=1e-6
+
+
+# test
+
+python /rds/general/user/xc2322/home/git_projects/RED-CNN-Baseline/main.py --mode='test' --exp_code='chest_fedavg_adapter_1' --test_code='1' --yaml_path='adapter.yaml' --fig_suffix='chest_fedavg_adapter_1' --result_fig --peft=1
+
+python /rds/general/user/xc2322/home/git_projects/RED-CNN-Baseline/main.py --mode='test' --exp_code='chest_fedavg_adapter_2' --test_code='1' --yaml_path='adapter.yaml' --fig_suffix='chest_fedavg_adapter_2' --result_fig --peft=2
+
+python /rds/general/user/xc2322/home/git_projects/RED-CNN-Baseline/main.py --mode='test' --exp_code='chest_fedavg_halfft' --test_code='1' --yaml_path='adapter.yaml' --fig_suffix='chest_fedavg_halfft' --result_fig 

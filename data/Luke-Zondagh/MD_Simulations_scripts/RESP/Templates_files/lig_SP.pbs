@@ -1,0 +1,46 @@
+#!/bin/bash
+#PBS -P CHEM1173
+#PBS -N 3VO_SP
+#PBS -l select=1:ncpus=24:mpiprocs=24
+#PBS -l walltime=0:05:00
+#PBS -q smp
+#PBS -m be
+#PBS -M lzondagh@uwc.ac.za
+#PBS -o /mnt/lustre/users/jjoubert1/HF_MAESTRO/3VO_maestro_SP_output
+#PBS -e /mnt/lustre/users/jjoubert1/HF_MAESTRO/3VO_maestro_SP_error
+
+function cleanup_scratch() {
+echo "Deleting inside signal handler, meaning I probably either hit the walltime, or deleted the job using qdel"
+
+rm -rfv $GAUSS_SCRDIR
+echo "---"
+echo "Signal handler ending time:"
+date
+exit 0
+}
+
+trap 'cleanup_scratch' SIGTERM SIGHUP SIGINT SIGQUIT SIGFPE SIGKILL SIGALRM
+
+mkdir -p /mnt/lustre/users/jjoubert1/HF_MAESTRO/$PBS_JOBID
+cd /mnt/lustre/users/jjoubert1/HF_MAESTRO
+
+echo "Job starts here"
+date
+
+module add chpc/gaussian16/C01
+GAUSS_SCRDIR=/mnt/lustre/users/jjoubert1/HF_MAESTRO/$PBS_JOBID
+export g16root GAUSS_SCRDIR GAUSS_EXEDIR
+source $g16root/g16/bsd/g16.profile
+export GAUSS_EXEDIR=$g16root/g16/linda-exe:$GAUSS_EXEDIR
+
+LINDA=`cat $PBS_NODEFILE | uniq | tr '\n' , | sed 's|,$||'`
+sed -i 's/.*linda.*/\%lindaworkers='$LINDA'/' 3VO_maestro_SP.gjf
+g16 < 3VO_maestro_SP.gjf > 3VO_maestro_SP.log
+
+echo "rm -rfv $GAUSS_SCRDIR"
+pushd /mnt/lustre/users/jjoubert1/HF_MAESTRO
+rm -rf $PBS_JOBID;
+popd
+
+echo "Normal execution ending time:"
+date

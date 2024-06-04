@@ -1,0 +1,36 @@
+#!/bin/sh
+
+#PBS -l select=1:ncpus=5:ngpus=1
+
+#PBS -l walltime=2:00:00
+
+#PBS -q dgx
+
+#PBS -N RN50_1
+
+#PBS -j oe
+
+#PBS -o rn50_1.log
+
+cd "$PBS_O_WORKDIR" || exit $?
+
+image="nvcr.io/nvidia/tensorflow:20.02-tf2-py3"
+
+nscc-docker run $image << EOF
+
+nvidia-smi
+export HOME=/home/users/sutd/1002653 
+export TFDS_DIR=/scratch/users/sutd/1002653/tensorflow_datasets
+export HDF5_USE_FILE_LOCKING='FALSE'
+cd /scratch/users/sutd/1002653/mini-dlperf && \
+git pull && \
+cd tensorflow && \
+ls && \
+bash setup.sh && \
+echo $TFDS_DIR && \
+python3 resnet_tfdist.py --amp --xla \
+   --dataset imagenet2012 \
+   --data_dir /scratch/users/sutd/1002653/tensorflow_datasets \
+   --epochs 1 --batch_size 256
+
+EOF > stdout.$PBS_JOBID 2> stderr.$PBS_JOBID

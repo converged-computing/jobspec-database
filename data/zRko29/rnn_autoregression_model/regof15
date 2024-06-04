@@ -1,0 +1,42 @@
+#!/bin/bash
+#
+#SBATCH --partition=gpu                 # partition (queue)
+#SBATCH --qos=valhala
+#SBATCH --nodes=1                       # number of nodes
+#SBATCH --ntasks-per-node=1             # number of cores
+#SBATCH --mem=24G                       # memory per node
+#SBATCH --time=5-00:00                  # time (D-HH:MM)
+#SBATCH --output=slurm.%N.%j.out        # STDOUT
+#SBATCH --error=slurm.%N.%j.err         # STDERR
+
+# won't work without this
+export NCCL_P2P_DISABLE=1
+# export NCCL_DEBUG=INFO
+
+source ~/.bashrc
+
+conda activate rnn_env
+
+optimization_steps=100
+experiment=logs/overfitting_K=1.5
+
+for i in $(seq $optimization_steps)
+do
+    echo
+    echo "-----------------------------"
+    echo "Optimization step: $i / $optimization_steps"
+    echo
+    
+    echo "Making gridsearch step."
+    python gridsearch.py --experiment_path $experiment
+    
+    echo "Running trainer."
+    srun python trainer.py --num_nodes 1 --devices 0 --train_size 1.0 --epochs 4000 --experiment_path $experiment
+    
+    echo "Updating parameter intervals."
+    python update.py --min_good_samples 4 --max_good_loss 1e-6 --check_every_n_steps 3 --current_step $i --experiment_path $experiment
+done
+
+echo
+echo "-----------------------------"
+echo "Optimization finished."

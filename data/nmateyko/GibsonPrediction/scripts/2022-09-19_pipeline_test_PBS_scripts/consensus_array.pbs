@@ -1,0 +1,36 @@
+#!/bin/bash
+
+#PBS -l walltime=1:00:00,select=1:ncpus=1:mem=2gb
+#PBS -J 1-16
+#PBS -N consensus_plab
+#PBS -M nicholas.mateyko@ubc.ca
+#PBS -m abe
+#PBS -A st-cdeboer-1
+#PBS -o output_^array_index^.txt
+#PBS -e error_^array_index^.txt
+ 
+################################################################################
+ 
+cd $PBS_O_WORKDIR
+source /arc/software/spack/opt/spack/linux-centos7-x86_64/gcc-5.4.0/miniconda3-4.6.14-f4hr756q34tvp7nsjn7hovq46fomaww6/etc/profile.d/conda.sh
+conda activate gibspred
+
+set -e
+logDir="log"
+dataDir="/arc/project/st-cdeboer-1/nick/GibsonPrediction/data/trimmed"
+taskDir="/arc/project/st-cdeboer-1/nick/GibsonPrediction/scripts/consensus_tasks.txt"
+idx=$PBS_ARRAY_INDEX
+read1=$(awk -v ArrayTaskID=$idx '$1==ArrayTaskID {print $2}' $taskDir)
+read2=$(awk -v ArrayTaskID=$idx '$1==ArrayTaskID {print $3}' $taskDir)
+outFile=$(awk -v ArrayTaskID=$idx '$1==ArrayTaskID {print $4}' $taskDir)
+mkdir -p log 
+
+if [ ! -e $logDir/$idx.consensus.done ]
+then
+        /arc/project/st-cdeboer-1/nick/GibsonPrediction/scripts/consensus_reads.py \
+        -i1 $dataDir/$read1 -i2 $dataDir/$read2 -o $outFile.txt.gz -l $outFile.log.txt.gz
+        
+        touch $logDir/$idx.consensus.done
+else
+        echo Already performed consensus of sample $idx
+fi

@@ -26,12 +26,15 @@ python scripts/get_jobspecs.py ./scripts/data/raw-links-may-23.json --outdir ./d
 ```
 
 Note that the data now is just a trial run! We have 11k+ unique results from just that, wowza.
-We will want to optimize our search term strategy to get across a set of applications and scopes.
-
+We will want to optimize our search term strategy to get across a set of applications and scopes. After this we currently have `19544` scripts.
 
 ## Analysis
 
-TODO! I will likely start this weekend. In additional to regular pre-processing, we will want to de-duplicate any scripts that are exact copies.
+You can run:
+
+```bash
+python scripts/word2vec.py
+```
 
 
 ## License

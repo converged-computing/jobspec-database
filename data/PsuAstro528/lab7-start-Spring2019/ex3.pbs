@@ -1,0 +1,31 @@
+#!/bin/bash
+#PBS -A cyberlamp_class     
+#PBS -l qos=cl_class        
+## Time requested: 0 hours, 59 minutes, 0 seconds
+#PBS -l walltime=00:59:00    
+## Ask for one core on one node and one gpu
+#PBS -l nodes=1:ppn=1:gpus=1
+## Each processor will use no more than 1GB of RAM
+#PBS -l pmem=1gb             
+## combine STDOUT and STDERR into one file
+#PBS -j oe                   
+## Ask for emails when jobs begins, ends or aborts
+#PBS -m abe                  
+## replace with your email and uncomment if you want emails
+##PBS -M YOUR_EMAIL_HERE@psu.edu       
+## Specificy job name, so easy to find in qstat
+#PBS -N Lab7Ex3
+
+echo "Starting job $PBS_JOBNAME"
+date
+echo "Job id: $PBS_JOBID"
+echo "About to change into $PBS_O_WORKDIR"
+cd $PBS_O_WORKDIR 
+export CUDA_HOME=/gpfs/group/ebf11/default/astro528/cuda
+echo "About to start Julia"
+julia -e 'using Weave; weave("ex3.ipynb",doctype="github",fig_path="ex3_figs")'
+echo "Julia completed"
+mv ex3.md ex3_${PBS_JOBID}.md
+echo "Done"
+date
+

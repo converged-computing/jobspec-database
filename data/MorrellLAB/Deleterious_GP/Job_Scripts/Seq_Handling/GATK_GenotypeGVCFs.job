@@ -1,0 +1,46 @@
+#!/bin/bash
+#PBS -l mem=72gb,nodes=1:ppn=1,walltime=36:00:00
+#PBS -m abe
+#PBS -M konox006@umn.edu
+#PBS -q mesabi
+
+module load java
+
+#	Path to the reference
+REF=${HOME}/Shared/References/Reference_Sequences/Barley/Morex/barley_RefSeq_v1.0/barley_pseudomolecules_parts.fa
+REF_DICT=${HOME}/Shared/References/Reference_Sequences/Barley/Morex/barley_RefSeq_v1.0/barley_pseudomolecules_parts.dict
+#	Path to directory containing GVCFs
+GVCF_DIR=/panfs/roc/scratch/tkono/Genomic_Prediction/GVCFs/
+#	 Build the sample list
+SAMPLE_LIST=($(find ${GVCF_DIR} -name '*.g.vcf'))
+#	Put them into a format that will be accepted by the GATK command line
+GATK_IN=()
+for s in "${SAMPLE_LIST[@]}"
+do
+		GATK_IN+=("-V $s")
+	done
+#   Array of sequence names, since we are going to call SNPs in a task array
+SEQNAMES=($(cut -f 2 ${REF_DICT} | grep -E '^SN' | cut -f 2 -d ':'))
+#   Get which sequence we are analyzing with the task ID
+CURRENT=${SEQNAMES[${PBS_ARRAYID}]}
+#	Make sure the output directory exists
+OUTPUT_DIR=/panfs/roc/scratch/tkono/Genomic_Prediction/Variants/Parts
+mkdir -p ${OUTPUT_DIR}
+
+#	GenotypeGVCFs options:
+#		-R Reference
+#		-L BED: Operate only over the intervals listed in BED
+#		-V Input GVCF
+#		-o Output VCF
+#		--heterozygosity 0.008: Use a prior on nucleotide diversity of 0.008/bp
+#		--sample_ploidy 1: treat samples as haploid (they are highly inbred)
+
+export _JAVA_OPTIONS="-Xmx71g"
+java -jar ~/Soft/GenomeAnalysisTK-3.6/GenomeAnalysisTK.jar\
+	-T GenotypeGVCFs \
+	-R ${REF} \
+    -L ${CURRENT} \
+	${GATK_IN[@]}\
+	--heterozygosity 0.008\
+	--sample_ploidy 1\
+	-o ${OUTPUT_DIR}/GATK_${CURRENT}.vcf

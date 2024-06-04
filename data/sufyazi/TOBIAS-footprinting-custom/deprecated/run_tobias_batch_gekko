@@ -1,0 +1,124 @@
+#!/usr/bin/env bash
+# shellcheck disable=SC1091
+# shellcheck disable=SC2153
+# This script is used to run the job on the cluster.
+
+#PBS -N 20230707_tobias_batch_test
+#PBS -P sbs_liyh
+
+#PBS -q q128
+#PBS -l select=1:ncpus=32:mpiprocs=32:mem=16gb
+#PBS -l walltime=24:00:00
+
+#PBS -m bea
+#PBS -M suffi.azizan@ntu.edu.sg
+
+#PBS -o /home/suffi.azizan/scratchspace/pipeline_scripts/footprinting-workflow-scripts/logs/pbs_oe_230707-1130.txt
+#PBS -e /home/suffi.azizan/scratchspace/pipeline_scripts/footprinting-workflow-scripts/logs/pbs_oe_230707-1130.txt
+#PBS -j oe
+
+# Load modules
+module purge
+module load r/gcc6/4.2.0
+
+# load conda environment
+eval "$(conda shell.bash hook)"
+conda activate snakemake_tobias
+
+gathered_input_root=$FILES
+dataset_rec=$REC
+run_num=$RUN_NUM
+
+# Set cores
+CORE=32
+
+# Check and increase file descriptor limit
+FILELIMIT=$(ulimit -n)
+echo "Current file descriptor limit: " "$FILELIMIT"
+#ulimit -n 10000
+#FILELIMIT=$(ulimit -n)
+#echo "New file descriptor limit: " "$FILELIMIT"
+
+# Declare an associative array to store the dataset and experiment type pairs
+declare -A dataset_dict
+
+# Read the dataset record file and populate the associative array
+while read -r dataset experiment; do
+    dataset_dict["$dataset"]="$experiment"
+done < "$dataset_rec"
+
+# Print the dataset and experiment type pairs
+for dataset in "${!dataset_dict[@]}"; do
+    # get the path of the dataset in the gathered_input_root
+    dataset_path=$(find "${gathered_input_root}" -maxdepth 1 -mindepth 1 -type d -name "${dataset}")
+	# check if the dataset path is empty; if it is empty, skip
+	if [ -z "${dataset_path}" ]; then
+		continue
+	fi
+    # assign the experiment type to a variable
+    experiment_type="${dataset_dict[$dataset]}"
+
+    # iterate through each sample
+	for sample_dir in "${dataset_path}"/*; do
+		# check if the file is a directory; if it is NOT a directory, skip
+		if [ ! -d "${sample_dir}" ]; then
+			continue
+		else
+            # get the sample name
+			sample_name=$(basename "${sample_dir}")
+			# capture the sample number
+			if [[ $sample_name =~ (sample[0-9]{1,3}) ]]; then
+  				substring="${BASH_REMATCH[1]}"
+  				echo "Current directory: $substring of ${dataset}"
+			fi
+            # find input files and assign to variables
+            # find the bam file
+            readarray -t bam_files < <(find "${sample_dir}" -type f \( -name "*.trim.srt.nodup.no_chrM_MT.bam" -o -name "*.nodup.no_chrM_MT.bam" -o -name "*.rep-merged.bam" \))
+            # check if the length of the bam_files array is more than 1; if yes, then filter for the one named .rep-merged.bam
+            if [[ "${#bam_files[@]}" -gt 1 ]]; then
+                bam=$(find "${sample_dir}" -type f -name "*.rep-merged.bam")
+            else
+                bam="${bam_files[0]}"
+            fi
+            echo "Bam file: $bam"
+            # create the output directory
+            mkdir -p "/home/suffi.azizan/scratchspace/outputs/tobias-io/tobias-analysis-outputs/RUN-${run_num}/${dataset}_${sample_name}"
+        fi
+
+        # check if the experiment type is DNase-seq
+        if [[ "$experiment_type" == "dnaseseq" ]]; then
+            echo "Dataset: $dataset Experiment Type: $experiment_type"
+            # run bias correction
+            if TOBIAS ATACorrect -b "$bam" -g /home/suffi.azizan/scratchspace/inputs/genomes/GRCh38_no_alt_GCA_000001405.15.fasta -p /home/suffi.azizan/scratchspace/outputs/tobias-io/master_merged_peakset/ALL_master_merged_peakset.bed --blacklist /home/suffi.azizan/scratchspace/inputs/genomes/hg38-blacklist.v2.bed --read_shift 0 0 --k_flank 6 --outdir "/home/suffi.azizan/scratchspace/outputs/tobias-io/tobias-analysis-outputs/RUN-${run_num}/${dataset}_${sample_name}" --prefix "${dataset}_${sample_name}" --cores $CORE >> "/home/suffi.azizan/scratchspace/pipeline_scripts/footprinting-workflow-scripts/logs/${dataset}_${sample_name}_${experiment_type}-${CORE}cores-gekko-test-${run_num}.log"; then
+                echo "Bias correction has been completed for ${dataset}_${sample_name}. Proceeding with footprinting."
+            else
+                echo "Bias correction has failed for ${dataset}_${sample_name}. Please check the log file for more details."
+                continue
+            fi
+        elif [[ "$experiment_type" == "atacseq" ]]; then
+            echo "Dataset: $dataset Experiment Type: $experiment_type"
+            # run bias correction
+            if TOBIAS ATACorrect -b "$bam" -g /home/suffi.azizan/scratchspace/inputs/genomes/GRCh38_no_alt_GCA_000001405.15.fasta -p /home/suffi.azizan/scratchspace/outputs/tobias-io/master_merged_peakset/ALL_master_merged_peakset.bed --blacklist /home/suffi.azizan/scratchspace/inputs/genomes/hg38-blacklist.v2.bed --outdir "/home/suffi.azizan/scratchspace/outputs/tobias-io/tobias-analysis-outputs/RUN-${run_num}/${dataset}_${sample_name}" --prefix "${dataset}_${sample_name}" --cores $CORE >> "/home/suffi.azizan/scratchspace/pipeline_scripts/footprinting-workflow-scripts/logs/${dataset}_${sample_name}_${experiment_type}-${CORE}cores-gekko-test-${run_num}.log"; then
+                echo "Bias correction has been completed for ${dataset}_${sample_name}. Proceeding with footprinting."
+            else
+                echo "Bias correction has failed for ${dataset}_${sample_name}. Please check the log file for more details."
+                continue
+            fi
+        fi
+
+        FILELIMIT=$(ulimit -n)
+        echo "Current file descriptor limit: " "$FILELIMIT"
+
+        # run TOBIAS footprinting
+        # score bigwigs
+        if TOBIAS ScoreBigwig --signal "/home/suffi.azizan/scratchspace/outputs/tobias-io/tobias-analysis-outputs/RUN-${run_num}/${dataset}_${sample_name}/${dataset}_${sample_name}_corrected.bw" --regions /home/suffi.azizan/scratchspace/outputs/tobias-io/master_merged_peakset/ALL_master_merged_peakset.bed --output "/home/suffi.azizan/scratchspace/outputs/tobias-io/tobias-analysis-outputs/RUN-${run_num}/${dataset}_${sample_name}/${dataset}_${sample_name}_footprints.bw" --cores $CORE >> "/home/suffi.azizan/scratchspace/pipeline_scripts/footprinting-workflow-scripts/logs/${dataset}_${sample_name}_${experiment_type}-${CORE}cores-gekko-test-${run_num}.log" && \
+            
+        # call footprints
+        TOBIAS BINDetect --motifs /home/suffi.azizan/scratchspace/pipeline_scripts/footprinting-workflow-scripts/motif-guided/joined_filt_combined_motifs.jaspar --signals "/home/suffi.azizan/scratchspace/outputs/tobias-io/tobias-analysis-outputs/RUN-${run_num}/${dataset}_${sample_name}/${dataset}_${sample_name}_footprints.bw" --genome /home/suffi.azizan/scratchspace/inputs/genomes/GRCh38_no_alt_GCA_000001405.15.fasta --peaks /home/suffi.azizan/scratchspace/outputs/tobias-io/master_merged_peakset/ALL_master_merged_peakset.bed --outdir "/home/suffi.azizan/scratchspace/outputs/tobias-io/tobias-analysis-outputs/RUN-${run_num}/${dataset}_${sample_name}/bindetect_outputs" --skip-excel --cores $CORE >> "/home/suffi.azizan/scratchspace/pipeline_scripts/footprinting-workflow-scripts/logs/${dataset}_${sample_name}_${experiment_type}-${CORE}cores-gekko-test-${run_num}.log"; then
+            echo "Successfully ran TOBIAS footprinting for ${dataset}_${sample_name}."
+        else
+            echo "Failed to run TOBIAS footprinting for ${dataset}_${sample_name} due to an error. Please see the log file for more details."
+            continue
+        fi   
+    done
+done

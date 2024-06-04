@@ -1,0 +1,38 @@
+#!/bin/zsh
+#PBS -A VeloC
+#PBS -l select=32
+#PBS -l walltime=0:30:00
+#PBS -q prod
+#PBS -l filesystems=home
+#PBS -M thomas.bouvier@inria.fr
+
+set -eu
+
+echo "Setting up spack"
+source ${HOME}/git/spack-polaris/share/spack/setup-env.sh
+echo "Activating env"
+spack env activate /home/tbouvier/git/spack-envs/polaris
+spack find -fN
+
+export WANDB_MODE=offline
+
+# 4 MPI ranks per node spread evenly across cores
+NNODES=`wc -l < $PBS_NODEFILE`
+NRANKS_PER_NODE=4
+NDEPTH=8
+NTHREADS=1
+
+NTOTRANKS=$(( NNODES * NRANKS_PER_NODE ))
+echo "NUM_OF_NODES=${NNODES} TOTAL_NUM_RANKS=${NTOTRANKS} RANKS_PER_NODE=${NRANKS_PER_NODE} THREADS_PER_RANK=${NTHREADS}"
+
+# Copying the dataset to local storage
+#mpiexec -n ${NNODES} -hostfile $PBS_NODEFILE cp -r /grand/VeloC/tbouvier/datasets/ImageNet_blurred /local/scratch/
+
+# Jobs are run from the xps/polaris dir, main.py is at location ../..
+#
+# IMPORANT NOTE: the --cpu-bind depth option to mpiexec is crucial if you
+# intend to run Mochi processes that will use additional threads or
+# execution streams.  The default CPU binding on Polaris will limit each
+# process launched with mpiexec to a single CPU core that will starve any
+# additional threads.
+mpiexec -n ${NTOTRANKS} --ppn ${NRANKS_PER_NODE} --depth=${NDEPTH} --cpu-bind depth ./set_affinity_gpu_polaris.sh python ../../main.py --yaml-config experiments_polaris.yaml --config er_resnet_scale --log-level info

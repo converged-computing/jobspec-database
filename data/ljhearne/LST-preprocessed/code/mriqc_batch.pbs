@@ -1,0 +1,41 @@
+#!/bin/bash
+
+# This code executes the individual level MRIQC processing.
+# See https://mriqc.readthedocs.io/en/stable/index.html
+
+#PBS -N LST7T_mriqc
+#PBS -l mem=45gb,walltime=2:00:00,ncpus=12
+#PBS -m abe
+#PBS -M luke.hearne@qimrberghofer.edu.au
+#PBS -o /mnt/lustre/working/lab_lucac/shared/projects/LST7T/scratch/batch
+#PBS -e /mnt/lustre/working/lab_lucac/shared/projects/LST7T/scratch/batch
+#PBS -k eod
+#PBS -J 0-62
+
+# project directory
+proj_dir=/mnt/lustre/working/lab_lucac/shared/projects/LST7T/
+
+# get subject from list
+mapfile -t subj_array < ${proj_dir}code/subject_list.txt
+subj=${subj_array[$PBS_ARRAY_INDEX]}
+echo "Current subject: " ${subj}
+
+# paths
+bids_dir=${proj_dir}data/bids/
+out_dir=${proj_dir}data/derivatives/mriqc/
+work_dir=${proj_dir}scratch/mriqc/${subj}/
+
+# container
+mriqc_con=/mnt/lustre/working/lab_lucac/shared/x_mriqc_containers/mriqc-0.16.1.simg
+
+# load modules
+module load singularity/3.7.1
+
+# run proxy script
+source ~/.proxy
+
+# run mriqc via singularity
+singularity run --cleanenv ${mriqc_con} ${bids_dir} ${out_dir} participant --participant-label ${subj} --no-sub --mem_gb 24 --n_cpus 8 -w ${work_dir}
+
+# unload module
+module unload singularity/3.7.1

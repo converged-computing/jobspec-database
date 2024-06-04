@@ -1,0 +1,36 @@
+#!/bin/bash
+
+#
+# PURPOSE: Sample submit script for cores = nodes*16
+# USAGE:   qsub submit_hello
+#
+
+# PBSPRO directives (must be above shell commands)
+#PBS -q cpu_amd
+#PBS -N hello_mpi                                   
+#PBS -l select=2:ncpus=16:mpiprocs=16:mem=1gb 
+#PBS -l walltime=0:05:00                      
+#
+
+#     *** User parameters ***
+RUNDIR=CHANGE_ME
+EXEFILE=CHANGE_ME/helloworld.py
+
+# load modules
+module load shared pbspro gcc python openmpi/gcc/64 
+module list
+
+# set env variables
+export PYTHONPATH=/cm/home/mmasarik/.local/lib/python2.7
+
+# get number of slots needed
+nslots=$(wc -l < $PBS_NODEFILE)
+
+# change to run dir if not already there
+cd $RUNDIR
+
+# call executable
+mpirun -v -np $nslots -machinefile $PBS_NODEFILE $EXEFILE
+
+# END
+exit

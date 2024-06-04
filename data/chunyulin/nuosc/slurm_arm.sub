@@ -1,0 +1,37 @@
+#! /bin/bash
+#SBATCH -J nuosc_12D
+#SBATCH --nodes=1 --ntasks-per-node=1 --cpus-per-task=252
+###SBATCH --hint=nomultithread
+#SBATCH --hint=multithread
+
+hostname
+export OMP_NUM_THREADS=${SLURM_CPUS_PER_TASK}
+
+module purge
+module load arm21/21.1
+
+OUT=nuosc
+##.%q{PMIX_RANK}
+#srun ${NSYS} profile -o ${OUT} -f true --trace openmp,nvtx,cuda ./nuosc --dz 0.005 --nvz 51 --mu 0.1
+#srun ./nuosc --dz 0.01 --nvz 201 --mu 0.1 --ANA_EVERY 10 --ENDSTEP 10
+#srun ncu -s 12 -c 8 --set full -o profile ./nuosc --mu 0.1
+
+
+NV="51 101 201"
+DZ="0.1 0.05 0.01 0.005 0.001"
+
+OMP="1 2 4 8 16 32 63"
+OMP="1 1 2 4 8 16 32 48 64 80 96 128 252"
+NV="51 101 201"
+DZ="0.1"
+
+for omp in ${OMP}; do
+for nv in ${NV}; do
+for dz in ${DZ}; do
+    export OMP_NUM_THREADS=$((omp))
+    srun --cpu-bind=v,cores ./nuosc --mu 1.0 --nv ${nv} --dz ${dz} --zmax 1024 --cfl 0.25 --ipt 1 --ko 1e-3 --ANA_EVERY_T 99 --END_STEP 20
+done
+done
+done
+
+echo "--- Walltime: ${SECONDS} sec."

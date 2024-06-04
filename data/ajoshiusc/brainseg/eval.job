@@ -1,0 +1,15 @@
+#!/bin/bash
+#SBATCH --nodes=1
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=8
+#SBATCH --mem=64GB
+#SBATCH --time=1:00:00
+#SBATCH --partition=gpu
+#SBATCH --gres=gpu:1
+#SBATCH --account=ajoshi_27
+
+module purge
+module load nvidia-hpc-sdk
+module load gcc/8.3.0
+
+python /scratch1/wenhuicu/brainseg/evaluation.py --name='BCE0.0001weighted_BCE2'

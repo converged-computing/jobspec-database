@@ -1,0 +1,20 @@
+#!/bin/bash
+#PBS -jeo
+#PBS -r n
+#PBS -l nodes=1:ppn=1
+
+date
+hostname
+echo $PBS_JOBNAME
+
+module load ScriptLang/python/2.7i Compilers/Intel/psxe_2016.4 QCh/LAMMPS/17Nov16/psxe2016.4
+
+export LAMMPS_POTENTIALS=~/lammps/_res
+
+export RUN_DIR=~/lammps
+
+cd ${RUN_DIR}
+
+mpirun -genv OMP_NUM_THREADS 1 -np ${PBS_NP}  ${LAMMPS_ROOT}/lmp_parallel -sf intel -pk intel 0 omp 1 -in $PBS_JOBNAME.lam -log $PBS_JOBNAME.out >$PBS_JOBNAME.stdout
+
+date

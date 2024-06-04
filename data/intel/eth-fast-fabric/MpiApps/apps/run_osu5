@@ -1,0 +1,116 @@
+#!/bin/bash
+# BEGIN_ICS_COPYRIGHT8 ****************************************
+#
+# Copyright (c) 2015-2023, Intel Corporation
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are met:
+#
+#     * Redistributions of source code must retain the above copyright notice,
+#       this list of conditions and the following disclaimer.
+#     * Redistributions in binary form must reproduce the above copyright
+#       notice, this list of conditions and the following disclaimer in the
+#       documentation and/or other materials provided with the distribution.
+#     * Neither the name of Intel Corporation nor the names of its contributors
+#       may be used to endorse or promote products derived from this software
+#       without specific prior written permission.
+#
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+# AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+# IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+# DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE
+# FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+# DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+# SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+# CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+# OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+# OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+#
+# END_ICS_COPYRIGHT8   ****************************************
+
+# [ICS VERSION STRING: unknown]
+
+# SLURM directives.  Must precede all non-comment lines and can't use variables
+# slurm command line overrides any SBATCH settings here
+# to disable a given setting below, use ## to comment out
+##SBATCH --job-name=run_osu5
+#SBATCH --output=logs/osu.%j.out
+# timelimit in days-hours:minutes:seconds
+##SBATCH --time=0-00:30:00
+
+# BASE PATH TO MPI EXECUTABLES: To use an alternate location,
+# either edit this line or set MPICH_PREFIX in your environment.
+# see select_mpi for the set of default MPI selections
+# default to MPI used for build
+MPICH_PREFIX=${MPICH_PREFIX:-`cat .prefix 2>/dev/null`}
+
+trap "exit 1" SIGHUP SIGTERM SIGINT
+
+BASE_DIR="osu-micro-benchmarks-5.9/mpi/"
+
+if [ -z "$1" -o x"$1" == x"-h" -o x"$1" == x"--help" ]
+then 
+	echo "Usage: $0 <number_of_processes> <command> [options]"
+	echo "          or"
+	echo "       $0 --help"
+	echo "    number_of_processes may be 'all' in which case PROCS_PER_NODE ranks will"
+	echo "                     be started for every entry in the MPI_HOSTS file."
+	echo "    <command> osu benchmark to run"
+	echo "    [options] are passed to <command>"
+	echo
+	echo "For example: $0 2 osu_allgatherv -f"
+	echo
+	echo "Possible commands are: "
+	sep=""
+	n=0
+	for f in $(find ${BASE_DIR} -executable -type f); do
+		echo -n $sep$(basename $f)
+		sep=", "
+		n=$(($n + 1))
+		if [ $((n % 4)) -eq 0 ]
+		then
+			echo "$sep"
+			sep=""
+		fi
+	done
+	echo
+	echo
+	echo "To get more details about [options] available: $0 1 <command> --help"
+	echo "For example: $0 1 osu_fop_latency --help"
+	exit 1
+fi
+
+NUM_PROCESSES=$1
+shift
+
+if [ $# -lt 1 ]; then
+	echo "You must specify an OSU benchmark."
+	exit 1
+fi
+
+CMD=`find ${BASE_DIR} -name "$1"`
+if [ -z ${CMD} ]; then
+	echo "$1 is not a valid OSU benchmark."
+	exit 1
+fi
+
+APP="$1"
+shift
+if [ x"$1" = x"-h" -o x"$1" = x"--help" -o x"$1" = x"-help" ]
+then
+	set -- "-h"
+	MIN_PROCESSES=1
+fi
+
+LOGFILE=
+. ./prepare_run
+
+(
+	echo " Running $CMD ..."
+	show_mpi_hosts
+	show_mpi_env
+	set -x
+	$MPI_RUN_CMD $CMD "$@"
+	set +x
+) 2>&1 | tee -i -a $LOGFILE
+echo "########################################### " >> $LOGFILE

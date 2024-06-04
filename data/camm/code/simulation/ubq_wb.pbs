@@ -1,0 +1,273 @@
+#!/bin/bash
+#PBS -l nodes=4:ppn=16
+#PBS -l walltime=50:00:00
+#PBS -N namdTest
+
+MPIRUN=/shared/openmpi/gcc/bin/mpirun
+NAMD=/shared/local/namd/NAMD_2.9_Linux-x86_64-mpi_shared/Linux-x86_64-g++/namd2
+
+cd $PBS_O_WORKDIR
+mkdir toppar
+mv *psf toppar/Q42.psf
+
+#Eq config file
+cat > equilibrate.conf <<'@EQEOF'
+#############################################################
+## JOB DESCRIPTION                                         ##
+#############################################################
+
+# Retrieve init.* from the annealing directory with original
+# Hydrogen charge.
+
+
+#############################################################
+## ADJUSTABLE PARAMETERS                                   ##
+#############################################################
+set temperature     290 ;# initial temperature, in Kelvin
+set charge        42 ;# hydrogen charge
+set pressure      1.01325  ;#  in bar -> 1 atm
+set inputname          init ;# prefix for input files
+set outputname  equilibrate ;# prefix for output files
+
+#############################################################
+## SIMULATION PARAMETERS                                   ##
+#############################################################
+# Input files
+structure      toppar/Q$charge.psf  ;# topoloty
+coordinates    toppar/crd.md18_vmd_autopsf.pdb ;# coordinates
+#binCoordinates $inputname.restart.coor; # binaryCoordinates override coordinates 
+#binVelocities  $inputname.restart.vel;
+temperature  $temperature  ; # do not set the temperature if we pass a velocities file
+extendedSystem $inputname.xsc; # extended info file 
+
+paraTypeCharmm  on                               ;# CHARMM force-field
+parameters      toppar/par_all27_prot_lipid.inp
+
+# These are specified by CHARMM
+exclude             scaled1-4
+1-4scaling          1.0
+switching           on
+
+# You have some freedom choosing the cutoff
+cutoff              12.0 ;# may use smaller, maybe 10., with PME
+switchdist          10.0 ;# cutoff - 2.
+pairlistdist        14.0 ;# cutoff + 2. Promise that atom won't move more than 2A in a cycle
+stepspercycle       20   ;# redo pairlists every X steps
+pairlistsPerCycle    2   ;# This means the parilist will be updataed every stepspercycle/pairlistsPerCycle = 10 (default=10)
+
+# Integrator Parameters
+timestep            1.0   ;# 1fs/step
+rigidBonds          none  ;# rigidBonds=none needed to record vibrations of bonds involving hydrogens
+nonbondedFreq       1     ;# nonbonded forces every step
+fullElectFrequency  1     ;# evaluate PME every X steps
+
+# Periodic Boundary Conditions. Only given when starting a simulation from scratch,
+# since the basis vectors will fluctuate during constant pressure simulation and
+#  updated values need to be read via extendedSystem from a .xsc file. 
+#cellBasisVector1    36.0   0.   0.0
+#cellBasisVector2     0.0  36.0   0.0
+#cellBasisVector3     0.0   0   36.0
+
+# Wrap output coordinates to the central cell
+wrapWater           on ;# wrap water to central cell
+wrapAll             on ;# wrap other molecules too
+wrapNearest        off ;# issue for non-rectangular cells
+
+# PME (for full-system periodic electrostatics)
+PME                 on
+PMEInterpOrder       6   ;# interpolation order (spline order = 6 in CHARMM)
+PMEGridSpacing      1.0
+PMEGridSizeX        40   ;# should be slightly higher than the cell size and a multiple of 2, and/or 3, and/or 5
+PMEGridSizeY        40
+PMEGridSizeZ        40
+
+# Langevin tempeature control
+langevin            on    ;# do langevin dynamics
+langevinTemp  $temperature
+langevinDamping     1.0   ;# damping coefficient (gamma) of 1/ps
+langevinHydrogen    off   ;# don't couple langevin bath to hydrogens
+  # Control parameters for annealing
+  #reassignFreq       3000   ;# number of timesteps between temperature reassignment
+  #reassignTemp        290   ;# new temperature when reassignment happens
+  #reassignIncr       -1.0   ;# temperature increment when reassignment happens
+  #reassignHold       10.0   ;# target or limit temperature
+
+# Constant Pressure Control (variable volume)
+useGroupPressure      no ;# needed if rigidBonds are declared
+useFlexibleCell       no ;# anysotropic cell fluctuations. Adequate for membrane simulations
+useConstantArea       no ;# no for water box, maybe for membrane simulations
+langevinPiston        on
+langevinPistonTarget  $pressure ;#  in bar -> 1 atm
+langevinPistonPeriod  100.0   ;#  in fs
+langevinPistonDecay    50.0   ;#  recommended langevinPistonPeriod = 2 * langevinPistonDecay
+langevinPistonTemp  $temperature ;# coupled to heat bath
+
+# Output
+outputName          $outputname ;# prefix for output files
+restartfreq         5000  ;# overwrite restart file every X steps
+DCDUnitCell         yes   ;# write unit cell data to DCD file
+dcdfreq             5000  ;# write coords every X steps
+xstFreq             5000  ;# write extended trajectory every X steps
+#forceDCDfreq       1000  ;# trajectory of atom forces every X steps
+outputEnergies      5000
+outputPressure      5000
+outputTiming        5000
+
+#############################################################
+## EXTRA PARAMETERS ##
+#############################################################
+
+# Put here any custom parameters that are specific to
+# this job (e.g., SMD, TclForces, etc...)
+
+###################################################################
+## EXECUTION SCRIPT                                            
+#  time namd2-mc +idlepoll +p8 file.conf > file.log (8 cores)
+###################################################################
+
+# Minimization
+#minimize            1000 ;# perform 1000 minimization steps
+
+firsttimestep         0            ;# reset frame counter
+run 500000  ;# 500ps
+@EQEOF
+
+#Production config file
+cat > production_single.conf <<'@PRODEOF'
+#############################################################
+## JOB DESCRIPTION                                         ##
+#############################################################
+
+# Retrieve init.* from the annealing directory with original
+# Hydrogen charge.
+
+
+#############################################################
+## ADJUSTABLE PARAMETERS                                   ##
+#############################################################
+set temperature     290 ;# initial temperature, in Kelvin
+set charge        42 ;# hydrogen charge
+set pressure      1.01325  ;#  in bar -> 1 atm
+set inputname  production00 ;# prefix for input files
+set outputname production_single ;# prefix for output files
+
+#############################################################
+## SIMULATION PARAMETERS                                   ##
+#############################################################
+# Input files
+structure      toppar/Q$charge.psf  ;# topoloty
+coordinates    toppar/crd.md18_vmd_autopsf.pdb ;# coordinates
+binCoordinates $inputname.restart.coor; # binaryCoordinates override coordinates 
+binVelocities  $inputname.restart.vel;
+#temperature  $temperature  ; # do not set the temperature if we pass a velocities file
+extendedSystem $inputname.restart.xsc; # extended info file 
+
+paraTypeCharmm  on                               ;# CHARMM force-field
+parameters      toppar/par_all27_prot_lipid.inp
+
+# These are specified by CHARMM
+exclude             scaled1-4
+1-4scaling          1.0
+switching           on
+
+# You have some freedom choosing the cutoff
+cutoff              12.0 ;# may use smaller, maybe 10., with PME
+switchdist          10.0 ;# cutoff - 2.
+pairlistdist        14.0 ;# cutoff + 2. Promise that atom won't move more than 2A in a cycle
+stepspercycle       20   ;# redo pairlists every X steps
+pairlistsPerCycle    2   ;# This means the parilist will be updataed every stepspercycle/pairlistsPerCycle = 10 (default=10)
+
+# Integrator Parameters
+timestep            1.0   ;# 1fs/step
+rigidBonds          none  ;# rigidBonds=none needed to record vibrations of bonds involving hydrogens
+nonbondedFreq       1     ;# nonbonded forces every step
+fullElectFrequency  1     ;# evaluate PME every X steps
+
+# Periodic Boundary Conditions. Only given when starting a simulation from scratch,
+# since the basis vectors will fluctuate during constant pressure simulation and
+#  updated values need to be read via extendedSystem from a .xsc file. 
+#cellBasisVector1    36.0   0.   0.0
+#cellBasisVector2     0.0  36.0   0.0
+#cellBasisVector3     0.0   0   36.0
+
+# Wrap output coordinates to the central cell
+wrapWater          off ;# wrap water to central cell
+wrapAll            off ;# wrap other molecules too
+wrapNearest        off ;# issue for non-rectangular cells
+
+# PME (for full-system periodic electrostatics)
+PME                 on
+PMEInterpOrder       6   ;# interpolation order (spline order = 6 in CHARMM)
+PMEGridSpacing      1.0
+PMEGridSizeX        40   ;# should be slightly higher than the cell size and a multiple of 2, and/or 3, and/or 5
+PMEGridSizeY        40
+PMEGridSizeZ        40
+
+# Langevin tempeature control
+langevin            on    ;# do langevin dynamics
+langevinTemp  $temperature
+langevinDamping     1.0   ;# damping coefficient (gamma) of 1/ps
+langevinHydrogen    off   ;# don't couple langevin bath to hydrogens
+  # Control parameters for annealing
+  #reassignFreq       3000   ;# number of timesteps between temperature reassignment
+  #reassignTemp        290   ;# new temperature when reassignment happens
+  #reassignIncr       -1.0   ;# temperature increment when reassignment happens
+  #reassignHold       10.0   ;# target or limit temperature
+
+# Constant Pressure Control (variable volume)
+useGroupPressure      no ;# needed if rigidBonds are declared
+useFlexibleCell       no ;# anysotropic cell fluctuations. Adequate for membrane simulations
+useConstantArea       no ;# no for water box, maybe for membrane simulations
+langevinPiston        on
+langevinPistonTarget  $pressure ;#  in bar -> 1 atm
+langevinPistonPeriod  100.0   ;#  in fs
+langevinPistonDecay    50.0   ;#  recommended langevinPistonPeriod = 2 * langevinPistonDecay
+langevinPistonTemp  $temperature ;# coupled to heat bath
+
+# Output
+outputName          $outputname ;# prefix for output files
+restartfreq         1000  ;# overwrite restart file every X steps
+DCDUnitCell         yes   ;# write unit cell data to DCD file
+dcdfreq             1000  ;# write coords every X steps
+xstFreq             1000  ;# write extended trajectory every X steps
+#forceDCDfreq       1000  ;# trajectory of atom forces every X steps
+outputEnergies      1000
+outputPressure      1000
+outputTiming        1000
+
+#############################################################
+## EXTRA PARAMETERS ##
+#############################################################
+
+# Put here any custom parameters that are specific to
+# this job (e.g., SMD, TclForces, etc...)
+
+###################################################################
+## EXECUTION SCRIPT                                            
+#  time namd2-mc +idlepoll +p8 file.conf > file.log (8 cores)
+###################################################################
+
+# Minimization
+#minimize            1000 ;# perform 1000 minimization steps
+
+firsttimestep         0            ;# reset frame counter
+run 4000000  ;# 4ns
+@PRODEOF
+#equilibrium run
+#cp /data/jbq/projects/research/LiCl/watBox30/Hq.II/Q42/T290/equilibrate/equilibrate.conf .
+cp /data/jbq/projects/research/LiCl/watBox30/Hq.II/Q42/toppar/crd.md18_vmd_autopsf.pdb  toppar
+cp /data/jbq/projects/research/LiCl/watBox30/Hq.II/Q42/toppar/par_all27_prot_lipid.inp toppar
+cp /data/jbq/projects/research/LiCl/watBox30/Hq.II/Q42/T290/equilibrate/init.xsc . 
+$MPIRUN -machinefile $PBS_NODEFILE -np 64 $NAMD equilibrate.conf > equilibrate_64cores.log
+while [ $? -ne 0 ] ; do
+    $MPIRUN -machinefile $PBS_NODEFILE -np 64 $NAMD equilibrate.conf > equilibrate_64cores.log
+done
+#production run
+#cp /data/jbq/projects/research/LiCl/watBox30/Hq.II/Q42/T290/production/production_single.conf .
+mv equilibrate.restart.coor production00.restart.coor 
+mv equilibrate.restart.vel production00.restart.vel 
+mv equilibrate.restart.xsc production00.restart.xsc 
+$MPIRUN -machinefile $PBS_NODEFILE -np 64 $NAMD production_single.conf > production_single_64cores.log
+while [ $? -ne 0 ] ; do
+    $MPIRUN -machinefile $PBS_NODEFILE -np 64 $NAMD production_single.conf > production_single_64cores.log
+done

@@ -1,0 +1,23 @@
+#!/bin/bash
+#PBS -N qtl2_PI_297130
+#PBS -e qtl2_PI_297130.err
+#PBS -o qtl2_PI_297130.out
+#PBS -l select=1:ncpus=6:mem=60gb:interconnect=fdr,walltime=56:00:00
+
+cd $PBS_O_WORKDIR
+
+BASE_DIR="/zfs/tillers/panicle/lucas/projects/NAM_2020/QTL"
+POPULATION=PI_297130
+
+# module add singularity
+
+cd ${POPULATION}
+singularity run -B /zfs ~/singularity_containers/rqtl2.sif \
+    Rscript ${BASE_DIR}/scan_phenotypes.R ${POPULATION}
+# 
+# singularity run -B /zfs ~/singularity_containers/rqtl2.sif \
+#     Rscript ${BASE_DIR}/permutation_hk.R ${POPULATION}
+
+singularity run -B /zfs ~/singularity_containers/rqtl2.sif \
+    Rscript ${BASE_DIR}/chromosome_hits.R ${POPULATION}
+

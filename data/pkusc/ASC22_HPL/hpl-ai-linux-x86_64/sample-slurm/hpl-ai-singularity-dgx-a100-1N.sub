@@ -1,0 +1,23 @@
+#!/bin/bash
+#SBATCH -N 1
+#SBATCH --ntasks-per-node=8  
+#SBATCH --job-name "test-hpl-ai.1N"
+#SBATCH --cpu-bind=none
+#SBATCH --mpi=pmix
+#SBATCH --time=40:00
+#SBATCH --output=slurm-%x.%J.%N.out
+
+DATESTRING=`date "+%Y-%m-%dT%H:%M:%S"`
+
+# IMP NOTE: download the SIF image of the container using the following command before executing this batch script:
+# singularity pull --docker-login hpc-benchmarks:21.4-hpl.sif docker://nvcr.io/nvidia/hpc-benchmarks:21.4-hpl
+CONT='/path/to/hpc-benchmarks:21.4-hpl.sif'
+MOUNT="/path/to/your/custom/dat-files:/workspace/dat-files"
+
+echo "Running on hosts: $(echo $(scontrol show hostname))"
+echo "$DATESTRING"
+
+srun singularity run --nv -B "${MOUNT}" "${CONT}" hpl.sh --xhpl-ai --config dgx-a100 --dat /workspace/hpl-ai-linux-x86_64/sample-dat/HPL-dgx-a100-1N.dat
+
+echo "Done"
+echo "$DATESTRING"

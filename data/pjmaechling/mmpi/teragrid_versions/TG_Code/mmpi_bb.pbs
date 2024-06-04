@@ -1,0 +1,19 @@
+#!/bin/bash
+#
+# This is the pbs script template for the MMPI program
+#
+# We define the number of repitions for the data transfers, and the 
+# message length of each transfer. These are parameters that are passed
+# into the main mmmpi program as well as to script that extracts the
+# matlab arrays
+#
+#PBS -l size=64
+#PBS -l walltime=00:05:00
+#PBS -o mmpi_pjm.out
+#PBS -j oe
+#PBS -N mmpi_pjm
+WORK_HOME=/usr/users/7/maechlin/tg_paper
+cd $WORK_HOME
+pbsyod -size $PBS_O_SIZE ./mmpi
+$WORK_HOME/mmpi2mat.py 64 
+exit 0

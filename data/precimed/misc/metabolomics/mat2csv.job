@@ -1,0 +1,19 @@
+#!/usr/bin/bash
+
+# Job name:
+#SBATCH --job-name=mat2csv
+# Project:
+#SBATCH --account=p33
+# Wall clock limit:
+#SBATCH --time=4:20:00
+#SBATCH --cpus-per-task=8
+# Max memory usage:
+#SBATCH --mem-per-cpu=8GB
+#SBATCH --array=1-22
+
+module purge
+source /cluster/projects/p33/users/mohammadzr/envs/pynext38/bin/activate
+
+python ../mostest_code/pvals2csv_touse.py --mat ../../lipids/europeans/mostest/nmr_eur_${SLURM_ARRAY_TASK_ID}.mat --bim ../../lipids/europeans/zscores/glm_original_combined_zscore.csv_bim_as_ref.csv --n ../../lipids/europeans/zscores/n_max_nmr249_eur.csv --out ../lipids/europeans/mostest/nmr_eur_${SLURM_ARRAY_TASK_ID}.mat.csv
+
+echo 'Done'

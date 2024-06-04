@@ -1,0 +1,32 @@
+#!/bin/bash
+#PBS -A cyberlamp_class     
+#PBS -l qos=cl_class        
+## Time requested: 0 hours, 15 minutes, 0 seconds
+#PBS -l walltime=00:15:00    
+## Ask for one core on one node
+#PBS -l nodes=1:ppn=1:gpus=1        
+## Each processor will use no more than 1GB of RAM
+#PBS -l pmem=1gb             
+## combine STDOUT and STDERR into one file
+#PBS -j oe                   
+## Ask for emails when jobs begins, ends or aborts
+#PBS -m abe                  
+## replace with your email
+##PBS -M YOUR_EMAIL_HERE@psu.edu       
+## Specificy job name, so easy to find in qstat
+#PBS -N Lab7SetupGpu
+
+echo "# Starting job $PBS_JOBNAME"
+date
+echo "# Job id: $PBS_JOBID"
+echo "# Change into $PBS_O_WORKDIR"
+cd $PBS_O_WORKDIR            # Change into directory where job was submitted from
+echo "# Set directory where CUDA toolkit can be found"
+export CUDA_HOME=/gpfs/group/ebf11/default/astro528/cuda
+echo "# Start Julia and instantiate Project to install packages"
+julia -e 'using Pkg; Pkg.activate("."); Pkg.instantiate()'
+echo "# Run GPU test script."
+julia test_gpu.jl
+echo "# Julia completed."
+date
+

@@ -1,0 +1,43 @@
+#!/bin/bash
+#PBS -A UQ-CAI
+#PBS -l select=1:ncpus=20:mem=64GB:vmem=64GB,walltime=23:00:00
+#PBS -N lashis_5tp_optimex
+#PBS -V
+#set -x
+source ~/.bashrc
+export ITK_GLOBAL_DEFAULT_NUMBER_OF_THREADS=16
+export NSLOTS=16
+export ASHS_ROOT=/gpfs1/scratch/90days/uqtshaw/ashs-fastashs_beta
+#export ANTSPATH=~/bin/
+#export PATH=${ANTSPATH}:$PATH
+preprocessing_dir=/30days/uqtshaw/optimex/${SUBJNAME}
+#module load singularity
+#where the data lives
+out_dir=/30days/uqtshaw/optimex/derivatives/LASHiS/${SUBJNAME}/${SUBJNAME}
+mkdir -p ${out_dir}
+cd ${out_dir}
+#Do LASHiS
+if [[ ${SUBJNAME} == "sub-1007MO" ]] ; then
+    /30days/uqtshaw/LASHiS/LASHiS.sh \
+    -a /30days/uqtshaw/ashs_atlas_umcutrecht_7t_20170810/ \
+    -c '2' \
+    -n '0' \
+    -j '16' \
+    -o "${out_dir}" \
+    ${preprocessing_dir}/${SUBJNAME}_ses-01_T1w_N4corrected_norm_preproc.nii.gz ${preprocessing_dir}/${SUBJNAME}_ses-01_T2w_NlinMoCo_res-iso.3_N4corrected_denoised_brain_preproc.nii.gz \
+    ${preprocessing_dir}/${SUBJNAME}_ses-02_T1w_N4corrected_norm_preproc.nii.gz ${preprocessing_dir}/${SUBJNAME}_ses-02_T2w_NlinMoCo_res-iso.3_N4corrected_denoised_brain_preproc.nii.gz \
+    ${preprocessing_dir}/${SUBJNAME}_ses-03_T1w_N4corrected_norm_preproc.nii.gz ${preprocessing_dir}/${SUBJNAME}_ses-03_T2w_NlinMoCo_res-iso.3_N4corrected_denoised_brain_preproc.nii.gz \
+    ${preprocessing_dir}/${SUBJNAME}_ses-04_T1w_N4corrected_norm_preproc.nii.gz ${preprocessing_dir}/${SUBJNAME}_ses-04_T2w_NlinMoCo_res-iso.3_N4corrected_denoised_brain_preproc.nii.gz
+else
+    /30days/uqtshaw/LASHiS/LASHiS.sh \
+    -a /30days/uqtshaw/ashs_atlas_umcutrecht_7t_20170810/ \
+    -c '2' \
+    -n '0' \
+    -j '16' \
+    -o "${out_dir}" \
+    ${preprocessing_dir}/${SUBJNAME}_ses-01_T1w_N4corrected_norm_preproc.nii.gz ${preprocessing_dir}/${SUBJNAME}_ses-01_T2w_NlinMoCo_res-iso.3_N4corrected_denoised_brain_preproc.nii.gz \
+    ${preprocessing_dir}/${SUBJNAME}_ses-02_T1w_N4corrected_norm_preproc.nii.gz ${preprocessing_dir}/${SUBJNAME}_ses-02_T2w_NlinMoCo_res-iso.3_N4corrected_denoised_brain_preproc.nii.gz \
+    ${preprocessing_dir}/${SUBJNAME}_ses-03_T1w_N4corrected_norm_preproc.nii.gz ${preprocessing_dir}/${SUBJNAME}_ses-03_T2w_NlinMoCo_res-iso.3_N4corrected_denoised_brain_preproc.nii.gz \
+    ${preprocessing_dir}/${SUBJNAME}_ses-04_T1w_N4corrected_norm_preproc.nii.gz ${preprocessing_dir}/${SUBJNAME}_ses-04_T2w_NlinMoCo_res-iso.3_N4corrected_denoised_brain_preproc.nii.gz \
+    ${preprocessing_dir}/${SUBJNAME}_ses-05_T1w_N4corrected_norm_preproc.nii.gz ${preprocessing_dir}/${SUBJNAME}_ses-05_T2w_NlinMoCo_res-iso.3_N4corrected_denoised_brain_preproc.nii.gz
+fi

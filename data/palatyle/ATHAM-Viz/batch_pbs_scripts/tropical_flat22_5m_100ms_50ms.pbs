@@ -1,0 +1,35 @@
+#!/bin/bash
+
+#PBS -S /bin/bash
+
+#PBS -j oe
+#PBS -l place=free
+
+#PBS -N tropical_flat22_5m_100ms_50ms
+#PBS -m abe
+#PBS -M palatyle@isu.edu
+#PBS -l select=2:ncpus=32:mpiprocs=32
+#PBS -l walltime=168:00:00
+
+#PBS -P edu_res
+
+cd $PBS_O_WORKDIR
+source /etc/profile.d/modules.sh
+
+module load netcdf-fortran/4.6.1-gcc-12.3.0-6scz
+module load parallel-netcdf/1.12.3-gcc-12.3.0-hi72
+export LD_LIBRARY_PATH=/apps/spack/opt/gcc-12.3.0/netcdf-fortran-4.6.1-6sczhswldvzj3gr3pckslhlowc7nsqy4/lib:/apps/spack/opt/gcc-12.3.0/parallel-netcdf-1.12.3-hi72yggsmdcmrpbmwkwqqvtfhlvg3iak/lib:$LD_LIBRARY_PATH
+####----------------------------------------
+#### Flag key for non-default IO storage:  
+#### i = input directory                    
+#### v = INPUT_volcano filename             
+#### p = INPUT_profile filename             
+#### a = INPUT_atham_setup filename         
+#### d = INPUT_dynamic_setup filename       
+#### o = output directory                   
+#### f = output file prefix                 
+####----------------------------------------
+
+mpirun /home/palatyle/ATHAM_IO/exec/atham -i /home/palatyle/ATHAM-Viz/IO_ref -o /scratch/palatyle/tropical_flat22_5m_100ms_50ms -f atham -a INPUT_atham_setup_small_grid_22_5m -p INPUT_profile_50mps_trop_flat -v INPUT_volcano_22_5_100 -d INPUT_dynamic_setup
+
+

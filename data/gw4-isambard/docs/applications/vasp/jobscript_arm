@@ -1,0 +1,22 @@
+#!/bin/bash --login
+#PBS -N vasp_job
+
+# Select 1 nodes (maximum of 64 cores)
+#PBS -l select=1:ncpus=64
+
+# Select wall time 10 hours
+#PBS -l walltime=10:0:0
+
+# Use the arm nodes
+#PBS -q arm
+
+# Load modules for currently recommended VASP build - see build instructions for more info
+module swap PrgEnv-cray PrgEnv-gnu
+
+# Move to directory that script was submitted from
+export PBS_O_WORKDIR=$(readlink -f $PBS_O_WORKDIR)
+export OMP_NUM_THREADS=1
+cd $PBS_O_WORKDIR
+
+# XC requires use of aprun to launch job on compute notes
+aprun -n 64  vasp_std 2>&1 > vasp_job.log

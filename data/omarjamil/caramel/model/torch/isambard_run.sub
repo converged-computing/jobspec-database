@@ -1,0 +1,29 @@
+#!/bin/bash
+#PBS -N caramel
+#PBS -q pascalq
+##PBS -q voltaq
+#PBS -l select=4
+#PBS -l walltime=24:00:00
+
+module load cuda10.1/blas/10.1.243
+module load cuda10.1/fft/10.1.243
+module load cuda10.1/toolkit/10.1.243
+module load cudnn/7.0
+# /home/mo-ojamil/.conda/envs/torch/bin/python /home/mo-ojamil/ML/CRM/code/torch/q.py --epochs 100 --with-cuda --isambard --identifier 10N80W --region 10N80W 
+# /home/mo-ojamil/.conda/envs/torch/bin/python -u /home/mo-ojamil/ML/CRM/code/torch/train.py --epochs 25 --with-cuda --isambard --identifier 023001AQT --data-region 023001AQT --batch-size 200 --nb-hidden-layers 6 --data-fraction 1.0 --loss mae --normaliser 023001AQT_normalise --nlevs 55
+# /home/mo-ojamil/.conda/envs/torch/bin/python /home/mo-ojamil/ML/CRM/code/torch/train_stacked.py --epochs 30 --with-cuda --isambard --identifier 023001AQTS --data-region 023001AQTS --batch-size 106 --nb-hidden-layers 6 --samples-fraction 1.0 --data-fraction 1.0 --loss mae --normaliser 023001AQT_normalise_60_glb --nlevs 55
+# /home/mo-ojamil/.conda/envs/torch/bin/python -u /home/mo-ojamil/ML/CRM/code/torch/train_stacked.py --epochs 10 --with-cuda --isambard --identifier 023001AQTS --data-region 023001AQTS --batch-size 200 --nb-hidden-layers 6 --samples-fraction 1.0 --data-fraction 1.0 --loss mae --normaliser 023001AQT_normalise --nlevs 55 --warm-start qnext_006_lyr_388_in_055_out_0443_hdn_025_epch_00200_btch_023001AQTS_mae_023001AQT_normalise_stkd_sigm.tar
+# /home/mo-ojamil/.conda/envs/torch/bin/python -u /home/mo-ojamil/ML/CRM/code/torch/train_stacked.py --epochs 25 --with-cuda --isambard --identifier 023001AQTS --data-region 023001AQTS --batch-size 200 --nb-hidden-layers 6 --samples-fraction 1.0 --data-fraction 1.0 --loss mae --normaliser 023001AQT_normalise --nlevs 55
+# /home/mo-ojamil/.conda/envs/torch/bin/python -u /home/mo-ojamil/ML/CRM/code/torch/train_diff.py --epochs 50 --with-cuda --isambard --identifier 023001AQTS --data-region 023001AQTS --batch-size 150 --nb-hidden-layers 10 --samples-fraction 1.0 --data-fraction 1.0 --loss mse --normaliser 023001AQT_normalise --nlevs 55
+# /home/mo-ojamil/.conda/envs/torch/bin/python -u /home/mo-ojamil/ML/CRM/code/torch/train_diff.py --epochs 50 --with-cuda --isambard --identifier 023001AQS --data-region 023001AQS --batch-size 200 --nb-hidden-layers 6 --samples-fraction 1.0 --data-fraction 1.0 --loss mae --normaliser 023001AQS_normalise --nlevs 45
+# /home/mo-ojamil/.conda/envs/torch/bin/python -u /home/mo-ojamil/ML/CRM/code/torch/train_diff.py --epochs 50 --with-cuda --isambard --identifier 023001AQS_Qv --data-region 023001AQS_Qv --batch-size 200 --nb-hidden-layers 6 --samples-fraction 1.0 --data-fraction 1.0 --loss mae --normaliser 023001AQS_Qv_normalise --nlevs 45
+# /home/mo-ojamil/.conda/envs/torch/bin/python -u /home/mo-ojamil/ML/CRM/code/torch/train_diff.py --epochs 50 --with-cuda --isambard --identifier 023001AQSD --data-region 023001AQSD --batch-size 150 --nb-hidden-layers 8 --samples-fraction 1.0 --data-fraction 1.0 --loss mse --normaliser 023001AQSD_normalise --nlevs 55
+/home/mo-ojamil/.conda/envs/torch/bin/python -u /home/mo-ojamil/ML/CRM/code/torch/train_diff_ae.py --epochs 50 --with-cuda --isambard --identifier 023001AQS --data-region 023001AQS --batch-size 150 --nb-hidden-layers 6 --samples-fraction 1.0 --data-fraction 1.0 --loss mse --normaliser 023001AQS_normalise --nlevs 55
+# /home/mo-ojamil/.conda/envs/torch/bin/python -u /home/mo-ojamil/ML/CRM/code/torch/train_diff_vae.py --epochs 50 --with-cuda --isambard --identifier 023001AQS --data-region 023001AQS --batch-size 150 --samples-fraction 1.0 --data-fraction 1.0 --loss mse --normaliser 023001AQS_normalise --nlevs 55
+# /home/mo-ojamil/.conda/envs/torch/bin/python -u /home/mo-ojamil/ML/CRM/code/torch/train_diff_enc.py --epochs 50 --with-cuda --isambard --identifier 023001AQS --data-region 023001AQS --batch-size 150 --nb-hidden-layers 6 --samples-fraction 1.0 --data-fraction 1.0 --loss mse --normaliser 023001AQS_normalise --nlevs 55
+# /home/mo-ojamil/.conda/envs/torch/bin/python /home/mo-ojamil/ML/CRM/code/torch/train_stacked.py --epochs 30 --with-cuda --isambard --identifier 023001AQTS --data-region 023001AQTS --batch-size 200 --nb-hidden-layers 6 --samples-fraction 1.0 --data-fraction 1.0 --loss mae --normaliser 023001AQT_standardise_mx --nlevs 55
+# /home/mo-ojamil/.conda/envs/torch/bin/python /home/mo-ojamil/ML/CRM/code/torch/train_siren.py --epochs 10 --with-cuda --isambard --identifier 023001AQT --data-region 023001AQT --batch-size 500 --nb-hidden-layers 8 --data-fraction 1.0 --loss mae --normaliser 023001AQ_standardise_mx --nlevs 70
+# /home/mo-ojamil/.conda/envs/torch/bin/python /home/mo-ojamil/ML/CRM/code/torch/train_pca.py --epochs 20 --with-cuda --isambard --identifier 023001AQT --data-region 023001AQT --batch-size 500 --nb-hidden-layers 6 --data-fraction 1.0 --loss mse --normaliser 023001AQ_standardise_mx --nlevs 70
+# /home/mo-ojamil/.conda/envs/torch/bin/python /home/mo-ojamil/ML/CRM/code/torch/caramel.py --epochs 100 --with-cuda --isambard --identifier 9999LEAU --data-region 9999LEAU_std --batch-size 2000 --nhdn-layers 9 --data-frac 1.0 --loss mae
+# /home/mo-ojamil/.conda/envs/torch/bin/python /home/mo-ojamil/ML/CRM/code/torch/train_resnet.py --epochs 40 --with-cuda --isambard --identifier 023001AQTT3T19 --data-region 023001AQTT3_t19 --batch-size 500 --data-fraction 1.0 --loss mae --normaliser 023001AQ_standardise_mx --nlevs 52
+# /home/mo-ojamil/.conda/envs/torch/bin/python /home/mo-ojamil/ML/CRM/code/torch/train_vae.py --epochs 10 --with-cuda --isambard --identifier 023001AQT --data-region 023001AQT --batch-size 500 --data-fraction 0.7 --loss mae --normaliser 023001AQ_standardise_mx --nlevs 70

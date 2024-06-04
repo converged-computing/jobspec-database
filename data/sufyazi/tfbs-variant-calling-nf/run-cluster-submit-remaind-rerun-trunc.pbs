@@ -1,0 +1,24 @@
+#!/bin/bash
+#PBS -l select=1:ncpus=4:mem=8GB
+#PBS -l walltime=115:00:00
+#PBS -j oe
+#PBS -P 12003580
+#PBS -q normal
+
+module load singularity && module load java
+cd $PBS_O_WORKDIR
+
+timestamp=$(date +%Y%m%d-%H.%M)
+
+# Run the workflow on the test data, and write the output to output/
+nextflow \
+    -log nextflow-logs/.nextflow.log \
+    run \
+    -resume \
+    main.nf \
+    --run_mode "subset" \
+    --dataset_id_list "cluster-input-dir/manifests/dataset-manifest-remainder-rerun.txt" \
+    -c nextflow_cluster.config \
+    -with-dag workflow-reports/v4/dag-${timestamp}.html \
+    -with-report workflow-reports/v4/report-${timestamp}.html \
+    -with-timeline workflow-reports/v4/timeline-${timestamp}.html

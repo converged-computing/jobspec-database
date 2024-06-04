@@ -1,0 +1,22 @@
+#!/bin/bash
+
+# Params for sbatch
+#SBATCH --partition=short-serial
+#SBATCH --job-name=hist_home
+#SBATCH -o %j_hist.out
+#SBATCH -e %j_hist.err
+#SBATCH --time=06:00:00
+#SBATCH --array=1-101
+
+# Set environment 
+module add jaspy
+cd /home/users/tommatthews/Homeostasis/
+source /home/users/tommatthews/Homeostasis/xheat/bin/activate
+
+# Launch
+python compute_hist.py ${SLURM_ARRAY_TASK_ID}
+
+
+
+
+

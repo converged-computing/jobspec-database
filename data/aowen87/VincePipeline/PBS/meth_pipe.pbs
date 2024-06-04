@@ -1,0 +1,14 @@
+#!/bin/bash
+#PBS -m abe
+#PBS -l nodes=1:ppn=4
+#PBS -q generic
+
+module load python/3.4.4
+module load methpipe
+
+cd _PATH_INSERT_/MethylationPipe
+
+
+python3 meth_convert.py ${brat_bw_dir} ${meth_output}
+python3 methylome_comp.py ${meth_dir} ${diff_out} ${wt_meth} ${wt_hmr}
+python3 average_meth.py ${txt_directory} ${roi} ${linkage} ${window}

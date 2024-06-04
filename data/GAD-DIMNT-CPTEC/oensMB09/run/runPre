@@ -1,0 +1,1354 @@
+#! /bin/bash 
+
+#-------------------------------------------------------------------------------------------------#
+#                         Brazilian global Atmospheric Model - BAM_V1.3.0                         #
+#-------------------------------------------------------------------------------------------------#
+# Descrição:                                                                                      #
+#     Script para executar o pré-processamento do BAM                                             #
+#                                                                                                 #
+# Uso:                                                                                            #
+#     ./runPre TRC LV LABELI PREFIX TOTAL SmoothTopo GDASOnly RESIN KMIN                          #
+#                                                                                                 #
+# Exemplo:                                                                                        #
+#     ./runPre 126 28 2012123118 SMT 1 T F 574 64                                                 #
+#                                                                                                 #
+# Opções:                                                                                         #
+#     * TRC.......: resolução espectral das previsões (eg., 62, 126, 213, 299, 666)               #
+#     * LV........: resolução vertical das previsões (eg., 28, 42, 64, 96)                        #
+#     * LABELI....: data da análise (eg., 2013010100)                                             #
+#     * PREFIX....: prefixo da análise (eg., NMC, CPT, AVN)                                       #
+#     * TOTAL.....: 1 - tudo (todos os processos); 0 - parcial (apenas alguns processos)          #
+#                   veja o arquivo namelist.runPre para mais informações ou mais abaixo           #
+#     * SmoothTopo: flag lógica para realizar a suavização da topografia                          #
+#                   (T ou F eg., usar quando a análise não for produzida pelo CPTEC)              #
+#     * GDASOnly..: flag lógica para escrever apenas os arquivos de análises espectrais           #
+#                   para o BAM (T or F)                                                           #
+#     * RESIN.....: resolução espectral da análise (eg., 62, 126, 213, 299, 666)                  #
+#     * KMIN......: resolução vertical das análises (eg., 28, 42, 64, 96)                         #
+#                                                                                                 #
+# Notas:                                                                                          #
+#     * Até 14/Jan/2015 às 06Z (2015011406) as análises do NCEP estão na resolução TQ00574L064;   #
+#       após esta data, as análises passam a ter a resolução TQ1534L064. A partir desta data, o   #
+#       arquivo de temperatura da superfície do mar (TSM) lido é o                                #
+#       rtgssthr_grb_0.083.grib2.${DATA} (observe a resolução: 0.083 graus) e o arquivo de neve   #
+#       (SNOW) não é mais lido (até 2015011400, eram lidos os arquivos gdas1.T00Z.sstgrb2.${DATA} #
+#       e gdas1.T00Z.sstgrb2.${DATA}). Outras informações sobre os novos arquivos de TSM:         #
+#       http://www.nco.ncep.noaa.gov/pmb/products/sst/                                            #
+#     * Até 19/Jul/2017 às 12Z (2017071912) as análises do NCEP estão no formato espectral, na    #
+#       resolução TQ01534L064. A partir desta data, os arquivos de análise passam a serem         #
+#       escritos em ponto de grade (utilizando-se a biblioteca nemsio) e o nome dos arquivos      #
+#       passam a ser gdas.T${HH}Z.atmanl.nemsio.${DATA}, na mesma resolução. Outras informações   #
+#       sobre as alterações dos modelos e produtos disseminados pelo NCEP:                        #
+#       https://www.nco.ncep.noaa.gov/pmb/changes/                                                #
+#                                                                                                 #
+# Revisões:                                                                                       #
+#     * 22-06-2016: Khamis, E. G.  - código inicial                                               #
+#     * 14-07-2016: Khamis, E. G.  - incluídas funções que tornam o runPre independente de        #
+#                                    scripts externos através de um namelist                      #
+#                                    no momento, continua dependente apenas do                    #
+#                                    run_Chopping_parallel.bash e run_Chopping_serial.bash        #
+#     * 21-07-2016: Khamis, E. G.  - runPre independente do run_Chopping_parallel.bash e          #
+#                                    run_Chopping_serial.bash                                     #
+#     * 26-07-2016: Khamis, E. G.  - inclusão de função que cria um script de submissão para      #
+#                                    cada processo                                                #
+#     * 28-07-2016: Khamis, E. G.  - mudança na forma de submissão dos processos e inclusão de    #
+#                                    função de espera e checagem das saídas                       #
+#                                    convém ressaltar que é feita uma busca de "ENDS NORMALLY"    #
+#                                    no log do processo. alguns processos, como por exemplo       #
+#                                    NormalModes e TopographyGradient, não possuem esse print no  #
+#                                    código. esse print será incluído. quem for usar              #
+#                                    esse script deverá recompilar o código Fortran com os        #
+#                                    prints inclusos                                              #
+#     * 20-09-2016: Bastarz, C. F. - corrigida verificação do arquivo de análise quando a         #
+#                                    suavização da topografia é realizada (PREFIXO=SMT)           #
+#                                    corrigido o numero de processadores por nó do                #
+#                                    Chopping_parralel (N=24)                                     #
+#                                    generalizado o prefixo dos processos SSTClima,               #
+#                                    FLUXCO2Clima, SSTWeekly, SSTMonthlyDirec, SSTDailyDirec      #
+#                                    e TopographyGradient (modificacões feitas também no script   #
+#                                    namelist.runPre)                                             #
+#                                  - inclusao de testes e verificação da existência do arquivo    #
+#                                    de SST                                                       #
+#     * 17-02-2020: Bastarz, C. F. - revisão geral para a consolidação da versão e algumas        #
+#                                    melhorias                                                    #
+#     * 10-03-2020: Bastarz, C. F. - inclusão do processo CO2MonthlyDirec                         #
+#                                                                                                 #
+# DMD/CPTEC/INPE, 2019                                                                            #
+#-------------------------------------------------------------------------------------------------#
+
+#
+# Funções comuns
+#
+function usageprincipal()
+{
+  echo ""
+  echo -e "\033[34;1m Brazilian global Atmospheric Model - BAM_V1.3.0\033[m"
+  echo ""
+  echo " Descrição:"
+  echo "     Script para executar o pré-processamento do BAM"
+  echo ""
+  echo " Uso:"
+  echo "     ./runPre TRC LV LABELI PREFIX total SmoothTopo GDASOnly RESIN KMIN"
+  echo ""
+  echo " Exemplo:"
+  echo "     ./runPre 126 28 2012123118 SMT 1 T F 574 64"
+  echo ""
+  echo " Opções:"
+  echo "     * TRC.......: resolução espectral das previsões (eg., 62, 126, 213, 299, 666)" 
+  echo "     * LV........: resolução vertical das previsões (eg., 28, 42, 64, 96)" 
+  echo "     * LABELI....: data da análise (eg., 2013010100)" 
+  echo "     * PREFIX....: prefixo da análise (eg., NMC, CPT, AVN)" 
+  echo "     * TOTAL.....: 1 - tudo (todos os processos); 0 - parcial (apenas alguns processos)" 
+  echo "                   veja o arquivo namelist.runPre para mais informações ou mais abaixo" 
+  echo "     * SmoothTopo: flag lógica para realizar a suavização da topografia" 
+  echo "                   (T ou F eg., usar quando a análise não for produzida pelo CPTEC)" 
+  echo "     * GDASOnly..: flag lógica para escrever apenas os arquivos de análises espectrais" 
+  echo "                   para o BAM (T or F)" 
+  echo "     * RESIN.....: resolução espectral da análise (eg., 62, 126, 213, 299, 666)" 
+  echo "     * KMIN......: resolução vertical das análises (eg., 28, 42, 64, 96)" 
+  echo ""
+  echo -e "\033[33;1m DMD/CPTEC/INPE, 2019 \033[m"
+  echo ""    
+}
+
+mostraHelice() 
+{
+  for i in / - \\ \|
+  do
+    echo -ne "\033[31;1m"
+    echo -ne "\033[1D$i"
+    echo -ne "\033[m"
+    sleep .1
+  done
+}
+
+function WaitUntil()
+{
+  local file
+
+  file=${1}
+  file2=${2}
+  QPIDpre=${3}
+  fileo=${4}
+  varname=${5}
+
+  echo ""
+  echo -en "     Aguardando arquivo ${file}   "
+
+  job_state=$(echo $(squeue -h -u ${USER} -j ${3}) | awk -F" " '{print $5}')
+
+  until [ -z ${job_state} ]
+  do
+
+    echo "${3} ${job_state}"
+    sleep 2s
+
+    job_state=$(echo $(squeue -h -u ${USER} -j ${3}) | awk -F" " '{print $5}')
+
+  done
+
+  fazqstat=0
+
+  while [ \( ! -s ${file} \) ]
+  do
+    sleep 0.33 | mostraHelice;
+    let fazqstat++
+    if [ $fazqstat -gt 100 ]
+    then # o qstat é executado a cada 33 segundos
+      if test ! -e ${file2} 
+      then
+        #testpid=$(/opt/pbs/10.4.0.101257/bin/qstat $QPIDpre | tail -1 | awk '{print $5}')
+        testpid=$(/usr/bin/squeue --job $QPIDpre | tail -1 | awk '{print $5}')
+      else
+        break
+      fi
+      if [ 'x'$testpid = 'x' ]
+      then
+        break
+      fi
+      fazqstat=0
+    fi 
+  done
+
+  until [ -s ${file} ]; do sleep 1s; done
+
+  if [ $varname != "NormalModes" -a  $varname != "TopographyGradient" ]
+  then # não possuem o print 'ends normally' no código fortran
+    preok=$(cat ${file} | grep -i "normally" | wc -l)
+    mensagem=$(cat ${file} | grep -i "normally" )
+    if [ ${preok} -eq 1 ]
+    then
+      echo ""
+      echo ""
+      echo -e "    \033[32;1m${mensagem}\033[m"
+    else
+      echo ""
+      echo ""
+      echo -e "    \033[31;1m !!! Problema ao executar o ${varname} !!!\033[m"
+      echo -e "    \033[31;1m     Nao foi gerado ${fileo} \033[m"
+      exit 1
+    fi
+  fi
+
+  # Essa checagem abaixo será removida quando o print 'ends normally' for adicionado ao código fortran
+  if [ $varname = NormalModes -o $varname = TopographyGradient ]
+  then
+    if test ! -s ${fileo} 
+    then
+      echo ""
+      echo ""
+      echo -e "    \033[31;1m !!! Problema ao executar o ${varname} !!!\033[m"
+      echo -e "    \033[31;1m     Nao foi gerado ${fileo} \033[m"
+      exit 1
+    else
+      echo ""
+      echo ""
+      echo -e "    \033[32;1m*** ${varname} ENDS NORMALLY ***\033[m"
+    fi
+  fi
+}
+
+diffdate() 
+{
+  di=${1}
+  df=${2}
+  procname=${3}
+
+  si=$(date --date "${di:0:8} ${di:8:2}:${di:10:2}:${di:12:2}" +%s)
+  sf=$(date --date "${df:0:8} ${df:8:2}:${df:10:2}:${df:12:2}" +%s)
+
+  (( horas = (sf - si )/3600 ))
+  (( minutos = ( (sf - si ) - horas*3600 )/60 ))
+  (( segundos = (sf - si ) - horas*3600 - minutos*60 ))
+
+  if [ $horas    -lt 10 ]; then horas='0'$horas       ; fi
+  if [ $minutos  -lt 10 ]; then minutos='0'$minutos   ; fi
+  if [ $segundos -lt 10 ]; then segundos='0'$segundos ; fi
+
+  diffd=$horas'h'$minutos'm'$segundos's'
+  echo ""
+  echo -e "\033[32;1m     Tempo Total do Processo ${procname}: $diffd \033[m"
+  echo ""
+  echo ""
+}
+
+function lenamelist 
+{
+  auxdir=$1
+
+  sed 's/#.*$//' $auxdir/namelist.runPre | sed 's/[ ]\+//g' | sed '/^$/d' > $auxdir/namelistrp.tmp
+
+  if [ $total -eq 1 ]
+  then
+    rm -fr $auxdir/.listapre 2>&1
+    sed -n '/&geral/{/\//tc;:a;/\//!{N;ba;};:c;s/.*\&geral//;s/\/.*$//;p;}' $auxdir/namelistrp.tmp  | sed '/^$/d'> $auxdir/tmp
+    nl=$(wc -l $auxdir/tmp | awk '{print $1}')
+    if [ $nl -gt 0 ]; then
+      echo ""
+      echo -e "\033[35;1m     ----- Inicio da Leitura da Relacao de Processos -----\033[m"
+      echo ""
+      echo -e "\033[35;1m     Bloco\033[32;1m geral \033[35;1m\033[m"
+      echo ""
+      while read linha
+      do
+        echo "       $linha "| sed 's/=/ = /g'
+        eval export $linha
+        echo "$linha" | sed 's/=/ = /g' | grep '= 1' | cut -d' ' -f1 >> $auxdir/.listapre
+      done < $auxdir/tmp
+    fi
+  fi
+
+  if [ $total -eq 0 ]
+  then
+    rm -fr $auxdir/.listapre 2>&1
+    sed -n '/&opt/{/\//tc;:a;/\//!{N;ba;};:c;s/.*\&opt//;s/\/.*$//;p;}' $auxdir/namelistrp.tmp  | sed '/^$/d'> $auxdir/tmp
+    nl=$(wc -l $auxdir/tmp | awk '{print $1}')
+    if [ $nl -gt 0 ]
+    then
+      echo ""
+      echo -e "\033[35;1m     ----- Inicio da Leitura da Relacao de Processos -----\033[m"
+      echo ""
+      echo -e "\033[35;1m     Bloco\033[32;1m opt \033[35;1m\033[m"
+      echo ""
+      while read linha
+      do
+        echo "       $linha "| sed 's/=/ = /g' 
+        eval export $linha
+        echo "$linha" | sed 's/=/ = /g' | grep '= 1' | cut -d' ' -f1 >> $auxdir/.listapre
+      done < $auxdir/tmp
+    fi
+  fi
+
+  if [ $total -eq 2 ]
+  then
+    rm -fr $auxdir/.listapre 2>&1
+    sed -n '/&debug/{/\//tc;:a;/\//!{N;ba;};:c;s/.*\&debug//;s/\/.*$//;p;}' $auxdir/namelistrp.tmp  | sed '/^$/d'> $auxdir/tmp
+    nl=$(wc -l $auxdir/tmp | awk '{print $1}')
+    if [ $nl -gt 0 ]
+    then
+      echo ""
+      echo -e "\033[35;1m     ----- Inicio da Leitura da Relacao de Processos -----\033[m"
+      echo ""
+      echo -e "\033[35;1m     Bloco\033[32;1m debug \033[35;1m\033[m"
+      echo ""
+      while read linha
+      do
+        echo "       $linha "| sed 's/=/ = /g' 
+        eval export $linha
+        echo "$linha" | sed 's/=/ = /g' | grep '= 1' | cut -d' ' -f1 >> $auxdir/.listapre
+      done < $auxdir/tmp
+    fi
+  fi
+
+  # Verifica se os executaveis se encontram no pre/exec
+  if [ $USE_SINGULARITY != true ] 
+  then
+    for execfile in $(cat $auxdir/.listapre)
+    do
+      if [ ${execfile} = ClmtClima ]
+      then
+        if [ ! -e ${DK_suite}/pre/exec/TemperatureClima ]
+        then
+          cp -vf ${dirhome}/sources/TemperatureClima/TemperatureClima ${DK_suite}/pre/exec/ 
+        fi
+      else
+        if [ ${execfile} = Clmt ]
+        then
+          if [ ! -e ${DK_suite}/pre/exec/Temperature ]
+          then
+            cp -vf ${dirhome}/sources/Temperature/Temperature ${DK_suite}/pre/exec/
+          fi 
+        else
+          if [ ! -e ${DK_suite}/pre/exec/${execfile} ]
+          then
+            cp -vf ${dirhome}/sources/${execfile}/${execfile} ${DK_suite}/pre/exec/ 
+          fi
+        fi
+      fi
+    done
+  fi
+
+  echo ""
+  echo -e "\033[35;1m     ----- Fim da Leitura da Relação de Processos-----\033[m"
+
+  rm -f $auxdir/namelistrp.tmp $auxdir/tmp 
+}
+
+function spid() 
+{
+  echo ""
+  for i in $(seq 1 1 12)
+  do
+    host=eslogin$(printf "%02i\n" $i)
+    echo "------------ $host ------------"
+    ssh $host "ps -u $USER"
+    echo "-----------------------------------"
+    echo ""
+    if [ $host = $HOSTNAME ]
+    then
+      echo "AVISO: O PID $$ é o próprio runPre que está executando o spid"
+      echo ""
+      echo ""
+    fi 
+  done
+}
+
+function fileout()
+{
+  procname=${1}
+   
+  varname=$procname
+
+  inputaux=InputDim # cabeçalho da primeira linha dos arquivos .nml
+
+  if [ ${procname} = TopoWaterPercNavy ]
+  then
+    file_out=${dirdata}/pre/dataout/TopoNavy.dat
+    file_out2=${dirdata}/pre/dataout/WaterNavy.dat
+    jobname=TopoNavy 
+    ieeefiles='20,30,40'
+  fi
+  if [ ${procname} = TopoWaterPercGT30 ]
+  then
+    file_out=${dirdata}/pre/dataout/TopoGT30.dat
+    file_out2=${dirdata}/pre/dataout/WaterGT30.dat
+    jobname=GT30
+  fi
+  if [ ${procname} = NormalModes  ]
+  then
+    file_out=${dirdata}/model/datain/NMI.${TRUNCA}
+    jobname=NormalModes
+    ieeefiles='20'
+    inputaux=NorModNML
+  fi
+  if [ ${procname} = LandSeaMask  ]
+  then
+    file_out=${dirdata}/pre/dataout/LandSeaMaskNavy.G${prefix}.dat
+    jobname=SeaMask
+    ieeefiles='10,20,30'
+  fi
+  if [ ${procname} = VarTopo ]
+  then
+    file_out=${dirdata}/pre/dataout/Topography.G${prefix}
+    jobname=VarTop
+    ieeefiles='10,20,30,40'
+  fi
+  if [ ${procname} = TopoSpectral ]
+  then
+    file_out=${dirdata}/model/datain/TopoVariance.G${prefix}
+    jobname=TopoSpectra
+    ieeefiles='10,20,30'
+  fi
+  if [ ${procname} = Chopping_serial  ]
+  then
+    file_out=${dirdata}/model/datain/GANL${PREFXI}${DATA}S.unf.${MRES}
+    file_out2=${dirdata}/model/datain/OZON${PREFXI}${DATA}S.grd.${pfxgrd}
+    jobname=Chopping
+    ieeefiles='10,15,20,25,30,35,40,45,50,55,60,65,70,75'
+    inputaux=ChopNML
+  fi
+  if [ ${procname} = Chopping_parallel  ]
+  then
+    file_out=${dirdata}/model/datain/GANL${PREFXI}${DATA}S.unf.${MRES}
+    file_out2=${dirdata}/model/datain/OZON${PREFXI}${DATA}S.grd.${pfxgrd}
+    file_out3=${dirdata}/model/datain/TRAC${PREFXI}${DATA}S.grd.${pfxgrd}
+    jobname=Chopping
+    ieeefiles='10,15,20,25,30,35,40,45,50,55,60,65,70,75'
+    inputaux=ChopNML
+  fi
+  if [ ${procname} = VegetationMaskSSiB ]
+  then
+    file_out=${dirdata}/pre/dataout/VegetationMaskClima.dat
+    jobname=VegMasSSiB
+    ieeefiles='20,30'
+  fi
+  if [ ${procname} = VegetationMask ]
+  then
+    file_out=${dirdata}/pre/dataout/VegetationMask.G${prefix}
+    jobname=VegetationMask
+    ieeefiles='20,30,50'
+  fi
+  if [ ${procname} = VegetationMaskSiB2Clima ]
+  then
+    file_out=${dirdata}/pre/dataout/VegetationMaskClima.dat
+    jobname=VegMasSiB2 
+    ieeefiles='10,20,30'
+  fi
+  if [ ${procname} = VegetationMaskSiB2 ]
+  then
+    file_out=${dirdata}/pre/dataout/VegetationMaskSiB2.G${prefix}
+    jobname=VegMaskSiB2 
+    ieeefiles='20,30,50'
+  fi
+  if [ ${procname} = VegetationMaskIBISClima ]
+  then
+    file_out=${dirdata}/pre/dataout/VegetationMaskIBISClima.dat
+    jobname=VegMasIBIS 
+    ieeefiles='10,20,30'
+  fi
+  if [ ${procname} = VegetationMaskIBIS ]
+  then
+    file_out=${dirdata}/pre/dataout/VegetationMaskIBISClima.dat
+    jobname=VegMasIBIS 
+    ieeefiles='20,30,50'
+  fi
+  if [ ${procname} = VegetationAlbedoSSiB ]
+  then
+    file_out=${dirdata}/model/datain/VegetationMask.G${prefix}
+    jobname=VegAlbSSiB 
+    ieeefiles='20,40'
+  fi
+  if [ ${procname} = DeepSoilTemperatureClima ]
+  then
+    file_out=${dirdata}/pre/dataout/DeepSoilTemperatureClima.dat
+    jobname=DeepSoilTemClim
+    ieeefiles='20'
+  fi
+  if [ ${procname} = DeepSoilTemperature ]
+  then
+    file_out=${dirdata}/model/datain/DeepSoilTemperature.G${prefix}
+    jobname=DeepSoilTemp 
+    ieeefiles='10,20'
+  fi
+  if [ ${procname} = RoughnessLengthClima ]
+  then
+    file_out=${dirdata}/pre/dataout/RoughnessLengthClima.dat
+    jobname=RouLenClm 
+    ieeefiles='20'
+  fi
+  if [ ${procname} = RoughnessLength ]
+  then
+    file_out=${dirdata}/model/datain/RoughnessLength.G${prefix}
+    jobname=RougLeng
+    ieeefiles='10,20'
+  fi
+  if [ ${procname} = SoilMoistureClima ]
+  then
+    file_out=${dirdata}/pre/dataout/SoilMoistureClima.dat
+    jobname=SoilMoisClm
+    ieeefiles='20'
+  fi
+  if [ ${procname} = SoilMoisture ]
+  then
+    file_out=${dirdata}/model/datain/SoilMoisture.G${prefix}
+    jobname=SoilMoist
+    ieeefiles='20,30'
+  fi
+  if [ ${procname} = AlbedoClima ]
+  then
+    file_out=${dirdata}/pre/dataout/AlbedoClima.dat
+    jobname=AlbClm
+    ieeefiles='20'
+  fi
+  if [ ${procname} = Albedo ]
+  then
+    file_out=${dirdata}/pre/dataout/Albedo.G${prefix}
+    jobname=Alb
+    ieeefiles='10,20'
+  fi
+  if [ ${procname} = SnowClima ]
+  then
+    file_out=${dirdata}/model/datain/Snow${DATA}S.unf.G${prefix}
+    jobname=SnowClm
+    ieeefiles='20,30'
+  fi
+  if [ ${procname} = SSTClima ]
+  then
+    datt=${DATA:0:8}
+    file_out=${dirdata}/model/datain/SSTClima$datt.G${prefix}
+    jobname=SSTClim
+    ieeefiles='10,40,50'
+  fi
+  if [ ${procname} = FLUXCO2Clima ]
+  then
+    datt=${DATA:0:8}
+    file_out=${dirdata}/model/datain/FLUXCO2Clima$datt.G${prefix}
+    jobname=FLUXCO2Clim
+    ieeefiles='10,40,50'
+  fi
+  if [ ${procname} = OCMClima ]
+  then
+    datt=$(echo ${DATA} |cut -c 1-8)
+    file_out=${dirdata}/model/datain/ocean_depth.G${prefix}
+    jobname=OCMClima
+    ieeefiles='10,40,50'
+  fi
+  if [ ${procname} = SSTWeeklyNCEP ]
+  then
+    datt=${DATA:0:8}
+    file_out=${dirdata}/pre/dataout/SSTWeekly.$datt
+    jobname=SSTWeeklyNCEP
+    ieeefiles='10,20'
+  fi
+  if [ ${procname} = SSTWeekly ]
+  then
+    datt=${DATA:0:8}
+    file_out=${dirdata}/model/datain/SSTWeekly$datt.G${prefix}
+    jobname=SSTWeekly
+    ieeefiles='10,30,50,60'
+  fi
+  if [ ${procname} = SNOWWeeklyNCEP ]
+  then
+    datt=${DATA:0:8}
+    file_out=${dirdata}/pre/dataout/SNOWWeekly.$datt
+    jobname=SNOWWeeklyNCEP
+    ieeefiles='10,20'
+  fi
+  if [ ${procname} = SoilMoistureWeeklyCPTEC ]
+  then
+    datt=${DATA:0:8}
+    file_out=${dirdata}/pre/dataout/SoilMoistureWeekly.$datt 
+    jobname=SoilMWCPTEC
+    ieeefiles='10,20'
+  fi
+  if [ ${procname} = SNOWWeekly ]
+  then
+    datt=${DATA:0:8}
+    file_out=${dirdata}/model/datain/SNOWWeekly.$datt.G${prefix}
+    jobname=SNOWWeekly
+    ieeefiles='10,20'
+  fi
+  if [ ${procname} = SoilMoistureWeekly ]
+  then
+    datt=${DATA:0:8}
+    file_out=${dirdata}/model/datain/SoilMoistureWeekly.$datt.G${prefix}
+    jobname=SoilMW
+    ieeefiles='10,20'
+  fi
+  if [ ${procname} = CLimaSoilMoistureClima ]
+  then
+    file_out=${dirdata}/pre/dataout/CLimaSoilMoistureClima.dat
+    jobname=CSoilMoisC
+    ieeefiles='10,20'
+  fi
+  if [ ${procname} = CLimaSoilMoisture ]
+  then
+    file_out=${dirdata}/model/datain/CLimaSoilMoisture.G${prefix}
+    jobname=CSoilMoisture
+    ieeefiles='10,20'
+  fi
+  if [ ${procname} = ClmtClima ]
+  then
+    file_out=${dirdata}/pre/dataout/TemperatureClima.dat
+    jobname=ClmtClima
+    ieeefiles='10,20'
+    varname=TemperatureClima 
+  fi
+  if [ ${procname} = Clmt ]
+  then
+    file_out=${dirdata}/model/datain/Temperature.G${prefix}
+    jobname=Clmt
+    ieeefiles='10,20'
+    varname=Temperature 
+  fi
+  if [ ${procname} = DeltaTempColdestClima ]
+  then
+    file_out=${dirdata}/pre/dataout/DeltaTempColdestClima.dat
+    jobname=DelTempColdC
+    ieeefiles='10,20'
+  fi
+  if [ ${procname} = DeltaTempColdest ]
+  then
+    file_out=${dirdata}/model/datain/DeltaTempColdes.G${prefix}
+    jobname=DelTempCold
+    ieeefiles='10,20'
+  fi
+  if [ ${procname} = NDVIClima ]
+  then
+    file_out=${dirdata}/pre/dataout/NDVIClima.dat
+    jobname=NDVIClima
+    ieeefiles='10,20'
+  fi
+  if [ ${procname} = NDVI ]
+  then
+    file_out=${dirdata}/model/datain/NDVI.G${prefix}
+    jobname=NDVI
+    ieeefiles='10,20'
+  fi
+  if [ ${procname} = PorceClayMaskIBISClima ]
+  then
+    file_out=${dirdata}/pre/dataout/PorceClayMaskIBISClima.dat
+    jobname=PcClayMaskIBISC
+    ieeefiles='10,20,30'
+  fi
+  if [ ${procname} = PorceClayMaskIBIS ]
+  then
+     file_out=${dirdata}/model/datain/PorceClayMaskIBIS.G${prefix}
+     jobname=PcClayMaskIBIS
+     ieeefiles='20,30,50'
+  fi
+  if [ ${procname} = PorceClayMaskSiB2Clima ]
+  then
+    file_out=${dirdata}/pre/dataout/PorceClayMaskSiB2Clima.dat
+    jobname=PcClayMskSiB2C
+    ieeefiles='10,20,30'
+  fi
+  if [ ${procname} = PorceClayMaskSiB2 ]
+  then
+    file_out=${dirdata}/model/datain/PorceClayMaskSiB2.G${prefix}
+    jobname=PcClayMskSiB2
+    ieeefiles='20,30,50'
+  fi
+  if [ ${procname} = PorceSandMaskIBISClima ]
+  then
+    file_out=${dirdata}/pre/dataout/PorceSandMaskIBISClima.dat
+    jobname=PcSandMskIBISC
+    ieeefiles='10,20,30'
+  fi
+  if [ ${procname} = PorceSandMaskIBIS ]
+  then
+    file_out=${dirdata}/model/datain/PorceSandMaskIBIS.G${prefix}
+    jobname=PcSandMskIBIS
+    ieeefiles='20,30,50'
+  fi
+  if [ ${procname} = PorceSandMaskSiB2Clima ]
+  then
+    file_out=${dirdata}/pre/dataout/PorceSandMaskSiB2Clima.dat
+    jobname=PcSandMskSiB2C
+    ieeefiles='10,20,30'
+  fi
+  if [ ${procname} = PorceSandMaskSiB2 ]
+  then
+    file_out=${dirdata}/model/datain/PorceSandMaskSiB2.G${prefix}
+    jobname=PcSandMskSiB2
+    ieeefiles='20,30,50'
+  fi
+  if [ ${procname} = SoilTextureMaskSiB2Clima ]
+  then
+    file_out=${dirdata}/pre/dataout/SoilTextureMaskClima.dat
+    jobname=SoilTxMskSiB2C
+    ieeefiles='10,20,30'
+  fi
+  if [ ${procname} = SoilTextureMaskSiB2 ]
+  then
+    file_out=${dirdata}/model/datain/SoilTextureMaskSiB2.G${prefix}
+    jobname=SoilTxMskSiB2
+    ieeefiles='20,30,50'
+  fi
+  if [ ${procname} = SSTMonthlyDirec ]
+  then
+    DATA1=${DATA:0:8}
+    file_out=${dirdata}/model/datain/SSTMonthlyDirec${DATA1}.G${prefix}
+    jobname=SSTMonthlyDirec
+    ieeefiles='10,30,50,60'
+  fi
+  if [ ${procname} = SSTDailyDirec ]
+  then
+    DATA1=${DATA:0:8}
+    file_out=${dirdata}/model/datain/SSTDailyDirec${DATA1}.G${prefix}
+    jobname=SSTDailyDirec
+    ieeefiles='10,30,50,60'
+  fi
+  if [ ${procname} = TopographyGradient ] 
+  then
+    file_out=${dirdata}/model/datain/TopographyGradient${DATA}.G${prefix}
+    jobname=TopoGrad
+    ieeefiles='10,20'
+    inputaux=TopoGradNML
+  fi
+  if [ ${procname} = CO2MonthlyDirec ] 
+  then
+    DATA1=${DATA:0:8}
+    file_out=${dirdata}/model/datain/CO2MonthlyDirec${DATA1}.G${prefix}
+    jobname=CO2MonthlyDirec
+    ieeefiles='10,30,50,60'
+  fi
+}
+
+function crianml() 
+{ 
+  varname=${1}
+
+  echo -e "\033[35;1m     ----- Cria namelist -----\033[m"
+
+  if [ $varname = ClmtClima ]; then varname=TemperatureClima; fi
+  if [ $varname = Clmt ]     ; then varname=Temperature     ; fi
+
+  rm -f ${DK_suite}/pre/exec/${varname}.nml
+
+  sed    's/#.*$//'           ${onde}/namelist.runPre  > ${DK_suite}/pre/exec/namelistrp.tmp
+  sed -i '/DirBCs=/s/\//|/g'  ${DK_suite}/pre/exec/namelistrp.tmp
+  sed -i '/DirMain=/s/\//|/g' ${DK_suite}/pre/exec//namelistrp.tmp
+  sed -i '/DirInp=/s/\//|/g'  ${DK_suite}/pre/exec//namelistrp.tmp
+  sed -i '/DirOut=/s/\//|/g'  ${DK_suite}/pre/exec//namelistrp.tmp
+  sed -i '/DirHome=/s/\//|/g' ${DK_suite}/pre/exec/namelistrp.tmp
+  sed -n "/&${varname}$/{/\//tc;:a;/\//!{N;ba;};:c;s/.*\&${varname}//;p;}" ${DK_suite}/pre/exec/namelistrp.tmp  > ${DK_suite}/pre/exec/tmp
+
+  nl=$(wc -l ${DK_suite}/pre/exec/tmp | awk '{print $1}')
+
+  if [ $nl -gt 0 ]
+  then
+    echo -e "\033[35;1m     ----- Gerando o arquivo \033[32;1m ${varname}.nml \033[35;1m\033[m"
+    while read linha2
+    do
+      echo "  $linha2" | sed s/'${IM}'/$IM/g                       \
+                       | sed s/'${JM}'/$JM/g                       \
+                       | sed s,'${dirdata}',"$dirdata",g           \
+                       | sed s/'${RESOUT}'/$RESOUT/g               \
+                       | sed s/'${KMOUT}'/$KMOUT/g                 \
+                       | sed s/'${RESO}'/$RESO/g                   \
+                       | sed s/'${RESIN}'/$RESIN/g                 \
+                       | sed s/'${KMIN}'/$KMIN/g                   \
+                       | sed s/'${GetOzone}'/$GetOzone/g           \
+                       | sed s/'${GetTracers}'/$GetTracers/g       \
+                       | sed s/'${GrADS}'/$GrADS/g                 \
+                       | sed s/'${GrADSOnly}'/$GrADSOnly/g         \
+                       | sed s/'${GDASOnly}'/$GDASOnly/g           \
+                       | sed s/'${SmoothTopo}'/$SmoothTopo/g       \
+                       | sed s/'${RmGANL}'/$RmGANL/g               \
+                       | sed s/'${SetLinear}'/$SetLinear/g         \
+                       | sed s/'${SetLinearGrid}'/$SetLinearGrid/g \
+                       | sed s/'${DataGDAS}'/$DataGDAS/g           \
+                       | sed s/'${DATA}'/$DATA/g                   \
+                       | sed s/'${UTC}'/$UTC/g                     \
+                       | sed s,'${dirhome}',"$dirhome",g           \
+                       | sed s/'${AnlPref}'/$AnlPref/g             \
+                       | sed s,'${dirhome}',"$dirhome",g           \
+                       | sed s/'${MendCut}'/$MendCut/g             \
+                       | sed s/'${SmthPerCut}'/$SmthPerCut/g       \
+                       | sed s/'${PREFIXO}'/$PREFIXO/g 
+    done < ${DK_suite}/pre/exec/tmp > ${DK_suite}/pre/exec/${varname}.nml
+  fi
+
+  sed -i 's, inputaux=,\&,g'  ${DK_suite}/pre/exec/${varname}.nml  
+  sed -i '/^\s*$/d'           ${DK_suite}/pre/exec/${varname}.nml  
+  sed -i '/DirBCs=/s/|/\//g'  ${DK_suite}/pre/exec/${varname}.nml 
+  sed -i '/DirMain=/s/|/\//g' ${DK_suite}/pre/exec/${varname}.nml 
+  sed -i '/DirInp=/s/|/\//g'  ${DK_suite}/pre/exec/${varname}.nml 
+  sed -i '/DirOut=/s/|/\//g'  ${DK_suite}/pre/exec/${varname}.nml 
+  sed -i '/DirHome=/s/|/\//g' ${DK_suite}/pre/exec/${varname}.nml 
+  sed -i '$ d'                ${DK_suite}/pre/exec/${varname}.nml   
+
+  if test ! -s ${DK_suite}/pre/exec/${varname}.nml
+  then
+    echo -e "\033[31;1m     ----- Problema na criacao do arquivo! -----\033[m"
+    exit 1 
+  else
+    echo " /" >>  ${DK_suite}/pre/exec/${varname}.nml  
+    echo -e "\033[35;1m     ----- arquivo pronto -----\033[m" 
+    rm -f ${DK_suite}/pre/exec/namelistrp.tmp ${DK_suite}/pre/exec/tmp
+  fi
+}
+
+function GetSNOW() 
+{
+  #
+  #  Run GetSNOW.ksh
+  #  To deGRIB NCEP SNOW file with the script GetSNOW.ksh
+  #  and to format properly the file for SNOWWeekly)
+  #
+  YYYYMMDD=${DATA:0:8}
+  hh12=${DATA:8:2}
+  
+  hh00=00
+  
+  cd ${dirdata}/pre/datain
+  
+  # Possible SNOW GRIB files:
+  grbfiles=(gdas1.T${hh00}Z.snogrd.${YYYYMMDD}${hh00}  gdas1.T${hh12}Z.snogrd.${YYYYMMDD}${hh12}  gdas1.T${hh00}Z.snogrd.${YYYYMMDD}${hh12}  \
+            gdas1.T${hh00}Z.snogrb.${YYYYMMDD}${hh00}  gdas1.T${hh12}Z.snogrb.${YYYYMMDD}${hh12}  gdas1.T${hh00}Z.snogrb.${YYYYMMDD}${hh12}  \
+            gdas1.T${hh00}Z.snogrb2.${YYYYMMDD}${hh00} gdas1.T${hh12}Z.snogrb2.${YYYYMMDD}${hh12} gdas1.T${hh00}Z.snogrb2.${YYYYMMDD}${hh12})
+  
+  for gfile in ${grbfiles[@]}
+  do
+    if [ -s ${gfile} -a ${gfile:10:8} = .snogrb. ]
+    then
+      ${dirgrads}/wgrib -s -4yr -d 1 -ieee gdas1.T${hh12}Z.snogrb.${YYYYMMDD}${hh12}
+      mv dump gdas1.T${hh12}Z.snogrd.${YYYYMMDD}${hh12}
+      echo "SNOW file found ${gfile}"
+      break
+    elif [ -s ${gfile} -a ${gfile:10:9} = .snogrb2. ]
+    then
+      ${dirgrads}/wgrib2 -s -YY -d 1 -order we:ns ${gfile} -ieee gdas1.T${hh12}Z.snogrd.${YYYYMMDD}${hh12}
+      echo "SNOW file found ${gfile}"
+      break
+    elif [ -s ${gfile} -a ${gfile:10:8} = .snogrd. ]
+    then 
+      echo "SNOW file found ${gfile}"
+      break
+    else
+      echo "SNOW file not found!"
+    fi
+  done
+
+  date=$(awk 'BEGIN {print substr("'${rec}'",7,10)}')
+}
+
+function GetSoilMoisture() 
+{
+  #
+  #  Run GetSoilMoisture.ksh
+  #  To deGRIB CPTEC SoilMoisture file with the script GetSoilMoisture.ksh
+  #  and to format properly the file for SoilMoistureWeekly)
+  #
+  YYYYMMDD=${DATA:0:8}
+  hh12=${DATA:8:2}
+  hh=00
+
+  cd ${dirdata}/pre/datain
+}
+
+function GetSST() 
+{
+  #
+  #  Run GetSST.ksh
+  #  To deGRIB NCEP SST file with the script GetSST.ksh
+  #  and to format properly the file for SSTWeekly)
+  #
+  YYYYMMDD=${DATA:0:8}
+  hh12=${DATA:8:2}
+  
+  hh00=00
+  
+  cd ${dirdata}/pre/datain
+  
+  # Possible SST GRIB files:
+  grbfiles=(gdas1.T${hh00}Z.sstgrd.${YYYYMMDD}${hh00}  gdas1.T${hh12}Z.sstgrd.${YYYYMMDD}${hh12}  gdas1.T${hh00}Z.sstgrd.${YYYYMMDD}${hh12}  \
+            gdas1.T${hh00}Z.sstgrb.${YYYYMMDD}${hh00}  gdas1.T${hh12}Z.sstgrb.${YYYYMMDD}${hh12}  gdas1.T${hh00}Z.sstgrb.${YYYYMMDD}${hh12}  \
+            gdas1.T${hh00}Z.sstgrb2.${YYYYMMDD}${hh00} gdas1.T${hh12}Z.sstgrb2.${YYYYMMDD}${hh12} gdas1.T${hh00}Z.sstgrb2.${YYYYMMDD}${hh12} \
+            rtgssthr_grb_0.5.grib2.${YYYYMMDD} rtgssthr_grb_0.083.grib2.${YYYYMMDD})
+  
+  for gfile in ${grbfiles[@]}
+  do
+    if [ -s ${gfile} -a ${gfile:10:8} = .sstgrb. ]
+    then 
+      ${dirgrads}/wgrib -s -4yr -d 1 -ieee ${gfile}
+      mv dump gdas1.T${hh12}Z.sstgrd.${YYYYMMDD}${hh12}
+      echo "SST file found ${gfile}"
+      break
+    elif [ -s ${gfile} -a ${gfile:10:9} = .sstgrb2. -o -s ${gfile} -a ${gfile:0:13} = rtgssthr_grb_ ]
+    then 
+      ${dirgrads}/wgrib2 -s -YY -d 1 -order we:ns ${gfile} -ieee gdas1.T${hh12}Z.sstgrd.${YYYYMMDD}${hh12}
+      echo "SST file found ${gfile}"
+      break
+    elif [ -s ${gfile} -a ${gfile:10:8} = .sstgrd. ]
+    then 
+      echo "SST file found ${gfile}"
+      break
+    else
+      echo "SST file not found ${gfile}"
+    fi
+  done
+  
+  date=$(awk 'BEGIN {print substr("'${rec}'",7,10)}')
+}
+
+function criabash() 
+{
+  export FEXE=$(pwd)
+  export cpu_mpi=${1}
+  export cpu_node=${2}
+  export RES=${3}        # jobname
+  export varname=${4}    # linha
+  
+  num=$(($cpu_mpi+$cpu_node-1))
+  fra=$(($num/$cpu_node))
+  cpu_tot=$(($fra*$cpu_node))
+
+  if [ $varname = ClmtClima ]
+  then
+     varname=TemperatureClima
+  fi
+  if [ $varname = Clmt ]
+  then
+     varname=Temperature
+  fi
+
+  direxe=${dirdata}/pre/exec
+  dirsrc=${dirhome}/sources/${varname}
+  dirout=${dirhome}/scripts/output
+  dirrun=${dirhome}/scripts
+
+  host=$(hostname)
+
+  echo "${host}"
+
+  RUNTM=$(date +'%d_%H:%M')
+
+  if [ $varname = Chopping_parallel ]
+  then
+    cp -f ${dirsrc}/Delta* ${dirdata}/pre/datain/
+    export PBS_SERVER=${pbs_server1}
+    export HEADBASH="#!/bin/bash -x" # for debug
+    #export FILAPBS="#PBS -q ${QUEUEP}"
+    export FILAPBS="#SBATCH --partition=${QUEUEP}"
+  else 
+    export PBS_SERVER=${pbs_server2}
+    export HEADBASH="#!/bin/bash -x"
+    #export FILAPBS="#PBS -q ${AUX_QUEUE}"
+    export FILAPBS="#SBATCH --partition=${AUX_QUEUE}"
+  fi
+
+  optserver=$(printf "$PBS_SERVER \n" | cut -c1-3)
+
+  if [[ (${optserver} = "aux") ]]
+  then
+    export MPPBS="#"
+  else
+    #export MPPBS="#PBS -l mppwidth=${cpu_mpi}"
+    export MPPBS="#SBATCH --tasks-per-node=${cpu_mpi}"
+  fi
+
+  auxvarname=$varname
+
+cat <<EOT1 > ${direxe}/set${varname}.bash
+${HEADBASH}
+#SBATCH --output=${direxe}/Out.MPI${cpu_mpi}_${varname}
+#SBATCH --error=${direxe}/Err.MPI${cpu_mpi}_${varname}
+#SBATCH --time=${AUX_WALLTIME}
+${MPPBS}
+#SBATCH --nodes=${cpu_node}
+#SBATCH --job-name=$RES
+${FILAPBS}
+
+###${HEADBASH}
+####PBS -o ${host}:${direxe}/Out.MPI${cpu_mpi}_${varname}
+####PBS -j oe
+####PBS -l walltime=${AUX_WALLTIME}
+####PBS -A ${QUOTA}
+###${MPPBS}
+####PBS -l mppnppn=${cpu_node}
+####PBS -V
+####PBS -S /bin/bash
+####PBS -N $RES
+###${FILAPBS}
+
+if [ -e ${HOME_suite}/pre/exec/this.pre.job.${varname} ]; then rm ${HOME_suite}/pre/exec/this.pre.job.${varname}; fi
+
+echo \${PBS_JOBID} > ${HOME_suite}/pre/exec/this.pre.job.${varname}
+
+auxvarname=$(printf "$varname")
+
+if [ $USE_INTEL == true ]
+then
+# EGEON INTEL
+module purge
+module load ohpc
+module swap gnu9 intel
+module swap openmpi4 impi
+module load hwloc
+module load phdf5
+module load netcdf
+module load netcdf-fortran
+module swap intel intel/2022.1.0
+
+module list
+else
+  if [ $USE_SINGULARITY == true ]
+  then
+module list
+  else
+# EGEON GNU
+module purge
+module load gnu9/9.4.0
+module load ucx/1.11.2
+module load openmpi4/4.1.1
+module load netcdf/4.7.4
+module load netcdf-fortran/4.5.3
+module load phdf5/1.10.8
+module load hwloc
+module load libfabric/1.13.0
+
+module list
+  fi
+fi
+
+if [[ (\${auxvarname} = "Chopping_parallel") ]]
+then
+#  .  /opt/modules/default/etc/modules.sh
+#  module load stat
+#  module list
+  export PBS_SERVER=${pbs_server1}
+else
+  export PBS_SERVER=${pbs_server2}
+fi
+
+if [[ (${MAQUI} = "Linux") || (${MAQUI} = "linux") ]]
+then
+  export F_UFMTENDIAN=${ieeefiles}
+fi
+
+export KMP_STACKSIZE=128m
+
+if [[ (\${auxvarname} = "FLUXCO2Clima") ]]
+then
+  ulimit -s 65532
+else
+  ulimit -s unlimited
+fi
+
+cd ${direxe}
+
+date
+
+optserver=$(printf "$PBS_SERVER \n" | cut -c1-3)
+
+if [[ (\${optserver} = "aux") ]]
+then
+  ${direxe}/${varname} -i ${direxe}/${varname}.nml
+else
+  #  time aprun -n ${cpu_mpi} -N ${cpu_node} ${direxe}/${varname} -i ${direxe}/${varname}.nml
+
+  #OK EGEON
+  #  time mpirun -n ${cpu_mpi} -N ${cpu_node} ${direxe}/${varname} -i ${direxe}/${varname}.nml
+  #mpirun -np ${cpu_mpi} ${direxe}/${varname} -i ${direxe}/${varname}.nml
+
+  #EGEON SINGULARITY
+  if [ \$USE_SINGULARITY == true ]
+  then
+    #module load singularity; singularity exec -e --bind /mnt/beegfs/carlos.bastarz:/mnt/beegfs/carlos.bastarz /mnt/beegfs/carlos.bastarz/containers/BAM_V1.2.1.sif mpirun -np ${cpu_mpi} /usr/local/bin/${varname} -i ${direxe}/${varname}.nml
+    module load singularity; singularity exec -e --bind ${WORKBIND}:${WORKBIND} ${SIFIMAGE} mpirun -np ${cpu_mpi} /usr/local/bin/${varname} -i ${direxe}/${varname}.nml
+  else
+    mpirun -np ${cpu_mpi} ${direxe}/${varname} -i ${direxe}/${varname}.nml
+  fi
+fi
+
+date
+
+echo "" > ${direxe}/.${varname}.ok
+EOT1
+
+  chmod +x ${direxe}/set${varname}.bash 
+}
+
+#
+# Início do Pré-processamento
+#
+
+#
+# Verifica o número de argumentos passados junto com o script:
+# Pelo menos 9 argumentos devem ser passados;
+# Caso contrário, será chamada a função para imprimir o cabeçalho e o script é encerrado
+#
+if [ "$#" -lt 9 ]
+then
+  if [ 'x'$1 = 'xspid' ]
+  then
+    spid
+    exit 0
+  else
+    usageprincipal
+    exit 1
+  fi
+fi
+
+#
+# Pegando os argumentos da linha de comando
+#
+export TRC=${1}             
+export LV=${2}              
+export DATA=${3}       # LABELI initial data YYYYMMDDHH 
+export PREFIXO=${4}    # PREFIX   
+export total=${5}         
+export SmoothTopo=${6} # Flag to Performe Topography Smoothing
+
+if [ ${SmoothTopo} == "T" ]
+then
+  export PREFIXO=SMT 
+fi
+
+export GDASOnly=${7}   # Flag to Only Produce Input CPTEC Analysis File
+export RESIN=${8}      # Spectral Horizontal Resolution of Input Data
+export KMIN=${9}       # Number of Layers of Input Data
+
+#
+# Ajuste das variáveis de ambiente
+#
+CASE=$(echo ${TRC} ${LV} | awk '{ printf("TQ%4.4dL%3.3d\n",$1,$2)  }')
+
+export PATHENV=$(dirname $(readlink -e ${0})) # Local (path) onde está este script
+export FILEENV=${PATHENV}/EnvironmentalVariablesMCGA
+export PATHBASE=$(cd ${PATHENV}; cd ../; pwd)
+
+. ${FILEENV} ${CASE} ${PREFIXO}
+
+cd ${DK_suite}/pre/exec
+
+#
+# Ajustes do Chopping
+#
+typeset -x prefi
+
+export RESOUT=$(echo ${1} | awk '{print $1/1}')
+export KMOUT=$(echo ${2} | awk '{print $1/1}')
+
+export GetOzone=T      # Flag to Produce Ozone Files
+export GetTracers=T    # Flag to Produce Tracers Files
+export GrADS=T         # Flag to Produce GrADS Files
+export GrADSOnly=F     # Flag to Only Produce GrADS Files (Do Not Produce Inputs for Model)
+export RmGANL=F        # Flag to Remove GANL File if Desired
+export MendCut=$(echo $RESOUT | awk '{ print (int(1/((5+(40000/($1*3)))*(3/(40000)))) +1) }') # FLAG to Spectral Resolution Cut Off for Topography Smoothing
+export SmthPerCut=0.12 # FLAG to Percentage for Topography Smoothing
+
+export SetLinear=FALSE
+export RESO=${1}
+
+if [ $RESOUT = 21 ];   then export IM=64;   export JM=32;   export timestep=3600; fi 
+if [ $RESOUT = 31 ];   then export IM=96;   export JM=48;   export timestep=1800; fi 
+if [ $RESOUT = 42 ];   then export IM=128;  export JM=64;   export timestep=1200; fi 
+if [ $RESOUT = 62 ];   then export IM=192;  export JM=96;   export timestep=900;  fi
+if [ $RESOUT = 106 ];  then export IM=320;  export JM=160;  export timestep=600;  fi
+if [ $RESOUT = 126 ];  then export IM=384;  export JM=192;  export timestep=450;  fi
+if [ $RESOUT = 133 ];  then export IM=400;  export JM=200;  export timestep=450;  fi
+if [ $RESOUT = 159 ];  then export IM=480;  export JM=240;  export timestep=360;  fi
+if [ $RESOUT = 170 ];  then export IM=512;  export JM=256;  export timestep=360;  fi
+if [ $RESOUT = 213 ];  then export IM=640;  export JM=320;  export timestep=300;  fi
+if [ $RESOUT = 213 ];  then export IM=640;  export JM=320;  export timestep=300;  fi
+if [ $RESOUT = 254 ];  then export IM=768;  export JM=384;  export timestep=240;  fi
+if [ $RESOUT = 299 ];  then export IM=900;  export JM=450;  export timestep=200;  fi
+if [ $RESOUT = 319 ];  then export IM=960;  export JM=480;  export timestep=180;  fi
+if [ $RESOUT = 341 ];  then export IM=1024; export JM=512;  export timestep=180;  fi
+if [ $RESOUT = 382 ];  then export IM=1152; export JM=576;  export timestep=150;  fi
+if [ $RESOUT = 511 ];  then export IM=1536; export JM=768;  export timestep=120;  fi
+if [ $RESOUT = 533 ];  then export IM=1600; export JM=800;  export timestep=120;  fi
+if [ $RESOUT = 666 ];  then export IM=2000; export JM=1000; export timestep=90;   fi
+if [ $RESOUT = 863 ];  then export IM=2592; export JM=1296; export timestep=60;   fi
+if [ $RESOUT = 1279 ]; then export IM=3840; export JM=1920; export timestep=20;   fi
+if [ $RESOUT = 1332 ]; then export IM=4000; export JM=2000; export timestep=20;   fi
+
+if [[ "$SetLinear" = "TRUE" ]]
+then
+  export TRUNC=$(echo ${RESOUT} |awk '{ printf("TL%4.4d\n",$1)  }')
+  export MRES=$(echo ${TRC} ${LV} |awk '{ printf("TL%4.4dL%3.3d\n",$1,$2)  }')
+else
+  export TRUNC=$(echo ${RESOUT} |awk '{ printf("TQ%4.4d\n",$1)  }')
+  export MRES=$(echo ${TRC} ${LV} |awk '{ printf("TQ%4.4dL%3.3d\n",$1,$2)  }')
+fi
+
+export TRUNCA=$(echo ${TRC} ${LV} |awk '{ printf("T%4.4dL%3.3d\n",$1,$2)  }')
+
+export pfxgrd=$(echo ${JM} ${LV}  |awk '{ printf("G%5.5dL%3.3d\n",$1,$2)  }')
+
+prefix=$(echo ${JM} |awk '{ printf("%5.5d\n",$1)  }')
+
+#
+# As variáveis DataGDAS e AnlPref a seguir, devem ser ajustadas no script 
+# EnvironmentalVariablesMCGA antes de executar o script runPre
+#
+if [ -z "${DataGDAS}" ]
+then
+  export DataGDAS="Spec" # Spec == Anl. Spec. NCEP; Grid == Anl. Grid NCEP
+fi 
+
+if [ -z "${AnlPref}" ]
+then
+  #export AnlPref="gdas1" # gdas1/gblav == Anl. Spec. NCEP; gdas/gblav == Anl. Grid. NCEP
+  export AnlPref="gblav" # gdas1/gblav == Anl. Spec. NCEP; gdas/gblav == Anl. Grid. NCEP
+fi 
+
+export dirhome=${HOME_suite}/pre
+export dirdata=${DK_suite}
+export dirgrads=${DIRGRADS}
+
+#
+# Opções da máquina
+#
+export MAQUI=Linux
+export PBS_SERVER=${pbs_server2}
+
+export onde=$PATHBASE/run
+
+lenamelist ${onde} # essa leitura gera uma lista com os processos escolhidos para rodar no pre
+
+#
+# Ajustes de caminhos nos namelists dos processos SST[Daily,Monthly]Direc e CO2MonthlyDirec
+#
+foiv2m=${dirdata}/pre/datasst/oiv2monthly/sstmtd.nml
+if [ -s ${foiv2m} ]; then sed -i "/drsst/c\ drsst='${dirdata}/pre/datasst/oiv2monthly/ '," ${foiv2m}; fi 
+
+foiv2d=${dirdata}/pre/datasst/oiv2daily/sstmtd.nml
+if [ -s ${foiv2d} ]; then sed -i "/drsst/c\ drsst='${dirdata}/pre/datasst/oiv2daily/ '," ${foiv2d}; fi 
+
+fco2m=${dirdata}/pre/dataco2/oiv2monthly/co2mtd.nml
+if [ -s ${fco2m} ]; then sed -i "/DRCO2/c\ DRCO2='${dirdata}/pre/dataco2/oiv2monthly/ '," ${fco2m}; fi 
+
+fco2d=${dirdata}/pre/dataco2/oiv2daily/co2mtd.nml
+if [ -s ${fco2d} ]; then sed -i "/DRCO2/c\ DRCO2='${dirdata}/pre/dataco2/oiv2daily/ '," ${fco2d}; fi 
+
+while read linha
+do
+  date +%Y%m%d%H%M%S > ${onde}/.tempoi
+
+  echo -e "   > \033[33;1mProcesso: ${linha}\033[m"
+  echo ""
+
+  fileout ${linha}
+
+  crianml ${linha}
+
+  if [ ${linha} = SSTWeeklyNCEP ]
+  then
+    GetSST
+  fi
+  if [ ${linha} = SNOWWeeklyNCEP ]
+  then
+    GetSNOW
+  fi
+  if [ ${linha} = SoilMoistureWeeklyCPTEC ]
+  then
+    GetSoilMoisture
+  fi
+
+#
+#  Cria o script de submissão
+#
+  if [ $linha = Chopping_parallel ]
+  then
+    echo ""
+    #echo -e "     \033[33;1mCria .bash e submete o processo: criabash 240 24 $jobname ${linha}\033[m"
+    #echo -e "     \033[33;1mCria .bash e submete o processo: criabash 20 1 $jobname ${linha}\033[m"
+    echo -e "     \033[33;1mCria .bash e submete o processo: criabash 128 1 $jobname ${linha}\033[m"
+    #criabash 240 24 $jobname ${linha}
+    #criabash 20 1 $jobname ${linha}
+    criabash 128 1 $jobname ${linha}
+  else
+    if [ $linha = Chopping_serial ]
+    then
+      echo ""
+      echo -e "     \033[33;1mCria .bash e submete o processo: criabash 24 1 $jobname ${linha}\033[m"
+      criabash 24 1 $jobname ${linha}
+    else
+      echo ""
+      echo -e "     \033[33;1mCria .bash e submete o processo: criabash 1 1 $jobname ${linha}\033[m"
+      criabash 1 1 $jobname ${linha}
+    fi
+  fi
+
+#
+#  Submete o processo 
+#
+  export NQPIDpre=$(${QSUB} ${direxe}/set${varname}.bash)
+  export QPIDpre=$(echo ${NQPIDpre} | awk -F " " '{print $4}')
+  echo "     QPIDpre: ${QPIDpre}"
+
+  fileout $linha
+
+#
+#  Verifica o log do processo e copia as saídas quando necessário
+#
+  rm -f ${direxe}/.${linha}.ok > /dev/null 2>&1
+
+  if [ $linha = Chopping_parallel ]
+  then
+    #rm -f ${direxe}/Out.MPI240_${varname} > /dev/null 2>&1
+    #WaitUntil ${direxe}/Out.MPI240_${varname} ${direxe}/.${linha}.ok ${QPIDpre} ${file_out} ${linha}
+    #rm -f ${direxe}/Out.MPI20_${varname} > /dev/null 2>&1
+    rm -f ${direxe}/Out.MPI128_${varname} > /dev/null 2>&1
+    #WaitUntil ${direxe}/Out.MPI20_${varname} ${direxe}/.${linha}.ok ${QPIDpre} ${file_out} ${linha}
+    WaitUntil ${direxe}/Out.MPI128_${varname} ${direxe}/.${linha}.ok ${QPIDpre} ${file_out} ${linha}
+    sleep 15 # verificar se a pausa é suficiente para a cópia de arquivos grandes
+  else
+    if [ $linha = Chopping_serial ]
+    then # checar se falta file_out3
+      rm -f ${direxe}/Out.MPI24_${varname} > /dev/null 2>&1
+      WaitUntil ${direxe}/Out.MPI24_${varname} ${direxe}/.${linha}.ok ${QPIDpre} ${file_out} ${linha}
+      sleep 15 
+    else
+      rm -f ${direxe}/Out.MPI1_${varname} > /dev/null 2>&1
+      WaitUntil ${direxe}/Out.MPI1_${varname} ${direxe}/.${linha}.ok ${QPIDpre} ${file_out} ${linha}
+    fi
+  fi
+
+#
+# Verifica a existência das saídas dos processos
+#
+  if [ $linha = TopoWaterPercNavy -o $linha = TopoWaterPercGT30 ]
+  then
+    if test ! -s ${file_out} 
+    then 
+      echo ""
+      echo -e "    \033[31;1m Problema!!! Nao foi gerado ${file_out} !!!\033[m"
+      exit 1
+    else 
+      if test ! -s ${file_out2} 
+      then
+        echo ""
+        echo -e "    \033[31;1m Problema!!! Nao foi gerado ${file_out2} !!!\033[m"
+        exit 1
+      else
+        echo ""
+        echo "     Fim do $linha"
+      fi
+    fi
+  else
+    if test ! -s ${file_out} 
+    then
+      echo ""
+      echo -e "    \033[31;1m Problema!!! Nao foi gerado ${file_out} !!!\033[m"
+      exit 1
+    else
+      echo ""
+      echo "     Fim do $linha"
+    fi
+  fi
+
+  date +%Y%m%d%H%M%S > ${onde}/.tempof
+  diffdate $(cat ${onde}/.tempoi) $(cat ${onde}/.tempof) ${linha}
+
+  rm -f ${onde}/.tempoi ${onde}/.tempof
+
+done < ${onde}/.listapre
+
+rm -f ${onde}/.listapre 2>&1
+
+#exit 0

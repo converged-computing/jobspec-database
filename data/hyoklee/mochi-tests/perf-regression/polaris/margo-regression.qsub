@@ -1,0 +1,27 @@
+#!/bin/sh
+##
+## Usage: qsub margo-regression.qsub
+## Author: Hyokyung Lee (hyoklee@hdfgroup.org)
+## Last Update: 2022-10-28
+##
+#PBS -l select=2:system=polaris
+#PBS -l place=scatter
+#PBS -l walltime=10:00
+#PBS -l filesystems=home:grand
+#PBS -q debug
+#PBS -A CSC250STDM12
+
+module load cudatoolkit-standalone
+module load cray-mpich/8.1.16
+
+# Set PREFIX to match your Spack and mochi-tests installation.
+PREFIX=/home/hyoklee
+export LD_LIBRARY_PATH=$PREFIX/install/lib:$PREFIX/install/lib64:$LD_LIBRARY_PATH
+
+# Get all node names first to verify the nodes that were used later.
+mpiexec -n 1 -ppn 1 cat $PBS_NODEFILE >& $PREFIX/nodes.txt
+
+# Run GPU benchmarking tests.
+mpiexec  -n 2 -ppn 1 $PREFIX/bin/gpu-margo-p2p-bw -x 4096 -n "ofi+verbs://" -c 1 -D 10
+mpiexec  -n 2 -ppn 1 $PREFIX/bin/gpu-margo-p2p-bw -x 4096 -n "ofi+verbs://" -c 1 -D 10 -j 
+mpiexec  -n 2 -ppn 1 $PREFIX/bin/gpu-margo-p2p-bw -x 4096 -n "ofi+verbs://" -c 1 -D 10 -k

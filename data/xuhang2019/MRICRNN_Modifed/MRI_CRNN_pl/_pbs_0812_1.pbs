@@ -1,0 +1,23 @@
+#!/bin/bash
+#PBS -l select=1:ncpus=4:mem=120gb:ngpus=1:gpu_type=RTX6000
+#PBS -l walltime=24:00:00
+#PBS -N pl_dataset1_0812
+#PBS -o pbs_log/
+#PBS -e pbs_log/
+ 
+cd $PBS_O_WORKDIR
+echo "PBS_O_WORKDIR" is $PBS_O_WORKDIR
+
+module load anaconda3/personal
+
+
+export PATH='/rds/general/user/xc2322/home/anaconda3/envs/test_py38/bin/':$PATH
+which python
+
+# grant authority
+nvidia-smi
+
+
+python /rds/general/user/xc2322/home/git_projects/MRI_CRNN_pl/main.py --mode='train' --model_name='pl_dataset1_gt' --dataset_index=1 --use_dcl
+
+

@@ -1,0 +1,34 @@
+#! /bin/bash --login
+
+#PBS -N GBMVDYN_42aHSD
+#PBS -q Std
+#PBS -l nodes=2:ppn=2
+#PBS -m abe
+#PBS -M user.name@domain.name
+#PBS -o pbs.charmm.out
+#PBS -e pbs.charmm.err
+
+#Because charmm uses shared libraries, add charmm to your default
+#module list before running by typing the following:
+
+#module initadd charmm/31b1
+
+cd $PBS_O_WORKDIR
+
+#simple serial charmm job
+#charmm < GB.inp > GBminimization.out.$PBS_JOBID
+
+# example: run an MPI job
+cat > stream.inp << EOF
+* Energy minimization of NAMD-equilibrated structure
+* using GBMV model in Lee et al., J. Comp. Chem. 24(11): 1348 (2003).
+*
+stream @stream
+stop
+EOF
+
+export input="stream=GBMV_MIN.INP"
+
+which charmm.mpi.xxlarge
+mpicmd charmm.mpi.xxlarge $input < stream.inp > GBMVmin.out
+

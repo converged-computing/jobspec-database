@@ -1,0 +1,67 @@
+#!/bin/bash
+
+### script to run an mpi job using 28 cores or less (using only one 28-core node)
+
+### Set the job name
+#PBS -N hw4
+
+### Specify the group for this job
+### List of PI groups available to each user can be found with "va" command
+#PBS -W group_list=ece569
+
+### Set the queue for this job as windfall or standard (adjust ### and #)
+#PBS -q standard
+
+### Set the number of nodes, cores and memory that will be used for this job
+### select=1 is the node count, ncpus=28 are the cores in each node, 
+### mem=168gb is memory per node, pcmem=6gb is the memory per core - optional
+
+###PBS -l select=1:ncpus=28:mem=168gb:ngpus1
+#PBS -l select=1:ncpus=2:mem=12gb:ngpus=1
+### Specify "wallclock time", hhh:mm:ss. Required field
+#PBS -l walltime=00:00:10
+
+### Specify total cpu time, hhh:mm:ss. Calculated for you if left out
+### total cputime = walltime * ncpus
+#PBS -l cput=00:00:10
+
+### Load required modules/libraries if needed (openmpi example)
+### Use "module avail" command to list all available modules
+### for ocelote 
+ module load openmpi
+ module load cuda91/toolkit/9.1.85
+### end of for ocelote
+### for elgato
+###module load openmpi3
+###module load cuda10
+### end of elgato
+### set directory for job execution, ~netid = home directory path
+cd ~akoglu/Spring2021/ece569/build_dir
+
+###
+###setenv MPI_DSM_DISTRIBUTE
+
+### run your executable program with begin and end date and time output
+
+PATHS[0]=/home/u26/akoglu/Spring2021/ece569/build_dir/Histogram/Dataset/0
+PATHS[1]=/home/u26/akoglu/Spring2021/ece569/build_dir/Histogram/Dataset/1
+PATHS[2]=/home/u26/akoglu/Spring2021/ece569/build_dir/Histogram/Dataset/2
+PATHS[3]=/home/u26/akoglu/Spring2021/ece569/build_dir/Histogram/Dataset/3
+PATHS[4]=/home/u26/akoglu/Spring2021/ece569/build_dir/Histogram/Dataset/4
+PATHS[5]=/home/u26/akoglu/Spring2021/ece569/build_dir/Histogram/Dataset/5
+PATHS[6]=/home/u26/akoglu/Spring2021/ece569/build_dir/Histogram/Dataset/6
+
+
+
+#### /Histogram_Solution -e $j/output.raw -i $j/input.raw 0 -t integral_vector > Histogram_output/$file
+#### version command line options: 0(global), 1(shared), 2(optimized). 
+count=0
+for j in ${PATHS[@]}
+do
+   file=output$((count)).txt
+   /usr/bin/time mpirun -n 1 ./Histogram_Solution -e $j/output.raw -i $j/input.raw 0 -t integral_vector > Histogram_output/$file
+ count=$((count+1))
+done
+
+
+

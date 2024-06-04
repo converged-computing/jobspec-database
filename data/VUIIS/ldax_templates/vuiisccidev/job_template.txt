@@ -1,0 +1,63 @@
+#!/bin/bash
+#SBATCH --mail-user=${job_email}
+#SBATCH --mail-type=${job_email_options}
+#SBATCH --nodes=1
+#SBATCH --ntasks=${job_ppn}
+#SBATCH --time=${job_walltime}
+#SBATCH --mem=${job_memory}mb
+#SBATCH -o ${job_output_file}
+
+smemwatch -k 90 -d 50 $$$$ &
+# List info
+uname -a
+
+# Make sure tmp directory is made
+mkdir -p $TMPDIR
+
+XNATHOST=${XNAT_HOST}
+XNATUSER=${XNAT_USER}
+SESSLIMIT=40
+SLEEPMAX=300
+SLEEPSHORT=120
+
+# Check number of open sessions on host before we download
+echo "Checking that we can download"
+SLEEPSECS=$[ ( $RANDOM % $SLEEPSHORT ) ]s && echo "$SLEEPSECS" && sleep $SLEEPSECS
+while true;do
+    SESSID=`curl -s -n "$XNATHOST/data/JSESSION"`
+    echo "JSESSIONID=$SESSID"
+    SESSCOUNT=`curl -s -b "JSESSIONID=$SESSID" "$XNATHOST/data/user/$XNATUSER/sessions" | cut -s -f2 -d ":" | cut -f1 -d "}"`
+    echo "$SESSCOUNT"
+    echo "$SESSLIMIT"
+    if (( "$SESSCOUNT" > "$SESSLIMIT" )); then
+        echo -n "Cannot download yet, too many open sessions, sleeping "
+        curl -s -b "JSESSIONID=$SESSID" -X DELETE "$XNATHOST/data/JSESSION"
+	SLEEPSECS=$[ ( $RANDOM % $SLEEPMAX ) ]s && echo "$SLEEPSECS" && sleep $SLEEPSECS
+    else
+        echo "Looks good, ready to download" 
+	curl -s -b "JSESSIONID=$SESSID" -X DELETE "$XNATHOST/data/JSESSION"
+        break
+    fi
+done
+echo "DONE! JSESSIONID=$SESSID"
+
+
+# Run mega docker
+singularity exec --cleanenv --contain --bind /home/$USER/.dax_settings.ini:/home/$USER/.dax_settings.ini --bind /home/$USER/.daxnetrc:/home/$USER/.daxnetrc --bind /scratch/$USER:/scratch/$USER --bind /tmp:/tmp /data/mcr/singularity/mega_docker/vuiiscci_mega_docker_4.1.0-2020-04-22.img scl enable python27 'bash -c "
+cp /data/mcr/ldax_setup/bashrc_ldax /home/vuiisccidev/.bashrc && \
+source /home/vuiisccidev/.bashrc && \
+cp -r /data/mcr/ldax_setup/matlab /home/vuiisccidev/ && \
+export PYTHONNOUSERSITE=TRUE && \
+export OPENBLAS_NUM_THREADS=1 && \
+export LM_LICENSE_FILE=9327@vm-infr-license.vampire && \
+export PYTHONPATH=/data/mcr/masimatlab/trunk/xnatspiders/python/:/data/mcr/masimatlab/trunk/xnatspiders/SpiderUtils/ && \
+export PATH=\"$PATH\":/usr/local/matlab/2013a/bin:/data/mcr/fsl5/bin/:/data/mcr/camino/bin/:/data/mcr/masimatlab/trunk/xnatspiders/python/justinlib_v1_1_0/xnatlib:/data/mcr/masimatlab/trunk/xnatspiders/python/justinlib_v1_1_0/pythonlib && \
+export FSLDIR=/data/mcr/fsl5 && \
+source /data/mcr/fsl5/etc/fslconf/fsl.sh && \
+export CAMINO_HEAP_SIZE=30000 && \
+export FREESURFER_HOME=/data/mcr/freesurfer && \
+export FREESURFER_PBS_TEMPLATE=/data/mcr/masimatlab/trunk/xnatspiders/pbs_templates/FreesurferReconAllWithQC_PBS_template.txt && \
+source /data/mcr/freesurfer/SetUpFreeSurfer.sh && \
+xvfb-run -a --server-num=$((65536+$$$$)) --server-args=\"-screen 0 1920x1280x24 -ac\" \
+${job_cmds}\
+"'

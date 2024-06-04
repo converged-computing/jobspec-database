@@ -1,0 +1,41 @@
+#!/bin/bash
+#PBS -l select=2:system=polaris
+#PBS -l place=scatter
+#PBS -l walltime=0:10:00
+#PBS -l filesystems=home
+#PBS -q debug
+#PBS -A radix-io
+
+export OUTPUT_FILE=margo-vector-regression.output
+echo "" > $OUTPUT_FILE
+echo "################################" >> $OUTPUT_FILE
+echo "## MARGO-VECTOR-REGRESSION JOB RESULTS:" >> $OUTPUT_FILE
+echo "" >> $OUTPUT_FILE
+
+if [ -n "$CI_PROJECT_DIR" ]; then
+    # we appear to be running a gitlab-ci action
+    . $CI_PROJECT_DIR/sandbox/spack/share/spack/setup-env.sh
+    export EXE_PATH="$CI_PROJECT_DIR/sandbox/install/bin/"
+elif [ -n "$SANDBOX" ]; then
+    # we appear to be running from the run-regression.sh script
+    . $SANDBOX/spack/share/spack/setup-env.sh
+    # Change to working directory; jobs are launched in place
+    cd ${PBS_O_WORKDIR}
+    export EXE_PATH="./"
+else
+    # can't tell what's going on
+    echo "ERROR: neither the CI_PROJECT_DIR (for gitlab-ci execution) or the SANDBOX"
+    echo "       (for manual command line execution) variable are set."
+    exit 1
+fi
+
+spack env activate mochi-regression >> $OUTPUT_FILE
+spack find -vN >> $OUTPUT_FILE
+
+echo "## Margo CXI (vector benchmark with len 1, 512KiB xfers):" >> $OUTPUT_FILE
+mpiexec -n 2 $EXE_PATH/margo-p2p-vector -x 524288 -n cxi:// -c 1 -D 20 >> $OUTPUT_FILE
+
+sleep 1
+
+echo "## Margo CXI (vector benchmark with len 256, 512KiB xfers):" >> $OUTPUT_FILE
+mpiexec -n 2 $EXE_PATH/margo-p2p-vector -x 524288 -n cxi:// -c 1 -D 20 -v 256 >> $OUTPUT_FILE

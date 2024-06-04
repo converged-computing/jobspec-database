@@ -1,0 +1,46 @@
+#!/bin/bash --login
+
+###############################################################################
+#
+# This is an example PBS script for testing Fluidity on Archer, and
+# can be found in the GitHub FluidityProject/buildscripts repository
+# as:
+#
+#     /uk/ac/archer/unittest.pbs
+#
+# This script is submitted by build.bash to test Fluidity.
+#
+# The progress of the tests can be monitored in a timestamped
+# file of the form:
+#
+#  unittest-##########.log
+#
+###############################################################################
+
+#PBS -N unittest
+#PBS -l select=1
+#PBS -l walltime=24:00:00
+
+# Make sure any symbolic links are resolved to absolute path
+export PBS_O_WORKDIR=$(readlink -f $PBS_O_WORKDIR)
+
+# Change to the directory that the job was submitted from
+cd $PBS_O_WORKDIR
+
+# FLUIDITYDIR comes from the environment passed in using qsub -v
+module use $FLUIDITYDIR/modulefiles
+module unload PrgEnv-cray PrgEnv-gnu PrgEnv-intel
+module load PrgEnv-fluidity
+export PATH=$PATH:$FLUIDITYDIR/bin
+export PYTHONPATH=$PYTHONPATH:$FLUIDITYDIR/python
+
+# The tests takes about ?? hours on a compute node.
+
+mkdir -p tmp
+export TMPDIR=$PWD/tmp
+
+# TIMESTAMP comes from the environment passed in using qsub -v
+aprun -n 1 make unittest > unittest-${TIMESTAMP}.log 2>&1
+
+unset TMPDIR
+rm -rf tmp

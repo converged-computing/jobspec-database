@@ -1,0 +1,98 @@
+#!/bin/sh
+#
+#PBS -N [NAME]
+#PBS -l [CPUCONTROL]
+#PBS -l walltime=[WALLCLOCK]
+
+# Run in the current working (submission) directory
+if test X$PBS_ENVIRONMENT = XPBS_BATCH; then cd $PBS_O_WORKDIR; fi
+
+# The CUDA device reserved for you by the batch system
+CUDADEV=`cat $PBS_GPUFILE | rev | cut -d"-" -f1 | rev | tr -cd [:digit:]`
+echo "CUDA Devices"
+echo $CUDADEV
+export CUDA_VISIBLE_DEVICES=$CUDADEV
+echo "CUDA Visible Devices"
+echo $CUDA_VISIBLE_DEVICES
+
+# load the required modules
+module load cuda/5.5
+export CUDA_HOME=/opt/cuda/5.5
+
+# Number of MD steps
+md_steps=[MDRUNS]
+
+# Set absolute path to amber
+amber=$AMBERHOME/bin/pmemd.cuda
+
+# Show the library path for debugging
+echo "LIBRARY PATH"
+echo $LD_LIBRARY_PATH
+
+
+######################
+
+# Minimize the system
+echo "Minimization 1; ligand & peptide restrained"
+if [[ -e [FOLDER]/md-files/min.rst ]]; then
+    echo '-- min.rst file exists, skipping minimization 1'
+else
+    echo '-- Running Minimization 1'
+    $amber -O -i [FOLDER]/in_files/explicit_min.in -o [FOLDER]/md-logs/outMin.log -c [FOLDER]/md-files/peptide.inpcrd -p [FOLDER]/md-files/peptide.prmtop -r [FOLDER]/md-files/min.rst -ref [FOLDER]/md-files/peptide.inpcrd
+    
+    # Create pdb file for the minimized structure
+    ${AMBERHOME}/bin/ambpdb -p [FOLDER]/md-files/peptide.prmtop < [FOLDER]/md-files/min.rst > [FOLDER]/pdb-files/minimization.pdb
+fi
+
+######################
+
+echo "Heating, no restraints"
+if [[ -e [FOLDER]/md-files/equil0.rst ]]; then
+    echo '-- equil0.rst file exists, skipping heating'
+elif [[ -e [FOLDER]/md-files/min.rst ]]; then
+    echo '-- Running Heating'
+    $amber -O -i [FOLDER]/in_files/explicit_heat.in -o [FOLDER]/md-logs/outHeat.log -c [FOLDER]/md-files/min.rst -p [FOLDER]/md-files/peptide.prmtop -r [FOLDER]/md-files/equil0.rst -x [FOLDER]/md-files/heat.mdcrd -ref [FOLDER]/md-files/min.rst
+    
+    # Convert the resulting structure to a pdb-file
+    ${AMBERHOME}/bin/ambpdb -p [FOLDER]/md-files/peptide.prmtop < [FOLDER]/md-files/equil0.rst > [FOLDER]/pdb-files/heating.pdb
+else
+    echo '-- min.rst not found, skipping heating'
+fi
+
+######################
+
+# A function for running another step of the script
+runMD(){
+
+# define the local step nr, previous step nr, and new step nr
+local cStep=$1
+local pStep=$(($1-1))
+
+# Start amber MD simulation
+$amber -O -i [FOLDER]/in_files/explicit_equil.in -o [FOLDER]/md-logs/[LOGFILENAME]${cStep}.log -amd [FOLDER]/md-logs/aMD${cStep}.log -c [FOLDER]/md-files/equil${pStep}.rst -p [FOLDER]/md-files/peptide.prmtop -r [FOLDER]/md-files/equil${cStep}.rst -x [FOLDER]/md-files/equil${cStep}.mdcrd
+
+# Create pdb file from results
+$AMBERHOME/bin/ambpdb -p [FOLDER]/md-files/peptide.prmtop < [FOLDER]/md-files/equil${cStep}.rst > [FOLDER]/pdb-files/equil${cStep}.pdb
+}
+
+# Run the MD simulations. Figure out last stop, and take "md_steps" runs from that
+arr=( md-files/equil*.rst )  # * is list of all file and dir names
+n=${#arr[@]}
+echo "Molecular Dynamics"
+echo "-- Number of previous MD runs: "$(($n-1))
+
+startI=$n
+endI=$(($n+$md_steps))
+
+while [ $startI -lt $endI ]
+do
+    if [[ -e [FOLDER]/md-files/equil$(($startI+1)).rst ]]; then
+        echo "-- #"$startI" MD already run, skipping to next"
+    elif [[ -e [FOLDER]/md-files/equil$(($startI-1)).rst ]]; then
+        echo "-- Running script #"$startI
+        runMD $startI
+    else
+        echo '-- previous equil file not found, skipping equilibration #'$startI
+    fi
+    startI=`expr $startI + 1`
+done

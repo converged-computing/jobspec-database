@@ -1,0 +1,321 @@
+#!/bin/bash -l
+
+#******************************************************#
+#                                                      #
+#         Script for running Quantum Espresso          #
+#     Intended to work with the SLURM queue system     #
+#           within the Easley HPC system               #
+#                                                      #
+#        Benjamin Jackson, Auburn University           #
+#                 baj0040@auburn.edu                   #
+#                                                      #
+#                Updated: 12/08/2021                   #
+#                                                      #
+#******************************************************#
+
+Main(){
+	FNAME=$(echo ${!#} | awk -F. '{print $1}')
+
+##Defaults:
+	NPROC=48
+	MEM=184
+	QTYPE=s
+	TIME=500:00:00	
+	JOBTYPE=s
+## K Defaults: #Currently, specifying K values is mandatory
+	START_DEF=1
+	END_DEF=10
+	SHIFT_DEF=1
+  ##Default paths:
+	SUBDIR=/home/$(whoami)/.subfiles
+#	SUBDIR=$(pwd)
+	CURDIR=$(pwd)
+	SCRDIR=/scratch/$(whoami)/pdft/${FNAME}
+	BACKUPDIR=/home/$(whoami)/trash/overwrite
+	SCRIPT_PATH=$( dirname "$(readlink -f "$0")" )
+	QE_MODULE=espresso/intel/6.8 
+	if [[ ! -d ${SCRDIR} ]]; then mkdir -p ${SCRDIR}; fi
+	if [[ ! -d ${BACKUPDIR} ]]; then mkdir -p ${BACKUPDIR}; fi
+
+	#Begin Program
+	if [[ "$#" -lt 1 ]]; then Helpfn; exit; fi
+	Option_Handler "$@";
+	Req_Check;
+  QUEUE=$(Queue_Set)
+	Batch_Builder;
+	if [[ ${STOP} != 1 ]]; then sbatch ${SUBDIR}/${FNAME}.batch; fi
+#	rm -f ${SUBDIR}/${FNAME}.batch
+}
+Option_Handler(){
+	while getopts ":hN:n:m:t:q:j:k:g" option; do
+		case $option in
+			h) Helpfn; exit;; #Called help function and exit
+			n) NPROC=$OPTARG;;
+			N) NODES=$OPTARG;;
+			m) MEM=$( echo $OPTARG | sed 's/GB//' );;
+			t) TIME=$OPTARG;; #HOUR:MINUTES
+			q) QTYPE=$OPTARG;;
+			j) JOBTYPE=$OPTARG;;
+			k) JOBTYPE=k; KSettings=$OPTARG;; #Currently specifying the k values is required. Fix in future
+			g) SUBDIR=$(pwd); STOP=1;;
+		esac
+	done
+}
+Batch_Builder(){
+	Opening_Gen;
+	while true; do
+		case ${JOBTYPE} in
+			*[kK]*)  KScan_Gen; JOBTYPE=$( echo ${JOBTYPE} | sed 's/[kK]//');;
+			*[sS]*)  SCF_Gen "scf"; JOBTYPE=$( echo ${JOBTYPE} | sed 's/[sS]//');;
+			*[nN]*)  SCF_Gen "nscf"; JOBTYPE=$( echo ${JOBTYPE} | sed 's/[nN]//');;
+			*[bB]1*) Bands_Unpol_Gen; JOBTYPE=$( echo ${JOBTYPE} | sed 's/[bB]1//');;
+			*[bB]2*) Bands_Pol_Gen; JOBTYPE=$( echo ${JOBTYPE} | sed 's/[bB]2//');;
+			*[dD]*)  Spinden_Gen; JOBTYPE=$( echo ${JOBTYPE} | sed 's/[dD]//');;
+			*) break;;
+		esac
+	done
+	Closer_Gen;	
+}
+Opening_Gen(){
+SPOT=EOF
+cat > ${SUBDIR}/${FNAME}.batch << EOF
+#!/bin/bash -l
+#SBATCH --job-name=${FNAME}.qe
+${NODE_STR}
+${NPROC_STR}
+${MEM_STR}
+#SBATCH --cpus-per-task=1
+#SBATCH --error=${SUBDIR}/${FNAME}.e%j
+#SBATCH --time=${TIME}
+#SBATCH --output=/dev/null
+#SBATCH --partition=${QUEUE}
+#SBATCH --mail-user=$(whoami)@auburn.edu
+#SBATCH --mail-type=NONE
+#SBATCH --no-requeue
+module load ${QE_MODULE}
+CURDIR=\$(pwd)
+FNAME=${FNAME}
+SCRDIR=${SCRDIR}
+SUBDIR=${SUBDIR}
+if  [[ ! -d \${SCRDIR} ]]; then       #Check if SUBDIR exists, create if not
+        mkdir -p \${SCRDIR}
+fi
+NPROC=${NPROC}
+cd \${SCRDIR}
+EOF
+}
+LDOS_Pol(){
+EFermi=$( grep 'the Fermi energy' \${CURDIR}/${FNAME}.nscf.out | awk '{print $5}')
+Emin=$( Py_Add "${EFermi}" "$( echo ${In_String} | awk -F',' '{print $1}')" )
+Emax=$( Py_Add "${EFermi}" "$(echo ${In_String} | awk -F',' '{print $2}')" )
+
+cat > ${SUBDIR}/${FNAME}.batch << EOF
+cat > \${SCRDIR}/\${FNAME}.ldos1.in << ${SPOT}
+&inputpp
+ prefix='\${FNAME}',
+ outdir='\${SCRDIR}',
+ plot_num=10,
+ spin_component=1,
+ emin=${Emin},
+ emax=${Emax},
+/
+&plot
+ iflag=3,
+ output_format=6,
+ fileout='\${CURDIR}/\${FNAME}.ldos1.cube',
+/
+EOF
+cat > \${SCRDIR}/\${FNAME}.ldos2.in << EOF
+&inputpp
+ prefix='\${FNAME}',
+ outdir='\${SCRDIR}',
+ plot_num=10,
+ spin_component=2,
+ emin=${Emin},
+ emax=${Emax},
+/
+&plot
+ iflag=3,
+ output_format=6,
+ fileout='\${CURDIR}/\${FNAME}.ldos2.cube',
+/
+${SPOT}
+cp \${SCRDIR}/\${FNAME}.ldos1.in \${CURDIR}/\${FNAME}.ldos1.out
+mpirun -n \${NPROC} /tools/espresso-6.8/bin/pp.x -inp \${SCRDIR}/\${FNAME}.ldos1.in >> \${CURDIR}/\${FNAME}.ldos1.out
+cp \${SCRDIR}/\${FNAME}.ldos2.in \${CURDIR}/\${FNAME}.ldos2.out
+mpirun -n \${NPROC} /tools/espresso-6.8/bin/pp.x -inp \${SCRDIR}/\${FNAME}.ldos2.in >> \${CURDIR}/\${FNAME}.ldos2.out
+EOF
+}
+Bands_Unpol_Gen(){
+cat >> ${SUBDIR}/${FNAME}.batch << EOF
+cat > \${SCRDIR}/\${FNAME}.bands.in << ${SPOT}
+&bands
+ prefix='\${FNAME}',
+ outdir='\${SCRDIR}',
+ filband='\${CURDIR}/\${FNAME}.bands.dat',
+/
+${SPOT}
+cp \${SCRDIR}/\${FNAME}.bands.in \${CURDIR}/\${FNAME}.bands.out
+mpirun -n \${NPROC} /tools/espresso-6.8/bin/bands.x -inp \${SCRDIR}/\${FNAME}.bands.in >> \${CURDIR}/\${FNAME}.bands.out
+EOF
+}
+Bands_Pol_Gen(){
+cat >> ${SUBDIR}/${FNAME}.batch << EOF
+cat > \${SCRDIR}/\${FNAME}.bands1.in << ${SPOT}
+&bands
+ prefix='\${FNAME}',
+ outdir='\${SCRDIR}',
+ filband='\${CURDIR}/\${FNAME}.spin1.dat',
+ spin_component=1
+/
+${SPOT}
+cat > \${SCRDIR}/\${FNAME}.bands2.in << ${SPOT}
+&bands
+ prefix='\${FNAME}',
+ outdir='\${SCRDIR}',
+ filband='\${CURDIR}/\${FNAME}.spin2.dat',
+ spin_component=2,
+/
+${SPOT}
+cp \${SCRDIR}/\${FNAME}.bands1.in \${CURDIR}/\${FNAME}.bands1.out
+mpirun -n \${NPROC} /tools/espresso-6.8/bin/bands.x -inp \${SCRDIR}/\${FNAME}.bands1.in >> \${CURDIR}/\${FNAME}.bands1.out
+cp \${SCRDIR}/\${FNAME}.bands2.in \${CURDIR}/\${FNAME}.bands2.out
+mpirun -n \${NPROC} /tools/espresso-6.8/bin/bands.x -inp \${SCRDIR}/\${FNAME}.bands2.in >> \${CURDIR}/\${FNAME}.bands2.out
+EOF
+}
+Spinden_Gen(){
+cat >> ${SUBDIR}/${FNAME}.batch << EOF
+NX=\$(grep 'Den' \${CURDIR}/\${FNAME}.scf.out | awk -F'(' '{print \$2}' | awk -F')' '{print \$1}' | awk -F',' '{print \$1}')
+NY=\$(grep 'Den' \${CURDIR}/\${FNAME}.scf.out | awk -F'(' '{print \$2}' | awk -F')' '{print \$1}' | awk -F',' '{print \$2}')
+NZ=\$(grep 'Den' \${CURDIR}/\${FNAME}.scf.out | awk -F'(' '{print \$2}' | awk -F')' '{print \$1}' | awk -F',' '{print \$3}')
+#Make Spinden file
+cat > \${SCRDIR}/\${FNAME}.spinden.in << ${SPOT}
+&inputpp
+ prefix='\${FNAME}',
+ outdir='\${SCRDIR}',
+ plot_num=6,
+/
+&plot
+ iflag=3,
+ output_format=6,
+ fileout='\${CURDIR}/\${FNAME}.spin.cube',
+ nx=\${NX},ny=\${NY},nz=\${NZ},
+/
+${SPOT}
+#Run Spinden
+cp \${SCRDIR}/\${FNAME}.spinden.in \${CURDIR}/\${FNAME}.spinden.out
+mpirun -n \${NPROC} /tools/espresso-6.8/bin/pp.x -inp \${SCRDIR}/\${FNAME}.spinden.in >> \${CURDIR}/\${FNAME}.spinden.out
+rm -f tmp.pp
+EOF
+}
+Closer_Gen(){
+cat >> ${SUBDIR}/${FNAME}.batch << EOF
+if [[ ! -s \${SUBDIR}/\${FNAME}.e\${SLURM_JOB_ID} ]]; then
+  rm -f \${SUBDIR}/\${FNAME}.e\${SLURM_JOB_ID}
+else
+  mv \${SUBDIR}/\${FNAME}.e\${SLURM_JOB_ID} \${CURDIR}/.
+fi
+exit 0
+EOF
+}
+Queue_Set(){
+	QTYPE=$( echo $QTYPE | awk '{print tolower($0)}' )
+  if [[ "$QTYPE" = "b2" ]]; then echo "bigmem2";
+  	elif [[ "$QTYPE" = "rb2" ]]; then echo "ezm0048_bg2"; 
+  	elif [[ "$QTYPE" = "b4" ]]; then echo "bigmem4";
+  	elif [[ "$QTYPE" = "a" ]]; then echo "amd";
+  	elif [[ "$QTYPE" = "gpu" ]]; then echo "gpu2";
+  	elif [[ "$QTYPE" = "r" ]]; then echo "ezm0048_std";
+  	else echo "general";
+  fi
+}
+Req_Check(){
+	NODE_LIMIT=0 #Set value to 1 if process cannot run as multinode
+	QTYPE=$( echo $QTYPE | awk '{print tolower($0)}' )
+	case $QTYPE in
+		rb2 | b2 ) NMAX=48; MEMMAX=384;;
+		b4) NMAX=48; MEMMAX=768;;
+		a | amd) NMAX=128; MEMMAX=256;;
+		gpu2 | gpu4) echo "This script is not set up for GPU calculations- please resubmit with another queue"; exit 30 ;;
+		s | * ) NMAX=48; MEMMAX=192;;
+	esac
+	if [[ ${NPROC} -gt ${NMAX} ]]; then NODES_NPROC=$( Div_Rounder "${NPROC}" "${NMAX}" ); fi
+	if [[ ${MEM} -gt ${MEMMAX} ]]; then NODES_MEM=$( Div_Rounder "${MEM}" "${MEMMAX}" ); fi
+	if [[ ${NODES_NPROC} -gt ${NODES_MEM} ]]; then NODES=${NODES_NPROC};
+		elif [[ ${NODES_MEM} -gt ${NODES_NPROC} ]]; then NODES=${NODES_MEM};
+		else NODES=1; fi
+	if [[ ${NODES} -eq 1 ]]; then MEM_STR="#SBATCH --mem=${MEM}GB";
+		else MEM_STR="#SBATCH --mem-per-cpu=$( Div_Rounder "${MEM}" "${NPROC}" )GB
+#SBATCH --ntasks-per-node="; 
+	fi	
+	#Set up a handler for controlling tasks per node here
+	NPROC_STR="#SBATCH --ntasks=${NPROC}"	
+	NODE_STR="#SBATCH --nodes=${NODES}"
+	if [[ ${NODE_LIMIT} -eq 1 ]]; then
+		if [[ ${MEM} -gt ${MEMMAX} ]]; then
+			echo "You have requested more memory than is available for this queue; if needed, request additional nodes"
+			exit 10
+		fi
+		if [[ $NPROC -gt $NMAX ]]; then
+			echo "You have requested more processors than is available on a node; if needed, request additional nodes"
+			exit 15
+		fi
+	fi
+}
+#SBATCH --ntasks-per-node=10
+Helpfn(){
+echo "
+You have run the qr2 job submission script for Quantum Espresso calculations. This script will automatically create a batch job for you. 
+
+The output files will automatically be placed in the current directory.
+Input files must be of the form: file.[JobType].in
+Output files will be of the form: file.[JobType].out
+
+      Options:
+       -h    |   Help, display this current usage guide
+       -n    |   Number of Processors Requested
+       -m    |   Memory Requested in GB; Specifying the GB units is optional
+       -t    |   Time Limit for Jobs in HR:MIN format
+       -N    |   Number of nodes to run on; this is unnecessary as the nodes will be determined by your resources request
+       -q    |   Which queue this job will be submitted to; Options: b2- bigmem2, rb2- Investor bigmem2, b4-bigmem4, a-amd,
+             |      gpu-GPU2, r-Investor general, g- general nodes       
+       -j    |   Type of Quantum Espresso calculations you'd like to run; 
+             |      Options: s- SCF, n- NSCF, b1- unpolarized bands, b2- spin-polarized bands, d- spin density plot
+             |               k- K_Space scan for automatic K point generation; use the -k flag instead to change defaults
+             |      These options must be specified as a single string, no spaces (e.g. snb1d). Case and order does not matter
+       -k    |   K_space scan; specify start, end, and shift as: start,end,shift (e.g. a 1 to 8 scan with 0 shift 1,8,0)
+
+You may specify these in any order, but the filename must be the last value specified. 
+
+If you are running a SCF and/or NSCF you must have a file.scf.in and file.nscf.in in the current directory, and \"file\" 
+must agree between the two
+
+If -n, -m, -t, -N, -j, and -q are not specified default values will be used.
+
+Your current defaults are:
+       Proc    =   ${NPROC}
+       Memory  =   ${MEM}
+       Time    =   ${TIME}
+       Queue   =   ${QTYPE}/$( Queue_Set )
+       JobType =   ${JOBTYPE}
+       K_Scan  =   Start: ${START_DEF} End: ${END_DEF} Shift: ${SHIFT_DEF}
+You can change this in $(echo $0)
+
+EXAMPLE:
+$(echo $0) -n 12 -m 24GB -t 10:00 -q b2 -j snb2d file.scf.in
+"
+}
+Div_Rounder(){
+	A=$1
+	B=$2
+	if [[ $( python -c "print(${A}%${B})" ) -ne 0 ]]; then
+		echo $( python -c "print( int( ((${A}-(${A}%${B}))/${B}+1) ) )" )
+	else echo $( python -c "print( int(${A}/${B}) )" )
+	fi
+}
+Py_Add(){
+	A=$1
+	B=$2
+	echo $( python -c "print( (${A}+${B}) )" )
+}
+Main "$@"; exit

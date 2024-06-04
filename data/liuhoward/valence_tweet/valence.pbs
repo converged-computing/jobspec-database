@@ -1,0 +1,31 @@
+#!/bin/bash
+
+#PBS -N valence
+
+#PBS -W group_list=xxx
+#PBS -q windfall
+###PBS -q standard
+
+#PBS -l select=1:ncpus=1:mem=40gb:ngpus=1
+
+#PBS -l walltime=5:0:0
+#PBS -l cput=5:00:00
+#PBS -l place=free:shared
+
+module load singularity
+cd ~/work/valence_tweet/bert/
+singularity exec --cleanenv --nv /extra/liuhao16/work/tf1.12_201904.img python run_classifier.py \
+  --task_name=valence \
+  --do_train=true \
+  --do_eval=true \
+  --do_predict=true \
+  --data_dir=$HOME/work/valence_tweet/data/ \
+  --vocab_file=$HOME/work/valence_tweet/uncased_L-12_H-768_A-12/vocab.txt \
+  --bert_config_file=$HOME/work/valence_tweet/uncased_L-12_H-768_A-12/bert_config.json \
+  --init_checkpoint=$HOME/work/valence_tweet/uncased_L-12_H-768_A-12/bert_model.ckpt \
+  --max_seq_length=128 \
+  --train_batch_size=64 \
+  --learning_rate=1e-5 \
+  --num_train_epochs=42 \
+  --output_dir=/extra/liuhao16/work/valence_tweet/output42/
+

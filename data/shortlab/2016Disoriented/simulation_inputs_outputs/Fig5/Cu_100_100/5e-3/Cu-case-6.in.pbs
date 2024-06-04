@@ -1,0 +1,34 @@
+#!/bin/bash
+#PBS -N Cu-case-6.in
+#PBS -j oe
+#PBS -ko
+#PBS -l walltime=8:00:00
+#PBS -l select=16:ncpus=32:mpiprocs=32
+#PBS -l place=excl
+#
+#
+cat $PBS_NODEFILE
+source /etc/profile.d/modules.sh
+module load use.projects
+module load use.easybuild
+module load lammps/28Jun14-gmvolf-3.5.0
+#
+echo ""
+echo ""
+echo "The following PBS extra args (PBS_EXTRA_ARGS) will be used: -P ldrd"
+echo "The following lammps extra args (LAMMPS_EXTRA_ARGS) will be used: "
+NPROCS=`cat $PBS_NODEFILE | wc -l`
+cd $PBS_O_WORKDIR
+JOB_NUM=${PBS_JOBID%\.*}
+if [ $PBS_O_WORKDIR != $HOME ]
+then
+ln -s $HOME/$PBS_JOBNAME.o$JOB_NUM $PBS_JOBNAME.o$JOB_NUM
+fi
+#
+mpirun -genvlist PATH,LD_LIBRARY_PATH /home/shormich/projects/fission/lammps/src/lammps-16Feb16/src/lammps  -in $PBS_JOBNAME 
+#
+if [ $PBS_O_WORKDIR != $HOME ]
+then
+rm $PBS_JOBNAME.o$JOB_NUM
+mv $HOME/$PBS_JOBNAME.o$JOB_NUM $PBS_JOBNAME.o$JOB_NUM
+fi

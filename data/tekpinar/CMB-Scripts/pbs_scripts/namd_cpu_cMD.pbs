@@ -1,0 +1,87 @@
+#!/bin/bash
+#PBS -S /bin/bash
+#PBS -l walltime=72:00:00
+#PBS -l nodes=8:ppn=8
+#PBS -m e
+#PBS -j oe
+#PBS -M tekpinar@buffalo.edu
+#PBS -o cMD_trj1_pbs.out
+#PBS -N cMD_trj1
+#PBS -q quantum
+#
+# Change to job submission directory
+#
+
+export CONV_RSH=ssh
+#export CONV_DAEMON
+#export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/util/namd/NAMD_2.8_Source-CUDA
+
+cd $PBS_O_WORKDIR
+#
+# load namd via module
+
+. $MODULESHOME/init/bash
+module load namd/2.8-IBVERBS
+module unload vmd
+module load vmd/v1.9
+#export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/util/namd/NAMD_2.8_Linux-x86_64-ibverbs-CUDA
+
+#
+# Set number of processors to number requested from PBS
+#
+NP=`cat $PBS_NODEFILE | wc -l`
+echo "NAMDHOME = "$NAMDHOME
+#
+# construct namd nodes file from $PBS_NODEFILE
+#
+export NODELIST=tmp.$$
+echo "group main" > $NODELIST
+NODES=`cat $PBS_NODEFILE`
+for node in $NODES ; do
+   echo "host "$node >> $NODELIST
+done
+
+NAME_WORK_DIR=cMD2
+PATH_WORK_DIR=/panasas/scratch/tekpinar/ns3_helicase/${NAME_WORK_DIR}
+
+#Run preparation perl script
+#perl produce_md_input_files.pl
+
+#echo "Minimization step for 'protein+dna+water':"
+#CURRENTDIR=${PATH_WORK_DIR}/minimization
+#date
+#INFILE=${CURRENTDIR}/min.conf
+#OUTFILE=${CURRENTDIR}/namd.log
+#ERRFILE=${CURRENTDIR}/namd.err
+#charmrun ++remote-shell ssh ++verbose $NAMDHOME/namd2 +p$NP ++nodelist $NODELIST $INFILE  1>${OUTFILE} 2>${ERRFILE}
+#date
+
+#echo "Heating step for 'protein+dna+water':"
+#CURRENTDIR=${PATH_WORK_DIR}/heating
+#date
+#INFILE=${CURRENTDIR}/heat.conf
+#OUTFILE=${CURRENTDIR}/namd.log
+#ERRFILE=${CURRENTDIR}/namd.err
+#charmrun ++remote-shell ssh ++verbose $NAMDHOME/namd2 +p$NP ++nodelist $NODELIST $INFILE  1>${OUTFILE} 2>${ERRFILE}
+#date
+
+#echo "Equillibration step for 'protein+dna+water':"
+#CURRENTDIR=${PATH_WORK_DIR}/equillibration
+#date
+#INFILE=${CURRENTDIR}/equil.conf
+#OUTFILE=${CURRENTDIR}/namd.log
+#ERRFILE=${CURRENTDIR}/namd.err
+#charmrun ++remote-shell ssh ++verbose $NAMDHOME/namd2 +p$NP ++nodelist $NODELIST $INFILE  1>${OUTFILE} 2>${ERRFILE}
+#date
+
+
+echo "Production step for 'protein+dna+water':"
+CURRENTDIR=${PATH_WORK_DIR}/production
+date
+INFILE=${CURRENTDIR}/prod.conf
+OUTFILE=${CURRENTDIR}/namd_cMD_trj1.log
+ERRFILE=${CURRENTDIR}/namd_cMD_trj1.err
+charmrun ++remote-shell ssh ++verbose $NAMDHOME/namd2 +p$NP ++nodelist $NODELIST  $INFILE  1>${OUTFILE} 2>${ERRFILE}
+date
+echo "Finished succesfully!"
+rm $NODELIST

@@ -1,0 +1,33 @@
+#!/bin/bash
+
+## Introductory Example for running NAMD on a GPU Xena node
+## Copyright (c) 2013 The Center for Advanced Research Computing
+##                            at The University of New Mexico
+
+#PBS -lnodes=1:ppn=16
+#PBS -lwalltime=24:00:00
+#PBS -S /bin/bash
+
+# Please set these variables!!!!!!
+CONFFILE=4HNAk_wb.conf
+LOGFILE=4HNAk_wb.log
+
+
+# Load the environment modules system
+source /etc/profile.d/modules.sh
+
+# Load the environment module for NAMD and cuda 
+module load namd/2.10/singlenode_withgpu
+module load cuda/7.5
+
+# Determine the number of processors allocated to this job
+export PROCS=16 
+
+# Change to the directory that this job was submitted from
+cd $PBS_O_WORKDIR
+
+# Run the thing
+namd2 +p16 +setcpuaffinity +devices 0 $CONFFILE >& $LOGFILE
+
+# If you want to use a dual-gpu node set queue at top (#PBS -q dualGPU) and add device:
+#$NAMD_HOME/namd2 +p16 +setcpuaffinity +devices 0,1 $CONFFILE >& $LOGFILE

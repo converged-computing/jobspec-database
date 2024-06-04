@@ -1,0 +1,53 @@
+#!/bin/sh
+## job name
+#PBS -N ple_FLXSA
+## maximum runtime
+#PBS -l walltime=06:00:00
+## select number of nodes, cpus (per node) and memory (per node)
+#PBS -l select=1:ncpus=48:mem=100gb
+## standard output standard error
+#PBS -o reports
+#PBS -e reports
+## array job
+###PBS -J 11-29
+##PBS_ARRAY_INDEX=10
+## start job after another job finished?
+###PBS -W depend=afterany:2521439.pbs
+########### parameters
+OM="'"'baseline'"'"
+SCENARIO="'"''"'"
+
+### print details about job
+echo ""
+echo "This is job $PBS_JOBID index $PBS_ARRAY_INDEX"
+echo "The following ressources have been allocated"
+cat $PBS_NODEFILE
+echo ""
+
+### set working directory
+cd $HOME/git/MSE_ple.27.7e/
+
+## load modules
+## anaconda includes R and OpenMPI
+module purge
+module load mpi/intel-2018.1.163 anaconda3/personal
+### activate MPI environment
+source activate R4_202109
+
+echo "starting the simulations..."
+### run job
+### when running with MPI, worker count is one less than selected cores
+R CMD BATCH --no-save --no-restore "--args use_MPI=FALSE n_workers=40 n_blocks=100 stock_id='ple.27.7e' n_iter=1000 n_yrs=20 scenario=$SCENARIO MP='2over3_XSA' OM=$OM rec_failure=FALSE ga_search=FALSE stat_yrs='multiple' save_MP=TRUE" $HOME/git/MSE_ple.27.7e/MP_run.R $HOME/reports/$PBS_JOBID.$PBS_ARRAY_INDEX.Rout
+## $PBS_ARRAY_INDEX
+
+echo ""
+echo "R job finished!"
+echo ""
+
+## print details about job
+echo "job details from PBS:"
+echo "==============================================================================="
+qstat -f
+echo "==============================================================================="
+qstat -t
+echo "==============================================================================="

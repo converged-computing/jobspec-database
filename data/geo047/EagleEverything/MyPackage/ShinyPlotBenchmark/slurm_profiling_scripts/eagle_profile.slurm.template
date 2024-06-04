@@ -1,0 +1,31 @@
+#! /bin/bash
+#SBATCH --job-name _SLURM_JOBID_TEMPLATE__eagle
+#SBATCH --nodes 1
+#SBATCH -o eagle__SLURM_JOBID_TEMPLATE__%A.out
+#SBATCH -e eagle__SLURM_JOBID_TEMPLATE__%A.err
+#SBATCH --ntasks-per-node 1
+#SBATCH --cpus-per-task=_NUM_CPU_TEMPLATE_
+#SBATCH --time=00:40:00
+#SBATCH --mem=_NUM_RAMMB_TEMPLATE_
+_GRES_GPU_TEMPLATE_
+NTHREADS=_OMP_CPU_TEMPLATE_
+NGPUS=_NUM_GPU_TEMPLATE_
+
+module load singularity R hdf5 cuda
+
+# $SLURM_ARRAY_TASK_ID 
+echo "SLURM_JOBID="$SLURM_JOBID
+echo "SLURM_JOB_NODELIST"=$SLURM_JOB_NODELIST
+echo "SLURM_NNODES"=$SLURM_NNODES
+echo "SLURMTMPDIR="$SLURMTMPDIR
+
+cd /flush1/bow355/AMplus_new_code/Large
+# export SING_CUDA_ACC=/flush1/bow355/AMplus_new_code/Mid_docker_tests/mro_cuda8_eagle_acc2.img
+export SING_CUDA_ACC=/flush1/bow355/AMplus_new_code/Mid_docker_tests/mro_cuda8_eagle_acc2_hdf-latest.img
+
+
+# cat am_big.R | EAGLE_PROFILE_STR=1 KMP_AFFINITY=granularity=fine,compact OMP_NUM_THREADS=$NTHREADS singularity exec --nv $SING_CUDA_ACC /usr/bin/runR.sh _NUM_GPU_TEMPLATE_ > eagle_compact__SLURM_JOBID_TEMPLATE___${SLURM_JOBID}_ncpu_${NTHREADS}.res 2>&1
+# cat am_big__RFILE_TEMPLATE_.R | EAGLE_PROFILE_STR=1 KMP_AFFINITY=granularity=fine,scatter OMP_NUM_THREADS=$NTHREADS singularity exec --nv $SING_CUDA_ACC /usr/bin/runR.sh _NUM_GPU_TEMPLATE_ > eagle_HDF5_cs_eigenblas__SLURM_JOBID_TEMPLATE___${SLURM_JOBID}_gpu_${NGPUS}_ncpu_${NTHREADS}.res 2>&1
+
+cat am_big__RFILE_TEMPLATE_.R | EAGLE_PROFILE_STR=1 KMP_AFFINITY=granularity=fine,scatter OMP_NUM_THREADS=$NTHREADS  /flush1/bow355/AMplus_new_code/Mid_docker_tests/runR.sh _NUM_GPU_TEMPLATE_  > eagle_REPEAT_cs_ROWMAJOR_MASTER__SLURM_JOBID_TEMPLATE___${SLURM_JOBID}_gpu_${NGPUS}_ncpu_${NTHREADS}.res 2>&1
+# cat am_big__RFILE_TEMPLATE_.R | EAGLE_PROFILE_STR=1 KMP_AFFINITY=granularity=fine,scatter OMP_NUM_THREADS=$NTHREADS  R --vanilla > eagle_REPEAT_cs_CRAN__SLURM_JOBID_TEMPLATE___${SLURM_JOBID}_gpu_${NGPUS}_ncpu_${NTHREADS}.res 2>&1

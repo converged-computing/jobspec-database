@@ -1,0 +1,34 @@
+#!/bin/bash
+#SBATCH --mail-user=${job_email}
+#SBATCH --mail-type=${job_email_options}
+#SBATCH --nodes=1
+#SBATCH --ntasks=${job_ppn}
+#SBATCH --time=${job_walltime}
+#SBATCH --mem=${job_memory}mb
+#SBATCH -o ${job_output_file}
+
+smemwatch -k 90 -d 50 $$ &
+# List info
+uname -a
+
+# Make sure tmp directory is made
+mkdir -p $TMPDIR
+
+# Run mega docker
+singularity exec --cleanenv --contain --bind /home/$USER/.dax_settings.ini:/home/$USER/.dax_settings.ini --bind /home/$USER/.daxnetrc:/home/$USER/.daxnetrc --bind /scratch/$USER:/scratch/$USER --bind /tmp:/tmp /nfs/masi/singularity/vuiiscci_mega_docker_3.0.1-2020-02-12.img scl enable python27 'bash -c "
+source /data/mcr/ldax_setup/bashrc_ldax && \
+cp -r /data/mcr/ldax_setup/matlab /home/vuiisccidev/ && \
+export PYTHONNOUSERSITE=TRUE && \
+export OPENBLAS_NUM_THREADS=1 && \
+export LM_LICENSE_FILE=9327@vm-infr-license.vampire && \
+export PYTHONPATH=/data/mcr/masimatlab/trunk/xnatspiders/python/:/data/mcr/masimatlab/trunk/xnatspiders/SpiderUtils/ && \
+export PATH=\"$PATH\":/usr/local/matlab/2013a/bin:/data/mcr/fsl5/bin/:/data/mcr/camino/bin/:/data/mcr/masimatlab/trunk/xnatspiders/python/justinlib_v1_1_0/xnatlib:/data/mcr/masimatlab/trunk/xnatspiders/python/justinlib_v1_1_0/pythonlib && \
+export FSLDIR=/data/mcr/fsl5 && \
+source /data/mcr/fsl5/etc/fslconf/fsl.sh && \
+export CAMINO_HEAP_SIZE=30000 && \
+export FREESURFER_HOME=/data/mcr/freesurfer && \
+export FREESURFER_PBS_TEMPLATE=/data/mcr/masimatlab/trunk/xnatspiders/pbs_templates/FreesurferReconAllWithQC_PBS_template.txt && \
+source /data/mcr/freesurfer/SetUpFreeSurfer.sh && \
+xvfb-run --server-num=$(($$$$ + 99)) --server-args=\"-screen 0 1920x1200x24 -ac +extension GLX\" \
+${job_cmds}\
+"'

@@ -1,0 +1,53 @@
+#!/bin/bash
+# ... >>> PBS -l nodes=1:ppn=xxprocsxx:xxnodexx
+#PBS -l nodes=1:ppn=16:gpu
+# #PBS -e xxsubnamexx
+#PBS -j oe
+#PBS -N xxsubnamexx
+
+cd $PBS_O_WORKDIR
+
+# Fix environment variables.
+
+USER=xxuserxx        
+JOB_SUB=xxjob_subxx           # directory label on scratch drive
+MY_DIR=xxmy_dirxx             # submit location
+JOB_DIR=xxjob_dirxx           # /scratch/user/$JOB_SUB
+COMPLETE_D=xxcompleted_dirxx  # /data4/user/completed/$JOB_SUB
+
+# NAMD_HOME=/home/sam/software/NAMD_CVS-2013-08-02_Linux-x86_64-multicore-CUDA
+NAMD_HOME=/home/dmerz3/opt/NAMD_2.9_Linux-x86_64-multicore-CUDA
+export NAMD_HOME
+export LD_LIBRARY_PATH=/usr/local/lib64
+#NAMD_COMM=native
+#export NAMD_COMM
+
+NODES=`cat $PBS_NODEFILE`
+NODELIST=~/namd2.nodelist.nolh135
+echo "group main" > $NODELIST
+
+ncount=0
+for node in $NODES
+do		
+    echo $node
+    echo "host $node" >> $NODELIST
+    ncount=$((ncount+1))
+done		
+
+cp $NODELIST ~/namd2.nodelist.counted.nolh135
+
+rm -f $COMPLETE_D     # rm -rf $JOB_DIR
+mkdir -p $COMPLETE_D  # mkdir -p $JOB_DIR
+cp * $COMPLETE_D      # cp * $JOB_DIR
+cd $COMPLETE_D        # cd $MY_DIR
+# cd $COMPLETE_D        # cd $JOB_DIR
+
+#-----------------------------
+#running NAMD
+#-----------------------------
+
+#${NAMD_HOME}/charmrun ${NAMD_HOME}/namd2 +p${ncount} +idlepoll +devices 0,1   ubq_wb_eq.conf >& ubq_wb_eq_gpu.log
+${NAMD_HOME}/charmrun ${NAMD_HOME}/namd2 +p${ncount} +idlepoll +devices 0,1 xxnamdconfigxx >& gpu.log
+
+#rsync -auvz $JOB_DIR/* $COMPLETE_D
+#rm -rf $JOB_DIR

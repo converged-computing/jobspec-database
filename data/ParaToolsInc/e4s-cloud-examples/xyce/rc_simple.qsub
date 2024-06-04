@@ -1,0 +1,13 @@
+#!/bin/bash
+#PBS -l nodes=2:ppn=2,walltime=10:00
+#PBS -l naccesspolicy=singlejob
+#PBS -N rc_simple
+#PBS -V
+
+cd $PBS_O_WORKDIR
+
+export MV2_HOMOGENEOUS_CLUSTER=1
+export MV2_SUPPRESS_JOB_STARTUP_PERFORMANCE_WARNING=1
+
+spack load --first xyce
+mpiexec $(which Xyce) ./rc_simple_xyce.cir

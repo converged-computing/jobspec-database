@@ -1,0 +1,46 @@
+#!/bin/bash
+#PBS -S /bin/bash
+##PBS -q debug
+#PBS -m e
+#PBS -l nodes=4:AMD:ppn=4
+#PBS -l walltime=72:00:00
+#PBS -M userid@buffalo.edu
+#PBS -o 1goj_eq_dyn_pbs.out
+#PBS -j oe
+#PBS -N 1goj_eq_dyn
+#PBS
+#
+# NAMD input file
+#
+INFILE=/home/tekpinar/namd/inputscripts/1goj_eq_dyn.inp
+OUTFILE=/home/tekpinar/namd/output/1goj_eq_dyn_021910.log
+
+#
+# NAMD path
+#
+#NAMDEXE=/util/namd/NAMD_2.6b1_Linux-amd64-TCP/namd2 
+
+#
+# generic setup and checks
+#
+#ulimit -c 0
+ulimit -s unlimited
+echo "check module commands:"
+source $MODULESHOME/init/bash
+#which module
+echo "Module has not been loaded"
+module load namd/2.6b1-mx
+echo "Module has been loaded"
+#echo "Using NAMDEXE = "$NAMDEXE
+NPROCS=`cat $PBS_NODEFILE | wc -l`
+#
+# goto dir from which job was submitted and run
+#  (allows standard output to go to PBS output file)
+#
+cd $PBS_O_WORKDIR
+date
+mpiexec /util/namd/NAMD_2.6b1_Source/Linux-amd64-MPI-mx-icc/namd2 $INFILE>$OUTFILE
+date
+#
+# remove scratch directory
+\rm -r $PBSTMPDIR

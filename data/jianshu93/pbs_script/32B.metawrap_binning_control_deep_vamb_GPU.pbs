@@ -1,0 +1,27 @@
+#!/bin/bash
+#PBS -N vamb-binning_GPU
+#PBS -l nodes=1:ppn=24:gpus=4:exclusive_process
+#PBS -l mem=360gb
+#PBS -l walltime=120:00:00
+#PBS -q inferno
+#PBS -A GT-ktk3-CODA20
+#PBS -o /storage/home/hcoda1/4/jzhao399/p-ktk3-0/rich_project_bio-konstantinidis/scripts/log/${PBS_JOBNAME}_${PBS_JOBID}.out
+#PBS -t 127,131,132,244,245,247,264-266,281,282,284,304,497,539,540,550-552
+
+name=pico${PBS_ARRAYID}
+module purge
+module load cuda/10.1
+source ~/.bashrc
+conda init bash
+conda activate base
+which perl
+which samtools
+#VARIABLES
+name=pico${PBS_ARRAYID}
+wd=/storage/home/hcoda1/4/jzhao399/p-ktk3-0/rich_project_bio-konstantinidis/pico_new/01.resample_reads
+output=/storage/home/hcoda1/4/jzhao399/p-ktk3-0/rich_project_bio-konstantinidis/pico_new/02.megahit/${name}_vamb_GPU
+contig=/storage/home/hcoda1/4/jzhao399/p-ktk3-0/rich_project_bio-konstantinidis/pico_new/02.megahit/${name}/${name}.contigs.long.fa
+
+~/p-ktk3-0/miniconda3/bin/minimap2 -d ${output}/${name}.mmi ${contig}
+~/p-ktk3-0/miniconda3/bin/minimap2 -t 24 -N 50 -ax sr ${output}/${name}.mmi ${wd}/${name}.resampled_1.fastq.gz ${wd}/${name}.resampled_2.fastq.gz | samtools view -F 3584 -b --threads 24 > ${output}/${name}.bam
+~/p-ktk3-0/miniconda3/bin/vamb --outdir ${output}/out --fasta ${contig} --bamfiles ${output}/${name}.bam -o C --minfasta 200000 --cuda

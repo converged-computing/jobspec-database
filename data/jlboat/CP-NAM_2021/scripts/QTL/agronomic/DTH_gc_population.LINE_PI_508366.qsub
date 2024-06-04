@@ -1,0 +1,81 @@
+#!/bin/bash
+#PBS -N gc_population_PI_508366
+#PBS -e gc_population_PI_508366.err
+#PBS -o gc_population_PI_508366.out
+#PBS -l select=1:ncpus=16:mem=28gb:interconnect=fdr,walltime=56:00:00
+
+cd $PBS_O_WORKDIR
+
+BASE_DIR="/zfs/tillers/panicle/lucas/projects/NAM_2020/QTL_VEG"
+POPULATION=PI_508366
+
+export LD_PRELOAD=""; module add anaconda3/5.1.0-gcc/8.3.1
+# source activate /home/jboatw2/.conda/envs/updated_conda/envs/python3
+
+# module add singularity
+
+cd ${POPULATION}
+
+# if [ -e ${POPULATION}.ABH.hmp.txt ]
+# then
+#     rm ${POPULATION}.ABH.hmp.txt
+#     ln -s /zfs/tillers/panicle/lucas/projects/NAM_NIR/MV/populations/${POPULATION}.ABH.hmp.txt
+# fi
+# 
+# if [ ! -e old ]
+# then
+#     mkdir old
+# fi
+# 
+# mv *png ./old/
+# mv *Rdata ./old/
+# mv *GC.q* ./old/
+# 
+# if [ -e ${POPULATION}.GC.qchetero.corrected.rqtl.csv ]
+# then
+#     rm *corrected.rqtl.csv
+# fi
+# 
+# sed -i "s/${POPULATION}.chr.rqtl.noH.csv/${POPULATION}.GC.qchetero.corrected.rqtl.csv/" rqtl2_${POPULATION}.yaml
+# 
+# if [ ! -e config.txt ]
+# then
+#     ln -s /zfs/tillers/panicle/lucas/projects/NAM_2020/QTL/config.txt
+# fi
+# 
+# python ${BASE_DIR}/transpose.py ${POPULATION}
+# bash ${BASE_DIR}/run_correction.bash ${POPULATION}
+# 
+# if [ -e pmap.csv ]
+# then
+#     rm pmap.csv
+# fi
+# 
+# if [ -e gmap.csv ]
+# then
+#     rm gmap.csv
+# fi
+# 
+# awk '{print $1"_"$2","$1","$2/1000000}' ${POPULATION}.GC.qchetero.corrected.map | sed 's/,Chr0/,/g' | sed 's/,Chr/,/g' > pmap.csv
+# sed -i 's/chr_pos,chr,0/marker,chr,pos/g' pmap.csv
+# cp pmap.csv gmap.csv
+# sed -i 's/H/-/g' ${POPULATION}.GC.qchetero.corrected.map
+# bash ${BASE_DIR}/formatMap.bash ${POPULATION}
+# grep -v ",1,1,1,1,1" ${POPULATION}.GC.qchetero.corrected.rqtl.csv > mid
+# mv mid ${POPULATION}.GC.qchetero.corrected.rqtl.csv
+# 
+# conda deactivate
+source activate r_env
+
+echo "${POPULATION}"
+echo "${BASE_DIR}"
+which Rscript
+
+# singularity run -B /zfs ~/singularity_containers/rqtl2.sif
+Rscript ${BASE_DIR}/scan_DTH.R ${POPULATION}
+
+# singularity run -B /zfs ~/singularity_containers/rqtl2.sif
+# Rscript ${BASE_DIR}/permutation_hk.R ${POPULATION}
+
+# singularity run -B /zfs ~/singularity_containers/rqtl2.sif
+Rscript ${BASE_DIR}/chromosome_hits.DTH.R ${POPULATION}

@@ -1,0 +1,116 @@
+#! /bin/ksh
+
+#Version 2.0.1 Lester
+#NREL CHARMM PBS file constructor.
+
+CHARMM_USAGE="usage: $0 <CHARMM_infile> <total_number_processors> <queue> <wallclock time>\n\n<queue> in {Std,Myr,Ib,Std8}, <wallclock time>=hh:mm:ss"
+
+# Command has to be correct, no deviations.
+case $# in 
+  4)	CHARMM_JOB=$1; NPROCS=$2 ; QUEUE=$3; WALLCLOCK=$4;;
+  *)	echo $CHARMM_USAGE; exit;;
+esac
+
+# Check to make sure $CHARMM_JOB file exists
+if ( ! [[ -f $CHARMM_JOB ]] )
+   then echo "$0: $1 does not exist"; echo $CHARMM_USAGE; exit
+fi 
+
+# Get basename and figure out run directory name to ues
+CHARMM_JOB_BASENAME=${CHARMM_JOB%\.*}
+JOB_DIRNAME=$CHARMM_JOB_BASENAME
+if ( [[ -d $CHARMM_JOB_BASENAME ]] )
+then
+   n=1
+   until ( ! [[ -d $CHARMM_JOB_BASENAME.$n ]] )
+   do
+      let "n = n+1"
+   done
+   JOB_DIRNAME=$CHARMM_JOB_BASENAME.$n
+fi
+
+# Check that <total_number_processors> is integral
+if ( [[ $NPROCS != +([0-9]) ]] )
+   then echo "$0: <total_number_processors> must be an integer"; echo $CHARMM_USAGE; exit
+fi
+
+# Check for allowed queues, and assign tasks per node. If less than one node
+# being requested, only create requested number of processes.
+case $QUEUE in
+  Std)	TASKS_PER_NODE=2
+        CHARMM_EXECUTABLE="charmm_AMD64";;
+  Myr)	TASKS_PER_NODE=2
+        CHARMM_EXECUTABLE="charmm_AMD64";;
+  Ib)	TASKS_PER_NODE=4
+        CHARMM_EXECUTABLE="charmm_AMD64";;
+  Std8)	TASKS_PER_NODE=8
+        echo "CHARMM is not yet available for the Std8 queue."
+        exit 1;;
+  *)	echo "<queue> must be one of Std, Myr, Ib, or Std8"
+        echo $CHARMM_USAGE
+        exit;;
+esac
+if ( [[ $NPROCS -lt $TASKS_PER_NODE ]] )
+   then
+      TASKS_PER_NODE=$NPROCS
+      NNODES=1
+   else
+      let "NNODES=($NPROCS+$TASKS_PER_NODE-1)/$TASKS_PER_NODE"
+fi
+PBS_NNODES="#PBS -l nodes=$NNODES:ppn=$TASKS_PER_NODE"
+
+# Sanity check on wallclock specification
+if ( [[ -n ${WALLCLOCK#[0-4][0-9]:[0-9][0-9]:[0-9][0-9]} ]] )
+   then
+      echo "$0: <wallclock time> must take the form hh:mm:ss less than 48 hours"
+      echo $CHARMM_USAGE
+   exit
+fi
+PBS_WALLCLOCK="#PBS -l walltime=$WALLCLOCK"
+
+# Work out e-mail notification
+if [ -n "$EXT_MAIL" ]; then
+  PBS_MAIL="#PBS -M $EXT_MAIL"
+  PBS_MAIL_FLAGS="#PBS -m abe"
+else
+  PBS_MAIL="\b"
+  PBS_MAIL_FLAGS="\b"
+fi
+
+if ( [[ -d $CHARMM_JOB_BASENAME ]] ); then
+   echo "Test case directory \"$CHARMM_JOB\" has already been used" 
+   echo "Remove directory \"$CHARMM_JOB\" and rerun the $0 command" 
+   exit 1
+fi 
+
+mkdir $JOB_DIRNAME
+cp $CHARMM_JOB $JOB_DIRNAME/.
+cd $JOB_DIRNAME
+
+cat >> $CHARMM_JOB_BASENAME.pbs << EOF
+#!/bin/bash
+#PBS -N $CHARMM_JOB
+#PBS -q $QUEUE
+$PBS_NNODES
+$PBS_WALLCLOCK
+$PBS_MAIL
+$PBS_MAIL_FLAGS
+#PBS -e ${CHARMM_JOB_BASENAME}.pbs.err
+#PBS -o ${CHARMM_JOB_BASENAME}.pbs.out
+
+ulimit -s unlimited
+
+module load charmm/34b2
+
+cd \$PBS_TMPDIR
+cp \$PBS_O_WORKDIR/$CHARMM_JOB .
+# Add cp statements for auxiliary files needed in PBS_TMPDIR in the form
+# of the above statement.
+
+mpirun $CHARMM_EXECUTABLE < $CHARMM_JOB >& \$PBS_O_WORKDIR/$CHARMM_JOB_BASENAME.log
+
+exit
+EOF
+
+echo "The PBS jobfile has been written in directory $JOB_DIRNAME."
+echo "Modify as desired, then submit via qsub."

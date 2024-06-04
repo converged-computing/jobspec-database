@@ -1,0 +1,18 @@
+#!/bin/bash
+#PBS -N StyleGANGeneratingNewEnv
+#PBS -q gpu_1
+#PBS -l select=1:ncpus=9:ngpus=1
+#PBS -P CSCI1142
+#PBS -l walltime=6:00:00
+#PBS -o /mnt/lustre/users/schetty1/StyleRuns/GenerateNewEnv.out
+#PBS -e /mnt/lustre/users/schetty1/StyleRuns/GenerateNewEnv.err
+#PBS -m abe
+#PBS -M chtsha042@myuct.ac.za
+cd /home/schetty1/ 
+module load chpc/python/anaconda/3-2021.11
+eval "$(conda shell.bash hook)"
+conda activate /home/schetty1/.conda/envs/GeneratorEnv
+module load chpc/gcc/6.3.0
+export PATH=/usr/local/cuda-11.8/bin:$PATH
+python3 /home/schetty1/stylegan2-ada-pytorch-main/generateOriginal.py  --outdir=/home/schetty1/lustre/GeneratedImages/StyleGAN2ADA/Elbow256 --trunc=1 --seeds=87,22,269 --network=/mnt/lustre/users/schetty1/GeneratedImages/StyleGAN2ADA/Elbow256/00004-ElbowLATStyle256-auto1-noaug/network-snapshot-560016.pkl
+conda deactivate

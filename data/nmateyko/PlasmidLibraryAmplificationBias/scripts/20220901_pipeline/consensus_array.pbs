@@ -1,0 +1,31 @@
+#!/bin/bash
+#PBS -l walltime=1:00:00,select=1:ncpus=1:mem=2gb
+#PBS -J 1-10
+#PBS -N consensus_plab
+#PBS -M nicholas.mateyko@ubc.ca
+#PBS -m abe
+#PBS -A st-cdeboer-1
+#PBS -o output_^array_index^.txt
+#PBS -e error_^array_index^.txt
+ 
+################################################################################
+ 
+cd $PBS_O_WORKDIR
+source /arc/software/spack/opt/spack/linux-centos7-x86_64/gcc-5.4.0/miniconda3-4.6.14-f4hr756q34tvp7nsjn7hovq46fomaww6/etc/profile.d/conda.sh
+conda activate plab
+
+set -e
+logDir="log"
+dataDir="/arc/project/st-cdeboer-1/nick/PlasmidLibraryAmplificationBias/data/trimmed"
+idx=$PBS_ARRAY_INDEX
+mkdir -p log 
+
+if [ ! -e $logDir/$idx.consensus.done ]
+then
+        /arc/project/st-cdeboer-1/nick/PlasmidLibraryAmplificationBias/scripts/consensus_reads.py \
+        -i1 $dataDir/trimmed.1.$idx.fastq.gz -i2 $dataDir/trimmed.2.$idx.fastq.gz -o consensus.$idx.txt.gz -l log.txt
+        
+        touch $logDir/$idx.consensus.done
+else
+        echo Already performed consensus of sample $idx
+fi

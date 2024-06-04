@@ -1,0 +1,39 @@
+#!/bin/sh
+
+#PBS -l select=1:ncpus=40:ngpus=8
+
+#PBS -l walltime=8:00:00
+
+#PBS -q dgx
+
+#PBS -N XFMER_8
+
+#PBS -j oe
+
+#PBS -o xfmer_8.log
+
+cd "$PBS_O_WORKDIR" || exit $?
+
+image="nvcr.io/nvidia/tensorflow:20.02-tf2-py3"
+
+nscc-docker run $image << EOF
+
+nvidia-smi
+export HOME=/home/users/sutd/1002653 
+export TFDS_DIR=/scratch/users/sutd/1002653/tensorflow_datasets
+cd /scratch/users/sutd/1002653/mini-dlperf && \
+git pull && \
+cd tensorflow && \
+ls && \
+bash setup.sh && \
+echo $TFDS_DIR && \
+mpirun -np 8 \
+    -bind-to none -map-by slot \
+    -x NCCL_DEBUG=INFO -x LD_LIBRARY_PATH -x PATH \
+    -mca pml ob1 -mca btl ^openib \
+    python3 xfmer_horovod.py \
+    --amp  --epochs 2 --batch_size 16 --interval 10 --warmup_prop 1.0 \
+    --task qqp --maxseqlen 64 --model xlm-mlm-en-2048 \
+    --lr 0.00004 --stats
+
+EOF > stdout.$PBS_JOBID 2> stderr.$PBS_JOBID

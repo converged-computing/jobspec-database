@@ -1,0 +1,21 @@
+#!/bin/bash
+
+# sbatch thefilename
+# job standard output will go to the file slurm-%j.out (where %j is the job ID)
+
+#SBATCH --time=08:00:00   # walltime limit (HH:MM:SS)
+#SBATCH --nodes=1   # number of nodes
+#SBATCH --ntasks-per-node=12   # 12 processor core(s) per node
+#SBATCH --gres=gpu:2
+#SBATCH --partition=gpu   # gpu node(s)
+#SBATCH --job-name="bmp_gw"
+#SBATCH --mail-user=clabuzze@iastate.edu   # email address
+#SBATCH --mail-type=BEGIN
+#SBATCH --mail-type=END
+#SBATCH --mail-type=FAIL
+
+module load python/3.7.7-dwjowwi
+python3 -c 'import tensorflow as tf; sess = tf.compat.v1.Session(config=tf.compat.v1.ConfigProto(log_device_placement=True))'
+module load ml-gpu
+export SM_FRAMEWORK=tf.keras;
+ml-gpu python3 ~/bmp_wrr/cnn/model_wrr_gw_lidar.py

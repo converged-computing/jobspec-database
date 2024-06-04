@@ -1,0 +1,207 @@
+#!/bin/bash
+#
+# forhlr2_slurm_submit_script.template
+#
+# Copyright (C) 2020 IMTEK Simulation
+# Author: Johannes Hoermann, johannes.hoermann@imtek.uni-freiburg.de
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
+#SBATCH --nodes=$${nodes}
+#SBATCH --ntasks=$${ntasks}
+#SBATCH --ntasks-per-node=$${ntasks_per_node}
+#SBATCH --ntasks-per-core=$${ntasks_per_core}
+#SBATCH --exclude=$${exclude_nodes}
+#SBATCH --gres=$${gres}
+#SBATCH --qos=$${qos}
+#SBATCH --time=$${walltime}
+#SBATCH --partition=$${queue}
+#SBATCH --account=$${account}
+#SBATCH --job-name=$${job_name}
+#SBATCH --license=$${license}
+#SBATCH --output=$${job_name}-%j.out
+#SBATCH --error=$${job_name}-%j.error
+#SBATCH --export="$${export}"
+#SBATCH --constraint=$${constraint}
+#SBATCH --signal=$${signal}
+
+# printf '%*s\n' "${COLUMNS:-$(tput cols)}" '' | tr ' ' -
+echo ""
+echo "--- SBATCH SUBMIT SCRIPT INITIAL ENVIRONMENT VARIABLES ---"
+printenv
+echo "----------------------------------------------------------"
+echo ""
+
+# printf '%*s\n' "${COLUMNS:-$(tput cols)}" '' | tr ' ' -
+
+######
+# following snippets analyze signal string as set in Fireworks qadapter file
+# and configure trap accordingly
+
+# signal string can be of form "[B:]<signal>[@<signal_time>]"
+# split and assign
+signal_string=
+signal_time=
+signal_string="$${signal}"
+echo "Processing signal string '${signal_string}'..." 1>&2
+
+signalArr=(${signal_string//:/ })
+
+# case: B:<signal>[@<signal_time>]
+if [ "${#signalArr[@]}" -gt 1 ]; then
+  echo "Stripping prefix 'B:' off signal string '${signal_string}'..." 1>&2
+  signal_string="${signalArr[1]}"
+# case: <signal>[@<signal_time>]
+elif [ "${#signalArr[@]}" -gt 0 ]; then
+  echo "No prefix 'B:' at signal string '${signal_string}'..." 1>&2
+  signal_string="${signalArr[0]}"
+fi
+
+echo "Further processing signal string '${signal_string}'..." 1>&2
+signalArr=(${signal_string//@/ })
+
+# case: <signal>[@<signal_time>]
+if [ "${#signalArr[@]}" -gt 0 ]; then
+  echo "Extracting signal from signal string '${signal_string}'..." 1>&2
+  signal_string="${signalArr[0]}"
+# case: empty string
+else
+  echo "Remaining signal string '${signal_string}' empty, assuming SIGTERM..." 1>&2
+  signal_string=SIGTERM
+fi
+
+# case <signal>@<signal_time>
+if [ "${#signalArr[@]}" -gt 1 ]; then
+  echo "Extracting signal time from signal string '${signal_string}'..." 1>&2
+  signal_time="${signalArr[1]}"
+# case <signal>
+else
+  echo "No signal time suffix in signal string '${signal_string}'..." 1>&2
+  signal_time=0
+fi
+echo "Awaiting signal '${signal_string}' about ${signal_time} seconds before hitting job walltime..." 1>&2
+
+#####
+
+
+# infer number of OpenMP threads from SLURM svariables if OMP_NUM_THREADS not defined
+if [ -z "${OMP_NUM_THREADS}" ] && [ -n "${SLURM_CPUS_PER_TASK}" ]; then
+    export OMP_NUM_THREADS=${SLURM_CPUS_PER_TASK}
+elif [ -z "${OMP_NUM_THREADS}" ] && [ -n "${SLURM_JOB_CPUS_PER_NODE}" ] && [ -n "${SLURM_TASKS_PER_NODE}" ]; then
+    export OMP_NUM_THREADS=$((${SLURM_JOB_CPUS_PER_NODE} / ${SLURM_TASKS_PER_NODE}))
+elif [ -z "${OMP_NUM_THREADS}" ]; then
+    export OMP_NUM_THREADS=1
+fi
+
+# standard setting for affinity if not specified
+if [ -z "${KMP_AFFINITY}" ]; then
+    export KMP_AFFINITY='verbose,compact'
+fi
+
+## set INTEL MPI specific options, refer to
+# -- https://software.intel.com/en-us/fortran-compiler-developer-guide-and-reference-supported-environment-variables
+# export KMP_BLOCKTIME=0
+# -- https://software.intel.com/en-us/mpi-developer-reference-linux-interoperability-with-openmp
+# export I_MPI_PIN_DOMAIN=core
+# -- https://software.intel.com/en-us/mpi-developer-guide-linux-selecting-fabrics
+if [ -z "${SLURM_NNODES}" ] && [ "${SLURM_NNODES}" == "1" ]; then
+  export I_MPI_FABRICS=shm
+elif [ -z "${SLURM_NNODES}" ] && [ "${SLURM_NNODES}" -ge 128 ]; then
+  #128 or more nodes, see https://wiki.scc.kit.edu/hpc/index.php/ForHLR_-_SLURM_Batch_Jobs
+  export I_MPI_HYDRA_BRANCH_COUNT=-1
+fi
+
+
+# -- https://wiki.scc.kit.edu/hpc/index.php/ForHLR_-_SLURM_Batch_Jobs#Intel_MPI
+# -- https://software.intel.com/en-us/fortran-compiler-developer-guide-and-reference-thread-affinity-interface-linux-and-windows
+# -- https://software.intel.com/en-us/fortran-compiler-developer-guide-and-reference-thread-affinity-interface-linux-and-windows#KMP_AFFINITY_ENVIRONMENT_VARIABLE
+# export KMP_AFFINITY=compact,1,0
+
+# not for srun, but mpirun or mpiexec.hydra:
+export MPIRUN_OPTIONS='-binding "domain=omp:compact" -print-rank-map -envall'
+
+export NUM_PROCS=$((${SLURM_NTASKS}*${OMP_NUM_THREADS}))
+echo "Running on ${NUM_PROCS} cores with ${SLURM_NTASKS} MPI-tasks and ${OMP_NUM_THREADS} threads" 1>&2
+# echo "with mpirun options '${MPIRUN_OPTIONS}'."
+# startexe="mpiexec.hydra -bootstrap slurm ${MPIRUN_OPTIONS} -n ${SLURM_NTASKS} ${EXE}"
+
+# to preserve variables that might be reset by following module loads
+# export SLURM_EXPORT_ENV
+# export SRUN_EXPORT_ENV="ALL" # default, followed by overrides
+# if [ -n "${OMP_NUM_THREADS}" ]; then
+#   export SRUN_EXPORT_ENV="${SRUN_EXPORT_ENV},OMP_NUM_THREADS='${OMP_NUM_THREADS}'"
+# fi
+# if [ -n "${OMP_PROC_BIND}" ]; then
+#   export SRUN_EXPORT_ENV="${SRUN_EXPORT_ENV},OMP_PROC_BIND='${OMP_PROC_BIND}'"
+# fi
+# if [ -n "${OMP_PLACES}" ]; then
+#   export SRUN_EXPORT_ENV="${SRUN_EXPORT_ENV},OMP_PLACES='${OMP_PLACES}'"
+# fi
+# if [ -n "${KMP_AFFINITY}" ]; then
+#   export SRUN_EXPORT_ENV="${SRUN_EXPORT_ENV},KMP_AFFINITY='${KMP_AFFINITY}'"
+# fi
+# if [ -n "${KMP_BLOCKTIME}" ]; then
+#   export SRUN_EXPORT_ENV="${SRUN_EXPORT_ENV},KMP_BLOCKTIME='${KMP_BLOCKTIME}'"
+# fi
+# if [ -n "${I_MPI_PIN_DOMAIN}" ]; then
+#   export SRUN_EXPORT_ENV="${SRUN_EXPORT_ENV},I_MPI_PIN_DOMAIN='${I_MPI_PIN_DOMAIN}'"
+# fi
+# if [ -n "${I_MPI_FABRICS}" ]; then
+#   export SRUN_EXPORT_ENV="${SRUN_EXPORT_ENV},I_MPI_FABRICS='${I_MPI_FABRICS}'"
+# fi
+# https://slurm.schedmd.com/srun.html
+# --export=<environment variables [ALL] | NONE>
+# Identify which environment variables are propagated to the launched
+# application. By default, all are propagated. Multiple environment variable
+# names should be comma separated. Environment variable names may be specified
+# to propagate the current value (e.g. "--export=EDITOR") or specific values
+# may be exported (e.g. "--export=EDITOR=/bin/emacs"). In these two examples,
+# the propagated environment will only contain the variable EDITOR. If one
+# desires to add to the environment instead of replacing it, have the argument
+# include ALL (e.g. "--export=ALL,EDITOR=/bin/emacs"). This will propagate
+# EDITOR along with the current environment. Unlike sbatch, if ALL is specified,
+# any additional specified environment variables are ignored. If one desires no
+# environment variables be propagated, use the argument NONE. Regardless of this
+# setting, the appropriate SLURM_* task environment variables are always
+# exported to the environment. srun may deviate from the above behavior if the
+# default launch plugin, launch/slurm, is not used.
+
+$${pre_rocket}
+cd $${launch_dir}
+
+echo ""
+echo "--- SBATCH SUBMIT SCRIPT PRE-RUN ENVIRONMENT VARIABLES ---"
+printenv
+echo "----------------------------------------------------------"
+echo ""
+
+
+$${rocket_launch} &
+rocket_pid=$!
+echo "Launched process ${rocket_pid}..." 2>&1
+trapcode="echo 'Recieved signal ${signal_string}: Walltime will be reached in ${signal_time} seconds.' 1>&2"
+trapcode="${trapcode}; echo 'Sending SIGINT to process ${rocket_pid}...' 1>&2"
+trapcode="${trapcode}; kill -SIGTERM ${rocket_pid}; echo 'Signal sent.' 1>&2;"
+echo "Waiting for process completion or signal ${signal_string}..." 1>&2
+echo "Trap code: ${trapcode}" 1>&2
+trap "${trapcode}" "${signal_string}"
+wait ${rocket_pid}
+$${post_rocket}
+
+# CommonAdapter (SLURM) completed writing Template

@@ -1,0 +1,42 @@
+#!/bin/bash
+### Run across 2 nodes
+#PBS -l select=2:ncpus=40:ngpus=8
+#PBS -l walltime=0:10:00
+#PBS -q dgx
+
+### Specify project code
+#PBS -P 99999999
+
+#PBS -N multinode
+#PBS -j oe
+
+run_pbsdsh(){
+# For multinode jobs the execjob_prologue hook must run on the sister MoM in the other vnodes
+# This happens in two circumstances
+#   An MPI application which is tightly integrated with PBS is used
+#   A process is launched from the sister MoM with pbs-attach or tm_spawn
+#      (which happens when pbsdsh is used)
+pbsdsh hostname
+}
+
+run_nvidia-smi(){
+# pdsh is not PBS-aware (unless it is compiled in as a module)
+PATH=${PATH}:/home/app/dgx/usr/bin ; export PATH
+PDSH_RCMD_TYPE=ssh ; export PDSH_RCMD_TYPE=ssh
+WCOLL=$PBS_NODEFILE ; export WCOLL
+pdsh -f 1 nvidia-smi
+}
+
+# Will not see GPU cards on remote nodes
+echo 
+echo Pass 1
+run_nvidia-smi
+# Run PBS-aware command to trigger hook on remote nodes
+echo 
+echo pbsdsh
+run_pbsdsh
+echo
+# Will see GPU cards on remote nodes this time
+echo
+echo Pass 2
+run_nvidia-smi

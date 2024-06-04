@@ -1,0 +1,35 @@
+#!/bin/bash
+
+#PBS -l nodes=1:ppn=24
+#PBS -N spack_node_intel_dirty_install
+#PBS -j oe
+#PBS -M $USER@cornell.edu
+
+# I assume you already checked spack spec -I
+# Launch with:
+#
+#     qsub -v spec='python+tk' /share/apps/spack/totient_spack_configs/node_compile.pbs
+#
+# NOTE: Make sure you are underneath *YOUR* home directory, when running from
+#       underneath /share/apps/spack it couldn't copy the .oXXXX output file back
+#       due to insufficient permissions.
+#
+# NOTE: Better yet, just put the `spack_node_install` function in your ~/.bashrc and
+#       launch
+#
+#       spack_node_install 'python+tk'
+#
+#       from anywhere you please ;)  Read the docs:
+#
+#           https://cornell-ssw.github.io/cluster_administration.html#admin-shell-configurations
+#
+
+# I HATE INTEL AND EVERYTHING ABOUT HOW THEY DO WHAT THEY DO
+
+SPEC="${spec:-}"
+echo '---> Loading intel specific module for a dirty environment'
+module load intel/15.0.3
+echo '---> About to run: /share/apps/spack/spack_all/bin/spack --color=always install --dirty '"$SPEC"
+echo '     To view colors, use `less -R <output_file>`'
+# /share/apps/spack/spack_all/bin/spack --color=always install $SPEC
+/share/apps/spack/spack_all/bin/spack -d --color=always install --dirty $SPEC

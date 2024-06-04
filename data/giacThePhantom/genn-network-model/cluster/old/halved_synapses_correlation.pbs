@@ -1,0 +1,30 @@
+#!/bin/bash
+#PBS -l select=1:ncpus=2:mpiprocs=10:mem=64GB
+#PBS -l walltime=07:59:00
+#PBS -q short_gpuQ
+#PBS -N Beegenn_sleep_halved_synapses_correlation
+#PBS -o beegenn.stdout.txt
+#PBS -e beegenn.stderr.txt
+#PBS -m abe
+#PBS -M giacomo.fantoni@studenti.unitn.it
+
+module load cuda-11.1
+module load singularity-3.4.0
+
+cd $PBS_O_WORKDIR
+
+rm beegenn_sleep.sif
+
+# NOTE: you need to install squashfs-tools from source, or singularity will fail!
+# https://github.com/plougher/squashfs-tools/blob/master/INSTALL
+# Make sure to install mksquashfs inside ~/.local so that it can be found in the PATH
+
+singularity pull docker://giacthephantom/beegenn:sleep
+# TODO: genn-network-model/data can/should be replaced with anything we want
+# singularity run --bind $PBS_O_WORKDIR/genn-network-model/data:/data,$PBS_O_WORKDIR/outputs:/home/genn docker://giacthephantom/beegenn:sleep sim_docker
+
+singularity exec \
+  --bind $PBS_O_WORKDIR/genn-network-model/t_30_halved_synapses:/t_30_halved_synapses,$PBS_O_WORKDIR/outputs:/home/genn \
+  --nv \
+  docker://giacthephantom/beegenn:sleep \
+  python3 -m beegenn.plots.correlation /t_30_halved_synapses t30noinputhalvedsynapsescluster

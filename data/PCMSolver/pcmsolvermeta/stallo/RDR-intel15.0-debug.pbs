@@ -1,0 +1,49 @@
+#!/bin/bash
+#PBS -lnodes=1:ppn=16:localwork
+#PBS -lwalltime=4:00:00
+#PBS -A nn4654k
+
+module purge
+module unuse /opt/modulefiles/*
+module use /home/easybuild/modules/all
+module use /home/easybuild/modules/all/Core
+module load intel/2015a
+module load Boost
+module load Python
+module load CMake
+
+which ifort
+which icc
+which icpc
+ifort --version
+icc --version
+icpc --version
+
+export build_name=RDR-CentOS-6.6-intel15.0-debug
+export site_name=stallo.uit.no
+PCMSolver_TMPDIR=/local/work/roberto/pcmscratch-${build_name}
+export PCMSolver_TMPDIR
+export NPROCS=`lscpu -p | egrep -v '^#' | wc -l`
+export CTEST_MAKE_NUM_PROCS=$NPROCS
+
+export PYTHON=`which python`
+
+TMP_DIR=/global/work/roberto/tmprunpcmsolver/${build_name}
+mkdir -p $TMP_DIR
+
+git clone git@gitlab.com:PCMSolver/pcmsolver.git $TMP_DIR
+
+cd $TMP_DIR
+
+python setup.py --fc=ifort --cc=icc --cxx=icpc --type=debug --python=$PYTHON --cmake-options='-DBUILDNAME=${build_name} -DSITE=${site_name}' --boost-headers='/home/easybuild/software/MPI/intel/2015.1.133-GCC-4.9.2/impi/5.0.2.044/Boost/1.58.0-Python-2.7.9/include' --boost-libraries='/home/easybuild/software/MPI/intel/2015.1.133-GCC-4.9.2/impi/5.0.2.044/Boost/1.58.0-Python-2.7.9/lib'
+
+cd $TMP_DIR/build
+
+
+ctest -D Nightly -j$NPROCS
+
+cd
+rm -rf $PCMSolver_TMPDIR $TMP_DIR
+
+exit 0
+

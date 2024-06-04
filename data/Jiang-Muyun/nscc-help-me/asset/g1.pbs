@@ -1,0 +1,92 @@
+#!/bin/sh
+### https://help-2626.nscc.sg/wp-content/uploads/Getting-Started-ASPIRE-1-v1.10-final.pdf
+### Note that the first line tells the system that this is a shell script. 
+### Any lines started with #PBS are not comments,
+### but the job attributes for PBS Pro to read.
+
+### Specify amount of time required (maximum 24 hours)
+### If you pay 5K SGD monthly then you can require 240 hours for a job :)
+#PBS -l walltime=24:00:00
+
+### Select the correct node to queue. 
+### Currently, there are two type of nodes in ASPIRE 2A, normal and ai.
+### Each normal node has 4 gpus, while each ai node has 8 gpus.
+#PBS -q normal
+###PBS -q ai
+
+### Request a single GPU
+### The "select=1" specifies the number of nodes
+### Make the ncpus value 16 times the ngpus value, e.g. select=1:ncpus=16:ngpus=1
+#PBS -l select=1:ncpus=16:ngpus=1
+
+### Request multiple GPUs
+### Note that each normal node has 4 gpus, while each ai node has 8 gpus.
+### If you have queued for normal node and wanted to apply for 8 gpus, then use
+###PBS -l select=1:ncpus=64:ngpus=4
+###PBS -l select=1:ncpus=32:ngpus=2
+### If you have queued for ai node and wanted to apply for 8 gpus, then use
+### PBS -l select=1:ncpus=128:ngpus=8
+
+### Specify project code
+### e.g. 41000001 was the pilot project code
+### Job will not submit unless this is changed
+### The project code, if any, should appear in the welcome information 
+### in the console once you logged into your NSCC account.
+### A personal code would queue forever.
+#PBS -P PROJECT_CODE
+
+### Specify name for job
+### They records the standard outputs and errors during the job execution.
+#PBS -N TASK_NAME
+
+### Standard output by default goes to file $PBS_JOBNAME.o$PBS_JOBID
+### Standard error by default goes to file $PBS_JOBNAME.e$PBS_JOBID
+### To merge standard output and error use the following
+#PBS -j oe
+
+
+### Start of commands to be run
+
+### Change to directory where the job was submitted
+cd "$PBS_O_WORKDIR" || exit $?
+
+### Since our job is to simply run the python code, and
+### we have built a personal container, we could simply
+### run the job by one line. The instructions for each segment
+### are provided below.
+
+### Print the environment variables and GPU dashbroad.
+printenv
+pwd
+
+### Bind the scratch directory to singularity so that it can find it.
+export SINGULARITY_BIND="/scratch:/scratch,/home/project:/data/project"
+module load singularity
+
+### Manually assign index to Singularity
+export CUDA_VISIBLE_DEVICES=0
+### export CUDA_VISIBLE_DEVICES=0,1,2,3
+### Note that if you applied more gpus, then using export CUDA_VISIBLE_DEVICES=0,1,2,3 for 4 gpus.
+
+### If you choose to install your Python package on-the-go, uncomment the next line to install your packages.
+### singularity run ~/scratch/pt113.sif python -m pip install --user mne pandas seaborn
+
+singularity run --nv  ~/scratch/2020-05-19.sif python EEG_DL.py --dataset $dataset --model $model --arg $arg
+### >> "report/_"
+
+### If your main.py has arguments, see the following example.
+### singularity run --nv  ~/scratch/my.sif python ~/tutorial/main.py -var1 $v1 -var2 $v2> main_log
+
+### The first one "singularity run --nv my.sif" means
+### to use singularity to run "my.sif" container, with
+### nvidia cuda support enabled.
+
+### The second one "python main.py > main_log" is exactly the same
+### as we did in daily PhD struggle, which is, to run the code,
+### and log the console output in a text file named "main_log".
+### When arguments are needed, we indicate them using the dollor symbol $v1 so that later we can feed them to job.psb.
+
+### Some other commands that may be useful are provided below.
+### Print the environment variable of NSCC PBS Pro. So 
+### that you will know what the goddammit variables in
+### https://help.nscc.sg/wp-content/uploads/2016/08/PBS_Professional_Quick_Reference.pdf

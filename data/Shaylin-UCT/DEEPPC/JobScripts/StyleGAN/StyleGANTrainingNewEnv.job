@@ -1,0 +1,16 @@
+#!/bin/bash
+#PBS -N StyleGANTrainingNewEnv
+#PBS -q gpu_1
+#PBS -l select=1:ncpus=9:ngpus=1
+#PBS -P CSCI1142
+#PBS -l walltime=12:00:00
+#PBS -o /mnt/lustre/users/schetty1/StyleRuns/RunNewEnv.out
+#PBS -e /mnt/lustre/users/schetty1/StyleRuns/RunNewEnv.err
+#PBS -m abe
+#PBS -M chtsha042@myuct.ac.za
+cd /home/schetty1/ 
+module load chpc/python/anaconda/3-2021.11
+eval "$(conda shell.bash hook)"
+conda activate /home/schetty1/.conda/envs/CondaGANforStyle
+python3 /home/schetty1/stylegan2-ada-pytorch-main/train.py --outdir=/home/schetty1/lustre/GeneratedImages/StyleGAN2ADA/Elbow256 --data=/home/schetty1/lustre/ImagesforResearch/ElbowLATStyle256 --gpus=1 --aug=noaug --snap=10
+conda deactivate

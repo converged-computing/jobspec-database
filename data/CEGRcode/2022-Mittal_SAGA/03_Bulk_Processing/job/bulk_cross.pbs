@@ -1,0 +1,184 @@
+#!/bin/bash
+#PBS -l nodes=1:ppn=4
+#PBS -l pmem=14gb
+#PBS -l walltime=00:15:00
+#PBS -A open
+#PBS -o logs/bulk_cross.log.out
+#PBS -e logs/bulk_cross.log.err
+#PBS -t 1-512
+
+module load gcc
+module load samtools
+module load anaconda3
+source activate mittal
+
+# Cross all BED x all BAM to generate heatmap and composite libraries
+
+# Fill in placeholder constants with your directories
+WRK=/path/to/2022-Mittal_SAGA
+BAMDIR=$WRK/data/BAM
+BEDDIR=$WRK/data/RefPT-YEP
+OUTDIR=$WRK/LIBRARY
+
+# Script shortcuts
+ORIGINAL_SCRIPTMANAGER=/path/to/ScriptManager-v0.13.jar
+ORIGINAL_SCRIPTMANAGER=$WRK/bin/ScriptManager-v0.13.jar
+SCRIPTMANAGER=/path/to/ScriptManager-v0.13.jar
+SCRIPTMANAGER=$WRK/bin/ScriptManager-v0.13-$PBS_ARRAYID.jar
+COMPOSITE=$WRK/bin/sum_Col_CDT.pl
+
+
+cd $WRK
+[ -d $OUTDIR ] || mkdir $OUTDIR
+cp $ORIGINAL_SCRIPTMANAGER $SCRIPTMANAGER
+
+# Determine BAM file for the current job array index
+BAMFILE=`ls $BAMDIR/*.bam | head -n $PBS_ARRAYID | tail -1`
+BAM=`basename $BAMFILE ".bam"`
+TYPE=`echo $BAM |cut -d"_" -f2`
+[ -f $BAMFILE.bai ] || samtools index $BAMFILE
+
+nucleosome_tagpileup () {
+	BEDFILE=$1
+	BAMFILE=$2
+	DIR=$3
+	BASE=$4
+	[[ -d $DIR/CDT ]] || mkdir $DIR/CDT
+	[[ -d $DIR/COMPOSITES ]] || mkdir $DIR/COMPOSITES
+	[[ -d $DIR/NormComposites ]] || mkdir $DIR/NormComposites
+	[[ -d $DIR/Heatmap/STRAND ]] || mkdir -p $DIR/Heatmap/STRAND
+	[[ -d $DIR/Occupancy ]] || mkdir $DIR/Occupancy
+
+	#FACTOR=`grep 'Scaling factor' $WRK/data/NormalizationFactors/$BAM\_NFRw_ScalingFactors.out | awk -F" " '{print $3}'`
+	FACTOR=`grep 'Both:' $WRK/data/NormalizationFactors/$BAM\_NFRw_ScalingFactor.out | awk -F" " '{print $2}'`
+
+	# Pileup combined heatmaps
+	java -jar $SCRIPTMANAGER read-analysis tag-pileup $BEDFILE $BAMFILE --cpu 4 -s 15 --combined -o $DIR/COMPOSITES/$BASE.out -M $DIR/CDT/$BASE
+	java -jar $SCRIPTMANAGER read-analysis scale-matrix $DIR/CDT/$BASE\_combined.cdt -s $FACTOR -o $DIR/CDT/$BASE\_combined_Normalized.cdt
+	java -jar $SCRIPTMANAGER figure-generation heatmap -p 0.95 --black $DIR/CDT/$BASE\_combined_Normalized.cdt -o $DIR/Heatmap/STRAND/$BASE\_combined_treeview.png
+
+	# Pileup stranded
+	java -jar $SCRIPTMANAGER read-analysis tag-pileup $BEDFILE $BAMFILE --cpu 4 -o $DIR/COMPOSITES/$BASE.out -M $DIR/CDT/$BASE\_read1
+	java -jar $SCRIPTMANAGER read-analysis scale-matrix $DIR/CDT/$BASE\_read1_anti.cdt -s $FACTOR -o $DIR/CDT/$BASE\_read1_anti_Normalized.cdt
+	java -jar $SCRIPTMANAGER read-analysis scale-matrix $DIR/CDT/$BASE\_read1_sense.cdt -s $FACTOR -o $DIR/CDT/$BASE\_read1_sense_Normalized.cdt
+
+	# Make stranded composites
+	perl $COMPOSITE $DIR/CDT/$BASE\_read1_anti_Normalized.cdt $DIR/CDT/$BASE\_ANTI
+        perl $COMPOSITE $DIR/CDT/$BASE\_read1_sense_Normalized.cdt $DIR/CDT/$BASE\_SENSE
+        cat $DIR/CDT/$BASE\_ANTI <(tail -1 $DIR/CDT/$BASE\_SENSE) > $DIR/NormComposites/$BASE\_Normalized.out
+	rm $DIR/CDT/$BASE\_SENSE $DIR/CDT/$BASE\_ANTI
+}
+
+
+rna_ncis_tagpileup () {
+	BEDFILE=$1
+	BAMFILE=$2
+	DIR=$3
+	BASE=$4
+	[[ -d $DIR/CDT ]] || mkdir $DIR/CDT
+	[[ -d $DIR/COMPOSITES ]] || mkdir $DIR/COMPOSITES
+	[[ -d $DIR/NormComposites ]] || mkdir $DIR/NormComposites
+	[[ -d $DIR/Heatmap/STRAND ]] || mkdir -p $DIR/Heatmap/STRAND
+	[[ -d $DIR/Occupancy ]] || mkdir $DIR/Occupancy
+	FACTOR=`grep 'Scaling factor' $WRK/data/NormalizationFactors/$BAM\_NCISb_ScalingFactors.out | awk -F" " '{print $3}'`
+
+	java -jar $SCRIPTMANAGER read-analysis tag-pileup $BEDFILE $BAMFILE --cpu 4 -2 -o $DIR/COMPOSITES/$BASE.out -M $DIR/CDT/$BASE
+	java -jar $SCRIPTMANAGER read-analysis scale-matrix $DIR/CDT/$BASE\_anti.cdt -s $FACTOR -o $DIR/CDT/$BASE\_anti_Normalized.cdt
+	java -jar $SCRIPTMANAGER read-analysis scale-matrix $DIR/CDT/$BASE\_sense.cdt -s $FACTOR -o $DIR/CDT/$BASE\_sense_Normalized.cdt
+	java -jar $SCRIPTMANAGER figure-generation heatmap -p 0.95 --blue $DIR/CDT/$BASE\_sense_Normalized.cdt -o $DIR/Heatmap/STRAND/$BASE\_sense_treeview.png
+	java -jar $SCRIPTMANAGER figure-generation heatmap -p 0.95 --red $DIR/CDT/$BASE\_anti_Normalized.cdt -o $DIR/Heatmap/STRAND/$BASE\_anti_treeview.png
+	java -jar $SCRIPTMANAGER figure-generation merge-heatmap $DIR/Heatmap/STRAND/$BASE\_sense_treeview.png $DIR/Heatmap/STRAND/$BASE\_anti_treeview.png -o $DIR/Heatmap/$BASE\_merge.png
+
+	perl $COMPOSITE $DIR/CDT/$BASE\_anti_Normalized.cdt $DIR/CDT/$BASE\_ANTI
+        perl $COMPOSITE $DIR/CDT/$BASE\_sense_Normalized.cdt $DIR/CDT/$BASE\_SENSE
+        cat $DIR/CDT/$BASE\_ANTI <(tail -1 $DIR/CDT/$BASE\_SENSE) > $DIR/NormComposites/$BASE\_Normalized.out
+	rm $DIR/CDT/$BASE\_SENSE $DIR/CDT/$BASE\_ANTI
+}
+
+
+rna_total_tagpileup () {
+	BEDFILE=$1
+	BAMFILE=$2
+	DIR=$3
+	BASE=$4
+	[[ -d $DIR/CDT ]] || mkdir $DIR/CDT
+	[[ -d $DIR/COMPOSITES ]] || mkdir $DIR/COMPOSITES
+	[[ -d $DIR/NormComposites ]] || mkdir $DIR/NormComposites
+	[[ -d $DIR/Heatmap/STRAND ]] || mkdir -p $DIR/Heatmap/STRAND
+	[[ -d $DIR/Occupancy ]] || mkdir $DIR/Occupancy
+	FACTOR=`grep 'Scaling factor' $WRK/data/NormalizationFactors/$BAM\_Totalb_ScalingFactors.out | awk -F" " '{print $3}'`
+
+	java -jar $SCRIPTMANAGER read-analysis tag-pileup $BEDFILE $BAMFILE --cpu 4 -2 -o $DIR/COMPOSITES/$BASE.out -M $DIR/CDT/$BASE
+	java -jar $SCRIPTMANAGER read-analysis scale-matrix $DIR/CDT/$BASE\_anti.cdt -s $FACTOR -o $DIR/CDT/$BASE\_anti_Normalized.cdt
+	java -jar $SCRIPTMANAGER read-analysis scale-matrix $DIR/CDT/$BASE\_sense.cdt -s $FACTOR -o $DIR/CDT/$BASE\_sense_Normalized.cdt
+	java -jar $SCRIPTMANAGER figure-generation heatmap -p 0.95 --blue $DIR/CDT/$BASE\_sense_Normalized.cdt -o $DIR/Heatmap/STRAND/$BASE\_sense_treeview.png
+	java -jar $SCRIPTMANAGER figure-generation heatmap -p 0.95 --red $DIR/CDT/$BASE\_anti_Normalized.cdt -o $DIR/Heatmap/STRAND/$BASE\_anti_treeview.png
+	java -jar $SCRIPTMANAGER figure-generation merge-heatmap $DIR/Heatmap/STRAND/$BASE\_sense_treeview.png $DIR/Heatmap/STRAND/$BASE\_anti_treeview.png -o $DIR/Heatmap/$BASE\_merge.png
+
+	perl $COMPOSITE $DIR/CDT/$BASE\_anti_Normalized.cdt $DIR/CDT/$BASE\_ANTI
+        perl $COMPOSITE $DIR/CDT/$BASE\_sense_Normalized.cdt $DIR/CDT/$BASE\_SENSE
+        cat $DIR/CDT/$BASE\_ANTI <(tail -1 $DIR/CDT/$BASE\_SENSE) > $DIR/NormComposites/$BASE\_Normalized.out
+	rm $DIR/CDT/$BASE\_SENSE $DIR/CDT/$BASE\_ANTI
+}
+
+
+
+classic_tagpileup () {
+	BEDFILE=$1
+	BAMFILE=$2
+	DIR=$3
+	BASE=$4
+	[[ -d $DIR/CDT ]] || mkdir $DIR/CDT
+	[[ -d $DIR/COMPOSITES ]] || mkdir $DIR/COMPOSITES
+	[[ -d $DIR/NormComposites ]] || mkdir $DIR/NormComposites
+	[[ -d $DIR/Heatmap/STRAND ]] || mkdir -p $DIR/Heatmap/STRAND
+	[[ -d $DIR/Occupancy ]] || mkdir $DIR/Occupancy
+	FACTOR=`grep 'Scaling factor' $WRK/data/NormalizationFactors/$BAM\_NCISb_ScalingFactors.out | awk -F" " '{print $3}'`
+
+	java -jar $SCRIPTMANAGER read-analysis tag-pileup $BEDFILE $BAMFILE --cpu 4 -o $DIR/COMPOSITES/$BASE.out -M $DIR/CDT/$BASE
+	java -jar $SCRIPTMANAGER read-analysis scale-matrix $DIR/CDT/$BASE\_anti.cdt -s $FACTOR -o $DIR/CDT/$BASE\_anti_Normalized.cdt
+	java -jar $SCRIPTMANAGER read-analysis scale-matrix $DIR/CDT/$BASE\_sense.cdt -s $FACTOR -o $DIR/CDT/$BASE\_sense_Normalized.cdt
+	java -jar $SCRIPTMANAGER figure-generation heatmap -p 0.95 --blue $DIR/CDT/$BASE\_sense_Normalized.cdt -o $DIR/Heatmap/STRAND/$BASE\_sense_treeview.png
+	java -jar $SCRIPTMANAGER figure-generation heatmap -p 0.95 --red $DIR/CDT/$BASE\_anti_Normalized.cdt -o $DIR/Heatmap/STRAND/$BASE\_anti_treeview.png
+	java -jar $SCRIPTMANAGER figure-generation merge-heatmap $DIR/Heatmap/STRAND/$BASE\_sense_treeview.png $DIR/Heatmap/STRAND/$BASE\_anti_treeview.png -o $DIR/Heatmap/$BASE\_merge.png
+
+	perl $COMPOSITE $DIR/CDT/$BASE\_anti_Normalized.cdt $DIR/CDT/$BASE\_ANTI
+        perl $COMPOSITE $DIR/CDT/$BASE\_sense_Normalized.cdt $DIR/CDT/$BASE\_SENSE
+        cat $DIR/CDT/$BASE\_ANTI <(tail -1 $DIR/CDT/$BASE\_SENSE) > $DIR/NormComposites/$BASE\_Normalized.out
+	rm $DIR/CDT/$BASE\_SENSE $DIR/CDT/$BASE\_ANTI
+}
+
+# Process BAM file for each BED file in directory
+for BEDFILE in `ls $BEDDIR/*1000bp.bed`;
+do
+	echo $BEDFILE
+	BED=`basename $BEDFILE ".bed"`
+	DIR=$OUTDIR/$BED
+	[ -d $DIR ] || mkdir $DIR
+	if [ $TYPE == "H2B" ] || [ $TYPE == "H2BK123ub" ] || [ $TYPE == "H2AZ" ] || \
+	    [ $TYPE == "H3" ] || [ $TYPE == "H3K4me3" ] || [ $TYPE == "H3K9ac" ] || [ $TYPE == "H3K9me2" ] || [ $TYPE == "H3K9me3" ] || [ $TYPE == "H3K14ac" ] || \
+	    [ $TYPE == "H3K27ac" ] || [ $TYPE == "H3K36me3" ] || [ $TYPE == "H3K79me3" ] || \
+	    [ $TYPE == "H4"] || [ $TYPE == "H4R3me2" ] || [ $TYPE == "H4K8ac" ] || [ $TYPE == "H4K12ac" ] || [ $TYPE == "H4K16ac" ] || [ $TYPE == "H4K20me1" ];
+then
+		#echo "Skip Nucleosome"
+		echo "Run Nucleosome"
+		BASE=$BAM\_$BED\_read1
+		nucleosome_tagpileup $BEDFILE $BAMFILE $DIR $BASE
+	elif [ $TYPE == "polyA-RNA" ] || [ $TYPE == "poly-A-RNA" ] || [ $TYPE == "poly-A-NCISb" ] || [ $TYPE == "poly-A-Totalb" ];
+	then
+		echo "Run RNA pileup"
+		echo $BASE
+		SID=`echo $BAM | awk -F"_" '{print $1}'`
+		SUFFIX=`echo $BAM | awk -F"_" '{OFS="_"}{print $3,$4,$5,$6,$7,$8}'`
+		NCIS_BASE=$SID\_poly-A-NCISb\_$SUFFIX\_$BED
+		echo $NCIS_BASE
+		rna_ncis_tagpileup $BEDFILE $BAMFILE $DIR $NCIS_BASE
+		TOTAL_BASE=$SID\_poly-A-Totalb\_$SUFFIX\_$BED
+		echo $TOTAL_BASE
+		rna_total_tagpileup $BEDFILE $BAMFILE $DIR $TOTAL_BASE
+	else
+		echo "Run classic TF pileup"
+		BASE=$BAM\_$BED\_read1
+		classic_tagpileup $BEDFILE $BAMFILE $DIR $BASE
+	fi
+done

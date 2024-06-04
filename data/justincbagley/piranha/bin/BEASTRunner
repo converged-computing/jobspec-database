@@ -1,0 +1,641 @@
+#!/bin/sh
+
+##########################################################################################
+#  __  o  __   __   __  |__   __                                                         #
+# |__) | |  ' (__( |  ) |  ) (__(                                                        # 
+# |                                                                                      #
+#                                                                                        #
+# File: BEASTRunner.sh                                                                   #
+  VERSION="v1.5.2"                                                                       #
+# Author: Justin C. Bagley                                                               #
+# Date: Created by Justin Bagley on Fri, 11 Nov 2016 14:33:51 -0600.                     #
+# Last update: December 23, 2020                                                         #
+# Copyright (c) 2016-2021 Justin C. Bagley. All rights reserved.                         #
+# Please report bugs to <jbagley@jsu.edu>.                                               #
+#                                                                                        #
+# Description:                                                                           #
+# SHELL SCRIPT FOR AUTOMATING RUNNING BEAST ON A REMOTE SUPERCOMPUTING CLUSTER           #
+#                                                                                        #
+##########################################################################################
+
+# Provide a variable with the location of this script.
+SCRIPT_PATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+# Source Scripting Utilities
+# -----------------------------------
+# These shared utilities provide many functions which are needed to provide
+# the functionality in this boilerplate. This script will fail if they can
+# not be found.
+# -----------------------------------
+UTILS_LOCATION="${SCRIPT_PATH}/../lib/utils.sh" # Update this path to find the utilities.
+
+if [[ -f "${UTILS_LOCATION}" ]]; then
+  source "${UTILS_LOCATION}"
+else
+  echo "Please find the file util.sh and add a reference to it in this script. Exiting..."
+  exit 1
+fi
+
+# Source shared functions and variables
+# -----------------------------------
+FUNCS_LOCATION="${SCRIPT_PATH}/../lib/sharedFunctions.sh" # Update this path to find the shared functions.
+VARS_LOCATION="${SCRIPT_PATH}/../lib/sharedVariables.sh" # Update this path to find the shared variables.
+
+if [[ -f "${FUNCS_LOCATION}" ]] && [[ -f "${VARS_LOCATION}" ]]; then
+  source "${FUNCS_LOCATION}" ;
+  source "${VARS_LOCATION}" ;
+else
+  echo "Please find the files sharedFunctions.sh and sharedVariables.sh and add references to them in this script. Exiting... "
+  exit 1
+fi
+
+CONFIG_FILE_LOCATION="${SCRIPT_PATH}/../etc/beast_runner.cfg" # Update this path to find the beast_runner.cfg file.
+
+# trapCleanup Function
+# -----------------------------------
+# Any actions that should be taken if the script is prematurely
+# exited.  Always call this function at the top of your script.
+# -----------------------------------
+trapCleanup () {
+  echo ""
+  # Delete temp files, if any
+  if is_dir "${tmpDir}"; then
+    rm -r "${tmpDir}"
+  fi
+  die "Exit trapped. In function: '${FUNCNAME[*]}'"
+}
+
+# safeExit
+# -----------------------------------
+# Non destructive exit for when script exits naturally.
+# Usage: Add this function at the end of every script.
+# -----------------------------------
+safeExit () {
+  # Delete temp files, if any
+  if is_dir "${tmpDir}"; then
+    rm -r "${tmpDir}"
+  fi
+  trap - INT TERM EXIT
+  exit
+}
+
+# Set Flags
+# -----------------------------------
+# Flags which can be overridden by user input.
+# Default values are below
+# -----------------------------------
+quiet=false
+printLog=false
+verbose=false
+force=false
+strict=false
+debug=false
+args=()
+
+# Set Temp Directory
+# -----------------------------------
+# Create temp directory with three random numbers and the process ID
+# in the name.  This directory is removed automatically at exit.
+# -----------------------------------
+tmpDir="/tmp/${SCRIPT_NAME}.$RANDOM.$RANDOM.$RANDOM.$$"
+(umask 077 && mkdir "${tmpDir}") || {
+  die "Could not create temporary directory! Exiting."
+}
+
+# Logging
+# -----------------------------------
+# Log is only used when the '-l' flag is set.
+#
+# To never save a logfile change variable to '/dev/null'
+# Save to Desktop use: $HOME/Desktop/${SCRIPT_BASENAME}.log
+# Save to standard user log location use: $HOME/Library/Logs/${SCRIPT_BASENAME}.log
+# -----------------------------------
+logFile="$HOME/Library/Logs/${SCRIPT_BASENAME}.log"
+
+# Check for Dependencies
+# -----------------------------------
+# Arrays containing package dependencies needed to execute this script.
+# The script will fail if dependencies are not installed.  For Mac users,
+# most dependencies can be installed automatically using the package
+# manager 'Homebrew'.  Mac applications will be installed using
+# Homebrew Casks. Ruby and gems via RVM.
+# -----------------------------------
+export homebrewDependencies=()
+export caskDependencies=()
+export gemDependencies=()
+
+
+
+
+BEASTRunner () {
+
+######################################## START ###########################################
+##########################################################################################
+
+echo "INFO      | $(date) |----------------------------------------------------------------"
+echo "INFO      | $(date) | BEASTRunner, v1.5.2 July 2020                                  "
+echo "INFO      | $(date) | Copyright (c) 2016-2021 Justin C. Bagley. All rights reserved. "
+echo "INFO      | $(date) |----------------------------------------------------------------"
+echo "INFO      | $(date) | Starting BEASTRunner pipeline... "
+echo "INFO      | $(date) | Running with the following options: "
+echo "INFO      | $(date) | - Number of runs, <nRuns> = ${MY_NUM_INDEP_RUNS} "
+echo "INFO      | $(date) | - Supercomputer run <walltime> = ${MY_SC_WALLTIME} "
+echo "INFO      | $(date) | - Java memory allocation, <javaMem> = ${JAVA_MEM_ALLOC} "
+
+echo "INFO      | $(date) | Step #1: Set up workspace and check machine type. "
+############ SET WORKING DIRECTORY AND CHECK MACHINE TYPE
+echoShortPWD
+checkMachineType
+
+######
+## START DEBUG MODE
+if [[ "$MY_DEBUG_MODE_SWITCH" != "0" ]]; then set -xv; fi
+
+
+echo "INFO      | $(date) | Checking for 'beast_runner.cfg' configuration file... "
+if [[ -f ./beast_runner.cfg ]]; then 
+	echo "INFO      | $(date) | Configuration file check passed. Moving forward with .cfg file in current directory... "
+elif [[ ! -f ./beast_runner.cfg ]]; then 
+	echo "WARNING   | $(date) | Configuration file check FAILED. Copying default .cfg file into current directory... "
+	cp "$CONFIG_FILE_LOCATION" . ;
+	echo "INFO      | $(date) | Please edit the default 'beast_runner.cfg' configuration file just added so that \
+it includes all pertinent information (first 3 variables) before rerunning RAxMLRunner in this directory. "
+	echo "INFO      | $(date) | Quitting... "
+	safeExit ;
+fi
+
+
+echo "INFO      | $(date) | Step #2: Read variables from configuration file, make $(calc $MY_NUM_INDEP_RUNS - 1) copies per input XML file \
+for a total of five runs of "
+echo "INFO      | $(date) | each model/XML using different random number seeds. "
+echo "INFO      | $(date) | Setting up variables, including those specified in the cfg file, and reading XML files into environmental variable..."
+
+	MY_XML_FILES=./*.xml ;
+	MY_NUM_XML="$(ls . | grep "\.xml$" | wc -l)";
+echo "INFO      | $(date) | Number of XML files read: $MY_NUM_XML"		## Check number of input files read into program.
+
+	MY_SSH_ACCOUNT="$(grep -n "ssh_account" ./beast_runner.cfg | awk -F"=" '{print $NF}')" ;
+	MY_SC_DESTINATION="$(grep -n "destination_path" ./beast_runner.cfg | awk -F"=" '{print $NF}' | sed 's/\ //g')"	;				## This pulls out the correct destination path on the supercomputer from the "beast_runner.cfg" configuration file in the working directory (generated/modified by user prior to running BEASTRunner).
+	MY_SC_BIN="$(grep -n "bin_path" ./beast_runner.cfg | awk -F"=" '{print $NF}' | sed 's/\ //g')" ;
+	MY_EMAIL_ACCOUNT="$(grep -n "email_account" ./beast_runner.cfg | awk -F"=" '{print $NF}')" ;
+	MY_SC_PBS_WKDIR_CODE="$(grep -n "pbs_wkdir_code" ./beast_runner.cfg | awk -F"=" '{print $NF}')" ;
+##	MY_NUM_INDEP_RUNS="$(grep -n "n_runs" ./beast_runner.cfg | awk -F"=" '{print $NF}')" ;
+	MY_BEAST_PATH="$(grep -n "beast_path" ./beast_runner.cfg | awk -F"=" '{print $NF}')" ;
+
+
+echo "INFO      | $(date) | Step #2: Make $(calc $MY_NUM_INDEP_RUNS - 1) copies per input XML file for a total of $MY_NUM_INDEP_RUNS runs of each model or "
+echo "INFO      | $(date) | XML using different random seeds. "
+echo "INFO      | $(date) | Looping through original .xml's and making $(calc $MY_NUM_INDEP_RUNS - 1) copies per file, renaming \
+each copy with an extension of '_#.xml'"
+echo "INFO      | $(date) | where # ranges from 2 - $MY_NUM_INDEP_RUNS. *** IMPORTANT ***: The starting .xml files MUST \
+end in 'run.xml'."
+(
+	for (( i=2; i<="$MY_NUM_INDEP_RUNS"; i++ )); do
+	    find . -type f -name '*run.xml' | while read FILE ; do
+	        newfile="$(echo ${FILE} | sed -e 's/\.xml/\_'$i'\.xml/')" ;
+	        cp "${FILE}" "${newfile}" ;
+	    done
+	done
+)
+
+(
+	find . -type f -name '*run.xml' | while read FILE ; do
+		newfile="$(echo ${FILE} |sed -e 's/run\.xml/run_1\.xml/')" ;
+		cp "${FILE}" "${newfile}" ;
+	done
+)
+
+	rm ./*run.xml ; 	## Remove the original "run.xml" input files so that only XML files
+						## annotated with their run numbers 1 - $MY_NUM_INDEP_RUNS remain.
+
+
+echo "INFO      | $(date) | Step #3: Make directories for runs and generate shell scripts unique to each \
+input file for directing/queuing runs. "
+##--Loop through the input XML files and do the following for each file: (A) generate one 
+##--folder per XML file with the same name as the file, only minus the extension; (B) 
+##--create a shell script with the name "beast_pbs.sh" that is specific to the input 
+##--and can be used to submit job to supercomputer; (C) move the PBS shell script into 
+##--the folder whose name corresponds to the particular input XML file being manipulated
+##--at the same pass in the loop.
+(
+	for i in $MY_XML_FILES; do
+		mkdir "$(ls ${i} | sed 's/\.xml$//g')";
+		MY_INPUT_BASENAME="$(ls ${i} | sed 's/^.\///g; s/.py$//g')";
+
+echo "#!/bin/bash
+
+#PBS -l nodes=1:ppn=1,pmem=${JAVA_MEM_ALLOC},walltime=${MY_SC_WALLTIME}
+#PBS -N ${MY_INPUT_BASENAME}
+#PBS -m abe
+#PBS -M ${MY_EMAIL_ACCOUNT}
+
+#---Change walltime to be the expected number of hours for the run-------------#
+#---NOTE: The run will be killed if this time is exceeded----------------------#
+#---Change the -M flag to point to your email address.-------------------------#
+
+
+##--ATTENTION: PIrANHA users may need to remove or edit the next three lines; for example, you 
+##--would remove this section if your supercomputing cluster did not use modules to load 
+##--software/libraries, and you would edit this section if modules had different locations or
+##--names on your cluster.
+module purge
+module load beagle/2.1.2
+module load jdk/1.8.0-60
+
+java -Xmx${JAVA_MEM_ALLOC} -jar ${MY_BEAST_PATH} -beagle_sse -seed $(python -c "import random; print random.randint(10000,100000000000)") -beagle_GPU ${i} > ${i}.out
+
+
+$MY_SC_PBS_WKDIR_CODE
+
+exit 0" > beast_pbs.sh
+
+	chmod +x beast_pbs.sh;
+	mv ./beast_pbs.sh ./"$(ls ${i} | sed 's/.xml$//g')";
+	cp $i ./"$(ls ${i} | sed 's/\.xml$//g')";
+
+	done
+)
+
+echo "INFO      | $(date) | Setup and run check on the number of run folders created by the program..."
+	MY_FILECOUNT="$(find . -type f | wc -l)";
+	MY_DIRCOUNT="$(find . -type d | wc -l)";
+	MY_NUM_RUN_FOLDERS="$(calc $MY_DIRCOUNT - 1)";
+
+echo "INFO      | $(date) | Number of run folders created: $MY_NUM_RUN_FOLDERS"
+
+
+echo "INFO      | $(date) | Step #4: Create batch submission file, move all run folders created in previous step \
+and submission file to supercomputer. "
+##--This step assumes that you have set up passowordless access to your supercomputer
+##--account (e.g. passwordless ssh access), by creating and organizing appropriate and
+##--secure public and private ssh keys on your machine and the remote supercomputer (by 
+##--secure, I mean you closed write privledges to authorized keys by typing "chmod u-w 
+##--authorized keys" after setting things up using ssh-keygen). This is VERY IMPORTANT
+##--as the following will not work without completing this process first. The following
+##--links provide a list of useful tutorials/discussions related to doing this:
+#	* https://www.msi.umn.edu/support/faq/how-do-i-setup-ssh-keys
+#	* https://coolestguidesontheplanet.com/make-passwordless-ssh-connection-osx-10-9-mavericks-linux/ 
+#	* https://www.tecmint.com/ssh-passwordless-login-using-ssh-keygen-in-5-easy-steps/
+echo "INFO      | $(date) | Copying run folders to working dir on supercomputer..."
+
+echo "#!/bin/bash
+" > batch_qsub_top.txt ;
+
+(
+	for j in ./*/; do
+		FOLDERNAME="$(echo $j | sed 's/\.\///g')";
+		scp -r $j $MY_SSH_ACCOUNT:$MY_SC_DESTINATION ;	## Safe copy to remote machine.
+
+echo "cd $MY_SC_DESTINATION$FOLDERNAME
+qsub beast_pbs.sh
+#" >> cd_and_qsub_commands.txt ;
+
+	done
+)
+## NOT RUN:  sed -i.bak 1,3d ./cd_and_qsub_commands.txt		## First line of file attempts to cd to "./*/", but this will break the submission script. Here, we use sed to remove the first three lines, which contain the problematic cd line, a qsub line, and a blank line afterwards.
+
+echo "
+$MY_SC_PBS_WKDIR_CODE
+exit 0
+" > batch_qsub_bottom.txt ;
+
+cat batch_qsub_top.txt cd_and_qsub_commands.txt batch_qsub_bottom.txt > beastrunner_batch_qsub.sh ;
+
+##--More flow control. Check to make sure batch_qsub.sh file was successfully created.
+if [ -f ./beastrunner_batch_qsub.sh ]; then
+    echo "INFO      | $(date) | Batch queue submission file ("beastrunner_batch_qsub.sh") successfully created. "
+else
+    echo "WARNING   | $(date) | Something went wrong. Batch queue submission file ("beastrunner_batch_qsub.sh") not created. Exiting... "
+    exit
+fi
+
+echo "INFO      | $(date) | Also copying configuration file to supercomputer..."
+scp ./beast_runner.cfg $MY_SSH_ACCOUNT:$MY_SC_DESTINATION ;
+
+echo "INFO      | $(date) | Also copying batch_qsub_file to supercomputer..."
+scp ./beastrunner_batch_qsub.sh $MY_SSH_ACCOUNT:$MY_SC_DESTINATION ;
+
+
+
+echo "INFO      | $(date) | Step #5: Submit all jobs to the queue. "
+##--This is the key: using ssh to connect to supercomputer and execute the "beastrunner_batch_qsub.sh"
+##--submission file created and moved into sc destination folder above. The batch qsub file
+##--loops through all run folders and submits all jobs/runs (sh scripts in each folder) to the 
+##--job queue. We do this (pass the commands to the supercomputer) using bash HERE document syntax 
+##--(as per examples on the following web page, URL: 
+##--https://www.cyberciti.biz/faq/linux-unix-osx-bsd-ssh-run-command-on-remote-machine-server/).
+
+ssh $MY_SSH_ACCOUNT << HERE
+cd $MY_SC_DESTINATION
+pwd
+chmod u+x ./beastrunner_batch_qsub.sh
+./beastrunner_batch_qsub.sh
+#
+exit
+HERE
+
+
+echo "INFO      | $(date) | Finished copying run folders to supercomputer and submitting BEAST jobs to queue!!"
+
+echo "INFO      | $(date) | Step #6: Clean up working directory by removing temporary files etc. "
+echo "INFO      | $(date) | Removing temporary files from local machine..."
+
+	for (( i=1; i<="$MY_NUM_INDEP_RUNS"; i++ )); do rm ./*_"$i".xml; done ;
+	if [[ -s ./batch_qsub_top.txt ]]; then rm ./batch_qsub_top.txt; fi
+	if [[ -s ./cd_and_qsub_commands.txt]]; then rm ./cd_and_qsub_commands.txt; fi
+	if [[ -s ./batch_qsub_bottom.txt ]]; then rm ./batch_qsub_bottom.txt; fi
+	if [[ -s ./beastrunner_batch_qsub.sh ]]; then rm ./beastrunner_batch_qsub.sh; fi
+	if [[ -s ./args.txt ]]; then rm ./args.txt ; fi 	## Remove arguments file generated when parsing the options.
+
+echo "INFO      | $(date) | Done." 
+echo "----------------------------------------------------------------------------------------------------------"
+echo ""
+
+## END DEBUG MODE
+if [[ "$MY_DEBUG_MODE_SWITCH" != "0" ]]; then set +xv; fi
+######
+
+##########################################################################################
+######################################### END ############################################
+
+}
+
+
+############################### BEGIN OPTIONS AND USAGE ##################################
+
+
+############ CREATE USAGE & HELP TEXTS
+USAGE="
+Usage: $(basename "$0") [OPTION]...
+
+ ${bold}Options:${reset}
+  -n   nRuns (def: $MY_NUM_INDEP_RUNS) number of independent BEAST runs per model (.xml file)
+  -w   walltime (def: $MY_SC_WALLTIME) wall time (run time; hours:minutes:seconds) passed to 
+       supercomputer 
+  -m   javaMem (def: $JAVA_MEM_ALLOC) memory, i.e. RAM, allocation for Java. Must be an
+       appropriate value for the node, with units in M=megabytes or G=gigabytes.  
+  -h   help text (also: -help) echo this help text and exit
+  -H   verbose help text (also: -Help) echo verbose help text and exit
+  -V   version (also: --version) echo version of this script and exit
+  -d   debug (def: 0, off; 1, on also: --debug) run function in Bash debug mode
+
+ ${bold}OVERVIEW${reset}
+ THIS SCRIPT automates conducting multiple runs of BEAST1 or BEAST2 (Drummond et al. 2012;
+ Bouckaert et al. 2014) XML input files on a remote supercomputing cluster that uses SLURM
+ resource management with PBS wrappers, or a PBS resource management system.
+	The code starts from a single working directory on the user's local machine, which 
+ contains one or multiple XML input files with extension '*run.xml' (where * is any set of 
+ alphanumeric characters separated possibly by underscores but no spaces). These files are 
+ identified and run through the BEASTRunner pipeline, which involves five steps, as follows: 
+ 1) set up the workspace; 2) copy each XML file n times to create n+1 separate XML run files; 
+ 3) make directories for 1 run per XML (nRuns) and create a shell script with the name 
+ 'beast_pbs.sh' that is specific to the input and can be used to submit job to supercomputer 
+ and move this PBS shell script into the corresponding folder; 4) create a PBS-format batch 
+ submission file and move it and all run folders to the desired working directory on the 
+ supercomputer; 5) execute the batch submission file on the supercomputer so that all jobs 
+ are submitted to the supercomputer queue.
+	Like other software programs such as BPP, G-PhoCS, and GARLI, some information that is 
+ used by BEASTRunner is fed to the program from an external configuration file, which is 
+ named 'beast_runner.cfg'. There are six entries that users can supply in this file. However, 
+ three of these are essential for running BEAST using the BEASTRunner script, including: 
+ ssh user account info, the path to the parent directory for BEAST runs on the supercomputer, 
+ and the user's email address. Users must fill this information in and save a new version of 
+ the .cfg file in the working directory on their local machine prior to calling the program. 
+ Only then can the user call the program by typing './BEASTRunner.sh' and pressing return.
+	It is assumed that BEAST1 (e.g. v1.8.3++) or BEAST2 (e.g. 2.4++) is installed on the
+ supercomputer, and that the user can provide absolute paths to the BEAST jar file in the 
+ cfg file. Last testing was conducted using BEAST v2.4.5. Check for BEAST2 updates at 
+ <http://BEAST2.org>. 
+
+ ${bold}Usage examples:${reset}
+ Call the program using PIrANHA, as follows:
+    piranha -f BEASTRunner                                Run with default settings
+    piranha -f BEASTRunner -n 10                          Change the number of runs to 10
+    piranha -f BEASTRunner -n 10 -w 24:00:00              Also edit run walltime
+    piranha -f BEASTRunner -n 10 -w 24:00:00 -m 2048M     Change memory (RAM) allocation to 2GB
+	
+ ${bold}CITATION${reset}
+ Bagley, J.C. 2020. PIrANHA v0.4a4. GitHub repository, Available at:
+	<https://github.com/justincbagley/piranha>.
+
+ ${bold}REFERENCES${reset}
+ Bouckaert, R., Heled, J., Künert, D., Vaughan, T.G., Wu, C.H., Xie, D., Suchard, M.A., Rambaut,
+	A., Drummond, A.J. 2014) BEAST2: a software platform for Bayesian evolutionary analysis. 
+	PLoS Computational Biology, 10, e1003537.
+ Drummond, A.J., Suchard, M.A., Xie, D., Rambaut, A. 2012. Bayesian phylogenetics with BEAUti 
+	and the BEAST 1.7. Molecular Biology and Evolution, 29, 1969-1973.
+
+ Created by Justin Bagley on Fri, 11 Nov 2016 14:33:51 -0600. 
+ Copyright (c) 2016-2021 Justin C. Bagley. All rights reserved.
+"
+
+VERBOSE_USAGE="Usage: $(basename "$0") [OPTION]...
+
+ ${bold}Options:${reset}
+  -n   nRuns (def: $MY_NUM_INDEP_RUNS) number of independent BEAST runs per model (.xml file)
+  -w   walltime (def: $MY_SC_WALLTIME) wall time (run time; hours:minutes:seconds) passed to 
+       supercomputer 
+  -m   javaMem (def: $JAVA_MEM_ALLOC) memory, i.e. RAM, allocation for Java. Must be an
+       appropriate value for the node, with units in M=megabytes or G=gigabytes.  
+  -h   help text (also: -help) echo this help text and exit
+  -H   verbose help text (also: -Help) echo verbose help text and exit
+  -V   version (also: --version) echo version of this script and exit
+  -d   debug (def: 0, off; 1, on also: --debug) run function in Bash debug mode
+
+ ${bold}OVERVIEW${reset}
+ THIS SCRIPT automates conducting multiple runs of BEAST1 or BEAST2 (Drummond et al. 2012;
+ Bouckaert et al. 2014) XML input files on a remote supercomputing cluster that uses SLURM
+ resource management with PBS wrappers, or a PBS resource management system.
+	The code starts from a single working directory on the user's local machine, which 
+ contains one or multiple XML input files with extension '*run.xml' (where * is any set of 
+ alphanumeric characters separated possibly by underscores but no spaces). These files are 
+ identified and run through the BEASTRunner pipeline, which involves five steps, as follows: 
+ 1) set up the workspace; 2) copy each XML file n times to create n+1 separate XML run files; 
+ 3) make directories for 1 run per XML (nRuns) and create a shell script with the name 
+ 'beast_pbs.sh' that is specific to the input and can be used to submit job to supercomputer 
+ and move this PBS shell script into the corresponding folder; 4) create a PBS-format batch 
+ submission file and move it and all run folders to the desired working directory on the 
+ supercomputer; 5) execute the batch submission file on the supercomputer so that all jobs 
+ are submitted to the supercomputer queue.
+	Like other software programs such as BPP, G-PhoCS, and GARLI, some information that is 
+ used by BEASTRunner is fed to the program from an external configuration file, which is 
+ named 'beast_runner.cfg'. There are six entries that users can supply in this file. However, 
+ three of these are essential for running BEAST using the BEASTRunner script, including: 
+ ssh user account info, the path to the parent directory for BEAST runs on the supercomputer, 
+ and the user's email address. Users must fill this information in and save a new version of 
+ the .cfg file in the working directory on their local machine prior to calling the program. 
+ Only then can the user call the program by typing './BEASTRunner.sh' and pressing return.
+	It is assumed that BEAST1 (e.g. v1.8.3++) or BEAST2 (e.g. 2.4++) is installed on the
+ supercomputer, and that the user can provide absolute paths to the BEAST jar file in the 
+ cfg file. Last testing was conducted using BEAST v2.4.5. Check for BEAST2 updates at 
+ <http://BEAST2.org>. 
+
+ ${bold}DETAILS${reset}
+ The -n flag sets the number of independent BEAST runs to be submitted to the supercomputer
+ for each model specified in a .xml file in the current working directory. The default is 5
+ runs.
+
+ The -w flag passes the expected amount of time for each BEAST run to the supercomputer
+ management software, in hours:minutes:seconds (00:00:00) format. If your supercomputer does 
+ not use this format, or does not have a walltime requirement, then you will need to modify 
+ the shell scripts for each run and re-run them without specifying a walltime.
+
+ The -m flag passes the amount of RAM memory to be allocated to beast.jar/Java during each
+ BEAST run. The default (5120 megabytes, or ~5 gigabytes) is around five times the typical
+ default value of 1024M (~1 GB). Suggested values in MB units: 1024M, 2048M, 3072M, 4096M, 
+ or 5120M, or in terms of GB units: 1G, 2G, 3G, 4G, 5G.
+ 
+ ${bold}Usage examples:${reset}
+ Call the program using PIrANHA, as follows:
+    piranha -f BEASTRunner                                Run with default settings
+    piranha -f BEASTRunner -n 10                          Change the number of runs to 10
+    piranha -f BEASTRunner -n 10 -w 24:00:00              Also edit run walltime
+    piranha -f BEASTRunner -n 10 -w 24:00:00 -m 2048M     Change memory (RAM) allocation to 2GB
+	
+ ${bold}CITATION${reset}
+ Bagley, J.C. 2020. PIrANHA v0.4a4. GitHub repository, Available at:
+	<https://github.com/justincbagley/piranha>.
+
+ ${bold}REFERENCES${reset}
+ Bouckaert R, Heled J, Künert D, Vaughan TG, Wu CH, Xie D, Suchard MA, Rambaut A, Drummond 
+ 	AJ (2014) BEAST2: a software platform for Bayesian evolutionary analysis. PLoS 
+ 	Computational Biology, 10, e1003537.
+ Drummond AJ, Suchard MA, Xie D, Rambaut A (2012) Bayesian phylogenetics with BEAUti and 
+ 	the BEAST 1.7. Molecular Biology and Evolution, 29, 1969-1973.
+
+ Created by Justin Bagley on Fri, 11 Nov 2016 14:33:51 -0600. 
+ Copyright (c) 2016-2021 Justin C. Bagley. All rights reserved.
+"
+
+#if [[ -z "$*" ]]; then
+#	echo "$USAGE"
+#	exit
+#fi
+
+if [[ "$1" == "-h" ]] || [[ "$1" == "-help" ]]; then
+	echo "$USAGE"
+	exit
+fi
+
+if [[ "$1" == "-H" ]] || [[ "$1" == "-Help" ]]; then
+	echo "$VERBOSE_USAGE"
+	exit
+fi
+
+if [[ "$1" == "-V" ]] || [[ "$1" == "--version" ]]; then
+	echo "$(basename "$0") $VERSION";
+	exit
+fi
+
+############ CHECK ARGUMENTS
+	# echo "$@"; echo "$#"; echo "$1" 
+	# for i in "$@"; do
+	# 	echo "$i";
+	# done
+	# MY_ARGS="$(echo "$@" | perl -pe $'s/\ /\n/')"
+	# echo "$MY_ARGS"
+
+
+############ CAPTURE ARGUMENTS, SEND TO FILE FOR PARSING
+	if [[ -s ./args.tmp ]]; then rm ./args.tmp ; fi ;
+	if [[ -s ./args.txt ]]; then rm ./args.txt ; fi ;
+
+	ALL_MY_ARGUMENTS="$(echo "$@")"
+	echo "$ALL_MY_ARGUMENTS" > ./args.txt
+	perl -p -i -e $'s/\ /\n/g' ./args.txt
+	#wc -l ./args.txt | perl -pe 's/\.\/args\.txt.*//g' | perl -pe 's/\ //g'
+
+
+############ MANUALLY PARSE THE OPTIONS FROM ARGS
+
+### SET OPTIONS TO DEFAULT VALUES, EXCEPT WHERE VALUES WERE READ IN FROM USER ARGS
+	if [[  "$(grep -h '\-n' ./args.txt | wc -l | perl -pe 's/\ //g')" = "0" ]]; then
+		MY_NUM_INDEP_RUNS=5 ;
+	else 
+		MY_ARG="$(grep -h '\-n' ./args.txt | perl -pe 's/\-n//g')";
+		MY_NUM_INDEP_RUNS="$MY_ARG" ;
+	fi
+#
+	if [[  "$(grep -h '\-w' ./args.txt | wc -l | perl -pe 's/\ //g')" = "0" ]]; then
+		MY_SC_WALLTIME=48:00:00 ;
+	else 
+		MY_ARG="$(grep -h '\-w' ./args.txt | perl -pe 's/\-w//g')";
+		MY_SC_WALLTIME="$MY_ARG" ;
+	fi
+#
+	if [[  "$(grep -h '\-m' ./args.txt | wc -l | perl -pe 's/\ //g')" = "0" ]]; then
+		JAVA_MEM_ALLOC=5120M ;
+	else 
+		MY_ARG="$(grep -h '\-m' ./args.txt | perl -pe 's/\-m//g')";
+		JAVA_MEM_ALLOC="$MY_ARG" ;
+	fi
+#
+	if [[  "$(grep -h '\-d' ./args.txt | wc -l | perl -pe 's/\ //g')" = "0" ]]; then
+		MY_DEBUG_MODE_SWITCH=0 ;
+	else 
+		MY_ARG="$(grep -h '\-d' ./args.txt | perl -pe 's/\-d//g' | perl -pe 's/\ //g')";
+		MY_DEBUG_MODE_SWITCH="$MY_ARG" ;
+	fi
+	if [[  "$(grep -h '\-\-debug' ./args.txt | wc -l | perl -pe 's/\ //g')" = "0" ]]; then
+		MY_DEBUG_MODE_SWITCH=0 ;
+	else 
+		MY_DEBUG_MODE_SWITCH=1 ;
+	fi
+
+
+# ############ PARSE THE OPTIONS
+# while getopts 'n:w:m:' opt ; do
+#   case $opt in
+# ## BEASTRunner options:
+#     n) MY_NUM_INDEP_RUNS=$OPTARG ;;
+#     w) MY_SC_WALLTIME=$OPTARG ;;
+#     m) JAVA_MEM_ALLOC=$OPTARG ;;
+# ## Missing and illegal options:
+#     :) printf "Missing argument for -%s\n" "$OPTARG" >&2
+#        echo "$USAGE" >&2
+#        exit 1 ;;
+#    \?) printf "Illegal option: -%s\n" "$OPTARG" >&2
+#        echo "$USAGE" >&2
+#        exit 1 ;;
+#   esac
+# done
+
+
+################################ END OPTIONS AND USAGE ###################################
+
+
+# ############# ############# #############
+# ##       TIME TO RUN THE SCRIPT        ##
+# ##                                     ##
+# ## You shouldn't need to edit anything ##
+# ## beneath this line                   ##
+# ##                                     ##
+# ############# ############# #############
+
+# Trap bad exits with your cleanup function
+trap trapCleanup EXIT INT TERM
+
+# Set IFS to preferred implementation
+IFS=$'\n\t'
+
+# Exit on error. Append '||true' when you run the script if you expect an error.
+set -o errexit
+
+# Run in debug mode, if set
+if ${debug}; then set -x ; fi
+
+# Exit on empty variable
+if ${strict}; then set -o nounset ; fi
+
+# Bash will remember & return the highest exitcode in a chain of pipes.
+# This way you can catch the error in case mysqldump fails in `mysqldump |gzip`, for example.
+set -o pipefail
+
+# Invoke the checkDependenices function to test for Bash packages.  Uncomment if needed.
+# checkDependencies
+
+# Run the script
+BEASTRunner
+
+# Exit cleanly
+safeExit

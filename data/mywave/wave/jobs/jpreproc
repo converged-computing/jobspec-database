@@ -1,0 +1,32 @@
+#!/bin/sh
+#
+#==>  WAM pre-processing preproc
+#
+#     Arno Behrens (June 2011)
+#
+#PBS -S /bin/sh
+#PBS -N preproc
+#PBS -j oe
+#PBS -l select=1:ncpus=1
+#PBS -l place=scatter
+#PBS -q ksd-test
+#
+set +k
+WAMDIR=/data/behrens/mywave
+WORK=/data/behrens/mywave/workdir
+cd ${WORK}/tempsg
+cp ${WAMDIR}/const/TOPOCAT.DAT .
+cp ${WAMDIR}/const/Preproc_User .
+cp ${WAMDIR}/abs/preproc preproc.exe
+#
+/opt/scali/bin/mpirun -np 1 -machinefile ${PBS_NODEFILE} preproc.exe
+#
+mv Preproc_Prot ${WAMDIR}/dayfiles/preproc_prot_c
+mv Grid_info_SWAMP ../work
+rm Preproc_User preproc.exe TOPOCAT.DAT
+#
+# ===================================================================
+#  GRID FILES HAVE BEEN CREATED AND SAVED.
+#  END OF JOB PREPROC.
+# ===================================================================
+#

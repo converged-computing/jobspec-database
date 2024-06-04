@@ -1,0 +1,23 @@
+#!/bin/bash
+
+#PBS -l nodes=1:ppn=12
+#PBS -l vmem=94gb
+#PBS -l walltime=6:00:00
+#PBS -j oe
+#PBS -M briochemc@gmail.com
+#PBS -m abe
+#PBS -e $HOME/Projects/FastBGCParameterOptimization/cluster_output/error.txt
+#PBS -o $HOME/Projects/FastBGCParameterOptimization/cluster_output/output.txt
+
+# Load the julia module
+module load julia/1.1.0
+
+# Go to the root folder on katana
+cd $HOME/Projects/FastBGCParameterOptimization
+
+# Set DataDeps environment variable to download without asking
+DATADEPS_ALWAYS_ACCEPT = true
+
+# Run it!
+julia src/run_profile_D2q_method.jl
+

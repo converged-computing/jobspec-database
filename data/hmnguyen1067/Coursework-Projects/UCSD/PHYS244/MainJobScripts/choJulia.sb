@@ -1,0 +1,27 @@
+#!/bin/bash
+#SBATCH --job-name="choJL"
+#SBATCH --output="choJL.out"
+#SBATCH --partition=shared
+#SBATCH --nodes=1
+#SBATCH --ntasks-per-node=1
+#SBATCH --cpus-per-task=16
+#SBATCH --mem=32G
+#SBATCH --export=ALL
+#SBATCH --account=csd453
+#SBATCH -t 03:00:00
+
+# Julia environment
+module purge
+module load slurm
+module load cpu
+module load gcc
+module load julia
+module load intel-mkl
+
+#SET the number of Julia threads
+export JULIA_NUM_THREADS=16
+
+#Run the Julia job
+srun hostname -s > hostfile
+sleep 5
+julia --machine-file ./hostfile ./choFinalJL.jl

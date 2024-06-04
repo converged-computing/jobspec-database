@@ -1,0 +1,31 @@
+#!/bin/bash
+#PBS -j eo
+#PBS -r n
+#PBS -l nodes=1:ppn=1
+#PBS -l walltime=96:00:00
+hostname
+date
+
+module add Compilers/Intel/psxe_2016.4
+module add MPI/intel/5.1.3.258/intel
+
+export OMP_NUM_THREADS=1 
+export LAMMPS_POTENTIALS=~/lammps/_res
+
+if [ -d ~/lammps/$PBS_JOBNAME ]; then
+  export RUN_DIR=~/lammps/$PBS_JOBNAME
+else
+  export RUN_DIR=~/lammps
+fi
+
+cd ${RUN_DIR}
+
+numprocs=$(($PBS_NUM_PPN * $PBS_NUM_NODES))
+if [ $PBS_NUM_PPN -eq 1 ]; then
+  /home/AMG/lammps/lmp_intel_cpu_intelmpi -in $PBS_JOBNAME.lam -log $PBS_JOBNAME.out >>$PBS_JOBNAME.stdout
+else
+  echo "numprocs " $numprocs >>~/lammps/$PBS_JOBNAME.stdout
+  mpirun -np $numprocs /home/AMG/lammps/lmp_intel_cpu_intelmpi -in $PBS_JOBNAME.lam -log $PBS_JOBNAME.out >>$PBS_JOBNAME.stdout
+fi
+
+date

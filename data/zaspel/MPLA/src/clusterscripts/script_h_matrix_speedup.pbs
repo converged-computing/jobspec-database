@@ -1,0 +1,18 @@
+#!/bin/bash
+#PBS -A csc238
+#PBS -N h_matrix_speedup
+#PBS -j oe
+#PBS -l walltime=00:15:00
+
+module swap PrgEnv-pgi PrgEnv-gnu
+module load cudatoolkit
+module load gsl
+module load atlas
+export MPICH_RDMA_ENABLED_CUDA=1
+export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:/opt/cray/mpt/7.6.3/gni/mpich-gnu/5.1/lib/pkgconfig
+export LD_LIBRARY_PATH=/opt/gcc/4.9.3/snos/lib64:/lib:/lustre/atlas/proj-shared/csc238/MPLA/src:/lustre/atlas/proj-shared/csc238/hmglib/src:$GSL_DIR/lib:/lustre/atlas/proj-shared/csc238/magma/lib:/lustre/atlas/proj-shared/csc238/openblas/lib
+
+cd /lustre/atlas/proj-shared/csc238/MPLA/src
+
+aprun -n $PBS_ARRAYID -N 1 ./h_matrix_test $[2**20] 2 1.0e-5 0 100 8 512 4 1.0 $[2**24] $[2**20]
+

@@ -1,0 +1,74 @@
+#!/bin/bash
+#----------------------------------------------------------
+# Job name
+#PBS -N sbmmp2100
+# queue select
+#PBS -q workq
+# Name of stdout output file (default)
+#PBS -o md100ns.out 
+# stdout output file
+#PBS -j oe
+#PBS -l walltime=720:00:00 
+#----------------------------------------------------------
+
+# Enter the name of the GPU host
+GPUHOST=kuhpcgn2
+export num_proc=32
+
+
+# Change these to something relevant
+export MDNAME=md100ns
+export MDP_FILE=md.mdp
+export GRO_FILE=npt.gro
+export CPT_FILE=npt.cpt
+export TOPOL_FILE=topol.top
+export NDX_FILE=index.ndx
+
+#Start time
+start=`date +%s.%N`
+# Change to submission directory
+cd $PBS_O_WORKDIR
+#Load basic OHPC tools
+module load ohpc
+#Load cuda
+module load cuda
+#Load singularity
+module load singularity
+export SIFPATH=$HOME/.config/sifdir
+export SIFIMG=gromacs_2022.3.sif
+
+echo "Starting"
+echo '---------------------------------------------'
+
+SSHBIN=/usr/bin/ssh
+
+
+export OMP_NUM_THREADS=$num_proc
+export MPI_NUM_PROCS=1
+
+#Preprocessing
+$SSHBIN $GPUHOST LD_LIBRARY_PATH="" singularity run --nv -B ${PWD}:/host_pwd --pwd /host_pwd $SIFPATH/$SIFIMG gmx grompp -f ${MDP_FILE} -c ${GRO_FILE} -t ${CPT_FILE} -r ${GRO_FILE} -p ${TOPOL_FILE} -n ${NDX_FILE} -o ${MDNAME}.tpr -maxwarn 3
+
+#Actual MD Dynamics: 
+$SSHBIN $GPUHOST LD_LIBRARY_PATH="" singularity run --nv -B ${PWD}:/host_pwd --pwd /host_pwd $SIFPATH/$SIFIMG gmx mdrun -ntmpi $MPI_NUM_PROCS -nb gpu -pin on -v -ntomp $OMP_NUM_THREADS -deffnm $MDNAME
+
+
+#End time
+end=`date +%s.%N`
+
+echo "OMP_NUM_THREADS= "$OMP_NUM_THREADS", MPI_NUM_PROCS= "$MPI_NUM_PROCS
+export RUNTIME=$( echo "$end - $start" | bc -l )
+echo '---------------------------------------------'
+echo "Runtime: "$RUNTIME" sec"
+echo '---------------------------------------------'
+
+source ${PBS_O_HOME}/.config/telegram/telegram.conf
+
+LOGIN_NODE=kuhpchn
+SSHBIN=/usr/bin/ssh
+URL="https://api.telegram.org/bot${TOKEN}/sendMessage"
+# Generate the telegram message  text
+TEXT="${bell} Hello Arka, PBS Job ${PBS_JOBNAME} finished @ ${HOSTNAME}:${PBS_O_WORKDIR}. Job ID: ${PBS_JOBID}"
+CMD='curl -s --max-time 10 --retry 5 --retry-delay 2 --retry-max-time 10  -d '\""chat_id=${CHATID}&text=${TEXT}&disable_web_page_preview=true&parse_mode=markdown"\"" ${URL}"
+$SSHBIN $LOGIN_NODE $CMD
+
