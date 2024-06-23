@@ -1,0 +1,36 @@
+{
+    "application": "Slurm",
+    "details": {
+        "software": [
+            "GCC/7.3.0-2.30",
+            "icc/2018.3.222-GCC-7.3.0-2.30",
+            "intel/2018b",
+            "OpenMPI/3.1.1",
+            "impi/2018.3.222",
+            "Python/3.6.6"
+        ],
+        "resources": {
+            "nodes": 1,
+            "cores_per_node": "$SLURM_CPUS_ON_NODE",
+            "gpus_per_node": "$SLURM_GPUS_ON_NODE",
+            "memory_per_node": "3000MB (default)",
+            "partition": "WORKQ",
+            "time": "12:00:00",
+            "account": "ie-idi"
+        },
+        "environment": {
+            "WORKDIR": "$SLURM_SUBMIT_DIR",
+            "CUDA_VISIBLE_DEVICES": "$CUDA_VISIBLE_DEVICES",
+            "refiner_id": "$1"
+        },
+        "script_files": {
+            "duke": "mat_dataset_refiner.py",
+            "st_olavs": "patient_dataset_refiner.py"
+        },
+        "other": {
+            "job_name": "stianrh_AMD_Refiner",
+            "output_file": "terminal_output/refiner_log.out",
+            "virtual_env": ".env/neural_nets"
+        }
+    }
+}

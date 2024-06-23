@@ -1,0 +1,30 @@
+{
+    "application": "SLURM",
+    "details": {
+        "software": [
+            "dask",
+            "python",
+            "ruche",
+            "PDI",
+            "kokkos"
+        ],
+        "resources": {
+            "nodes": "SLURM_NNODES",
+            "cpus_per_task": "SLURM_CPUS_PER_TASK",
+            "threads_per_core": 1,
+            "partition": "cpu_short",
+            "environment_files": [
+                "${BASE_DIR}/envs/ruche/cpu/${SIMU_SIZE}/modules.env",
+                "deisa/bin/activate",
+                "pdi/share/pdi/env.sh"
+            ],
+            "working_directory": "${WORKING_DIR}"
+        },
+        "commands": [
+            "dask scheduler --scheduler-file=${SCHEFILE}",
+            "dask worker --local-directory /tmp --scheduler-file=${SCHEFILE}",
+            "python -O in-situ/fft_updated.py",
+            "build/main ${BASE_DIR}/envs/ruche/cpu/${SIMU_SIZE}/setup.ini ${BASE_DIR}/envs/ruche/cpu/${SIMU_SIZE}/io_deisa.yml --kokkos-map-device-id-by=mpi_rank"
+        ]
+    }
+}

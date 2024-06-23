@@ -1,0 +1,36 @@
+{
+    "application": "SLURM",
+    "details": {
+        "job_name": "vector-validation",
+        "time_limit": "00:15:00",
+        "memory_per_cpu": "2625 MB",
+        "partition": "batch",
+        "modules": [
+            "FFTW/3.3.8-gompi-2020b",
+            "HDF5/1.10.7-gompi-2020b"
+        ],
+        "executable": "flups_validation_nb",
+        "mpi_library": "OpenMPI",
+        "libraries": [
+            "FFTW",
+            "HDF5"
+        ],
+        "environment_variables": [
+            "OMP_NUM_THREADS",
+            "HOME_FLUPS",
+            "EXEC_FLUPS",
+            "SCRATCH"
+        ],
+        "commands": [
+            "module purge",
+            "module load FFTW/3.3.8-gompi-2020b HDF5/1.10.7-gompi-2020b",
+            "module list",
+            "mkdir -p $SCRATCH/data",
+            "mkdir -p $SCRATCH/prof",
+            "cp $HOME_FLUPS/$EXEC_FLUPS $SCRATCH",
+            "cd $SCRATCH",
+            "srun --label valgrind --leak-check=full --track-origins=yes ./flups",
+            "mpirun ${EXEC_FLUPS} -np ${MY_NX} ${MY_NY} ${MY_NZ} -res ${MY_SIZEX} ${MY_SIZEY} ${MY_SIZEZ} -nres ${MY_NRES} -ns ${MY_NSOLVE} -k ${MY_KERNEL} -c 0 -bc ${MY_BC}"
+        ]
+    }
+}

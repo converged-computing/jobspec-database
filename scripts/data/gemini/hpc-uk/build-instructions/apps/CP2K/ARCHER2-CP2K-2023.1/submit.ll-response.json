@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n\"application\": \"CP2K\",\n\"software_requirements\": {\n\"CP2K\": \"2023.1\",\n\"libint\": \"2.6.0 cp2k-lmax-4\",\n\"libxc\": \"6.1.0\",\n\"ELPA\": \"2022.11.001\",\n\"PLUMED\": \"2.8.2\"\n},\n\"resource_requirements\": {\n\"modules\": [\n\"PrgEnv-gnu\",\n\"cray-fftw\",\n\"cray-python\",\n\"mkl\"\n],\n\"environment_variables\": {\n\"OMP_NUM_THREADS\": \"1\",\n\"FCFLAGS\": \"-fallow-argument-mismatch\",\n\"PRFX\": \"${HOME/home/work}/apps\",\n\"CP2K_LABEL\": \"cp2k\",\n\"CP2K_NAME\": \"cp2k-2023.1\",\n\"CP2K_BASE\": \"${PRFX}/cp2k\",\n\"CP2K_ROOT\": \"${CP2K_BASE}/cp2k-2023.1\"\n},\n\"build_instructions\": [\n\"mkdir -p ${CP2K_BASE}\",\n\"cd ${CP2K_BASE}\",\n\"rm -rf ${CP2K_NAME}\",\n\"mkdir tmp\",\n\"cd tmp\",\n\"wget -q https://github.com/${CP2K_LABEL}/${CP2K_LABEL}/releases/download/v${CP2K_VERSION}/${CP2K_NAME}.tar.bz2\",\n\"bunzip2 ${CP2K_NAME}.tar.bz2\",\n\"tar xf ${CP2K_NAME}.tar\",\n\"rm ${CP2K_NAME}.tar\",\n\"mv ${CP2K_NAME} ../${CP2K_NAME}\",\n\"cd ..\",\n\"rmdir tmp\",\n\"mkdir ${CP2K_ROOT}/libs\",\n\"cd ${CP2K_BASE}\",\n\"if [ -d \\\"${CP2K_BASE}/build-instructions\\\" ]; then\",\n\"  cp ${CP2K_BASE}/build-instructions/apps/CP2K/ARCHER2-CP2K-${CP2K_VERSION}/ARCHER2.psmp ${CP2K_ROOT}/arch/\",\n\"else\",\n\"  git clone https://github.com/hpc-uk/build-instructions.git\",\n\"  cp ${CP2K_BASE}/build-instructions/apps/CP2K/ARCHER2-CP2K-${CP2K_VERSION}/ARCHER2.psmp ${CP2K_ROOT}/arch/\",\n\"  rm -rf build-instructions\",\n\"fi\",\n\"sed -i \\\"s:<CP2K_ROOT>:${CP2K_ROOT}:\\\" ${CP2K_ROOT}/arch/ARCHER2.psmp\",\n\"sed -i \\\"s:<LIBINT_VERSION>:${LIBINT_VERSION}:\\\" ${CP2K_ROOT}/arch/ARCHER2.psmp\",\n\"sed -i \\\"s:<LIBINT_VERSION_SUFFIX>:${LIBINT_VERSION_SUFFIX}:\\\" ${CP2K_ROOT}/arch/ARCHER2.psmp\",\n\"sed -i \\\"s:<LIBXC_VERSION>:${LIBXC_VERSION}:\\\" ${CP2K_ROOT}/arch/ARCHER2.psmp\",\n\"sed -i \\\"s:<LIBXSMM_VERSION>:${LIBXSMM_VERSION}:\\\" ${CP2K_ROOT}/arch/ARCHER2.psmp\",\n\"sed -i \\\"s:<ELPA_VERSION>:${ELPA_VERSION}:\\\" ${CP2K_ROOT}/arch/ARCHER2.psmp\",\n\"sed -i \\\"s:<PLUMED_VERSION>:${PLUMED_VERSION}:\\\" ${CP2K_ROOT}/arch/ARCHER2.psmp\",\n\"cd ${CP2K_ROOT}/libs\",\n\"LIBINT_LABEL=libint\",\n\"LIBINT_NAME=${LIBINT_LABEL}-${LIBINT_VERSION}-${LIBINT_VERSION_SUFFIX}\",\n\"LIBINT_ARCHIVE=${LIBINT_LABEL}-v${LIBINT_VERSION}-${LIBINT_VERSION_SUFFIX}\",\n\"LIBINT_ROOT=${CP2K_ROOT}/libs/${LIBINT_LABEL}\",\n\"rm -rf ${LIBINT_ROOT}\",\n\"mkdir -p ${LIBINT_ROOT}\",\n\"cd ${LIBINT_ROOT}\",\n\"mkdir ${LIBINT_NAME}\",\n\"cd ${LIBINT_NAME}\",\n\"wget -q https://github.com/${CP2K_LABEL}/${LIBINT_LABEL}-${CP2K_LABEL}/releases/download/v${LIBINT_VERSION}/${LIBINT_ARCHIVE}.tgz\",\n\"tar zxf ${LIBINT_ARCHIVE}.tgz\",\n\"rm ${LIBINT_ARCHIVE}.tgz\",\n\"mv ${LIBINT_ARCHIVE} ${LIBINT_VERSION_SUFFIX}\",\n\"cd ${LIBINT_VERSION_SUFFIX}\",\n\"CC=cc CXX=CC FC=ftn LDFLAGS=-dynamic ./configure \\\\\",\n\"    --enable-fortran --with-cxx-optflags=-O \\\\\",\n\"    --prefix=${LIBINT_ROOT}/${LIBINT_VERSION}/${LIBINT_VERSION_SUFFIX}\",\n\"make -j ${SLURM_NTASKS}\",\n\"make -j ${SLURM_NTASKS} install\",\n\"make -j ${SLURM_NTASKS} clean\",\n\"cd ${CP2K_ROOT}/libs\",\n\"LIBXC_LABEL=libxc\",\n\"LIBXC_NAME=${LIBXC_LABEL}-${LIBXC_VERSION}\",\n\"LIBXC_ROOT=${CP2K_ROOT}/libs/${LIBXC_LABEL}\",\n\"rm -rf ${LIBXC_ROOT}\",\n\"mkdir -p ${LIBXC_ROOT}\",\n\"cd ${LIBXC_ROOT}\",\n\"rm -rf ${LIBXC_NAME}\",\n\"wget -q https://gitlab.com/${LIBXC_LABEL}/${LIBXC_LABEL}/-/archive/${LIBXC_VERSION}/${LIBXC_NAME}.tar.gz\",\n\"tar zxf ${LIBXC_NAME}.tar.gz\",\n\"rm ${LIBXC_NAME}.tar.gz\",\n\"cd ${LIBXC_NAME}\",\n\"autoreconf -i\",\n\"CC=cc CXX=CC FC=ftn ./configure --prefix=${LIBXC_ROOT}/${LIBXC_VERSION}\",\n\"make -j ${SLURM_NTASKS}\",\n\"make -j ${SLURM_NTASKS} install\",\n\"make -j ${SLURM_NTASKS} clean\",\n\"cd ${CP2K_ROOT}/libs\",\n\"ELPA_LABEL=elpa\",\n\"ELPA_NAME=${ELPA_LABEL}-${ELPA_VERSION}\",\n\"ELPA_ROOT=${CP2K_ROOT}/libs/${ELPA_LABEL}\",\n\"rm -rf ${ELPA_ROOT}\",\n\"mkdir -p ${ELPA_ROOT}\",\n\"cd ${ELPA_ROOT}\",\n\"wget -q https://elpa.mpcdf.mpg.de/software/tarball-archive/Releases/${ELPA_VERSION}/${ELPA_NAME}.tar.gz\",\n\"tar zxf ${ELPA_NAME}.tar.gz\",\n\"rm ${ELPA_NAME}.tar.gz\",\n\"cd ${ELPA_ROOT}/${ELPA_NAME}\",\n\"mkdir build-serial\",\n\"cd build-serial\",\n\"export LIBS=\\\"-L${MKLROOT}/lib/intel64 -lmkl_scalapack_lp64 -Wl,--no-as-needed -lmkl_gf_lp64 -lmkl_gnu_thread -lmkl_core -lmkl_blacs_intelmpi_lp64 -lgomp -lpthread -lm -ldl\\\"\",\n\"CC=cc CXX=CC FC=ftn LDFLAGS=-dynamic ../configure       \\\\\",\n\"  --enable-openmp=no --enable-shared=no \\\\\",\n\"  --disable-avx512 --disable-detect-mpi-launcher \\\\\",\n\"  --without-threading-support-check-during-build \\\\\",\n\"  --prefix=${ELPA_ROOT}/${ELPA_VERSION}/serial\",\n\"make -j ${SLURM_NTASKS}\",\n\"make -j ${SLURM_NTASKS} install\",\n\"make -j ${SLURM_NTASKS} clean\",\n\"cd ${ELPA_ROOT}/${ELPA_NAME}\",\n\"mkdir build-openmp\",\n\"cd build-openmp\",\n\"export LIBS=\\\"-L${MKLROOT}/lib/intel64 -lmkl_scalapack_lp64 -Wl,--no-as-needed -lmkl_gf_lp64 -lmkl_gnu_thread -lmkl_core -lmkl_blacs_intelmpi_lp64 -lgomp -lpthread -lm -ldl\\\"\",\n\"CC=cc CXX=CC FC=ftn LDFLAGS=-dynamic ../configure \\\\\",\n\"  --enable-openmp=yes --enable-shared=no --enable-allow-thread-limiting \\\\\",\n\"  --disable-avx512 --disable-detect-mpi-launcher \\\\\",\n\"  --without-threading-support-check-during-build \\\\\",\n\"  --prefix=${ELPA_ROOT}/${ELPA_VERSION}/openmp\",\n\"make -j ${SLURM_NTASKS}\",\n\"make -j ${SLURM_NTASKS} install\",\n\"make -j ${SLURM_NTASKS} clean\",\n\"cd ${CP2K_ROOT}/libs\",\n\"PLUMED_LABEL=plumed\",\n\"PLUMED_NAME=${PLUMED_LABEL}-${PLUMED_VERSION}\",\n\"PLUMED_ROOT=${CP2K_ROOT}/libs/${PLUMED_LABEL}\",\n\"rm -rf ${PLUMED_ROOT}\",\n\"mkdir -p ${PLUMED_ROOT}\",\n\"cd ${PLUMED_ROOT}\",\n\"wget -q https://github.com/${PLUMED_LABEL}/${PLUMED_LABEL}2/archive/refs/tags/v${PLUMED_VERSION}.tar.gz\",\n\"tar zxf v${PLUMED_VERSION}.tar.gz\",\n\"rm v${PLUMED_VERSION}.tar.gz\",\n\"mv ${PLUMED_LABEL}2-${PLUMED_VERSION} ${PLUMED_NAME}\",\n\"cd ${PLUMED_NAME}\",\n\"CC=cc CXX=CC FC=ftn MPIEXEC=srun ./configure \\\\\",\n\"  --disable-openmp --disable-shared --disable-dlopen \\\\\",\n\"  --prefix=${PLUMED_ROOT}/${PLUMED_VERSION}\",\n\"make -j ${SLURM_NTASKS}\",\n\"make -j ${SLURM_NTASKS} install\",\n\"make -j ${SLURM_NTASKS} clean\",\n\"cd ${CP2K_ROOT}\",\n\"make -j ${SLURM_NTASKS} ARCH=ARCHER2 VERSION=psmp\",\n\"make -j ${SLURM_NTASKS} clean ARCH=ARCHER2 VERSION=psmp\"\n]\n}\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 2,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 2766,
+        "candidates_token_count": 2529,
+        "total_token_count": 5295,
+        "cached_content_token_count": 0
+    }
+}

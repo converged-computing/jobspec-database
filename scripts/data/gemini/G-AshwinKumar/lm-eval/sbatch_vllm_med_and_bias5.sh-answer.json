@@ -1,0 +1,32 @@
+{
+    "application": "SLURM",
+    "details": {
+        "job_name": "eval",
+        "stdout_output_file": "slurm_output/out.txt",
+        "stderr_output_file": "slurm_output/err.txt",
+        "gpu_request": "1 A100",
+        "exclusive_access": true,
+        "cores_per_task": 32,
+        "run_time": "02:00:00",
+        "memory_per_node": "247G",
+        "model_name": "BioMedGPT-LM-7B",
+        "model_path": "/mnt/lustre/scratch/nlsas/home/res/cns10/SHARE/Models_Trained/llm/BioMedGPT-LM-7B",
+        "singularity_version": "3.9.7",
+        "singularity_image": "/mnt/lustre/scratch/nlsas/home/res/cns10/SHARE/Singularity/lm_eval_harness042_vllm032_cuda118.sif",
+        "hf_datasets_cache": "/mnt/lustre/scratch/nlsas/home/res/cns10/SHARE/user_caches/hf_cache_",
+        "lm_eval_harness_arguments": {
+            "model": "vllm",
+            "model_args": {
+                "pretrained": "/mnt/lustre/scratch/nlsas/home/res/cns10/SHARE/Models_Trained/llm/BioMedGPT-LM-7B",
+                "tensor_parallel_size": 2,
+                "trust_remote_code": true,
+                "dtype": "bfloat16",
+                "gpu_memory_utilization": 0.6
+            },
+            "tasks": "bbq",
+            "device": "cuda",
+            "batch_size": "auto:4",
+            "num_fewshot": 5
+        }
+    }
+}

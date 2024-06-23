@@ -1,0 +1,51 @@
+{
+    "application": "robomimic",
+    "details": {
+        "environment": {
+            "conda": {
+                "base": "/data/home/sodhani/miniconda3",
+                "envs": [
+                    "hwm_tdmpc",
+                    "mujoco"
+                ]
+            },
+            "libraries": {
+                "mujoco": "/data/home/prajj/.mujoco/mujoco210/bin"
+            },
+            "python": "3",
+            "script": "robomimic/scripts/train.py"
+        },
+        "resources": {
+            "compute": {
+                "cpus": 16,
+                "gpus": 1
+            },
+            "storage": {
+                "dataset": "/checkpoints/prajj/robomimic/${DATASET_NAME}/${DATA_TYPE}/${QUALITY}_${MODE}.hdf5",
+                "output": "/checkpoints/prajj/robomimic/output/${ALGO_NAME}/${JOB_NAME}/${SLURM_ARRAY_TASK_ID}/"
+            }
+        },
+        "parameters": {
+            "algo": "dt",
+            "dataset": "can",
+            "mode": "dense",
+            "quality": "low_dim",
+            "n_layers": 3,
+            "batch_size": 256,
+            "num_epochs": 800,
+            "rollout_n": 50,
+            "lr": 0.0001,
+            "weight_decay": 0.1,
+            "dropout": 0.1,
+            "n_heads": 1,
+            "n_embed": 128,
+            "seq_length": 1,
+            "target_return": 120,
+            "pct_traj": 1,
+            "num_episodes_during_eval": 50,
+            "random_timesteps": 0,
+            "dt_bc_mode": false,
+            "reward_shaping": false
+        }
+    }
+}

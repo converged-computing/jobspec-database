@@ -1,0 +1,34 @@
+{
+    "application": "openfold",
+    "details": {
+        "framework": "pytorch",
+        "requirements": {
+            "slurm": {
+                "partition": "regular",
+                "nodes": "multiple",
+                "gpus_per_node": 4,
+                "cpus_per_task": 32,
+                "container_image": "schheda/openfold:23.07-opt",
+                "mpi": "pmi2"
+            },
+            "container": {
+                "image": "schheda/openfold:23.07-opt",
+                "mounts": [
+                    "{DATADIR}:/data:ro",
+                    "{LOGDIR}:/results"
+                ]
+            },
+            "software": [
+                "shifter",
+                "gpu",
+                "nccl-2.18"
+            ],
+            "other": [
+                "bash",
+                "run_and_time_pm.sh",
+                "python3",
+                "mlperf_logging.compliance_checker"
+            ]
+        }
+    }
+}

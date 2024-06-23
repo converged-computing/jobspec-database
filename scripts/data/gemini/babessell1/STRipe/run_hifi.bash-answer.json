@@ -1,0 +1,45 @@
+{
+    "application": "Snakemake",
+    "details": {
+        "workflow_manager": "Snakemake",
+        "resource_manager": "SLURM",
+        "job_name": "run_trgt",
+        "partition": "standard",
+        "nodes": 1,
+        "memory": "32GB",
+        "tasks": 1,
+        "time": "7:59:00",
+        "output_file": "logs/trgt.out",
+        "error_file": "logs/trgt.err",
+        "manifest_file": "manifests/hifi_manifest.csv",
+        "hifi_bam_file_pattern": "/nfs/turbo/dcmb-class/bioinf593/groups/group_05/raw/hifi/{sample}.hifi.bam",
+        "trgt_file_pattern": "/nfs/turbo/dcmb-class/bioinf593/groups/group_05/output/trgt/{sample}.hifi.sorted.vcf.gz",
+        "realigned_bam_file_pattern": "/nfs/turbo/dcmb-class/bioinf593/groups/group_05/output/trgt/{sample}.hifi.sorted.spanning.bam",
+        "temp_manifest_file": "./manifests/temp_manifest.csv",
+        "snakemake_workflows": [
+            "download.smk",
+            "index.smk",
+            "call_trgt.smk"
+        ],
+        "mode_options": [
+            "inline",
+            "download",
+            "index",
+            "call_trgt"
+        ],
+        "resource_requirements": {
+            "download.smk": {
+                "cores": 1,
+                "memory": "1000 MB"
+            },
+            "index.smk": {
+                "cores": 1,
+                "memory": "4000 MB"
+            },
+            "call_trgt.smk": {
+                "cores": 1,
+                "memory": "32000 MB"
+            }
+        }
+    }
+}

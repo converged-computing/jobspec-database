@@ -1,0 +1,37 @@
+{
+    "application": "SLURM",
+    "details": {
+        "resources": {
+            "memory": "32GB",
+            "tasks": 1,
+            "cpus_per_task": 8,
+            "gpus": 1,
+            "partition": "main"
+        },
+        "software": {
+            "shell": "zsh",
+            "python_version": "3.x",
+            "python_virtualenv": "/mnt/stud/home/ynagel/dal-toolbox/venv",
+            "script": "evaluate.py"
+        },
+        "data": {
+            "dataset": "IMAGENET100",
+            "ood_datasets": [
+                "CIFAR10",
+                "CIFAR100"
+            ],
+            "dataset_path": "/mnt/datasets/imagenet/ILSVRC2012/"
+        },
+        "model": {
+            "name": "resnet18_sngp",
+            "ensemble": "resnet18_ensemble"
+        },
+        "active_learning": {
+            "strategy": "bayesian_entropy",
+            "initial_samples": 2048,
+            "acquisition_size": 2048,
+            "acquisition_iterations": 9
+        },
+        "output": "/mnt/stud/work/ynagel/results/udal/evaluation/${dataset}/${model}_sngp/${al_strat}/N_INIT${n_init}__ACQ_SIZE${acq_size}__N_ACQ${n_acq}/seed${random_seed}/"
+    }
+}

@@ -1,0 +1,44 @@
+{
+    "application": "SLURM",
+    "details": {
+        "resource_requirements": {
+            "nodes": 1,
+            "cores_per_node": 1,
+            "walltime": "24:00:00",
+            "partition": "standard",
+            "account": "tumi"
+        },
+        "software_requirements": {
+            "modules": [
+                "gcc",
+                "bbmap",
+                "cutadapt/2.5"
+            ],
+            "tools": [
+                "bbduk.sh",
+                "cutadapt"
+            ]
+        },
+        "workflow": {
+            "description": "Trimming of Illumina fastq reads, with adapter trimming followed by primer trimming using bbduk.sh and cutadapt, respectively.",
+            "input": "fastq.gz files in DataPool1/fastqs",
+            "output": "trimmed fastq.gz files in trimmed_seqs/run1",
+            "steps": [
+                {
+                    "name": "adapter trimming",
+                    "tool": "bbduk.sh",
+                    "input": "fastq.gz files from DataPool1/fastqs",
+                    "output": "adapter-trimmed fastq.gz files in trimmed_seqs/run1",
+                    "description": "Trimming of adapters using bbduk.sh"
+                },
+                {
+                    "name": "primer trimming",
+                    "tool": "cutadapt",
+                    "input": "adapter-trimmed fastq.gz files from trimmed_seqs/run1",
+                    "output": "primer-trimmed fastq.gz files in trimmed_seqs/run1",
+                    "description": "Trimming of primers using cutadapt"
+                }
+            ]
+        }
+    }
+}

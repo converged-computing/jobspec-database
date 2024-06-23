@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "Proteus\n\n```json\n{\n  \"application\": \"Proteus\",\n  \"software_requirements\": [\n    \"Proteus\",\n    \"Python\",\n    \"PETSc\",\n    \"parun\"\n  ],\n  \"resource_requirements\": {\n    \"nodes\": 1,\n    \"cores\": 64,\n    \"walltime\": \"24:00:00\",\n    \"partition\": \"workq\",\n    \"account\": \"hpc_ceds3d\"\n  },\n  \"input_files\": [\n    \"setup.py\",\n    \"cell.py\",\n    \"mangrove.pyx\",\n    \"mangrove_2.pyx\",\n    \"nse_p.py\",\n    \"nse_n.py\",\n    \"petsc.options.asm\",\n    \"*.sh\"\n  ],\n  \"output_files\": [],\n  \"commands\": [\n    \"date\",\n    \"module load proteus/fct\",\n    \"export LD_LIBRARY_PATH=/home/packages/compilers/intel/compiler/2022.0.2/linux/compiler/lib/intel64_lin:${LD_LIBRARY_PATH}\",\n    \"export MV2_HOMOGENEOUS_CLUSTER=1\",\n    \"mkdir -p $WORK/$SLURM_JOB_NAME.$SLURM_JOBID\",\n    \"cd $SLURM_SUBMIT_DIR\",\n    \"cp setup.py $WORK/$SLURM_JOB_NAME.$SLURM_JOBID\",\n    \"cp cell.py $WORK/$SLURM_JOB_NAME.$SLURM_JOBID\",\n    \"cp mangrove.pyx $WORK/$SLURM_JOB_NAME.$SLURM_JOBID\",\n    \"cp mangrove_2.pyx $WORK/$SLURM_JOB_NAME.$SLURM_JOBID\",\n    \"cp nse_p.py $WORK/$SLURM_JOB_NAME.$SLURM_JOBID\",\n    \"cp nse_n.py $WORK/$SLURM_JOB_NAME.$SLURM_JOBID\",\n    \"cp petsc.options.asm $WORK/$SLURM_JOB_NAME.$SLURM_JOBID\",\n    \"cp *.sh $WORK/$SLURM_JOB_NAME.$SLURM_JOBID\",\n    \"cd $WORK/$SLURM_JOB_NAME.$SLURM_JOBID\",\n    \"python setup.py build_ext -i\",\n    \"srun parun nse_p.py nse_n.py -F -l 5 -C \\\"he=.0125 usePETSc=True cell_bottom=0.50 cell_height=0.05 T=100.0\\\" -O petsc.options.asm -D p50\",\n    \"exit 0\"\n  ]\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 2,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 1298,
+        "candidates_token_count": 659,
+        "total_token_count": 1957,
+        "cached_content_token_count": 0
+    }
+}

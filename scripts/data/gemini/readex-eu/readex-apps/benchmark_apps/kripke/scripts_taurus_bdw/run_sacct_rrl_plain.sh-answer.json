@@ -1,0 +1,41 @@
+{
+    "application": "Slurm",
+    "details": {
+        "runtime": "1 hour",
+        "nodes": 1,
+        "tasks_per_node": 28,
+        "cpus_per_task": 1,
+        "partition": "broadwell",
+        "memory_per_cpu": "2200M",
+        "job_name": "kripke_sacct",
+        "account": "p_readex",
+        "reservation": "p_readex_56",
+        "environment": {
+            "SCOREP_ENABLE_PROFILING": "false",
+            "SCOREP_ENABLE_TRACING": "false",
+            "SCOREP_SUBSTRATE_PLUGINS": [
+                "rrl"
+            ],
+            "SCOREP_RRL_PLUGINS": [
+                "cpu_freq_plugin",
+                "uncore_freq_plugin",
+                "OpenMPTP"
+            ],
+            "SCOREP_RRL_TMM_PATH": "tuning_model.json",
+            "SCOREP_MPI_ENABLE_GROUPS": "ENV",
+            "SCOREP_RRL_CHECK_IF_RESET": "reset"
+        },
+        "commands": [
+            "measure-rapl ./kripke $KRIPKE_COMMAND",
+            "sacct -j $SLURM_JOBID.$i --format=\"JobID,CPUTimeRAW,ConsumedEnergyRaw\"",
+            "tail -1 $file | awk -F'[ ,]' '{print int($1) \" \" int($2)}'"
+        ],
+        "libraries": [
+            "Score-P",
+            "OpenMPI"
+        ],
+        "tools": [
+            "sacct"
+        ]
+    }
+}

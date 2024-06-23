@@ -1,0 +1,41 @@
+{
+    "application": "Slurm",
+    "details": {
+        "resource_requirements": {
+            "nodes": 1,
+            "gpus_per_node": 3,
+            "time": "00:05:00",
+            "partition": "gpu",
+            "account": "<yourProject>-gpu"
+        },
+        "modules": [
+            "PrgEnv-cray",
+            "rocm",
+            "craype-accel-amd-gfx90a"
+        ],
+        "mpi_settings": {
+            "MPICH_GPU_SUPPORT_ENABLED": 1
+        },
+        "omp_settings": {
+            "OMP_NUM_THREADS": 1
+        },
+        "executable": {
+            "dir": "$MYSCRATCH/hello_jobstep",
+            "name": "hello_jobstep",
+            "path": "$exeDir/$exeName"
+        },
+        "srun_parameters": {
+            "nodes": 1,
+            "tasks": 3,
+            "cpus_per_task": 8,
+            "gpus_per_node": 3,
+            "gpus_per_task": 1,
+            "gpu_bind": "closest"
+        },
+        "commands": [
+            "scontrol show job ${SLURM_JOBID}",
+            "srun -l -u -N 1 -n 3 -c 8 --gpus-per-node=3 --gpus-per-task=1 --gpu-bind=closest ${theExe} | sort -n",
+            "sacct -j ${SLURM_JOBID} -o jobid%20,Start%20,elapsed%20"
+        ]
+    }
+}

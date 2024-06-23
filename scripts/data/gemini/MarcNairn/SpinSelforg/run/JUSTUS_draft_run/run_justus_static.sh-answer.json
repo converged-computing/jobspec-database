@@ -1,0 +1,23 @@
+{
+    "application": "SLURM",
+    "details": {
+        "resource_requirements": {
+            "nodes": 1,
+            "tasks_per_node": 1,
+            "cpus_per_task": 1,
+            "memory": "4gb"
+        },
+        "job_name": "static_pump_Nmc",
+        "output_file": "static_pump_Nmc-%a_%A.out",
+        "error_file": "static_pump_Nmc-%a_%A.err"
+    },
+    "script_execution": {
+        "command": "srun julia run/JUSTUS_draft_run/run_parallel_justus_static.jl $SLURM_ARRAY_TASK_ID $1 $2 $3 $4",
+        "arguments": {
+            "$SLURM_ARRAY_TASK_ID": "Array task ID",
+            "$1": "File label (0-999)",
+            "$2": "Pumping strength",
+            "$3": "Temperature"
+        }
+    }
+}

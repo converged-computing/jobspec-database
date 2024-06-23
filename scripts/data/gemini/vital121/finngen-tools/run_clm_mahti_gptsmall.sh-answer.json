@@ -1,0 +1,33 @@
+{
+    "application": "Deepspeed",
+    "software": [
+        "gcc/10.3.0",
+        "cuda/11.2.2",
+        "pytorch/1.9",
+        "pdsh/2.31",
+        "Singularity",
+        "Deepspeed"
+    ],
+    "resource_requirements": {
+        "account": "project_2004600",
+        "partition": "gpumedium",
+        "time": "36:00:00",
+        "nodes": 6,
+        "gres": "gpu:a100:4",
+        "output": "logs/%j.out",
+        "error": "logs/%j.err"
+    },
+    "other_requirements": {
+        "singularity_image": "/appl/soft/ai/singularity/images/pytorch_1.9.0_csc_custom.sif",
+        "singularity_flags": "-B /appl/spack/v014/install-tree/gcc-4.8.5/pdsh-2.31-cdzt5w/bin:/usr/local/sbin",
+        "data_dir": "data",
+        "output_dir": "output-gptsmall",
+        "num_epochs": 10,
+        "per_gpu_batch_size": 16,
+        "base_learning_rate": "3e-5",
+        "gradient_accumulation_steps": 4,
+        "gpus_per_node": 4,
+        "hostfile": "hostfiles/$SLURM_JOBID.txt",
+        "deepspeed_config": "ds_config.json"
+    }
+}

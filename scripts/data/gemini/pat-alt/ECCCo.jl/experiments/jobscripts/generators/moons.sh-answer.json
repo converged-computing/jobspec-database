@@ -1,0 +1,36 @@
+{
+    "application": "julia",
+    "software": [
+        "openmpi",
+        "julia"
+    ],
+    "resources": {
+        "partition": "compute",
+        "account": "research-eemcs-insy",
+        "time": "01:30:00",
+        "tasks": 30,
+        "cpus_per_task": 10,
+        "memory_per_cpu": "2GB"
+    },
+    "environment": {
+        "modules": [
+            "2023r1",
+            "openmpi"
+        ],
+        "project": "experiments",
+        "threads": "$SLURM_CPUS_PER_TASK"
+    },
+    "script_path": "experiments/run_experiments.jl",
+    "data": "moons",
+    "output_path": "results",
+    "arguments": [
+        "--",
+        "data=moons",
+        "output_path=results",
+        "mpi",
+        "threaded",
+        "n_individuals=100",
+        "n_runs=50"
+    ],
+    "log_file": "experiments/logs/moons.log"
+}

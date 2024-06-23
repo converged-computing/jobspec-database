@@ -1,0 +1,37 @@
+{
+    "application": "Ray",
+    "details": {
+        "resource_requirements": {
+            "partition": "allgpu",
+            "constraints": [
+                "P100",
+                "V100",
+                "A100"
+            ],
+            "time": "24:00:00",
+            "nodes": 1,
+            "working_directory": "/home/kaechben/slurm"
+        },
+        "software_dependencies": {
+            "modules": [
+                "maxwell",
+                "gcc/9.3",
+                "anaconda3/5.2"
+            ],
+            "conda_environment": "jetnet"
+        },
+        "ray_configuration": {
+            "head_node_selection": {
+                "method": "scontrol show hostnames",
+                "head_node_determination": "first node in the list"
+            },
+            "ray_start_command": {
+                "head_node": "ray start --temp-dir '/tmp/kaechben/ray' --head --node-ip-address=\"$head_node_ip\" --port=$port --block",
+                "worker_nodes": "ray start --temp-dir '/tmp/kaechben/ray' --address \"$ip_head\" --block"
+            }
+        },
+        "python_script": {
+            "path": "/home/$USER/JetNet_NF/LitJetNet/LitNF/main.py"
+        }
+    }
+}

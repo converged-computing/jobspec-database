@@ -1,0 +1,24 @@
+{
+    "application": "TensorFlow",
+    "details": {
+        "modules": [
+            "tensorflow/1.4.0-py27-gpu",
+            "opencv",
+            "openmpi"
+        ],
+        "environment_variables": {
+            "PYTHONPATH": "$PYTHONPATH:/home/wu082/software/lib/python2.7/site-packages"
+        },
+        "resources": {
+            "nodes": 1,
+            "time": "5:00:00",
+            "tasks_per_node": 1,
+            "gpu": 1,
+            "memory": "128g"
+        },
+        "script": {
+            "name": "rgz_train",
+            "command": "mpirun -np 1 python $APP_ROOT/tools/train_net.py --device gpu --device_id 0 --imdb rgz_2017_train22 --iters 80000 --cfg $APP_ROOT/experiments/cfgs/faster_rcnn_end2end.yml --network VGGnet_train22 --weights $APP_ROOT/data/pretrained_model/VGG_imagenet.npy"
+        }
+    }
+}

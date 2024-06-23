@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"Slurm\",\n  \"software\": [\n    \"sdsc cpu/0.15.4\",\n    \"gcc/9.2.0\",\n    \"openmpi/4.1.1\",\n    \"anaconda3/2020.11\",\n    \"multinest1\",\n    \"lightcurve-analysis\"\n  ],\n  \"resources\": {\n    \"nodes\": 1,\n    \"cores\": 32,\n    \"memory\": \"96G\",\n    \"time\": \"12:00:00\",\n    \"partition\": \"shared\"\n  },\n  \"environment\": {\n    \"LD_LIBRARY_PATH\": \"/home/thussenot/MultiNest/lib/:$LD_LIBRARY_PATH\"\n  },\n  \"data\": {\n    \"prior_file\": \"./nugent_TrPi2018GRB230812B05.prior\",\n    \"data_file\": \"../../../simUVgriz.txt\"\n  },\n  \"output\": {\n    \"stdout\": \"nmmaSNtophat%A_%a.out\",\n    \"stderr\": \"nmmaSNtophat%A_%a.err\"\n  },\n  \"email\": {\n    \"address\": \"thomas.hussenot@ijclab.in2p3.fr\",\n    \"type\": \"ALL\"\n  },\n  \"account\": \"umn131\"\n}\n```\n\nThis script uses **Slurm** to manage the job submission and resource allocation. It uses **Slurm** to:\n\n* Request a specific job name (`nmmaSNtophat.job`)\n* Set the output and error file names (`nmmaSNtophat%A_%a.out`, `nmmaSNtophat%A_%a.err`)\n* Specify the partition to run the job on (`shared`)\n* Request the number of nodes and tasks per node (`--nodes=1`, `--ntasks-per-node=32`)\n* Allocate memory (`--mem=96G`)\n* Set a time limit for the job (`--time=12:00:00`)\n* Configure email notifications (`--mail-type=ALL`, `--mail-user=thomas.hussenot@ijclab.in2p3.fr`)\n* Specify the account to charge the job to (`-A umn131`)\n* Export all environment variables (`--export=ALL`)\n\nThe script then loads a series of modules, including:\n\n* `sdsc cpu/0.15.4`\n* `gcc/9.2.0`\n* `openmpi/4.1.1`\n* `anaconda3/2020.11`\n\nIt also activates a conda environment called `multinest1` and sets the `LD_LIBRARY_PATH` environment variable.\n\nFinally, the script uses `mpiexec` to run the `lightcurve-analysis` program with specific parameters. The `lightcurve-analysis` program appears to be a tool for analyzing light curves from astronomical events. \n\nThe script provides detailed parameters for the analysis, including:\n\n* Model: `nugent-hyper,TrPi2018`\n* Output directory: `outdirSNtophat32cores`\n* Label: `GRB230812B`\n* Prior file: `./nugent_TrPi2018GRB230812B05.prior`\n* Jet type: `-1`\n* Time range: `--tmin 0.01 --tmax 32 --dt 0.01`\n* Number of live points: `--nlive 2048`\n* Maximum E(B-V): `--Ebv-max 0`\n* Trigger time: `--trigger-time 60168.79041667`\n* Data file: `../../simUVgriz.txt`\n* Plotting options: `--plot --xlim 0,32 --ylim 30,18 --bestfit`\n\nThis indicates that the script is likely performing a sophisticated analysis of astronomical data, possibly related to supernovae or gamma-ray bursts. \n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 524,
+        "candidates_token_count": 955,
+        "total_token_count": 1479,
+        "cached_content_token_count": 0
+    }
+}

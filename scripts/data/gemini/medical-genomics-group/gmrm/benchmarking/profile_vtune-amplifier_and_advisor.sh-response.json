@@ -1,0 +1,68 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"Slurm\",\n  \"details\": {\n    \"partition\": \"debug\",\n    \"memory\": \"0\",\n    \"tasks\": 2,\n    \"cpus-per-task\": 8,\n    \"time\": \"00:30:00\",\n    \"compiler\": {\n      \"gcc\": {\n        \"source\": \"../compile_with_gcc.sh\",\n        \"env_vars\": {\n          \"MV2_ENABLE_AFFINITY\": 0,\n          \"GOMPC_CPU_AFFINITY\": \"verbose\"\n        }\n      },\n      \"intel\": {\n        \"source\": \"../compile_with_intel.sh\",\n        \"env_vars\": {\n          \"KMP_AFFINITY\": \"verbose\"\n        }\n      }\n    },\n    \"environment_vars\": {\n      \"ARDYH_ROOT\": \"$ARDYH_ROOT\",\n      \"ARDYH_EXE\": \"$ARDYH_EXE\",\n      \"AMPLEXE_VARS\": \"/ssoft/spack/external/intel/2018.4/vtune_amplifier/amplxe-vars.sh\",\n      \"ADVIXE_VARS\": \"/ssoft/spack/external/intel/2018.4/advisor/advixe-vars.sh\",\n      \"MODULEPATH\": \"/ssoft/spack/humagne/v1/share/spack/lmod/linux-rhel7-x86_S6g1_Mellanox/intel/18.0.5:$MODULEPATH\",\n      \"INTEL_LICENSE_FILE\": \"/ssoft/spack/external/intel/License:$INTEL_LICENSE_FILE\",\n      \"BENCH_DIR\": \"/work/ext-unil-ctgg/etienne/data_bench/\",\n      \"OUT_DIR\": \"/scratch/orliac/bench_ardyh\",\n      \"OMP_NUM_THREADS\": \"$SLURM_CPUS_PER_TASK\"\n    },\n    \"tools\": {\n      \"amplxe\": {\n        \"command\": \"amplxe-cl\",\n        \"options\": {\n          \"hotspots\": \"-c hotspots    -r $OUT_DIR/vtune  -data-limit=0 -- \",\n          \"concurrency\": \"-c concurrency -r $OUT_DIR/vtune  -data-limit=0 -- \",\n          \"memory-access\": \"-c memory-access -knob analyze-mem-objects=true -knob dram-bandwidth-limits=true  -r $OUT_DIR/vtune  -data-limit=0 -- \"\n        }\n      },\n      \"advixe\": {\n        \"command\": \"advixe-cl\",\n        \"options\": {\n          \"survey\": \"--collect survey           -no-auto-finalize -project-dir=$OUT_DIR/advisor  $SEARCH_DIRS -data-limit=0 -- \",\n          \"tripcounts\": \"--collect tripcounts -flop -no-auto-finalize -project-dir=$OUT_DIR/advisor  $SEARCH_DIRS -data-limit=0 -- \"\n        }\n      }\n    },\n    \"command_base\": \"srun --cpu-bind=verbose\",\n    \"command_tail\": \"$ARDYH_ROOT/bin/$ARDYH_EXE \\\n--bed-file $BENCH_DIR/test.bed \\\n--dim-file $BENCH_DIR/test.dim \\\n--group-index-file $BENCH_DIR/test.gri \\\n--group-mixture-file $BENCH_DIR/test.grm \\\n--shuffle-markers 1 \\\n--seed 123 \\\n--trunc-markers 100 \\\n--verbosity 0 \\\n--iterations 5\"\n  }\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "citation_metadata": {
+                "citation_sources": [
+                    {
+                        "start_index": 895,
+                        "end_index": 1033,
+                        "uri": "https://github.com/medical-genomics-group/gmrm",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 1969,
+                        "end_index": 2133,
+                        "uri": "https://github.com/medical-genomics-group/gmrm",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 2000,
+                        "end_index": 2222,
+                        "uri": "https://github.com/medical-genomics-group/gmrm",
+                        "license_": ""
+                    }
+                ]
+            },
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 1698,
+        "candidates_token_count": 849,
+        "total_token_count": 2547,
+        "cached_content_token_count": 0
+    }
+}

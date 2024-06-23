@@ -1,0 +1,31 @@
+{
+    "application": "PyTorch",
+    "details": {
+        "script_name": "tokenizer_train.py",
+        "train_script": "train.py",
+        "hyperparameter_files": [
+            "hparams/tokenizer.yaml",
+            "hparams/train_ddp.yaml"
+        ],
+        "resource_requirements": {
+            "slurm_partition": "gpu-nvlink",
+            "cores": 4,
+            "time": "100:00:00",
+            "gpus": 4,
+            "memory_per_cpu": "80GB"
+        },
+        "monitoring": {
+            "interval": 120,
+            "file": "slurm-${SLURM_JOB_ID}.out",
+            "tool": "gpustat"
+        },
+        "modules": [
+            "cuda"
+        ],
+        "distributed_training": {
+            "framework": "PyTorch",
+            "backend": "nccl",
+            "processes_per_node": 4
+        }
+    }
+}

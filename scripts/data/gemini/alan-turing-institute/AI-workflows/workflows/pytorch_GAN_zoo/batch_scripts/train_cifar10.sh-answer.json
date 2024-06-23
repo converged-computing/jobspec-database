@@ -1,0 +1,20 @@
+{
+    "application": "Slurm",
+    "details": {
+        "resource_requirements": {
+            "qos": "%qos",
+            "partition": "%partition",
+            "nodes": 1,
+            "wallclock_time": "2-00:00:00",
+            "job_name": "pytorch_gan_zoo_cifar10",
+            "gpus": 1
+        },
+        "modules": "%modules",
+        "scratch_host": "%scratch_host",
+        "inputs": "cifar10 config_cifar10.json",
+        "outputs": "output_networks/cifar10_$job_id",
+        "container": "pytorch_GAN_zoo.sif",
+        "container_command": "train.py PGAN -c config_cifar10.json --restart --no_vis -n cifar10_$job_id",
+        "run_command": "singularity exec --nv --bind $scratch:/scratch_mount --pwd /scratch_mount $container $container_command"
+    }
+}

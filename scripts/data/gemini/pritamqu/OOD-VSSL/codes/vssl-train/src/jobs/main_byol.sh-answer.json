@@ -1,0 +1,34 @@
+{
+    "application": "SLURM",
+    "details": {
+        "resource_requirements": {
+            "partition": "v100_full_node",
+            "nodes": 2,
+            "tasks": 2,
+            "gpus_per_node": 4,
+            "error_output": "/scratch/user/OUTPUTS/logs/%A.err",
+            "output": "/scratch/user/OUTPUTS/logs/%A.out",
+            "array": "0-1%1"
+        },
+        "software": {
+            "python": "main_byol.py",
+            "other_scripts": "srun_worker_[job_id]_[rank].sh"
+        },
+        "libraries": {
+            "distributed": "multiprocessing-distributed",
+            "communication_backend": "nccl"
+        },
+        "environment_variables": {
+            "MASTER": "hostname of master node",
+            "MPORT": "randomly generated port between 6000 and 9999",
+            "jobdir": "parent directory of current directory",
+            "log_path": "/scratch/user/OUTPUTS/logs",
+            "CONFIG": "path to config file (argument 1)",
+            "DB": "database name (argument 2, default: kinetics400)",
+            "RESUME": "path to checkpoint (argument 3)",
+            "SLURM_JOB_NUM_NODES": "number of nodes allocated",
+            "SLURM_PROCID": "rank of the current process",
+            "SLURM_ARRAY_JOB_ID": "array job ID"
+        }
+    }
+}

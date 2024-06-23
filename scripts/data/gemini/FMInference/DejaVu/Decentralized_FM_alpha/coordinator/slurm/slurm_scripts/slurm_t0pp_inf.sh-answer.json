@@ -1,0 +1,44 @@
+{
+    "application": "Slurm",
+    "details": {
+        "job_name": "gptneox",
+        "partition": "jag-standard",
+        "resources": {
+            "gpu": 1,
+            "time": "3:59:00",
+            "tasks": 1,
+            "cpus_per_task": 2,
+            "mem_per_cpu": "4G",
+            "output_file": "/afs/cs.stanford.edu/u/biyuan/exe_log/gptneox_%j.log"
+        },
+        "environment": {
+            "conda_env": "base",
+            "working_directory": "/afs/cs.stanford.edu/u/biyuan/GPT-home-private",
+            "network_interface": "en*",
+            "nccl_settings": {
+                "socket_ifname": "en*",
+                "debug": "INFO",
+                "ib_disable": 1,
+                "p2p_disable": 1
+            },
+            "world_size": 6,
+            "machine_size": 6,
+            "n_gpu_per_machine": 1
+        },
+        "inference_runner": {
+            "script": "dist_inference_runner_w_slurm_coordinator.py",
+            "model_type": "t5",
+            "model_name": "/sailhome/biyuan/scratch/models/t0pp-new",
+            "num_iters": 10,
+            "budget": 2600,
+            "batch_size": 24,
+            "input_seq_length": 512,
+            "generate_seq_length": 32,
+            "micro_batch_size": 1,
+            "num_layers": 4,
+            "max_layers": 24,
+            "coordinator_server_ip": "10.79.12.70",
+            "unique_port": "$port"
+        }
+    }
+}

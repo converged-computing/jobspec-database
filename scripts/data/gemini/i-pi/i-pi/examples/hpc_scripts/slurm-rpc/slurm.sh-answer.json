@@ -1,0 +1,59 @@
+{
+    "application": "i-PI",
+    "details": {
+        "software": [
+            "i-PI",
+            "Lammps"
+        ],
+        "resources": [
+            "SLURM",
+            "Bash",
+            "Python3",
+            "MPI"
+        ],
+        "files": [
+            "RESTART",
+            "EXIT",
+            "input.template-inet.xml",
+            "INITIAL.xml",
+            "log.ipi",
+            "count",
+            "in.template.lmp",
+            "in.lmp",
+            "log.instance1.lmp",
+            "log.instance2.lmp",
+            "log.instance3.lmp",
+            "log.instance4.lmp",
+            "STOP",
+            "run-slurm.sh"
+        ],
+        "directories": [
+            "full_sys",
+            "beads",
+            "contracted",
+            "IPI_LOGS"
+        ],
+        "environment_variables": [
+            "IPI_EXE",
+            "LMP_EXE",
+            "HOST",
+            "NTIME"
+        ],
+        "commands": [
+            "source <path-to-i-pi-root>/env.sh",
+            "python3 -u ${IPI_EXE} INITIAL.xml | tee log.ipi &",
+            "sleep 10",
+            "mpirun -np 2 ${LMP_EXE} -in in.lmp &",
+            "srun -n 4 ${LMP_EXE} -in in.lmp -screen log.lmp -log none &",
+            "srun -n 1 ${LMP_EXE} -in in.lmp -screen log.instance1.lmp -log none &",
+            "srun -n 1 ${LMP_EXE} -in in.lmp -screen log.instance2.lmp -log none &",
+            "srun -n 1 ${LMP_EXE} -in in.lmp -screen log.instance3.lmp -log none &",
+            "srun -n 1 ${LMP_EXE} -in in.lmp -screen log.instance4.lmp -log none &",
+            "wait",
+            "sleep 2",
+            "mkdir IPI_LOGS",
+            "cp -p log.ipi IPI_LOGS/log.ipi_$l",
+            "sbatch run-slurm.sh"
+        ]
+    }
+}

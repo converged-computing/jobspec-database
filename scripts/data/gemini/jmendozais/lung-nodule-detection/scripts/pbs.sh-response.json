@@ -1,0 +1,62 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"PBS\",\n  \"details\": {\n    \"software\": [\n      \"Bash\",\n      \"SSH\",\n      \"SCP\",\n      \"PBS\",\n      \"Python\",\n      \"Theano\"\n    ],\n    \"resource_requirements\": [\n      \"nodes=1:ppn=14:gpus=0\",\n      \"nodes=1:ppn=14:gpus=1\"\n    ],\n    \"configuration_file\": \"config.sh\",\n    \"temporary_file_location\": \"/tmp\",\n    \"user_email\": \"jmendozais@gmail.com\",\n    \"remote_server\": \"manati\",\n    \"tasks\": [\n      \"test1\",\n      \"segment-train\",\n      \"segment-dbs\",\n      \"det1\",\n      \"det2\",\n      \"lnd\"\n    ],\n    \"commands\": [\n      \"echo \\'Test command\\'\",\n      \"cd ~/lung-nodule-detection; python segment.py --train\",\n      \"cd ~/lung-nodule-detection; python segment.py --segment\",\n      \"cd ~/lung-nodule-detection; python detect.py --save-blobs --threshold 0.5\",\n      \"cd ~/lung-nodule-detection; python detect.py --save-blobs --threshold 0.7\",\n      \"cd ~/lung-nodule-detection; ${THEANO_OPTS},device=cuda1 python lnd.py --model convnet --model-selection ${fixed_params} --fc 3\"\n    ],\n    \"environment_variables\": {\n      \"THEANO_OPTS\": \"THEANO_FLAGS=mode=FAST_RUN,floatX=float32,optimizer_including=cudnn\",\n      \"da_params\": \"'--da-tr 0.12 --da-rot 18 --da-zoom 1.25 --da-is 0.2 --da-flip 1'\",\n      \"fixed_params\": \"'${da_params} --lr 0.001 --epochs 2 --dropout 0.05 --lidp --dp-intercept -0.1 --conv 6 --roi-size 128 --filters 32'\"\n    }\n  }\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "citation_metadata": {
+                "citation_sources": [
+                    {
+                        "start_index": 1052,
+                        "end_index": 1217,
+                        "uri": "https://github.com/jmendozais/lung-nodule-detection",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 1144,
+                        "end_index": 1362,
+                        "uri": "https://github.com/jmendozais/lung-nodule-detection",
+                        "license_": ""
+                    }
+                ]
+            },
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 657,
+        "candidates_token_count": 518,
+        "total_token_count": 1175,
+        "cached_content_token_count": 0
+    }
+}

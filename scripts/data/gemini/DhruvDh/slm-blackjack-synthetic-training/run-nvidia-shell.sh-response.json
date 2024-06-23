@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"Singularity\",\n  \"details\": {\n    \"software\": [\n      \"Singularity\"\n    ],\n    \"resource_requirements\": {\n      \"job_name\": \"test-nvidia\",\n      \"output\": \"test-nvidia.out\",\n      \"error\": \"test-nvidia.err\",\n      \"time\": \"01:00:00\",\n      \"nodes\": 1,\n      \"tasks_per_node\": 1,\n      \"memory\": \"48G\",\n      \"partition\": \"GPU\",\n      \"gres\": \"gpu:A40:1\",\n      \"container_image\": \"nvidia.sif\"\n    }\n  }\n}\n```\n\nThis script uses the Singularity container technology to run an interactive shell within the `nvidia.sif` container. \n\n**Breakdown of the script:**\n\n* **SBATCH directives:** These lines define the job parameters for a cluster scheduler like Slurm. They specify:\n    * `job-name`: The name of the job.\n    * `output`, `error`: Files to store standard output and error output.\n    * `time`: Maximum runtime for the job.\n    * `nodes`: Number of nodes to use.\n    * `ntasks-per-node`: Number of tasks per node.\n    * `mem`: Amount of memory requested.\n    * `partition`: The cluster partition to run the job in (likely for GPUs).\n    * `gres`:  GPU resources requested.\n* **Module loading:**  This line loads the Singularity module, making it available to the script.\n* **Interactive shell:**  `srun --pty singularity shell --nv nvidia.sif` starts an interactive shell within the `nvidia.sif` container. `--pty` allocates a pseudo-terminal for the shell, allowing for interactive use. `--nv` enables access to the GPU within the container.\n\n**Overall:** This script utilizes Singularity and a cluster scheduler (likely Slurm) to run a task within the `nvidia.sif` container with access to an A40 GPU. \n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 184,
+        "candidates_token_count": 461,
+        "total_token_count": 645,
+        "cached_content_token_count": 0
+    }
+}

@@ -1,0 +1,39 @@
+{
+    "application": "CP2K",
+    "details": {
+        "environment": {
+            "PBS": {
+                "walltime": "06:00:00",
+                "nodes": "8",
+                "cores_per_node": "64",
+                "mpi_procs_per_node": "32",
+                "omp_threads_per_core": "2",
+                "memory_per_node": "200gb"
+            },
+            "OMP_NUM_THREADS": "2",
+            "MKL_NUM_THREADS": "2"
+        },
+        "modules": {
+            "CP2K": "2022.1-foss-2022a"
+        },
+        "executables": {
+            "cp2k": "/gpfs/home/cahart/software/smeagol/cp2k-smeagol/cp2k-private-external-blas/exe/local/cp2k.psmp"
+        },
+        "input_files": [
+            "1_bulkLR.inp",
+            "2_dft_wfn.inp",
+            "3_0V.inp",
+            "4_V.inp"
+        ],
+        "output_files": [
+            "log_3_0V.out",
+            "log_4_${V}V.out"
+        ],
+        "script_functionality": [
+            "copy input files",
+            "modify input files based on parameters",
+            "run CP2K with MPI",
+            "post-processing of output files"
+        ]
+    }
+}

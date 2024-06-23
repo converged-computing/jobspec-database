@@ -1,0 +1,56 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"Gromacs\",\n  \"details\": {\n    \"modules\": [\n      \"gcc/8.4.1\",\n      \"cuda/11.2\",\n      \"openmpi/4.1.1-cuda\",\n      \"gromacs/2022.2-mpi-cuda\"\n    ],\n    \"resources\": {\n      \"nodes\": 1,\n      \"mpi_tasks\": 4,\n      \"openmp_threads_per_task\": 8,\n      \"runtime\": \"02:00:00\"\n    },\n    \"commands\": [\n      \"gmx_mpi grompp -f eql2.mdp -c ../../NVT/eql.gro -p ../../prepare_system/topol.top -o eql2.tpr -pp eql2.top -po eql2.mdp\",\n      \"srun gmx_mpi mdrun -s eql2.tpr -o eql2.trr -x eql2.xtc -c eql2.gro -e eql2.edr -g eql2.log -ntomp ${SLURM_CPUS_PER_TASK}\",\n      \"gmx_mpi grompp -f prd.mdp -c eql2.gro -p ../../prepare_system/topol.top -o prd.tpr -pp prd.top -po prd.mdp\",\n      \"srun gmx_mpi mdrun -s prd.tpr -o prd.trr -x prd.xtc -c prd.gro -e prd.edr -g prd.log -ntomp ${SLURM_CPUS_PER_TASK}\"\n    ]\n  }\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "citation_metadata": {
+                "citation_sources": [
+                    {
+                        "start_index": 330,
+                        "end_index": 815,
+                        "uri": "https://github.com/fxcoudert/citable-data",
+                        "license_": ""
+                    }
+                ]
+            },
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 714,
+        "candidates_token_count": 402,
+        "total_token_count": 1116,
+        "cached_content_token_count": 0
+    }
+}

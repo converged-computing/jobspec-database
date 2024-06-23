@@ -1,0 +1,28 @@
+{
+    "application": "MultiNest",
+    "software": [
+        "openmpi",
+        "anaconda3",
+        "MultiNest",
+        "light_curve_analysis"
+    ],
+    "resource_requirements": {
+        "queue": "shared",
+        "nodes": 1,
+        "tasks_per_node": 32,
+        "memory": "96G",
+        "time": "12:00:00",
+        "email": "thomas.hussenot@ijclab.in2p3.fr",
+        "account": "umn131"
+    },
+    "modules": [
+        "sdsc cpu/0.15.4",
+        "gcc/9.2.0",
+        "openmpi/4.1.1",
+        "anaconda3/2020.11"
+    ],
+    "environment_variables": [
+        "LD_LIBRARY_PATH"
+    ],
+    "command": "mpiexec -n 32 light_curve_analysis --model nugent-hyper,TrPi2018 --outdir outdirSNgauss32cores --label GRB230812B --prior ./nugent_TrPi2018GRB230812Bgauss.prior --conditional-gaussian-prior-thetaObs --conditional-gaussian-prior-N-sigma 1 --tmin 0.01 --tmax 32 --dt 0.01 --error-budget 1 --nlive 2048 --Ebv-max 0 --trigger-time 60168.79041667 --data ../../../dataXri.txt --plot --xlim 0,32 --ylim 30,18"
+}

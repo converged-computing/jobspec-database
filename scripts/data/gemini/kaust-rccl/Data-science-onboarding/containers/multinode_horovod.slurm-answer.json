@@ -1,0 +1,33 @@
+{
+    "application": "SLURM",
+    "details": {
+        "job_name": "horovod_multiGPU_demo",
+        "time": "00:10:00",
+        "nodes": 2,
+        "tasks": 4,
+        "tasks_per_node": 2,
+        "gpus_per_node": 2,
+        "cpus_per_gpu": 2,
+        "memory": "32G",
+        "partition": "batch",
+        "modules": [
+            "rl9-gpustack",
+            "openmpi/4.1.4/gnu11.2.1-cuda11.8",
+            "singularity"
+        ],
+        "environment_variables": {
+            "OMPI_MCA_btl": "^openib",
+            "IMAGE": "$PWD/horovod_gpu_0192.sif",
+            "OMP_NUM_THREADS": "1"
+        },
+        "commands": [
+            "mpirun -np 4 -N 2 singularity exec --nv $IMAGE python ./tensorflow2_synthetic_benchmark.py --model ResNet50  --batch-size 128 --num-warmup-batches 10 --num-batches-per-iter 10 --num-iters 10 >> TF2_multiGPU.log",
+            "mpirun -np 4 -N 2 singularity exec --nv $IMAGE python ./pytorch_synthetic_benchmark.py --model resnet50 --batch-size 128 --num-warmup-batches 10 --num-batches-per-iter 10 --num-iters 10 >>pytorch_multiGPU.log"
+        ],
+        "libraries": [
+            "tensorflow",
+            "pytorch",
+            "horovod"
+        ]
+    }
+}

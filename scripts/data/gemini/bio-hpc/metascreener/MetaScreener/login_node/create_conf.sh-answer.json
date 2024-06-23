@@ -1,0 +1,61 @@
+{
+    "application": "Bash",
+    "software": {
+        "queue_manager": "Slurm or Sun Grid Engine",
+        "python": {
+            "run": "python",
+            "version": "N/A"
+        },
+        "java": {
+            "run": "java",
+            "version": "N/A"
+        },
+        "molecular_dynamics": {
+            "g_mmpbsa": "path_metascreener/analyze_results/Simulation_gromacs/analyze_trajectory/extra/g_mmpbsa",
+            "g_gmx": "gmx_mpi",
+            "g_amber_home": "path_metascreener/external_sw/amber14/"
+        }
+    },
+    "resource_requirements": {
+        "path_metascreener": "N/A",
+        "path_login_node": "N/A",
+        "path_cluster_nodes": "N/A",
+        "path_analize_results": "N/A",
+        "path_external_sw": "N/A",
+        "path_extra_metascreener": "N/A"
+    },
+    "queue_manager_details": {
+        "slurm": {
+            "command_show_jobs": "squeue",
+            "command_get_id_job": "echo ${job_id}| cut -d \" \" -f 4",
+            "command_dependency": "sbatch --depend=afterok",
+            "queue_direc_output": "#SBATCH --output=",
+            "queue_direc_error": "#SBATCH --error=",
+            "queue_direc_queue": "#SBATCH -p ",
+            "queue_direc_project": "#SBATCH -A ",
+            "queue_direc_mail_type": "#SBATCH --mail-type=END",
+            "queue_direc_mail_user": "#SBATCH --mail-user=",
+            "queue_direc_job_name": "#SBATCH -J ",
+            "queue_direc_time": "#SBATCH --time=",
+            "queue_direc_cpus": "#SBATCH --cpus-per-task="
+        },
+        "sun_grid_engine_with_pbs": {
+            "command_show_jobs": "qstat",
+            "command_get_id_job": "echo ${job_id} | cut -d \".\" -f 1",
+            "command_dependency": "qsub -W depend=afterok",
+            "queue_direc_output": "#PBS -o ",
+            "queue_direc_error": "#PBS -e",
+            "queue_direc_queue": "",
+            "queue_direc_project": "#PBS -A ",
+            "queue_direc_mail_type": "",
+            "queue_direc_mail_user": "#PBS -M ",
+            "queue_direc_job_name": "#PBS -N ",
+            "queue_direc_time": "#PBS -lwalltime=",
+            "queue_direc_cpus": "#PBS -l nodes=1:ppn=1"
+        },
+        "sun_grid_engine_without_pbs": {
+            "command_show_jobs": "qstat",
+            "command_get_id_job": "echo ${job_id} | cut -d \".\" -f 1"
+        }
+    }
+}

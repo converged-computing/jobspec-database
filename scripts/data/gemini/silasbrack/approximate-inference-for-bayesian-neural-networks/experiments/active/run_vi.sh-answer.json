@@ -1,0 +1,32 @@
+{
+    "application": "LSF",
+    "details": {
+        "job_name": "active_vi",
+        "output_file": "active_%J.out",
+        "queue": "gpuv100",
+        "gpu_config": "num=1:mode=exclusive_process",
+        "wall_time": "24:00",
+        "memory_limit": "16GB",
+        "modules": [
+            "python3/3.9.6",
+            "cuda/11.3"
+        ],
+        "virtual_environment": "venv",
+        "python_script": "src/train_active.py",
+        "arguments": [
+            "--multirun",
+            "data=mura",
+            "training.epochs=30",
+            "training.active_queries=100",
+            "training.initial_pool=50",
+            "training.query_size=10",
+            "acquisition=random,max_entropy,bald",
+            "inference=vi",
+            "data.batch_size=8192",
+            "inference/model=convnet",
+            "inference.model.num_classes=7",
+            "inference/variational_family=radial",
+            "inference.device=cuda"
+        ]
+    }
+}

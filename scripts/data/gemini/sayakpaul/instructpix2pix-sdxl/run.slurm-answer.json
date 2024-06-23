@@ -1,0 +1,33 @@
+{
+    "application": "instructpix2pix-sdxl",
+    "details": {
+        "framework": "PyTorch",
+        "accelerator": "GPU (NVIDIA)",
+        "library": "Accelerate",
+        "scheduler": "SLURM",
+        "resources": {
+            "nodes": 1,
+            "tasks_per_node": 1,
+            "cpus_per_task": 96,
+            "gpus": 8,
+            "partition": "production-cluster",
+            "storage": {
+                "output": "/admin/home/suraj/logs/maskgit-imagenet/%x-%j.out",
+                "code": "/admin/home/suraj/code/instructpix2pix-sdxl",
+                "output_dir": "/fsx/suraj/instructpix2pix-sdxl",
+                "dataset": "s3://muse-datasets/instructpix2pix-clip-filtered-wds"
+            }
+        },
+        "environment": {
+            "conda_env": "muse",
+            "python_version": "unknown",
+            "model": "stabilityai/stable-diffusion-xl-base-1.0",
+            "vae": "madebyollin/sdxl-vae-fp16-fix",
+            "max_train_steps": 10000,
+            "learning_rate": 1e-05,
+            "batch_size": 16,
+            "gradient_accumulation_steps": 4,
+            "mixed_precision": "fp16"
+        }
+    }
+}

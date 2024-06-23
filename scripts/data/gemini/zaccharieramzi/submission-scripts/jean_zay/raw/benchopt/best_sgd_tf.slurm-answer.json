@@ -1,0 +1,26 @@
+{
+    "application": "Slurm",
+    "details": {
+        "job_name": "benchopt_run_best_sgd",
+        "tasks": 1,
+        "tasks_per_node": 1,
+        "gpu": 1,
+        "cpus_per_task": 10,
+        "time": "02:00:00",
+        "output": "%x_%A_%a.out",
+        "error": "%x_%A_%a.out",
+        "qos": "qos_gpu-dev",
+        "distribution": "block:block",
+        "hint": "nomultithread",
+        "modules": [
+            "pytorch-gpu/py3/1.10.1"
+        ],
+        "environment_variables": {
+            "PYTHONUSERBASE": "$WORK/.local_torch",
+            "PATH": "$WORK/.local_torch/bin:$PATH",
+            "TMPDIR": "$JOBSCRATCH"
+        },
+        "working_directory": "$WORK/benchmark_resnet_classif",
+        "command": "benchopt run . -o *18 -d cifar[*,random_state=42,with_validation=False] -r 1 -n 200 --timeout 10800 -f sgd-tf[batch_size=128,coupled_weight_decay=0.0005,data_aug=True,*,lr_schedule=cosine,momentum=0.9,nesterov=True]"
+    }
+}

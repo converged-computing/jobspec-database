@@ -1,0 +1,39 @@
+{
+    "application": "SLURM",
+    "details": {
+        "resources": {
+            "nodes": 1,
+            "tasks_per_node": 2,
+            "cpus_per_task": 16,
+            "memory": "128GB",
+            "gpus": 2
+        },
+        "software": {
+            "module_path": "/shared/apps/modules",
+            "modules": {
+                "rocm": "5.4.2",
+                "ucx": "1.13.1",
+                "ompi": "4.1.4"
+            },
+            "singularity_image": "/shared/apps/bin/namd3_3.0a9.sif",
+            "namd_version": "3.0a9"
+        },
+        "operating_systems": [
+            "Ubuntu",
+            "RHEL8",
+            "RHEL9",
+            "SLES15",
+            "CentOS8",
+            "Rocky9"
+        ],
+        "commands": [
+            "cp -r /examples ./examples-$$",
+            "/opt/namd/bin/namd3 jac/jac.namd +p1 +setcpuaffinity --CUDASOAintegrate on +devices 0,1",
+            "/opt/namd/bin/namd3 apoa1/apoa1.namd +p1 +setcpuaffinity --CUDASOAintegrate on +devices 0,1",
+            "/opt/namd/bin/namd3 f1atpase/f1atpase.namd +p1 +setcpuaffinity --CUDASOAintegrate on +devices 0,1",
+            "/opt/namd/bin/namd3 stmv/stmv.namd +p1 +setcpuaffinity --CUDASOAintegrate on +devices 0,1",
+            "cp -r ./examples-$$   $PWD/gpu2-$$-$SLURM_JOB_NODELIST-$SLURM_JOB_ID",
+            "rm -rf examples-$$/"
+        ]
+    }
+}

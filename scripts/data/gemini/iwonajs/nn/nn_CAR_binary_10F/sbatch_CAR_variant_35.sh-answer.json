@@ -1,0 +1,51 @@
+{
+    "application": "Slurm",
+    "details": {
+        "resource_requirements": {
+            "gpu": 1,
+            "cpus": 4,
+            "memory": "32000M",
+            "time": "03:00:00"
+        },
+        "software": {
+            "python": "3.7.4",
+            "cuda": "latest",
+            "cudnn": "latest",
+            "scipy-stack": "latest",
+            "tensorflow_gpu": "latest",
+            "virtualenv": "latest"
+        },
+        "script_details": {
+            "script_type": "bash",
+            "script_purpose": "Training a machine learning model",
+            "script_execution_details": {
+                "data_preparation": {
+                    "input_data_source": "tar.gz archive",
+                    "data_preparation_steps": [
+                        "copy data files to temporary directory",
+                        "extract data from archive"
+                    ]
+                },
+                "virtual_environment_setup": {
+                    "environment_type": "virtualenv",
+                    "environment_creation": "create and activate virtual environment",
+                    "package_installation": [
+                        "install tensorflow_gpu package"
+                    ]
+                },
+                "model_training": {
+                    "training_script": "run_terminal.py",
+                    "training_parameters": [
+                        "n",
+                        "u",
+                        "m",
+                        "chkpt",
+                        "flat"
+                    ],
+                    "output_format": "tar.gz archive",
+                    "output_file_name": "CAR_variant_35_$SLURM_ARRAY_TASK_ID.tar"
+                }
+            }
+        }
+    }
+}

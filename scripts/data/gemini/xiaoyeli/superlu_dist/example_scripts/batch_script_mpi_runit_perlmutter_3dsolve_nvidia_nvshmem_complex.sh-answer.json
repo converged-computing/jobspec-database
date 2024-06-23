@@ -1,0 +1,85 @@
+{
+    "application": "SUPERLU_DIST",
+    "details": {
+        "software": [
+            "PrgEnv-nvidia",
+            "cudatoolkit",
+            "cray-libsci",
+            "cmake",
+            "nvshmem/2.11.0",
+            "SUPERLU_DIST",
+            "MPICH",
+            "OpenMP"
+        ],
+        "resources": {
+            "compute_nodes": 16,
+            "tasks_per_node": 4,
+            "gpus": 64,
+            "cores_per_node": [
+                {
+                    "edison": 24
+                },
+                {
+                    "cori": 32
+                },
+                {
+                    "perlmutter": 64
+                }
+            ],
+            "threads_per_node": [
+                {
+                    "edison": 48
+                },
+                {
+                    "cori": 64
+                },
+                {
+                    "perlmutter": 128
+                }
+            ],
+            "gpus_per_node": [
+                {
+                    "perlmutter": 4
+                }
+            ]
+        },
+        "settings": {
+            "SUPERLU_DIST": {
+                "SUPERLU_LBS": "GD",
+                "SUPERLU_ACC_OFFLOAD": 1,
+                "GPU3DVERSION": 1,
+                "ANC25D": 0,
+                "NEW3DSOLVE": 1,
+                "NEW3DSOLVETREECOMM": 1,
+                "SUPERLU_BIND_MPI_GPU": 1,
+                "SUPERLU_MAXSUP": 256,
+                "SUPERLU_RELAX": 64,
+                "SUPERLU_MAX_BUFFER_SIZE": 10000000,
+                "SUPERLU_NUM_LOOKAHEADS": 2,
+                "SUPERLU_NUM_GPU_STREAMS": 1,
+                "SUPERLU_MPI_PROCESS_PER_GPU": 1,
+                "SUPERLU_N_GEMM": 6000
+            },
+            "NVSHMEM": {
+                "NVSHMEM_USE_GDRCOPY": 1,
+                "NVSHMEM_MPI_SUPPORT": 1,
+                "NVSHMEM_LIBFABRIC_SUPPORT": 1,
+                "NVSHMEM_DISABLE_CUDA_VMM": 1,
+                "FI_CXI_OPTIMIZED_MRS": false,
+                "NVSHMEM_BOOTSTRAP_TWO_STAGE": 1,
+                "NVSHMEM_BOOTSTRAP": "MPI",
+                "NVSHMEM_REMOTE_TRANSPORT": "libfabric"
+            },
+            "MPICH": {
+                "MPICH_GPU_SUPPORT_ENABLED": 1,
+                "CRAY_ACCEL_TARGET": "nvidia80",
+                "MPICH_MAX_THREAD_SAFETY": "multiple"
+            },
+            "OpenMP": {
+                "OMP_NUM_THREADS": 1,
+                "OMP_PLACES": "threads",
+                "OMP_PROC_BIND": "spread"
+            }
+        }
+    }
+}

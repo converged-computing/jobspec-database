@@ -1,0 +1,74 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n\"application\": \"SLURM\",\n\"details\": {\n\"script\": \"#!/bin/bash\\n#SBATCH --job-name=contrastive_pretrain\\n#SBATCH --output=/home/eecs/paras/slurm/coderep/%j_supervised_augment.log\\n#SBATCH --ntasks=1\\n#SBATCH --mem=256000\\n#SBATCH --time=125:00:00\\n#SBATCH --exclude=atlas,blaze,r16\\n\\ndate;hostname;pwd\\nfree -mh\\n\\nexport PATH=\\\"/data/paras/miniconda3/bin:$PATH\\\"\\nexport DATA_CACHE=\\\"/dev/shm/paras\\\"\\necho \\\"CUDA_VISIBLE_DEVICES = $CUDA_VISIBLE_DEVICES\\\"\\necho \\\"CUDA_DEVICE_ORDER = $CUDA_DEVICE_ORDER\\\"\\necho \\\"SLURM_JOB_ID = $SLURM_JOB_ID\\\"\\ndf -h\\ngpustat -cup\\nnvidia-smi\\nfree -m | awk 'NR==2{printf \\\"Memory Usage: %s/%sMB (%.2f%%)\\n\\\", $3,$2,$3*100/$2 }'\\ndf -h | awk '$NF==\"/\"{printf \\\"Disk Usage: %d/%dGB (%s)\\n\\\", $3,$2,$5}'\\ntop -bn1 | grep load | awk '{printf \\\"CPU Load: %.2f\\n\\\", $(NF-2)}' \\n\\nchmod 755 -R ~/slurm\\n\\nmkdir -p $DATA_CACHE\\nchmod 755 $DATA_CACHE\\nrsync -avhW --no-compress --progress /work/paras/representjs/data/codesearchnet_javascript \\\"$DATA_CACHE\\\"\\n\\ncd /work/paras/representjs\\npip install torch\\npip install -e .\\nnpm install\\n\\npython representjs/main.py train \\\\\\n\\t--run_name 20017_augmentation_identifier_codeenc_noreset_4ldecoder \\\\\\n\\t--program_mode augmentation --label_mode identifier \\\\\\n\\t--n_decoder_layers=4 --subword_regularization_alpha 0.1 \\\\\\n\\t--num_epochs 150 --save_every 10 --batch_size 32 --num_workers 16 --lr 1e-4 \\\\\\n\\t--train_filepath $DATA_CACHE/codesearchnet_javascript/javascript_train_supervised.jsonl.gz \\\\\\n\\t--eval_filepath $DATA_CACHE/codesearchnet_javascript/javascript_valid_0.jsonl.gz\\n\",\n\"environment\": {\n\"PATH\": \"/data/paras/miniconda3/bin:$PATH\",\n\"DATA_CACHE\": \"/dev/shm/paras\"\n},\n\"resources\": {\n\"memory\": \"256GB\",\n\"time\": \"125:00:00\",\n\"tasks\": \"1\",\n\"excluded_nodes\": \"atlas,blaze,r16\"\n},\n\"dependencies\": {\n\"python\": \"torch\",\n\"python\": \"representjs\",\n\"npm\": \"representjs\"\n},\n\"output\": \"/home/eecs/paras/slurm/coderep/%j_supervised_augment.log\",\n\"job_name\": \"contrastive_pretrain\",\n\"commands\": [\n\"date\",\n\"hostname\",\n\"pwd\",\n\"free -mh\",\n\"echo \\\"CUDA_VISIBLE_DEVICES = $CUDA_VISIBLE_DEVICES\\\"\",\n\"echo \\\"CUDA_DEVICE_ORDER = $CUDA_DEVICE_ORDER\\\"\",\n\"echo \\\"SLURM_JOB_ID = $SLURM_JOB_ID\\\"\",\n\"df -h\",\n\"gpustat -cup\",\n\"nvidia-smi\",\n\"free -m | awk 'NR==2{printf \\\"Memory Usage: %s/%sMB (%.2f%%)\\n\\\", $3,$2,$3*100/$2 }'\",\n\"df -h | awk '$NF==\"/\"{printf \\\"Disk Usage: %d/%dGB (%s)\\n\\\", $3,$2,$5}'\",\n\"top -bn1 | grep load | awk '{printf \\\"CPU Load: %.2f\\n\\\", $(NF-2)}'\",\n\"chmod 755 -R ~/slurm\",\n\"mkdir -p $DATA_CACHE\",\n\"chmod 755 $DATA_CACHE\",\n\"rsync -avhW --no-compress --progress /work/paras/representjs/data/codesearchnet_javascript \\\"$DATA_CACHE\\\"\",\n\"cd /work/paras/representjs\",\n\"pip install torch\",\n\"pip install -e .\",\n\"npm install\",\n\"python representjs/main.py train --run_name 20017_augmentation_identifier_codeenc_noreset_4ldecoder --program_mode augmentation --label_mode identifier --n_decoder_layers=4 --subword_regularization_alpha 0.1 --num_epochs 150 --save_every 10 --batch_size 32 --num_workers 16 --lr 1e-4 --train_filepath $DATA_CACHE/codesearchnet_javascript/javascript_train_supervised.jsonl.gz --eval_filepath $DATA_CACHE/codesearchnet_javascript/javascript_valid_0.jsonl.gz\"\n]\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "citation_metadata": {
+                "citation_sources": [
+                    {
+                        "start_index": 2022,
+                        "end_index": 2342,
+                        "uri": "https://github.com/parasj/contracode",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 2285,
+                        "end_index": 2597,
+                        "uri": "https://github.com/parasj/contracode",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 2597,
+                        "end_index": 3121,
+                        "uri": "https://github.com/ZZR0/ISSTA22-CodeStudy",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 2999,
+                        "end_index": 3163,
+                        "uri": "https://github.com/parasj/contracode",
+                        "license_": ""
+                    }
+                ]
+            },
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 606,
+        "candidates_token_count": 1245,
+        "total_token_count": 1851,
+        "cached_content_token_count": 0
+    }
+}

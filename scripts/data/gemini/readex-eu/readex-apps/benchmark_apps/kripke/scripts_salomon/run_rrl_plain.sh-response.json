@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n\"application\": \"PBS\",\n\"details\": {\n\"scheduler\": \"PBS\",\n\"queue\": \"qprod\",\n\"job_name\": \"compare_kripke\",\n\"nodes\": \"1\",\n\"cpus\": \"24\",\n\"mpi_processes\": \"24\",\n\"accelerator\": \"false\",\n\"x86_adapt\": \"true\",\n\"walltime\": \"01:00:00\",\n\"mail_options\": \"be\",\n\"environment_variables\": {\n\"FM_DIR\": \"PBS_O_WORKDIR (if PBS_ENVIRONMENT is PBS_BATCH), pwd (otherwise)\",\n\"MERIC_ROOT\": \"set from ../readex_env/set_env_meric.source\",\n\"SCOREP_ENABLE_PROFILING\": \"false\",\n\"SCOREP_ENABLE_TRACING\": \"false\",\n\"SCOREP_SUBSTRATE_PLUGINS\": \"rrl\",\n\"SCOREP_RRL_PLUGINS\": \"cpu_freq_plugin,uncore_freq_plugin,OpenMPTP\",\n\"SCOREP_RRL_TMM_PATH\": \"tuning_model.json\",\n\"SCOREP_MPI_ENABLE_GROUPS\": \"ENV\",\n\"SCOREP_RRL_CHECK_IF_RESET\": \"reset\"\n},\n\"modules\": {\n\"purge\": \"all modules\",\n\"load\": {\n\"../readex_env/set_env_ptf_rapl.source\": \"set environment for PTF RAPL\",\n\"../readex_env/set_env_meric.source\": \"set environment for MERIC\",\n\"../environment.sh\": \"set general environment\"\n}\n},\n\"commands\": {\n\"prepare\": \"rm -f kripke_rrl_plain.tmp\",\n\"run_plain\": \"mpirun -n 24 ./kripke $KRIPKE_COMMAND | tee -a kripke_rrl_plain.tmp\",\n\"run_tuned\": \"mpirun -n 24 ./kripke $KRIPKE_COMMAND | tee -a kripke_rrl_plain.tmp\",\n\"cleanup\": \"rm -f kripke_rrl_plain.tmp\"\n},\n\"measurement_tools\": {\n\"staticMERICtool\": {\n\"commands\": {\n\"start\": \"$MERIC_ROOT/tools/staticMERICtool/multiNodeStaticMeasureStart.sh --rapl\",\n\"stop\": \"$MERIC_ROOT/tools/staticMERICtool/multiNodeStaticMeasureStop.sh --rapl\"\n}\n},\n\"Score-P\": \"used for tuning, but profiling and tracing disabled\"\n},\n\"data_analysis\": {\n\"metrics\": {\n\"time\": \"extracted from output using grep -oP '(?:Runtime \\[s\\] = )\\d+\\.\\d+'\",\n\"cpus_energy\": \"extracted from output using grep -oP '(?:Overall CPUs energy consumption \\[J\\] = )\\d+'\",\n\"nodes_energy\": \"extracted from output using grep -oP '(?:Overall nodes energy consumption \\[J\\] = )\\d+'\"\n},\n\"calculations\": {\n\"average_time\": \"SUMTIME / REPEAT_COUNT\",\n\"average_cpus_energy\": \"SUMCPUs / REPEAT_COUNT\",\n\"average_nodes_energy\": \"SUMNODEs / REPEAT_COUNT\"\n},\n\"output\": \"echo commands for time, CPUs energy, and nodes energy\"\n}\n}\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 1033,
+        "candidates_token_count": 787,
+        "total_token_count": 1820,
+        "cached_content_token_count": 0
+    }
+}

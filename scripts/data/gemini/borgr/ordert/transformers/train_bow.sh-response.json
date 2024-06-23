@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n\"application\": \"SLURM\",\n\"details\": {\n\"resources\": {\n\"memory\": \"32GB\",\n\"cpu_cores\": 8,\n\"time_limit\": \"7 hours\",\n\"gpus\": 4,\n\"gpu_memory\": \"8GB\"\n},\n\"software\": {\n\"python\": \"3.x\",\n\"tensorflow\": \"2.0.0\",\n\"pytorch\": \"1.x\",\n\"transformers\": \"x.x.x\",\n\"tokenizers\": \"x.x.x\",\n\"cProfile\": \"x.x.x\",\n\"lshw\": \"x.x.x\",\n\"bash\": \"x.x.x\"\n},\n\"libraries\": [\n\"torch.utils.bottleneck\"\n],\n\"scripts\": [\n\"run_language_modeling_with_tokenizers.py\"\n],\n\"data\": [\n\"train.en\",\n\"replica_val.en\",\n\"blimp\"\n],\n\"models\": [\n\"bowgpt\"\n],\n\"configs\": [\n\"gpt2Small.json\"\n]\n}\n}\n```\n\nThis script is running within a SLURM job environment. \n\nHere's a breakdown of the script's content and its resource requirements:\n\n**SLURM:**\n* `#!/bin/bash`: This line specifies that the script should be run using the Bash interpreter.\n* `#SBATCH --mem=32g`: Allocates 32 GB of RAM to the job.\n* `#SBATCH -c8`: Requests 8 CPU cores for the job.\n* `#SBATCH --time=7-0`: Sets the job runtime limit to 7 hours.\n* `#SBATCH --gres=gpu:4,vmem:8g`: Requests 4 GPUs with 8 GB of memory each.\n* `#SBATCH --mail-type=BEGIN,END,FAIL,TIME_LIMIT`: Configures email notifications for job start, completion, failure, and time limit reached.\n* `#SBATCH --mail-user=leshem.choshen@mail.huji.ac.il`: Specifies the email address to receive notifications.\n* `#SBATCH --output=/cs/snapless/oabend/borgr/ordert/slurm/bow%j.out`:  Directs the job output to a file named \"bow%j.out\" in the specified directory. The `%j` is a placeholder for the job ID.\n\n**Software and Libraries:**\n* `module load tensorflow/2.0.0`: Loads the TensorFlow 2.0.0 module.\n* `source /cs/snapless/oabend/borgr/envs/tg/bin/activate`: Activates a Python virtual environment named \"tg\".\n* `python -m torch.utils.bottleneck ...`:  Uses the `torch.utils.bottleneck` module to profile the script execution.\n* `python -m cProfile -s tottime ...`: Uses the `cProfile` module to profile the script execution and output the results sorted by total time.\n* `lshw -C display`:  A command to gather hardware information, specifically about display devices (likely GPUs).\n\n**Script Execution:**\n* `script_path=${working_dir}borgr_code/run_language_modeling_with_tokenizers.py`: Defines the path to the Python script.\n* `python $script_path ...`: Executes the Python script using the specified arguments.\n\n**Arguments and Parameters:**\n* `--eval_blimp`:  Indicates that the script should evaluate the model on the BLIMP dataset.\n* `--blimp_dir $blimp_dir`: Specifies the directory containing the BLIMP dataset.\n* `--per_gpu_eval_batch_size 4`: Sets the batch size for evaluation on each GPU.\n* `--train_data_file $train_path`: Specifies the path to the training data.\n* `--eval_data_file $eval_path`: Specifies the path to the evaluation data.\n* `--evaluate_during_training`: Enables evaluation during training.\n* `--tokenizer_batch_size 100000`:  Sets the batch size for the tokenizer.\n* `--output_dir $working_dir/output/$model_name`: Specifies the output directory for the model and training results.\n* `--model_type bowgpt`: Specifies the model type to use.\n* `--do_train`: Enables training.\n* `--do_eval`: Enables evaluation.\n* `--line_by_line`:  Indicates that the data should be processed line by line.\n* `--learning_rate 1e-5`: Sets the learning rate for training.\n* `--num_train_epochs 5`: Specifies the number of training epochs.\n* `--save_total_limit 20`: Limits the number of saved model checkpoints to 20.\n* `--tokenizer_name $working_dir/tokenizers/en_tokenizer_gpt2_32k`:  Specifies the tokenizer to use.\n* `--save_steps 5000`: Saves checkpoints after every 5000 training steps.\n* `--per_gpu_train_batch_size 4`: Sets the batch size for training on each GPU.\n* `--warmup_steps=10000`:  Specifies the number of warmup steps for the optimizer.\n* `--logging_steps=5000`: Logs training progress every 5000 steps.\n* `--gradient_accumulation_steps=4`:  Accumulates gradients for 4 steps before updating the model weights.\n* `--config_name $config`: Specifies the path to the model configuration file.\n* `--block_size=512`: Sets the maximum sequence length for the model.\n\n**Note:**  The script's specific purpose and the details of the models and data used are not fully clear without further context. It appears to involve natural language processing (NLP) tasks, potentially related to language modeling or text generation, using the `bowgpt` model and a tokenizer based on GPT2.\n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 873,
+        "candidates_token_count": 1349,
+        "total_token_count": 2222,
+        "cached_content_token_count": 0
+    }
+}

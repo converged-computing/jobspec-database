@@ -1,0 +1,60 @@
+{
+    "application": "SLURM",
+    "details": {
+        "software": [
+            "openmpi",
+            "anaconda3",
+            "julia",
+            "python3"
+        ],
+        "resource_requirements": {
+            "nodes": 4,
+            "time": "08:00:00",
+            "queue": "normal",
+            "job_name": "s1",
+            "email": "nkozak@stanford.edu",
+            "email_type": "ALL",
+            "output": "s1.%j.out",
+            "environment": "env_CS238"
+        },
+        "file_operations": {
+            "directory": "/home/nkozak/CS238/explore_states",
+            "script": "s1.py",
+            "log_reduction": {
+                "command": "tail -n 1000 s1*.out > end_s1.out",
+                "remove": "s1*.out"
+            },
+            "file_removal": {
+                "directory": "/home/nkozak/CS238/explore_states/s1/backGround",
+                "patterns": [
+                    "1*",
+                    "2*",
+                    "3*",
+                    "4*",
+                    "5*",
+                    "6*",
+                    "7*",
+                    "8*",
+                    "9*",
+                    "processor*"
+                ]
+            },
+            "file_compression": [
+                {
+                    "directory": "/home/nkozak/CS238/explore_states/s1",
+                    "target": "VTK",
+                    "archive": "VTK.zip"
+                },
+                {
+                    "directory": "/home/nkozak/CS238/explore_states/s1",
+                    "target": "postProcessing",
+                    "archive": "postProcessing.zip"
+                }
+            ],
+            "file_movement": {
+                "source": "/home/nkozak/CS238/explore_states/s1/backGround",
+                "destination": "/scratch/users/nkozak/CS238/explore_states/s1/"
+            }
+        }
+    }
+}

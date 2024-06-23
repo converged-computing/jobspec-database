@@ -1,0 +1,103 @@
+{
+    "application": "QuantumEspresso",
+    "other_software": [
+        "SLURM",
+        "python",
+        "sed",
+        "awk",
+        "grep",
+        "cp",
+        "mkdir",
+        "mv",
+        "mpirun",
+        "module load espresso/intel/6.8",
+        "cat"
+    ],
+    "resource_requirements": {
+        "nodes": {
+            "default": 1,
+            "limit": 1,
+            "max": 48
+        },
+        "memory": {
+            "default": 184,
+            "max": 768
+        },
+        "processors": {
+            "default": 48,
+            "max": 128
+        },
+        "time": {
+            "default": "500:00:00"
+        },
+        "queues": {
+            "bigmem2": {
+                "nodes": 1,
+                "memory": 384,
+                "processors": 48
+            },
+            "ezm0048_bg2": {
+                "nodes": 1,
+                "memory": 384,
+                "processors": 48
+            },
+            "bigmem4": {
+                "nodes": 1,
+                "memory": 768,
+                "processors": 48
+            },
+            "amd": {
+                "nodes": 1,
+                "memory": 256,
+                "processors": 128
+            },
+            "gpu2": {
+                "error": "This script is not set up for GPU calculations- please resubmit with another queue"
+            },
+            "ezm0048_std": {
+                "nodes": 1,
+                "memory": 192,
+                "processors": 48
+            },
+            "general": {
+                "nodes": 1,
+                "memory": 192,
+                "processors": 48
+            }
+        },
+        "job_types": {
+            "s": {
+                "calculation": "scf"
+            },
+            "n": {
+                "calculation": "nscf"
+            },
+            "b1": {
+                "calculation": "bands",
+                "spin_component": 1
+            },
+            "b2": {
+                "calculation": "bands",
+                "spin_component": 2
+            },
+            "d": {
+                "calculation": "pp",
+                "plot_num": 6,
+                "iflag": 3,
+                "output_format": 6
+            },
+            "k": {
+                "calculation": "scf",
+                "k_points": "automatic",
+                "start": 1,
+                "end": 10,
+                "shift": 1
+            }
+        },
+        "directories": {
+            "scratch": "/scratch/$(whoami)/pdft/${FNAME}",
+            "backup": "/home/$(whoami)/trash/overwrite",
+            "subfiles": "/home/$(whoami)/.subfiles"
+        }
+    }
+}

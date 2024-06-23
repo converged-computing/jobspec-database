@@ -1,0 +1,56 @@
+{
+    "application": "cutadapt",
+    "other_software": [
+        "samtools",
+        "star",
+        "sbatch",
+        "module",
+        "zgrep",
+        "sed",
+        "basename",
+        "realpath",
+        "wc",
+        "mkdir",
+        "date",
+        "hostname",
+        "cat"
+    ],
+    "resource_requirements": {
+        "slurm": {
+            "partition": "default",
+            "nodes": 1,
+            "ntasks": 4,
+            "mem": "30000M",
+            "time": "14-0",
+            "gres": "scratch:28G",
+            "job-name": "slurm_script",
+            "array": "1-N",
+            "mail-user": "user@example.com",
+            "mail-type": "FAIL",
+            "output": "/path/to/logs/slurm_script.%Y%m%d%H%M%S%N-%A_%a.out.log"
+        },
+        "modules": [
+            "CBI",
+            "samtools",
+            "star/2.7.7a"
+        ]
+    },
+    "file_types": [
+        ".fastq.gz",
+        ".bam",
+        ".out.log"
+    ],
+    "input_files": [
+        "*R1.fastq.gz",
+        "/francislab/data1/refs/STAR/hg38-golden-ncbiRefSeq-2.7.7a"
+    ],
+    "output_files": [
+        "*_R1.fastq.gz",
+        "*_R2.fastq.gz",
+        "*.Aligned.sortedByCoord.out.bam"
+    ],
+    "commands": [
+        "cutadapt",
+        "STAR"
+    ]
+}

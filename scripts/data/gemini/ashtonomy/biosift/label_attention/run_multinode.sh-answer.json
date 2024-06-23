@@ -1,0 +1,50 @@
+{
+    "application": "BioBERT",
+    "details": {
+        "framework": "PyTorch",
+        "resource_requirements": {
+            "compute_nodes": 2,
+            "cpus_per_node": 30,
+            "gpus_per_node": 2,
+            "gpu_type": "A100",
+            "memory_per_node": "200GB",
+            "walltime": "72:00:00",
+            "conda_environment": "/scratch/taw2/conda_envs/biosift_env",
+            "modules": [
+                "cuda/11.6.2-gcc/9.5.0",
+                "nccl/2.11.4-1-gcc/9.5.0-cu11_6-nvP-nvV-nvA",
+                "openmpi/4.1.3-gcc/9.5.0-cu11_6-nvP-nvV-nvA-ucx",
+                "anaconda3/2022.05-gcc/9.5.0"
+            ],
+            "launch_script": "/scratch/taw2/biosift/run.sh"
+        },
+        "software_dependencies": {
+            "model": "BioBERT",
+            "dataset": "/scratch/taw2/biosift/dataset/hf_datasets/binary_dataset/",
+            "wandb_project": "biosift",
+            "wandb_job_name": "supervised_{model_name////_}"
+        },
+        "script_details": {
+            "purpose": "Train and evaluate BioBERT model for a binary classification task",
+            "hyperparameter_optimization": {
+                "method": "RayTune",
+                "output_file": "/scratch/taw2/biosift/benchmarks/supervised/output/hyperparameters/{model////_}.json"
+            },
+            "training_parameters": {
+                "batch_size": "dynamic (calculated per node)",
+                "learning_rate": "from hyperparameter file",
+                "weight_decay": "from hyperparameter file",
+                "epochs": 5,
+                "save_strategy": "epoch",
+                "evaluation_strategy": "epoch",
+                "load_best_model_at_end": true,
+                "output_directory": "/scratch/taw2/biosift/output/run_data/{model_name////_}_{timestamp}"
+            },
+            "distributed_training": {
+                "strategy": "MPI",
+                "communication_library": "NCCL",
+                "debug_level": "INFO"
+            }
+        }
+    }
+}

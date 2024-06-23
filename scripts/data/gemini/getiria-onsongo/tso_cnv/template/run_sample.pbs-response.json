@@ -1,0 +1,140 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "PBS\n\n{\n\"application\": \"PBS\",\n\"other_software\": [\n\"bwa\",\n\"bowtie2\",\n\"picard\",\n\"samtools\",\n\"R\",\n\"bedtools\",\n\"MySQL\",\n\"perl\",\n\"python\"\n],\n\"resource_requirements\": {\n\"nodes\": \"1\",\n\"ppn\": \"24\",\n\"memory\": \"62GB\",\n\"walltime\": \"48:00:00\",\n\"group\": \"thyagara\"\n},\n\"libraries\": [\n\"bwa/0.7.12_gcc-4.9.2_haswell/bwa\",\n\"bowtie2/2.2.4_gcc-4.9.2_haswell\",\n\"picard/1.140\",\n\"samtools/1.2_gcc-4.9.2_haswell\",\n\"R/3.1.1\",\n\"bedtools/2.25.0/bin/bedtools\"\n],\n\"data_files\": [\n\"sample_path/completed.txt\",\n\"scripts_location/control_pileup.sh\",\n\"scripts_location/sample_pileup.sh\",\n\"code_path/mysql-5.6.24-linux-glibc2.5-x86_64.tar.gz\",\n\"code_path/my.cnf\",\n\"tables_path/training_data_2016_07.sql\",\n\"tables_path/tso_data.sql\",\n\"tables_path/tso_exon_60bp_segments_main_data.sql\",\n\"tables_path/tso_exon_60bp_segments_pileup.sql\",\n\"tables_path/tso_exon_60bp_segments_window_data.sql\",\n\"tables_path/tso_exon_contig_pileup.sql\",\n\"tables_path/tso_reference_exon.sql\",\n\"tables_path/tso_reference.sql\",\n\"tables_path/tso_windows_padded_pileup.sql\",\n\"load_control.sql\",\n\"load_sample.sql\",\n\"create_reference.sql\",\n\"find_median.R\",\n\"create_tables_part1.sql\",\n\"normalize_coverage.R\",\n\"smooth_coverage.R\",\n\"get_three_ref.R\",\n\"create_tables_ref_v1.sql\",\n\"create_tables_ref.R\",\n\"create_tables_ref_v2.sql\",\n\"create_coverage.sql\",\n\"create_sample_coverage.sql\",\n\"create_control_coverage.sql\",\n\"cnv_tables.sql\",\n\"cnv_tables_amplifications.sql\",\n\"ordered_genes.sql\",\n\"create_data.sql\",\n\"get_machine_learning_data.sql\",\n\"aggregate_window.R\",\n\"combine_data.sql\",\n\"cnv_randomForest_predict.R\",\n\"get_predicted.sql\",\n\"get_predicted_all_features.sql\",\n\"scripts_location/plot_script.pl\",\n\"plot_genes_ordered.py\",\n\"get_ordered_genes.sql\",\n\"scripts_location/move_script.pl\",\n\"move_plots.sh\",\n\"scripts_location/cnv2vcf.py\",\n\"seq_db\",\n\"get_qc_data.sql\"\n],\n\"output_files\": [\n\"sample_path/completed.txt\",\n\"sample_name_raw_data_$_now.txt\",\n\"sample_name_raw_data_amp_$_now.txt\",\n\"sample_name_predicted_$_now.txt\",\n\"sample_name_predicted_amp_$_now.txt\",\n\"plot_genes_ordered.py\",\n\"sample_name_cnv_calls_on_ordered_genes_$_now.txt\",\n\"sample_result\",\n\"move_plots.sh\",\n\"sample_name_cnv.vcf\",\n\"sample_name_qc_data_$_now.txt\",\n\"archive_path/raw_data/sample_name_raw_data_$_now.txt\",\n\"archive_path/raw_data/sample_name_raw_data_amp_$_now.txt\",\n\"archive_path/predicted_data/sample_name_predicted_$_now.txt\",\n\"archive_path/predicted_data/sample_name_predicted_amp_$_now.txt\",\n\"archive_path/QC/sample_name_qc_data_$_now.txt\"\n],\n\"environment_variables\": {\n\"working_dir\": \"sample_path\",\n\"script_path\": \"scripts_location\",\n\"table_path\": \"tables_path\",\n\"MYSQL_LOAD_WAIT\": \"120\",\n\"code_src\": \"code_path\",\n\"PATH\": \"$working_dir/bin:$working_dir/src/mysql-5.6.24-linux-glibc2.5-x86_64/bin:$PATH\",\n\"BASE\": \"$working_dir/mysql\",\n\"mysql_socket\": \"$BASE/thesock\"\n},\n\"commands\": [\n\"newgrp - thyagara\",\n\"cd $working_dir\",\n\"module load bwa/0.7.12_gcc-4.9.2_haswell/bwa\",\n\"module load bowtie2/2.2.4_gcc-4.9.2_haswell\",\n\"module load picard/1.140\",\n\"module load samtools/1.2_gcc-4.9.2_haswell\",\n\"module load R/3.1.1\",\n\"module load bedtools/2.25.0/bin/bedtools\",\n\"ls -1 $working_dir/completed.txt > /dev/null 2>&1\",\n\"echo \\\"Started a new run on $_now\\\" >> $working_dir/completed.txt\",\n\"grep \\\"control_pileup.sh\\\" $working_dir/completed.txt > /dev/null 2>&1\",\n\"echo \\\"control_pileup.sh already run\\\"\",\n\"echo \\\"Run control_pileup.sh\\\"\",\n\"sh control_pileup.sh\",\n\"echo \\\"control_pileup.sh\\\" >> $working_dir/completed.txt\",\n\"grep \\\"sample_pileup.sh\\\" $working_dir/completed.txt > /dev/null 2>&1\",\n\"echo \\\"sample_pileup.sh already run\\\"\",\n\"echo \\\"Run sample_pileup.sh\\\"\",\n\"sh sample_pileup.sh\",\n\"echo \\\"sample_pileup.sh\\\" >> $working_dir/completed.txt\",\n\"grep \\\"installed_mysql\\\" $working_dir/completed.txt > /dev/null 2>&1\",\n\"echo \\\"MySQL already installed\\\"\",\n\"mkdir src\",\n\"cd src\",\n\"tar xzvf $code_src/mysql-5.6.24-linux-glibc2.5-x86_64.tar.gz\",\n\"mkdir $working_dir/mysql\",\n\"cd $working_dir/src/mysql-5.6.24-linux-glibc2.5-x86_64/support-files\",\n\"cp $code_src/my.cnf my-default.cnf\",\n\"cd ..\",\n\"rm -rf *.cnf\",\n\"./scripts/mysql_install_db -datadir=$working_dir/mysql/data\",\n\"cd $working_dir\",\n\"echo \\\"installed_mysql\\\" >> $working_dir/completed.txt\",\n\"export PATH=$working_dir/bin:$working_dir/src/mysql-5.6.24-linux-glibc2.5-x86_64/bin:$PATH\",\n\"mysqld --innodb-buffer-pool-size=40G --key-buffer-size=15G --innodb-log-file-size=5G \\\\\",\n\"--innodb_flush_log_at_trx_commit=2 --basedir=$BASE --datadir=$BASE/data --log-error=$BASE/data/mysql.err \\\\\",\n\"--pid-file=$BASE/mysql.pid --socket=$BASE/thesock --port=3306 \\\\\",\n\"--lc-messages-dir=$working_dir/src/mysql-5.6.24-linux-glibc2.5-x86_64/share/english --tmpdir=/scratch &\",\n\"sleep $MYSQL_LOAD_WAIT\",\n\"grep \\\"base_tables_loaded\\\" $working_dir/completed.txt > /dev/null 2>&1\",\n\"echo \\\"base tables already loaded\\\"\",\n\"mysql --socket=$BASE/thesock -u root -e \\\"CREATE DATABASE cnv;\\\"\",\n\"echo \\\"Load tables\\\"\",\n\"mysql --socket=$BASE/thesock -u root cnv < $table_path/training_data_2016_07.sql\",\n\"mysql --socket=$BASE/thesock -u root cnv < $table_path/tso_data.sql\",\n\"mysql --socket=$BASE/thesock -u root cnv < $table_path/tso_exon_60bp_segments_main_data.sql\",\n\"mysql --socket=$BASE/thesock -u root cnv < $table_path/tso_exon_60bp_segments_pileup.sql\",\n\"mysql --socket=$BASE/thesock -u root cnv < $table_path/tso_exon_60bp_segments_window_data.sql\",\n\"mysql --socket=$BASE/thesock -u root cnv < $table_path/tso_exon_contig_pileup.sql\",\n\"mysql --socket=$BASE/thesock -u root cnv < $table_path/tso_reference_exon.sql\",\n\"mysql --socket=$BASE/thesock -u root cnv < $table_path/tso_reference.sql\",\n\"mysql --socket=$BASE/thesock -u root cnv < $table_path/tso_windows_padded_pileup.sql\",\n\"echo \\\"base_tables_loaded\\\" >> $working_dir/completed.txt\",\n\"grep \\\"load_control.sql\\\" $working_dir/completed.txt > /dev/null 2>&1\",\n\"echo \\\"load_control.sql already run\\\"\",\n\"echo \\\"Run load_control.sql\\\"\",\n\"mysql --socket=$BASE/thesock -u root cnv < load_control.sql\",\n\"echo \\\"load_control.sql\\\" >> $working_dir/completed.txt\",\n\"grep \\\"load_sample.sql\\\" $working_dir/completed.txt > /dev/null 2>&1\",\n\"echo \\\"load_sample.sql already run\\\"\",\n\"echo \\\"Run load_sample.sql\\\"\",\n\"mysql --socket=$BASE/thesock -u root cnv < load_sample.sql\",\n\"echo \\\"load_sample.sql\\\" >> $working_dir/completed.txt\",\n\"grep \\\"create_reference.sql\\\" $working_dir/completed.txt > /dev/null 2>&1\",\n\"echo \\\"create_reference.sql already run\\\"\",\n\"echo \\\"Run create_reference.sql\\\"\",\n\"mysql --socket=$BASE/thesock -u root cnv < create_reference.sql\",\n\"echo \\\"create_reference.sql\\\" >> $working_dir/completed.txt\",\n\"grep \\\"find_median.R\\\" $working_dir/completed.txt > /dev/null 2>&1\",\n\"echo \\\"find_median.R already run\\\"\",\n\"echo \\\"Run  find_median.R\\\"\",\n\"R CMD BATCH find_median.R\",\n\"echo \\\"find_median.R\\\" >> $working_dir/completed.txt\",\n\"grep \\\"create_tables_part1.sql\\\" $working_dir/completed.txt > /dev/null 2>&1\",\n\"echo \\\"create_tables_part1.sql already run\\\"\",\n\"echo \\\"Run  create_tables_part1.sql\\\"\",\n\"mysql --socket=$BASE/thesock -u root cnv < create_tables_part1.sql\",\n\"echo \\\"create_tables_part1.sql\\\" >> $working_dir/completed.txt\",\n\"grep \\\"normalize_coverage.R\\\" $working_dir/completed.txt > /dev/null 2>&1\",\n\"echo \\\"normalize_coverage.R already run\\\"\",\n\"echo \\\"Run  normalize_coverage.R\\\"\",\n\"R CMD BATCH normalize_coverage.R\",\n\"echo \\\"normalize_coverage.R\\\" >> $working_dir/completed.txt\",\n\"grep \\\"smooth_coverage.R\\\" $working_dir/completed.txt > /dev/null 2>&1\",\n\"echo \\\"smooth_coverage.R already run\\\"\",\n\"echo \\\"Run  smooth_coverage.R\\\"\",\n\"R CMD BATCH smooth_coverage.R\",\n\"echo \\\"smooth_coverage.R\\\" >> $working_dir/completed.txt\",\n\"grep \\\"get_three_ref.R\\\" $working_dir/completed.txt > /dev/null 2>&1\",\n\"echo \\\"get_three_ref.R already run\\\"\",\n\"echo \\\"Run  get_three_ref.R\\\"\",\n\"R CMD BATCH get_three_ref.R\",\n\"echo \\\"get_three_ref.R\\\" >> $working_dir/completed.txt\",\n\"grep \\\"create_tables_ref_v1.sql\\\" $working_dir/completed.txt > /dev/null 2>&1\",\n\"echo \\\"create_tables_ref_v1.sql already run\\\"\",\n\"echo \\\"Run  create_tables_ref_v1.sql\\\"\",\n\"mysql --socket=$BASE/thesock -u root cnv < create_tables_ref_v1.sql\",\n\"echo \\\"create_tables_ref_v1.sql\\\" >> $working_dir/completed.txt\",\n\"grep \\\"create_tables_ref.R\\\" $working_dir/completed.txt > /dev/null 2>&1\",\n\"echo \\\"create_tables_ref.R already run\\\"\",\n\"echo \\\"Run  create_tables_ref.R\\\"\",\n\"R CMD BATCH create_tables_ref.R\",\n\"echo \\\"create_tables_ref.R\\\" >> $working_dir/completed.txt\",\n\"grep \\\"create_tables_ref_v2.sql\\\" $working_dir/completed.txt > /dev/null 2>&1\",\n\"echo \\\"create_tables_ref_v2.sql already run\\\"\",\n\"echo \\\"Run  create_tables_ref_v2.sql\\\"\",\n\"mysql --socket=$BASE/thesock -u root cnv < create_tables_ref_v2.sql\",\n\"echo \\\"create_tables_ref_v2.sql\\\" >> $working_dir/completed.txt\",\n\"grep \\\"create_coverage.sql\\\" $working_dir/completed.txt > /dev/null 2>&1\",\n\"echo \\\"create_coverage.sql already run\\\"\",\n\"echo \\\"Run  create_coverage.sql\\\"\",\n\"mysql --socket=$BASE/thesock -u root cnv < create_coverage.sql\",\n\"echo \\\"create_coverage.sql\\\" >> $working_dir/completed.txt\",\n\"grep \\\"create_sample_coverage.sql\\\" $working_dir/completed.txt > /dev/null 2>&1\",\n\"echo \\\"create_sample_coverage.sql already run\\\"\",\n\"echo \\\"Run  create_sample_coverage.sql\\\"\",\n\"mysql --socket=$BASE/thesock -u root cnv < create_sample_coverage.sql\",\n\"echo \\\"create_sample_coverage.sql\\\" >> $working_dir/completed.txt\",\n\"grep \\\"create_control_coverage.sql\\\" $working_dir/completed.txt > /dev/null 2>&1\",\n\"echo \\\"create_control_coverage.sql already run\\\"\",\n\"echo \\\"Run  create_control_coverage.sql\\\"\",\n\"mysql --socket=$BASE/thesock -u root cnv < create_control_coverage.sql\",\n\"echo \\\"create_control_coverage.sql\\\" >> $working_dir/completed.txt\",\n\"grep \\\"cnv_tables.sql\\\" $working_dir/completed.txt > /dev/null 2>&1\",\n\"echo \\\"cnv_tables.sql already run\\\"\",\n\"echo \\\"Run  cnv_tables.sql\\\"\",\n\"mysql --socket=$BASE/thesock -u root cnv < cnv_tables.sql\",\n\"echo \\\"cnv_tables.sql\\\" >> $working_dir/completed.txt\",\n\"grep \\\"cnv_tables_amplifications.sql\\\" $working_dir/completed.txt > /dev/null 2>&1\",\n\"echo \\\"cnv_tables_amplifications.sql already run\\\"\",\n\"echo \\\"Run  cnv_tables_amplifications.sql\\\"\",\n\"mysql --socket=$BASE/thesock -u root cnv < cnv_tables_amplifications.sql\",\n\"echo \\\"cnv_tables_amplifications.sql\\\" >> $working_dir/completed.txt\",\n\"grep \\\"ordered_genes.sql\\\" $working_dir/completed.txt > /dev/null 2>&1\",\n\"echo \\\"ordered_genes.sql already run\\\"\",\n\"echo \\\"Run ordered_genes.sql\\\"\",\n\"mysql --socket=$BASE/thesock -u root cnv < ordered_genes.sql\",\n\"echo \\\"ordered_genes.sql\\\" >> $working_dir/completed.txt\",\n\"grep \\\"create_data.sql\\\" $working_dir/completed.txt > /dev/null 2>&1\",\n\"echo \\\"create_data.sql already run\\\"\",\n\"echo \\\"Run create_data.sql\\\"\",\n\"mysql --socket=$BASE/thesock -u root cnv < create_data.sql\",\n\"echo \\\"create_data.sql\\\" >> $working_dir/completed.txt\",\n\"grep \\\"get_machine_learning_data.sql\\\" $working_dir/completed.txt > /dev/null 2>&1\",\n\"echo \\\"get_machine_learning_data.sql already run\\\"\",\n\"echo \\\"Run get_machine_learning_data.sql\\\"\",\n\"mysql --socket=$BASE/thesock -u root cnv < get_machine_learning_data.sql > sample_name_raw_data_$_now.txt\",\n\"echo \\\"get_machine_learning_data.sql\\\" >> $working_dir/completed.txt\",\n\"grep \\\"aggregate_window.R\\\" $working_dir/completed.txt > /dev/null 2>&1\",\n\"echo \\\"aggregate_window.R already run\\\"\",\n\"echo \\\"Run aggregate_window.R\\\"\",\n\"R CMD BATCH aggregate_window.R\",\n\"echo \\\"aggregate_window.R\\\" >> $working_dir/completed.txt\",\n\"grep \\\"combine_data.sql\\\" $working_dir/completed.txt > /dev/null 2>&1\",\n\"echo \\\"combine_data.sql already run\\\"\",\n\"echo \\\"Run combine_data.sql\\\"\",\n\"mysql --socket=$BASE/thesock -u root cnv < combine_data.sql\",\n\"echo \\\"combine_data.sql\\\" >> $working_dir/completed.txt\",\n\"grep \\\"cnv_randomForest_predict.R\\\" $working_dir/completed.txt > /dev/null 2>&1\",\n\"echo \\\"cnv_randomForest_predict.R already run\\\"\",\n\"echo \\\"Run cnv_randomForest_predict.R\\\"\",\n\"R CMD BATCH cnv_randomForest_predict.R\",\n\"echo \\\"cnv_randomForest_predict.R\\\" >> $working_dir/completed.txt\",\n\"grep \\\"get_predicted.sql\\\" $working_dir/completed.txt > /dev/null 2>&1\",\n\"echo \\\"get_predicted.sql already run\\\"\",\n\"echo \\\"Run get_predicted.sql\\\"\",\n\"mysql --socket=$BASE/thesock -u root cnv < get_predicted.sql > sample_name_predicted_$_now.txt\",\n\"echo \\\"get_predicted.sql\\\" >> $working_dir/completed.txt\",\n\"grep \\\"get_predicted_all_features.sql\\\" $working_dir/completed.txt > /dev/null 2>&1\",\n\"echo \\\"get_predicted_all_features.sql already run\\\"\",\n\"echo \\\"Run get_predicted_all_features.sql\\\"\",\n\"mysql --socket=$BASE/thesock -u root cnv < get_predicted_all_features.sql > sample_name_predicted_all_features_$_now.txt\",\n\"echo \\\"get_predicted_all_features.sql\\\" >> $working_dir/completed.txt\",\n\"mkdir -p archive_path/raw_data\",\n\"chmod 775 archive_path/raw_data\",\n\"cp  sample_name_raw_data_$_now.txt archive_path/raw_data\",\n\"chmod 664 archive_path/raw_data/sample_name_raw_data_$_now.txt\",\n\"cp  sample_name_raw_data_amp_$_now.txt archive_path/raw_data\",\n\"chmod 664 archive_path/raw_data/sample_name_raw_data_amp_$_now.txt\",\n\"mkdir -p archive_path/predicted_data\",\n\"chmod 775 archive_path/predicted_data\",\n\"cp  sample_name_predicted_$_now.txt  archive_path/predicted_data\",\n\"chmod 664 archive_path/predicted_data/sample_name_predicted_$_now.txt\",\n\"cp  sample_name_predicted_amp_$_now.txt  archive_path/predicted_data\",\n\"chmod 664 archive_path/predicted_data/sample_name_predicted_amp_$_now.txt\",\n\"grep \\\"plot_script.pl\\\" $working_dir/completed.txt > /dev/null 2>&1\",\n\"echo \\\"plot_script.pl already run\\\"\",\n\"echo \\\"plot_script.pl\\\"\",\n\"perl $script_path/plot_script.pl -t cnv_sample_name_tso_over_control_name_n_bowtie_bwa_ratio_gene_out -s sample_name -c cnv_sample_name_ordered_genes -k cnv_sample_name_ordered_genes -h localhost -u root -d cnv -o plot_genes_ordered.py -ms $mysql_socket -a 1\",\n\"echo \\\"plot_script.pl\\\" >> $working_dir/completed.txt\",\n\"grep \\\"plot_genes_ordered.py\\\" $working_dir/completed.txt > /dev/null 2>&1\",\n\"echo \\\"plot_genes_ordered.py already run\\\"\",\n\"echo \\\"plot_genes_ordered.py\\\"\",\n\"python plot_genes_ordered.py\",\n\"echo \\\"plot_genes_ordered.py\\\" >> $working_dir/completed.txt\",\n\"grep \\\"get_ordered_genes.sql\\\" $working_dir/completed.txt > /dev/null 2>&1\",\n\"echo \\\"get_ordered_genes.sql already run\\\"\",\n\"echo \\\"get_ordered_genes.sql\\\"\",\n\"mysql --socket=$BASE/thesock -u root cnv < get_ordered_genes.sql  > sample_name_cnv_calls_on_ordered_genes_$_now.txt\",\n\"echo \\\"get_ordered_genes.sql\\\" >> $working_dir/completed.txt\",\n\"sed -e s,NULL,,g < sample_name_cnv_calls_on_ordered_genes_$_now.txt > sample_name_cnv_calls_on_ordered_genes_$_now.txt.bak\",\n\"mv sample_name_cnv_calls_on_ordered_genes_$_now.txt.bak sample_name_cnv_calls_on_ordered_genes_$_now.txt\",\n\"cp  sample_name_cnv_calls_on_ordered_genes_$_now.txt sample_result\",\n\"grep \\\"move_script.pl\\\" $working_dir/completed.txt > /dev/null 2>&1\",\n\"echo \\\"move_script.pl already run\\\"\",\n\"echo \\\"move_script.pl\\\"\",\n\"perl $script_path/move_script.pl -c cnv_sample_name_ordered_genes -p sample_result -h localhost -u root -d cnv -o move_plots.sh -ms $mysql_socket\",\n\"echo \\\"move_plots.pl ran successfully\\\"\",\n\"grep \\\"move_plots.sh\\\" $working_dir/completed.txt > /dev/null 2>&1\",\n\"echo \\\"move_plots.sh already run\\\"\",\n\"echo \\\"Run move_plots.sh\\\"\",\n\"sh move_plots.sh\",\n\"echo \\\"move_script.pl\\\" >> $working_dir/completed.txt\",\n\"echo \\\"move_plots.sh\\\" >> $working_dir/completed.txt\",\n\"grep \\\"cnv2vcf.py\\\" $working_dir/completed.txt > /dev/null 2>&1\",\n\"echo \\\"cnv2vcf.py already run\\\"\",\n\"echo \\\"cnv2vcf.py\\\"\",\n\"python $script_path/cnv2vcf.py sample_name_cnv_calls_on_ordered_genes_$_now.txt 4 17 16 seq_db > sample_name_cnv.vcf\",\n\"echo \\\"cnv2vcf.py\\\" >> $working_dir/completed.txt\",\n\"cp  sample_name_cnv.vcf sample_result\",\n\"grep \\\"get_qc_data.sql\\\" $working_dir/completed.txt > /dev/null 2>&1\",\n\"echo \\\"get_qc_data.sql already run\\\"\",\n\"echo \\\"get_qc_data.sql\\\"\",\n\"mysql --socket=$BASE/thesock -u root cnv < get_qc_data.sql > sample_name_qc_data_$_now.txt\",\n\"echo \\\"get_qc_data.sql\\\" >> $working_dir/completed.txt\",\n\"cp  sample_name_qc_data_$_now.txt  archive_path/QC\",\n\"chmod 664 archive_path/QC/sample_name_qc_data_$_now.txt\",\n\"echo \\\"Shutdown MySQL\\\"\",\n\"mysqladmin --socket=$BASE/thesock shutdown -u root\"\n],\n\"notes\": \"This script runs a series of commands to analyze CNVs in a sample. It uses a variety of software packages, including bwa, bowtie2, picard, samtools, R, bedtools, and MySQL.\"\n}\n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "citation_metadata": {
+                "citation_sources": [
+                    {
+                        "start_index": 2626,
+                        "end_index": 2771,
+                        "uri": "https://github.com/HamLam/Exome_cnv",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 2835,
+                        "end_index": 3066,
+                        "uri": "https://github.com/HamLam/Exome_cnv",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 3851,
+                        "end_index": 4077,
+                        "uri": "https://github.com/HamLam/Exome_cnv",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 4248,
+                        "end_index": 4722,
+                        "uri": "https://github.com/HamLam/Exome_cnv",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 4857,
+                        "end_index": 5617,
+                        "uri": "https://github.com/HamLam/Exome_cnv",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 10852,
+                        "end_index": 11002,
+                        "uri": "https://github.com/HamLam/Exome_cnv",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 12777,
+                        "end_index": 12907,
+                        "uri": "https://github.com/HamLam/AWS_MOCS",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 12992,
+                        "end_index": 13120,
+                        "uri": "https://github.com/HamLam/AWS_MOCS",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 13133,
+                        "end_index": 13273,
+                        "uri": "https://github.com/HamLam/AWS_MOCS",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 13388,
+                        "end_index": 13624,
+                        "uri": "https://github.com/HamLam/AWS_MOCS",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 13502,
+                        "end_index": 13677,
+                        "uri": "https://github.com/HamLam/Exome_cnv",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 14112,
+                        "end_index": 14259,
+                        "uri": "https://github.com/HamLam/Exome_cnv",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 14266,
+                        "end_index": 14554,
+                        "uri": "https://github.com/HamLam/AWS_MOCS",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 14744,
+                        "end_index": 14920,
+                        "uri": "https://github.com/HamLam/AWS_MOCS",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 15336,
+                        "end_index": 15473,
+                        "uri": "https://github.com/HamLam/AWS_MOCS",
+                        "license_": ""
+                    }
+                ]
+            },
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 7660,
+        "candidates_token_count": 6125,
+        "total_token_count": 13785,
+        "cached_content_token_count": 0
+    }
+}

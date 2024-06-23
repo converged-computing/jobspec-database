@@ -1,0 +1,32 @@
+{
+    "application": "SLURM",
+    "details": {
+        "resource_requirements": {
+            "cpus": 80,
+            "nodes": 8,
+            "gpus": 8,
+            "time": "8:00:00",
+            "partition": "learnlab"
+        },
+        "software": {
+            "python": "evaluate.py",
+            "model_type": "google/t5-xl-lm-adapt"
+        },
+        "data": {
+            "eval_data": "/checkpoint/plewis/atlas_opensourcing/data/mmlu_data/5-shot-multitask/combined_valid.jsonl /checkpoint/plewis/atlas_opensourcing/data/mmlu_data/5-shot-multitask/combined_test.jsonl",
+            "pretrained_model": "/checkpoint/plewis/atlas_opensourcing/models/atlas/xl",
+            "pretrained_index": "/checkpoint/plewis/atlas_opensourcing/indices/atlas/wiki/xl",
+            "save_dir": "/checkpoint/plewis/atlas_opensourcing/experiments/"
+        },
+        "other": {
+            "precision": "fp32",
+            "target_maxlength": 16,
+            "text_maxlength": 512,
+            "per_gpu_batch_size": 1,
+            "n_context": 30,
+            "retriever_n_context": 30,
+            "experiment_name": "$SLURM_JOB_ID-xl-mmlu-zeroshot",
+            "port": "15000-16000"
+        }
+    }
+}

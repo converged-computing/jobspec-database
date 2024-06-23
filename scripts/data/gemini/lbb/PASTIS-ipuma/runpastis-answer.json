@@ -1,0 +1,33 @@
+{
+    "application": "SLURM",
+    "details": {
+        "queue": "ipuq",
+        "nodes": 1,
+        "cores": 81,
+        "time": "1-1:00",
+        "mail_type": "ALL",
+        "mail_user": "luk@simula.no",
+        "stdout": "slurm.%N.%j.out",
+        "stderr": "slurm.%N.%j.err",
+        "ulimit": "-s 10240",
+        "modules": [
+            "slurm/20.02.7",
+            "graphcore/vipu/1.16.1",
+            "graphcore/sdk/2.4.0",
+            "graphcore/tf/2.4.0_tf2.4.4",
+            "numactl/gcc/2.0.13"
+        ],
+        "environment_variables": {
+            "IPUOF_CONFIG_PATH": "/cm/shared/apps/graphcore/vipu/etc/ipuof.conf.d/p64_cl_a01_a16.conf",
+            "OMPI_MCA_opal_common_ucx_opal_mem_hooks": "1",
+            "OMPI_MCA_pml_ucx_verbose": "100",
+            "OMPI_MCA_btl_openib_warn_no_device_params_found": "1",
+            "OMPI_MCA_btl_openib_allow_ib": "1",
+            "OMPI_MCA_pml": "^ucx",
+            "OMPI_MCA_btl_openib_if_include": "mlx5_4:1",
+            "OMPI_MCA_btl": "openib,self",
+            "OMPI_MCA_btl_tcp_if_exclude": "lo,dis0,eno1,eno2,enp113s0f0,ib0,ib1,enp33s0f0,enp33s0f1"
+        },
+        "command": "./pastis -i /global/D1/projects/ipumer/datasets/metaclust/metaclust50_500K.fasta -c 500000 --af sim_mat.mtx --ckthr 1 --absw"
+    }
+}

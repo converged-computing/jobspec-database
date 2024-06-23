@@ -1,0 +1,44 @@
+{
+    "application": "PBS",
+    "details": {
+        "resource_requirements": {
+            "nodes": "1",
+            "processors_per_node": "4",
+            "walltime": "192:00:00",
+            "queue": "q192p48h@RTalon"
+        },
+        "email_notifications": {
+            "on_error": "true",
+            "on_abort": "false"
+        },
+        "job_name": "1bit_srm-full_dwt",
+        "email_address": "ewt16@msstate.edu",
+        "output_file": "1bit_srm-full_dwt.out",
+        "error_file": "1bit_srm-full_dwt.err",
+        "software": {
+            "matlab": {
+                "version": "unknown",
+                "path": "/usr/local/matlab/bin/matlab",
+                "arguments": "-nodisplay -r",
+                "commands": [
+                    "csq_deps('common'); image_ratedistortion_experiment('lena.jpg',$BITRATES,$LENA_SAVEFILE,$MODULE,$PARAMS);",
+                    "csq_deps('common'); image_ratedistortion_experiment('barbara.jpg',$BITRATES,$BARBARA_SAVEFILE,$MODULE,$PARAMS);",
+                    "csq_deps('common'); image_ratedistortion_experiment('boats.jpg',$BITRATES,$BOATS_SAVEFILE,$MODULE,$PARAMS);",
+                    "csq_deps('common'); image_ratedistortion_experiment('peppers.jpg',$BITRATES,$PEPPERS_SAVEFILE,$MODULE,$PARAMS);"
+                ],
+                "sleep_time": "5s"
+            }
+        },
+        "experiment_name": "1bit_srm-full_dwt",
+        "bitrates": "linspace(0.05,1,20)",
+        "experiment_module": "@experiment_module_biht2d",
+        "parameters": "csq_load_params('1bit/$EXP_NAME.m')",
+        "save_files": [
+            "csq_full_path('results/rd/lena_$EXP_NAME.mat')",
+            "csq_full_path('results/rd/barbara_$EXP_NAME.mat')",
+            "csq_full_path('results/rd/boats_$EXP_NAME.mat')",
+            "csq_full_path('results/rd/peppers_$EXP_NAME.mat')"
+        ],
+        "working_directory": "~/git/CSQuantization/experiments"
+    }
+}

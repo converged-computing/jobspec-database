@@ -1,0 +1,38 @@
+{
+    "application": "LSF",
+    "details": {
+        "scheduler": "LSF",
+        "resources": {
+            "nodes": 100,
+            "cores": 7,
+            "walltime": "12:00",
+            "project": "CHP115"
+        },
+        "modules": [
+            "cuda/10.1.243",
+            "gcc/7.4.0",
+            "cmake/3.18.2",
+            "ibm-wml-ce/1.6.2-3"
+        ],
+        "environment_variables": {
+            "OMP_NUM_THREADS": "7"
+        },
+        "executable": "/ccs/home/ppiaggi/Programs/Software-deepmd-kit-1.0/lammps-git/src/lmp_mpi",
+        "input_files": [
+            "Restart.lmp",
+            "start.lmp"
+        ],
+        "output_files": [
+            "restart2.lmp",
+            "restart.lmp",
+            "data.final",
+            "log.lammps",
+            "runno"
+        ],
+        "commands": [
+            "jsrun -n 600 -a 1 -c 7 -g 1 -bpacked:7 $lammps_exe -sf omp -in Restart.lmp",
+            "jsrun -n 600 -a 1 -c 7 -g 1 -bpacked:7 $lammps_exe -sf omp -in start.lmp",
+            "bsub job.sh"
+        ]
+    }
+}

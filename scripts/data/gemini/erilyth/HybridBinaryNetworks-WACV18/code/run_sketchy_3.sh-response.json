@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"SLURM\",\n  \"details\": {\n    \"software\": [\n      \"bash\",\n      \"python3\",\n      \"cuda/8.0\",\n      \"cudnn/7-cuda-8.0\"\n    ],\n    \"resources\": {\n      \"nodes\": 1,\n      \"cpus\": 24,\n      \"memory\": \"2048M per cpu\",\n      \"gpus\": 3,\n      \"time\": \"48 hours\",\n      \"account\": \"vishal.b\"\n    },\n    \"files\": [\n      \"clean.sh\",\n      \"main.py\",\n      \"../data/\",\n      \"textlogs/sketchy_googlenet.txt\",\n      \"textlogs/sketchy_googlenetwbin.txt\",\n      \"textlogs/sketchy_googlenetfbin.txt\"\n    ],\n    \"commands\": [\n      \"srun bash clean.sh; CUDA_VISIBLE_DEVICES=\\\"${array[0]}\\\" python3 main.py --dataset='sketchyrecognition' --data_dir='../data/' --nClasses=125 --workers=4 --epochs=400 --batch-size=192 --testbatchsize=4 --learningratescheduler='decayscheduler' --decayinterval=35 --decaylevel=2 --optimType='adam' --nesterov --tenCrop --maxlr=0.002 --minlr=0.00005 --weightDecay=0 --model_def='googlenet' --name='sketchy_googlenet' | tee \\\"textlogs/sketchy_googlenet.txt\\\" &\",\n      \"srun bash clean.sh; CUDA_VISIBLE_DEVICES=\\\"${array[1]}\\\" python3 main.py --dataset='sketchyrecognition' --data_dir='../data/' --nClasses=125 --workers=4 --epochs=400 --batch-size=128 --testbatchsize=4 --learningratescheduler='decayscheduler' --decayinterval=35 --decaylevel=2 --optimType='adam' --nesterov --tenCrop --maxlr=0.002 --minlr=0.00005 --weightDecay=0 --binaryWeight --binStart=2 --binEnd=100 --model_def='googlenetwbin' --name='sketchy_googlenetwbin' | tee \\\"textlogs/sketchy_googlenetwbin.txt\\\" &\",\n      \"srun bash clean.sh; CUDA_VISIBLE_DEVICES=\\\"${array[2]}\\\" python3 main.py --dataset='sketchyrecognition' --data_dir='../data/' --nClasses=125 --workers=4 --epochs=400 --batch-size=128 --testbatchsize=4 --learningratescheduler='decayscheduler' --decayinterval=35 --decaylevel=2 --optimType='adam' --nesterov --tenCrop --maxlr=0.002 --minlr=0.00005 --weightDecay=0 --binaryWeight --binStart=2 --binEnd=100 --model_def='googlenetfbin' --name='sketchy_googlenetfbin' | tee \\\"textlogs/sketchy_googlenetfbin.txt\\\"\"\n    ]\n  }\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 736,
+        "candidates_token_count": 770,
+        "total_token_count": 1506,
+        "cached_content_token_count": 0
+    }
+}

@@ -1,0 +1,44 @@
+{
+    "application": "Slurm",
+    "details": {
+        "resource_requirements": {
+            "nodes": 1,
+            "tasks": 1,
+            "cpus_per_task": 1,
+            "memory": "64G",
+            "gpu": "v100:1",
+            "partition": "gputest",
+            "time": "00:15:00",
+            "account": "Project_2002026"
+        },
+        "software_requirements": {
+            "python": "3",
+            "tensorflow": "latest",
+            "keras": "latest",
+            "keras_bert": "latest",
+            "bert": "latest"
+        },
+        "other_requirements": {
+            "environment_variables": {
+                "OMP_NUM_THREADS": "$SLURM_CPUS_PER_TASK",
+                "MODEL_DIR": "/scratch/project_2002026/bert/cased_L-12_H-768_A-12",
+                "SOURCE_DIR": "/scratch/project_2002026/multilabel_bert/neuro_classifier/multilabel",
+                "DATA_DIR": "data",
+                "OUTPUT_DIR": "output"
+            },
+            "virtual_environment": "/scratch/project_2002026/multilabel_bert/neuro_classifier/multilabel/VENV3"
+        },
+        "script_execution": {
+            "script_name": "bert_predict.py",
+            "arguments": {
+                "test": "$DATA_DIR/test$DATA_SUFFIX-processed.jsonl.gz",
+                "model": "$OUTPUT_DIR/model$DATA_SUFFIX.h5",
+                "labels": "$DATA_DIR/labels.json",
+                "output_file": "$OUTPUT_DIR/pred$DATA_SUFFIX-train_fulldoc-test.txt",
+                "clip_value": "1e-4",
+                "seq_len": "512",
+                "eval_batch_size": "6"
+            }
+        }
+    }
+}

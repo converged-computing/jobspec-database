@@ -1,0 +1,46 @@
+{
+    "application": "TADbit",
+    "software_requirements": [
+        "Java 11.0.2",
+        "GEM",
+        "tadbit"
+    ],
+    "resource_requirements": {
+        "cpus": 8,
+        "memory": "15G",
+        "time": "48 hours",
+        "queue": "medium",
+        "dependencies": "afterany:802941"
+    },
+    "input_files": [
+        "samplesNames.txt",
+        "genome",
+        "gem_index_path",
+        "read1_path",
+        "read2_path"
+    ],
+    "output_files": [
+        "${finalOut}/${filename}_TADbit_output.txt",
+        "${finalOut}/${filename}_TADbit_output.txt"
+    ],
+    "commands": [
+        "tadbit map",
+        "tadbit parse",
+        "tadbit filter",
+        "tadbit normalize",
+        "tadbit segment",
+        "tadbit describe",
+        "tadbit bin"
+    ],
+    "parameters": {
+        "filesPath": "/home/jmendietaes/data/2021/microC/sequencedData/merge_RUN208-RUN212/demux_fastq",
+        "genome": "/home/jmendietaes/referenceGenomes/mm10_reordered/mm10.reordered.fa",
+        "gem_index_path": "/home/jmendietaes/referenceGenomes/mm10_reordered/gem2Index/mm10.reordered.gem",
+        "mapper": "gem",
+        "mapBin": "/home/jmendietaes/programas/GEM/GEM-binaries-Linux-x86_64-core_i3-20121106-022124/gem-mapper",
+        "path": "/home/jmendietaes/data/2021/microC/allProcessed/TADbitOut/",
+        "rEnz": "None",
+        "chromCheck": "{{1..19},X",
+        "nthreads": "$SLURM_CPUS_PER_TASK"
+    }
+}

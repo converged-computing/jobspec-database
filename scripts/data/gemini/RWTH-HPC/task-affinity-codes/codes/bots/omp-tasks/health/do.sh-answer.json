@@ -1,0 +1,72 @@
+{
+    "application": "Slurm",
+    "details": {
+        "job_scheduler": "Slurm",
+        "partition": "c16s",
+        "nodes": 1,
+        "tasks_per_node": 1,
+        "job_name": "STREAM_TASK_AFFINITY_TEST",
+        "output_file": "sbatch_output.txt",
+        "time_limit": "00:30:00",
+        "exclusive_mode": true,
+        "compiler": "Intel compiler 18.0",
+        "programming_language": "C",
+        "libraries": [
+            "OpenMP"
+        ],
+        "environment_variables": [
+            "KMP_TASK_STEALING_CONSTRAINT=0",
+            "OMP_PLACES=cores",
+            "OMP_PROC_BIND=spread",
+            "OMP_NUM_THREADS=64",
+            "KMP_AFFINITY=verbose",
+            "T_AFF_SINGLE_CREATOR=1",
+            "T_AFF_NUM_TASK_MULTIPLICATOR=16",
+            "TASK_AFF_THREAD_SELECTION_STRATEGY",
+            "TASK_AFF_AFFINITY_MAP_MODE",
+            "TASK_AFF_PAGE_SELECTION_MODE",
+            "TASK_AFF_PAGE_WEIGHTING_STRATEGY",
+            "TASK_AFF_NUMBER_OF_AFFINITIES=1",
+            "TASK_AFF_THRESHOLD"
+        ],
+        "commands": [
+            "lscpu",
+            "make",
+            "no_numa_balancing",
+            "sed",
+            "grep"
+        ],
+        "input_files": [
+            "../../inputs/health/small.input",
+            "../../inputs/health/medium.input",
+            "../../inputs/health/large.input_rwth"
+        ],
+        "output_files": [
+            "sbatch_output.txt",
+            "rel_output.txt",
+            "deb_output.txt",
+            "SORT_thread_output.txt",
+            "SORT_domain_output.txt",
+            "SORT_combined_output.txt",
+            "stats_rel.txt",
+            "stats_deb.txt",
+            "combined_map_stats_rel.txt",
+            "combined_map_stats_deb.txt",
+            "output_corr_domain_rel.txt",
+            "output_in_corr_domain_rel.txt",
+            "output_corr_domain_deb.txt",
+            "output_in_corr_domain_deb.txt",
+            "output_stats_rel.txt",
+            "output_stats_deb.txt"
+        ],
+        "test_cases": [
+            ".affinity"
+        ],
+        "functions": [
+            "compile",
+            "run",
+            "compile_and_run",
+            "set_up_affinity"
+        ]
+    }
+}

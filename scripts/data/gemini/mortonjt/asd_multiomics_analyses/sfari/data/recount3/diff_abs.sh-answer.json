@@ -1,0 +1,50 @@
+{
+    "application": "Slurm",
+    "details": {
+        "scheduler": "Slurm",
+        "queue": "ccb",
+        "partition": "rome",
+        "time": "100:00:00",
+        "exclusive": true,
+        "environment": {
+            "conda": "qiime2-2021.4",
+            "module": "disBatch/2.0-beta",
+            "TBB_CXX_TYPE": "gcc"
+        },
+        "script": {
+            "case_control_disbatch.py": {
+                "biom-table": "table.biom",
+                "metadata-file": "sample_metadata.txt",
+                "matching-ids": "Match_IDs",
+                "groups": "Status",
+                "treatment-group": "ASD",
+                "monte-carlo-samples": 100,
+                "intermediate-directory": "intermediate",
+                "no-overwrite": true,
+                "job-extra": "export TBB_CXX_TYPE=gcc",
+                "output-inference": "age_sex_matched_posterior/rna_differentials-v4.nc"
+            },
+            "case_control_merge.py": {
+                "biom-table": "table.biom",
+                "inference-files": "intermediate/*.nc",
+                "monte-carlo-samples": 100,
+                "output-inference": "age_sex_matched_posterior/rna_differentials-backup.nc"
+            },
+            "case_control_local.py": {
+                "biom-table": "table_filtered.biom",
+                "metadata-file": "sample_metadata.txt",
+                "matching-ids": "Match_IDs",
+                "groups": "Status",
+                "reference-group": "ASD",
+                "monte-carlo-samples": 1000,
+                "chains": 4,
+                "chunksize": 20,
+                "cores": 30,
+                "output-tensor": "age_sex_matched_posterior.nc"
+            }
+        },
+        "resources": {
+            "memory": "100GB per process"
+        }
+    }
+}

@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n\"application\": \"SURFEX\",\n\"software\": [\n\"openmpi\",\n\"grib_api\",\n\"eccodes\",\n\"MASTERODB\",\n\"rttov31\",\n\"rrtm\"\n],\n\"resources\": {\n\"cpu\": 4,\n\"memory\": \"20000M\",\n\"time\": \"00:10:00\",\n\"partition\": \"normal256\",\n\"environment\": {\n\"MYLIB\": \"gmkpack pack name\",\n\"TESTDIR\": \"test directory\",\n\"OUTPUTDIR\": \"local directory\",\n\"HOMEPACK\": \"$HOME/pack\",\n\"SOURCE\": \"$HOMEPACK/$MYLIB/src/local\",\n\"LOADIR\": \"$HOMEPACK/$MYLIB/bin\",\n\"TMPDIR\": \"$HOME/tmp\",\n\"TMPLOC\": \"$TMPDIR/rundir.$$\",\n\"TMPWAIT\": \"$TMPDIR/wait_queue.$$\",\n\"RTTOV_COEFDIR\": \"$PWD\",\n\"DR_HOOK\": 1,\n\"DR_HOOK_IGNORE_SIGNALS\": -1,\n\"DR_HOOK_NOT_MPI\": 1,\n\"DR_HOOK_SILENT\": 1,\n\"DR_HOOK_OPT\": \"\",\n\"EC_PROFILE_HEAP\": 0,\n\"EC_PROFILE_MEM\": 0,\n\"EC_MPI_ATEXIT\": 0,\n\"DR_HOOK_SHOW_PROCESS_OPTIONS\": 0,\n\"EC_MEMINFO\": 0,\n\"TVSEARCHPATH\": \"$SOURCE\",\n\"OMP_NUM_THREADS\": 1,\n\"GRIB_SAMPLES_PATH\": \"$GRIB_API/share/grib_api/ifs_samples/grib1\",\n\"GRIB_DEFINITION_PATH\": \"$GRIB_API/share/grib_api/definitions\",\n\"ECCODES_SAMPLES_PATH\": \"$ECCODES/share/eccodes/ifs_samples/grib1\",\n\"ECCODES_DEFINITION_PATH\": \"$rekchemin/data/eccodes_extras_definitions:$ECCODES/share/eccodes/definitions\"\n}\n}\n```\n\nThe script runs the SURFEX (Surface Externalis\u00e9e) model, a land surface scheme used in weather and climate models. \n\n**Software dependencies:**\n\n* **OpenMPI:**  A library for running parallel processes.\n* **Grib API:** A library for reading and writing GRIB data, often used for meteorological data.\n* **ECCODES:** Another library for GRIB data, providing functionality like decoding and encoding.\n* **MASTERODB:** This appears to be the main executable of the SURFEX model, based on the script. \n* **RTTOV31:** A radiative transfer model, likely used for simulating satellite observations.\n* **RRTM:** The Radiative Transfer for TOVS model, another radiative transfer model used for calculating atmospheric radiation.\n\n**Resource requirements:**\n\nThe script sets up the following resources for the SURFEX run:\n\n* **CPU:** 4 cores (specified with `#SBATCH -n 4`)\n* **Memory:** 20 GB (specified with `#SBATCH --mem=20000`)\n* **Time:** 10 minutes (specified with `#SBATCH -t 00:10:00`)\n* **Partition:** normal256 (specified with `#SBATCH -p normal256`)\n* **Environment variables:** Various environment variables are set within the script to point to directories, set model options, and configure the MPI environment.\n\nThe script uses several environment variables to manage the execution environment and data files.  \n\n* `MYLIB`:  Specifies the name of the gmkpack pack that contains the SURFEX source code.\n* `TESTDIR`: Points to the directory where the test data is stored. \n* `OUTPUTDIR`: Specifies the directory where the results will be saved.\n\nThe script includes detailed configuration for various parameters, including:\n\n* **NAMELIST:**  Contains various parameters related to the SURFEX model configuration. \n* **Input files:** The script links symbolic links to various input files, including meteorological data, land surface parameters, and atmospheric constants.\n* **Execution:** The script sets up the MPI environment using `mpirun` or `orterun` depending on the platform (HPC or PC) and then launches the SURFEX executable (MASTER). \n\nThis script demonstrates a comprehensive setup for running the SURFEX model. The script includes specific instructions for managing the execution environment, loading libraries, and running the model on both HPC and PC platforms.\n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 11538,
+        "candidates_token_count": 1009,
+        "total_token_count": 12547,
+        "cached_content_token_count": 0
+    }
+}

@@ -1,0 +1,40 @@
+{
+    "application": "Slurm",
+    "details": {
+        "job_name": "graph_sample_w_tunned",
+        "partition": "gpu_p2",
+        "ntasks": 1,
+        "ntasks_per_node": 1,
+        "gres": "gpu:1",
+        "cpus_per_task": 10,
+        "compute_nodes": "v100-32g",
+        "hyperthreading": "disabled",
+        "time_limit": "20:00:00",
+        "output_file": "graph_sample_w_tunned_%j.out",
+        "error_file": "graph_sample_w_tunned_%j.err",
+        "project": "ynx@gpu",
+        "queue": "qos_gpu-dev",
+        "array_tasks": "0-3",
+        "modules": [
+            "tensorflow-gpu/py3/2.4.1"
+        ],
+        "python_script": "./train_eval_plot_script_click.py",
+        "python_arguments": {
+            "model": "graph",
+            "n_zernikes": 15,
+            "graph_features": 21,
+            "l_rate_param": "0.01 0.004",
+            "l_rate_non_param": "0.4 0.2",
+            "saved_model_type": "checkpoint",
+            "saved_cycle": "cycle2",
+            "total_cycles": 2,
+            "use_sample_weights": "True",
+            "l2_param": 0,
+            "base_id_name": "_sample_w_tunned_",
+            "suffix_id_name": "2c 5c 1k 2k",
+            "star_numbers": "200 500 1000 2000",
+            "plots_folder": "plots/graph_sample_w_tunned/"
+        },
+        "working_directory": "$WORK/repo/wf-psf/long-runs/"
+    }
+}

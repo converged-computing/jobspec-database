@@ -1,0 +1,71 @@
+{
+    "application": "SLURM",
+    "details": {
+        "resources": {
+            "partition": "gpu",
+            "nodes": 1,
+            "gpus": 1,
+            "time": "00:30:00",
+            "memory": "32G"
+        },
+        "modules": [
+            "2022",
+            "Anaconda3/2022.05",
+            "PyTorch/1.12.0-foss-2022a-CUDA-11.7.0",
+            "Java/11.0.16"
+        ],
+        "environment": {
+            "conda_env": "pex"
+        },
+        "script": "run/main.py",
+        "arguments": [
+            "chat",
+            "dialogpt",
+            "dialog",
+            "--checkpoint_dir",
+            "checkpoints/",
+            "--load",
+            "trained_fb_hpc_s4_nll05bart_dgpt",
+            "--lm",
+            "gpt2",
+            "--datadir",
+            "$TMPDIR/data/",
+            "--basedir",
+            "msc/msc_dialogue/",
+            "--speaker_prefixes",
+            "<other>",
+            "<self>",
+            "--sessionbreak",
+            "<session>",
+            "--include_persona",
+            "--augmented",
+            "--session",
+            "4",
+            "--chat_initfile",
+            "$TMPDIR/chatstarters.txt",
+            "--decoder_max",
+            "50",
+            "--do_sample",
+            "--num_beams",
+            "1",
+            "--temperature",
+            "1.5",
+            "--top_p",
+            "0.9",
+            "--top_k",
+            "10",
+            "--device",
+            "cuda",
+            "--log_interval",
+            "10",
+            "--loglevel",
+            "VERBOSE",
+            "--seed",
+            "1968",
+            "--logdir",
+            "$TMPDIR/logs/",
+            "--output_dir",
+            "$TMPDIR/output/"
+        ]
+    }
+}

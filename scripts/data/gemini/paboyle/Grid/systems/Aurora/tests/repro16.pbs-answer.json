@@ -1,0 +1,60 @@
+{
+    "application": "MPI",
+    "details": {
+        "scheduler": "PBS",
+        "queue": "EarlyAppAccess",
+        "account": "Aurora_Deployment",
+        "nodes": 16,
+        "walltime": "01:00:00",
+        "jobname": "dwf",
+        "modules": [
+            "oneapi/eng-compiler/2023.05.15.003",
+            "mpich/51.2/icc-all-deterministic-pmix-gpu"
+        ],
+        "environment_variables": {
+            "OMP_PROC_BIND": "spread",
+            "OMP_NUM_THREADS": "3",
+            "MPIR_CVAR_CH4_OFI_ENABLE_GPU_PIPELINE": "1",
+            "MPIR_CVAR_CH4_OFI_GPU_PIPELINE_D2H_ENGINE_TYPE": "0",
+            "MPIR_CVAR_CH4_OFI_GPU_PIPELINE_H2D_ENGINE_TYPE": "0",
+            "MPIR_CVAR_GPU_USE_IMMEDIATE_COMMAND_LIST": "1",
+            "MPIR_CVAR_CH4_OFI_GPU_PIPELINE_BUFFER_SZ": "1048576",
+            "MPIR_CVAR_CH4_OFI_GPU_PIPELINE_THRESHOLD": "131072",
+            "MPIR_CVAR_CH4_OFI_GPU_PIPELINE_NUM_BUFFERS_PER_CHUNK": "16",
+            "MPIR_CVAR_CH4_OFI_GPU_PIPELINE_MAX_NUM_BUFFERS": "16",
+            "MPICH_OFI_NIC_POLICY": "GPU",
+            "MPICH_COLL_SYNC": "1",
+            "MPICH_ENV_DISPLAY": "1",
+            "MPIR_CVAR_ALLREDUCE_DEVICE_COLLECTIVE": "0",
+            "MPIR_CVAR_REDUCE_DEVICE_COLLECTIVE": "0",
+            "MPIR_CVAR_ALLREDUCE_INTRA_ALGORITHM": "recursive_doubling"
+        },
+        "executable": "gpu_tile_compact.sh",
+        "arguments": [
+            "../Test_dwf_mixedcg_prec",
+            "--mpi",
+            "2.4.4.6",
+            "--grid",
+            "64.128.128.192",
+            "--shm-mpi",
+            "1",
+            "--shm",
+            "4096",
+            "--device-mem",
+            "32000",
+            "--accelerator-threads",
+            "32",
+            "--seconds",
+            "3000",
+            "--debug-stdout",
+            "--log",
+            "Message,Iterative"
+        ],
+        "processes": 192,
+        "cores_per_node": 12,
+        "resources": {
+            "shared_memory": "4096",
+            "device_memory": "32000"
+        }
+    }
+}

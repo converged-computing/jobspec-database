@@ -1,0 +1,49 @@
+{
+    "application": "PBS",
+    "details": {
+        "job_name": "obsproc_%JTYP%_%PDY%_%CC%_%DESC%",
+        "job_type": "oe",
+        "walltime": "1:00:00",
+        "account": "OBSPROC-DEV",
+        "queue": "dev",
+        "nodes": "1",
+        "cpus": "2",
+        "memory": "4gb",
+        "environment_variables": {
+            "envir": "prod",
+            "cyc": "%CC%",
+            "DESC": "%DESC%",
+            "JTYP": "%JTYP%",
+            "job": "${JTYP}_${cyc}",
+            "PDY": "%PDY%",
+            "userROOT": "/lfs/h2/emc/obsproc/noscrub/$USER",
+            "obsproc_ver": "v1.1",
+            "obsproc_ver_pckg": "v1.1.2",
+            "bufr_dump_ver": "1.0.0",
+            "obsNET": "obsproc",
+            "PACKAGEROOTpara": "/lfs/h1/ops/para/packages",
+            "HOMEobsproc": "${userROOT}/install/obsproc-rel.v1.0.0",
+            "VERSION_FILE": "${HOMEobsproc}/versions/run.ver",
+            "SENDECF": "NO",
+            "SENDDBN": "NO",
+            "TANK": "$DCOMROOT",
+            "DATAROOT": "/lfs/h2/emc/stmp/${USER}",
+            "jlogfile": "/lfs/h2/emc/stmp/${USER}/${JTYP}.${PDY}.jlogfile",
+            "COMOUT": "${DATAROOT}/CRON/${DESC}/com/${obsNET}/$obsproc_ver/${JTYP}.${PDY}",
+            "MODSDIR": "${DATAROOT}/CRON/${DESC}/dcom/${JTYP}",
+            "DEBUG_LEVEL": "3",
+            "KEEPDATA": "YES"
+        },
+        "software_modules": [
+            "grib_util/${grib_util_ver}",
+            "netcdf/${netcdf_ver}",
+            "intel/${intel_ver}",
+            "craype/${craype_ver}",
+            "cray-mpich/${cray_mpich_ver}",
+            "cray-pals/${cray_pals_ver}",
+            "cfp/${cfp_ver}",
+            "bufr_dump/${bufr_dump_ver}"
+        ],
+        "executable": "$HOMEobsproc/jobs/JOBSPROC_MODS"
+    }
+}

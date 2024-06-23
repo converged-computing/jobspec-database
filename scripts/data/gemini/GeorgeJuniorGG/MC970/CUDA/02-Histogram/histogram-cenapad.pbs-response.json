@@ -1,0 +1,80 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n\"application\": \"PBS\",\n\"software\": [\n\"gcc/9.4.0\",\n\"cmake/3.21.3-gcc-9.4.0\",\n\"cuda/11.5.0-gcc-9.4.0\"\n],\n\"resources\": [\n\"walltime=00:25:00\"\n],\n\"commands\": [\n\"module purge\",\n\"module load gcc/9.4.0\",\n\"module load cmake/3.21.3-gcc-9.4.0\",\n\"module load cuda/11.5.0-gcc-9.4.0\",\n\"cd $PBS_O_WORKDIR\",\n\"cmake -E remove -f build\",\n\"cmake -E make_directory build\",\n\"cd build\",\n\"cmake ../ -DCMAKE_BUILD_TYPE=Release -DCMAKE_CUDA_COMPILER=/opt/pub/spack/cuda/11.5.0/gcc/9.4.0/bin/nvcc\",\n\"cd ..\",\n\"cd build\",\n\"make\",\n\"cd ..\",\n\"build/parallel tests/$a.in 1>build/parallel.$a.out 2>build/parallel.$a.time\",\n\"cat build/parallel.$a.out\",\n\"build/serial tests/$a.in 1>build/serial.$a.out 2>build/serial.$a.time\",\n\"cat build/serial.$a.out\",\n\"diff -u tests/$a.out build/parallel.$a.out >&2\",\n\"ser=$(<build/serial.$a.time)\",\n\"par=$(<build/parallel.$a.time)\",\n\"speedup=$(bc -l <<< \\\"scale=4; $ser/$par\\\")\",\n\"echo \\\"  Serial runtime: ${ser}s\\\"\",\n\"echo \\\"Parallel runtime: ${par}s\\\"\",\n\"echo \\\"         Speedup: ${speedup}x\\\"\",\n\"if [[ ! -f runtime.csv ]]; then echo \\\"# Input,Serial time,Parallel time,Speedup\\\" > runtime.csv fi\",\n\"if [ $diff_status -eq 0 ]; then echo \\\"$a,$ser,$par,$speedup\\\" >> runtime.csv fi\"\n]\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 2,
+                    "blocked": false
+                }
+            ],
+            "citation_metadata": {
+                "citation_sources": [
+                    {
+                        "start_index": 281,
+                        "end_index": 477,
+                        "uri": "https://github.com/victorrigatto/mc970-parallel-computing",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 521,
+                        "end_index": 735,
+                        "uri": "https://github.com/mc970-1s23/CENAPAD-Tutorial",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 604,
+                        "end_index": 768,
+                        "uri": "https://github.com/victorrigatto/mc970-parallel-computing",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 779,
+                        "end_index": 997,
+                        "uri": "https://github.com/mc970-1s23/CENAPAD-Tutorial",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 946,
+                        "end_index": 1191,
+                        "uri": "https://github.com/mc970-1s23/CENAPAD-Tutorial",
+                        "license_": ""
+                    }
+                ]
+            },
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 552,
+        "candidates_token_count": 517,
+        "total_token_count": 1069,
+        "cached_content_token_count": 0
+    }
+}

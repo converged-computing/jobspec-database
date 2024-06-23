@@ -1,0 +1,35 @@
+{
+    "application": "Ray Tune",
+    "details": {
+        "resource_requirements": {
+            "account": "prcoe12",
+            "partition": "booster",
+            "time": "6:00:00",
+            "nodes": 12,
+            "tasks_per_node": 1,
+            "gres": "gpu:4",
+            "gpus_per_task": 4,
+            "cpus_per_task": 96
+        },
+        "software_requirements": {
+            "modules": [
+                "GCC/10.3.0",
+                "CUDA/11.0",
+                "cuDNN/8.0.2.39-CUDA-11.0"
+            ],
+            "environment": {
+                "TUNE_RESULT_DIR": "/p/project/prcoe12/wulff1/ray_results/tune_result_dir",
+                "TUNE_MAX_PENDING_TRIALS_PG": "${SLURM_NNODES}",
+                "CUDA_VISIBLE_DEVICES": "0,1,2,3",
+                "redis_password": "(uuidgen)",
+                "ip_head": "(dynamically generated)"
+            },
+            "python_environment": "tf2"
+        },
+        "script_structure": {
+            "head_node": "mlpf/raytune/start-head.sh",
+            "worker_nodes": "mlpf/raytune/start-worker.sh",
+            "main_script": "mlpf/pipeline.py"
+        }
+    }
+}

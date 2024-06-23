@@ -1,0 +1,92 @@
+{
+    "application": "pytorch",
+    "details": {
+        "software": [
+            "CUDA/11.3.1",
+            "cuDNN/8.2.1.32-CUDA-11.3.1",
+            "Anaconda3/2022.05",
+            "wandb",
+            "git-lfs",
+            "python",
+            "torch.distributed.run",
+            "pixel/scripts/training/run_pretraining.py"
+        ],
+        "resources": {
+            "queue": "qnvidia",
+            "nodes": 1,
+            "walltime": "48:00:00",
+            "project": "DD-22-70",
+            "cache_dir": "/scratch/project/dd-22-70/cache/data",
+            "output_dir": "/scratch/project/dd-22-70/experiments/pixel",
+            "data_source": [
+                "wikipedia",
+                "bookcorpusopen"
+            ]
+        },
+        "environment_variables": {
+            "WANDB_API_KEY": "6e62fdec81f0b81d70d3756f1391f44988935dab",
+            "WANDB_ENTITY": "nadav_b",
+            "WANDB_PROJECT": "pixel-pretraining",
+            "OUTPUT_DIR": "/scratch/project/dd-22-70/experiments/pixel",
+            "RUN_NAME": "pixel",
+            "OMP_NUM_THREADS": "8",
+            "PATH": "/home/it4i-nadavb/apps/lfs/bin",
+            "PYTHONPATH": "/home/it4i-nadavb/pixel"
+        },
+        "training_parameters": {
+            "text_renderer_name_or_path": "Team-PIXEL/pixel-base",
+            "max_steps": 2000000,
+            "train_dataset_names": [
+                "wikipedia",
+                "bookcorpusopen"
+            ],
+            "validation_dataset_name": "plip/wiki_dev",
+            "train_dataset_configs": [
+                "20220301.en",
+                "plain_text"
+            ],
+            "dataset_caches": [
+                "/scratch/project/dd-22-70/cache/data/wikipedia-en",
+                "/scratch/project/dd-22-70/cache/data/bookcorpus/bookcorpusopen"
+            ],
+            "train_splits": [
+                "train",
+                "train"
+            ],
+            "validation_split": "en",
+            "label_names": "pixel_values",
+            "do_train": true,
+            "do_eval": true,
+            "warmup_render_steps": 0,
+            "base_learning_rate": 0.00015,
+            "lr_scheduler_type": "cosine",
+            "weight_decay": 0.05,
+            "num_train_epochs": 1,
+            "warmup_ratio": 0.05,
+            "per_device_train_batch_size": 16,
+            "per_device_eval_batch_size": 16,
+            "gradient_accumulation_steps": 1,
+            "logging_strategy": "steps",
+            "logging_steps": 500,
+            "evaluation_strategy": "steps",
+            "eval_steps": 2000,
+            "save_strategy": "steps",
+            "save_steps": 1000,
+            "seed": 123,
+            "use_auth_token": "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",
+            "remove_unused_columns": false,
+            "fp16": true,
+            "half_precision_backend": "amp",
+            "streaming": true,
+            "report_to": "wandb",
+            "push_to_hub": false,
+            "hub_model_id": "copenlu/pixel",
+            "hub_strategy": "checkpoint",
+            "hub_token": "6e62fdec81f0b81d70d3756f1391f44988935dab",
+            "hub_private_repo": true,
+            "ddp_find_unused_parameters": false,
+            "dataloader_num_workers": 16,
+            "dropout_prob": 0.1
+        }
+    }
+}

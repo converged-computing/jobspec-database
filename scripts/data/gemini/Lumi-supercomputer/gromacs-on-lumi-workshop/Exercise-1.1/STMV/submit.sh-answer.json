@@ -1,0 +1,30 @@
+{
+    "application": "Gromacs",
+    "details": {
+        "version": "2023.3-gpu",
+        "resources": {
+            "partition": "small-g",
+            "account": "project_465000934",
+            "reservation": "gromacs_wednesday",
+            "time": "00:10:00",
+            "nodes": 1,
+            "tasks_per_node": 1,
+            "cpus_per_task": 7,
+            "OMP_NUM_THREADS": 7
+        },
+        "input_files": [
+            "ex1.1_${SLURM_NTASKS}x${OMP_NUM_THREADS}_jID${SLURM_JOB_ID}"
+        ],
+        "command": "gmx_mpi mdrun",
+        "arguments": [
+            "-g",
+            "ex1.1_${SLURM_NTASKS}x${OMP_NUM_THREADS}_jID${SLURM_JOB_ID}",
+            "-nsteps",
+            "-1",
+            "-maxh",
+            "0.017",
+            "-resethway",
+            "-notunepme"
+        ]
+    }
+}

@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"megatron-lm\",\n  \"details\": {\n    \"framework\": \"pytorch\",\n    \"libraries\": [\n      \"deepspeed\",\n      \"mpi\"\n    ],\n    \"resources\": {\n      \"compute_nodes\": 32,\n      \"walltime\": \"06:00:00\",\n      \"filesystems\": [\n        \"home\",\n        \"eagle\"\n      ],\n      \"queue\": \"prod\",\n      \"account\": \"FoundEpidem\",\n      \"modules\": [\n        \"conda/2023-10-04\",\n        \"gcc/11.2.0\"\n      ],\n      \"conda_env\": \"/lus/eagle/projects/candle_aesp/azton/conda-env/megatron-ds\"\n    },\n    \"configuration\": {\n      \"master_node\": \"master_node (obtained from $PBS_NODEFILE)\",\n      \"master_addr\": \"master_node's IP address (obtained from 'host $master_node')\",\n      \"master_port\": 23450,\n      \"http_proxy\": \"http://proxy.alcf.anl.gov:3128\",\n      \"https_proxy\": \"http://proxy.alcf.anl.gov:3130\",\n      \"cuda_visible_devices\": \"0,1,2,3\",\n      \"cuda_device_max_connections\": 1,\n      \"n_nodes\": \"Number of nodes obtained from $PBS_NODEFILE\",\n      \"n_ranks_per_node\": 4,\n      \"total_n_ranks\": \"n_nodes * n_ranks_per_node\",\n      \"logdir\": \"pretrain_bert_NTT\",\n      \"datetime\": \"date in format 'date_%y-%m-%d_time_%H-%M-%S'\",\n      \"seq_len\": 131072,\n      \"use_flash_attn\": 1,\n      \"micro_batch\": 1,\n      \"gas\": 1,\n      \"world_size\": \"total_n_ranks\",\n      \"global_batch\": \"micro_batch * world_size * gas\",\n      \"init_lr\": 4e-4,\n      \"use_sequence_parallel\": 1,\n      \"sp_size\": 8,\n      \"pp_size\": 1,\n      \"mp_size\": 1,\n      \"n_layers\": 40,\n      \"hidden\": 3072,\n      \"attention_heads\": 32,\n      \"zero_stage\": 1,\n      \"num_samples\": 900000000000 / seq_len,\n      \"train_iter\": \"num_samples / global_batch\",\n      \"log\": \"BERT_SP{sp_size}_MP{mp_size}_PP{pp_size}_NL{n_layers}_H{hidden}_A{attention_heads}_L{seq_len}_ZERO{zero_stage}_FLASH{use_flash_attn}_NN{total_n_ranks}\",\n      \"tensorboard_dir\": \"./runlogs/tensorboard\",\n      \"wandb_group\": \"3.3b-scalerun\",\n      \"wandb_project\": \"mega-genomes\",\n      \"wandb_name\": \"log\",\n      \"wandb_resume\": 0,\n      \"reload_path\": \"/lus/eagle/projects/RL-fold/azton/mega-genomes/checkpoints/BERT_SP1_MP1_PP1_NL8_H768_A8_L1024_ZERO1_FLASH1_NN128\",\n      \"data_path\": \"path to training data\",\n      \"data_dir\": \"/lus/eagle/projects/RL-fold/azton/genomes/NTT/megatron-bins/ncbi_fixed_6mer_splitds_\",\n      \"vocab_file\": \"/lus/eagle/projects/candle_aesp/azton/GenomeLM/genomelm/tokenizer_files/6-mer-tokenizer.json\",\n      \"data_load_args\": \"--data-path $DATA_PATH --dataloader-type single --vocab-file $VOCAB_FILE\",\n      \"cpu_optim\": \" --cpu-optimizer\",\n      \"ds_config\": \"./ds_config_zero1_bf16_nooffload.json\",\n      \"ds_args\": \" --deepspeed --deepspeed_config=$DS_CONFIG --zero-stage=$ZERO_STAGE --deepspeed-activation-checkpointing --sequence-parallel-size {sp_size} --no-pipeline-parallel --deepspeed-activation-checkpointing --checkpoint-activations --partition-activations --checkpoint-num-layers 1 \",\n      \"gpt_args\": [\n        \"--bert-no-binary-head\",\n        \"--genome-k-window 6\",\n        \"--genome-sliding-window 1\",\n        \"--tokenizer-type GenomeTokenizer\",\n        \"--save checkpoints/{log}/\",\n        \"--vocab-size 4104\",\n        \"--make-vocab-size-divisible-by 128\",\n        \"--seed 8675309\",\n        \"--DDP-impl local\",\n        \"--use-contiguous-buffers-in-local-ddp\",\n        \"--pipeline-model-parallel-size {pp_size}\",\n        \"--tensor-model-parallel-size {mp_size}\",\n        \"--sequence-parallel-size {sp_size}\",\n        \"--num-layers {n_layers}\",\n        \"--hidden-size {hidden}\",\n        \"--num-attention-heads {attention_heads}\",\n        \"--micro-batch-size {micro_batch}\",\n        \"--global-batch-size {global_batch}\",\n        \"--seq-length {seq_len}\",\n        \"--max-position-embeddings {seq_len}\",\n        \"--use-rotary-position-embeddings\",\n        \"--bf16\",\n        \"--loss-scale 2\",\n        \"--no-log-loss-scale-to-tensorboard\",\n        \"--train-iters {train_iter}\",\n        \"--lr-decay-iters 320000\",\n        \"--num-workers 12\",\n        \"--data-impl mmap\",\n        \"--data-parallel-random-init\",\n        \"--split 930,50,20\",\n        \"--distributed-backend nccl\",\n        \"--lr {init_lr}\",\n        \"--lr-decay-style cosine\",\n        \"--min-lr 1.0e-7\",\n        \"--weight-decay 1e-1\",\n        \"--clip-grad 1.0\",\n        \"--lr-warmup-fraction .01\",\n        \"--log-interval 1\",\n        \"--save-interval 100\",\n        \"--eval-interval 1000\",\n        \"--eval-iters 100\",\n        \"--override-opt_param-scheduler\",\n        \"--tensorboard-dir {tensorboard_dir}/{log}/\",\n        \"--log-timers-to-tensorboard\",\n        \"--tensorboard-log-interval 10\",\n        \"--no-async-tensor-model-parallel-allreduce\"\n      ]\n    }\n  }\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 2961,
+        "candidates_token_count": 1674,
+        "total_token_count": 4635,
+        "cached_content_token_count": 0
+    }
+}

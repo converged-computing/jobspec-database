@@ -1,0 +1,58 @@
+{
+    "application": "pytorch",
+    "details": {
+        "slurm_config": {
+            "nodes": 1,
+            "gpus": 1,
+            "memory": "36GB",
+            "cpus_per_task": 8,
+            "time": "7-00:00:00",
+            "job_name": "train",
+            "output": "/home/p/u/puzhao/run_logs/%x-%A_%a.out"
+        },
+        "environment": {
+            "conda_env": "pytorch",
+            "python_unbuffered": true
+        },
+        "script_details": {
+            "framework": "pytorch",
+            "model": "Siam-Unet",
+            "training_data": {
+                "satellites": [
+                    "S1",
+                    "S2",
+                    "ALOS"
+                ],
+                "stacking": true,
+                "input_bands": {
+                    "S1": [
+                        "ND",
+                        "VH",
+                        "VV"
+                    ],
+                    "S2": [
+                        "B4",
+                        "B8",
+                        "B12"
+                    ]
+                }
+            },
+            "training_parameters": {
+                "seed": [
+                    0,
+                    1,
+                    2,
+                    3,
+                    4
+                ],
+                "architecture": [
+                    "SiamUnet_conc",
+                    "SiamUnet_diff",
+                    "DualUnet_LF"
+                ],
+                "batch_size": 16,
+                "max_epochs": 100
+            }
+        }
+    }
+}

@@ -1,0 +1,34 @@
+{
+    "application": "MATLAB",
+    "details": {
+        "environment": "LSF (Load Sharing Facility)",
+        "resources": {
+            "cores": 8,
+            "memory": "4096 MB",
+            "walltime": "3 hours",
+            "modules": [
+                "MISC",
+                "matlab"
+            ],
+            "parallelism": "OpenMP",
+            "output_file": "/rwthfs/rz/cluster/work/rb570596/ProjectIC/matlab/output/logs/project_ic.txt"
+        },
+        "script_details": {
+            "job_name": "project_ic",
+            "email_address": "reinhold.bertram@rwth-aachen.de"
+        },
+        "matlab_options": {
+            "mode": "non-interactive batch",
+            "execution": {
+                "serial": "matlab -singleCompThread",
+                "parallel": "taskset -c 0-$mytasks matlab"
+            },
+            "arguments": "-nodisplay -nodesktop -nosplash -logfile job.log",
+            "matlab_code": [
+                "if getenv('LSB_DJOB_NUMPROC') > '1' matlabpool('OPEN','local',getenv('LSB_DJOB_NUMPROC')); end",
+                "main",
+                "exit"
+            ]
+        }
+    }
+}

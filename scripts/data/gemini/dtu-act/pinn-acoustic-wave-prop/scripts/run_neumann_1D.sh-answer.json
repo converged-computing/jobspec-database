@@ -1,0 +1,31 @@
+{
+    "application": "LSF",
+    "details": {
+        "software": [
+            "python3/3.8.9",
+            "cuda/11.1",
+            "cudnn/v8.0.4.30-prod-cuda-11.1",
+            "tensorrt/7.2.3.4-cuda-11.1"
+        ],
+        "resources": {
+            "queue": "gpuv100",
+            "cores": 1,
+            "gpu": {
+                "type": "v100",
+                "mode": "exclusive_process",
+                "count": 1
+            },
+            "memory": "4GB",
+            "walltime": "24:00",
+            "host_count": 1,
+            "output_file": "../data/pinn/logs/Output_%J.txt",
+            "error_file": "../data/pinn/logs/Error_%J.txt"
+        },
+        "environment_variables": {
+            "PYTHONPATH": "${PYTHONPATH}:/zhome/00/4/50173/.local/bin",
+            "LD_LIBRARY_PATH": "${LD_LIBRARY_PATH}:$CUDA_ROOT/extras/CUPTI/lib64/"
+        },
+        "script": "main_train.py",
+        "script_arguments": "--path_settings=\"scripts/settings/neumann_1D.json\""
+    }
+}

@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"SLURM\",\n  \"details\": {\n    \"job_name\": \"py-pycuda@2020.1\",\n    \"account\": \"sdsc\",\n    \"partition\": \"hotel\",\n    \"nodes\": 1,\n    \"tasks_per_node\": 1,\n    \"cpus_per_task\": 10,\n    \"memory\": \"93G\",\n    \"gpus\": 1,\n    \"time\": \"00:30:00\",\n    \"output\": \"%x.o%j.%N\",\n    \"scheduler_module\": \"slurm\",\n    \"compiler_module\": \"gcc/10.2.0\",\n    \"cuda_module\": \"cuda/11.2.2\",\n    \"spack_version\": \"0.17.3\",\n    \"spack_instance_name\": \"gpu\",\n    \"spack_instance_dir\": \"${HOME}/cm/shared/apps/spack/${SPACK_VERSION}/${SPACK_INSTANCE_NAME}\",\n    \"spack_package\": \"py-pycuda@2020.1\",\n    \"spack_compiler\": \"gcc@10.2.0\",\n    \"spack_variants\": \"\",\n    \"spack_dependencies\": \"^cuda@11.2.2/$(spack find --format '{hash:7}' cuda@11.2.2 % ${SPACK_COMPILER}) ^py-numpy@1.20.3/$(spack find --format '{hash:7}' py-numpy@1.20.3 % ${SPACK_COMPILER}) ^openblas@0.3.17/$(spack find --format '{hash:7}' openblas@0.3.17 % ${SPACK_COMPILER} ~ilp64 threads=none) ^boost@1.77.0/$(spack find --format '{hash:7}' boost@1.77.0 % ${SPACK_COMPILER} ~mpi)\",\n    \"spack_spec\": \"${SPACK_PACKAGE} % ${SPACK_COMPILER} ${SPACK_VARIANTS} ${SPACK_DEPENDENCIES}\"\n  }\n}\n```\n\n**Explanation:**\n\n* **SLURM:** The script is primarily designed to run under the SLURM workload manager. It uses SLURM directives (`#SBATCH`) to specify resource requirements. \n* **Spack:** The script leverages Spack for package management, using it to install the `py-pycuda@2020.1` package along with its dependencies.\n* **Environment Setup:** The script loads modules for the scheduler (SLURM), compiler (GCC), and CUDA. It also sets up the Spack environment using its `setup-env.sh` script.\n* **Dependencies:** The script defines the dependencies of the `py-pycuda` package, including specific versions of CUDA, NumPy, OpenBLAS, and Boost.\n* **Installation:** It installs the specified package using Spack with `--jobs` option, ensuring parallel execution for performance.\n* **Subsequent Job:** Finally, it launches another job (`adol-c@2.7.2.sh`) using `sbatch` with a dependency on the current job using `--dependency=\"afterok:${SLURM_JOB_ID}\"`.\n\nThis script outlines a typical workflow for managing complex software installations and dependencies within a high-performance computing (HPC) environment like those provided by SLURM. \n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 1005,
+        "candidates_token_count": 790,
+        "total_token_count": 1795,
+        "cached_content_token_count": 0
+    }
+}

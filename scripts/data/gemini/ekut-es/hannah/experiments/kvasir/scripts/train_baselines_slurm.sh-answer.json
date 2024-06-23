@@ -1,0 +1,33 @@
+{
+    "application": "Hannah",
+    "other_software": [
+        "slurm",
+        "hannah-train"
+    ],
+    "resource_requirements": {
+        "partition": "gpu-2080ti",
+        "nodes": 1,
+        "gres": "gpu:rtx2080ti:4",
+        "time": "720",
+        "error_output": "jobs/%j.err",
+        "standard_output": "jobs/%j.out",
+        "mail_type": "ALL",
+        "mail_user": "christoph.gerum@uni-tuebingen.de"
+    },
+    "environment_variables": {
+        "HANNAH_DATA_FOLDER": "/mnt/qb/datasets/STAGING/bringmann/datasets/",
+        "EXPERIMENT": "baseline",
+        "RESOLUTION": "320",
+        "MODEL": "timm_resnet152",
+        "SPLIT": "official"
+    },
+    "command_line_arguments": {
+        "module.num_workers": "8",
+        "module.batch_size": "32",
+        "trainer": "sharded",
+        "trainer.gpus": "4",
+        "dataset.split": "${SPLIT}",
+        "dataset.resolution": "$RESOLUTION",
+        "model": "${MODEL}"
+    }
+}

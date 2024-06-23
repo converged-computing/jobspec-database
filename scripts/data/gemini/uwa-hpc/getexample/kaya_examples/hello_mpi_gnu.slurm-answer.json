@@ -1,0 +1,25 @@
+{
+    "application": "SLURM",
+    "details": {
+        "job_name": "GE-fortranMPI_gnu",
+        "partition": "test",
+        "nodes": 3,
+        "tasks": 30,
+        "tasks_per_node": 10,
+        "cpus_per_task": 1,
+        "time": "00:01:00",
+        "account": "ea007",
+        "modules": [
+            "gcc/8.3.1",
+            "openmpi/4.0.5"
+        ],
+        "environment": {
+            "EXECUTABLE": "hello_mpi_gnu",
+            "SCRATCH": "$MYSCRATCH/run_fortranMPI_gnu/$SLURM_JOBID",
+            "RESULTS": "$MYGROUP/mpifortran_gnu_results/$SLURM_JOBID",
+            "OMP_NUM_THREADS": "${SLURM_CPUS_PER_TASK}"
+        },
+        "output_file": "fortranMPI_gnu.log",
+        "execution_command": "srun --mpi=pmix_v3 ./${EXECUTABLE} >> ${OUTPUT}"
+    }
+}

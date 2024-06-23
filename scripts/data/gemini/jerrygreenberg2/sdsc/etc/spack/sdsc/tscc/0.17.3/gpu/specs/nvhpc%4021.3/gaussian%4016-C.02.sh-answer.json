@@ -1,0 +1,40 @@
+{
+    "application": "Gaussian",
+    "software": [
+        {
+            "name": "Spack",
+            "version": "0.17.3",
+            "instance": "gpu"
+        },
+        {
+            "name": "Slurm",
+            "module": "slurm"
+        },
+        {
+            "name": "NVHPC",
+            "version": "21.3",
+            "module": "nvhpc@21.3"
+        },
+        {
+            "name": "CUDA",
+            "version": "10.0.130",
+            "module": "cuda/10.0.130"
+        },
+        {
+            "name": "Gaussian",
+            "version": "16-C.02",
+            "package": "gaussian@16-C.02",
+            "variants": "~binary +cuda cuda_arch=70",
+            "dependencies": "cuda@10.0.130/$(spack find --format '{hash:7}' cuda@10.0.130 % ${SPACK_COMPILER})"
+        }
+    ],
+    "resources": {
+        "nodes": 1,
+        "tasks_per_node": 1,
+        "cpus_per_task": 10,
+        "memory": "93G",
+        "gpus": 1,
+        "time": "01:00:00",
+        "scratch_directory": "${LOCAL_SCRATCH_DIR}/spack-stage"
+    }
+}

@@ -1,0 +1,38 @@
+{
+    "application": "deepspeed",
+    "details": {
+        "environment": {
+            "compute_resource": "CSC mahti",
+            "scheduler": "SLURM",
+            "account": "project_2004600",
+            "partition": "gputest",
+            "time": "00:15:00",
+            "gres": "gpu:a100:1",
+            "output_logs": "logs/%j.out",
+            "error_logs": "logs/%j.err"
+        },
+        "software": {
+            "compiler": "gcc/10.3.0",
+            "cuda": "cuda/11.2.2",
+            "pytorch": "pytorch/1.9",
+            "python_package": "deepspeed"
+        },
+        "deepspeed_build_options": {
+            "DS_BUILD_CPU_ADAM": 1,
+            "DS_BUILD_FUSED_ADAM": 1,
+            "DS_BUILD_FUSED_LAMB": 1,
+            "DS_BUILD_SPARSE_ATTN": 1,
+            "DS_BUILD_TRANSFORMER": 1,
+            "DS_BUILD_TRANSFORMER_INFERENCE": 0,
+            "DS_BUILD_STOCHASTIC_TRANSFORMER": 1,
+            "DS_BUILD_UTILS": 1,
+            "DS_BUILD_AIO": 0
+        },
+        "installation_method": "userspace",
+        "python_commands": [
+            "python -m pip uninstall --yes deepspeed",
+            "python -m pip install --user deepspeed --global-option=\"build_ext\"",
+            "python -m deepspeed.env_report"
+        ]
+    }
+}

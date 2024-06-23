@@ -1,0 +1,59 @@
+{
+    "application": "PyTorch",
+    "details": {
+        "framework": "PyTorch",
+        "resources": {
+            "nodes": 1,
+            "tasks": 1,
+            "cpus": 32,
+            "gpus": 8,
+            "memory": "Not specified",
+            "time": "3 hours"
+        },
+        "environment": {
+            "CARLA_ROOT": "/path/to/carla_9_10",
+            "PYTHONPATH": [
+                "/path/to/carla_9_10/PythonAPI",
+                "/path/to/carla_9_10/PythonAPI/carla",
+                "/path/to/carla_9_10/PythonAPI/carla/dist/carla-0.9.10-py3.7-linux-x86_64.egg",
+                "/path/to/carla_9_10/PythonAPI/carla/"
+            ],
+            "LD_LIBRARY_PATH": "/path/to/miniconda/lib",
+            "OMP_NUM_THREADS": 32,
+            "OPENBLAS_NUM_THREADS": 1
+        },
+        "script": "train.py",
+        "arguments": [
+            "--id",
+            "train_id_000",
+            "--batch_size",
+            "8",
+            "--setting",
+            "02_05_withheld",
+            "--root_dir",
+            "/path/to/dataset",
+            "--logdir",
+            "/path/to/logdir",
+            "--use_controller_input_prediction",
+            "1",
+            "--use_wp_gru",
+            "0",
+            "--use_discrete_command",
+            "1",
+            "--use_tp",
+            "1",
+            "--continue_epoch",
+            "1",
+            "--cpu_cores",
+            "32",
+            "--num_repetitions",
+            "3"
+        ],
+        "slurm": {
+            "job_name": "train_id_000",
+            "partition": "a100",
+            "output_file": "/path/to/slurmlogs/%j.out",
+            "error_file": "/path/to/slurmlogs/%j.err"
+        }
+    }
+}

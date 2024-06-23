@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"SLURM\",\n  \"details\": {\n    \"software\": [\n      \"dask\",\n      \"python\",\n      \"ruche\",\n      \"PDI\",\n      \"kokkos\"\n    ],\n    \"resources\": {\n      \"nodes\": \"SLURM_NNODES\",\n      \"cpus_per_task\": \"SLURM_CPUS_PER_TASK\",\n      \"threads_per_core\": 1,\n      \"partition\": \"cpu_short\",\n      \"environment_files\": [\n        \"${BASE_DIR}/envs/ruche/cpu/${SIMU_SIZE}/modules.env\",\n        \"deisa/bin/activate\",\n        \"pdi/share/pdi/env.sh\"\n      ],\n      \"working_directory\": \"${WORKING_DIR}\"\n    },\n    \"commands\": [\n      \"dask scheduler --scheduler-file=${SCHEFILE}\",\n      \"dask worker --local-directory /tmp --scheduler-file=${SCHEFILE}\",\n      \"python -O in-situ/fft_updated.py\",\n      \"build/main ${BASE_DIR}/envs/ruche/cpu/${SIMU_SIZE}/setup.ini ${BASE_DIR}/envs/ruche/cpu/${SIMU_SIZE}/io_deisa.yml --kokkos-map-device-id-by=mpi_rank\"\n    ]\n  }\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 736,
+        "candidates_token_count": 325,
+        "total_token_count": 1061,
+        "cached_content_token_count": 0
+    }
+}

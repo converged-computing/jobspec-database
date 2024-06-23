@@ -1,0 +1,32 @@
+{
+    "application": "petibm-rollingpitching",
+    "details": {
+        "resource_requirements": {
+            "partition": "small-gpu",
+            "nodes": 2,
+            "tasks_per_node": 20,
+            "time": "20:00:00"
+        },
+        "software_requirements": {
+            "singularity": "3.4.2",
+            "openmpi": "3.1.4"
+        },
+        "container_image": "/SEAS/home/mesnardo/images/petibm-rollingpitching_petibm0.5.1-xenial.sif",
+        "libraries": [
+            "/lib64/libibverbs/*",
+            "/lib64/libmlx5.so*",
+            "/lib64/libibverbs.so*",
+            "/lib64/libnl*.so*"
+        ],
+        "bind_mounts": [
+            "$ib,$simudir:$indir",
+            "$indir/probes.yaml",
+            "$indir/view.log"
+        ],
+        "environment_variables": {
+            "CUDA_VISIBLE_DEVICES": "0,1"
+        },
+        "input_directory": "/mnt",
+        "simulation_directory": "/lustre/groups/barbalab/mesnardo/rollingpitching/Re400_St0.6_AR1.27_psi90-2"
+    }
+}

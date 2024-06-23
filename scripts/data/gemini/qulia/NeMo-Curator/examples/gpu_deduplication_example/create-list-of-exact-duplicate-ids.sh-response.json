@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"SLURM\",\n  \"details\": {\n    \"job_name\": \"nemo-data-curator:create-exact-dup-id-list\",\n    \"nodes\": 1,\n    \"exclusive\": true,\n    \"time\": \"0:30:00\",\n    \"docker_image\": \"nvcr.io/ea-bignlp/ga-participants/nemofw-training:23.11\",\n    \"mounts\": \"${base_dir}:${base_dir}\",\n    \"input_id_list_dir\": \"<Provide path to exact_duplicates.parquet generated from exact dedup>\",\n    \"command\": \"create_list_of_duplicate_ids\",\n    \"command_args\": {\n      \"--input-id-list-dir\": \"${input_id_list_dir}\",\n      \"--input-bucket-key\": \"_hashes\",\n      \"--output-id-list-dir\": \"${res_dir}/exact_dup_ids\",\n      \"--output-bucket-list-dir\": \"${res_dir}/buckets\",\n      \"--log-dir\": \"${log_dir}/create_exact_dup_id_list\"\n    }\n  }\n}\n```\n\nThe script is using SLURM (Simple Linux Utility for Resource Management) to manage the execution of the script on a cluster. \n\n**Details:**\n\n- **SLURM:** The script starts with `#!/bin/bash` and uses `#SBATCH` directives to specify SLURM job parameters:\n    - `--job-name`: Sets the name of the job to \"nemo-data-curator:create-exact-dup-id-list\".\n    - `--nodes`: Requests one node for the job.\n    - `--exclusive`: Specifies that the job should be the only one running on the node.\n    - `--time`: Sets the maximum runtime to 30 minutes.\n- **Docker:** The script uses a Docker image \"nvcr.io/ea-bignlp/ga-participants/nemofw-training:23.11\" for running the `create_list_of_duplicate_ids` command. \n- **Mounts:** The script mounts the base directory of the script to the container using `--container-mounts=${mounts}`.\n- **Command:**  The script runs the command `create_list_of_duplicate_ids` within the Docker container, specifying several arguments:\n    - `--input-id-list-dir`: The directory containing the input list of exact duplicates.\n    - `--input-bucket-key`:  The key used to identify buckets for storing data.\n    - `--output-id-list-dir`:  The directory where the list of duplicate IDs will be saved.\n    - `--output-bucket-list-dir`:  The directory where the list of buckets will be saved.\n    - `--log-dir`:  The directory where the logs for the command will be saved. \n\nThe script utilizes Docker and SLURM to manage resource allocation, run the `create_list_of_duplicate_ids` command in a containerized environment, and produce a list of exact duplicate IDs and bucket information. \n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 668,
+        "candidates_token_count": 706,
+        "total_token_count": 1374,
+        "cached_content_token_count": 0
+    }
+}

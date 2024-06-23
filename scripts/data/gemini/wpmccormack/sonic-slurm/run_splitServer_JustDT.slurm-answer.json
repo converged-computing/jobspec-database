@@ -1,0 +1,49 @@
+{
+    "application": "cmsRun",
+    "details": {
+        "software": [
+            "CMSSW_11_3_0",
+            "CMSSW_12_0_0_pre5",
+            "sonic-workflows",
+            "python3.6",
+            "throughputFinderTimeDiff.py"
+        ],
+        "resource_requirements": {
+            "nodes": 1,
+            "tasks": 1,
+            "cpus": 4,
+            "time": "05:00:00",
+            "memory": "1gb",
+            "environment_variables": {
+                "SCRAM_ARCH": "slc7_amd64_gcc900",
+                "CMS_PATH": "~/cms_path"
+            },
+            "files": {
+                "input_files": [
+                    "~/CMSSW_12_0_0_pre5_ttbar_splitServer.tgz",
+                    "~/allSonicTriton_cff_JustDT.py",
+                    "~/local_files/*.root",
+                    "~/file_of_files.txt",
+                    "~/run_files_splitServer.py",
+                    "~/throughputFinderTimeDiff.py"
+                ],
+                "output_files": [
+                    "outThroughput.txt",
+                    "~/splitServer_JustDT_arrays/Synchro${SLURM_ARRAY_JOB_ID}.txt"
+                ]
+            }
+        },
+        "dependencies": [
+            "cmsset_default.sh",
+            "site-local-config.xml"
+        ],
+        "commands": [
+            "scram p CMSSW_11_3_0",
+            "scramv1 b -r ProjectRename",
+            "scramv1 runtime -sh",
+            "cmsRun run_files_splitServer.py address=$1 port=$2 tmi=True threads=4 maxEvents=8",
+            "cmsRun run_files_splitServer.py address=$1 port=$2 tmi=True threads=4 maxEvents=1000 &> outThroughput.txt",
+            "python3.6 ~/throughputFinderTimeDiff.py outThroughput.txt ~/splitServer_JustDT_arrays/Synchro${SLURM_ARRAY_JOB_ID}.txt"
+        ]
+    }
+}

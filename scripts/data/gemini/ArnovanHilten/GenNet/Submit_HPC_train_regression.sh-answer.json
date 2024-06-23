@@ -1,0 +1,44 @@
+{
+    "application": "SLURM",
+    "details": {
+        "resources": {
+            "partition": "gpu",
+            "time": "5-00:00:00",
+            "nodes": 1,
+            "cores": 16,
+            "gpus_per_node": 1,
+            "memory": "100G",
+            "memory_per_gpu": "39G"
+        },
+        "job_name": "GenNet_regression",
+        "output_file": "/home/ahilten/repositories/GenNet/GenNet_utils/SLURM_logs/out_%j.log",
+        "error_file": "/home/ahilten/repositories/GenNet/GenNet_utils/SLURM_logs/error_%j.log",
+        "modules": [
+            "CUDA/11.3.1",
+            "cuDNN/8.2.1.32-CUDA-11.3.1"
+        ],
+        "environment": {
+            "source": "$HOME/env_GenNet/bin/activate"
+        },
+        "python_script": "GenNet.py",
+        "arguments": [
+            "train",
+            "/home/ahilten/repositories/pheno_height/Input_files/",
+            "$1",
+            "-genotype_path",
+            "/projects/0/emc17610/nvidia/UKBB_HRC_imputed/genotype/",
+            "-problem_type",
+            "regression",
+            "-lr",
+            "$2",
+            "-bs",
+            "$3",
+            "-L1",
+            "$4",
+            "-network_name",
+            "regression_height",
+            "-epoch_size=50000",
+            "-patience=50"
+        ]
+    }
+}

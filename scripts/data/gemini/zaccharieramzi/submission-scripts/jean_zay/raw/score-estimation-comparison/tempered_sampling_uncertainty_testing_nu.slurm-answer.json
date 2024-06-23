@@ -1,0 +1,27 @@
+{
+    "application": "Slurm",
+    "details": {
+        "job_name": "tempered_sampling",
+        "tasks": 1,
+        "tasks_per_node": 1,
+        "gpus": 1,
+        "cpus_per_task": 10,
+        "hyperthreading": false,
+        "task_distribution": "block:block",
+        "time_limit": "20:00:00",
+        "qos": "qos_gpu-t3",
+        "output_file": "tempered_sampling%A_%a.out",
+        "error_file": "tempered_sampling%A_%a.out",
+        "array_tasks": 3,
+        "environment": {
+            "modules": [
+                "tensorflow-gpu/py3/2.3.0"
+            ],
+            "conda_environment": "fastmri-tf-2.1.0",
+            "fastmri_data_dir": "$SCRATCH/",
+            "checkpoints_dir": "$SCRATCH/nsec_nofc_3scales",
+            "figures_dir": "$SCRATCH/nsec_figures/tempered_sampling_testing_nu_nofc_3scales_sn${opt[$SLURM_ARRAY_TASK_ID]}"
+        },
+        "script": "python ./nsec/mri/tempered_sampling_reconstruction.py -n 1000 -b 2 -c CORPD_FBK -sn 2.0  -nps 50 --no-fcon -sc 3 -nr 7 -e 10 -dcs 0.1 -si 100 -nu ${opt[$SLURM_ARRAY_TASK_ID]}"
+    }
+}

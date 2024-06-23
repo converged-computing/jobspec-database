@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"Slurm\",\n  \"details\": {\n    \"resource_requests\": {\n      \"partition\": \"gpu\",\n      \"nodes\": 1,\n      \"tasks_per_node\": 1,\n      \"gpus_per_task\": 1,\n      \"cpus_per_task\": 2,\n      \"time\": \"4:00:00\"\n    },\n    \"environment_variables\": {\n      \"OMP_MCA_btl_openib_warn_default_gid_prefix\": 0,\n      \"OMP_MCA_btl_openib_cpc_exclude\": \"rdmacm\",\n      \"OMP_MCA_btl_openib_if_exclude\": \"mlx5_5:1,mlx5_11\",\n      \"NCCL_SOCKET_IFNAME\": \"hsn\"\n    },\n    \"software\": {\n      \"singularity\": \"/home/be62tdqc/test.sif\",\n      \"deepspeed\": \"/home/be62tdqc/.local/bin/deepspeed\",\n      \"nsys\": \"installed (likely from Nvidia) and used for profiling\"\n    },\n    \"scripts\": {\n      \"export_DDP_vars.sh\": \"used to set environment variables for distributed data parallel training\",\n      \"main_deepspeed.py\": \"main python script used for deep learning training\",\n      \"ds_config.json\": \"deepspeed configuration file for hyperparameter tuning\"\n    },\n    \"other\": {\n      \"data_path\": \"/pscratch/sd/s/stella/ABCD_TFF/MNI_to_TRs\",\n      \"output_file\": \"output_%p\",\n      \"profiling_options\": \"cuda, nvtx, cublas, cudnn\",\n      \"training_parameters\": {\n        \"step\": 2,\n        \"dataset_name\": \"Dummy\",\n        \"profiling\": True,\n        \"batch_size_phase2\": 4,\n        \"random_TR\": True,\n        \"lr_init_phase2\": 1e-4,\n        \"lr_policy_phase2\": \"SGDR\",\n        \"lr_warmup_phase2\": 500,\n        \"lr_gamma_phase2\": 0.5,\n        \"lr_step_phase2\": 500,\n        \"exp_name\": \"SGDR\",\n        \"deepspeed\": True,\n        \"deepspeed_config\": \"ds_config.json\"\n      }\n    }\n  }\n}\n```\n\n**Explanation:**\n\n* **Slurm:** The script utilizes Slurm as a resource manager to submit jobs and allocate resources.\n* **Singularity:** The script uses singularity to run the containerized application using a provided image (`/home/be62tdqc/test.sif`).\n* **Deepspeed:**  The script runs a deep learning training program (`main_deepspeed.py`) with the Deepspeed library for distributed training.\n* **Nsys:** The script uses Nsys from Nvidia for profiling the training process, capturing data from CUDA, NVTX, CuBLAS, and cuDNN.\n* **Other Software:**  The script utilizes various other tools:\n    * **Bash:** Used for scripting.\n    * **Conda:** Used for managing the environment and installing necessary packages.\n    * **MPI:**  Potentially used for distributed communication (as the environment variables related to OpenIB are configured).\n* **Data:** The script uses data stored at `/pscratch/sd/s/stella/ABCD_TFF/MNI_to_TRs`.\n* **Output:** The Nsys profiling results are written to a file named \"output_%p\".\n* **Training Parameters:** The script configures many parameters for deep learning training including:\n    * `step`: Training step.\n    * `dataset_name`: Name of the dataset.\n    * `profiling`: Enable profiling.\n    * `batch_size_phase2`: Batch size during phase 2 of training.\n    * `random_TR`: Use random time resolutions (TR).\n    * `lr_init_phase2`: Initial learning rate.\n    * `lr_policy_phase2`: Learning rate policy.\n    * `lr_warmup_phase2`: Learning rate warm-up steps.\n    * `lr_gamma_phase2`: Learning rate decay factor.\n    * `lr_step_phase2`: Learning rate decay step.\n    * `exp_name`: Experiment name.\n    * `deepspeed_config`: Path to the Deepspeed configuration file.\n\n**Note:**  The script likely performs distributed training using Deepspeed, utilizing Slurm and the containerized environment provided by Singularity. The profiling feature provides insights into the performance of the training process.\n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 784,
+        "candidates_token_count": 1083,
+        "total_token_count": 1867,
+        "cached_content_token_count": 0
+    }
+}

@@ -1,0 +1,36 @@
+{
+    "application": "SLURM",
+    "details": {
+        "partition": "gpu",
+        "excluded_nodes": "sls-titan-[0-2]",
+        "gpu_resources": "gpu:1",
+        "cores": 4,
+        "nodes": 1,
+        "memory": "30000",
+        "job_name": "s3p-sid",
+        "output_file": "./log_%j.txt",
+        "environment_setup": [
+            ". /data/sls/scratch/share-201907/slstoolchainrc",
+            "source /data/sls/scratch/yuangong/ssast/venvssast/bin/activate",
+            "export TORCH_HOME=."
+        ],
+        "python_script": "run_downstream.py",
+        "script_arguments": [
+            "--expdir",
+            "$expdir",
+            "-m",
+            "train",
+            "-u",
+            "$mdl",
+            "-d",
+            "voxceleb1",
+            "-c",
+            "config_sid.yaml",
+            "-s",
+            "hidden_states",
+            "-o",
+            "config.optimizer.lr=${lr}",
+            "-f"
+        ]
+    }
+}

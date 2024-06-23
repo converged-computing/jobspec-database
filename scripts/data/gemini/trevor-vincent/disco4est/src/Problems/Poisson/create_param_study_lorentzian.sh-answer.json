@@ -1,0 +1,114 @@
+{
+    "application": "SLURM",
+    "details": {
+        "software": [
+            "d4est",
+            "MPI",
+            "OpenMP",
+            "PETSc"
+        ],
+        "resources": {
+            "compute nodes": 1,
+            "cores per node": "$SLURM_CPUS_PER_TASK",
+            "memory per core": "1024M",
+            "wall time": "$5-00:00"
+        },
+        "environment": {
+            "d4est environment": "/home/p/pfeiffer/tvincent/d4est.env"
+        },
+        "input": {
+            "options.input": {
+                "initial_mesh": {
+                    "min_quadrants": -1,
+                    "min_level": 0,
+                    "fill_uniform": 1,
+                    "region0_deg": "$1",
+                    "region0_deg_quad_inc": "$2",
+                    "region1_deg": "$1",
+                    "region1_deg_quad_inc": "$2"
+                },
+                "problem": {
+                    "use_dirichlet": "$9"
+                },
+                "flux": {
+                    "name": "sipg",
+                    "sipg_penalty_prefactor": "$3",
+                    "sipg_flux_h": "$4",
+                    "sipg_penalty_fcn": "maxp_sqr_over_minh"
+                },
+                "amr": {
+                    "scheme": "uniform_h",
+                    "num_of_amr_steps": 100,
+                    "max_degree": 7
+                },
+                "geometry": {
+                    "name": "cubed_sphere_7tree",
+                    "R0": "$5",
+                    "R1": "$6",
+                    "compactify_outer_shell": 0,
+                    "compactify_inner_shell": 1,
+                    "DX_compute_method": "analytic",
+                    "JAC_compute_method": "numerical"
+                },
+                "d4est_vtk": {
+                    "filename": "poisson_sinx_uniform",
+                    "geometry_section": "geometry",
+                    "output_type": "ascii",
+                    "grid_type": "dg",
+                    "write_tree": 1,
+                    "write_level": 1,
+                    "write_rank": 1,
+                    "wrap_rank": 0,
+                    "write_deg": 1
+                },
+                "quadrature": {
+                    "name": "legendre"
+                },
+                "d4est_solver_krylov_petsc": {
+                    "ksp_type": "fcg",
+                    "ksp_atol": "5e-15",
+                    "ksp_rtol": "1e-20",
+                    "ksp_max_it": 10000,
+                    "ksp_view": 0,
+                    "ksp_monitor": 1,
+                    "ksp_converged_reason": 1,
+                    "ksp_initial_guess_nonzero": 0,
+                    "ksp_monitor_singular_value": 0
+                },
+                "multigrid": {
+                    "vcycle_imax": "$7",
+                    "vcycle_rtol": "$8",
+                    "vcycle_atol": 0.0,
+                    "smoother_name": "mg_smoother_cheby",
+                    "bottom_solver_name": "mg_bottom_solver_cg"
+                },
+                "mg_bottom_solver_cg": {
+                    "bottom_iter": 100,
+                    "bottom_rtol": "1e-10",
+                    "bottom_atol": 0.0,
+                    "bottom_print_residual_norm": 0
+                },
+                "mg_smoother_cheby": {
+                    "cheby_imax": 8,
+                    "cheby_eigs_cg_imax": 30,
+                    "cheby_eigs_lmax_lmin_ratio": 30.0,
+                    "cheby_eigs_max_multiplier": 1.0,
+                    "cheby_eigs_reuse_fromdownvcycle": 0,
+                    "cheby_eigs_reuse_fromlastvcycle": 0,
+                    "cheby_print_residual_norm": 0,
+                    "cheby_print_eigs": 0
+                },
+                "mg_bottom_solver_cheby": {
+                    "cheby_imax": 15,
+                    "cheby_eigs_cg_imax": 30,
+                    "cheby_eigs_lmax_lmin_ratio": 30.0,
+                    "cheby_eigs_max_multiplier": 1.0,
+                    "cheby_eigs_reuse_fromdownvcycle": 0,
+                    "cheby_eigs_reuse_fromlastvcycle": 0,
+                    "cheby_print_residual_norm": 0,
+                    "cheby_print_eig": 0
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,51 @@
+{
+    "application": "LSF",
+    "details": {
+        "resource_requirements": {
+            "nodes": 64,
+            "walltime": "01:00",
+            "project": "CSC331"
+        },
+        "software_requirements": {
+            "modules": [
+                "cmake",
+                "cuda/11.4",
+                "adios2",
+                "libfabric",
+                "gcc/9"
+            ],
+            "other_dependencies": [
+                "jsrun",
+                "nsys",
+                "build_script_cuda.sh",
+                "cpu-application-simulator"
+            ]
+        },
+        "data_requirements": {
+            "input": "d3d_coarse_v2_700.bin",
+            "output": {
+                "directory": "/gpfs/alpine/csc143/proj-shared/jieyang",
+                "filename": "${DATA}_cuda.bp"
+            }
+        },
+        "parameters": {
+            "USE_COMPRESSION": 1,
+            "VERBOSE": 0,
+            "NUM_GPU": 1,
+            "REORDER": 0,
+            "LOSSLESS": 0,
+            "SIM_ITER": 1,
+            "ACCUMULATE_DATA": 10,
+            "COMPUTE_DELAY": 0,
+            "PREFETCH": 1,
+            "DEVICE": "cuda",
+            "EB": 1e+17,
+            "MAX_MEM": 16000000000.0
+        },
+        "execution": {
+            "jsrun_command": "jsrun -n 384 -a 1 -c 1 -g 1 -r 6 -l gpu-cpu",
+            "nsys_command": "nsys profile -o /gpfs/alpine/csc143/proj-shared/jieyang/nsys_%q{OMPI_COMM_WORLD_RANK} --force-overwrite true",
+            "simulator_command": "./build_cuda/cpu-application-simulator"
+        }
+    }
+}

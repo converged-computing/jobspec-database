@@ -1,0 +1,23 @@
+{
+    "application": "SLURM",
+    "details": {
+        "job_name": "R2_calculations",
+        "output_file": "r2_log_hist",
+        "cpus": 4,
+        "runtime": "36:00:00",
+        "memory": "5G",
+        "email": "ekaterina.putintseva@ist.ac.at",
+        "requeue": false,
+        "partition": "gpu",
+        "gpus": 1,
+        "gpu_architecture": "GTX980",
+        "array_tasks": "3-12",
+        "software_modules": [
+            "tensorflow/python-2.7/1.3.0"
+        ],
+        "command": "srun --cpu_bind=verbose python ./network.py -c S$SLURM_ARRAY_TASK_ID",
+        "environment": {
+            "OMP_NUM_THREADS": "$SLURM_CPUS_PER_TASK"
+        }
+    }
+}

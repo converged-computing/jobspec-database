@@ -1,0 +1,60 @@
+{
+    "application": "SLURM",
+    "details": {
+        "job_name": "adl-mixed-50",
+        "account": "delia-mp",
+        "nodes": 1,
+        "tasks_per_node": 1,
+        "cpus_per_task": 64,
+        "error_output": "/p/scratch/delia-mp/lin4/experiment_result/adl/0804-mixed-50/error-%j.err",
+        "output": "/p/scratch/delia-mp/lin4/experiment_result/adl/0804-mixed-50/output-%j.out",
+        "time": "24:00:00",
+        "partition": "dc-gpu",
+        "gres": "gpu:4",
+        "environment": {
+            "SRUN_CPUS_PER_TASK": "$SLURM_CPUS_PER_TASK",
+            "MASTER_ADDR": "IP address of the first node in the job",
+            "MASTER_PORT": 7010,
+            "NCCL_DEBUG": "INFO",
+            "CUDA_VISIBLE_DEVICES": "0,1,2,3",
+            "NUM_GPU_PER_NODE": 4,
+            "LOG_DIR": "/p/scratch/delia-mp/lin4/experiment_result/adl/",
+            "EXPERIMENT": "0804-mixed-50",
+            "CHANNELS_NUM": 1
+        },
+        "software": {
+            "python": "3",
+            "srun": "version dependent on SLURM",
+            "nslookup": "version dependent on system",
+            "ADL environment": "/p/project/delia-mp/lin4/Julich_experiment/ADL/adl_env"
+        },
+        "script": "train.py",
+        "arguments": [
+            "--EXPERIMENT",
+            "0804-mixed-50",
+            "--json-file",
+            "configs/ADL_train.json",
+            "--DENOISER",
+            "efficient_Unet",
+            "--effective_batch_size",
+            "16",
+            "--world_size",
+            "4",
+            "--noise_type",
+            "mixed",
+            "--noise_level",
+            "50",
+            "--use_special_loss",
+            "--CHANNELS-NUM",
+            "1",
+            "--train-dirs",
+            "'p/scratch/delia-mp/lin4/RestormerGrayScaleData/clean/train/DFWB'",
+            "'p/scratch/delia-mp/lin4/RestormerGrayScaleData/clean/test/BSD68'",
+            "--test-dirs",
+            "'p/scratch/delia-mp/lin4/RestormerGrayScaleData/clean/test/Set12'",
+            "'p/scratch/delia-mp/lin4/RestormerGrayScaleData/clean/test/BSD68'",
+            "'p/scratch/delia-mp/lin4/RestormerGrayScaleData/clean/test/Urban100'",
+            "--distributed"
+        ]
+    }
+}

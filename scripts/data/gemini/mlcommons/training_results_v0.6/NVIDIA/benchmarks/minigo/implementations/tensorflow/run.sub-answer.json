@@ -1,0 +1,37 @@
+{
+    "application": "Slurm",
+    "details": {
+        "slurm": {
+            "partition": "mlperf",
+            "nodes": 1,
+            "walltime": "12:00:00",
+            "jobname": "reinforcement",
+            "exclusive_node_access": true,
+            "memory": "all available",
+            "mail_type": "FAIL",
+            "threads_per_core": 2,
+            "cores_per_socket": 20
+        },
+        "docker": {
+            "image": "mlperf-nvidia:reinforcement",
+            "data_dir": "/raid/data",
+            "results_dir": "/raid/results/reinforcement",
+            "volumes": [
+                "/raid/data:/data",
+                "/raid/results/reinforcement:/results",
+                "/opt/reinforcement/minigo/piazza:/opt/reinforcement/minigo/piazza"
+            ],
+            "gpu_devices": "NVIDIA_VISIBLE_DEVICES",
+            "execution_command": "nvidia-docker run --init --rm --net=host --uts=host --ipc=host --ulimit stack=67108864 --ulimit memlock=-1 --name=cont_${SLURM_JOB_ID} --security-opt seccomp=unconfined $IBDEVICES"
+        },
+        "mpi": {
+            "hostfile": "/dev/shm/mpi/${SLURM_JOB_ID}/mpi_hosts",
+            "config_file": "/dev/shm/mpi/${SLURM_JOB_ID}/mca_params.conf"
+        },
+        "benchmark": {
+            "name": "MINIGO",
+            "nexp": 10,
+            "seed": "randomly generated"
+        }
+    }
+}

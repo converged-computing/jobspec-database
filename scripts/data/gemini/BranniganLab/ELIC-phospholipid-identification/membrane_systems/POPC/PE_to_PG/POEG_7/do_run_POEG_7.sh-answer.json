@@ -1,0 +1,47 @@
+{
+    "application": "NAMD",
+    "details": {
+        "modules": [
+            "gcc",
+            "mvapich2"
+        ],
+        "software": [
+            "python3",
+            "sbatch",
+            "date",
+            "awk"
+        ],
+        "resources": {
+            "partition": "cmain",
+            "constraint": "oarc",
+            "time": "24:00:00",
+            "nodes": 1,
+            "tasks": 32,
+            "requeue": true
+        },
+        "dependency": {
+            "type": "afterok",
+            "dependency_on": "previous job"
+        },
+        "environment_variables": [
+            "NAMD",
+            "NEXT_DEPENDENCY",
+            "FIRST",
+            "LAST",
+            "CHUNK_SIZE",
+            "JOB_NAME",
+            "PREFIX"
+        ],
+        "scripts": [
+            "/home/tj227/mmdevel/relentless_fep.py"
+        ],
+        "files": [
+            "config_${PREFIX}.yaml",
+            "/home/tj227/bin/slack-ttjoseph"
+        ],
+        "output": [
+            "out%j.amarel.log",
+            "*.log"
+        ]
+    }
+}

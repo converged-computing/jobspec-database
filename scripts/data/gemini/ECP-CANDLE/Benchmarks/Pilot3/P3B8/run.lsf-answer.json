@@ -1,0 +1,32 @@
+{
+    "application": "LSF",
+    "details": {
+        "queue": "med107",
+        "job_name": "bert_quantized",
+        "output_file": "logs/quant%J.o",
+        "error_file": "logs/quant%J.e",
+        "walltime": "2:00",
+        "nodes": 1,
+        "allocation_flags": "nvme smt4",
+        "modules": [
+            "gcc",
+            "open-ce"
+        ],
+        "environment": {
+            "MED106": "/gpfs/alpine/proj-shared/med106",
+            "ENV_PATH": "$MED106/envs/opence",
+            "WEIGHTS_PATH": "$MED106/weights/ncbi_bert_base_pubmed_mimic_uncased"
+        },
+        "command": "python optimize.py --pretrained_weights_path $WEIGHTS_PATH",
+        "conda_environment": "$ENV_PATH",
+        "jsrun_parameters": {
+            "nodes": 1,
+            "tasks_per_node": 1,
+            "cores_per_task": 7,
+            "groups": 1,
+            "binding": "proportional-packed:7",
+            "launch_distribution": "packed"
+        },
+        "log_file": "logs/run.log"
+    }
+}

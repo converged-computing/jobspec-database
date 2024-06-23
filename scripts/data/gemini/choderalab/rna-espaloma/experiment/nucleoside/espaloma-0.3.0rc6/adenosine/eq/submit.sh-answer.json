@@ -1,0 +1,32 @@
+{
+    "application": "LSF",
+    "details": {
+        "scheduler": "LSF",
+        "queue": "gpuqueue",
+        "resources": {
+            "nodes": 1,
+            "cores": 1,
+            "memory": "8 GB",
+            "gpu": {
+                "type": "NVIDIA",
+                "count": 1,
+                "mode": "shared",
+                "exclusive": true
+            },
+            "walltime": "3 hours"
+        },
+        "environment": {
+            "OPENMM_CPU_THREADS": 1,
+            "conda_environment": "openmm"
+        },
+        "script_language": "Bash",
+        "libraries": [
+            "OpenMM",
+            "OpenEye"
+        ],
+        "commands": [
+            "conda activate openmm",
+            "python ${script_path}/openmm_eq.py -i state.pdb --restart_prefix ${restart_prefix} --output_prefix ."
+        ]
+    }
+}

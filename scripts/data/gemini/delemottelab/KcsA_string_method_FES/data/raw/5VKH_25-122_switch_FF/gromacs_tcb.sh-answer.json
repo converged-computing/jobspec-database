@@ -1,0 +1,18 @@
+{
+    "application": "Gromacs",
+    "software_requirements": [
+        "Gromacs/2020.1"
+    ],
+    "resource_requirements": [
+        "SBATCH -p tcb",
+        "SBATCH -J switch_FF",
+        "SBATCH -t 23:30:00",
+        "SBATCH -N 1",
+        "SBATCH -C gpu --gres=gpu:2",
+        "SBATCH -e job-%j.err -o job-%j.out",
+        "SBATCH --mail-user=sergio.perez.conesa@scilifelab.se --mail-type=FAIL",
+        "module unload gromacs",
+        "module load gromacs/2020.1",
+        "gmx mdrun -nt 24 -v -maxh $time -s topol.tpr  -pin on -cpi state.cpt"
+    ]
+}

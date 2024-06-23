@@ -1,0 +1,24 @@
+{
+    "application": "SLURM",
+    "details": {
+        "resource_manager": "SLURM",
+        "partition": "gpu",
+        "nodes": 1,
+        "gpus_per_node": 1,
+        "time": "00:05:00",
+        "account": "<yourProject>-gpu",
+        "modules": [
+            "PrgEnv-cray",
+            "rocm",
+            "craype-accel-amd-gfx90a"
+        ],
+        "mpi": "MPI is not explicitly used, but the script sets up the environment for it.",
+        "openmp": "OMP_NUM_THREADS=1",
+        "executable": {
+            "directory": "$MYSCRATCH/hello_jobstep",
+            "name": "hello_jobstep",
+            "path": "$MYSCRATCH/hello_jobstep/hello_jobstep"
+        },
+        "execution_command": "srun -l -u -N 1 -n 1 -c 8 --gpus-per-node=1 --gpus-per-task=1 ${theExe} | sort -n"
+    }
+}

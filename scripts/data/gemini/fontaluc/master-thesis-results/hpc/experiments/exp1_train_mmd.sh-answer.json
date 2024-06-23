@@ -1,0 +1,31 @@
+{
+    "application": "LSF",
+    "details": {
+        "queue": "gpuv100",
+        "job_name": "exp1_train_mmd",
+        "job_array": "[1-6]",
+        "cores": 1,
+        "gpu": "1 (exclusive_process)",
+        "walltime": "5:00",
+        "memory": "5GB",
+        "environment": {
+            "PYTHONHOME": "unset",
+            "PYTHONPATH": "unset",
+            "conda_env": "miniconda3",
+            "cuda_version": "11.6",
+            "cuda_sample": "/appl/cuda/11.6.0/samples/bin/x86_64/linux/release/deviceQuery"
+        },
+        "script": "src/train_mmd.py",
+        "script_arguments": [
+            "+conditional=${cond[$LSB_JOBINDEX - 1]}",
+            "+e=${e[$LSB_JOBINDEX - 1]}",
+            "+bx=1",
+            "+bw=10",
+            "+bz=1",
+            "+by=10",
+            "+bmw=10",
+            "+bmz=10",
+            "++seed=${seed[$LSB_JOBINDEX - 1]}"
+        ]
+    }
+}

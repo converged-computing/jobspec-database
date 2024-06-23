@@ -1,0 +1,68 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n\"application\": \"accelerate\",\n\"details\": {\n\"environment\": {\n\"conda_env\": \"eval-harness\",\n\"slurm_env\": {\n\"nodes\": 1,\n\"tasks_per_node\": 1,\n\"cpus_per_task\": 48,\n\"gpus_per_node\": 4,\n\"partition\": \"production-cluster\",\n\"output\": \"/fsx/loubna/logs/evaluation/mpe-1b/%x-%j.out\"\n},\n\"gpu_config\": {\n\"GPUS_PER_NODE\": 4,\n\"MASTER_ADDR\": \"scontrol show hostnames $SLURM_JOB_NODELIST | head -n 1\",\n\"MASTER_PORT\": 6000,\n\"NNODES\": \"$SLURM_NNODES\",\n\"NODE_RANK\": \"$SLURM_PROCID\",\n\"WORLD_SIZE\": \"$GPUS_PER_NODE*$NNODES\"\n},\n\"training_config\": {\n\"model\": \"$1\",\n\"lang\": \"$2\",\n\"CMD\": \"/fsx/loubna/code/bigcode-evaluation-harness/main.py --model bigcode/$model --tasks multiple-$lang --max_length_generation 512 --batch_size 50 --n_samples 50 --temperature 0.2 --precision bf16 --allow_code_execution --trust_remote_code --save_generations --use_auth_token --generation_only --save_generations_path $OUT_PATH/$model-$lang.json\",\n\"LAUNCHER\": \"accelerate launch --multi_gpu --num_machines $NNODES --num_processes $WORLD_SIZE --main_process_ip \\\"$MASTER_ADDR\\\" --main_process_port $MASTER_PORT --num_processes $WORLD_SIZE --machine_rank $SLURM_PROCID --role $SLURMD_NODENAME: --rdzv_conf rdzv_backend=c10d --max_restarts 0 --tee 3\",\n\"SRUN_ARGS\": \"--wait=60 --kill-on-bad-exit=1\"\n},\n\"network_config\": {\n\"NCCL_ASYNC_ERROR_HANDLING\": 1,\n\"NCCL_PROTO\": \"simple\",\n\"RDMAV_FORK_SAFE\": 1,\n\"FI_EFA_FORK_SAFE\": 1,\n\"FI_EFA_USE_DEVICE_RDMA\": 1,\n\"FI_PROVIDER\": \"efa\",\n\"FI_LOG_LEVEL\": 1,\n\"NCCL_IB_DISABLE\": 1,\n\"NCCL_SOCKET_IFNAME\": \"ens\"\n},\n\"resources\": {\n\"code_base\": \"/fsx/loubna/code/bigcode-evaluation-harness\",\n\"output_path\": \"/fsx/loubna/logs/evaluation/mpe-1b\",\n\"model_path\": \"/fsx/loubna/code/bigcode-evaluation-harness/replit-code-v1-3b\",\n\"generations_path\": \"/app/java_starcoder-3b.json\",\n\"generations_save_path\": \"/fsx/loubna/code/bigcode-evaluation-harness/multiple_gens\"\n},\n\"other\": {\n\"environment_source\": \"/admin/home/loubna/.bashrc\",\n\"tasks\": [\n\"multiple-java\"\n],\n\"model_type\": \"bigcode\"\n}\n}\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "citation_metadata": {
+                "citation_sources": [
+                    {
+                        "start_index": 319,
+                        "end_index": 513,
+                        "uri": "https://github.com/loubnabnl/megatron-smol-cluster",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 670,
+                        "end_index": 890,
+                        "uri": "https://github.com/uukuguy/speechless",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 914,
+                        "end_index": 1211,
+                        "uri": "https://github.com/uukuguy/speechless",
+                        "license_": ""
+                    }
+                ]
+            },
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 1037,
+        "candidates_token_count": 808,
+        "total_token_count": 1845,
+        "cached_content_token_count": 0
+    }
+}

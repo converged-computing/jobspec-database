@@ -1,0 +1,39 @@
+{
+    "application": "Slurm",
+    "details": {
+        "job_name": "moska_no_cumulate",
+        "account": "project_2010270",
+        "time": "06:00:00",
+        "partition": "gpusmall",
+        "output": "moska_no_cumulate_%j.out",
+        "error": "moska_no_cumulate_%j.err",
+        "mail_type": "END",
+        "mem_per_cpu": "4G",
+        "cpus_per_task": 64,
+        "nodes": 1,
+        "gres": "gpu:a100:1,nvme:100",
+        "modules": [
+            "tensorflow/2.15"
+        ],
+        "environment": {
+            "python": "python3",
+            "pip": "$LOCAL_SCRATCH/.venv/bin/pip3",
+            "tensorrt_bindings": "8.6.1",
+            "tensorrt_libs": "8.6.1",
+            "tensorflow": "2.15",
+            "cudnn_path": "$CUDNN_PATH",
+            "ld_library_path": "${CUDNN_PATH}/lib"
+        },
+        "libraries": [
+            "tensorrt-bindings",
+            "tensorrt-libs",
+            "tensorflow"
+        ],
+        "script": "fit_model.py",
+        "model_folder": "/projappl/project_2010270/RLFramework/MoskaModelsNoCumulate/",
+        "data_folder": "$LOCAL_SCRATCH/MoskaDataNoCumulate/",
+        "num_cpus": 64,
+        "num_games": 10240,
+        "num_files": 512
+    }
+}

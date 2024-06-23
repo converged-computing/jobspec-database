@@ -1,0 +1,29 @@
+{
+    "application": "TensorFlow",
+    "details": {
+        "environment": {
+            "operating_system": "Linux",
+            "compiler": "GCC/4.9.2-binutils-2.25",
+            "mpi": "OpenMPI/1.8.5",
+            "python": "Python/3.6.0",
+            "tensorflow": "tensorflow/1.5.0-cp36",
+            "virtualenv": "$HOME/.local/venv"
+        },
+        "resources": {
+            "cpus": 5,
+            "memory": "64GB",
+            "tmp_storage": "64GB",
+            "gpus": 4
+        },
+        "script": {
+            "name": "jemmons_train_20bn-jester.xs.sh",
+            "path": "$HOME/projects/vfeedbacknet/scripts/jemmons_train_20bn-jester.xs.sh",
+            "arguments": "0,1,2,3 vfeedbacknet_eccv_model13 $WORK/vfeedbacknet-results/20bn/vfeedbacknet_eccv_model13.loss_uniform.xs --video_length=20 --video_height=112 --video_width=112 --video_downsample_ratio=2 --learning_rate_init=0.1 --learning_rate_decay=0.998 --learning_rate_min=0.001 --global_step_init 0 --train_batch_size=128 --prefetch_batch_size=1024 --validation_interval=16 --last_loss_multipler=1 --num_gpus=4 --num_cpus=5 --pretrain_root_prefix=$WORK/pretrained-models",
+            "data": {
+                "dataset": "20bn-jester.xs",
+                "source": "$WORK/datasets/20bn-jester.xs.tar",
+                "destination": "$TMPFS/20bn-jester"
+            }
+        }
+    }
+}

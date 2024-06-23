@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"Slurm\",\n  \"details\": {\n    \"job_name\": \"infer_nriw_%j\",\n    \"output_file\": \"logs/infer_nriw_%j.log\",\n    \"memory\": \"64G\",\n    \"time\": \"0-06:00:00\",\n    \"partition\": \"gpu\",\n    \"gpu\": \"1\",\n    \"cpus_per_gpu\": \"16\",\n    \"excluded_nodes\": \"node-[12]\",\n    \"modules\": [\n      \"CUDA/9.1.85\",\n      \"cuDNN/7.0.5-CUDA-9.1.85\"\n    ],\n    \"environment_variables\": {\n      \"PATH\": \"~/.conda/envs/pipeline/bin:~/.homebrew/bin:${PATH}\"\n    },\n    \"python_script\": \"../../neural_rerendering.py\",\n    \"arguments\": [\n      \"--train_dir=$(realpath $(cat params.yaml | yq -r '.infer_nriw_'$sub'.trained_model_dir'))\",\n      \"--run_mode='eval_dir'\",\n      \"--inference_input_path=${INPUT_FOLDER}\",\n      \"--inference_output_dir=${OUTPUT_FOLDER}\",\n      \"--train_resolution=$(cat params.yaml | yq -r '.infer_nriw_'$sub'.train_resolution // \"512\"')\",\n      \"--use_buffer_appearance=$(cat params.yaml | yq -r '.infer_nriw_'$sub'.use_buffer_appearance // \"True\"')\",\n      \"--use_semantic=$(cat params.yaml | yq -r '.infer_nriw_'$sub'.use_semantic // \"True\"')\",\n      \"--appearance_nc=$(cat params.yaml | yq -r '.infer_nriw_'$sub'.appearance_nc // \"10\"')\",\n      \"--deep_buffer_nc=$(cat params.yaml | yq -r '.infer_nriw_'$sub'.deep_buffer_nc // \"7\"')\"\n    ],\n    \"timing_tool\": \"~/.homebrew/bin/time\"\n  }\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 995,
+        "candidates_token_count": 505,
+        "total_token_count": 1500,
+        "cached_content_token_count": 0
+    }
+}

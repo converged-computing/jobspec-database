@@ -1,0 +1,58 @@
+{
+    "application": "PBS",
+    "details": {
+        "job_name": "obsproc_%JTYP%_prep_%PDY%_%CC%_%DESC%",
+        "queue": "dev",
+        "account": "OBSPROC-DEV",
+        "walltime": "00:15:00",
+        "nodes": "1",
+        "cpus_per_node": "1",
+        "memory": "40gb",
+        "prepost": "true",
+        "debug": "true",
+        "software_dependencies": [
+            "grib_util",
+            "netcdf",
+            "intel",
+            "craype",
+            "cray-mpich",
+            "cray-pals",
+            "cfp",
+            "bufr_dump",
+            "prepobs"
+        ],
+        "environment_variables": [
+            "envir=prod",
+            "cyc=%CC%",
+            "JTYP=%JTYP%",
+            "type=%DESC%",
+            "DESC=%DESC%",
+            "job=$(echo $JTYP | cut -c1-3)_prep_erly_$cyc",
+            "jobid=$job.$PBS_JOBID",
+            "PDY=%PDY%",
+            "userROOT=/lfs/h2/emc/obsproc/noscrub/$USER",
+            "obsproc_ver=v1.0",
+            "obsproc_ver_pckg=v1.0.0",
+            "prepobs_ver=1.0.0",
+            "obsNET=obsproc",
+            "PACKAGEROOTpara=/lfs/h1/ops/para/packages",
+            "HOMEobsproc=${userROOT}/install/obsproc-rmprep",
+            "VERSION_FILE=${HOMEobsproc}/versions/run.ver",
+            "SENDECF=NO",
+            "SENDSDM=NO",
+            "DATAROOT=/lfs/h2/emc/stmp/$USER",
+            "jlogfile=/lfs/h2/emc/stmp/$USER/${JTYP}.${PDY}.jlogfile",
+            "COMIN_ROOT=/lfs/h2/emc/stmp/$USER/CRON/${DESC}/com",
+            "COMOUT_ROOT=/lfs/h2/emc/stmp/$USER/CRON/${DESC}/com/",
+            "KEEPDATA=YES",
+            "DEBUG_LEVEL=3",
+            "LOUD=ON",
+            "POE=NO",
+            "BACK=NO",
+            "NSPLIT=1"
+        ],
+        "script_execution": [
+            "$HOMEobsproc/jobs/JOBSPROC_RAP_PREP"
+        ]
+    }
+}

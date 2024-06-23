@@ -1,0 +1,33 @@
+{
+    "application": "Slurm",
+    "details": {
+        "resource_requirements": {
+            "partition": "v100_full_node",
+            "nodes": 1,
+            "tasks": 1,
+            "gpus_per_node": 4,
+            "error_log": "/scratch/user/OUTPUTS/logs/%A.err",
+            "output_log": "/scratch/user/OUTPUTS/logs/%A.out",
+            "array_jobs": "0-1%1"
+        },
+        "software": {
+            "python": "eval_finetune_open_set.py",
+            "other": [
+                "shuf",
+                "hostname"
+            ]
+        },
+        "arguments": {
+            "CONFIG": "Path to configuration file",
+            "DATASET": "Name of dataset",
+            "WEIGHT": "Path to weight file",
+            "SEED": "Random seed (optional, defaults to 42)"
+        },
+        "environment_variables": {
+            "MASTER": "Name of master node",
+            "MPORT": "Randomly assigned port number",
+            "jobdir": "Path to the directory containing the script",
+            "CKPTDIR": "Path to checkpoint directory (not specified in the script)"
+        }
+    }
+}

@@ -1,0 +1,57 @@
+{
+    "application": "SLURM",
+    "details": {
+        "software": [
+            "python",
+            "nvidia-smi",
+            "wandb"
+        ],
+        "resources": {
+            "nodes": 3,
+            "gpus_per_node": "a100:2",
+            "tasks_per_node": 2,
+            "cpus_per_task": 8,
+            "memory": "64G",
+            "time": "11:50:00",
+            "account": "rrg-lsigal",
+            "environment": "env_dpl"
+        },
+        "communication": {
+            "backend": "NCCL",
+            "init_method": "tcp://$MASTER_ADDR:3466"
+        },
+        "data": {
+            "data_path": "../data/mini_imagenet/train_comb",
+            "pretrained_path": "${EXP_pre}",
+            "pretrained_file": "checkpoint.pth"
+        },
+        "parameters": {
+            "pretrain": 0,
+            "exp_name": "PKD_nw_PM_FT",
+            "evaluate_freq": 50,
+            "visualization_freq": 50,
+            "prod_mode": "False",
+            "use_fp16": "True",
+            "lr": 0.0005,
+            "epochs": 1800,
+            "image_path": "../SMKD/img_viz",
+            "global_crops_scale": "0.4 1",
+            "local_crops_scale": "0.05 0.4",
+            "num_workers": 4,
+            "n_gpus": "$SLURM_NTASKS",
+            "lr_mix": 0,
+            "lr_noise": 1,
+            "K": 64,
+            "num_fore": 40,
+            "use_parts": 0,
+            "lambda1": 1,
+            "lambda2": 0,
+            "lambda3": 1,
+            "batch_size_per_gpu": 100,
+            "use_DDP": 1,
+            "supervised_contrastive": true,
+            "partition": "test",
+            "saveckp_freq": 5
+        }
+    }
+}

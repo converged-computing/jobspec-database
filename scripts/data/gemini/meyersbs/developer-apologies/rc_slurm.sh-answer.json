@@ -1,0 +1,40 @@
+{
+    "application": "SLURM",
+    "details": {
+        "job_name": "devaps1",
+        "output_file": "devaps1.stdout",
+        "error_file": "devaps1.stderr",
+        "email": "bsm9339@rit.edu",
+        "email_type": "ALL",
+        "duration": "0-05:00:00",
+        "account": "mistakes",
+        "partition": "tier3",
+        "cores": 1,
+        "memory": "200GB",
+        "environment": "spack env activate mistakes-21091601",
+        "dependencies": {
+            "python3": "ensurepip --upgrade",
+            "coverage": "pip3 install --user coverage",
+            "spacy": "spacy download en_core_web_sm"
+        },
+        "script": [
+            "python3 -u main.py info_rate_limit",
+            "python3 -u tests.py",
+            "python3 -u main.py download repos.txt.DM all data_850_stars/DM/",
+            "python3 -u main.py info_data data_850_stars/DM/",
+            "python3 -u main.py load experiment.hdf5 data_850_stars/DM/",
+            "python3 -u main.py info_hdf5 experiment.hdf5",
+            "python3 -u main.py preprocess experiment.hdf5 0",
+            "python3 -u main.py info_hdf5 experiment.hdf5",
+            "python3 -u main.py classify experiment.hdf5 0",
+            "python3 -u main.py info_hdf5 experiment.hdf5",
+            "cp -r -v data_850_stars/ zenodo/",
+            "mv zenodo/C++/ zenodo/C-PlusPlus/",
+            "mv zenodo/C#/ zenodo/C-Sharp/",
+            "mv zenodo/F#/ zenodo/F-Sharp/",
+            "python3 -u scripts/prepare_data_for_zenodo.py zenodo/",
+            "mv zenodo/ 88_million_developer_comments/",
+            "zip -9 -r 88_million_developer_comments.zip 88_million_developer_comments/"
+        ]
+    }
+}

@@ -1,0 +1,55 @@
+{
+    "application": "Slurm",
+    "details": {
+        "resource_requirements": {
+            "nodes": 2,
+            "tasks_per_node": 4,
+            "gpus_per_task": 0,
+            "time": "2:00:00",
+            "partition": "accelerated",
+            "account": "haicore-project-scc",
+            "gres": "gpu:4"
+        },
+        "environment_variables": {
+            "DATA_DIR": "/hkfs/work/workspace/scratch/qv2382-bigearthnet/",
+            "BASE_DIR": "/hkfs/work/workspace/scratch/qv2382-propulate/",
+            "SQL_DATA_DIR": "/hkfs/work/workspace/scratch/qv2382-propulate/sqldata/optuna",
+            "SQL_CONFIG": "/hkfs/work/workspace/scratch/qv2382-propulate/bigearthnet_kit/my.cnf",
+            "SQL_SOCKET": "/hkfs/work/workspace/scratch/qv2382-propulate/mysqld.sock",
+            "SQL_SOCKET_DIR": "/hkfs/work/workspace/scratch/qv2382-propulate/bigearthnet_kit/mysql/",
+            "SEED": "${RANDOM}",
+            "CONTAINER_DIR": "/hkfs/work/workspace/scratch/qv2382-propulate/containers/",
+            "SINGULARITY_FILE": "/hkfs/work/workspace/scratch/qv2382-propulate/containers/scratch-tf-sql.sif",
+            "UCX_MEMTYPE_CACHE": 0,
+            "NCCL_IB_TIMEOUT": 100,
+            "SHARP_COLL_LOG_LEVEL": 3,
+            "OMPI_MCA_coll_hcoll_enable": 0,
+            "NCCL_SOCKET_IFNAME": "ib0",
+            "NCCL_COLLNET_ENABLE": 0
+        },
+        "software": {
+            "singularity": {
+                "image": "scratch-tf-sql.sif",
+                "binds": [
+                    "/hkfs/work/workspace/scratch/qv2382-propulate/",
+                    "/hkfs/work/workspace/scratch/qv2382-bigearthnet/",
+                    "/scratch",
+                    "$TMP",
+                    "/hkfs/work/workspace/scratch/qv2382-propulate/sqldata/optuna:/var/lib/mysql",
+                    "/hkfs/work/workspace/scratch/qv2382-propulate/bigearthnet_kit/mysql:/run/mysqld",
+                    "/hkfs/work/workspace/scratch/qv2382-propulate/bigearthnet_kit/mysql/var/log/mysql:/var/log/mysql"
+                ],
+                "command": "bash optuna_sphere.sh"
+            },
+            "mpi": {
+                "implementation": "pmi2"
+            },
+            "database": {
+                "type": "mysql",
+                "data_dir": "/var/lib/mysql",
+                "socket": "/run/mysqld",
+                "config": "/hkfs/work/workspace/scratch/qv2382-propulate/bigearthnet_kit/my.cnf"
+            }
+        }
+    }
+}

@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"GEOS-Chem\",\n  \"details\": {\n    \"software\": \"GEOS-Chem Classic\",\n    \"requirements\": {\n      \"resources\": {\n        \"cores\": 8,\n        \"memory\": \"8000 MB\",\n        \"time\": \"30 minutes\"\n      },\n      \"scheduler\": \"SLURM\",\n      \"partition\": \"REQUESTED_PARTITION\",\n      \"docker\": \"registry.gsc.wustl.edu/sleong/esm:intel-2021.1.2\",\n      \"build_type\": \"Debug\",\n      \"openmp_threads\": \"6 (default), or equal to the number of cores requested\",\n      \"openmp_stacksize\": \"500m\"\n    }\n  }\n}\n```\n\nThe script is primarily for **GEOS-Chem**, a global chemical transport model. It runs a compilation test on different configurations of the GEOS-Chem Classic version of the model, which is the older version of GEOS-Chem. The script utilizes a scheduler (SLURM) to manage resource allocation.\n\nHere's a breakdown of the script's details:\n\n**Software:**\n\n* **GEOS-Chem Classic:** This is the main software the script is running and testing.\n* **Docker Image:**  `registry.gsc.wustl.edu/sleong/esm:intel-2021.1.2` is used to provide a consistent environment for the compilation process.\n\n**Requirements:**\n\n* **Resources:** The script requests 8 cores, 8 GB of memory, and a runtime of 30 minutes.\n* **Scheduler:** SLURM is the scheduler used to run the script.\n* **Partition:** The script runs on the `REQUESTED_PARTITION` (the specific partition needs to be defined).\n* **Build Type:** The script compiles GEOS-Chem Classic with the `Debug` build type.\n* **OpenMP:** The script sets the number of OpenMP threads to 6 by default. If running interactively, it will use the number of cores available. It also sets the OpenMP stack size to 500m.\n* **Docker:** The script uses a Docker image specified in the `BSUB` command, ensuring a consistent environment for compilation.\n\nThe script defines variables and functions to manage the test process, including:\n\n* **Setting up the environment:** It sources a user's `.bashrc` file and a specific environment file for GEOS-Chem Classic.\n* **Defining build directories:** The script sets up paths to the build directories for different GEOS-Chem configurations.\n* **Configuring and compiling:** It uses `cmake` and a `make` process to configure and compile GEOS-Chem.\n* **Tracking results:** The script keeps track of the number of successful and failed compilations.\n\nThis script is designed to run on a cluster environment (likely Harvard Cannon) and provides a framework for executing and testing the GEOS-Chem Classic model.\n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 2379,
+        "candidates_token_count": 657,
+        "total_token_count": 3036,
+        "cached_content_token_count": 0
+    }
+}

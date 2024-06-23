@@ -1,0 +1,30 @@
+{
+    "application": "SLURM",
+    "details": {
+        "partition": "GPUQ",
+        "gres": "gpu:1",
+        "constraint": "A100",
+        "account": "ie-idi",
+        "time": "167:00:00",
+        "nodes": 1,
+        "ntasks_per_node": 1,
+        "mem": "12000",
+        "job_name": "Variance metrics",
+        "output": "variance-train-3-%2a.out",
+        "mail_user": "sebastvi@stud.ntnu.no,ingebrin@stud.ntnu.no",
+        "mail_type": "END",
+        "array": "1-50%10",
+        "software": [
+            "fosscuda/2020b",
+            "Python/3.8.6-GCCcore-10.2.0",
+            "PyTorch/1.7.1-fosscuda-2020b"
+        ],
+        "libraries": [
+            "wandb"
+        ],
+        "commands": [
+            "python train.py --img 1280 --batch 8 --epochs 2000 --data sheep-cropped-no-msx-test.yaml --weights '' --cfg yolov5l6.yaml --cache --device 0 --name \"$ARRAY_RUN_NAME\"",
+            "python val.py --weights \"runs/train/$ARRAY_RUN_NAME/weights/best.pt\" --img 1280 --save-txt --save-conf --data sheep-cropped-no-msx.yaml --name \"$ARRAY_RUN_NAME\""
+        ]
+    }
+}

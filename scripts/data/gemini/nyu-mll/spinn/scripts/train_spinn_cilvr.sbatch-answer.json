@@ -1,0 +1,23 @@
+{
+    "application": "SLURM",
+    "details": {
+        "resource_requirements": {
+            "gpu": "1",
+            "memory": "16GB",
+            "time": "24 hours",
+            "constraints": "gpu_12gb"
+        },
+        "software_requirements": {
+            "python": "3.6"
+        },
+        "model_requirements": {
+            "default_model": "spinn.models.supervised_classifier",
+            "optional_override": "SPINNMODEL"
+        },
+        "execution_details": {
+            "script_execution": "python3 -m $MODEL --noshow_progress_bar --gpu 0 $SUB_FLAGS &",
+            "parallel_execution": "for SUB_FLAGS in $SPINN_FLAGS; do ... done"
+        },
+        "logging": "echo $SLURM_JOBID - `hostname` - $SPINN_FLAGS >> ~/spinn_machine_assignments.txt"
+    }
+}

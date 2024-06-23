@@ -1,0 +1,23 @@
+{
+    "application": "SLURM",
+    "details": {
+        "scheduler": "SLURM",
+        "partition": "scarf",
+        "node_type": "scarf17",
+        "cores_per_task": 2,
+        "exclusive_mode": true,
+        "walltime": "4 hours",
+        "modules": [
+            "OpenMPI/4.1.0-iccifort-2018.3.222-GCC-7.3.0-2.30"
+        ],
+        "software": "Relion",
+        "container": "Singularity",
+        "container_image": "/home/vol08/scarf688/git/intel-e2e-benchmark/case1/relion.sif",
+        "project_directory": "/work3/projects/sciml/scarf688/relion/10338",
+        "output_directory": "/work3/projects/sciml/scarf688/relion/runs/scarf/job_$SLURM_JOB_ID",
+        "relion_command": "singularity run -B $RELION_OUTPUT_DIR -B $BASE_DIR -H $RELION_PROJ_DIR $RELION_IMG -gpu_disable_check",
+        "relion_optimization_flags": "--dont_combine_weights_via_disc --pool 30",
+        "relion_mpi_flags": "--mca opal_warn_on_missing_libcuda 0",
+        "pipeline_script": "./benchmark_scripts/benchmark_relion.py ./benchmark_scripts/10338/pipeline_polish_5.sh"
+    }
+}

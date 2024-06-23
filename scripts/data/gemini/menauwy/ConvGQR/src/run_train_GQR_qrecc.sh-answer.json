@@ -1,0 +1,32 @@
+{
+    "application": "Slurm",
+    "details": {
+        "job_name": "train_qrecc",
+        "mail_type": "ALL",
+        "time": "7-00:00:00",
+        "partition": "amd-gpu-long",
+        "ntasks": 1,
+        "cpus_per_task": 10,
+        "mem": "100G",
+        "gres": "gpu:4g.40gb:1",
+        "software": [
+            "ALICE/default",
+            "conda",
+            "convgqr",
+            "python",
+            "train_GQR.py",
+            "nvidia-smi",
+            "rsync"
+        ],
+        "resources": {
+            "scratch_dir": "/scratchdata/${SLURM_JOB_USER}/${SLURM_JOB_ID}",
+            "data_dir": "/home/wangym/data1/dataset/",
+            "model_dir": "/home/wangym/data1/model/",
+            "train_file_path": "${dataset_dir}${train_dataset}/new_preprocessed/train_with_doc.json",
+            "log_dir_path": "${model_dir}convgqr/train_${train_dataset}",
+            "model_output_path": "${model_dir}convgqr/train_${train_dataset}",
+            "pretrained_query_encoder": "${model_dir}pretrained/t5-base",
+            "pretrained_passage_encoder": "${model_dir}pretrained/ance-msmarco-passage"
+        }
+    }
+}

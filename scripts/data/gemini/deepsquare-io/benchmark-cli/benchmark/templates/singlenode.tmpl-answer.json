@@ -1,0 +1,19 @@
+{
+    "application": "SLURM",
+    "details": {
+        "resource_manager": "SLURM",
+        "mpi_implementation": "Open MPI",
+        "communication_methods": "vader, self, tcp",
+        "container_runtime": "Docker or Singularity",
+        "container_image": "{{ .ContainerPath }}",
+        "container_mounts": "{{ .Workspace }}/hpl.dat:/test.dat",
+        "application_executable": "hpl.sh",
+        "application_arguments": "--xhpl-ai --cpu-affinity {{ .CpuAffinity }} --cpu-cores-per-rank {{ .CpusPerTasks }} --gpu-affinity {{ .GpuAffinity }} --dat \"/test.dat\"",
+        "resource_allocation": {
+            "nodes": "{{ .Node }}",
+            "tasks_per_node": "{{ .NtasksPerNode }}",
+            "gpus_per_node": "{{ .GpusPerNode }}",
+            "cpus_per_task": "{{ .CpusPerTasks }}"
+        }
+    }
+}

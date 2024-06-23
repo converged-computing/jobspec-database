@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"nccl-test\",\n  \"details\": {\n    \"software\": [\n      \"OpenMPI\",\n      \"NCCL\",\n      \"UCX\",\n      \"jq\",\n      \"curl\"\n    ],\n    \"resources\": [\n      \"SLURM\",\n      \"GPUs\",\n      \"nodes\",\n      \"network (eth0)\",\n      \"Infiniband (mlx5)\",\n      \"storage (/nfs/cluster)\"\n    ],\n    \"dependencies\": {\n      \"libraries\": [\n        \"libibverbs\",\n        \"libmlx5\",\n        \"libnccl\",\n        \"libcuda\"\n      ],\n      \"system\": [\n        \"Linux\",\n        \"kernel 4.18.0 or later\"\n      ]\n    }\n  }\n}\n```\n\nThis script is primarily for testing NCCL (NVIDIA Collective Communications Library) on a cluster of H100 GPUs with OpenMPI as the MPI implementation. \n\n**Here's a breakdown of the key elements:**\n\n* **SLURM:** This script relies on SLURM (Simple Linux Utility for Resource Management) for job submission and resource allocation. It requests 2 nodes with 8 GPUs per node and 8 tasks per node.\n* **OpenMPI:** The script sources the `mpivars.sh` file from the OpenMPI installation to set environment variables for the MPI runtime.\n* **NCCL:** The script uses `mpirun` with various NCCL-specific options to control the communication behavior, including:\n    * **NCCL_IB_HCA:**  Specifies the Infiniband hardware to use for communication.\n    * **NCCL_NET_PLUGIN:** Sets the NCCL network plugin to 'none', indicating the use of UCX (Unified Communication X).\n    * **NCCL_TOPO_FILE:** Provides the topology information of the H100 nodes.\n* **UCX:** The script uses UCX for communication between the nodes. \n* **Networking:** The script leverages the `eth0` network interface and Infiniband for high-speed communication between the nodes.\n* **GPUs:** It leverages 16 H100 GPUs distributed across the 2 nodes for parallel computations.\n\n**Script Functionality:**\n\nThe script runs a benchmark, `all_reduce_perf`, that performs all-reduce operations to measure communication performance. It passes various parameters like bandwidth (`-b`), message size (`-e`), number of iterations (`-i`), and message count (`-n`) to the benchmark.\n\n**Overall, this script is a sophisticated tool for testing and optimizing NCCL performance on a multi-node H100 GPU cluster utilizing SLURM, OpenMPI, UCX, and Infiniband for high-throughput communication.**"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 957,
+        "candidates_token_count": 612,
+        "total_token_count": 1569,
+        "cached_content_token_count": 0
+    }
+}

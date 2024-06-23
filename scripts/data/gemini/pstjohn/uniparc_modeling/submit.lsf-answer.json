@@ -1,0 +1,43 @@
+{
+    "application": "LSF",
+    "details": {
+        "resource_manager": "LSF",
+        "job_name": "singlenode_large",
+        "wall_time": "01:00",
+        "nodes": 1,
+        "project": "BIE108",
+        "output_file": "/ccs/home/pstjohn/job_output/%J.out",
+        "error_file": "/ccs/home/pstjohn/job_output/%J.err",
+        "modules": [
+            "ibm-wml-ce/1.7.0-3"
+        ],
+        "conda_environment": "tf21-ibm",
+        "python_path": "$HOME/uniparc_modeling:$PYTHONPATH",
+        "nccl_debug": "INFO",
+        "omp_num_threads": 4,
+        "working_directory": "$MEMBERWORK/bie108",
+        "script": "run_model.py",
+        "runtime": "python3",
+        "arguments": [
+            "--modelName=$LSB_JOBNAME.$LSB_JOBID",
+            "--scratchDir=\"$MEMBERWORK/bie108/uniparc_checkpoints\"",
+            "--dataDir=\"$PROJWORK/bie108/split_uniref100\"",
+            "--batchSize=96",
+            "--warmup=10",
+            "--totalSteps=100",
+            "--stepsPerEpoch=10",
+            "--validationSteps=10",
+            "--lr=1E-4",
+            "--maskingFreq=0.15",
+            "--sequenceLength=512",
+            "--modelDimension=768",
+            "--numberXformerLayers=12",
+            "--initialEpoch=0"
+        ],
+        "jsrun_arguments": {
+            "n": 1,
+            "g": 6,
+            "c": 42
+        }
+    }
+}

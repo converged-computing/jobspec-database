@@ -1,0 +1,52 @@
+{
+    "application": "MPI",
+    "details": {
+        "slurm": {
+            "account": "m1302",
+            "qos": "regular",
+            "time": "00:10:00",
+            "nodes": 2,
+            "ntasks_per_node": 1,
+            "cpus_per_task": 32,
+            "gpus_per_task": 1,
+            "constraint": "gpu"
+        },
+        "modules": [
+            "Nsight-Compute",
+            "Nsight-Systems",
+            "cudatoolkit",
+            "craype-accel-nvidia80",
+            "gpu",
+            "python",
+            "PrgEnv-gnu",
+            "cray-fftw",
+            "cray-hdf5-parallel",
+            "cray-libsci",
+            "libfabric"
+        ],
+        "environment_variables": {
+            "FI_HMEM_CUDA_USE_GDRCOPY": 1,
+            "FI_CXI_RDZV_THRESHOLD": 4096,
+            "FI_CXI_RDZV_EAGER_SIZE": null,
+            "FI_CXI_RDZV_GET_MIN": null,
+            "PMI_DIR": "/home/user/lib-PMI-4.1.2",
+            "ASAN_OPTIONS": "protect_shadow_gap=0:use_sigaltstack=0",
+            "USE_CUDA": [
+                "0",
+                "1"
+            ]
+        },
+        "mpi_options": "-n 2 -ppn 1 -l --bind-to core:2",
+        "test_cases": [
+            "-r am -d am -c delivery",
+            "-r am -d am -c fence",
+            "-r am -d am -c counter",
+            "-r am -d am -c cq_data",
+            "-r tag -d tag -c cq_data"
+        ],
+        "fi_provider": [
+            "cxi",
+            "psm3"
+        ]
+    }
+}

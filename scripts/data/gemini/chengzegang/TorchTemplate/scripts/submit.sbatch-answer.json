@@ -1,0 +1,43 @@
+{
+    "application": "SLURM",
+    "details": {
+        "resource_requirements": {
+            "nodes": 2,
+            "tasks": 2,
+            "cpus_per_task": 8,
+            "gpus": "a100:2",
+            "partition": "tandon_a100_2",
+            "time": "48:00:00",
+            "memory": "64GB"
+        },
+        "software": {
+            "singularity": "/scratch/work/public/singularity/cuda11.7.99-cudnn8.5-devel-ubuntu22.04.2.sif",
+            "torchrun": "pytorch"
+        },
+        "datasets": {
+            "imagenet_train": "/scratch/work/public/ml-datasets/imagenet/imagenet-train.sqf",
+            "imagenet_val": "/scratch/work/public/ml-datasets/imagenet/imagenet-val.sqf"
+        },
+        "environment_variables": {
+            "NCCL_DEBUG": "INFO",
+            "LOGLEVEL": "INFO"
+        },
+        "other_files": {
+            "env_sh": "/ext3/env.sh"
+        },
+        "model": "vit",
+        "task": "denoise",
+        "dataset": "imagenet",
+        "training_parameters": {
+            "num_workers": 16,
+            "batch_size": 128,
+            "logdir": "logs/224",
+            "total_epochs": 600,
+            "warmup_epochs": 30,
+            "image_size": 224,
+            "patch_size": 16,
+            "ddp": true,
+            "mnmg": true
+        }
+    }
+}

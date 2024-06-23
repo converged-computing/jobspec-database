@@ -1,0 +1,41 @@
+{
+    "application": "Slurm",
+    "details": {
+        "job_name": "dc21b",
+        "account": "cli@cpu",
+        "qos": "qos_cpu-t4",
+        "nodes": 1,
+        "ntasks_per_node": 1,
+        "cpus_per_task": 32,
+        "time": "48:00:00",
+        "output_file": "/gpfsscratch/rech/cli/uvo53rl/logs/logs/ml4ssh_dc_2021b_%j.log",
+        "error_file": "/gpfsscratch/rech/cli/uvo53rl/logs/errs/ml4ssh_dc_2021b_%j.err",
+        "modules": [
+            "git/2.31.1",
+            "github-cli/1.13.1",
+            "git-lfs/3.0.2",
+            "anaconda-py3/2021.05",
+            "ffmpeg/4.2.2"
+        ],
+        "environment_variables": {
+            "PYTHONPATH": "$WORK/projects/ml4ssh:${PYTHONPATH}",
+            "XLA_PYTHON_CLIENT_PREALLOCATE": "false",
+            "JAX_PLATFORM_NAME": "CPU"
+        },
+        "python_script": "experiments/dc_2021b/demo_siren.py",
+        "python_script_arguments": [
+            "--wandb-mode offline",
+            "--log-dir /gpfsscratch/rech/cli/uvo53rl/logs",
+            "--model siren",
+            "--n-epochs 2000",
+            "--activation sine",
+            "--batch-size 4096",
+            "--learning-rate 1e-4",
+            "--julian-time False",
+            "--train-data-dir /gpfsdswork/projects/rech/cli/uvo53rl/data/data_challenges/ssh_mapping_2021/train",
+            "--ref-data-dir /gpfsdswork/projects/rech/cli/uvo53rl/data/data_challenges/ssh_mapping_2021/ref",
+            "--test-data-dir /gpfsdswork/projects/rech/cli/uvo53rl/data/data_challenges/ssh_mapping_2021/test"
+        ],
+        "conda_environment": "jax_gpu_py39"
+    }
+}

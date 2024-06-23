@@ -1,0 +1,44 @@
+{
+    "application": "SLURM",
+    "details": {
+        "resource_requirements": {
+            "nodes": 1,
+            "tasks": 4,
+            "tasks_per_node": 4,
+            "time": "08:00:00",
+            "gpus": 4,
+            "cpus_per_task": 8,
+            "partition": "booster"
+        },
+        "software_requirements": {
+            "modules": [
+                "GCCcore/.9.3.0",
+                "Python",
+                "torchvision",
+                "OpenCV",
+                "scikit",
+                "TensorFlow"
+            ],
+            "virtual_environment": "/p/project/hai_dm4eo/wang_yi/env1/bin/activate"
+        },
+        "script": {
+            "name": "linear_dino_B2.py",
+            "arguments": {
+                "data_path": "/p/scratch/hai_dm4eo/wang_yi/BigEarthNet_LMDB",
+                "output_dir": "/p/project/hai_dm4eo/wang_yi/ssl4eo-s1s2/src/checkpoints/dino_lc/B2_vit_s_8_crop_100",
+                "lmdb": true,
+                "train_frac": 1,
+                "arch": "vit_small",
+                "patch_size": 8,
+                "num_workers": 8,
+                "batch_size_per_gpu": 64,
+                "epochs": 100,
+                "lr": 0.01,
+                "num_labels": 19,
+                "is_slurm_job": true,
+                "dist_url": "tcp://${master_node}:40000",
+                "pretrained_weights": "/p/project/hai_dm4eo/wang_yi/ssl4eo-s1s2/src/checkpoints/dino/B2_vit_s_8_crop/checkpoint.pth"
+            }
+        }
+    }
+}

@@ -1,0 +1,69 @@
+{
+    "application": "SLURM",
+    "details": {
+        "partition": "hopper-prod",
+        "gpus": 8,
+        "cpus": 80,
+        "tasks": 1,
+        "output_file": "slurm/logs/%x_%j.out",
+        "requeue": true,
+        "array": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11
+        ],
+        "exclusive": true,
+        "module": "cuda/12.2",
+        "wandb_tags": "refactor-chosen-rejected3,no-tag-$(git rev-parse --short HEAD)",
+        "models": [
+            "EleutherAI/pythia-6.9b-deduped",
+            "EleutherAI/pythia-2.8b-deduped",
+            "EleutherAI/pythia-1b-deduped"
+        ],
+        "seeds": [
+            44413,
+            55513,
+            66613,
+            77713
+        ],
+        "reward_model_path": "models/$MODEL/reward_model_$SEED",
+        "sft_model_path": "models/$MODEL/sft_model_$SEED",
+        "policy_model_path": "models/$MODEL/policy_model_$SEED",
+        "dpo_policy_model_path": "models/$MODEL/dpo_policy_model_$SEED",
+        "local_rollout_forward_batch_size": [
+            64,
+            32,
+            2
+        ],
+        "gradient_accumulation_steps": [
+            4,
+            16,
+            64
+        ],
+        "local_micro_batch_size": [
+            16,
+            4,
+            1
+        ],
+        "local_eval_batch_size": [
+            8,
+            1,
+            1
+        ],
+        "python_package": "accelerate",
+        "python_script": "summarize_from_feedback_details/sft.py",
+        "deepspeed": true,
+        "track": true,
+        "push_to_hub": true,
+        "run_eval": true
+    }
+}

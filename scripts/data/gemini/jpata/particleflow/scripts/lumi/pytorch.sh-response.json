@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"Singularity\",\n  \"details\": {\n    \"runtime\": \"ROCM\",\n    \"image\": \"/scratch/project_465000301/lumi-pytorch-rocm.simg\",\n    \"environment_variables\": [\n      \"PYTHONPATH=hep_tfds\",\n      \"TFDS_DATA_DIR=/scratch/project_465000301/tensorflow_datasets\",\n      \"MIOPEN_DISABLE_CACHE=true\",\n      \"MIOPEN_USER_DB_PATH=/tmp/${USER}-${SLURM_JOB_ID}-miopen-cache\",\n      \"MIOPEN_CUSTOM_CACHE_DIR=${MIOPEN_USER_DB_PATH}\",\n      \"ROCM_PATH=/opt/rocm\",\n      \"NCCL_DEBUG=WARN\",\n      \"MIOPEN_ENABLE_LOGGING=1\",\n      \"MIOPEN_ENABLE_LOGGING_CMD=1\",\n      \"MIOPEN_LOG_LEVEL=4\"\n    ],\n    \"bind_points\": [\n      \"/scratch/project_465000301\",\n      \"/tmp\"\n    ],\n    \"python_script\": \"mlpf/pyg_pipeline.py\",\n    \"arguments\": [\n      \"--dataset cms\",\n      \"--gpus $SLURM_GPUS_PER_TASK\",\n      \"--data-dir $TFDS_DATA_DIR\",\n      \"--config parameters/pytorch/pyg-cms.yaml\",\n      \"--train\",\n      \"--conv-type attention\",\n      \"--attention-type flash_external\",\n      \"--num-epochs 10\",\n      \"--gpu-batch-multiplier 4\",\n      \"--num-workers 1\",\n      \"--prefetch-factor 10\",\n      \"--checkpoint-freq 1\"\n    ],\n    \"slurm_resource_requirements\": {\n      \"job_name\": \"mlpf-train-cms\",\n      \"account\": \"project_465000301\",\n      \"time\": \"3-00:00:00\",\n      \"nodes\": 1,\n      \"ntasks-per-node\": 1,\n      \"cpus-per-task\": 32,\n      \"mem\": \"130G\",\n      \"gpus-per-task\": 8,\n      \"partition\": \"small-g\",\n      \"requeue\": false,\n      \"output\": \"logs/slurm-%x-%j-%N.out\"\n    },\n    \"modules\": [\n      \"LUMI/22.08\",\n      \"partition/G\"\n    ]\n  }\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 560,
+        "candidates_token_count": 609,
+        "total_token_count": 1169,
+        "cached_content_token_count": 0
+    }
+}

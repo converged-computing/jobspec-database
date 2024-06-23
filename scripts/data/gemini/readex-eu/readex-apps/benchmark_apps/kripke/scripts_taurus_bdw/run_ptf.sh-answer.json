@@ -1,0 +1,40 @@
+{
+    "application": "psc_frontend",
+    "details": {
+        "resources": {
+            "nodes": 2,
+            "tasks_per_node": 28,
+            "cpus_per_task": 1,
+            "memory_per_cpu": "2200M",
+            "partition": "broadwell",
+            "reservation": "p_readex_56",
+            "account": "p_readex",
+            "exclusive": true,
+            "comment": "no_monitoring",
+            "job_name": "kripke"
+        },
+        "environment": {
+            "SCOREP_SUBSTRATE_PLUGINS": "rrl",
+            "SCOREP_RRL_PLUGINS": "cpu_freq_plugin,uncore_freq_plugin",
+            "SCOREP_RRL_VERBOSE": "WARN",
+            "SCOREP_METRIC_PLUGINS": "x86_energy_sync_plugin",
+            "SCOREP_METRIC_PLUGINS_SEP": ";",
+            "SCOREP_METRIC_X86_ENERGY_SYNC_PLUGIN": "*/E",
+            "SCOREP_METRIC_X86_ENERGY_SYNC_PLUGIN_CONNECTION": "INBAND",
+            "SCOREP_METRIC_X86_ENERGY_SYNC_PLUGIN_VERBOSE": "WARN",
+            "SCOREP_METRIC_X86_ENERGY_SYNC_PLUGIN_STATS_TIMEOUT_MS": 1000,
+            "SCOREP_MPI_ENABLE_GROUPS": "ENV"
+        },
+        "application_parameters": {
+            "apprun": "./kripke $KRIPKE_COMMAND",
+            "mpinumprocs": 28,
+            "ompnumthreads": 1,
+            "phase": "Loop",
+            "info": 2,
+            "config_file": "readex_config_extended.xml",
+            "tune": "readex_intraphase",
+            "force_localhost": true,
+            "selective_info": "AutotunePlugins,FrontendStateMachines"
+        }
+    }
+}

@@ -1,0 +1,51 @@
+{
+    "application": "UNET_TRAIN",
+    "software": [
+        "Python",
+        "SambaFlow",
+        "MPICH",
+        "UNET",
+        "SambaLoader"
+    ],
+    "resources": [
+        "CPU",
+        "GPU",
+        "RDMA",
+        "MPI",
+        "Data Storage"
+    ],
+    "environment": [
+        "OMP_NUM_THREADS",
+        "SF_RNT_NUMA_BIND",
+        "SF_RNT_FSM_POLL_BUSY_WAIT",
+        "SF_RNT_DMA_POLL_BUSY_WAIT",
+        "SAMBA_CCL_USE_PCIE_TRANSPORT"
+    ],
+    "libraries": [
+        "unet.py",
+        "unet_hook.py",
+        "unet_batch.sh"
+    ],
+    "files": [
+        "out/unet_train_${BS}_${2}_${i}/unet_train_${BS}_${2}_${i}.pef",
+        "compile_${BS}_${2}_${i}.log",
+        "out/unet_train_${BS}_${2}_NP/unet_train_${BS}_${2}_NP.pef",
+        "compile_${BS}_${2}_NP.log",
+        "run_unet_${BS}_${2}_single.log",
+        "run_unet_${BS}_${2}_${NP}.log",
+        "log_dir_unet_train_kaggle",
+        "log_dir_unet_${NP}_train_kaggle",
+        "${UNET}/jsons/hd_files/hd_unet_${HD}.json",
+        "${UNET}/jsons/compiler_configs/unet_compiler_configs_no_inst.json"
+    ],
+    "arguments": [
+        "BS",
+        "HD",
+        "NUM_WORKERS"
+    ],
+    "command": [
+        "python ${UNET}/unet.py compile",
+        "python ${UNET}/unet_hook.py run",
+        "sbatch --gres=rdu:1 --tasks-per-node 8  --nodes 2 --nodelist sm-02,sm-01 --cpus-per-task=16 ./unet_batch.sh"
+    ]
+}

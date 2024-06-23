@@ -1,0 +1,31 @@
+{
+    "application": "LSF",
+    "details": {
+        "resource_manager": "LSF",
+        "queue": "CHM137",
+        "wall_time": "30 minutes",
+        "nodes": 2,
+        "gpu_devices": "gpumps",
+        "output_file": "job%J.out",
+        "error_file": "job%J.err",
+        "environment_variables": [
+            "USE_EXASCALE_API=True",
+            "LOG_BY_RANK=1",
+            "RANK_PROFILE=0",
+            "N_SIM=480",
+            "ADD_SPOTS_ALGORITHM=cuda",
+            "DEVICES_PER_NODE=1"
+        ],
+        "commands": [
+            "jsrun -n 6 -a 7 -c 7 -r 6 -g 1 libtbx.python $(libtbx.find_in_repositories LS49)/adse13_196/test_mpi.py",
+            "jsrun -n 12 -a 7 -c 7 -r 6 -g 1 libtbx.python $(libtbx.find_in_repositories LS49)/adse13_196/step5_batch.py",
+            "jsrun -n 6 -a 7 -c 7 -r 6 -g 1 libtbx.python $(libtbx.find_in_repositories LS49)/adse13_196/test_mpi.py"
+        ],
+        "libraries": [
+            "libtbx"
+        ],
+        "repositories": [
+            "LS49/adse13_196"
+        ]
+    }
+}

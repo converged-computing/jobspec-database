@@ -1,0 +1,36 @@
+{
+    "application": "accelerate",
+    "details": {
+        "framework": "PyTorch",
+        "library": "accelerate",
+        "model": "stabilityai/stable-diffusion-xl-base-1.0",
+        "training_data": "s3://muse-datasets/laion-aesthetic6plus-min512-data",
+        "resources": {
+            "nodes": 1,
+            "tasks_per_node": 1,
+            "cpus_per_task": 96,
+            "gpus": 8,
+            "partition": "production-cluster"
+        },
+        "environment": {
+            "conda_environment": "muse",
+            "bashrc_file": "/admin/home/suraj/.bashrc",
+            "conda_profile": "/fsx/suraj/miniconda3/etc/profile.d/conda.sh",
+            "repository": "/admin/home/suraj/code/muse-experiments/ctrlnet",
+            "output_directory": "/fsx/suraj/t2i-sketch-2",
+            "log_file": "/fsx/suraj/t2i-sketch-2/main_log.txt"
+        },
+        "training_parameters": {
+            "learning_rate": 5e-06,
+            "max_train_steps": 20000,
+            "max_train_samples": 3000000,
+            "batch_size": 16,
+            "validation_steps": 500,
+            "seed": 42,
+            "mixed_precision": "fp16",
+            "resolution": 1024,
+            "optimizer": "8bit adam",
+            "control_type": "sketch"
+        }
+    }
+}

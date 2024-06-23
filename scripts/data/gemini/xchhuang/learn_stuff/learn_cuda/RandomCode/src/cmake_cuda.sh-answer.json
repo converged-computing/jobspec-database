@@ -1,0 +1,33 @@
+{
+    "application": "CUDA",
+    "details": {
+        "slurm": {
+            "time_limit": "1:00:00",
+            "partition": "gpu20",
+            "gpu_count": 1,
+            "output_file": "slurm_outputs/slurm-%j.out"
+        },
+        "rsync": {
+            "source": "RandomCode",
+            "destination": "xhuang@slurm-submit.mpi-inf.mpg.de:/HPS/PatternSynthesis/work/github/learn_stuff/learn_cuda"
+        },
+        "cmake": {
+            "script": "./cmake_cuda.sh"
+        },
+        "cuda": {
+            "version": "10.2",
+            "environment_variables": {
+                "PATH": "/usr/lib/cuda-10.2/bin/:${PATH}",
+                "LD_LIBRARY_PATH": "/usr/lib/cuda-10.2/lib64${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}",
+                "CUDA_PATH": "/usr/lib/cuda-10.2/"
+            },
+            "build_commands": [
+                "cmake ..",
+                "make"
+            ],
+            "compilation_command": "nvcc add.cu -o add_cuda",
+            "execution_command": "./add_cuda",
+            "profiling_tool": "nvprof"
+        }
+    }
+}

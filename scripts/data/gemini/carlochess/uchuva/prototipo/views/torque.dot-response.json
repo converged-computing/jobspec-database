@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"PBS\",\n  \"details\": {\n    \"resource_requirements\": {\n      \"queue\": \"batch\",\n      \"walltime\": \"24:00:00\",\n      \"output_file\": \"{{= it.dagdir}}/{{= it.nodo.directorio}}/{{= it.nodo.nombre}}{{? it.config.times > 1 }}.$PBS_ARRAYID{{?}}.out\",\n      \"error_file\": \"{{= it.dagdir}}/{{= it.nodo.directorio}}/{{= it.nodo.nombre}}{{? it.config.times > 1 }}.$PBS_ARRAYID{{?}}.err\",\n      \"job_name\": \"{{= it.nodo.directorio}}_{{= it.nodo.nombre}}\"\n    },\n    \"dependencies\": {\n      \"type\": \"afterok\",\n      \"nodes\": \"{{= it.nodo.dependencia.join(\":\")}}\"\n    },\n    \"execution_environment\": {\n      \"docker\": {\n        \"image\": \"{{= it.config.image }}\",\n        \"location\": \"{{= it.config.location && it.config.location.trim() }}\",\n        \"arguments\": \"{{= it.config.argumento.trim() }}\"\n      },\n      \"module\": \"{{= it.config.module }}\",\n      \"working_directory\": \"{{= it.config.wd }}\"\n    }\n  }\n}\n```\n\nThe script is primarily designed to run on a **PBS (Portable Batch System)** cluster. It utilizes PBS commands to define job parameters like queue, walltime, output/error file locations, job name, and dependencies. The script also supports running commands within a Docker container or using a specific module. \n\nHere is a breakdown of the script's functionalities:\n\n* **PBS commands:** \n    * `#PBS -q batch`: Submits the job to the \"batch\" queue.\n    * `#PBS -l walltime=24:00:00`: Sets the maximum runtime for the job to 24 hours.\n    * `#PBS -o ...`: Defines the output file location.\n    * `#PBS -e ...`: Defines the error file location.\n    * `#PBS -N ...`: Assigns a name to the job.\n    * `#PBS -W depend=afterok: ...`: Sets a dependency on other jobs to ensure they complete before this one starts.\n* **Docker execution:** \n    * If `it.config.useDocker` is true, it executes the command inside a Docker container using the specified image, location, and arguments.\n* **Module loading:**\n    * If `it.config.module` is defined, it loads the specified module.\n* **Working directory:**\n    * If `it.config.wd` is defined, it changes the working directory to the specified location.\n* **Command execution:**\n    * Executes the command specified by `it.config.location` and `it.config.argumento`.\n\nThe script uses embedded template language (likely `Mustache` or similar) to dynamically generate values based on the context (`it`).  This suggests the script might be part of a larger workflow or system that manages multiple jobs and their configurations. \n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 438,
+        "candidates_token_count": 721,
+        "total_token_count": 1159,
+        "cached_content_token_count": 0
+    }
+}

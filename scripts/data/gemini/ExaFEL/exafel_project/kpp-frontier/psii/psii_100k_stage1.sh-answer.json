@@ -1,0 +1,62 @@
+{
+    "application": "hopper",
+    "software": [
+        "srun",
+        "hopper",
+        "cctbx",
+        "cuda",
+        "numexpr",
+        "cProfiler",
+        "SIT",
+        "XFEL_CUSTOM_WORKER_PATH",
+        "MODULES",
+        "psii_spread",
+        "exafel_project",
+        "kpp-sim",
+        "merging",
+        "application"
+    ],
+    "resource_requirements": {
+        "nodes": 128,
+        "cores": 2048,
+        "threads": 56,
+        "time": "02:00:00",
+        "memory": "not specified",
+        "gpu": {
+            "devices_per_node": 8,
+            "gpus_per_node": 1
+        },
+        "storage": {
+            "scratch": "$SCRATCH/psii/$SLURM_JOB_ID",
+            "psdm_data": "/global/cfs/cdirs/lcls/psdm-sauter"
+        },
+        "environment": [
+            "CCTBX_DEVICE_PER_NODE=8",
+            "N_START=0",
+            "LOG_BY_RANK=1",
+            "RANK_PROFILE=0",
+            "ADD_BACKGROUND_ALGORITHM=cuda",
+            "DEVICES_PER_NODE=8",
+            "MOS_DOM=25",
+            "CCTBX_NO_UUID=1",
+            "DIFFBRAGG_USE_KOKKOS=1",
+            "CUDA_LAUNCH_BLOCKING=1",
+            "NUMEXPR_MAX_THREADS=56",
+            "SLURM_CPU_BIND=cores",
+            "OMP_PROC_BIND=spread",
+            "OMP_PLACES=threads",
+            "SIT_PSDM_DATA=/global/cfs/cdirs/lcls/psdm-sauter",
+            "CCTBX_GPUS_PER_NODE=1",
+            "XFEL_CUSTOM_WORKER_PATH=$MODULES/psii_spread/merging/application"
+        ]
+    },
+    "input_files": [
+        "stage1.phil",
+        "structure_factors.mtz_name",
+        "exp_ref_spec_file"
+    ],
+    "output_files": [
+        "%j.out",
+        "%j.err"
+    ]
+}

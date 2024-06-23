@@ -1,0 +1,43 @@
+{
+    "application": "mpi",
+    "details": {
+        "environment": {
+            "conda": "2022-09-08",
+            "environment_name": "base"
+        },
+        "script": "scaling_DNN_pt_ddp.py",
+        "resources": {
+            "nodes": 4,
+            "cpus_per_node": 64,
+            "gpus_per_node": 4,
+            "walltime": "00:10:00",
+            "filesystems": [
+                "home",
+                "grand"
+            ],
+            "queue": "debug-scaling",
+            "account": "datascience"
+        },
+        "mpi_parameters": {
+            "ranks": 16,
+            "processes_per_node": 4,
+            "hostfile": "$PBS_NODEFILE",
+            "affinity": {
+                "cpu": "none",
+                "memory": "none"
+            }
+        },
+        "cuda_environment": {
+            "visible_devices": "0,1,2,3",
+            "nccl_debug": "info",
+            "nccl_net_gdr_level": "PHB",
+            "mpich_gpu_support_enabled": "1"
+        },
+        "script_arguments": {
+            "nEpochs": 40,
+            "batch": 512,
+            "nSamples": 32000,
+            "precision": "fp32"
+        }
+    }
+}

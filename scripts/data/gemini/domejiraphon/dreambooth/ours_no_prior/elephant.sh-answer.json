@@ -1,0 +1,26 @@
+{
+    "application": "SLURM",
+    "details": {
+        "job_name": "elephant",
+        "nodes": 1,
+        "cpus_per_task": 8,
+        "memory": "32GB",
+        "gpu": "a100:1",
+        "time": "4:00:00",
+        "environment": {
+            "XDG_RUNTIME_DIR": "/scratch/jy3694/dataset/dreambooth/training/ours/elephant",
+            "DATA": "elephant",
+            "CLASS": "elephant",
+            "MODEL_NAME": "stabilityai/stable-diffusion-xl-base-1.0",
+            "INSTANCE_DIR": "/scratch/jy3694/dataset/dreambooth/training/ours/elephant",
+            "CLASS_DIR": "/scratch/jy3694/dataset/dreambooth/regularization/ours/elephant",
+            "VAE_PATH": "madebyollin/sdxl-vae-fp16-fix",
+            "OUTPUT_DIR": "/scratch/jy3694/dreambooth_xl_no_prior/runs/ours/elephant",
+            "STEPS": 500
+        },
+        "command": "accelerate launch train_dreambooth_lora_sdxl.py --pretrained_model_name_or_path=stabilityai/stable-diffusion-xl-base-1.0 --instance_data_dir=/scratch/jy3694/dataset/dreambooth/training/ours/elephant --pretrained_vae_model_name_or_path=madebyollin/sdxl-vae-fp16-fix --output_dir=/scratch/jy3694/dreambooth_xl_no_prior/runs/ours/elephant --mixed_precision=\"fp16\" --instance_prompt=\"a photo of sks 'elephant'\" --resolution=1024 --train_batch_size=1 --gradient_accumulation_steps=4 --learning_rate=1e-5 --lr_scheduler=\"constant\" --lr_warmup_steps=0 --max_train_steps=500 --seed=\"0\"",
+        "container": "/scratch/work/public/singularity/cuda12.1.1-cudnn8.9.0-devel-ubuntu22.04.2.sif",
+        "overlay": "/scratch/jy3694/dataset/dreambooth/training/ours/elephant",
+        "environment_file": "/ext3/env.sh"
+    }
+}

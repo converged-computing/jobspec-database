@@ -1,0 +1,32 @@
+{
+    "application": "SLURM",
+    "details": {
+        "resource_requirements": {
+            "nodes": 1,
+            "tasks_per_node": 1,
+            "cpus_per_task": 1,
+            "memory": "300GB",
+            "time": "24:00:00",
+            "job_name": "netflix"
+        },
+        "email_notifications": {
+            "type": "BEGIN, END",
+            "address": "rrs480@nyu.edu"
+        },
+        "output_file": "netflix_%j.out",
+        "modules": [
+            "python3/intel/3.6.3",
+            "cuda/9.2.88",
+            "tensorflow/python3.6/1.5.0"
+        ],
+        "directories": {
+            "core_directory": "$SCRATCH/netflix/core/",
+            "local_python": "$SCRATCH/netflix/bin/python3.6",
+            "run_directory": "$SCRATCH/netflix-runs/run-${SLURM_JOB_ID/.*}",
+            "output_directory": "$RUNDIR/results"
+        },
+        "script": {
+            "main_script": "main.py"
+        }
+    }
+}

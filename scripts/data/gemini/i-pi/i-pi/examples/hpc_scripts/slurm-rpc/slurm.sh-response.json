@@ -1,0 +1,56 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n\"application\": \"i-PI\",\n\"details\": {\n\"software\": [\n\"i-PI\",\n\"Lammps\"\n],\n\"resources\": [\n\"SLURM\",\n\"Bash\",\n\"Python3\",\n\"MPI\"\n],\n\"files\": [\n\"RESTART\",\n\"EXIT\",\n\"input.template-inet.xml\",\n\"INITIAL.xml\",\n\"log.ipi\",\n\"count\",\n\"in.template.lmp\",\n\"in.lmp\",\n\"log.instance1.lmp\",\n\"log.instance2.lmp\",\n\"log.instance3.lmp\",\n\"log.instance4.lmp\",\n\"STOP\",\n\"run-slurm.sh\"\n],\n\"directories\": [\n\"full_sys\",\n\"beads\",\n\"contracted\",\n\"IPI_LOGS\"\n],\n\"environment_variables\": [\n\"IPI_EXE\",\n\"LMP_EXE\",\n\"HOST\",\n\"NTIME\"\n],\n\"commands\": [\n\"source <path-to-i-pi-root>/env.sh\",\n\"python3 -u ${IPI_EXE} INITIAL.xml | tee log.ipi &\",\n\"sleep 10\",\n\"mpirun -np 2 ${LMP_EXE} -in in.lmp &\",\n\"srun -n 4 ${LMP_EXE} -in in.lmp -screen log.lmp -log none &\",\n\"srun -n 1 ${LMP_EXE} -in in.lmp -screen log.instance1.lmp -log none &\",\n\"srun -n 1 ${LMP_EXE} -in in.lmp -screen log.instance2.lmp -log none &\",\n\"srun -n 1 ${LMP_EXE} -in in.lmp -screen log.instance3.lmp -log none &\",\n\"srun -n 1 ${LMP_EXE} -in in.lmp -screen log.instance4.lmp -log none &\",\n\"wait\",\n\"sleep 2\",\n\"mkdir IPI_LOGS\",\n\"cp -p log.ipi IPI_LOGS/log.ipi_$l\",\n\"sbatch run-slurm.sh\"\n]\n}\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 2,
+                    "blocked": false
+                }
+            ],
+            "citation_metadata": {
+                "citation_sources": [
+                    {
+                        "start_index": 717,
+                        "end_index": 1002,
+                        "uri": "https://github.com/jphilbin01/sampleCodes",
+                        "license_": ""
+                    }
+                ]
+            },
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 1187,
+        "candidates_token_count": 535,
+        "total_token_count": 1722,
+        "cached_content_token_count": 0
+    }
+}

@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"Slurm\",\n  \"details\": {\n    \"job_name\": \"SES-Adapter\",\n    \"partition\": \"NvidiaA800\",\n    \"node\": \"ZSGPU18\",\n    \"tasks_per_node\": 1,\n    \"gpu_count\": 1,\n    \"cpu_count\": 16,\n    \"memory\": \"100G\",\n    \"time\": \"180-00:00:00\",\n    \"output_file\": \"/public/home/tanyang/workspace/SES-Adapter/log/%j.out\",\n    \"error_file\": \"/public/home/tanyang/workspace/SES-Adapter/log/%j.err\",\n    \"environment\": \"conda activate protssn\",\n    \"working_directory\": \"/public/home/tanyang/workspace/SES-Adapter\",\n    \"environment_variables\": {\n      \"NCCL_IB_DISABLE\": \"0\",\n      \"NCCL_DEBUG\": \"INFO\",\n      \"OMP_PROC_BIND\": \"false\"\n    },\n    \"python_script\": \"train.py\",\n    \"python_script_arguments\": [\n      \"--plm_model ckpt/$plm_model\",\n      \"--num_attention_heads 8\",\n      \"--pooling_method $pooling_method\",\n      \"--pooling_dropout 0.1\",\n      \"--dataset_config dataset/$dataset/\"$dataset\"_\"$pdb_type\".json\",\n      \"--lr 5e-4\",\n      \"--num_workers 4\",\n      \"--gradient_accumulation_steps 1\",\n      \"--max_train_epochs 50\",\n      \"--max_batch_token 120000\",\n      \"--patience 5\",\n      \"--use_foldseek\",\n      \"--ckpt_root result\",\n      \"--ckpt_dir $plm_model/$dataset\",\n      \"--model_name woss_\"$pdb_type\"_\"$pooling_method\"_5e-4.pt\",\n      \"--wandb\",\n      \"--wandb_entity ty_ang\",\n      \"--wandb_project adapter\",\n      \"--wandb_run_name woss_\"$plm_model\"_\"$pdb_type\"_\"$pooling_method\"_5e-4\"\n    ]\n  }\n}\n```\n\nThe script is running under the **Slurm** workload manager. It requests a specific node (ZSGPU18) with an Nvidia A800 GPU, using 16 CPUs and 100 GB of memory. The script executes a Python script called `train.py`, which appears to be a machine learning model training script, utilizing a pre-trained language model (\"plm_model\"). The script further indicates the usage of a \"dataset_config\" file and utilizes the WandB library for logging and tracking. \n\nThe script also configures network communication and multithreading settings through environment variables. \n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 502,
+        "candidates_token_count": 658,
+        "total_token_count": 1160,
+        "cached_content_token_count": 0
+    }
+}

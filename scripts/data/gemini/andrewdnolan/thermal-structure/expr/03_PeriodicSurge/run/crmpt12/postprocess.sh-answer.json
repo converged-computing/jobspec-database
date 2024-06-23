@@ -1,0 +1,32 @@
+{
+    "application": "Dask",
+    "details": {
+        "scheduler": "Dask distributed scheduler",
+        "workers": 32,
+        "threads_per_worker": 1,
+        "memory_per_cpu": "8000M",
+        "job_name": "dask_gridding",
+        "walltime": "06:00:00",
+        "script_language": "Bash",
+        "environment_modules": "modulefile.cc.cedar",
+        "input_files": [
+            "result/${KEY}/mesh_dx50/${run_name}.result",
+            "result/${KEY}/nc/${run_name}.nc",
+            "run/${KEY}/${KEY}.commands"
+        ],
+        "output_files": [
+            "dask_%A_%a.out",
+            "dask_%A_%a.err",
+            "result/${KEY}/mesh_dx50/${new_name}.result",
+            "result/${KEY}/nc/${new_name}.nc"
+        ],
+        "post_processing_script": "./periodic_surge.sh",
+        "key": "crmpt12",
+        "variable_parameters": [
+            "QP",
+            "beta",
+            "NT",
+            "T_0"
+        ]
+    }
+}

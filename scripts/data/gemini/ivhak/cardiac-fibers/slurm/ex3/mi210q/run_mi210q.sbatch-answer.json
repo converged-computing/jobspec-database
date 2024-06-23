@@ -1,0 +1,31 @@
+{
+    "application": "SLURM",
+    "details": {
+        "job_name": "cardiac-fibers",
+        "partition": "mi210q",
+        "nodes": 1,
+        "tasks": 1,
+        "time": "4-00:00:00",
+        "gres": "rsmi:1",
+        "exclusive": true,
+        "cpus_per_task": 1,
+        "output": "jobs/%x-%j.out",
+        "error": "jobs/%x-%j.err",
+        "software": {
+            "cardiac-fibers": {
+                "location": "${HOME}/master/cardiac-fibers",
+                "commit": "HEAD"
+            },
+            "gpu-wrapper.sh": {
+                "location": "./gpu-wrapper.sh"
+            }
+        },
+        "data": {
+            "meshes": "/global/D1/homes/iverh/data/meshes/martinez-navarro-etal/mesh/mfem"
+        },
+        "build_dir": "/global/D1/homes/iverh/work/cardiac-fibers-${SLURM_JOB_ID}",
+        "job_dir": "./jobs/${SLURM_JOB_NAME}-${SLURM_JOB_ID}",
+        "environment_setup": ". envsetup-ex3.sh mi210q",
+        "make_targets": "TIMING_BARRIERS=YES clean cardiac-fibers"
+    }
+}

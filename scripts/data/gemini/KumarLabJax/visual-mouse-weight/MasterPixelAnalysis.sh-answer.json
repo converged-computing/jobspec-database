@@ -1,0 +1,38 @@
+{
+    "application": "SLURM",
+    "details": {
+        "job_name": "master_pixel_analysis",
+        "time": "6:00:00",
+        "ntasks": 1,
+        "cpus_per_task": 1,
+        "qos": "batch",
+        "mem": "16G",
+        "nice": true,
+        "modules": "singularity",
+        "environment_variables": [
+            "VIDEO_BATCH",
+            "SLURM_JOB_ID",
+            "SLURM_ARRAY_TASK_ID",
+            "ROOT_DIR"
+        ],
+        "software": [
+            "python3",
+            "singularity",
+            "sed",
+            "wc",
+            "sbatch"
+        ],
+        "files": [
+            "master_pixel_analysis.py",
+            "videos/batchfile.txt",
+            "/projects/kumar-lab/guzmam/fullSurvey/videos/${VIDEO_FILE}",
+            "${FULL_VIDEO_FILE%.*}_seg.avi",
+            "${FULL_VIDEO_FILE%.*}_ellfit.npz",
+            "/projects/kumar-lab/guzmam/environment/UPennInferImg.simg"
+        ],
+        "commands": [
+            "python3 /projects/kumar-lab/guzmam/fullSurvey/code/master_pixel_analysis.py ${FULL_VIDEO_FILE} ${FULL_VIDEO_FILE%.*}_ellfit.npz ${FULL_VIDEO_FILE%.*}_seg.avi",
+            "sbatch --export=ROOT_DIR=\"$(dirname \"${0}\")\",VIDEO_BATCH=\"${1}\" --array=\"1-${video_count}\" \"${0}\""
+        ]
+    }
+}

@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"spack\",\n  \"details\": {\n    \"scheduler\": \"slurm\",\n    \"package\": \"sundials@5.8.0\",\n    \"compiler\": \"gcc@10.2.0\",\n    \"variants\": \"precision=double~int64+mpi~openmp~pthread~raja~sycl~hypre~lapack~klu~petsc~superlu-mt~superlu-dist~trilinos+shared+static~fcmix~f2003+examples+examples-install+generic-math~monitoring\",\n    \"dependencies\": \"^mvapich2@2.3.7/$(spack find --format '{hash:7}' mvapich2@2.3.7 % ${SPACK_COMPILER})\",\n    \"resources\": {\n      \"nodes\": 1,\n      \"tasks_per_node\": 1,\n      \"cpus_per_task\": 16,\n      \"memory\": \"32G\",\n      \"time\": \"01:00:00\"\n    }\n  }\n}\n```\n\nThis script utilizes **spack** for package management and relies on **slurm** for job scheduling. \n\nHere's a breakdown of the script's functionality:\n\n* **Environment Setup:** \n    * Sets up environment variables for the script's execution, including job ID, script name, and system details.\n    * Loads the necessary modules: **slurm** for job scheduling, and **spack** for package management.\n* **Package Configuration:**\n    * Defines the desired **SPACK_SPEC** for installation, which includes the package, compiler, variants, and dependencies.\n* **Installation:**\n    * Installs the package using **spack install**.\n    * Configures **spack** modules for use with the installed package.\n* **Post-Installation:**\n    * Submits another job (`qchem@6.0.sh`) using **sbatch**,  dependent on the current job's completion. \n\nThis script essentially manages the installation and environment setup for the \"sundials\" package, leveraging **spack** and **slurm** for the process. \n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 854,
+        "candidates_token_count": 489,
+        "total_token_count": 1343,
+        "cached_content_token_count": 0
+    }
+}

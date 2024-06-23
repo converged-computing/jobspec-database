@@ -1,0 +1,40 @@
+{
+    "application": "slurm",
+    "details": {
+        "environment": {
+            "conda": "soma3.7",
+            "modules": [
+                "clang/2022.1.2",
+                "gcc/10.3.0",
+                "gcc/13.2.0",
+                "intel/2022.1.2",
+                "boost/1.78.0",
+                "eigen",
+                "tbb",
+                "blender"
+            ]
+        },
+        "resources": {
+            "nodes": 1,
+            "tasks_per_node": 1,
+            "cpus_per_task": 2,
+            "memory": "20g",
+            "gpus": 1,
+            "time": "12:00:00",
+            "account": "shdpm0",
+            "partition": "spgpu"
+        },
+        "script": {
+            "language": "bash",
+            "command": "python -u write_obj.py",
+            "arguments": [
+                "--model-folder ../models/",
+                "--motion-file /nfs/turbo/coe-shdpm/leyang/VEHS-7M/Mesh/SOMA_SMPLX_pkl/",
+                "--output-folder /nfs/turbo/coe-shdpm/leyang/VEHS-7M/Mesh/SMPLX_obj/",
+                "--model-type smplx",
+                "--batch-moshpp",
+                "--batch-id $slurm_task_id"
+            ]
+        }
+    }
+}

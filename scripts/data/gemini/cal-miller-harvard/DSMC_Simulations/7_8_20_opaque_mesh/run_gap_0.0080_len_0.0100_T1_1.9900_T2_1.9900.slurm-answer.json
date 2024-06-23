@@ -1,0 +1,29 @@
+{
+    "application": "Julia",
+    "software": [
+        "Intel compiler 19.0.5",
+        "OpenMPI 4.0.2",
+        "FFTW 3.3.8",
+        "CMake 3.12.1",
+        "Anaconda3 2019.10",
+        "Python 3.7.7"
+    ],
+    "resource_requirements": {
+        "cores": 24,
+        "nodes": 1,
+        "runtime": "8 hours",
+        "partition": "shared",
+        "memory_per_cpu": "1024 MB"
+    },
+    "script_details": {
+        "output_file": "logs/dsmc_job_%j.out",
+        "error_file": "logs/dsmc_job_%j.err",
+        "environment_variables": {
+            "OMP_PROC_BIND": "spread",
+            "OMP_PLACES": "threads",
+            "JULIA_NUM_THREADS": "$SLURM_CPUS_ON_NODE"
+        },
+        "julia_script": "RunCells3He.jl",
+        "julia_arguments": "--T1 1.9900 --T2 1.9900 -l 0.0080 -L 0.0100"
+    }
+}

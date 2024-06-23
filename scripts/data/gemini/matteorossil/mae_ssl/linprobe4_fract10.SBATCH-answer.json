@@ -1,0 +1,26 @@
+{
+    "application": "Slurm",
+    "details": {
+        "nodes": 1,
+        "tasks_per_node": 1,
+        "cpus_per_task": 16,
+        "time": "24:00:00",
+        "memory": "50GB",
+        "gpu": 1,
+        "job_name": "10_lp_200K_deblur_new",
+        "output_file": "/scratch/mr6744/pytorch/outputs_slurm/%j.out",
+        "environment": {
+            "MASTER_PORT": "random port between 10000 and 65500",
+            "WORLD_SIZE": "number of nodes * tasks per node",
+            "MASTER_ADDR": "hostname of the compute node",
+            "modules": "purged before running the command"
+        },
+        "singularity_image": "/scratch/work/public/singularity/cuda11.6.124-cudnn8.4.0.27-devel-ubuntu20.04.4.sif",
+        "overlay_filesystems": [
+            "/scratch/mr6744/pytorch/overlay-25GB-500K.ext3:ro",
+            "/vast/work/public/ml-datasets/imagenet/imagenet-train.sqf:ro",
+            "/vast/work/public/ml-datasets/imagenet/imagenet-val.sqf:ro"
+        ],
+        "command": "python -u main_linprobe.py --model vit_small_patch16 --cls_token --finetune /vast/mr6744/pretrained_models2/200K_deblur/run3/checkpoint-999.pth --batch_size 128 --epochs 100 --num_workers 16 --output_dir /vast/mr6744/linear_evaluation/200K_deblur/fract10 --log_dir /vast/mr6744/linear_evaluation/200K_deblur/fract10 --blr 0.1 --weight_decay 0.0 --nb_classes 1000 --data_path /imagenet --frac_retained 0.1"
+    }
+}

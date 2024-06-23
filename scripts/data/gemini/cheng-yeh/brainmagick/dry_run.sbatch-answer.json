@@ -1,0 +1,38 @@
+{
+    "application": "SLURM",
+    "details": {
+        "software": [
+            "anaconda3/2022.05",
+            "ipython",
+            "python 3.8",
+            "pytorch 1.12.1",
+            "torchaudio 0.12.1",
+            "cudatoolkit 11.3",
+            "spacy",
+            "en_core_web_md",
+            "dora"
+        ],
+        "resources": {
+            "nodes": 1,
+            "cores_per_node": 2,
+            "gpu": "RTX_6000",
+            "memory_per_gpu": "128G",
+            "time": "1440",
+            "queue": "inferno"
+        },
+        "libraries": [
+            "requirements.txt"
+        ],
+        "commands": [
+            "conda create -n bm ipython python=3.8 -y",
+            "conda activate bm",
+            "conda install pytorch==1.12.1 torchaudio==0.12.1 cudatoolkit=11.3 -c pytorch",
+            "pip install -U -r requirements.txt",
+            "pip install -e .",
+            "python -m spacy download en_core_web_md",
+            "dora grid nmi.main_table --dry_run --init",
+            "dora run -f 557f5f8a -d",
+            "dora grid nmi.main_table '!seed' '!features' '!wer_random' --dry_run --init"
+        ]
+    }
+}

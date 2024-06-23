@@ -1,0 +1,29 @@
+{
+    "application": "SLURM",
+    "details": {
+        "resource_requirements": {
+            "nodes": 1,
+            "time": "04:00:00",
+            "account": "hfm",
+            "job_name": "lesfoil",
+            "output": "out.%x_%j"
+        },
+        "software_requirements": {
+            "modules": {
+                "spack": "nalu-wind"
+            },
+            "environment_variables": {
+                "SPACK_MANAGER": "${HOME}/exawind/spack-manager",
+                "OMP_NUM_THREADS": 1,
+                "OMP_PLACES": "threads",
+                "OMP_PROC_BIND": "spread"
+            },
+            "executable": "naluX"
+        },
+        "configuration_file": "lesfoil.yaml",
+        "output_file": "lesfoil.log",
+        "mpi_ranks": "SLURM_JOB_NUM_NODES * 36",
+        "ranks_per_node": 36,
+        "threads_per_rank": 1
+    }
+}

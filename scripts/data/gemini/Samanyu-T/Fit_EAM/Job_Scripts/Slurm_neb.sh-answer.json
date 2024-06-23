@@ -1,0 +1,38 @@
+{
+    "application": "neb.sh",
+    "software": [
+        "SLURM",
+        "intel-oneapi-mkl",
+        "fftw",
+        "conda",
+        "pylammps",
+        "lammps",
+        "Intel MPI"
+    ],
+    "resource_requirements": {
+        "nodes": 1,
+        "tasks": 112,
+        "time": "02:00:00",
+        "partition": "sapphire",
+        "account": "UKAEA-AP002-CPU",
+        "modules": [
+            "rhel8/default-icl",
+            "intel-oneapi-mkl",
+            "fftw"
+        ],
+        "environment_variables": [
+            "LD_LIBRARY_PATH",
+            "PATH",
+            "OMP_NUM_THREADS",
+            "I_MPI_PIN_DOMAIN",
+            "I_MPI_PIN_ORDER",
+            "NODEFILE"
+        ],
+        "work_directory": "/home/ir-tiru1/Samanyu/WHHe_Fitting/git_folder"
+    },
+    "execution_details": {
+        "command": "mpirun -ppn $mpi_tasks_per_node -np $np $application $options",
+        "pinning_strategy": "Scattered domains with compact OpenMP threads",
+        "node_file": "machine.file.$JOBID"
+    }
+}

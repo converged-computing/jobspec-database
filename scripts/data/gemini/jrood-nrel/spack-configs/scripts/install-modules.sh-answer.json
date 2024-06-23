@@ -1,0 +1,63 @@
+{
+    "application": "Spack",
+    "details": {
+        "description": "The script utilizes Spack, a package manager for scientific software, to install HPACF group-related compilers, utilities, and software.",
+        "stages": [
+            "base",
+            "compilers",
+            "utilities",
+            "software"
+        ],
+        "resource_requirements": {
+            "slurm": {
+                "job_name": "build-modules",
+                "output_file": "%x.o%j",
+                "time_limit": "04:00:00",
+                "nodes": 1,
+                "partition": "short",
+                "account": "hpcapps"
+            },
+            "compilers": [
+                "gcc",
+                "intel-parallel-studio",
+                "llvm"
+            ],
+            "dependencies": [
+                "binutils",
+                "bison",
+                "bzip2",
+                "curl",
+                "git",
+                "python",
+                "texinfo",
+                "unzip",
+                "wget",
+                "flex",
+                "texlive"
+            ],
+            "environment_variables": [
+                "SPACK_ROOT",
+                "SPACK_DISABLE_LOCAL_CONFIG",
+                "SPACK_USER_CACHE_PATH",
+                "SPACK_USER_CONFIG_PATH",
+                "TMPDIR"
+            ],
+            "manual_customizations": [
+                "Edit software/compilers.yaml to point to all compilers installed in the compilers build phase",
+                "Run makelocalrc for all PGI compilers",
+                "Add set PREOPTIONS=-D__GCC_ATOMIC_TEST_AND_SET_TRUEVAL=1; to localrc",
+                "Rename necessary module files and set defaults"
+            ]
+        },
+        "supported_machines": [
+            "eagle",
+            "rhodes",
+            "ellis"
+        ],
+        "install_location": [
+            "/nopt/nrel/ecom/hpacf",
+            "/opt",
+            "/projects/hpacf/apps"
+        ]
+    }
+}

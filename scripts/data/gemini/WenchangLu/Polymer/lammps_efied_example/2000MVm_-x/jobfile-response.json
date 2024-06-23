@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"LAMMPS\",\n  \"details\": {\n    \"resource_manager\": \"LSF\",\n    \"scheduler_directives\": [\n      \"BSUB -P MAT201\",\n      \"BSUB -J 8PSU_H_2000MVm_-x\",\n      \"BSUB -o std.oe%J\",\n      \"BSUB -W 2:00\",\n      \"BSUB -nnodes 1\",\n      \"BSUB -alloc_flags \\\"gpumps smt1\\\"\"\n    ],\n    \"environment_variables\": [\n      \"ESPRESSO_PSEUDO\",\n      \"LSB_INTERACTIVE\",\n      \"LS_SUBCWD\",\n      \"LSB_MAX_NUM_PROCESSORS\"\n    ],\n    \"libraries\": \"lammps\",\n    \"runtime_parameters\": {\n      \"Ncpu\": \"LSB_MAX_NUM_PROCESSORS - 1\",\n      \"Nnode\": \"Ncpu / 42\",\n      \"Ngpu\": \"Nnode * 6\",\n      \"Nmpi\": \"Ngpu\",\n      \"N_rs\": \"Nmpi\",\n      \"N__r\": \"N_rs / Nnode\",\n      \"N__a\": \"Nmpi / N_rs\",\n      \"N__g\": \"Ngpu / N_rs\",\n      \"N__c\": \"Ncpu / N_rs\",\n      \"N_kt\": \"N__c / N__a\",\n      \"N_kg\": \"N__g / N__a\"\n    },\n    \"execution_command\": \"jsrun -n${N_rs} -a${N__a} -c${N__c} -g${N__g} -r${N__r} --bind none --latency_priority cpu-memory --smpiargs \\\"-gpu\\\" ${my_lmp_mpi} -nocite -k on g ${N_kg} t ${N_kt} -sf kk -pk kokkos newton on -i ./nvt.lmpi\"\n  }\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 466,
+        "candidates_token_count": 471,
+        "total_token_count": 937,
+        "cached_content_token_count": 0
+    }
+}

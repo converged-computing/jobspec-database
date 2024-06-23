@@ -1,0 +1,38 @@
+{
+    "application": "Python",
+    "details": {
+        "environment": {
+            "modules": [
+                "rhel8/default-icl",
+                "intel-oneapi-mkl",
+                "fftw",
+                "miniconda/3"
+            ],
+            "conda_environment": "pylammps",
+            "environment_variables": {
+                "LD_LIBRARY_PATH": "$HOME/.conda/envs/pylammps/lib:$LD_LIBRARY_PATH",
+                "PATH": "$HOME/lammps/src/:$PATH",
+                "OMP_NUM_THREADS": "1"
+            },
+            "mpi": {
+                "implementation": "Intel MPI",
+                "pinning": {
+                    "domain": "omp:compact",
+                    "order": "scatter"
+                }
+            },
+            "scheduler": {
+                "system": "SLURM",
+                "account": "UKAEA-AP002-CPU",
+                "partition": "sapphire",
+                "nodes": 1,
+                "tasks": 112,
+                "time": "12:00:00"
+            }
+        },
+        "script": {
+            "application_executable": "python Python_Scripts/Hydrogen_Coverage.py",
+            "work_directory": "/home/ir-tiru1/Samanyu/WHHe_Fitting/git_folder"
+        }
+    }
+}

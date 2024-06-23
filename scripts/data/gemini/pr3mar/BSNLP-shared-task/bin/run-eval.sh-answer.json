@@ -1,0 +1,32 @@
+{
+    "application": "Slurm",
+    "details": {
+        "resource_requirements": {
+            "nodes": 1,
+            "tasks": 1,
+            "memory": "5GB",
+            "cpus_per_task": 4,
+            "time": "3-00:00:00"
+        },
+        "container": {
+            "image_path": "$PWD/containers/pytorch-image-new.sqfs",
+            "mounts": [
+                {
+                    "source": "$PWD",
+                    "target": "/workspace"
+                },
+                {
+                    "source": "/shared/datasets/rsdo",
+                    "target": "/data"
+                }
+            ],
+            "entrypoint": "/workspace/bin/exec-eval.sh"
+        },
+        "command_arguments": [
+            "java-eval/data-$BUNDLE",
+            "$DIR_PREFIX/reports",
+            "$DIR_PREFIX/error-logs",
+            "$DIR_PREFIX/summaries"
+        ]
+    }
+}

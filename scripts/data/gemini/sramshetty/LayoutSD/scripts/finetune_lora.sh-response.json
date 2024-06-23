@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"LayoutSD\",\n  \"details\": {\n    \"resource_requirements\": {\n      \"partition\": \"g40x\",\n      \"account\": \"laion\",\n      \"nodes\": 4,\n      \"tasks_per_node\": 8,\n      \"gpus_per_task\": 1,\n      \"cpus_per_gpu\": 8,\n      \"modules\": [\"openmpi\", \"cuda/11.7\"],\n      \"environment_variables\": [\n        \"NCCL_PROTO=simple\",\n        \"FI_EFA_FORK_SAFE=1\",\n        \"FI_LOG_LEVEL=1\",\n        \"FI_EFA_USE_DEVICE_RDMA=1\",\n        \"NCCL_DEBUG=info\",\n        \"PYTHONFAULTHANDLER=1\",\n        \"CUDA_LAUNCH_BLOCKING=0\",\n        \"OMPI_MCA_mtl_base_verbose=1\",\n        \"FI_EFA_ENABLE_SHM_TRANSFER=0\",\n        \"FI_PROVIDER=efa\",\n        \"FI_EFA_TX_MIN_CREDITS=64\",\n        \"NCCL_TREE_THRESHOLD=0\"\n      ],\n      \"virtual_environment\": \"/fsx/home-shivr/layoutsd_venv\"\n    },\n    \"script_details\": {\n      \"command\": \"python /fsx/home-shivr/LayoutSD/finetune.py\",\n      \"arguments\": [\n        \"--data_path\",\n        \"pipe:aws s3 cp s3://laion-west/flickr-narrative-boxes/output_wds/{00000..01392..2}.tar -\",\n        \"--supp_data_path\",\n        \"pipe:aws s3 cp s3://laion-west/GRIT/wds_no_imgs/coyo_{0..20}_snappy.tar -\",\n        \"--dataset_type\",\n        \"narrative_wds\",\n        \"--supp_dataset_type\",\n        \"grit\",\n        \"--num_samples\",\n        \"25000\",\n        \"--supp_num_samples\",\n        \"100000\",\n        \"--batch_size\",\n        \"2\",\n        \"--supp_batch_size\",\n        \"8\",\n        \"--resampled\",\n        \"--model\",\n        \"gpt2-xl\",\n        \"--lora\",\n        \"--workers\",\n        \"8\",\n        \"--lr\",\n        \"5e-6\",\n        \"--lr_schedule\",\n        \"cosine\",\n        \"--decay\",\n        \"0.1\",\n        \"--epochs\",\n        \"100\",\n        \"--warmup\",\n        \"5000\",\n        \"--logging_interval\",\n        \"500\",\n        \"--run_name\",\n        \"gpt2-xl_lora_local-narratives\",\n        \"--delete_previous_checkpoint\"\n      ],\n      \"fallback_command\": \"sbatch /fsx/home-shivr/LayoutSD/scripts/finetune_lora.sh\"\n    }\n  }\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 767,
+        "candidates_token_count": 720,
+        "total_token_count": 1487,
+        "cached_content_token_count": 0
+    }
+}

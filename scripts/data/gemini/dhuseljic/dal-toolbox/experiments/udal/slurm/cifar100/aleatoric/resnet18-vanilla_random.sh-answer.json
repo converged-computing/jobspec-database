@@ -1,0 +1,34 @@
+{
+    "application": "SLURM",
+    "details": {
+        "resource_requirements": {
+            "memory": "32gb",
+            "tasks": 1,
+            "cpus_per_task": 8,
+            "gpu": 1,
+            "partition": "main"
+        },
+        "job_name": "udal",
+        "output_file": "/mnt/stud/home/ynagel/logs/udal/active_learning/%A_%a__%x.log",
+        "array_task_id": "1-10%2",
+        "environment": {
+            "python_virtual_environment": "/mnt/stud/home/ynagel/dal-toolbox/venv/bin/activate",
+            "working_directory": "/mnt/stud/home/ynagel/dal-toolbox/experiments/udal/"
+        },
+        "script": {
+            "python_file": "active_learning.py",
+            "arguments": {
+                "model": "resnet18",
+                "dataset": "CIFAR100",
+                "dataset_path": "/mnt/stud/home/ynagel/data",
+                "al_strategy": "random",
+                "al_cycle.n_init": 2048,
+                "al_cycle.init_pool_file": "/mnt/stud/home/ynagel/dal-toolbox/experiments/udal/initial_pools/${dataset}/random_${n_init}_seed${random_seed}.json",
+                "al_cycle.acq_size": 2048,
+                "al_cycle.n_acq": 9,
+                "output_dir": "/mnt/stud/home/ynagel/dal-toolbox/results/udal/active_learning/${dataset}/${model}/${al_strat}/N_INIT${n_init}__ACQ_SIZE${acq_size}__N_ACQ${n_acq}/seed${random_seed}/",
+                "random_seed": "$SLURM_ARRAY_TASK_ID"
+            }
+        }
+    }
+}

@@ -1,0 +1,33 @@
+{
+    "application": "LSF",
+    "details": {
+        "queue": "gpuv100",
+        "job_name": "v3ae_cifar_svhn",
+        "cores": 4,
+        "gpu": "1 (exclusive process)",
+        "walltime": "24:00",
+        "memory": "6GB",
+        "email": "s182172@student.dtu.dk",
+        "notifications": {
+            "start": "true",
+            "completion": "true"
+        },
+        "output_file": "sggm/job_logs/gpu-%J.out",
+        "error_file": "sggm/job_logs/gpu-%J.err",
+        "modules": [
+            "python3/3.7.7",
+            "cuda/10.2",
+            "cudnn/v7.6.5.32-prod-cuda-10.2"
+        ],
+        "environment": {
+            "virtual_env": "env",
+            "requirements": "requirements.txt",
+            "python_encoding": "utf8"
+        },
+        "commands": [
+            "nvidia-smi",
+            "cd sggm/ && python experiment.py --experiments_config configs/review_boundary.yml --gpus -1",
+            "cd sggm/ && python baselines/run.py --experiment_name uci_carbon --n_trials 20"
+        ]
+    }
+}

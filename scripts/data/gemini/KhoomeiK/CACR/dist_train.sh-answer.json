@@ -1,0 +1,58 @@
+{
+    "application": "Slurm",
+    "details": {
+        "job_name": "train_cac",
+        "partition": "gpu_high",
+        "time": "72:00:00",
+        "nodes": 2,
+        "ntasks_per_node": 4,
+        "gres": "gpu:4",
+        "cpus_per_task": 2,
+        "mem": "120G",
+        "chdir": "/work/rspandey/train_iais/",
+        "singularity_image": "/work/rspandey/uniter.sif",
+        "python_script": "train_itm_hard_negatives.py",
+        "config_file": "config/train-siais-large.json",
+        "IAIS": "soft",
+        "num_train_steps": 5000,
+        "valid_steps": 1000,
+        "tsa_schedule": "exp_schedule",
+        "mpirun_options": [
+            "-np",
+            "$SLURM_NTASKS",
+            "-H",
+            "$NODE_LIST",
+            "-bind-to",
+            "none",
+            "-map-by",
+            "slot",
+            "-x",
+            "NCCL_DEBUG=INFO",
+            "-x",
+            "NCCL_SOCKET_IFNAME=^lo",
+            "-x",
+            "LD_LIBRARY_PATH",
+            "-x",
+            "PATH",
+            "-mca",
+            "pml",
+            "ob1",
+            "-mca",
+            "btl",
+            "^openib",
+            "-mca",
+            "btl_openib_verbose",
+            "1"
+        ],
+        "singularity_binds": [
+            "$(pwd):/src",
+            "$DOWNLOADS/finetune:/storage",
+            "$DOWNLOADS/pretrained:/pretrain",
+            "$DOWNLOADS/txt_db:/txt",
+            "$DOWNLOADS/img_db:/img"
+        ],
+        "singularity_env": [
+            "NVIDIA_VISIBLE_DEVICES=$CUDA_VISIBLE_DEVICES"
+        ]
+    }
+}

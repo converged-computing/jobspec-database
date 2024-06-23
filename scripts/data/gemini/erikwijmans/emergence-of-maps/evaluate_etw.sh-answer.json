@@ -1,0 +1,48 @@
+{
+    "application": "SLURM",
+    "details": {
+        "environment": "conda",
+        "conda_environment": "nav-analysis-base",
+        "python_package": "nav_analysis",
+        "python_module": "evaluate_ppo",
+        "gpu_requirements": {
+            "sim_gpu_ids": "0",
+            "pth_gpu_id": "0"
+        },
+        "resource_requirements": {
+            "nodes": 1,
+            "cpus": 10,
+            "time": "72:00:00",
+            "partition": "dev",
+            "gres": "gpu:1"
+        },
+        "configuration_files": {
+            "task_configs": [
+                "tasks/loopnav/mp3d-gibson.loopnav.yaml",
+                "tasks/loopnav/gibson-public.loopnav.yaml"
+            ]
+        },
+        "data_files": {
+            "checkpoint_model_dirs": [
+                "data/checkpoints/gibson-public-explore-controller-512-rgb-r${SLURM_ARRAY_TASK_ID}",
+                "data/checkpoints/gibson-public-flee-hrl-rgb-r5",
+                "data/checkpoints/gibson-2plus-resnet18-frn-step-ramp-no-memory-depth",
+                "data/checkpoints/mp3d-only-loopnav-stage-2-trained-state-blind",
+                "data/checkpoints/mp3d-gibson-all-loopnav-stage-2-random-state-blind",
+                "data/checkpoints/mp3d-gibson-all-loopnav-stage-2-random-state-no-inputs",
+                "data/checkpoints/probes/mp3d-gibson-all-teleportnav-stage-2-zero-state-final-run_0_2-no-inputs/ckpt.124.pth",
+                "data/checkpoints/mp3d-gibson-all-loopnav-stage-1-v5-blind",
+                "data/checkpoints/probes/mp3d-gibson-all-loopnav-stage-2-trained-state-final-run_0_0-blind/ckpt.15.pth",
+                "data/checkpoints/mp3d-gibson-all-loopnav-stage-1-v5-blind/ckpt.278.pth"
+            ],
+            "output_directories": [
+                "/checkpoint/%u/jobs/job.%j.out",
+                "/checkpoint/%u/jobs/job.%j.err",
+                "data/eval/videos-with-data/${ENV_NAME}"
+            ],
+            "log_files": [
+                "data/eval/eval.${ENV_NAME}.pointnav.log"
+            ]
+        }
+    }
+}

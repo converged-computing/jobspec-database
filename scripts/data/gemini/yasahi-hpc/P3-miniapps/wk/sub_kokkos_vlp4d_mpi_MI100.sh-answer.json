@@ -1,0 +1,24 @@
+{
+    "application": "SLURM",
+    "details": {
+        "software": [
+            "openmpi/4.1.1",
+            "vlp4d_mpi"
+        ],
+        "resources": {
+            "nodes": 1,
+            "tasks": 2,
+            "gpus_per_node": 2,
+            "cpus_per_task": 64,
+            "gpus_per_task": 1,
+            "time": "00:10:00",
+            "queue": "amdrome",
+            "node": "amd1"
+        },
+        "environment_variables": {
+            "OMP_NUM_THREADS": "${SLURM_CPUS_PER_TASK}",
+            "ROCR_VISIBLE_DEVICES": "1,2,3"
+        },
+        "command": "../build/miniapps/vlp4d_mpi/kokkos/vlp4d_mpi --num_threads 1 --teams 1 --device 0 --num_gpus 3 --device_map 1 -f SLD10.dat"
+    }
+}

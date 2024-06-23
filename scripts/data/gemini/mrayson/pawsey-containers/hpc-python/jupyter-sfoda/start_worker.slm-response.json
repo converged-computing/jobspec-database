@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"Dask\",\n  \"details\": {\n    \"scheduler_file\": \"Path to the dask scheduler file. This file is passed as the first argument to the script.\",\n    \"notebook_dir\": \"Path to the directory containing the Jupyter notebooks. This directory is passed as the second argument to the script.\",\n    \"slurm\": {\n      \"account\": \"pawsey0106\",\n      \"partition\": \"work\",\n      \"ntasks\": 8,\n      \"cpus_per_task\": 4,\n      \"time\": \"01:00:00\",\n      \"job_name\": \"dask-worker\",\n      \"output\": \"dask-worker-%j.out\",\n      \"export\": \"NONE\"\n    },\n    \"singularity\": {\n      \"version\": \"3.11.4-slurm\",\n      \"image\": \"docker://mrayson/jupyter_sfoda:20230825\",\n      \"bind_paths\": \"/group:/group,/scratch:/scratch,/run:/run,$HOME:$HOME\",\n      \"environment_variables\": {\n        \"SINGULARITYENV_PREPEND_PATH\": \"/srv/conda/envs/notebook/bin:/srv/conda/condabin:/srv/conda/bin\",\n        \"SINGULARITYENV_XDG_DATA_HOME\": \"$MYSCRATCH/.local\",\n        \"OMP_NUM_THREADS\": \"8\",\n        \"OMP_PROC_BIND\": \"close\",\n        \"OMP_PLACES\": \"cores\"\n      }\n    },\n    \"dask_worker_parameters\": {\n      \"nthreads\": \"$SLURM_CPUS_PER_TASK\",\n      \"memory_limit\": \"${memlim}M\"\n    }\n  }\n}\n```\n\n**Explanation of the JSON output:**\n\n* **application:**  The script is running a Dask worker.\n* **details:** This section provides a detailed breakdown of the software and resource requirements. \n    * **scheduler_file:**  The path to the Dask scheduler file, which is necessary for the worker to connect to the scheduler.\n    * **notebook_dir:** The path to the directory containing Jupyter notebooks.\n    * **slurm:** This section describes the SLURM resource allocation settings.\n        * **account:** The account used to submit the job.\n        * **partition:** The partition of the cluster where the job is running.\n        * **ntasks:** The total number of tasks requested.\n        * **cpus_per_task:** The number of CPUs requested per task.\n        * **time:** The maximum time allowed for the job to run.\n        * **job_name:**  The name given to the SLURM job.\n        * **output:** The name of the output file for the job.\n        * **export:** Specifies whether environment variables should be exported to the job. \n    * **singularity:** This section describes the Singularity settings.\n        * **version:** The version of Singularity being used.\n        * **image:**  The Docker image that is being used to run the Dask worker.\n        * **bind_paths:**  The paths that are being mounted into the Singularity container.\n        * **environment_variables:** The environment variables that are being set within the Singularity container.\n    * **dask_worker_parameters:**  This section specifies the parameters being used to launch the Dask worker.\n        * **nthreads:**  The number of threads the Dask worker will use.\n        * **memory_limit:** The maximum memory limit for the Dask worker.\n\nThe script uses SLURM to allocate resources, Singularity to run the Dask worker in a container, and sets various environment variables to ensure that the worker runs correctly. The script calculates the memory limit for each worker based on the available resources and sets the number of threads and memory limit for each Dask worker. \n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 659,
+        "candidates_token_count": 872,
+        "total_token_count": 1531,
+        "cached_content_token_count": 0
+    }
+}

@@ -1,0 +1,38 @@
+{
+    "application": "MPI",
+    "details": {
+        "environment": {
+            "conda environment": "3DCNN",
+            "MPICH_GPU_SUPPORT_ENABLED": "1",
+            "NCCL_COLLNET_ENABLE": "1",
+            "NCCL_NET_GDR_LEVEL": "PHB",
+            "MASTER_ADDR": "hostname of the machine running the script",
+            "NNODES": "number of nodes specified in PBS script",
+            "NRANKS_PER_NODE": "number of GPUs per node",
+            "NTOTRANKS": "total number of MPI ranks to start",
+            "NDEPTH": "16 (specifies how many cores/threads to space MPI ranks apart on each node)",
+            "OMP_NUM_THREADS": "not explicitly defined, but likely set by default to 1"
+        },
+        "software": {
+            "MPI": "mpiexec",
+            "Python": "main.py",
+            "conda": "conda activate 3DCNN",
+            "nvidia-smi": "used to determine the number of GPUs per node"
+        },
+        "resource_requirements": {
+            "PBS": {
+                "nodes": "10",
+                "system": "polaris",
+                "place": "scatter",
+                "walltime": "0:40:00",
+                "filesystems": "home:grand",
+                "queue": "prod",
+                "account": "STlearn"
+            },
+            "hardware": {
+                "GPUs": "required for the NCCL library to function",
+                "cores": "required for the set_affinity_cmd script"
+            }
+        }
+    }
+}

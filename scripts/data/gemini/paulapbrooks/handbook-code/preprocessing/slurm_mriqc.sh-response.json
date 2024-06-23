@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"SLURM\",\n  \"details\": {\n    \"job_name\": \"mriqc\",\n    \"array_index\": \"001\",\n    \"output_logs\": \"../../data/bids/derivatives/mriqc/logs/mriqc-%A_%a.log\",\n    \"partition\": \"all\",\n    \"time_limit\": \"3:00:00\",\n    \"cpus_per_task\": 8,\n    \"mem_per_cpu\": \"14000 MB\",\n    \"email\": \"YOUREMAIL@princeton.edu\",\n    \"email_type\": \"BEGIN,END,FAIL\",\n    \"singularity_image\": \"not specified\",\n    \"scripts\": {\n      \"participant_level\": \"run_mriqc.sh\",\n      \"group_level\": \"run_mriqc_group.sh\"\n    }\n  }\n}\n```\n\n**Explanation:**\n\n* **SLURM:** The script uses the `sbatch` command, indicating it's designed to be run within a SLURM (Simple Linux Utility for Resource Management) environment. This is a common system for managing high-performance computing clusters.\n* **Job Details:** The script defines various SLURM parameters including job name, array indices, output log location, partition, time limit, CPU allocation, memory allocation, and email notifications.\n* **Modules:** The script purges existing modules because it relies on Singularity for software management.\n* **Scripts:** It uses two separate scripts: `run_mriqc.sh` for participant-level analysis and `run_mriqc_group.sh` for group-level analysis.  It doesn't explicitly specify what these scripts do, but it's implied that they run the MRIQC software.\n* **Singularity:** The script doesn't explicitly call a Singularity image, but the fact that modules are purged and the script mentions `run_mriqc.sh` suggests that MRIQC is likely run within a Singularity container. \n\n**Important Notes:**\n\n* **MRIQC:** The script is designed to run the MRIQC software, which is a quality control tool for MRI data. It's crucial to have the MRIQC software installed and accessible within the environment where you run the script.\n* **Singularity Image:**  You'll need to have a Singularity image containing the necessary MRIQC dependencies and the `run_mriqc.sh` and `run_mriqc_group.sh` scripts. \n* **Subject ID:** The script iterates over subject IDs based on the `SLURM_ARRAY_TASK_ID` variable. This implies that your BIDS dataset is structured in a way that allows easy access to subject-specific data within the script."
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 437,
+        "candidates_token_count": 615,
+        "total_token_count": 1052,
+        "cached_content_token_count": 0
+    }
+}

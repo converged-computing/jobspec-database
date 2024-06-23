@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"PBS\",\n  \"details\": {\n    \"job_name\": \"hs-d-r-n\",\n    \"nodes\": 1,\n    \"processors_per_node\": 3,\n    \"walltime\": \"48:00:00\",\n    \"queue\": \"qfermi\",\n    \"email\": \"adc@geo.au.dk\",\n    \"email_options\": \"abe\",\n    \"software\": [\n      {\n        \"name\": \"Grendel CUDA\",\n        \"version\": \"5.5.22\",\n        \"path\": \"/com/cuda/5.5.22\"\n      },\n      {\n        \"name\": \"Python\",\n        \"version\": \"2.7.6\",\n        \"path\": \"/com/python/2.7.6\"\n      },\n      {\n        \"name\": \"CMake\",\n        \"version\": \"unknown\",\n        \"path\": \"unknown\"\n      }\n    ],\n    \"resources\": [\n      {\n        \"name\": \"Nvidia GPU\",\n        \"description\": \"Used for running CUDA code\"\n      },\n      {\n        \"name\": \"PBS\",\n        \"description\": \"Used for job scheduling and resource allocation\"\n      },\n      {\n        \"name\": \"Scratch Disk\",\n        \"description\": \"Used for temporary storage\"\n      }\n    ],\n    \"script_commands\": [\n      \"source /com/gcc/4.6.4/load.sh\",\n      \"export PATH=$HOME/bin:$PATH\",\n      \"export PATH=$CUDAPATH/bin:$PATH\",\n      \"export LD_LIBRARY_PATH=$CUDAPATH/lib64:$CUDAPATH/lib:$LD_LIBRARY_PATH\",\n      \"export PYTHONPATH=$HOME/.local/lib/python:$PYTHONPATH\",\n      \"export PYTHONPATH=$HOME/.local/lib64/python:$PYTHONPATH\",\n      \"export PATH=/home/adc/.local/bin:$PATH\",\n      \"export PYTHONPATH=$PYTHON/lib:$PYTHONPATH\",\n      \"export PATH=$PYTHON/bin:$PATH\",\n      \"echo \\\"`whoami`@`hostname`\\\"\",\n      \"echo \\\"Start at `date`\\\"\",\n      \"ORIGDIR=/home/adc/code/sphere\",\n      \"WORKDIR=$ORIGDIR\",\n      \"cd $WORKDIR\",\n      \"nvidia-smi\",\n      \"rm CMakeCache.txt\",\n      \"cmake . && make\",\n      \"cd python\",\n      \"python halfshear-darcy-starter-neumann.py 0 1 1.0 3.5e-15 20000.0 1.797e-6 1.0 &\",\n      \"python halfshear-darcy-starter-neumann.py 1 1 1.0 3.5e-15 20000.0 1.797e-7 1.0 &\",\n      \"python halfshear-darcy-starter-neumann.py 2 1 1.0 3.5e-15 20000.0 1.797e-8 1.0 &\",\n      \"wait\",\n      \"echo \\\"End at `date`\\\"\"\n    ]\n  }\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 601,
+        "candidates_token_count": 765,
+        "total_token_count": 1366,
+        "cached_content_token_count": 0
+    }
+}

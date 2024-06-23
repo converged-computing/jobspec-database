@@ -1,0 +1,52 @@
+{
+    "application": "Slurm",
+    "details": {
+        "resource_manager": "Slurm",
+        "account": "nlpgroup",
+        "partition": "a100",
+        "nodes": 1,
+        "tasks": 4,
+        "gpus": "a100-4g-20gb:1",
+        "time_limit": "48:00:00",
+        "job_name": "awdlstm",
+        "email": "PDLVIC001@myuct.ac.za",
+        "email_type": "ALL",
+        "modules": [
+            "python/anaconda-python-3.7",
+            "software/TensorFlow-A100-GPU"
+        ],
+        "script": "awd_lstm/finetune.py",
+        "arguments": {
+            "descriptive_name": "finetune_awd_lstm",
+            "data": "data/isolezwe/isizulu",
+            "save_history": "logs/finetune_awd_lstm/$(date +\"%Y-%m-%d_%H-%M-%S\").txt",
+            "emsize": 800,
+            "nhid": 1150,
+            "nlayers": 3,
+            "lr": 50.0,
+            "clip": 0.25,
+            "epochs": 750,
+            "batch_size": 16,
+            "bptt": 70,
+            "dropout": 0.1,
+            "dropouth": 0.1,
+            "dropouti": 0.1,
+            "dropoute": 0.05,
+            "wdrop": 0.1,
+            "seed": 1882,
+            "patience": 3,
+            "nonmono": 8,
+            "cuda": true,
+            "when": [
+                40,
+                80,
+                120,
+                160
+            ],
+            "load": "models/awd_lstm/_emsize_800_nhid_1150_nlayers_3_lr_30.0_wdc_1.2e-06_clip_0.25_epochs_500_bsz_32_bptt_70_dropout_0.2_dropouth_0.2_dropouti_0.2_dropoute_0.1_wdrop_0.2_seed_1882_patience_3_when_[40, 80, 120].pt",
+            "save": "models/awd_lstm/finetuned_model.pt"
+        },
+        "language": "python",
+        "framework": "TensorFlow"
+    }
+}

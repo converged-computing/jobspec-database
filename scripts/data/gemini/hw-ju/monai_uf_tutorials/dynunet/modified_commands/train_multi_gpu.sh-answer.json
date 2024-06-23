@@ -1,0 +1,28 @@
+{
+    "application": "SLURM",
+    "software": [
+        "MONAI Core",
+        "Singularity",
+        "PyTorch",
+        "NCCL",
+        "Python",
+        "torch.distributed.launch"
+    ],
+    "resource_requirements": {
+        "nodes": 1,
+        "tasks": 1,
+        "gpus": 2,
+        "cpus_per_task": 4,
+        "memory": "200gb",
+        "partition": "hpg-ai",
+        "time": "4:00:00"
+    },
+    "environment_variables": {
+        "NCCL_DEBUG": "INFO",
+        "TORCH_DISTRIBUTED_DEBUG": "DETAIL",
+        "NCCL_ASYNC_ERROR_HANDLING": 1
+    },
+    "training_script": "train.py",
+    "training_command": "train.py -root_dir /mnt -datalist_path /mnt/dynunet/config/ -fold 0 -train_num_workers 4 -interval 1 -num_samples 1 -learning_rate 1e-1 -max_epochs 5 -task_id 04 -pos_sample_num 2 -expr_name baseline -tta_val True -multi_gpu True",
+    "python_path": "singularity exec --nv --bind /blue/vendor-nvidia/hju/data/MSD:/mnt /blue/vendor-nvidia/hju/monaicore1.0.1 python3"
+}

@@ -1,0 +1,53 @@
+{
+    "application": "SLURM",
+    "details": {
+        "scheduler": "SLURM",
+        "job_name": "retr-flow",
+        "partition": "gpu_titanrtx_short",
+        "nodes": 1,
+        "gpus": 4,
+        "cpus_per_task": 4,
+        "time": "01:00:00",
+        "memory": "75G",
+        "conda_environment": "vicc",
+        "modules": [
+            "2019",
+            "cuDNN"
+        ],
+        "working_directory": "/home/mtoering/ViCC/src/eval",
+        "python_script": "main_classifier.py",
+        "python_arguments": [
+            "--net",
+            "s3d",
+            "--dataset",
+            "ucf101-f",
+            "--which_split",
+            "1",
+            "--seq_len",
+            "32",
+            "--ds",
+            "1",
+            "--gpu",
+            "0,1,2,3",
+            "--batch_size",
+            "48",
+            "--workers",
+            "8",
+            "--ten_crop",
+            "--retrieval",
+            "--dataset_root",
+            "${DATASET_PATH}",
+            "--prefix",
+            "test",
+            "--dirname",
+            "${FEATURE_PATH}",
+            "--test",
+            "${TEST_PATH}"
+        ],
+        "dataset_path": "/home/mtoering/data/",
+        "test_prefix_path": "/home/mtoering/ViCC/runs/pretrain/cross/c2-rgbm/",
+        "test_dir_path": "vicc2-k1920-t0.1_ucf101-2stream-2clip-128_s3d-e100_bs24_optimsgd-cosTrue-b_lr0.6-f_lr0.0006-wd1e-06-lr0.001-sched[120,160]_seq2-len32-ds1_nmb_p300-f_p0-vfa[0,1,2,3]-nmb_v[2,2]-eps0.05-sh_i3-e_q25-w_e0",
+        "test_model_path": "/model/save_epoch99.pth.tar",
+        "feature_path": "feature_99"
+    }
+}

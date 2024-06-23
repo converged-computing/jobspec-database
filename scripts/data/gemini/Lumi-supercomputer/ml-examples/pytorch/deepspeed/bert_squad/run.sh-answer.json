@@ -1,0 +1,34 @@
+{
+    "application": "SLURM",
+    "details": {
+        "job_name": "pt-cnn",
+        "tasks": 32,
+        "tasks_per_node": 8,
+        "time": "0:10:00",
+        "exclusive": true,
+        "partition": "standard-g",
+        "account": "<project>",
+        "gpus_per_node": 8,
+        "modules": [
+            "LUMI/22.08",
+            "partition/G",
+            "singularity-bindings",
+            "aws-ofi-rccl",
+            "OpenMPI"
+        ],
+        "environment_variables": [
+            "NCCL_DEBUG=INFO",
+            "NCCL_SOCKET_IFNAME=hsn",
+            "NCCL_NET_GDR_LEVEL=3",
+            "MIOPEN_USER_DB_PATH=/tmp/${USER}-miopen-cache-${SLURM_JOB_ID}",
+            "MIOPEN_CUSTOM_CACHE_DIR=${MIOPEN_USER_DB_PATH}",
+            "CXI_FORK_SAFE=1",
+            "CXI_FORK_SAFE_HP=1",
+            "FI_CXI_DISABLE_CQ_HUGETLB=1",
+            "SINGULARITYENV_LD_LIBRARY_PATH=/opt/ompi/lib:${EBROOTAWSMINOFIMINRCCL}/lib:/opt/cray/xpmem/2.4.4-2.3_9.1__gff0e1d9.shasta/lib64:${SINGULARITYENV_LD_LIBRARY_PATH}"
+        ],
+        "singularity_image": "$SCRATCH/pytorch_rocm5.4.1_ubuntu20.04_py3.7_pytorch_1.12.1.sif",
+        "command": "python 3_squad_bert_deepspeed.py --deepspeed_config ds_config.json",
+        "deepspeed_environment": "ds-env/bin/activate"
+    }
+}

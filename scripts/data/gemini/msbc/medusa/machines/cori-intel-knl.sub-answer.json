@@ -1,0 +1,42 @@
+{
+    "application": "Slurm",
+    "details": {
+        "resource_requirements": {
+            "partition": "regular",
+            "walltime": "@WALLTIME@",
+            "nodes": "@NODES@",
+            "processes": "@NUM_PROCS@",
+            "cores_per_process": "@NCPU_PER_PROC@",
+            "features": "knl,quad,cache",
+            "scratch_space": "SCRATCH",
+            "job_name": "@SIMULATION_NAME@",
+            "error_file": "@RUNDIR@/@SIMULATION_NAME@.err",
+            "output_file": "@RUNDIR@/@SIMULATION_NAME@.out",
+            "email": "@EMAIL@"
+        },
+        "software_requirements": {
+            "modules": "cray-hdf5-parallel",
+            "executable": "@EXECUTABLE@"
+        },
+        "environment_variables": {
+            "GMON_OUT_PREFIX": "gmon.out",
+            "OMP_NUM_THREADS": "@NUM_THREADS@",
+            "OMP_PROC_BIND": "true",
+            "OMP_PLACES": "threads"
+        },
+        "execution": {
+            "command": "srun",
+            "arguments": [
+                "-N",
+                "@NODES@",
+                "-n",
+                "@NUM_PROCS@",
+                "-c",
+                "@NCPU_PER_PROC@",
+                "--cpu_bind=@CPU_BIND@",
+                "/tmp/fornax.exe",
+                "@PARFILE@"
+            ]
+        }
+    }
+}

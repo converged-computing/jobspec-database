@@ -1,0 +1,41 @@
+{
+    "application": "SLURM",
+    "details": {
+        "software": [
+            "Python",
+            "GCCcore/11.2.0",
+            "Stages/2022",
+            "virtual environment: /p/project/hai_dm4eo/wang_yi/env2/bin/activate"
+        ],
+        "resources": [
+            "nodes: 1",
+            "tasks: 4",
+            "tasks per node: 4",
+            "output file: srun_outputs/classification/SeCo_BE_moco_LC_rn50_10_%j.out",
+            "error file: srun_outputs/classification/SeCo_BE_moco_LC_rn50_10_%j.err",
+            "time: 01:00:00",
+            "job name: BE_LC_moco",
+            "GPU: 4",
+            "cpus per task: 10",
+            "partition: booster"
+        ],
+        "script": "linear_BE_moco.py",
+        "arguments": [
+            "--lmdb_dir /p/project/hai_dm4eo/wang_yi/data/BigEarthNet/",
+            "--bands B12",
+            "--checkpoints_dir /p/project/hai_ssl4eo/wang_yi/SSL4EO-S12/src/benchmark/transfer_classification/checkpoints/SeCo_BE_lc_B12_moco_rn50_10",
+            "--backbone resnet50",
+            "--train_frac 0.1",
+            "--batchsize 256",
+            "--lr 0.1",
+            "--schedule 20 40",
+            "--epochs 50",
+            "--num_workers 10",
+            "--seed 42",
+            "--dist_url tcp://${master_node}:40000",
+            "--linear",
+            "--pretrained /p/project/hai_ssl4eo/wang_yi/SSL4EO-S12/src/benchmark/pretrain_ssl/checkpoints/moco/SeCo_B12_rn50_224/checkpoint_0099.pth.tar",
+            "--resume /p/project/hai_ssl4eo/wang_yi/SSL4EO-S12/src/benchmark/transfer_classification/checkpoints/SEN12MS_BE_lc_B13_moco_rn50_10/checkpoint_0009.pth.tar"
+        ]
+    }
+}

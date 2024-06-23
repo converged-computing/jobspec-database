@@ -1,0 +1,31 @@
+{
+    "application": "accelerate",
+    "details": {
+        "resource_requirements": {
+            "cpus": 8,
+            "memory": "64G",
+            "gpus": 1
+        },
+        "software": {
+            "docker_image": "imc.tut.ac.jp/transformers-pytorch-cuda118:4.31.0",
+            "python_environment": "poetry",
+            "pytorch": "installed",
+            "transformers": "installed",
+            "huggingface": "installed"
+        },
+        "script_execution": {
+            "command": "accelerate launch src/zeroshot_prompt.py"
+        },
+        "environment_variables": {
+            "TORCH_HOME": "${PBS_O_WORKDIR}/.cache/torch",
+            "TRANSFORMERS_CACHE": "${PBS_O_WORKDIR}/.cache/transformers",
+            "HF_HOME": "${PBS_O_WORKDIR}/.cache/huggingface",
+            "TORCH_USE_CUDA_DSA": 1
+        },
+        "pbs_options": {
+            "queue": "gLiotq",
+            "job_dependencies": "oe",
+            "error_handling": "doe"
+        }
+    }
+}

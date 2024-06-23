@@ -1,0 +1,35 @@
+{
+    "application": "MPI",
+    "details": {
+        "software": [
+            "conda",
+            "mpiexec",
+            "python",
+            "nvidia-smi"
+        ],
+        "resources": {
+            "cluster": "polaris",
+            "queue": "debug-scaling",
+            "walltime": "0:30:00",
+            "nodes": 10,
+            "filesystems": [
+                "home",
+                "grand"
+            ],
+            "environment": {
+                "MPICH_GPU_SUPPORT_ENABLED": 1,
+                "NCCL_COLLNET_ENABLE": 1,
+                "NCCL_NET_GDR_LEVEL": "PHB",
+                "OMP_NUM_THREADS": 8,
+                "OMP_PLACES": "threads"
+            }
+        },
+        "script_specific": {
+            "conda_environment": "3DCNN",
+            "command": "python main.py --step 3 --batch_size_phase3 1 --exp_name mask_loss  --image_path /lus/grand/projects/STlearn/HCP_MNI_to_TRs  --use_mask_loss True --dataset_split_num 1 --model_weights_path_phase2 './experiments/S1200_transformer_reconstruction_sex_mask_loss/S1200_transformer_reconstruction_sex_mask_loss_epoch_18_batch_index_1118_BEST_val_loss.pth'",
+            "affinity_script": "./scripts/polaris/set_affinity_gpu_polaris.sh",
+            "depth": 16,
+            "ranks_per_node": null
+        }
+    }
+}

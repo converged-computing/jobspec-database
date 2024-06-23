@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"tabix\",\n  \"details\": {\n    \"slurm_account\": \"CARDIO-SL0-CPU\",\n    \"slurm_partition\": \"cardio\",\n    \"slurm_job_name\": \"tabix\",\n    \"slurm_array_task_id\": \"1-15\",\n    \"slurm_qos\": \"cardio\",\n    \"slurm_memory\": \"50000\",\n    \"slurm_time\": \"12:00:00\",\n    \"slurm_output\": \"/rds/user/jhz22/hpc-work/work/_tabix_%A_%a.o\",\n    \"slurm_error\": \"/rds/user/jhz22/hpc-work/work/_tabix_%A_%a.e\",\n    \"environment_variables\": {\n      \"TMPDIR\": \"${HPC_WORK}/work\",\n      \"f\": \"ls ~/rds/rds-jmmh2-results/public/gwas/blood_cell_traits/chen_2020/*EUR* | awk 'NR==ENVIRON[\\\"SLURM_ARRAY_TASK_ID\\\"]'\",\n      \"d\": \"dirname $f\",\n      \"trait\": \"basename $f | tr '_' '\\t' | cut -f1\"\n    },\n    \"commands\": [\n      \"gunzip -c $f | head -1 | awk -vFS=\\\"\\\\t\\\" -vOFS=\\\"\\\\t\\\" '{print \\\"snpid\\\",$0}'\",\n      \"gunzip -c $f | sed '1d' | sort -k1,1n -k2,2n | awk -vFS=\\\"\\\\t\\\" -vOFS=\\\"\\\\t\\\" '{if($3<$4) snpid=\\\"chr\\\"$1:\\\"$2_\\\"$3_\\\"$4; else snpid=\\\"chr\\\"$1:\\\"$2_\\\"$3_\\\"$4; print snpid,$0}'\",\n      \"bgzip -f > $d/tsv/EUR-$trait.tsv.gz\",\n      \"tabix -S1 -s2 -b3 -e3 $d/tsv/EUR-$trait.tsv.gz\"\n    ]\n  }\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 2,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 460,
+        "candidates_token_count": 512,
+        "total_token_count": 972,
+        "cached_content_token_count": 0
+    }
+}

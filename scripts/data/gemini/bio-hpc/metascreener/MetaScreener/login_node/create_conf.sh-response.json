@@ -1,0 +1,62 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"Bash\",\n  \"software\": {\n    \"queue_manager\": \"Slurm or Sun Grid Engine\",\n    \"python\": {\n      \"run\": \"python\",\n      \"version\": \"N/A\"\n    },\n    \"java\": {\n      \"run\": \"java\",\n      \"version\": \"N/A\"\n    },\n    \"molecular_dynamics\": {\n      \"g_mmpbsa\": \"path_metascreener/analyze_results/Simulation_gromacs/analyze_trajectory/extra/g_mmpbsa\",\n      \"g_gmx\": \"gmx_mpi\",\n      \"g_amber_home\": \"path_metascreener/external_sw/amber14/\"\n    }\n  },\n  \"resource_requirements\": {\n    \"path_metascreener\": \"N/A\",\n    \"path_login_node\": \"N/A\",\n    \"path_cluster_nodes\": \"N/A\",\n    \"path_analize_results\": \"N/A\",\n    \"path_external_sw\": \"N/A\",\n    \"path_extra_metascreener\": \"N/A\"\n  },\n  \"queue_manager_details\": {\n    \"slurm\": {\n      \"command_show_jobs\": \"squeue\",\n      \"command_get_id_job\": \"echo ${job_id}| cut -d \\\" \\\" -f 4\",\n      \"command_dependency\": \"sbatch --depend=afterok\",\n      \"queue_direc_output\": \"#SBATCH --output=\",\n      \"queue_direc_error\": \"#SBATCH --error=\",\n      \"queue_direc_queue\": \"#SBATCH -p \",\n      \"queue_direc_project\": \"#SBATCH -A \",\n      \"queue_direc_mail_type\": \"#SBATCH --mail-type=END\",\n      \"queue_direc_mail_user\": \"#SBATCH --mail-user=\",\n      \"queue_direc_job_name\": \"#SBATCH -J \",\n      \"queue_direc_time\": \"#SBATCH --time=\",\n      \"queue_direc_cpus\": \"#SBATCH --cpus-per-task=\"\n    },\n    \"sun_grid_engine_with_pbs\": {\n      \"command_show_jobs\": \"qstat\",\n      \"command_get_id_job\": \"echo ${job_id} | cut -d \\\".\\\" -f 1\",\n      \"command_dependency\": \"qsub -W depend=afterok\",\n      \"queue_direc_output\": \"#PBS -o \",\n      \"queue_direc_error\": \"#PBS -e\",\n      \"queue_direc_queue\": \"\",\n      \"queue_direc_project\": \"#PBS -A \",\n      \"queue_direc_mail_type\": \"\",\n      \"queue_direc_mail_user\": \"#PBS -M \",\n      \"queue_direc_job_name\": \"#PBS -N \",\n      \"queue_direc_time\": \"#PBS -lwalltime=\",\n      \"queue_direc_cpus\": \"#PBS -l nodes=1:ppn=1\"\n    },\n    \"sun_grid_engine_without_pbs\": {\n      \"command_show_jobs\": \"qstat\",\n      \"command_get_id_job\": \"echo ${job_id} | cut -d \\\".\\\" -f 1\"\n    }\n  }\n}\n```\n\nThis script seems to be used for creating a custom configuration file for a cluster using the `metascreener` software. It includes information about the queue manager, the versions of Python and Java, and the paths to various directories related to the cluster setup.\n\nThe script checks for the existence of specific commands (`sbatch` or `qsub`) to determine which queue manager is used. It then sets up the configuration parameters according to the detected queue manager.\n\n**Here's a breakdown of the script:**\n\n1. **Functions:**\n    * `write_comment`: Adds a comment block with a given message to the configuration file.\n    * `readFile`: Reads a file and extracts the value corresponding to a given key.\n    * `get_queue_manager`: Determines the queue manager (Slurm or Sun Grid Engine) based on the existence of `sbatch` or `qsub` commands.\n    * `get_python_run`: Gets the Python run command and version.\n    * `get_java_run`: Gets the Java run command and version.\n2. **Variable Initialization:**  Various variables are initialized with placeholder values (`N/A`) which are later assigned based on the detected queue manager and software versions.\n3. **Configuration File Creation:**\n    * If the configuration file (`config.cfg`) doesn't exist, the script will create it and populate it with information about the queue manager, Python, Java, and other cluster-specific paths.\n    * If the configuration file exists, the script will source the `read_file_conf.sh` script to load existing configuration values.\n4. **Output:** Finally, the script displays debugging information about the detected settings.\n\nThe script effectively aims to simplify the setup and configuration of the `metascreener` software on a cluster by automatically detecting and configuring the relevant settings based on the available resources.\n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "citation_metadata": {
+                "citation_sources": [
+                    {
+                        "start_index": 910,
+                        "end_index": 1335,
+                        "uri": "https://github.com/bio-hpc/metascreener",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 1545,
+                        "end_index": 1900,
+                        "uri": "https://github.com/bio-hpc/metascreener",
+                        "license_": ""
+                    }
+                ]
+            },
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 2688,
+        "candidates_token_count": 1164,
+        "total_token_count": 3852,
+        "cached_content_token_count": 0
+    }
+}

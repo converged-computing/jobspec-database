@@ -1,0 +1,33 @@
+{
+    "application": "Slurm",
+    "details": {
+        "partition": "amdgpulong",
+        "time": "72:00:00",
+        "gpu": "1",
+        "tasks_per_node": "1",
+        "memory_per_gpu": "32000",
+        "job_name": "Q_LoRA_ROCstorys",
+        "error_file": "Q_LoRA_ROCstory.err",
+        "output_file": "Q_LoRA_ROCstory.out",
+        "mail_user": "kangchen@fel.cvut.cz",
+        "mail_type": "ALL",
+        "software": [
+            "PyTorch/1.9.0-fosscuda-2020b",
+            "OpenMPI",
+            "Python"
+        ],
+        "libraries": [
+            "improved-diffusion"
+        ],
+        "datasets": [
+            "ROCstory"
+        ],
+        "commands": [
+            "hostname",
+            "pwd",
+            "mpirun -np 1 python improved-diffusion/scripts/run_train.py",
+            "mpirun -np 1 python improved-diffusion/scripts/batch_decode.py",
+            "python metrics_text.py"
+        ]
+    }
+}

@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"SLURM\",\n  \"details\": {\n    \"environment\": {\n      \"modules\": [\n        \"anaconda/2021b\",\n        \"gurobi/gurobi-903\"\n      ],\n      \"conda_environment\": \"MoEBERT\",\n      \"variables\": {\n        \"TOTAL_GPUS\": \"${SLURM_NTASKS}\",\n        \"HF_USER_DIR\": \"/home/gridsan/$(whoami)/.cache/huggingface\",\n        \"HF_LOCAL_DIR\": \"/state/partition1/user/$(whoami)/cache/huggingface\",\n        \"HF_HOME\": \"${HF_LOCAL_DIR}\",\n        \"TRANSFORMERS_OFFLINE\": \"1\",\n        \"HF_DATASETS_OFFLINE\": \"1\",\n        \"WANDB_DISABLED\": \"true\",\n        \"BACKEND\": \"pytorch\",\n        \"HDF5_USE_FILE_LOCKING\": \"FALSE\",\n        \"output_dir\": \"/home/gridsan/$(whoami)/MoEBERT-fork/results\"\n      }\n    },\n    \"resources\": {\n      \"nodes\": 1,\n      \"gpus\": \"volta:1\",\n      \"tasks_per_node\": 1,\n      \"cpus_per_task\": 4,\n      \"time\": \"0-24:0\",\n      \"mail_type\": \"FAIL\",\n      \"mail_user\": \"paulth@mit.edu\",\n      \"output_file\": \"/home/gridsan/ptheron/MoEBERT-fork/logs/importance_mnli_new/experiments_importance_out%j.txt\",\n      \"error_file\": \"/home/gridsan/ptheron/MoEBERT-fork/logs/importance_mnli_new/experiments_importance_err%j.txt\"\n    },\n    \"scripts\": {\n      \"sh_scripts/new_experiments/importance_preprocess_new.sh\": {\n        \"arguments\": [\n          \"$dset\",\n          \"$output_dir\"\n        ]\n      },\n      \"merge_importance.py\": {\n        \"arguments\": {\n          \"task\": \"$dset\"\n        }\n      }\n    }\n  }\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 583,
+        "candidates_token_count": 521,
+        "total_token_count": 1104,
+        "cached_content_token_count": 0
+    }
+}

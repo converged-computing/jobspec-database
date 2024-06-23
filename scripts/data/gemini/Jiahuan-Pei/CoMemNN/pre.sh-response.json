@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"SLURM\",\n  \"details\": {\n    \"job_name\": \"parameterized\",\n    \"output_file\": \"./job_out/%x.pre-%A.out\",\n    \"error_file\": \"./job_err/%x.pre-%A.err\",\n    \"partition\": \"cpu\",\n    \"cores\": 8,\n    \"memory\": \"60G\",\n    \"time\": \"1-00:00:00\",\n    \"environment\": {\n      \"bashrc\": \"${HOME}/.bashrc\",\n      \"conda_env\": \"tds_py37_pt\",\n      \"PYTHONPATH\": \"./\",\n      \"OMP_NUM_THREADS\": 2\n    },\n    \"script\": {\n      \"language\": \"python\",\n      \"path\": \"./$1/Prepare_dataset.py\",\n      \"arguments\": [\n        \"--data_dir=/ivi/ilps/personal/jpei/TDS\",\n        \"$2\"\n      ]\n    }\n  }\n}\n```\n\nThis script utilizes **SLURM** as the job scheduler and runs a Python script called \"Prepare_dataset.py\".\n\nHere's a breakdown of the script's functionality and resource requirements:\n\n**SLURM:**\n\n* **sbatch:** The `sbatch` command is used to submit a job to SLURM.\n* **job-name:** The job is named after the first argument passed to the script.\n* **-o:**  The standard output of the job is redirected to a file named `%x.pre-%A.out` in the `job_out` directory.\n* **-e:** The standard error of the job is redirected to a file named `%x.pre-%A.err` in the `job_err` directory.\n* **-p:** The job is submitted to the \"cpu\" partition.\n* **-c:** The job is requested to use 8 cores.\n* **--mem:** The job is requested to use 60 GB of memory.\n* **--time:** The job is allowed to run for a maximum of 1 hour.\n\n**Environment and Script:**\n\n* **source ${HOME}/.bashrc:** The user's `.bashrc` file is sourced to set up environment variables.\n* **source activate tds_py37_pt:** The `tds_py37_pt` conda environment is activated.\n* **PYTHONPATH=./:** The current directory is added to the PYTHONPATH environment variable.\n* **OMP_NUM_THREADS=2:** The number of threads for OpenMP is set to 2.\n* **python -u ./$1/Prepare_dataset.py --data_dir=/ivi/ilps/personal/jpei/TDS $2:** The Python script `Prepare_dataset.py` is executed with the data directory and additional arguments provided.\n\nThe `$1` and `$2` in the script represent arguments passed to the script. The first argument (`$1`) seems to be a submodule folder, and the second argument (`$2`) likely contains hyperparameters.\n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 288,
+        "candidates_token_count": 688,
+        "total_token_count": 976,
+        "cached_content_token_count": 0
+    }
+}

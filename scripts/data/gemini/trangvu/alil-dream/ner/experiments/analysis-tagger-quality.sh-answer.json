@@ -1,0 +1,63 @@
+{
+    "application": "SLURM",
+    "details": {
+        "job_name": "alner-transfer",
+        "account": "da33",
+        "tasks": 1,
+        "cpus_per_task": 1,
+        "memory_per_cpu": "50000M",
+        "gpu": 1,
+        "partition": "m3g",
+        "time": "5-00:00:00",
+        "mail_type": "BEGIN,END,FAIL",
+        "mail_user": "vuth0001@student.monash.edu",
+        "modules": [
+            "cuda/9.0",
+            "python/3.6.2",
+            "tensorflow/1.12.0-python3.6-gcc5"
+        ],
+        "environment": {
+            "CUDA_VISIBLE_DEVICES": "0",
+            "CUDA_CACHE_PATH": "/tmp/nv-$DATE"
+        },
+        "python_script": "AL-crf-dreaming.py",
+        "script_arguments": [
+            "--root_dir",
+            "$ROOT_DIR",
+            "--dataset_name",
+            "$DATASET_NAME",
+            "--train_file",
+            "$TEXT_DATA_DIR/$TRAIN_FILE",
+            "--dev_file",
+            "$TEXT_DATA_DIR/$DEV_FILE",
+            "--test_file",
+            "$TEXT_DATA_DIR/$TESTS_FILE",
+            "--policy_path",
+            "$POLICY_PATH",
+            "--word_vec_file",
+            "$EMBEDING_FILE",
+            "--episodes",
+            "1",
+            "--timesteps",
+            "20",
+            "--output",
+            "$OUTPUT",
+            "--label_data_size",
+            "100",
+            "--annotation_budget",
+            "200",
+            "--initial_training_size",
+            "0",
+            "--learning_phase_length",
+            "5",
+            "--vocab_size",
+            "20000",
+            "--ndream",
+            "5",
+            "--dreaming_budget",
+            "10",
+            "--initial_training_size",
+            "$init_size"
+        ]
+    }
+}

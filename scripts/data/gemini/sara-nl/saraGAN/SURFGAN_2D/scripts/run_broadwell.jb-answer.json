@@ -1,0 +1,51 @@
+{
+    "application": "SLURM",
+    "details": {
+        "resource_requirements": {
+            "nodes": 64,
+            "tasks_per_node": 64,
+            "partition": "broadwell",
+            "time_limit": "1 hour"
+        },
+        "environment_setup": [
+            "/home/davidr/tf_cpu36.sh",
+            "export KMP_BLOCKTIME=0",
+            "export KMP_AFFINITY='granularity=fine,verbose,compact,1,0'",
+            "export TF_XLA_FLAGS=--tf_xla_cpu_global_jit",
+            "export KMP_SETTINGS=TRUE",
+            "export OMP_NUM_THREADS=16",
+            "DIM=512"
+        ],
+        "python_script": "main.py",
+        "arguments": [
+            "stylegan2",
+            "/lustre4/2/managed_datasets/LIDC-IDRI/npy/average/",
+            "(1, 128, 512, 512)",
+            "--scratch_path",
+            "/",
+            "--starting_phase",
+            "5",
+            "--ending_phase",
+            "5",
+            "--base_dim",
+            "$DIM",
+            "--latent_dim",
+            "$DIM",
+            "--horovod",
+            "--starting_alpha",
+            "0",
+            "--base_batch_size",
+            "8",
+            "--max_global_batch_size",
+            "1024",
+            "--learning_rate",
+            "0.001"
+        ],
+        "libraries": [
+            "horovod"
+        ],
+        "other_software": [
+            "mpirun"
+        ]
+    }
+}

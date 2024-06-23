@@ -1,0 +1,56 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"SLURM\",\n  \"details\": {\n    \"job_name\": \"llchem-multinode\",\n    \"nodes\": 4,\n    \"tasks_per_node\": 1,\n    \"cpus_per_task\": 12,\n    \"output_file\": \"/fsx/proj-chemnlp/experiments/logs/training_%j.out\",\n    \"error_file\": \"/fsx/proj-chemnlp/experiments/logs/training_%j.err\",\n    \"open_mode\": \"append\",\n    \"account\": \"topchem\",\n    \"partition\": \"g40x\",\n    \"exclusive\": true,\n    \"environment\": {\n      \"CHEMNLP_PATH\": \"/fsx/proj-chemnlp/$2/chemnlp\",\n      \"TOKENIZERS_PARALLELISM\": \"false\",\n      \"WANDB_BASE_URL\": \"https://stability.wandb.io\",\n      \"NCCL_DEBUG\": \"INFO\",\n      \"NCCL_ASYNC_ERROR_HANDLING\": \"1\",\n      \"LOGLEVEL\": \"INFO\"\n    },\n    \"commands\": [\n      \"source $CHEMNLP_PATH/experiments/scripts/env_creation_hf.sh $1 $2\",\n      \"srun torchrun --nnodes $SLURM_NNODES --nproc_per_node 8 \\\\ --rdzv_id $RANDOM \\\\ --rdzv_backend c10d \\\\ --rdzv_endpoint $head_node_ip:29500 \\\\ experiments/scripts/run_tune.py  experiments/configs/hugging-face/$3 --config_overrides $overrides\"\n    ],\n    \"other_requirements\": [\n      \"Python\",\n      \"PyTorch\",\n      \"Hugging Face Transformers\",\n      \"NCCL\",\n      \"WandB\",\n      \"SLURM\",\n      \"Bash\"\n    ]\n  }\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 2,
+                    "blocked": false
+                }
+            ],
+            "citation_metadata": {
+                "citation_sources": [
+                    {
+                        "start_index": 769,
+                        "end_index": 1008,
+                        "uri": "https://github.com/phalem/chemnlp",
+                        "license_": ""
+                    }
+                ]
+            },
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 571,
+        "candidates_token_count": 445,
+        "total_token_count": 1016,
+        "cached_content_token_count": 0
+    }
+}

@@ -1,0 +1,30 @@
+{
+    "application": "Slurm",
+    "details": {
+        "job_name": "bench_insitu",
+        "output_file": "res256N_%x_%j.out",
+        "time_limit": "24:00:00",
+        "nodes": 35,
+        "account": "cad14985",
+        "constraint": "MI250",
+        "tasks_per_node": 8,
+        "exclusive": true,
+        "simulation_size": 256,
+        "script_directory": "${HOME}/bench-in-situ",
+        "working_directory": "${BASE_DIR}/working_dir",
+        "scheduler_file": "scheduler.json",
+        "prefix": "bench_insitu",
+        "dask_worker_nodes": 1,
+        "simulation_nodes": "($SLURM_NNODES-2-$DASK_WORKER_NODES)",
+        "simulation_processes": 8,
+        "openmp_threads": "${SLURM_CPUS_PER_TASK}",
+        "openmp_places": "cores",
+        "python_environment": "deisa",
+        "pdi_environment": "pdi/share/pdi/env.sh",
+        "ld_library_path": "/opt/cray/pe/python/3.11.5/lib/:$LD_LIBRARY_PATH",
+        "simulation_executable": "build/main",
+        "setup_file": "${BASE_DIR}/envs/adastra/${SIMU_SIZE}/setup.ini",
+        "io_file": "${BASE_DIR}/envs/adastra/io_deisa.yml",
+        "in_situ_script": "${BASE_DIR}/in-situ/fft_updated.py"
+    }
+}

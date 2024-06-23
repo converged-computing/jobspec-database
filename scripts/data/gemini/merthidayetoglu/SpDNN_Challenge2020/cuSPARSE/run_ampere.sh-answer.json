@@ -1,0 +1,52 @@
+{
+    "application": "Slurm",
+    "details": {
+        "partition": "gpu",
+        "time": "1:00:00",
+        "reservation": "root_34",
+        "nodes": 4,
+        "tasks_per_node": 4,
+        "sockets_per_node": 2,
+        "cores_per_socket": 20,
+        "threads_per_core": 4,
+        "memory_per_cpu": "1200",
+        "gpu_resources": "gpu:v100:4",
+        "environment_variables": {
+            "PROJREPO": "required",
+            "DATASET": "PROJREPO/dataset",
+            "BLOCKSIZE": 256,
+            "BUFFER": 24,
+            "OMP_NUM_THREADS": 16
+        },
+        "commands": [
+            "make clean;make -j",
+            "date",
+            "./inference"
+        ],
+        "loop_variables": {
+            "layer": [
+                120,
+                480,
+                1920
+            ],
+            "neuron": [
+                1024,
+                4096,
+                16384,
+                65536
+            ],
+            "bias": {
+                "1024": -0.3,
+                "4096": -0.35,
+                "16384": -0.4,
+                "65536": -0.45
+            },
+            "input": {
+                "1024": 6374505,
+                "4096": 25019051,
+                "16384": 98858913,
+                "65536": 392191985
+            }
+        }
+    }
+}

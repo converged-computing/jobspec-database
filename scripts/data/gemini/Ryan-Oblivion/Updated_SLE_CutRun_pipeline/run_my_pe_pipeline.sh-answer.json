@@ -1,0 +1,26 @@
+{
+    "application": "Slurm",
+    "details": {
+        "resource_requirements": {
+            "nodes": 1,
+            "tasks_per_node": 1,
+            "cpus_per_task": 1,
+            "partition": "cm",
+            "time": "10:00:00",
+            "memory": "10GB",
+            "job_name": "best_gg",
+            "mail_type": "FAIL,END",
+            "mail_user": "rj931@nyu.edu"
+        },
+        "software_requirements": {
+            "nextflow": "23.04.1",
+            "multiqc": "1.9"
+        },
+        "pipeline_description": "This script appears to be a Slurm job submission script for running a Nextflow pipeline named 'pe_sle_pipeline.nf'. The pipeline likely processes paired-end RNA sequencing data, possibly related to SLE research. The script includes settings for different input data sources (Mock, IAV, Bleo) and defines parameters like read files, filtered files, and background regions. It also uses multiqc for quality control and invokes two additional scripts: 'make_homer.sh' and 'homer_anno_combined.sh'. The 'make_homer.sh' script likely prepares input data for HOMER (Hypergeometric Optimization of Motif EnRichment), a tool for motif discovery and analysis in genomic datasets. 'homer_anno_combined.sh' might analyze the resulting HOMER output, potentially combining results from different replicates or experimental conditions.",
+        "additional_notes": {
+            "input_data": "The script uses file path patterns to locate input files. These patterns suggest that the script handles FASTQ files (fastq.gz) for paired-end reads and potentially also filtered files.",
+            "output_files": "The script generates 'multiqc_report.html' for quality control reports. It likely also produces outputs from the Nextflow pipeline and the HOMER analysis.",
+            "workflow_structure": "The script first runs the Nextflow pipeline twice (likely to address some dependency issue). Then it generates a list of FASTQC files and runs multiqc to create a quality control report. It then runs the HOMER scripts sequentially, with 'homer_anno_combined.sh' dependent on the completion of 'make_homer.sh'."
+        }
+    }
+}

@@ -1,0 +1,31 @@
+{
+    "application": "Slurm",
+    "details": {
+        "software": [
+            "Shifter",
+            "Docker",
+            "Bash"
+        ],
+        "resources": {
+            "account": "dune",
+            "job_name": "blip_graph_test",
+            "constraint": "gpu",
+            "queue": "shared",
+            "time": "24:00:00",
+            "nodes": 1,
+            "tasks": 1,
+            "cores_per_task": 32,
+            "gpus_per_task": 1,
+            "gpus_per_node": 1,
+            "gpu_bind": "none",
+            "dependency": "afterok:<optimize_blip_graph_prep_id>",
+            "array": "0-2",
+            "local_scratch": "/pscratch/sd/${USER:0:1}/${USER}/$SLURM_JOB_ID/$SLURM_ARRAY_TASK_ID",
+            "local_blip": "/global/cfs/cdirs/dune/users/${USER}",
+            "local_data": "/global/cfs/cdirs/dune/users/${USER}",
+            "hyper_parameter_file": "/local_scratch/hyper_parameter_data.csv",
+            "optimization_script": "./perlmutter_optimize_blip_graph.sh",
+            "docker_image": "docker:infophysics/blip:latest"
+        }
+    }
+}

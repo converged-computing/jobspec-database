@@ -1,0 +1,42 @@
+{
+    "application": "SLURM",
+    "details": {
+        "scheduler": "SLURM",
+        "partition": "milanq",
+        "time_limit": "20 hours",
+        "nodes": 1,
+        "tasks": 1,
+        "cpus_per_task": 1,
+        "output_file": "slurm.%N.%j.out",
+        "error_file": "slurm.%N.%j.err",
+        "environment_variables": {
+            "PATH": "$PATH:/usr/local/cuda/bin",
+            "LD_LIBRARY_PATH": "/home/santiago/local/lib"
+        },
+        "executable": "./execute",
+        "input_matrices": [
+            "AG-Monien/wave.mtx.gz",
+            "AG-Monien/debr.mtx.gz",
+            "AMD/G3_circuit.mtx.gz",
+            "Andrianov/ins2.mtx.gz",
+            "Andrianov/mip1.mtx.gz"
+        ],
+        "matrix_directory": "/global/D1/homes/james/sparcity/suitesparse/mtx/original/",
+        "output_directory": "/global/D1/homes/santiago/reorderings/rabbit/",
+        "temporary_directory": "/work/$USER/tmp1",
+        "commands": [
+            "make",
+            "gunzip",
+            "./execute",
+            "mkdir",
+            "mv",
+            "gzip",
+            "rm"
+        ],
+        "software_dependencies": [
+            "CUDA",
+            "GNU gzip",
+            "make"
+        ]
+    }
+}

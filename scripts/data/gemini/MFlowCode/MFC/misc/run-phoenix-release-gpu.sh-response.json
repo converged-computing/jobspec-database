@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"SLURM\",\n  \"details\": {\n    \"job_name\": \"shb-test-jobs\",\n    \"account\": \"gts-sbryngelson3\",\n    \"nodes\": 1,\n    \"cores_per_node\": 1,\n    \"memory\": \"100GB\",\n    \"gpu\": \"2\",\n    \"time\": \"02:00:00\",\n    \"queue\": \"embers\",\n    \"output\": \"test.out\",\n    \"wait\": true,\n    \"mfc.sh\": {\n      \"load\": {\n        \"command\": \"p\",\n        \"mode\": \"GPU\"\n      },\n      \"test\": {\n        \"arguments\": \"-a -j 2 --gpu -g $gpu_ids -- -c phoenix\"\n      }\n    },\n    \"nvidia-smi\": {\n      \"command\": \"-L\"\n    },\n    \"seq\": {\n      \"command\": \"-s ' ' 0 $(($gpu_count-1))\"\n    }\n  }\n}\n```\n\nThis script is running on **SLURM**, a job scheduler and resource manager, using several other tools and resources:\n\n* **mfc.sh:** A custom shell script with two functions: `load` and `test`. \n    * `load`:  Loads a specific configuration (`-c p`) with GPU (`-m GPU`) mode.\n    * `test`: Executes a test with specified arguments, including the GPU (`--gpu -g $gpu_ids`) and a phoenix configuration (`-- -c phoenix`).\n* **nvidia-smi:** A command-line utility for monitoring and managing NVIDIA GPUs. It is used to count the number of GPUs available on the node (`nvidia-smi -L | wc -l`).\n* **seq:**  A utility to generate a sequence of numbers. Here, it creates a space-separated list of GPU IDs (`0 1 2 ... gpu_count-1`).\n* **Bash:** The shell environment that runs the script.\n* **Other resources:** The script uses SLURM resources like account, nodes, cores, memory, time, queue, and output file. \n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 310,
+        "candidates_token_count": 490,
+        "total_token_count": 800,
+        "cached_content_token_count": 0
+    }
+}

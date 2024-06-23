@@ -1,0 +1,39 @@
+{
+    "application": "Slurm",
+    "details": {
+        "software": [
+            "nekrs",
+            "PrgEnv-gnu",
+            "craype-accel-amd-gfx90a",
+            "cray-mpich",
+            "rocm",
+            "sbcast"
+        ],
+        "libraries": [
+            "mpi_gtl_hsa",
+            "libnekrs.so",
+            "libocca.so",
+            "libnekrs-hypre-device.so",
+            "libnekrs-hypre.so"
+        ],
+        "resource_requirements": {
+            "compute_nodes": "specified by user",
+            "gpus": "8 per node",
+            "cores": "7 per NUMA node",
+            "memory": "unlimited",
+            "queue": "batch (user-configurable)",
+            "time": "specified by user",
+            "project_id": "specified by user",
+            "other": [
+                "NVME_HOME=/mnt/bb/$USER/",
+                "MPICH_GPU_SUPPORT_ENABLED=1",
+                "MPICH_MPIIO_HINTS=*:cray_cb_write_lock_mode=2:cray_cb_nodes_multiplier=4:striping_unit=16777216:striping_factor=specified by script:romio_cb_write=enable:romio_ds_write=disable:romio_no_indep_rw=true",
+                "NEKRS_GPU_MPI=1",
+                "MPICH_MPIIO_STATS=1",
+                "MPICH_OFI_NIC_POLICY=NUMA",
+                "NEKRS_CACHE_BCAST=1 (user-configurable)",
+                "NEKRS_LOCAL_TMP_DIR=$NVME_HOME"
+            ]
+        }
+    }
+}

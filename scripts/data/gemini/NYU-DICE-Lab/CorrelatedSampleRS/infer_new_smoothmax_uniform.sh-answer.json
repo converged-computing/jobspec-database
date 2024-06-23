@@ -1,0 +1,33 @@
+{
+    "application": "SLURM",
+    "details": {
+        "job_name": "certify_infer_minmax",
+        "nodes": 1,
+        "tasks_per_node": 1,
+        "cpus_per_task": 1,
+        "time": "47:59:00",
+        "memory": "32GB",
+        "gpu": "rtx8000:1",
+        "output": "out_%A_%j.log",
+        "singularity_image": "/scratch/aaj458/singularity_containers/cuda11.1.1-cudnn8-devel-ubuntu20.04.sif",
+        "singularity_overlay": "/scratch/aaj458/singularity_containers/my_pytorch.ext3:ro",
+        "python_script": "infer_certify_pretrained_salman_uncorrelated.py",
+        "dataset": "cifar10",
+        "data_path": "/scratch/aaj458/data/Cifar10/",
+        "model_path": "salman_models/pretrained_models/cifar10/finetune_cifar_from_imagenetPGD2steps/PGD_10steps_30epochs_multinoise/2-multitrain/eps_64/cifar10/resnet110/noise_$SIGMA/checkpoint.pth.tar",
+        "model_type": "resnet110",
+        "num_images": 1000,
+        "patch_size": "$PATCH_SIZE",
+        "patch_stride": "$PATCH_STRIDE",
+        "sigma": "$SIGMA",
+        "N0": 100,
+        "N": 100000,
+        "output_path": "cifar10_SOTA_100k_uniform/certify_results_salman_patchsmooth_smoothmax_randompatches_$MAXPATCHES/",
+        "batch_size": 400,
+        "robustness_mode": "$RMODE",
+        "noise_steps": 36,
+        "num_patches": "$MAXPATCHES",
+        "normalize": true,
+        "start_index": "$START_IDX"
+    }
+}

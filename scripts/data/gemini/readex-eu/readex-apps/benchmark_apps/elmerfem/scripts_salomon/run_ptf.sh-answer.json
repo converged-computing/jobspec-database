@@ -1,0 +1,46 @@
+{
+    "application": "ElmerSolver",
+    "details": {
+        "software": [
+            "ElmerSolver",
+            "psc_frontend",
+            "gen_problem.sh",
+            "CMake",
+            "MKL"
+        ],
+        "resources": {
+            "PBS": {
+                "account": "OPEN-12-63",
+                "queue": "qprod",
+                "job_name": "ELMER_ptf",
+                "nodes": 5,
+                "cores_per_node": 24,
+                "mpi_procs": 24,
+                "accelerator": false,
+                "walltime": "02:00:00"
+            },
+            "environment_variables": {
+                "NPROCS": 96,
+                "PROBLEM_PATH": "${ELMER_ROOT}/build/fem/tests/WinkelPoissonPartitionUniform/",
+                "SCOREP_SUBSTRATE_PLUGINS": "rrl",
+                "SCOREP_RRL_PLUGINS": "cpu_freq_plugin,uncore_freq_plugin",
+                "SCOREP_RRL_VERBOSE": "WARN",
+                "SCOREP_METRIC_PLUGINS": "x86_energy_sync_plugin",
+                "SCOREP_METRIC_PLUGINS_SEP": ";",
+                "SCOREP_METRIC_X86_ENERGY_SYNC_PLUGIN_*:": "E",
+                "SCOREP_METRIC_X86_ENERGY_SYNC_PLUGIN_CONNECTION": "INBAND",
+                "SCOREP_METRIC_X86_ENERGY_SYNC_PLUGIN_VERBOSE": "WARN",
+                "SCOREP_METRIC_X86_ENERGY_SYNC_PLUGIN_STATS_TIMEOUT_MS": 1000,
+                "SCOREP_MPI_ENABLE_GROUPS": "ENV",
+                "SCOREP_FILTERING_FILE": "scorep.filt"
+            },
+            "files": {
+                "readex_config_extended.xml": "${PROBLEM_PATH}",
+                "case.sif": "${ELMER_ROOT}",
+                "scorep.filt": "${PROBLEM_PATH}",
+                "rts.xml": "${ELMER_ROOT}",
+                "tuning_model.json": "${ELMER_ROOT}"
+            }
+        }
+    }
+}

@@ -1,0 +1,54 @@
+{
+    "application": "Slurm",
+    "details": {
+        "queue": "normal",
+        "nodes": 4,
+        "time": "08:00:00",
+        "job_name": "s2",
+        "email": "nkozak@stanford.edu",
+        "email_type": "ALL",
+        "output_file": "s2.%j.out",
+        "modules": [
+            "openmpi",
+            "anaconda3",
+            "julia"
+        ],
+        "conda_environment": "env_CS238",
+        "python_script": "s2.py",
+        "storage_management": {
+            "log_reduction": {
+                "command": "tail -n 1000 s2*.out > end_s2.out",
+                "remove_files": "rm s2*.out"
+            },
+            "file_removal": {
+                "directory": "/home/nkozak/CS238/explore_states/s2/backGround",
+                "files": [
+                    "1*",
+                    "2*",
+                    "3*",
+                    "4*",
+                    "5*",
+                    "6*",
+                    "7*",
+                    "8*",
+                    "9*",
+                    "processor*"
+                ]
+            },
+            "compression": [
+                {
+                    "directory": "VTK",
+                    "archive": "VTK.zip"
+                },
+                {
+                    "directory": "postProcessing",
+                    "archive": "postProcessing.zip"
+                }
+            ],
+            "move_to_scratch": {
+                "source": "/home/nkozak/CS238/explore_states/s2/backGround",
+                "destination": "/scratch/users/nkozak/CS238/explore_states/s2/"
+            }
+        }
+    }
+}

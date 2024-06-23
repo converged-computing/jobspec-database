@@ -1,0 +1,50 @@
+{
+    "application": "SLURM",
+    "details": {
+        "script_language": "Bash",
+        "slurm_options": {
+            "output_file": "/work/bm1164/m300832/Derwael/Init/Logs/SLURM_job.%j.%N.out",
+            "error_file": "/work/bm1164/m300832/Derwael/Init/Logs/SLURM_job.%j.%N.err",
+            "working_directory": "/work/bm1164/m300832/Derwael/Init/",
+            "job_name": "Init",
+            "environment": "get-user-env",
+            "account": "bm1164",
+            "mail_user": "clara.henry@mpimet.mpg.de",
+            "tasks": 100,
+            "time": "00:20:00",
+            "partition": "compute"
+        },
+        "software_packages": [
+            "intel-oneapi-mpi@2021.5.0%intel@2021.5.0",
+            "intel-oneapi-compilers@2022.0.1",
+            "intel-oneapi-mkl@2022.0.1%gcc@11.2.0",
+            "metis@5.1.0%intel@2021.5.0"
+        ],
+        "environment_variables": [
+            "OMPI_MCA_pml=ucx",
+            "OMPI_MCA_btl=self",
+            "OMPI_MCA_osc=pt2pt",
+            "UCX_IB_ADDR_TYPE=ib_global",
+            "OMPI_MCA_coll=^ml,hcoll",
+            "OMPI_MCA_coll_hcoll_enable=0",
+            "HCOLL_ENABLE_MCAST_ALL=0",
+            "HCOLL_MAIN_IB=mlx5_0:1",
+            "UCX_NET_DEVICES=mlx5_0:1",
+            "UCX_TLS=mm,knem,cma,dc_mlx5,dc_x,self",
+            "UCX_UNIFIED_MODE=y",
+            "HDF5_USE_FILE_LOCKING=FALSE",
+            "OMPI_MCA_io=romio321",
+            "UCX_HANDLE_ERRORS=bt",
+            "I_MPI_PMI_LIBRARY=/usr/lib64/libpmi2.so",
+            "I_MPI_FABRICS=shm:ofi"
+        ],
+        "ulimits": {
+            "stack_size": 102400,
+            "core_dump_size": 0
+        },
+        "commands": [
+            "make grid",
+            "srun -l --mpi=pmi2 --export=ALL --cpu_bind=cores --distribution=block:cyclic -n 100 ElmerSolver_mpi Init.sif"
+        ]
+    }
+}

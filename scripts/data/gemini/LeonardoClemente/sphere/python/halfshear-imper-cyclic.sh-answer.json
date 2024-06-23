@@ -1,0 +1,35 @@
+{
+    "application": "PBS",
+    "details": {
+        "job_name": "hs-imper-cyc",
+        "nodes": "1",
+        "cores_per_node": "3",
+        "walltime": "48:00:00",
+        "queue": "qfermi",
+        "email": "adc@geo.au.dk",
+        "email_options": "abe",
+        "software": [
+            {
+                "name": "Grendel CUDA",
+                "version": "5.5.22",
+                "path": "/com/cuda/5.5.22"
+            },
+            {
+                "name": "Python",
+                "version": "2.7.6",
+                "path": "/com/python/2.7.6"
+            }
+        ],
+        "script_execution": {
+            "working_directory": "/home/adc/code/sphere",
+            "commands": [
+                "nvidia-smi",
+                "cmake . && make",
+                "python halfshear-darcy-stress-mod-starter.py 0 1 1.0 3.5e-15 80000.0 1.040e-7 10000.0 60000.0 0.2 1.0 &",
+                "python halfshear-darcy-stress-mod-starter.py 1 1 1.0 3.5e-15 80000.0 1.040e-7 10000.0 62500.0 0.2 1.0 &",
+                "python halfshear-darcy-stress-mod-starter.py 2 1 1.0 3.5e-15 80000.0 1.040e-7 10000.0 65000.0 0.2 1.0 &",
+                "wait"
+            ]
+        }
+    }
+}

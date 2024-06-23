@@ -1,0 +1,29 @@
+{
+    "application": "SLURM",
+    "details": {
+        "resource_requirements": {
+            "nodes": 3,
+            "tasks": 3,
+            "tasks_per_node": 1,
+            "time": "00:05:00",
+            "partition": "fpga",
+            "account": "p200301",
+            "cores_per_task": 8
+        },
+        "software_requirements": {
+            "modules": [
+                "ifpgasdk",
+                "520nmx",
+                "CMake",
+                "intel",
+                "deploy/EasyBuild"
+            ]
+        },
+        "commands": [
+            "cd build",
+            "git pull",
+            "make main_node",
+            "srun main_node matrix_10000.bin rhs_10000.bin"
+        ]
+    }
+}

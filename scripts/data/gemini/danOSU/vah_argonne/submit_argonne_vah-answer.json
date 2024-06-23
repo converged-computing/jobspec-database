@@ -1,0 +1,29 @@
+{
+    "application": "Slurm",
+    "details": {
+        "software": [
+            "Singularity",
+            "Parallel",
+            "Bash"
+        ],
+        "resource_requirements": {
+            "nodes": 20,
+            "tasks_per_node": 36,
+            "time": "04:00:00",
+            "mail_user": "liyanage.5@osu.edu",
+            "mail_type": "all",
+            "account": "unedf_optimization",
+            "partition": "bdwall"
+        },
+        "file_system": {
+            "input_dir": "/home/ac.liyanage/vah_run_events/$1/",
+            "scratch": "/lcrc/globalscratch/dan"
+        },
+        "job_id": "$SLURM_JOB_ID",
+        "event_processing": {
+            "parallel": "parallel --delay .8 -j $SLURM_NTASKS",
+            "srun": "srun --export=all --exclusive -n1 --cpus-per-task=1 --cpu-bind=cores",
+            "singularity_command": "singularity exec -B $SCRATCH:/scr ~/jetscape_vah sh event.sh $inputdir $job"
+        }
+    }
+}

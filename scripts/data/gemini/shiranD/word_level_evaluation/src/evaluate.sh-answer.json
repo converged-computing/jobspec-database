@@ -1,0 +1,29 @@
+{
+    "application": "SLURM",
+    "details": {
+        "resource_requirements": {
+            "nodes": 1,
+            "tasks": 1,
+            "time": "100:00:00"
+        },
+        "output_files": {
+            "stdout": "out/gpt_test_%A_%a_%j.out",
+            "stderr": "error/gpt_test_%A_%a_%j.err"
+        },
+        "environment_variables": {
+            "LD_LIBRARY_PATH": "/usr/local/cuda-9.0/lib64:/usr/local/lib",
+            "CFLAGS": "-I/usr/local/cuda-9.0/include",
+            "LDFLAGS": "-L/usr/local/cuda-9.0/lib64",
+            "PATH": "$PATH:/usr/local/cuda-9.0/bin",
+            "CUDA_HOME": "/usr/local/cuda-9.0",
+            "LIBRARY_PATH": "/usr/local/cuda-9.0/lib64"
+        },
+        "python_script": "my_src/spin_evaluate.py",
+        "python_arguments": {
+            "output_dir": "$OUTPUTDIR",
+            "model": "$MODEL",
+            "testdata": "$EVAL_FILE",
+            "m_type": "$TYPE"
+        }
+    }
+}

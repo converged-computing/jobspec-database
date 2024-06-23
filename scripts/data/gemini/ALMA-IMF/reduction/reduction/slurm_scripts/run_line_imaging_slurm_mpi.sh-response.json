@@ -1,0 +1,68 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"SLURM\",\n  \"details\": {\n    \"software\": [\n      \"git\",\n      \"gcc\",\n      \"openmpi\",\n      \"python\",\n      \"CASA\"\n    ],\n    \"resource_requirements\": {\n      \"nodes\": 1,\n      \"time\": \"96:00:00\",\n      \"memory\": \"SLURM_MEM_PER_NODE\",\n      \"temp_drive\": \"/local\",\n      \"casa_memory\": \"SLURM_MEM_PER_NODE/NTASKS\",\n      \"mpi_processes\": \"SLURM_NTASKS/2+1\"\n    },\n    \"files\": [\n      \"getversion.py\",\n      \"line_imaging.py\",\n      \"to_image.json\",\n      \"metadata.json\",\n      \"config.py\",\n      \"rc\",\n      \".casarc\"\n    ],\n    \"environment_variables\": [\n      \"PATH\",\n      \"WORK_DIRECTORY\",\n      \"PRODUCT_DIRECTORY\",\n      \"ALMAIMF_ROOTDIR\",\n      \"SCRIPT_DIR\",\n      \"PYTHONPATH\",\n      \"USE_TEMPORARY_WORKING_DIRECTORY\",\n      \"TEMP_WORKDIR\",\n      \"PROJECT_DIRECTORY\",\n      \"LOGFILENAME\",\n      \"CASAPATH\",\n      \"LD_LIBRARY_PATH\"\n    ],\n    \"commands\": [\n      \"module load git gcc/9.3.0 openmpi/4.1.1\",\n      \"which python\",\n      \"which git\",\n      \"git --version\",\n      \"df -h /local\",\n      \"mkdir -v ${TEMP_WORKDIR}\",\n      \"cp -v ${PROJECT_DIRECTORY}/to_image.json ${TEMP_WORKDIR}/to_image.json\",\n      \"cp -v ${PROJECT_DIRECTORY}/metadata.json ${TEMP_WORKDIR}/metadata.json\",\n      \"ls -lhrt *.json\",\n      \"ls\",\n      \"python -c \\\"print(${SLURM_MEM_PER_NODE}/${NTASKS})\\\"\",\n      \"cat ${TMPDIR}/config.py\",\n      \"cat ${TMPDIR}/.casarc\",\n      \"cat ${TMPDIR}/rc\",\n      \"ldd /blue/adamginsburg/adamginsburg/casa/${CASAVERSION}/lib/libcasatools.so.4011.25.171\",\n      \"${CASA} --nogui --nologger --ipython-dir=${TMPDIR} --rcdir=${TMPDIR}  --logfile=${LOGFILENAME} -c \\\"import sys; print(sys.path)\\\"\",\n      \"python -c \\\"print(int(${SLURM_NTASKS}/2+1))\\\"\",\n      \"${MPICASA} -n ${mpi_ntasks} ${CASA} --nogui --nologger --ipython-dir=${TMPDIR} --rcdir=${TMPDIR}  --logfile=${LOGFILENAME} -c \\\"import os; print(f'mpi inside casa CASAPATH=', os.getenv('CASAPATH'))\\\"\",\n      \"${MPICASA} -n ${mpi_ntasks} ${CASA} --nogui --nologger --ipython-dir=${TMPDIR} --rcdir=${TMPDIR}  --logfile=${LOGFILENAME} -c \\\"execfile('$SCRIPT_DIR/line_imaging.py')\\\"\",\n      \"ps -C ${CASA} -o ppid=,pid=\",\n      \"/orange/adamginsburg/miniconda3/bin/python ${ALMAIMF_ROOTDIR}/slurm_scripts/monitor_memory.py ${childPID}\",\n      \"rmdir -v ${TEMP_WORKDIR}\"\n    ]\n  }\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 2,
+                    "blocked": false
+                }
+            ],
+            "citation_metadata": {
+                "citation_sources": [
+                    {
+                        "start_index": 1068,
+                        "end_index": 1216,
+                        "uri": "https://github.com/ALMA-IMF/reduction",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 1710,
+                        "end_index": 1898,
+                        "uri": "https://github.com/ALMA-IMF/reduction",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 1919,
+                        "end_index": 2082,
+                        "uri": "https://github.com/ALMA-IMF/reduction",
+                        "license_": ""
+                    }
+                ]
+            },
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 2868,
+        "candidates_token_count": 841,
+        "total_token_count": 3709,
+        "cached_content_token_count": 0
+    }
+}

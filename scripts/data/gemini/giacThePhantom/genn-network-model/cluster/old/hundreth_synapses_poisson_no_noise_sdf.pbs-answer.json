@@ -1,0 +1,37 @@
+{
+    "application": "PBS",
+    "details": {
+        "resources": {
+            "nodes": 1,
+            "cpu_cores": 2,
+            "mpi_processes": 10,
+            "memory": "64GB"
+        },
+        "queue": "common_gpuQ",
+        "job_name": "Beegenn_sleep_tenth_synapses_poisson",
+        "output_file": "beegenn.stdout.txt",
+        "error_file": "beegenn.stderr.txt",
+        "email_notification": "abe",
+        "email_address": "giacomo.fantoni@studenti.unitn.it"
+    },
+    "modules": [
+        "cuda-11.1",
+        "singularity-3.4.0"
+    ],
+    "container": {
+        "image": "docker://giacthephantom/beegenn:sleep",
+        "type": "Singularity",
+        "command": "python3 -m beegenn.plots.sdf /t_30_hundreth_synapses_no_noise t30noinputnonoisehundrethsynapsespoissoncluster"
+    },
+    "bindings": [
+        {
+            "source": "$PBS_O_WORKDIR/genn-network-model/t_30_hundreth_synapses_no_noise",
+            "target": "/t_30_hundreth_synapses_no_noise"
+        },
+        {
+            "source": "$PBS_O_WORKDIR/outputs",
+            "target": "/home/genn"
+        }
+    ],
+    "gpu_access": true
+}

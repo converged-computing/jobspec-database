@@ -1,0 +1,30 @@
+{
+    "application": "Singularity",
+    "details": {
+        "system": "Peta4-Skylake (Skylake CPUs, OPA)",
+        "environment": {
+            "modules": [
+                "rhel7/default-peta4"
+            ],
+            "variables": {
+                "OMP_NUM_THREADS": "unset (default max)",
+                "I_MPI_PIN_DOMAIN": "omp:compact",
+                "I_MPI_PIN_ORDER": "scatter"
+            }
+        },
+        "resources": {
+            "nodes": "dynamic (SLURM_JOB_NUM_NODES)",
+            "cores": "dynamic (SLURM_NTASKS)",
+            "memory": "dynamic (5980MB/core - skylake, 12030MB/core - skylake-himem)",
+            "queue": "skylake or skylake-himem",
+            "walltime": "12:00:00",
+            "email_notifications": "FAIL"
+        },
+        "command": {
+            "type": "MPI (Intel or OpenMPI) or OpenMP",
+            "executable": "singularity exec",
+            "options": "-B $SLURM_SUBMIT_DIR:/summit_user docker://$1 python $2"
+        },
+        "workdir": "$SLURM_SUBMIT_DIR"
+    }
+}

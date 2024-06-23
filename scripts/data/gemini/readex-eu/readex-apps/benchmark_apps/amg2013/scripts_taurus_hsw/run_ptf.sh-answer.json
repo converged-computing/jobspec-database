@@ -1,0 +1,53 @@
+{
+    "application": "Score-P",
+    "details": {
+        "scheduler": "Slurm",
+        "walltime": "24 hours",
+        "nodes": 5,
+        "tasks_per_node": 2,
+        "cpus_per_task": 12,
+        "memory_per_cpu": "2500M",
+        "partition": "haswell",
+        "account": "p_readex",
+        "reservation": "READEX",
+        "job_name": "amg2013_ptf",
+        "output_file": "amg2013_ptf.out",
+        "error_file": "amg2013_ptf.out",
+        "environment": "readex_env/set_env_ptf_hdeem.source",
+        "mpi_implementation": "OpenMPI",
+        "openmp_threads": 12,
+        "application_executable": "./test/amg2013_ptf",
+        "application_arguments": "-P 2 2 2 -r 40 40 40",
+        "mpi_processes": 8,
+        "tuning_method": "readex_intraphase",
+        "configuration_file": "readex_config_ptf.xml",
+        "scorep_plugins": {
+            "substrate": "rrl",
+            "rrl": "cpu_freq_plugin,uncore_freq_plugin,OpenMPTP",
+            "metric": "hdeem_sync_plugin",
+            "hdeem_sync_plugin": "*/E",
+            "x86_energy_sync_plugin": "*/E"
+        },
+        "scorep_verbosity": {
+            "rrl": "WARN",
+            "hdeem_sync_plugin": "WARN",
+            "x86_energy_sync_plugin": "WARN"
+        },
+        "scorep_mpi_groups": "ENV",
+        "scorep_hdeem_sync_plugin_connection": "INBAND",
+        "scorep_hdeem_sync_plugin_stats_timeout_ms": 1000,
+        "scorep_x86_energy_sync_plugin_connection": "INBAND",
+        "scorep_x86_energy_sync_plugin_stats_timeout_ms": 1000,
+        "psc_frontend_options": {
+            "apprun": "./test/amg2013_ptf -P 2 2 2 -r 40 40 40",
+            "mpinumprocs": 8,
+            "ompnumthreads": 12,
+            "phase": "main_phase",
+            "tune": "readex_intraphase",
+            "config-file": "readex_config_ptf.xml",
+            "force-localhost": true,
+            "info": 2,
+            "selective-info": "AutotuneAll,AutotunePlugins"
+        }
+    }
+}

@@ -1,0 +1,44 @@
+{
+    "application": "SLURM",
+    "details": {
+        "job_name": "ClusterCountCpu",
+        "partition": "defq",
+        "time": "23:00:00",
+        "nodes": 1,
+        "tasks": 1,
+        "tasks_per_node": 1,
+        "memory": "200000",
+        "cpus_per_task": 80,
+        "exclusive": true,
+        "array": "0-8",
+        "mail_type": "ALL",
+        "mail_user": "j.schenke@hzdr.de",
+        "output_file": "log.intel_clustercount.slurm-%A_%a.out",
+        "error_file": "err.intel_clustercount.slurm-%A_%a.out",
+        "modules": [
+            "git",
+            "intel",
+            "cmake",
+            "boost",
+            "python"
+        ],
+        "environment_variables": {
+            "alpaka_DIR": "/home/schenk24/workspace/alpaka/",
+            "KMP_AFFINITY": "verbose,compact"
+        },
+        "executable": "./bench",
+        "arguments": [
+            "0",
+            "100",
+            "12.4",
+            "2",
+            "1",
+            "0",
+            "0",
+            "../../../data_pool/synthetic/pede.bin",
+            "../../../data_pool/px_101016/gainMaps_M022.bin",
+            "../../../data_pool/synthetic/random_clusters_overlapping/cluster_$SLURM_ARRAY_TASK_ID.bin",
+            "clustercount$SLURM_ARRAY_TASK_ID"
+        ]
+    }
+}

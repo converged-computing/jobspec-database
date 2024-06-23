@@ -1,0 +1,56 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"amr_wind\",\n  \"software_requirements\": [\n    \"amd/${rocm_version}\",\n    \"craype-accel-amd-gfx90a\",\n    \"PrgEnv-amd\",\n    \"cray-mpich\"\n  ],\n  \"resource_requirements\": {\n    \"job_name\": \"20x20_scaling\",\n    \"account\": \"CFD162\",\n    \"time\": \"2:00:00\",\n    \"nodes\": 400,\n    \"queue\": \"debug\",\n    \"exclusive\": true,\n    \"tasks_per_node\": 8,\n    \"gpu_bind\": \"closest\"\n  },\n  \"environment_variables\": {\n    \"rocm_version\": \"5.4.3\",\n    \"MPICH_GPU_SUPPORT_ENABLED\": 1,\n    \"LD_LIBRARY_PATH\": \"/opt/rocm-${rocm_version}/llvm/lib/:$LD_LIBRARY_PATH\",\n    \"FI_MR_CACHE_MONITOR\": \"memhooks\",\n    \"FI_CXI_RX_MATCH_MODE\": \"software\",\n    \"CONFFILE\": \"MedWS_LowTI_Offshore_Stable_Layout_20x20.inp\",\n    \"TASKSPERNODE\": 8,\n    \"NTASKS\": \"((TASKSPERNODE*SLURM_JOB_NUM_NODES))\"\n  },\n  \"script_details\": {\n    \"source_files\": [\n      \"/lustre/orion/cfd162/proj-shared/lcheung/spackbuilds/spack-manager.jrood/loadexawind.sh\"\n    ],\n    \"commands\": [\n      \"module purge\",\n      \"module load amd/${rocm_version}\",\n      \"module load craype-accel-amd-gfx90a\",\n      \"module load PrgEnv-amd\",\n      \"module load cray-mpich\",\n      \"source /lustre/orion/cfd162/proj-shared/lcheung/spackbuilds/spack-manager.jrood/loadexawind.sh\",\n      \"export LD_LIBRARY_PATH=/opt/rocm-${rocm_version}/llvm/lib/:$LD_LIBRARY_PATH\",\n      \"export FI_MR_CACHE_MONITOR=memhooks\",\n      \"export FI_CXI_RX_MATCH_MODE=software\",\n      \"export CONFFILE=MedWS_LowTI_Offshore_Stable_Layout_20x20.inp\",\n      \"export TASKSPERNODE=8\",\n      \"export NTASKS=$((TASKSPERNODE*SLURM_JOB_NUM_NODES))\",\n      \"srun -N $SLURM_JOB_NUM_NODES -n $NTASKS --ntasks-per-node=$TASKSPERNODE --gpu-bind=closest amr_wind $CONFFILE\"\n    ]\n  }\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 2,
+                    "blocked": false
+                }
+            ],
+            "citation_metadata": {
+                "citation_sources": [
+                    {
+                        "start_index": 964,
+                        "end_index": 1204,
+                        "uri": "https://github.com/lawrenceccheung/ALCC_Frontier_WindFarm",
+                        "license_": ""
+                    }
+                ]
+            },
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 511,
+        "candidates_token_count": 682,
+        "total_token_count": 1193,
+        "cached_content_token_count": 0
+    }
+}

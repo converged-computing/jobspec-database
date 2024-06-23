@@ -1,0 +1,32 @@
+{
+    "application": "PyTorch",
+    "details": {
+        "environment": {
+            "module_load": "conda/pytorch",
+            "conda_env": "/lus/theta-fs0/projects/SuperBERT/jgpaul/envs/pytorch-1.9.1-cu11.3",
+            "OMP_NUM_THREADS": 8
+        },
+        "framework": {
+            "launch_mode": "distributed",
+            "backend": "c10d",
+            "rdzv_backend": "c10d",
+            "max_restarts": 0,
+            "launch_script": "python -m torch.distributed.run"
+        },
+        "resources": {
+            "compute_resource": "COBALT",
+            "compute_nodes": 2,
+            "compute_queue": "full-node",
+            "compute_account": "SuperBERT",
+            "compute_walltime": "720"
+        },
+        "training_script": {
+            "script_name": "run_pretraining.py",
+            "script_arguments": {
+                "input_dir": "/lus/theta-fs0/projects/SuperBERT/jgpaul/datasets/encoded/wikibooks/static_masked_30K/sequences_lowercase_max_seq_len_128_next_seq_task_true/",
+                "output_dir": "results/bert_large_uncased_wikibooks_pretraining",
+                "config_file": "config/bert_pretraining_phase1_config.json"
+            }
+        }
+    }
+}

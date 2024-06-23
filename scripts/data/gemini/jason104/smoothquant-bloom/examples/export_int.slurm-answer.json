@@ -1,0 +1,41 @@
+{
+    "application": "SLURM",
+    "details": {
+        "slurm_commands": [
+            "#SBATCH --job-name=export_int",
+            "#SBATCH --nodes=1",
+            "#SBATCH --ntasks-per-node=1",
+            "#SBATCH --cpus-per-task=32",
+            "#SBATCH --gres=gpu:8",
+            "#SBATCH --output=%x-%j.out",
+            "#SBATCH --error=%x-%j.out",
+            "#SBATCH --account=ENT212162",
+            "#SBATCH --partition=gp4d"
+        ],
+        "environment_variables": [
+            "PYTHONUSERBASE=$CONDA_PREFIX",
+            "HF_HOME=/work/twsuzrf718/hf_home",
+            "MASTER_ADDR=`scontrol show hostnames $SLURM_JOB_NODELIST | head -n 1`",
+            "MASTER_PORT=$(expr 10000 + $(echo -n $SLURM_JOBID | tail -c 4))",
+            "NCCL_DEBUG=WARN",
+            "NCCL_SOCKET_IFNAME=ib0",
+            "NCCL_IB_HCA=mlx5_0",
+            "PYTORCH_CUDA_ALLOC_CONF=max_split_size_mb:2048",
+            "OMP_NUM_THREADS=1",
+            "LAUNCHER=\"python\"",
+            "CMD=\"bloom_export_int8_model.py\""
+        ],
+        "software": [
+            "python",
+            "accelerate",
+            "deepspeed",
+            "mpirun",
+            "srun"
+        ],
+        "resource_requirements": [
+            "1 node",
+            "32 cores",
+            "8 GPUs"
+        ]
+    }
+}

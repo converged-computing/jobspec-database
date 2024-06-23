@@ -1,0 +1,46 @@
+{
+    "application": "Balsam",
+    "details": {
+        "scheduler": "Cobalt",
+        "resource_requirements": {
+            "nodes": "{{ num_nodes }}",
+            "queue": "{{ queue }}",
+            "wall_time": "{{ wall_time_min }} minutes",
+            "optional_params": {
+                "mig_count": {
+                    "description": "Number of MIG instances to create",
+                    "values": [
+                        2,
+                        3,
+                        7
+                    ],
+                    "default": 0
+                }
+            },
+            "filesystems": [
+                "home",
+                "grand",
+                "eagle",
+                "theta-fs0"
+            ],
+            "proxy": "http://theta-proxy.tmi.alcf.anl.gov:3128",
+            "gpu_resources": {
+                "mig": {
+                    "enabled": true,
+                    "config_ids": {
+                        "2": 9,
+                        "3": 14,
+                        "7": 19
+                    }
+                }
+            },
+            "environment_variables": {
+                "PMI_NO_FORK": 1,
+                "BALSAM_SITE_PATH": "{{ balsam_site_path }}"
+            }
+        },
+        "launcher_command": "{{ launcher_cmd }}",
+        "job_mode": "{{ job_mode }}",
+        "tags": "{{ filter_tags }}"
+    }
+}

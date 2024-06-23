@@ -1,0 +1,36 @@
+{
+    "application": "SLURM",
+    "details": {
+        "job_name": "3dlap",
+        "partition": "boost_usr_prod",
+        "time": "01:00:00",
+        "nodes": 1,
+        "ntasks": 1,
+        "gres": "gpu:1",
+        "ntasks_per_node": 4,
+        "modules": [
+            "openmpi/4.1.6--gcc--12.2.0",
+            "openblas/0.3.24--gcc--12.2.0",
+            "gcc/12.2.0",
+            "cuda/12.1"
+        ],
+        "environment": {
+            "LD_LIBRARY_PATH": "/leonardo/home/userexternal/pdambra0/polynomialsmoothers/install/lib"
+        },
+        "executable": "./3dlaplacian",
+        "parameters": {
+            "degiter": 4,
+            "idim": 2000,
+            "psize": 1
+        },
+        "output_files": [
+            "3dlap/match/cpu/log_hgs_match_l1jac_${idim}_task_${psize}_thr_1.txt",
+            "3dlap/match/cpu/log_l1jacobi_match_l1jac_${idim}_task_${psize}_thr_1.txt"
+        ],
+        "other_commands": [
+            "module list",
+            "mpirun"
+        ],
+        "description": "This script runs a 3D Laplacian solver using the HYPRE library. It uses SLURM to manage the resources and submit the job. The script sets up the environment, loads the necessary modules, and runs the executable with different parameters. The output is redirected to log files."
+    }
+}

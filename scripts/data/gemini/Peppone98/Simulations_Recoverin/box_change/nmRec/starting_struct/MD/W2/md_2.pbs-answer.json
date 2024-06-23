@@ -1,0 +1,30 @@
+{
+    "application": "GROMACS",
+    "details": {
+        "resource_requirements": {
+            "nodes": 1,
+            "cpus": 1,
+            "mpi_processes": 1,
+            "gpus": 1,
+            "memory": "1GB",
+            "walltime": "01:00:00"
+        },
+        "queue": "short_gpuQ",
+        "job_name": "md_2",
+        "output_file": "md_2_out",
+        "error_file": "md_2_err",
+        "modules": [
+            "gcc91",
+            "openmpi-3.0.0",
+            "BLAS",
+            "gsl-2.5",
+            "lapack-3.7.0",
+            "cuda-11.3"
+        ],
+        "environment_variables": {
+            "LD_LIBRARY_PATH": "$LD_LIBRARY_PATH:/home/giuseppe.gambini/usr/installations/plumed/lib",
+            "OMP_NUM_THREADS": "1"
+        },
+        "command": "/apps/openmpi-3.0.0/bin/mpirun -np 1 /home/giuseppe.gambini/usr/installations/gromacs/bin/gmx_mpi mdrun -s md_2.tpr -nb gpu -pme auto"
+    }
+}

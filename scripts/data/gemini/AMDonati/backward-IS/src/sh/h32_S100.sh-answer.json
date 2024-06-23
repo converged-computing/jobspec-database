@@ -1,0 +1,26 @@
+{
+    "application": "SLURM",
+    "details": {
+        "job_name": "H32-S100",
+        "queue": "qos_gpu-t3",
+        "tasks": 1,
+        "gpus": 1,
+        "array_size": 100,
+        "cpus_per_task": 8,
+        "memory_per_cpu": "8g",
+        "output_file": "slurm_out_2/h32-S100-%j.out",
+        "error_file": "slurm_out_2/h32-S100-%j.err",
+        "runtime": "20:00:00",
+        "environment_variables": {
+            "TMPDIR": "$JOBSCRATCH",
+            "PYTHONPATH": "src:${PYTHONPATH}"
+        },
+        "modules": [
+            "pytorch-gpu/py3/1.7.1",
+            "conda"
+        ],
+        "conda_environment": "back-is",
+        "python_script": "src/estimate.py",
+        "python_arguments": "-data_path $DATA_PATH -model_path $MODEL_PATH -out_path ${OUT_PATH} -num_particles $NUM_PARTICLES -backward_samples $BACKWARD_SAMPLES -sigma_init $SIGMA_INIT -sigma_y $SIGMA_Y -sigma_h $SIGMA_H -pms $PMS -particles_pms $PARTICLES_PMS"
+    }
+}

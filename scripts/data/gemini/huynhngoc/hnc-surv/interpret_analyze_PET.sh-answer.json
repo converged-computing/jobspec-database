@@ -1,0 +1,35 @@
+{
+    "application": "Slurm",
+    "details": {
+        "resources": {
+            "cpus": 1,
+            "nodes": 1,
+            "memory": "12G",
+            "partition": "smallmem,hugemem,orion,hugemem-avx2",
+            "email": "ngochuyn@nmbu.no",
+            "email_type": "FAIL",
+            "exclude_nodes": "cn-11,cn-12,cn-14",
+            "output_file": "outputs/interpret-analyze-%A-%a.out",
+            "error_file": "outputs/interpret-analyze-%A-%a.out"
+        },
+        "software": {
+            "singularity": "deoxys-survival.sif",
+            "python": "interpret_analyze_PET.py",
+            "ray": true
+        },
+        "environment_variables": {
+            "ITER_PER_EPOCH": "200",
+            "NUM_CPUS": "4",
+            "RAY_ROOT": "$TMPDIR/ray",
+            "MAX_SAVE_STEP_GB": "0"
+        },
+        "additional_details": {
+            "script_function": "To analyze results of a deep learning model for survival prediction",
+            "arguments": {
+                "$1": "Path to the configuration file",
+                "$PROJECTS/ngoc/hn_surv/perf/$2": "Path to the project directory",
+                "--idx": "$SLURM_ARRAY_TASK_ID"
+            }
+        }
+    }
+}

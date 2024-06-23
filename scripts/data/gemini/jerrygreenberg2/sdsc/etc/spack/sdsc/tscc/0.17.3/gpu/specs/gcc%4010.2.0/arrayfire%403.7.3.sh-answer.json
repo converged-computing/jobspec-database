@@ -1,0 +1,23 @@
+{
+    "application": "Spack",
+    "details": {
+        "scheduler": "SLURM",
+        "resources": {
+            "nodes": 1,
+            "tasks_per_node": 1,
+            "cpus_per_task": 10,
+            "memory": "93G",
+            "gpus": 1,
+            "time": "01:00:00"
+        },
+        "environment": {
+            "spack_version": "0.17.3",
+            "spack_instance_name": "gpu",
+            "spack_instance_dir": "${HOME}/cm/shared/apps/spack/${SPACK_VERSION}/${SPACK_INSTANCE_NAME}",
+            "spack_package": "arrayfire@3.7.3",
+            "spack_compiler": "gcc@10.2.0",
+            "spack_variants": "+cuda cuda_arch=70,80 ~forge ~ipo ~opencl",
+            "spack_dependencies": "^cuda@11.2.2/$(spack find --format '{hash:7}' cuda@11.2.2 % gcc@10.2.0) ^openblas@0.3.17/$(spack find --format '{hash:7}' openblas@0.3.17 % ${SPACK_COMPILER} ~ilp64 threads=none) ^fftw@3.3.10/$(spack find --format '{hash:7}' fftw@3.3.10 % ${SPACK_COMPILER} ~mpi ~openmp) ^boost@1.77.0/$(spack find --format '{hash:7}' boost@1.77.0 % ${SPACK_COMPILER} ~mpi)"
+        }
+    }
+}

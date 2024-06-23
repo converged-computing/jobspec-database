@@ -1,0 +1,34 @@
+{
+    "application": "Slurm",
+    "details": {
+        "nodes": 1,
+        "tasks_per_node": 32,
+        "job_name": "COMP_Dune_3_5_10b",
+        "partition": "standard",
+        "time": "7-00:00:00",
+        "output": "./Dune_3_5_10b/slurm_logs/COMP_out.out",
+        "error": "./Dune_3_5_10b/slurm_logs/COMP_err.out",
+        "mail_user": "rschanta@udel.edu",
+        "mail_type": "BEGIN,END,FAIL",
+        "dependency": "afterany:27624300",
+        "environment_variables": [
+            "UD_QUIET_JOB_SETUP=YES",
+            "UD_USE_SRUN_LAUNCHER=YES",
+            "UD_DISABLE_CPU_AFFINITY=YES",
+            "UD_MPI_RANK_DISTRIB_BY=CORE",
+            "UD_DISABLE_IB_INTERFACES=YES",
+            "UD_SHOW_MPI_DEBUGGING=YES"
+        ],
+        "required_packages": [
+            "matlab"
+        ],
+        "commands": [
+            "run_compress_out /lustre/scratch/rschanta/ Dune_3_5_10b /work/thsu/rschanta/RTS/",
+            "rm -rf \"/lustre/scratch/rschanta/Dune_3_5_10b/outputs-proc/\""
+        ],
+        "resources": {
+            "lustre_scratch": "/lustre/scratch/rschanta/Dune_3_5_10b",
+            "work_directory": "/work/thsu/rschanta/RTS/"
+        }
+    }
+}

@@ -1,0 +1,39 @@
+{
+    "application": "Python",
+    "details": {
+        "environment": {
+            "module_loads": [
+                "rhel8/default-icl",
+                "python/3.8",
+                "miniconda/3"
+            ],
+            "conda_env": "/home/zxc22/.conda/envs/dst",
+            "openmp_threads": 1
+        },
+        "slurm_directives": {
+            "job_name": "parse",
+            "account": "BYRNE-SL3-CPU",
+            "partition": "icelake",
+            "nodes": 1,
+            "tasks": 76,
+            "time": "03:00:00",
+            "mail_type": "NONE",
+            "array": "0-4"
+        },
+        "resource_requirements": {
+            "nodes": 1,
+            "tasks": 76,
+            "memory_per_cpu": "3380 MiB"
+        },
+        "mpi_setup": {
+            "intel_mpi_pinning": {
+                "domain": "omp:compact",
+                "order": "scatter"
+            }
+        },
+        "application_command": {
+            "executable": "python -u -m scripts.parse",
+            "options": "-d decode/sgd-x/${STEP}/experiment-11-1/model.2560000 \n-s data/raw/sgd-x/${STEP}/test/schema.json -t data/interim/sgd-x/${STEP}/test"
+        }
+    }
+}

@@ -1,0 +1,30 @@
+{
+    "application": "Singularity",
+    "details": {
+        "image": "animate_latest.sif",
+        "script": "src/experiment_scripts/eval.py",
+        "resources": {
+            "partition": "ml",
+            "job_name": "aNiMAte-eval",
+            "nodes": 1,
+            "gpus": "a100:1",
+            "memory": "512G",
+            "environment_variables": {
+                "CUDA_LAUNCH_BLOCKING": 1
+            }
+        },
+        "arguments": {
+            "config-path": "<config-path>",
+            "checkpoint-path": "<checkpoint-path>",
+            "thread_num": "${SLURM_NTASKS}",
+            "remove_nma_outliers": 1,
+            "outliers_sigma_num": 2.0,
+            "cluster_num": 2,
+            "latent_decomposition": "PCA",
+            "load_evaluation": 0
+        },
+        "bind_mounts": [
+            "/sdf"
+        ]
+    }
+}

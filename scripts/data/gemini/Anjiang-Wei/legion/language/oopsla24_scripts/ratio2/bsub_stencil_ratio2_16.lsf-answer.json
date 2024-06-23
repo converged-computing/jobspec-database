@@ -1,0 +1,47 @@
+{
+    "application": "LULESH",
+    "software": [
+        "gcc/7.3.1",
+        "cmake/3.14.5",
+        "cuda/11.7.0",
+        "jsrun",
+        "stencil"
+    ],
+    "resource_requirements": {
+        "nodes": "$numnodes",
+        "processes": "$LSB_DJOB_NUMPROC",
+        "gpus_per_node": 4,
+        "libraries": [
+            "LD_LIBRARY_PATH"
+        ],
+        "environment_variables": [
+            "root_dir",
+            "LD_LIBRARY_PATH"
+        ],
+        "scheduler": "LSF"
+    },
+    "execution_details": {
+        "repeat": 5,
+        "tile": 1250,
+        "oricmd": "-tsteps 50 -tprune 30 -hl:sched 1024 -ll:gpu ${numgpus} -ll:util 1 -ll:bgwork 2 -ll:csize 150000 -ll:fsize 15000 -ll:zsize 2048 -ll:rsize 512 -ll:gsize 0 -level 5 -dm:replicate 1 -dm:same_address_space -dm:memoize -lg:no_fence_elision -lg:parallel_replay 2",
+        "logori": "-wrapper -level mapper=debug -logfile wrapper_${nx}_${ny}_${nox}_${noy}_n%.wrapper -lg:prof ${n} -lg:prof_logfile prof_${nx}_${ny}_${nox}_${noy}_n%.gz",
+        "logcpl": "-wrapper -level mapper=debug -logfile wrapper_${nx}_${ny}_${ncx}_${ncy}_n%.wrapper -lg:prof ${n} -lg:prof_logfile prof_${nx}_${ny}_${ncx}_${ncy}_n%.gz",
+        "command_line_arguments": {
+            "-nx": "nx * tile",
+            "-ny": "ny * tile",
+            "-ntx": "nox",
+            "-nty": "noy"
+        },
+        "output_files": [
+            "out_${nx}_${ny}_${nox}_${noy}_r${r}.log",
+            "out_${nx}_${ny}_${ncx}_${ncy}_r${r}.log",
+            "prof_${nx}_${ny}_${nox}_${noy}_n%.gz",
+            "prof_${nx}_${ny}_${ncx}_${ncy}_n%.gz",
+            "wrapper_${nx}_${ny}_${nox}_${noy}_n%.wrapper",
+            "wrapper_${nx}_${ny}_${ncx}_${ncy}_n%.wrapper"
+        ],
+        "directories": [
+            "ratio_${n}_${nx}_${ny}"
+        ]
+    }
+}

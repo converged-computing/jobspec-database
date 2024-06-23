@@ -1,0 +1,34 @@
+{
+    "application": "PBS",
+    "details": {
+        "job_name": "diffusivity-c_grad_p=0.5",
+        "nodes": 1,
+        "processors_per_node": 3,
+        "walltime": "1920:00:00",
+        "queue": "qfermi",
+        "email": "adc@geo.au.dk",
+        "email_options": "abe",
+        "software": {
+            "gcc": "4.6.4",
+            "cuda": "5.5.22",
+            "python": "2.7.6"
+        },
+        "libraries": {
+            "cuda_libraries": "/com/cuda/5.5.22/lib64:/com/cuda/5.5.22/lib",
+            "python_libraries": "/home/adc/.local/lib/python:/home/adc/.local/lib64/python:/com/python/2.7.6/lib"
+        },
+        "script_execution": {
+            "working_directory": "/home/adc/code/sphere",
+            "commands": [
+                "nvidia-smi",
+                "rm CMakeCache.txt",
+                "cmake . && make",
+                "cd python",
+                "python diffusivity-starter.py 0 1.0 0.5 10.0e3 20.0e3 &",
+                "python diffusivity-starter.py 1 1.0 0.5 40.0e3 60.0e3 &",
+                "python diffusivity-starter.py 2 1.0 0.5 80.0e3 120.0e3 &",
+                "wait"
+            ]
+        }
+    }
+}

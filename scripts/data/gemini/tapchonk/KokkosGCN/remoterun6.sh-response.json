@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"Slurm\",\n  \"details\": {\n    \"job_name\": \"$( whoami )-$1\",\n    \"partition\": \"gecko\",\n    \"cpus_per_task\": 32,\n    \"mem_per_cpu\": \"4G\",\n    \"gres\": \"gpu:0\",\n    \"time\": \"60:00\",\n    \"output\": \"%j/cs310_output_%j.out\",\n    \"error\": \"%j/cs310_error_%j.err\",\n    \"environment\": {\n      \"modules\": \"/etc/profile.d/modules.sh\",\n      \"cuda\": \"CUDA 12.3\",\n      \"gcc\": \"GCC 12.2.0\",\n      \"cpu\": \"lscpu\",\n      \"gpu\": {\n        \"lshw\": \"lshw -C display\",\n        \"nvidia-smi\": \"nvidia-smi\"\n      }\n    },\n    \"environment_variables\": {\n      \"OMP_NUM_THREADS\": 32,\n      \"OMP_PROC_BIND\": \"spread\",\n      \"OMP_PLACES\": \"threads\"\n    },\n    \"runtime_environment\": {\n      \"executable\": \"$1\",\n      \"parameters\": \"$@\"\n    }\n  }\n}\n```\n\nThis script appears to be designed for submitting a job to a Slurm cluster called \"kudu\" using a specific set of resources. The script checks for the required parameters, verifies the executable, ensures it's running on \"kudu,\" and then sets up a job submission script. \n\nHere's a breakdown of the script's key features:\n\n**Job Submission:**\n\n* **`sbatch`:** The script utilizes `sbatch` to submit jobs to Slurm.\n* **Job Name:** The job name is dynamically generated using the username and the executable's name.\n* **Partition:** The script targets the \"gecko\" partition within the Slurm cluster.\n* **Resources:** It requests 32 CPUs per task, 4GB of memory per CPU, a GPU (with `gres=gpu:0`), a time limit of 60 minutes, and specific output and error file paths.\n* **Environment:** The script includes commands to print out system information, such as CUDA version, compiler version, CPU details, and GPU information (using `lscpu`, `lshw`, and `nvidia-smi`). \n\n**Environment Variables:**\n\n* The script defines environment variables for OpenMP:\n    * `OMP_NUM_THREADS`: 32 - sets the number of threads used by OpenMP.\n    * `OMP_PROC_BIND`: \"spread\" - ensures threads are spread across CPU cores.\n    * `OMP_PLACES`: \"threads\" - specifies that threads should be used as placement units.\n\n**Runtime Environment:**\n\n* The script prepares a temporary file (`tmp`) containing the Slurm submission script.\n* **Compiling Makefile:** If a `Makefile` is found, it's included in the submission script, and OpenMP environment variables are set.\n* **Running the Executable:** The script executes the provided executable (`$@`) using `srun`, ensuring it's run on the allocated resources.\n\n**Output:**\n\n* The script logs the job submission details, including the job ID (`BATCHNO`), and provides instructions for checking job status using `squeue`.\n\n**Overall:** This script acts as a wrapper to streamline job submission to a Slurm cluster. It configures the job with specific resources, prints environment information, and runs the executable on the allocated compute nodes.\n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 748,
+        "candidates_token_count": 790,
+        "total_token_count": 1538,
+        "cached_content_token_count": 0
+    }
+}

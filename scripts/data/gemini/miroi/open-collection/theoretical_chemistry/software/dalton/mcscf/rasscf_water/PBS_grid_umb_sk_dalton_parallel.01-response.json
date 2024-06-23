@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "PBS\n\nThe script is running on a **PBS (Portable Batch System)** cluster, a common workload management system for high-performance computing. \n\nHere's a breakdown of the script's components and resource requirements:\n\n**Software:**\n\n- **Dalton:** The script utilizes Dalton, a quantum chemistry program, for molecular calculations.\n- **OpenMPI:** Open MPI is a message passing interface (MPI) implementation used for parallel execution of Dalton.\n- **Intel Compiler Suite:** The script uses Intel compilers (fortran, C, and C++) with the Intel Math Kernel Library (MKL) for optimized performance.\n\n**Resource Requirements:**\n\n- **Nodes:** The script requests 1 node with 4 processors (specified by `nodes=1:ppn=4`).\n- **Walltime:** The script allocates a maximum runtime of 2 hours (specified by `walltime=02:00:00`).\n- **Memory:** The script requests 4 GB of memory (specified by `mem=4g`).\n- **Queue:** The script submits the job to the \"batch\" queue (specified by `-q batch`).\n- **Email Notifications:** The script sends an email to the specified address (`Miroslav.Ilias@umb.sk`) upon job completion.\n- **Scratch Directory:** The script sets up a local scratch directory on `/mnt/local` to store temporary files for Dalton calculations.\n- **OpenMP Threads:** The script utilizes OpenMP threads for parallelization within a single node, setting `OMP_NUM_THREADS` to 1.\n- **MKL Threads:** The script controls MKL thread usage with the `MKL_NUM_THREADS` and `MKL_DYNAMIC` environment variables.\n\n**Script Details:**\n\n- **Environment Setup:** The script sets up the environment by loading appropriate modules (Intel compilers, OpenMPI) and defining environment variables for the execution paths.\n- **Parallel Execution:** The script uses `mpirun` to run Dalton in parallel using the specified number of processors (`NPROCS_PBS`).\n- **Dalton Execution:** The script launches Dalton with specific options (`-N`, `-noarch`) for the calculation.\n\n**JSON Output:**\n\n```json\n{\n  \"application\": \"PBS\",\n  \"software\": [\n    \"Dalton\",\n    \"OpenMPI\",\n    \"Intel Compiler Suite\",\n    \"Intel Math Kernel Library\"\n  ],\n  \"resourceRequirements\": {\n    \"nodes\": 1,\n    \"processors\": 4,\n    \"walltime\": \"02:00:00\",\n    \"memory\": \"4g\",\n    \"queue\": \"batch\",\n    \"email\": \"Miroslav.Ilias@umb.sk\",\n    \"scratchDirectory\": \"/mnt/local/$USER/$PBS_JOBID\"\n  },\n  \"scriptDetails\": {\n    \"environment\": {\n      \"Intel Compilers\": true,\n      \"OpenMPI\": true,\n      \"MKL\": true,\n      \"OpenMP Threads\": 1,\n      \"MKL Threads\": {\n        \"MKL_NUM_THREADS\": 1,\n        \"MKL_DYNAMIC\": \"FALSE\"\n      }\n    },\n    \"parallelExecution\": {\n      \"mpirun\": true,\n      \"processors\": \"NPROCS_PBS\"\n    },\n    \"daltonExecution\": {\n      \"command\": \"$DALTON/$BUILD/dalton -N $NPROCS_PBS  -noarch H2O.rasscf_prop H2O.C2v\"\n    }\n  }\n}\n```\n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 1607,
+        "candidates_token_count": 781,
+        "total_token_count": 2388,
+        "cached_content_token_count": 0
+    }
+}

@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"SLURM\",\n  \"details\": {\n    \"job_name\": \"streamvc\",\n    \"output_file\": \"/home/yandex/APDL2324a/group_4/%j.out\",\n    \"partition\": \"studentbatch\",\n    \"max_time\": \"4000 minutes\",\n    \"signal_type\": \"USR1\",\n    \"signal_timeout\": \"120\",\n    \"nodes\": 1,\n    \"memory\": \"16000 MB\",\n    \"cpus_per_gpu\": 2,\n    \"gpus\": 4,\n    \"environment_variables\": {\n      \"HF_HOME\": \"/home/yandex/APDL2324a/group_4/newcache\",\n      \"TORCH_HOME\": \"/home/yandex/APDL2324a/group_4\",\n      \"XDG_CAHCE_HOME\": \"/home/yandex/APDL2324a/group_4\",\n      \"ACCELERATE_GRADIENT_ACCUMULATION_STEPS\": \"2\"\n    },\n    \"commands\": [\n      \"nvidia-smi\",\n      \"accelerate launch --main_process_port $((29050 + ($SLURM_JOB_ID % 100))) ./code/train.py --run-name streamvc_$SLURM_JOB_ID --batch-size 64 --lr 2e-5 --betas 0.9 0.98 --weight-decay 1e-2 --module-to-train content-encoder --limit-num-batches 1000 --log-labels-interval 20 --log-gradient-interval 20 --accuracy-interval 50 --schedualer-gamma 0.5 --schedualer-step 200 --model-checkpoint-interval 200 --limit-batch-samples 288000\",\n      \"accelerate launch --main_process_port $((29050 + ($SLURM_JOB_ID % 100))) ./code/train.py --run-name streamvc_$SLURM_JOB_ID --batch-size 4 --lr 1e-6 --betas 0.9 0.98 --weight-decay 1e-2 --module-to-train decoder-and-speaker --content-encoder-checkpoint \\\"./model.safetensors\\\"\"\n    ]\n  }\n}\n```\n\nThe script utilizes the **SLURM** workload manager to execute the code. It requests resources like CPUs, GPUs, and memory for a training process. The script appears to be training a deep learning model using **accelerate** library, which leverages multiple GPUs for efficient training. \n\nThe script has two different training configurations based on command-line arguments:\n\n* **\"ce\"**: Trains the \"content-encoder\" module.\n* **\"svc\"**: Trains the \"decoder-and-speaker\" module, utilizing a pre-trained \"content-encoder\" model.\n\nThe script utilizes `nvidia-smi` command to gather information about the available GPUs. It also configures several environment variables for the training process. It leverages the `accelerate` library for efficient distributed training and utilizes a pre-trained model for the \"svc\" configuration. \n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 606,
+        "candidates_token_count": 749,
+        "total_token_count": 1355,
+        "cached_content_token_count": 0
+    }
+}

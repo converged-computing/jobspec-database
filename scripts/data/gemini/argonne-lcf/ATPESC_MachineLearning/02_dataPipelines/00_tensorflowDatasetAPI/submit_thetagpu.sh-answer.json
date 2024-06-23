@@ -1,0 +1,33 @@
+{
+    "application": "COBALT",
+    "details": {
+        "resource_requirements": {
+            "time": "10",
+            "nodes": "1",
+            "queue": "single-gpu",
+            "filesystems": [
+                "home",
+                "eagle"
+            ],
+            "output_directory": "logdir/$COBALT_JOBID"
+        },
+        "software_requirements": {
+            "conda": {
+                "version": "2023-01-11"
+            },
+            "python": {
+                "version": "unknown"
+            },
+            "mpi": {
+                "implementation": "mpirun"
+            },
+            "libraries": [
+                "OpenMP"
+            ]
+        },
+        "execution_script": {
+            "script_name": "ilsvrc_dataset.py",
+            "arguments": "-c ilsvrc.json --interop $OMP_NUM_THREADS --intraop $OMP_NUM_THREADS --logdir logdir/t${OMP_NUM_THREADS}_${COBALT_JOBID}"
+        }
+    }
+}

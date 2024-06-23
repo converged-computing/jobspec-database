@@ -1,0 +1,27 @@
+{
+    "application": "SLURM",
+    "details": {
+        "job_name": "nofc_sampling_mri",
+        "mpi_tasks": 1,
+        "mpi_tasks_per_node": 1,
+        "gpus_per_node": 1,
+        "cpus_per_task": 10,
+        "core_type": "physical",
+        "task_distribution": "block:block",
+        "max_runtime": "20:00:00",
+        "qos": "qos_gpu-t3",
+        "output_file": "nofc_sampling_mri%A_%a.out",
+        "error_file": "nofc_sampling_mri%A_%a.out",
+        "array_tasks": "0-6",
+        "dependency": "afterok:387637",
+        "conda_environment": "fastmri-tf-2.1.0",
+        "tensorflow_version": "2.3.0",
+        "python_script": "./nsec/mri/sampling.py",
+        "script_arguments": "-ns 100000 --nps-train 50.0 -b 2 -c CORPD_FBK -is 64 -sn ${opt[$SLURM_ARRAY_TASK_ID]} --no-fcon",
+        "environment_variables": {
+            "FASTMRI_DATA_DIR": "$SCRATCH/",
+            "CHECKPOINTS_DIR": "$SCRATCH/nsec_nofc/",
+            "FIGURES_DIR": "$SCRATCH/nsec_figures/sampling_nofc_sn${opt[$SLURM_ARRAY_TASK_ID]}/"
+        }
+    }
+}

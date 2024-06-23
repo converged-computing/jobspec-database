@@ -1,0 +1,37 @@
+{
+    "application": "Singularity",
+    "details": {
+        "singularity_image": "/app1/common/singularity-img/3.0.0/pytorch_1.9_cuda_11.3.0-ubuntu20.04-py38-ngc_21.04.simg",
+        "environment_variables": [
+            "TRANSFORMERS_OFFLINE=1",
+            "TOKENIZERS_PARALLELISM=false",
+            "PYTHONPATH=$PYTHONPATH:/home/svu/e0741024/PyPackages/CS4248/GAT/lib/python3.8/site-packages",
+            "PYTORCH_CUDA_ALLOC_CONF=garbage_collection_threshold:0.6,max_split_size_mb:128"
+        ],
+        "python_script": "main.py",
+        "pbs_script_arguments": [
+            "--train",
+            "data/fulltrain_1.csv",
+            "--train_partition=1",
+            "--batch_size",
+            "4",
+            "--max_epochs",
+            "100",
+            "--config",
+            "gat",
+            "--max_sent_len",
+            "50",
+            "--encoder",
+            "4",
+            "--mode",
+            "0"
+        ],
+        "pbs_resource_requirements": {
+            "nodes": "1",
+            "cpus": "10",
+            "memory": "80gb",
+            "gpus": "1",
+            "walltime": "24:00:00"
+        }
+    }
+}

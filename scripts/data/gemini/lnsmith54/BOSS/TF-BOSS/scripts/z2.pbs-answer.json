@@ -1,0 +1,87 @@
+{
+    "application": "PBS",
+    "details": {
+        "resource_requirements": {
+            "walltime": "xTime:00:00",
+            "nodes": "1",
+            "cpus_per_node": "12",
+            "mpi_processes": "12",
+            "gpus": "2",
+            "placement": "scatter:excl"
+        },
+        "job_name": "TFBOSS2SxSeed0",
+        "job_options": {
+            "join_output": "oe",
+            "export_variables": "V",
+            "queue": "standard",
+            "account": "ERDCS97260VU3"
+        },
+        "modules": [
+            "python36",
+            "openmpi/cuda/64/3.1.4",
+            "tensorflow-py36-cuda10.1-gcc/1.14.0"
+        ],
+        "script_execution": [
+            {
+                "command": "cd $PBS_O_WORKDIR",
+                "description": "Change directory to the working directory"
+            },
+            {
+                "command": "cd ..",
+                "description": "Change directory to parent directory"
+            },
+            {
+                "command": "pwd",
+                "description": "Print current directory"
+            },
+            {
+                "command": "cp -r BOSS /tmp/",
+                "description": "Copy the BOSS directory to /tmp"
+            },
+            {
+                "command": "cd /tmp/BOSS",
+                "description": "Change directory to /tmp/BOSS"
+            },
+            {
+                "command": "export ML_DATA=\"/tmp/BOSS/data\"",
+                "description": "Set the environment variable ML_DATA to the data directory"
+            },
+            {
+                "command": "export PYTHONPATH=$PYTHONPATH:$PWD",
+                "description": "Add the current directory to the PYTHONPATH"
+            },
+            {
+                "command": "date",
+                "description": "Print the current date and time"
+            },
+            {
+                "command": "echo \"FixMatch cifar10.xSeed0@xSize0-xValid0IterxKimg0UxUratio0CxConf0WDxWd0BSxBatch0LRxLr0AxAug0_xRep0\"",
+                "description": "Print a message indicating the execution of the script"
+            },
+            {
+                "command": "CUDA_VISIBLE_DEVICES=xRep0 python fixmatch.py --train_kimg xKimg0 --uratio xUratio0 --confidence xConf0 --wd xWd0 --wu 1  --batch xBatch0 --lr xLr0  --filters=32 --scales 3 --repeat 4 --dataset=cifar10.xSeed0@xSize0-xValid0 --train_dir experiments/fixmatch/SxSeed0@xSize0-xValid0IterxKimg0UxUratio0CxConf0WDxWd0BSxBatch0LRxLr0AxAug0_xRep0 --augment xAug0  > $PBS_O_WORKDIR/results/cifar10.xSeed0@xSize0-xValid0IterxKimg0UxUratio0CxConf0WDxWd0BSxBatch0LRxLr0AxAug0_xRep0 &",
+                "description": "Execute the fixmatch.py script with specific parameters and redirect output"
+            },
+            {
+                "command": "echo \"FixMatch cifar10.xSeed0@xSize0-xValid0IterxKimg0UxUratio0CxConf0WDxWd0BSxBatch0LRxLr0AxAug0_xRep1\"",
+                "description": "Print a message indicating the execution of the script"
+            },
+            {
+                "command": "CUDA_VISIBLE_DEVICES=xRep1 python fixmatch.py --train_kimg xKimg0 --uratio xUratio0 --confidence xConf0 --wd xWd0 --wu 1  --batch xBatch0 --lr xLr0  --filters=32 --scales 3 --repeat 4 --dataset=cifar10.xSeed0@xSize0-xValid0 --train_dir experiments/fixmatch/SxSeed0@xSize0-xValid0IterxKimg0UxUratio0CxConf0WDxWd0BSxBatch0LRxLr0AxAug0_xRep1 --augment xAug0  > $PBS_O_WORKDIR/results/cifar10.xSeed0@xSize0-xValid0IterxKimg0UxUratio0CxConf0WDxWd0BSxBatch0LRxLr0AxAug0_xRep1",
+                "description": "Execute the fixmatch.py script with specific parameters and redirect output"
+            },
+            {
+                "command": "wait",
+                "description": "Wait for all background processes to finish"
+            },
+            {
+                "command": "date",
+                "description": "Print the current date and time"
+            },
+            {
+                "command": "exit",
+                "description": "Exit the script"
+            }
+        ]
+    }
+}

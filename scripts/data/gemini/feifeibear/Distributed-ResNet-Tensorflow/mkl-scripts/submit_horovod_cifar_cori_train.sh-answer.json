@@ -1,0 +1,40 @@
+{
+    "application": "TensorFlow",
+    "details": {
+        "framework": "TensorFlow",
+        "distributed training framework": "Horovod",
+        "cluster manager": "SLURM",
+        "hardware": {
+            "architecture": "KNL",
+            "cores per node": 272,
+            "nodes": "${SLURM_JOB_NUM_NODES}"
+        },
+        "libraries": [
+            "TensorFlow",
+            "Horovod",
+            "MPI"
+        ],
+        "environment variables": [
+            "KMP_BLOCKTIME",
+            "KMP_SETTINGS",
+            "KMP_AFFINITY",
+            "OMP_NUM_THREADS",
+            "BATCH_SIZE",
+            "TF_SCRIPT",
+            "DATASET",
+            "LOG_DIR",
+            "TF_FLAGS"
+        ],
+        "configuration": {
+            "training data path": "$SCRATCH/data",
+            "log directory": "./logs/horovod_cifar_${DATASET}_${SLURM_JOB_NUM_NODES}_nodes_${BATCH_SIZE}_log",
+            "batch size": "${BATCH_SIZE}",
+            "number of GPUs": 0,
+            "training steps": 80000,
+            "number of intra-threads": 66,
+            "number of inter-threads": 3,
+            "data format": "channels_last"
+        },
+        "script": "../resnet_cifar_main_horovod.py"
+    }
+}

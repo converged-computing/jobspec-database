@@ -1,0 +1,39 @@
+{
+    "application": "LSF",
+    "details": {
+        "resource_requirements": {
+            "cores": 1,
+            "runtime": "20 minutes",
+            "memory": "16GB",
+            "gpu": {
+                "type": "NVIDIA TITAN RTX",
+                "count": 1
+            }
+        },
+        "software": {
+            "modules": [
+                "gcc/6.3.0",
+                "cuda/11.0.3"
+            ],
+            "conda_environment": "base",
+            "python_script": "dist_training_runner_w_coordinator.py"
+        },
+        "configuration": {
+            "world_size": 64,
+            "pipeline_group_size": 8,
+            "data_group_size": 8,
+            "cuda_id": 0,
+            "fp16": true,
+            "embedding_dim": 2048,
+            "num_heads": 16,
+            "num_layers": 6,
+            "batch_size": 64,
+            "micro_batch_size": 1,
+            "coordinator_server_ip": "129.132.93.84"
+        },
+        "environment_variables": {
+            "NCCL_SOCKET_IFNAME": "access",
+            "GLOO_SOCKET_IFNAME": "access"
+        }
+    }
+}

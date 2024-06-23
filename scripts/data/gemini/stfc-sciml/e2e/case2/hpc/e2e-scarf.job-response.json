@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"SLURM\",\n  \"details\": {\n    \"job_name\": \"PEARLIntelE2E\",\n    \"output_file\": \"e2e-inference-%j.out\",\n    \"time_limit\": \"24:00:00\",\n    \"partition\": \"gpu\",\n    \"cpus_per_task\": 2,\n    \"gres_flags\": \"enforce-binding\",\n    \"ntasks_per_socket\": 4,\n    \"modules\": [\n      \"OpenMPI/4.0.0-GCC-8.2.0-2.31.1\"\n    ],\n    \"singularity_image\": \"hvd-scarf.simg\",\n    \"working_directory\": \"~/data/scarf688/projects/intel-e2e-benchmark/case2\",\n    \"training_data\": \"/work/data/one-day\",\n    \"training_data_hdf\": \"/work/data/hdf/one-day\",\n    \"test_data\": \"/work/data/ssts\",\n    \"output_directory\": \"/work/results/run_$SLURM_JOB_ID\",\n    \"sst_file\": \"/work/data/ssts/sst_matchups.h5\",\n    \"model_file\": \"$OUTPUT_DIR/model.h5\",\n    \"pythonpath\": \"/work\",\n    \"mpirun_flags\": [\n      \"-bind-to none\",\n      \"-map-by slot\",\n      \"-x NCCL_DEBUG=INFO\",\n      \"-x LD_LIBRARY_PATH\",\n      \"-x PATH\",\n      \"-x HOROVOD_TIMELINE=$OUTPUT_DIR/timeline_train.json\"\n    ],\n    \"training_command\": \"python /work/e2e_benchmark/command.py train $TRAIN_DATA_HDF $OUTPUT_DIR --epochs 30 --no-cache\",\n    \"inference_command\": \"python /work/e2e_benchmark/command.py inference $TEST_DATA $OUTPUT_DIR\",\n    \"convert_hdf_command\": \"python /work/e2e_benchmark/command.py convert-hdf $TRAIN_DATA $TRAIN_DATA_HDF\",\n    \"sst_comp_command\": \"python /work/e2e_benchmark/command.py sst-comp $SST_FILE $OUTPUT_DIR\"\n  }\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 848,
+        "candidates_token_count": 551,
+        "total_token_count": 1399,
+        "cached_content_token_count": 0
+    }
+}

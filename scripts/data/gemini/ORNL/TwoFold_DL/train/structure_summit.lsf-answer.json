@@ -1,0 +1,74 @@
+{
+    "application": "LSF",
+    "details": {
+        "resource_requirements": {
+            "walltime": "2 hours",
+            "nodes": 16,
+            "queue": "batch",
+            "project": "ABC123"
+        },
+        "software": {
+            "modules": [
+                "gcc/9.3.0",
+                "open-ce/1.5.0-py39-0"
+            ],
+            "conda_environment": "/autofs/nccs-svm1_proj/bif136/summit-env",
+            "python_script": "../train.py"
+        },
+        "environment_variables": {
+            "NENSEMBLE": 1,
+            "HF_DATASETS_CACHE": "/tmp",
+            "TRANSFORMERS_CACHE": "/tmp",
+            "TRANSFORMERS_OFFLINE": 1,
+            "HF_DATASETS_OFFLINE": 1,
+            "OMP_NUM_THREADS": 1,
+            "PYTHONUNBUFFERED": 1,
+            "TOKENIZERS_PARALLELISM": "false",
+            "NNODES": "calculated based on LSB_MCPU_HOSTS",
+            "NWORKERS": "calculated based on NNODES",
+            "TRAIN_DATASET": "/path/to/train/set",
+            "TEST_DATASET": "/path/to/test/set",
+            "NCROSS": 3,
+            "LR": "1e-5",
+            "PER_DEVICE_BATCH_SIZE": 1,
+            "CLUSTER": "summit",
+            "BATCH_SIZE": "calculated based on PER_DEVICE_BATCH_SIZE and NWORKERS",
+            "TORCH_DISTRIBUTED_DEBUG": "INFO",
+            "GLOBAL_ID": "calculated based on LSB_JOBINDEX and NENSEMBLE",
+            "ID_STR": "formatted string based on CLUSTER, BATCH_SIZE, LR, NCROSS, and GLOBAL_ID",
+            "final_checkpoint": "latest checkpoint file in results_${ID_STR} directory",
+            "LD_PRELOAD": "${OLCF_GCC_ROOT}/lib64/libstdc++.so.6"
+        },
+        "execution_method": "jsrun",
+        "arguments": {
+            "smiles_tokenizer_dir": "/gpfs/alpine/world-shared/med106/blnchrd/models/bert_large_plus_clean_regex/tokenizer",
+            "smiles_model_dir": "/gpfs/alpine/world-shared/med106/blnchrd/automatedmutations/pretraining/run/job_86neeM/output",
+            "model_type": "regex",
+            "seq_model_name": "Rostlab/prot_bert_bfd",
+            "train_dataset": "/path/to/train/set",
+            "test_dataset": "/path/to/test/set",
+            "train_size": 13753,
+            "n_cross_attn": 3,
+            "output_dir": "./results_${ID_STR}",
+            "max_steps": 150000,
+            "per_device_train_batch_size": 1,
+            "per_device_eval_batch_size": 1,
+            "learning_rate": "1e-5",
+            "weight_decay": 0.01,
+            "logging_dir": "./logs_${ID_STR}",
+            "logging_steps": 1,
+            "lr_scheduler_type": "constant_with_warmup",
+            "evaluation_strategy": "steps",
+            "eval_steps": 100,
+            "gradient_accumulation_steps": 1,
+            "fp16": "False",
+            "save_strategy": "steps",
+            "save_steps": 100,
+            "warmup_steps": 10,
+            "optim": "adafactor",
+            "ignore_data_skip": true,
+            "gradient_checkpointing": true,
+            "seed": "calculated based on GLOBAL_ID"
+        }
+    }
+}

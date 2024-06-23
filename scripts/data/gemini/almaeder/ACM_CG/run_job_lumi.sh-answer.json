@@ -1,0 +1,37 @@
+{
+    "application": "SLURM",
+    "details": {
+        "job_name": "PASC_SRC",
+        "partition": "standard-g",
+        "nodes": 1,
+        "tasks_per_node": 1,
+        "gpus_per_node": 1,
+        "cpus_per_task": 7,
+        "time": "02:00:00",
+        "account": "project_465000929",
+        "modules": [
+            "kmc_env",
+            "craype-x86-trento"
+        ],
+        "environment_variables": [
+            "HIPCC_COMPILE_FLAGS_APPEND",
+            "HIPCC_LINK_FLAGS_APPEND",
+            "MPICH_GPU_SUPPORT_ENABLED",
+            "GMX_FORCE_GPU_AWARE_MPI",
+            "GMX_ENABLE_DIRECT_GPU_COMM",
+            "MPICH_OFI_NIC_POLICY",
+            "HCC_AMDGPU_TARGET",
+            "OMP_NUM_THREADS",
+            "CPU_BIND",
+            "ROCR_VISIBLE_DEVICES"
+        ],
+        "commands": [
+            "module restore kmc_env",
+            "module load craype-x86-trento",
+            "srun ./select_gpu build/test_split",
+            "srun --cpu-bind=${CPU_BIND} ./select_gpu ./build/test_split",
+            "srun --cpu-bind=${CPU_BIND} ./wrapper.sh --hip-trace ./select_gpu ./build/test_split",
+            "srun ./wrapper.sh --hip-trace ./select_gpu ./build/test_split"
+        ]
+    }
+}

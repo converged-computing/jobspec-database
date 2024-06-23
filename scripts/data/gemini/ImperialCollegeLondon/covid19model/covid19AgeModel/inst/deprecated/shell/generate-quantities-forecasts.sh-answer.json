@@ -1,0 +1,34 @@
+{
+    "application": "PBS",
+    "details": {
+        "software": [
+            "cmdstan",
+            "anaconda3",
+            "Rscript"
+        ],
+        "resources": [
+            "walltime=23:59:00",
+            "select=1:ncpus=37:ompthreads=37:mem=333gb",
+            "queue=pqcovid19c",
+            "job array"
+        ],
+        "libraries": [
+            "covid19model"
+        ],
+        "input_files": [
+            "~/git/R0t/base-ages-generate-quantities-forecast.R",
+            "$JOB_TO_PROCESS_FILE"
+        ],
+        "output_files": [
+            "$JOB_TO_PROCESS_FILE"
+        ],
+        "commands": [
+            "source activate covid19model",
+            "ls -d $JOB_DIR1/*/ > $JOB_TO_PROCESS_FILE",
+            "cat \"$JOB_TO_PROCESS_FILE\" | wc -l",
+            "sed -n \"$PBS_ARRAY_INDEX\"'p' \"$JOB_TO_PROCESS_FILE\"",
+            "Rscript \"$CODE_DIR\"/base-ages-generate-quantities-forecast.R -indir.code \"$CODE_DIR\" -indir.results \"$PBS_ARRAY_INPUT\" -location.index {} -with.flow 1 -forecast.period $FORECAST_PERIOD -school.reopen \"0\" -multiplier_cntct_school_opening \"1\"",
+            "Rscript \"$CODE_DIR\"/base-ages-generate-quantities-forecast.R -indir.code \"$CODE_DIR\" -indir.results \"$PBS_ARRAY_INPUT\" -location.index {} -with.flow 1 -forecast.period $FORECAST_PERIOD -school.reopen \"1\" -multiplier_cntct_school_opening \"$i\""
+        ]
+    }
+}

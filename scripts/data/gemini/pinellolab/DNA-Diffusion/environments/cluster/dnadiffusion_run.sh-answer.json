@@ -1,0 +1,51 @@
+{
+    "application": "Accelerate",
+    "details": {
+        "framework": "Accelerate",
+        "resource_requirements": {
+            "nodes": 1,
+            "tasks_per_node": 8,
+            "gpus": 8,
+            "cpus_per_gpu": 12,
+            "queue": "g40",
+            "account": "openbioml",
+            "job_name": "openbioml"
+        },
+        "environment_variables": {
+            "NCCL_PROTO": "simple",
+            "NCCL_DEBUG": "WARN",
+            "NCCL_TREE_THRESHOLD": 0,
+            "NCCL_IBEXT_DISABLE": 1,
+            "NCCL_SOCKET_IFNAME": "^docker0,lo",
+            "FI_EFA_FORK_SAFE": 1,
+            "FI_LOG_LEVEL": 1,
+            "FI_EFA_USE_DEVICE_RDMA": 1,
+            "FI_EFA_ENABLE_SHM_TRANSFER": 0,
+            "FI_PROVIDER": "efa",
+            "FI_EFA_TX_MIN_CREDITS": 64,
+            "PYTHONFAULTHANDLER": 1,
+            "OMPI_MCA_mtl_base_verbose": 1,
+            "OMPI_MCA_btl": "^openib",
+            "XDG_CACHE_HOME": "temporary directory",
+            "CONDA_ENVIRONMENT": "environment variable from .env file"
+        },
+        "libraries": {
+            "MPI": "mpicc",
+            "Conda": "conda",
+            "Gimmemotifs": "gimmemotifs"
+        },
+        "scripts": {
+            "train.py": "training script"
+        },
+        "other_software": {
+            "Slurm": "job scheduler",
+            "Accelerate": "distributed training framework",
+            "Conda": "package manager",
+            "NCCL": "communication library"
+        },
+        "other_requirements": {
+            "Docker": "containerization software",
+            "GPU": "graphics processing unit"
+        }
+    }
+}

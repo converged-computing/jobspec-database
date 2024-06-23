@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"Dask\",\n  \"software\": [\n    \"Dask\",\n    \"Python\",\n    \"SLURM\"\n  ],\n  \"resource_requirements\": {\n    \"nodes\": 3,\n    \"tasks\": 3,\n    \"memory\": \"320GiB\",\n    \"partition\": \"astro-cpu\",\n    \"cluster\": \"astrolab\",\n    \"exclusive\": true,\n    \"cpus_per_task\": 3,\n    \"gpu\": false,\n    \"dask_config_path\": \"${HOME}/work/slurm-scripts/dask_config_distrim_hight_split_mini.yaml\",\n    \"env_name\": \"rascil_new\",\n    \"project_path\": \"${HOME}/work/ska-sdp-distributed-fourier-transform\"\n  }\n}\n```\n\nThe script uses **Dask**, a Python library for parallel computing, to run the Python script `demo_api.py`. It leverages **SLURM**, a workload manager, to allocate resources on the AstroLab cluster. \n\n**Here's a breakdown of the script:**\n\n1. **SLURM configuration:** The script begins by setting various parameters using `#SBATCH` directives. These define the job name, account, number of nodes, tasks, memory, time limit, email settings, partition, cluster, and other resource requirements.\n2. **Environment Setup:** The script defines paths for the project, Dask configuration, and worker logs. It then sources the user's bash profile (`~/.bashrc`) to ensure the correct environment variables are set.\n3. **Dask scheduler:** The script runs a Dask scheduler on a designated node using `srun` and `dask-scheduler`. The scheduler listens on a specific port for worker connections.\n4. **Dask workers:** The script launches Dask workers on each allocated node using `srun` and `dask-worker`. Workers connect to the scheduler and perform the actual computation.\n5. **Python Execution:** Finally, the script executes the Python script `demo_api.py` using the `python` command. The script's arguments are provided using the `--` flag.\n\nThe script's resource requirements include:\n\n* **3 nodes**\n* **3 tasks**\n* **320GB memory per worker**\n* **3 CPUs per task**\n* **Exclusive node access**\n* **A Dask configuration file**\n* **A specific environment (`rascil_new`)**\n* **A project path**\n\nThis script is tailored for the AstroLab cluster and uses specific commands and paths that are likely configured for this environment. \n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 1007,
+        "candidates_token_count": 587,
+        "total_token_count": 1594,
+        "cached_content_token_count": 0
+    }
+}

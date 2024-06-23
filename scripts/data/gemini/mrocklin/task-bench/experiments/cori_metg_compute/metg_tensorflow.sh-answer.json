@@ -1,0 +1,32 @@
+{
+    "application": "SLURM",
+    "details": {
+        "scheduler": "SLURM",
+        "queue": "regular",
+        "constraints": "haswell",
+        "exclusive_execution": true,
+        "runtime": "01:00:00",
+        "email_notifications": "ALL",
+        "cores_per_node": "SLURM_JOB_CPUS_PER_NODE",
+        "environment": "tensorflow",
+        "library_paths": [
+            "$PWD/../../core",
+            "$PWD/../../tensorflow/ops"
+        ],
+        "task_launcher": "srun",
+        "task_script": "task_bench.py",
+        "task_arguments": {
+            "-kernel": "compute_bound",
+            "-iter": "1 << (26-s)",
+            "-type": "type",
+            "-radix": "RADIX",
+            "-steps": "STEPS",
+            "-width": "$2 * cores"
+        },
+        "sweep_variables": [
+            "NGRAPHS",
+            "PATTERN"
+        ],
+        "output_file": "tensorflow_ngraphs_${g}_type_${t}_nodes_${n}.log"
+    }
+}

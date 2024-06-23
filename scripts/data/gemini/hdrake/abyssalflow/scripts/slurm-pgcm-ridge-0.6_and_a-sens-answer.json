@@ -1,0 +1,32 @@
+{
+    "application": "Slurm",
+    "details": {
+        "job_name": "p-a-sens",
+        "nodes": 1,
+        "tasks_per_node": 8,
+        "partition": "sched_mit_raffaele",
+        "time": "36:00:00",
+        "exclusive": true,
+        "output_file": "out/job_%j.out",
+        "error_file": "err/job_%j.err",
+        "script_requirements": {
+            "julia": "julia run.jl equil_1 0 &",
+            "execute-PGCM-repeat-thread": "srun -n 1 --exclusive execute-PGCM-repeat-thread $EXPNAME $ITER0 $ITERN > \"output_\"$ITER0\".txt\""
+        },
+        "resource_requirements": {
+            "directories": [
+                "../pgcm/ridge-0.6_del-0.2",
+                "../../pgcm/ridge-0.6_del-0.4",
+                "../../pgcm/ridge-0.6_del-0.8",
+                "../../pgcm/ridge-0.6_del-inf",
+                "../../pgcm/ridge-0.6_del-0.4_a-0.25x",
+                "../../pgcm/ridge-0.6_del-0.4_a-0.5x",
+                "../../pgcm/ridge-0.6_del-0.4_a-2.0x",
+                "../../pgcm/ridge-0.6_del-0.4_a-4.0x"
+            ],
+            "files": [
+                "../../scripts/execute-PGCM-repeat-thread"
+            ]
+        }
+    }
+}

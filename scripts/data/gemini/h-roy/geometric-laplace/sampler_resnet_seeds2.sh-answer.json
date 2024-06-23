@@ -1,0 +1,45 @@
+{
+    "application": "LSF",
+    "details": {
+        "job_name": "resnet_proj_sample",
+        "queue": "p1",
+        "resources": {
+            "gpu": {
+                "type": "gpu80gb",
+                "count": 1,
+                "mode": "exclusive_process"
+            },
+            "cpu": {
+                "count": 4
+            },
+            "memory": {
+                "limit": "32GB"
+            },
+            "runtime": {
+                "limit": "20:00"
+            },
+            "output": "logs/%J.out",
+            "error": "logs/%J.err"
+        },
+        "modules": {
+            "python": "python3/3.11.4",
+            "cuda": "cuda/12.2",
+            "cudnn": "cudnn/v8.9.1.23-prod-cuda-12.X",
+            "geom": "geom/bin/activate"
+        },
+        "environment": {
+            "XLA_PYTHON_CLIENT_PREALLOCATE": "false"
+        },
+        "script": "src/sampling/sample_resnet.py",
+        "arguments": {
+            "diffusion_steps": 3,
+            "num_samples": 5,
+            "lanczos_iters": 2500,
+            "posthoc_precision": 0.5,
+            "posterior_type": "non-kernel-eigvals",
+            "run_name": "seed2",
+            "sample_seed": 2,
+            "checkpoint_path": "./checkpoints/CIFAR-10/ResNet/good_params_seed2.pickle"
+        }
+    }
+}

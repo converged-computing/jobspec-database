@@ -1,0 +1,30 @@
+{
+    "application": "PBS",
+    "details": {
+        "software": [
+            "R/3.5.0",
+            "r-biomed-libs/3.5.0"
+        ],
+        "resources": {
+            "processors": 1,
+            "memory": "4gb",
+            "walltime": "100:00:00",
+            "queue": "fluxod",
+            "qos": "flux"
+        },
+        "script_execution": {
+            "command": "Rscript code/learning/main.R",
+            "arguments": [
+                "$seed",
+                "RBF_SVM"
+            ],
+            "output_file": "data/temp/best_hp_results_RBF_SVM_$seed.csv"
+        },
+        "array_parameters": {
+            "start": 1,
+            "end": 100,
+            "variable": "$PBS_ARRAYID",
+            "seed": "$PBS_ARRAYID - 1"
+        }
+    }
+}

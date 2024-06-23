@@ -1,0 +1,68 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"SLURM\",\n  \"details\": {\n    \"environment\": \"bash\",\n    \"resources\": {\n      \"memory\": \"0\",\n      \"time\": \"8:00:00\",\n      \"nodes\": \"SLURM_JOB_NUM_NODES\",\n      \"tasks_per_node\": 8,\n      \"container\": {\n        \"image\": \"nvcr.io/nvidia/effdet:21.09-tf2\",\n        \"mounts\": \"${checkpointdir}:/workspace/checkpoints,${datadir}:/workspace/coco\"\n      }\n    },\n    \"software\": {\n      \"python\": \"3\",\n      \"libraries\": [\n        \"efficientdet\"\n      ]\n    },\n    \"command\": \"python3 train.py --training_mode=${training_mode:=traineval} --training_file_pattern=/workspace/coco/train-* --val_file_pattern=/workspace/coco/val-* --val_json_file=/workspace/coco/annotations/instances_val2017.json --model_name=efficientdet-d0 --model_dir=/tmp/convergence-AMP-32xV100-32G --backbone_init=/workspace/checkpoints/efficientnet-b0-joc --batch_size=$bs --eval_batch_size=$bs --num_epochs=$ep --use_xla=True --amp=True --lr=$lr --warmup_epochs=$wu --hparams=\\\"moving_average_decay=$ema,momentum=$momentum\\\"\"\n  }\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 2,
+                    "blocked": false
+                }
+            ],
+            "citation_metadata": {
+                "citation_sources": [
+                    {
+                        "start_index": 497,
+                        "end_index": 681,
+                        "uri": "https://github.com/NVIDIA/DeepLearningExamples",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 560,
+                        "end_index": 756,
+                        "uri": "https://github.com/NVIDIA/DeepLearningExamples",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 784,
+                        "end_index": 1011,
+                        "uri": "https://github.com/Sooonko/DeepLearningExample",
+                        "license_": ""
+                    }
+                ]
+            },
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 609,
+        "candidates_token_count": 362,
+        "total_token_count": 971,
+        "cached_content_token_count": 0
+    }
+}

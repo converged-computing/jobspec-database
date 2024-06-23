@@ -1,0 +1,41 @@
+{
+    "application": "Horovod",
+    "details": {
+        "slurm": {
+            "partition": "normal",
+            "nodes": 4,
+            "job_name": "pre_scrach",
+            "output_file": "pre_cscd_r_128_from_scrach.out",
+            "tasks_per_node": 4,
+            "cpus_per_task": 8,
+            "gres": "dcu:4"
+        },
+        "environment_variables": {
+            "MIOPEN_USER_DB_PATH": "/tmp/tensorflow-miopen-${USER}-2.8",
+            "MIOPEN_DEBUG_DISABLE_FIND_DB": "1",
+            "HOROVOD_HIERARCHICAL_ALLREDUCE": "1"
+        },
+        "mpirun_arguments": {
+            "np": "${num_DCU}",
+            "hostfile": "${DIR}/hostfile-tmp",
+            "mca_pml": "ucx",
+            "ucx_tls": "sm,rc,rocm_cpy,rocm_gdr,rocm_ipc",
+            "ld_library_path": "environment variable",
+            "mca_coll_hcoll_enable": "0",
+            "bind_to": "none"
+        },
+        "python_script": "run_pretraining_hvd.py",
+        "script_arguments": {
+            "input_file": "/public/home/zzx6320/lh/Projects/bert/data/cscibert_pre_training/pre_training_R_cscd_128.tfrecord",
+            "bert_config_file": "/public/home/zzx6320/lh/Projects/bert/models/chinese_L-12_H-768_A-12/chinese_L-12_H-768_A-12/bert_config.json",
+            "output_dir": "output/Pre1_cscd_R_128_64_from_scrach",
+            "max_seq_length": "128",
+            "do_train": "True",
+            "do_eval": "True",
+            "train_batch_size": "64",
+            "learning_rate": "2e-5",
+            "num_train_steps": "500000",
+            "save_checkpoints_steps": "1000"
+        }
+    }
+}

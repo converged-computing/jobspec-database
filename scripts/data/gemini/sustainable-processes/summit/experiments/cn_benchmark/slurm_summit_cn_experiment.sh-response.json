@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"Singularity\",\n  \"details\": {\n    \"system\": \"Peta4-Skylake (Skylake CPUs, OPA)\",\n    \"environment\": {\n      \"modules\": [\"rhel7/default-peta4\"],\n      \"variables\": {\n        \"OMP_NUM_THREADS\": \"unset (default max)\",\n        \"I_MPI_PIN_DOMAIN\": \"omp:compact\",\n        \"I_MPI_PIN_ORDER\": \"scatter\"\n      }\n    },\n    \"resources\": {\n      \"nodes\": \"dynamic (SLURM_JOB_NUM_NODES)\",\n      \"cores\": \"dynamic (SLURM_NTASKS)\",\n      \"memory\": \"dynamic (5980MB/core - skylake, 12030MB/core - skylake-himem)\",\n      \"queue\": \"skylake or skylake-himem\",\n      \"walltime\": \"12:00:00\",\n      \"email_notifications\": \"FAIL\"\n    },\n    \"command\": {\n      \"type\": \"MPI (Intel or OpenMPI) or OpenMP\",\n      \"executable\": \"singularity exec\",\n      \"options\": \"-B $SLURM_SUBMIT_DIR:/summit_user docker://$1 python $2\"\n    },\n    \"workdir\": \"$SLURM_SUBMIT_DIR\"\n  }\n}\n```\n\n**Explanation of the script and the JSON output:**\n\n* **Application:** The script is designed to run applications within a Singularity container environment. \n* **System:** It's specifically tailored for the Peta4-Skylake system, which uses Skylake CPUs and OPA (Open Power Architecture).\n* **Environment:** The script sets up the environment with the following:\n    * **Modules:** It loads the \"rhel7/default-peta4\" module, which is essential for the Peta4-Skylake system. \n    * **Variables:**\n        * **OMP_NUM_THREADS:** This variable is unset, allowing the application to use the maximum number of threads available.\n        * **I_MPI_PIN_DOMAIN and I_MPI_PIN_ORDER:** These variables control how MPI tasks are pinned to cores, optimizing performance by minimizing cache conflicts.\n* **Resources:** The script utilizes SLURM (Simple Linux Utility for Resource Management) to request resources:\n    * **Nodes:** The number of nodes is determined dynamically based on the SLURM_JOB_NUM_NODES environment variable.\n    * **Cores:** The number of cores is determined by the SLURM_NTASKS environment variable.\n    * **Memory:** The amount of memory allocated per core depends on the selected queue (either 5980MB for \"skylake\" or 12030MB for \"skylake-himem\").\n    * **Queue:** The script specifies the queue to use for resource allocation (\"skylake\" or \"skylake-himem\").\n    * **Walltime:** The job is requested to run for a maximum of 12 hours.\n    * **Email notifications:** The user will receive email notifications only in case of job failure.\n* **Command:** The script provides options to run different types of applications:\n    * **MPI:** It supports running MPI codes, potentially using OpenMP, with both Intel MPI and OpenMPI. \n    * **OpenMP:** It can also run pure OpenMP applications on a single node.\n    * **Executable:** The script uses the \"singularity exec\" command to run the application within the Singularity container.\n    * **Options:** The script allows passing custom options to the application through the `$options` variable. \n* **Workdir:** The working directory for the job is set to the directory where the `sbatch` command was executed ($SLURM_SUBMIT_DIR).\n\nThe JSON output provides a structured representation of this information, making it easy to parse and use in other applications. \n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 1530,
+        "candidates_token_count": 865,
+        "total_token_count": 2395,
+        "cached_content_token_count": 0
+    }
+}

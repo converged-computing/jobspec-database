@@ -1,0 +1,54 @@
+{
+    "application": "SLURM",
+    "details": {
+        "resources": {
+            "gpu": {
+                "type": "p100",
+                "count": 4
+            },
+            "nodes": {
+                "count": 2,
+                "tasks_per_node": 4
+            },
+            "tasks": 8
+        },
+        "partition": "gpu",
+        "time": "01:00:00",
+        "constraint": "exclusive",
+        "output": "latency.collusingp2p.2h8p.out",
+        "mail": {
+            "user": "hochan@utexas.edu",
+            "type": [
+                "fail",
+                "end"
+            ]
+        },
+        "excluded_nodes": [
+            "comet-33-15",
+            "comet-33-11"
+        ],
+        "environment": {
+            "OMP_NUM_THREADS": 1,
+            "MV2_USE_CUDA": 1,
+            "MV2_USE_GDR": 1,
+            "MPI_THREAD_MULTIPLE": 1,
+            "MV2_CPU_MAPPING": 0,
+            "MV2_ENABLE_AFFINITY": 0,
+            "LD_PRELOAD": "/home/hlee89/bin/opt/mvapich2/gdr/2.3.4/mcast/no-openacc/cuda10.1/mofed4.7/mpirun/gnu4.8.5/lib64/libmpi.so",
+            "MV2_DEBUG_SHOW_BACKTRACE": 1,
+            "MV2_SHOW_ENV_INFO": 1
+        },
+        "software": {
+            "mpirun": {
+                "version": "unknown",
+                "hostfile": "hosts.txt.$SLURM_JOBID"
+            },
+            "osu_latency_coll": {
+                "arguments": "-m 0:40000000"
+            },
+            "generate_pbs_nodefile": {
+                "output": "HFILE"
+            }
+        }
+    }
+}

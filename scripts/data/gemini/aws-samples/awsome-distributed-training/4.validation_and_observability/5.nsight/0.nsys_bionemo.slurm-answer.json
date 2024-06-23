@@ -1,0 +1,50 @@
+{
+    "application": "Slurm",
+    "details": {
+        "software": [
+            "Python",
+            "nsys",
+            "hydra",
+            "WandB"
+        ],
+        "resources": {
+            "nodes": 4,
+            "tasks_per_node": 8,
+            "gpus_per_node": 8,
+            "storage": {
+                "fsx": {
+                    "mount_point": "/fsx",
+                    "data_path": "/fsx/processed"
+                },
+                "workspace": {
+                    "path": "/workspace/bionemo"
+                }
+            }
+        },
+        "libraries": [
+            "bionemo",
+            "esm1nv"
+        ],
+        "training_parameters": {
+            "micro_batch_size": 256,
+            "accumulate_grad_batches": 1,
+            "tensor_model_parallel_size": 1,
+            "val_check_interval": 50,
+            "max_steps": 100
+        },
+        "data": {
+            "train_files": "x_OP_000..049_CL_",
+            "test_files": "x_OP_000..049_CL_",
+            "val_files": "x_OP_000..049_CL_",
+            "index_mapping_dir": "/fsx/processed"
+        },
+        "logging": {
+            "project_name": "esm1nv_pretraining",
+            "exp_tag": "-small",
+            "exp_name": "esm1nv_batch256_gradacc1_nodes4-small",
+            "create_wandb_logger": false,
+            "wandb_logger_offline": false,
+            "results_path": "/fsx/esm1nv-train/esm1nv_pretraining/esm1nv_batch256_gradacc1_nodes4-small/results"
+        }
+    }
+}

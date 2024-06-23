@@ -1,0 +1,27 @@
+{
+    "application": "SLURM",
+    "details": {
+        "resource_requirements": {
+            "partition": "gpu",
+            "memory": "32G",
+            "gpus": 1,
+            "cpus_per_gpu": 1,
+            "time": "72:00:00",
+            "mail_user": "adityasv@andrew.cmu.edu",
+            "mail_type": "ALL"
+        },
+        "environment_variables": {
+            "NCCL_SOCKET_IFNAME": "eno1",
+            "NCCL_IB_DISABLE": 1
+        },
+        "python_script": "splade_md2d.py",
+        "arguments": {
+            "model_name": "/home/adityasv/multidoc2dial/md2d/splade/training_with_sentence_transformers/output/distilsplade-ft-dpr/0_MLMTransformer",
+            "use_all_queries": true,
+            "data_path": "/home/adityasv/multidoc2dial/data/mdd_dpr/dpr_negatives_beir_format",
+            "lr": 1e-06,
+            "epochs": 20,
+            "pair_lambda": "0.$SLURM_ARRAY_TASK_ID"
+        }
+    }
+}

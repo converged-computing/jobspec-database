@@ -1,0 +1,56 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"Slurm\",\n  \"details\": {\n    \"job_name\": \"psana_legion_bb\",\n    \"dependency\": \"singleton\",\n    \"nodes\": 17,\n    \"time\": \"00:30:00\",\n    \"qos\": \"debug\",\n    \"constraint\": \"haswell\",\n    \"image\": \"docker:stanfordlegion/psana-mpi:latest\",\n    \"exclusive\": true,\n    \"mail_type\": \"ALL\",\n    \"account\": \"lcls\",\n    \"data_source\": \"DW persistentdw name=slaughte_data_noepics\",\n    \"psana_location\": \"$HOME/psana_legion/psana-legion\",\n    \"data_location\": \"$DW_PERSISTENT_STRIPED_slaughte_data_noepics/reg\",\n    \"environment_variables\": {\n      \"SIT_PSDM_DATA\": \"$HOST_DATA_DIR/d/psdm\",\n      \"EAGER\": 1,\n      \"SLURM_HOSTFILE\": \"$PWD/nodelist.txt\"\n    },\n    \"script_execution\": {\n      \"command\": \"srun -n $(( n * c + 1 )) -N $(( n + 1 )) --cpus-per-task $(( 64 / c )) --cpu_bind threads --distribution=arbitrary --output rax_n\\\"$n\\\"_c\\\"$c\\\".log shifter python $HOST_PSANA_DIR/psana_legion/mpi_rax.py\",\n      \"node_counts\": [1, 2, 4, 8, 16],\n      \"cores_per_node\": [64]\n    },\n    \"other_tools\": [\n      \"make_nodelist.py\",\n      \"shifter\"\n    ]\n  }\n}\n```\n\n**Explanation of the JSON output:**\n\n* **application**: The script is primarily running under the **Slurm** workload manager. \n* **details**: Contains information about the script's configuration, environment, and execution. \n    * **job_name**: The name of the Slurm job.\n    * **dependency**: The job relies on a single other job completing successfully.\n    * **nodes**: The script requires 17 nodes.\n    * **time**: The maximum runtime is set to 30 minutes.\n    * **qos**:  The Quality of Service (QoS) setting is \"debug\", suggesting this is for debugging purposes.\n    * **constraint**: The job requires nodes with the Haswell architecture.\n    * **image**: The script uses a Docker image from the Stanford Legion team for PSANA and MPI.\n    * **exclusive**: This flag tells Slurm to load the image before executing the script, potentially speeding up execution.\n    * **mail_type**: Notifications are requested for all events (begin, end, failure).\n    * **account**: The job runs under the \"lcls\" account.\n    * **data_source**:  The script uses a \"DW persistentdw\" named \"slaughte_data_noepics\" for data.\n    * **psana_location**: The location of the Psana installation on the host machine.\n    * **data_location**: The location of the data used by the script.\n    * **environment_variables**:  Defines various environment variables used by the script.\n    * **script_execution**: Details about how the script actually runs, including the command used for execution and the node and core counts it iterates over.\n    * **other_tools**:  Lists other tools used by the script: `make_nodelist.py` and `shifter`.\n\nThis breakdown provides a clear, structured representation of the information contained in the script. \n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "citation_metadata": {
+                "citation_sources": [
+                    {
+                        "start_index": 719,
+                        "end_index": 920,
+                        "uri": "https://github.com/StanfordLegion/psana-legion",
+                        "license_": ""
+                    }
+                ]
+            },
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 464,
+        "candidates_token_count": 841,
+        "total_token_count": 1305,
+        "cached_content_token_count": 0
+    }
+}

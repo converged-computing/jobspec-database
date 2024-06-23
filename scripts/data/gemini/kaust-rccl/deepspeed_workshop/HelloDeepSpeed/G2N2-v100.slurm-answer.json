@@ -1,0 +1,52 @@
+{
+    "application": "SLURM",
+    "details": {
+        "software": [
+            "python",
+            "deep\u3053\u3068\u304c"
+        ],
+        "libraries": [
+            "deepspeed",
+            "NCCL"
+        ],
+        "resources": {
+            "compute": {
+                "nodes": 2,
+                "cpus_per_task": 4,
+                "ntasks": 2,
+                "gpus": 2,
+                "gpus_per_node": 1
+            },
+            "network": {
+                "interface": "Infiniband",
+                "socket_ifname": "ib0",
+                "net_gdr_level": 4
+            }
+        },
+        "environment_variables": [
+            "NCCL_DEBUG",
+            "NCCL_TREE_THRESHOLD",
+            "NCCL_SOCKET_IFNAME",
+            "NCCL_NET_GDR_LEVEL",
+            "MAX_JOBS",
+            "master_ip",
+            "MASTER_PORT",
+            "HF"
+        ],
+        "commands": [
+            "nvidia-smi -L",
+            "nvidia-smi topo -m",
+            "ibv_devinfo",
+            "module load dl",
+            "module load deepspeed/0.8.3",
+            "module list",
+            "srun -n 1 -N 1 --gpus=1 -w ${nodes_array[0]} /bin/hostname -I | cut -d \" \" -f 2",
+            "python -c 'import socket; s=socket.socket(); s.bind((\"\", 0)); print(s.getsockname()[1]); s.close()'",
+            "srun -n ${SLURM_NTASKS} -N ${SLURM_NNODES} python train_bert_ds.py --checkpoint_dir $PWD --num_layers 2 --hidden_dim 512"
+        ],
+        "files": [
+            "train_bert_ds.py",
+            "hostfile"
+        ]
+    }
+}

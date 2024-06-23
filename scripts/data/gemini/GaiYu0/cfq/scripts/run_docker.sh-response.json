@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"Docker\",\n  \"details\": {\n    \"slurm\": {\n      \"job_name\": \"cfq_train_docker\",\n      \"output_file\": \"/home/eecs/paras/slurm/%j\",\n      \"tasks\": 1,\n      \"cpus_per_task\": 40,\n      \"memory\": \"400000 MB\",\n      \"gpus\": 1,\n      \"time\": \"125:00:00\",\n      \"exclude_nodes\": \"atlas,blaze,r16,freddie\"\n    },\n    \"environment\": {\n      \"CFQ_DIR\": \"data/cfq\",\n      \"DATA_CACHE\": \"/data/$USER/data_cache/cfq\",\n      \"RUN_CACHE\": \"/data/$USER/data_cache/cfq_runs\",\n      \"PYTHONPATH\": \"/app\"\n    },\n    \"docker\": {\n      \"image\": \"cfq\",\n      \"command\": \"python cfq/train.py --run_dir_root=/run_cache --data_root_path=/data_cache --flagfile $FLAGFILE\",\n      \"volumes\": [\n        \"/dev/hugepages:/dev/hugepages\",\n        \"$DATA_CACHE:/data_cache\",\n        \"$RUN_CACHE:/run_cache\",\n        \"$HOME/.netrc:/home/user/.netrc\"\n      ],\n      \"env\": [\n        \"PYTHONPATH=/app\"\n      ],\n      \"gpu\": \"device=$CUDA_VISIBLE_DEVICES\",\n      \"ipc\": \"host\",\n      \"user\": \"$(id -u):$(id -g)\"\n    },\n    \"script\": \"scripts/download_cfq.py\"\n  }\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 626,
+        "candidates_token_count": 407,
+        "total_token_count": 1033,
+        "cached_content_token_count": 0
+    }
+}

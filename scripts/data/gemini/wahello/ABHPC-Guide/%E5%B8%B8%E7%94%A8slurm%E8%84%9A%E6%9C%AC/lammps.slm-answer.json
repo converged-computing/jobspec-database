@@ -1,0 +1,25 @@
+{
+    "application": "LAMMPS",
+    "details": {
+        "software": {
+            "lammps": "lammps/12Dec18"
+        },
+        "resources": {
+            "queue": "E5-2630V2",
+            "nodes": 2,
+            "cores_per_node": 12,
+            "mpi_implementation": "OpenMPI",
+            "mpi_fabric": "ofi"
+        },
+        "execution": {
+            "cpu": {
+                "command": "mpirun -genv I_MPI_FABRICS=ofi -machinefile $CURDIR/nodelist.$SLURM_JOB_ID lammps-cpu -in $SLURM_JOB_NAME.in -sf omp -pk omp 1 -l $SLURM_JOB_NAME.log > $SLURM_JOB_NAME.sta",
+                "mpi_runtime": "lammps-cpu"
+            },
+            "gpu": {
+                "command": "mpirun -machinefile $CURDIR/nodelist.$SLURM_JOB_ID GPU-PRERUN\nmpirun -genv I_MPI_FABRICS=ofi -machinefile $CURDIR/nodelist.$SLURM_JOB_ID lammps-gpu -in $SLURM_JOB_NAME.in -sf gpu -pk gpu $PK_NUM  -l $SLURM_JOB_NAME.log > $SLURM_JOB_NAME.sta",
+                "mpi_runtime": "lammps-gpu"
+            }
+        }
+    }
+}

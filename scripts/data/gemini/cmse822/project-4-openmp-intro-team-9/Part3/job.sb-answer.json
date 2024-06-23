@@ -1,0 +1,35 @@
+{
+    "application": "Slurm",
+    "details": {
+        "resource_requirements": {
+            "wall_clock_time": "00:10:00",
+            "tasks": 4,
+            "nodes": 1,
+            "memory": "8G",
+            "constraint": "amd20"
+        },
+        "executable_file": "matmulti_omp_mpi",
+        "compiler": "mpic++",
+        "compiler_flags": "-fopenmp",
+        "input_parameters": {
+            "N": 2000,
+            "size": [
+                1,
+                2,
+                4
+            ],
+            "threads": [
+                1,
+                2,
+                4,
+                8,
+                16,
+                32,
+                64,
+                128
+            ]
+        },
+        "execution_command": "mpiexec -n $size ./matmulti_omp_mpi $threads $N",
+        "output_format": "job information to output file"
+    }
+}

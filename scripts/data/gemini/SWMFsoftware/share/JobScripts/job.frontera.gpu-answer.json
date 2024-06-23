@@ -1,0 +1,27 @@
+{
+    "application": "SBATCH",
+    "details": {
+        "language": "Bash",
+        "purpose": "Run SWMF model on Frontera supercomputer",
+        "resource requirements": {
+            "nodes": 64,
+            "tasks_per_node": 56,
+            "walltime": "24:00:00",
+            "queue": "normal",
+            "project": "BCS21001",
+            "compiler": "nvhpc 20.7",
+            "mpi": "nvhpc's built-in mpi",
+            "post-processing": "PostProc.pl"
+        },
+        "environment variables": [
+            "I_MPI_ADJUST_REDUCE=1",
+            "UCX_LOG_LEVEL=ERROR",
+            "OPAL_PREFIX=/scratch1/projects/compilers/nvhpc20v7/Linux_x86_64/20.7/comm_libs/mpi"
+        ],
+        "commands": [
+            "mpirun -n 1 ./SWMF.exe  > runlog_`date +%y%m%d%H%M`",
+            "ibrun -n 1 ./PostProc.pl -r=300 -n=10 >& PostProc.log &",
+            "mpirun -n 3528 -o 56 ./SWMF.exe > runlog_`date +%y%m%d%H%M`"
+        ]
+    }
+}

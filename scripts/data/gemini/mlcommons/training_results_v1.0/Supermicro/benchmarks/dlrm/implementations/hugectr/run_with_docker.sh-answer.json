@@ -1,0 +1,47 @@
+{
+    "application": "Docker",
+    "details": {
+        "container_name": "dlrm_hugectr",
+        "container_image": "${CONT}",
+        "container_mounts": [
+            "/raid/datasets/criteo/mlperf/40m.limit_preshuffled/",
+            "/workspace/dlrm"
+        ],
+        "environment_variables": [
+            "DATADIR",
+            "DATASET_TYPE",
+            "DGXSYSTEM",
+            "other variables from ./config_${DGXSYSTEM}.sh"
+        ],
+        "resources": [
+            "GPU",
+            "CPU",
+            "RAM",
+            "Disk (RAID, GPFS)"
+        ],
+        "scripts": [
+            "run_and_time.sh"
+        ],
+        "libraries": [
+            "mlperf_logging",
+            "mlperf_logger"
+        ],
+        "tools": [
+            "nvidia-docker",
+            "bash",
+            "python3",
+            "sync",
+            "sudo",
+            "sysctl",
+            "hostname"
+        ],
+        "log_files": [
+            "${LOGDIR}/${DATESTAMP}_${_experiment_index}.log"
+        ],
+        "other_details": [
+            "Uses SLURM for job management",
+            "Clears caches between experiments",
+            "Runs experiments in a loop"
+        ]
+    }
+}

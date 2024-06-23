@@ -1,0 +1,30 @@
+{
+    "application": "Beegenn",
+    "details": {
+        "resource_requirements": {
+            "nodes": 1,
+            "cpus": 2,
+            "mpi_procs": 10,
+            "memory": "64GB",
+            "walltime": "07:59:00",
+            "queue": "short_gpuQ"
+        },
+        "modules": [
+            "cuda-11.1",
+            "singularity-3.4.0"
+        ],
+        "dependencies": {
+            "squashfs-tools": "required, install from source"
+        },
+        "container": {
+            "image": "docker://giacthephantom/beegenn:sleep",
+            "type": "Singularity"
+        },
+        "command": "python3 -m beegenn.plots.spikes /t_30 t30noinputcluster",
+        "bind_points": {
+            "$PBS_O_WORKDIR/genn-network-model/t_30": "/t_30",
+            "$PBS_O_WORKDIR/outputs": "/home/genn"
+        },
+        "gpu_support": "enabled"
+    }
+}

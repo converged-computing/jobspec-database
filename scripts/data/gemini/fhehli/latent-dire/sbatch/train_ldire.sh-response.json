@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"slurm\",\n  \"details\": {\n    \"job_name\": \"train\",\n    \"time\": \"04:00:00\",\n    \"ntasks_per_node\": 1,\n    \"cpus_per_task\": 8,\n    \"mem_per_cpu\": \"4G\",\n    \"tmp\": \"40G\",\n    \"gpus\": 1,\n    \"gres\": \"gpumem:8g\",\n    \"modules\": [\n      \"gcc/8.2.0\",\n      \"python_gpu/3.10.4\",\n      \"eth_proxy\"\n    ],\n    \"python_packages\": [\n      \".\",\n      \"src/guided-diffusion\"\n    ],\n    \"datasets\": [\n      \"5_steps_split\",\n      \"10_steps_split\",\n      \"20_steps_split\",\n      \"30_steps_split\"\n    ],\n    \"training_script\": \"src/training.py\",\n    \"model\": \"resnet50_latent\",\n    \"data_type\": \"latent\",\n    \"batch_size\": 256,\n    \"max_epochs\": 1000\n  }\n}\n```\n\nThis script is designed to run on a cluster managed by the **Slurm** workload manager. \n\nHere's a breakdown of the software and resource requirements:\n\n* **Slurm**: The script uses Slurm directives (`#SBATCH`) to define job parameters like the job name, runtime, resources per node, and GPU requirements.\n* **Modules**: It loads specific versions of the GCC compiler, Python with GPU support, and a proxy for accessing resources. \n* **Python**: The script uses Python to install libraries, manage datasets, and execute training.\n* **Packages**: It installs local packages (`pip install .`) and a package named `src/guided-diffusion`.\n* **Datasets**: The script works with four datasets (listed in the `datasets` array) that are presumably located on the cluster's scratch space. \n* **Training**: It uses the `src/training.py` script to train a model named `resnet50_latent` on latent data. The script specifies parameters like batch size and maximum epochs.\n* **Resources**: The script requires 1 node with 8 CPUs per task, 4 GB of memory per CPU, 40 GB of temporary space, and a single GPU with 8 GB of memory. \n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 474,
+        "candidates_token_count": 556,
+        "total_token_count": 1030,
+        "cached_content_token_count": 0
+    }
+}

@@ -1,0 +1,45 @@
+{
+    "application": "PBS",
+    "details": {
+        "resource_requirements": {
+            "nodes": "1",
+            "ppn": "4",
+            "pmem": "16gb",
+            "walltime": "00:30:00",
+            "account": "open"
+        },
+        "software_requirements": {
+            "gcc": "8.3.1",
+            "bedtools": "2.27.1",
+            "bwa": "0.7.15",
+            "samtools": "1.5",
+            "anaconda3": null,
+            "genopipe": null
+        },
+        "script_details": {
+            "commands": [
+                "sed \"9q;d\" depth_simulations.txt",
+                "awk '{print $1}'  <(echo $INFO)",
+                "awk '{print $2}'  <(echo $INFO)",
+                "awk '{print $3}'  <(echo $INFO)",
+                "bash ../scripts/simulate.sh -i $PBS_ARRAYID -d $DEPTH -s $SEED -g $GENOME -o $OUTPUT",
+                "bash ../scripts/align.sh -i $PBS_ARRAYID -g ../input/sacCer3.fa -o $OUTPUT -t 4",
+                "date +%s",
+                "echo \"${LOCUS} ${DEPTH} simulate in ${runtime}\""
+            ],
+            "variables": [
+                "WRK",
+                "INFO",
+                "LOCUS",
+                "DEPTH",
+                "BASE",
+                "GENOME",
+                "OUTPUT",
+                "SEED",
+                "start",
+                "end",
+                "runtime"
+            ]
+        }
+    }
+}

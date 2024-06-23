@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"LSF\",\n  \"details\": {\n    \"queue\": \"normal\",\n    \"walltime\": \"24:00\",\n    \"output\": \"{{= it.dagdir}}/{{= it.nodo.directorio}}/{{= it.nodo.nombre}}{{? it.config.times > 1 }}.%I{{?}}.out\",\n    \"error\": \"{{= it.dagdir}}/{{= it.nodo.directorio}}/{{= it.nodo.nombre}}{{? it.config.times > 1 }}.%I{{?}}.err\",\n    \"job_name\": \"{{= it.nodo.directorio}}_{{= it.nodo.nombre}}{{? it.config.times && it.config.times > 1 }}[1-{{= it.config.times}}]{{?}}\",\n    \"dependencies\": \"{{= it.nodo.dependencia.join(\"&&\")}}\",\n    \"docker_image\": \"{{= it.config.image }}\",\n    \"docker_volume\": \"{{= it.dagdir}}/{{= it.nodo.directorio}}:{{= it.dagdir}}/{{= it.nodo.directorio}}\",\n    \"docker_workdir\": \"{{= it.dagdir}}/{{= it.nodo.directorio}}{{? it.config.wd }}/{{= it.config.wd }}{{?}}\",\n    \"module\": \"{{= it.config.module }}\",\n    \"working_directory\": \"{{= it.config.wd }}\",\n    \"command\": \"{{= it.config.location && it.config.location.trim() }} {{= it.config.argumento.trim() }}\"\n  }\n}\n```\n\n**Explanation:**\n\n* **Application:** The script is designed to be run under **LSF (Load Sharing Facility)**. This is a batch system for scheduling and running jobs on a cluster.  \n* **Details:** The script defines various LSF options and parameters.  These are used to:\n    * **Specify the queue:** The job will be submitted to the 'normal' queue.\n    * **Set the walltime:** The job will run for a maximum of 24 hours.\n    * **Define output and error files:** These files will contain the job's standard output and error messages.\n    * **Set a job name:** The job name is constructed based on the directory and node name.\n    * **Specify dependencies:** If the node has dependencies, they are defined as a list of jobs that must complete before this job starts.\n    * **Run a command within a Docker container (if specified):** \n        * The script mounts the working directory as a volume inside the container.\n        * It specifies the image to use and sets the working directory inside the container.\n        * It executes the command provided in `it.config.location` and `it.config.argumento`.\n    * **Load a module (if specified):** The script uses the `module` command to load the specified module.\n    * **Change to a working directory (if specified):** The script changes to the specified directory using `cd`.\n    * **Execute a command:** The script executes the command specified in `it.config.location` and `it.config.argumento`.\n\nThe script uses a templating language (likely `Jinja2`) to dynamically generate the LSF commands based on the provided input data. The data is passed in as variables within the `it` object. \n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 524,
+        "candidates_token_count": 767,
+        "total_token_count": 1291,
+        "cached_content_token_count": 0
+    }
+}

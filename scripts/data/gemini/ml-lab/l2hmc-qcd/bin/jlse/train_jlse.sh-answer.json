@@ -1,0 +1,39 @@
+{
+    "application": "Horovod",
+    "details": {
+        "environment": {
+            "COBALT": "job scheduler",
+            "CUDA": "version 10.0.130",
+            "conda": "environment 'hvdNCCL'",
+            "modules": [
+                "cuda"
+            ],
+            "proxies": {
+                "https": "https://proxy:3128",
+                "http": "http://proxy:3128",
+                "ftp": "ftp://proxy:3128"
+            },
+            "variables": {
+                "OMP_NUM_THREADS": "1",
+                "KMP_BLOCKTIME": "1",
+                "KMP_SETTINGS": "TRUE",
+                "KMP_AFFINITY": "'granularity=fine,verbose,compact,1,0'",
+                "AUTOGRAPH_VERBOSITY": "10",
+                "TF_XLA_FLAGS": "'--tf_xla_auto_jit=2'",
+                "XLA_FLAGS": "'--xla_gpu_cuda_data_dir=/soft/compilers/cuda/cuda-10.0.130'",
+                "OMPI_MCA_opal_cuda_support": "true",
+                "NCCL_DEBUG": "INFO"
+            }
+        },
+        "resources": {
+            "nodes": "determined by COBALT_NODEFILE",
+            "processes": "determined by number of GPUs",
+            "GPUs": "all available GPUs on the node",
+            "storage": "log_dirs.txt (optional), train_args.json"
+        },
+        "script": {
+            "train.py": "primary training script",
+            "log_dirs.txt": "file containing log directory paths"
+        }
+    }
+}

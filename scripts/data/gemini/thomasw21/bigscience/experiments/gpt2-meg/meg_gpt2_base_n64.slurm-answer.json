@@ -1,0 +1,44 @@
+{
+    "application": "megatron-lm",
+    "software": [
+        "python",
+        "torch.distributed.launch",
+        "nvidia-smi",
+        "perl",
+        "srun",
+        "bash"
+    ],
+    "resource_requirements": {
+        "slurm_parameters": {
+            "job_name": "meg_gpt2_base_n64_dp1_tp4_pp64",
+            "constraint": "v100-32g",
+            "nodes": 64,
+            "ntasks_per_node": 1,
+            "cpus_per_task": 40,
+            "hint": "nomultithread",
+            "gres": "gpu:4",
+            "time": "00:10:00",
+            "output": "%x-%j.out",
+            "error": "%x-%j.out",
+            "account": "six@gpu"
+        },
+        "environment_variables": {
+            "six_ALL_CCFRWORK": "/path/to/six_ALL_CCFRWORK",
+            "six_ALL_CCFRSCRATCH": "/path/to/six_ALL_CCFRSCRATCH",
+            "SLURM_JOB_NODELIST": "/path/to/SLURM_JOB_NODELIST",
+            "SLURM_JOBID": "/path/to/SLURM_JOBID",
+            "SLURM_PROCID": "/path/to/SLURM_PROCID"
+        },
+        "hardware": {
+            "gpu_type": "v100",
+            "gpu_memory": "32g",
+            "gpus_per_node": 4,
+            "nodes": 64
+        },
+        "other": {
+            "data_path": "/path/to/six_ALL_CCFRWORK/datasets-custom/openwebtext-10k/meg-gpt2_text_document",
+            "checkpoint_path": "/path/to/six_ALL_CCFRWORK/models-custom/megatron-gpt2/megatron_lm_345m_v0.0/release",
+            "save_checkpoint_path": "/path/to/six_ALL_CCFRSCRATCH/checkpoints/gpt2-1-node"
+        }
+    }
+}

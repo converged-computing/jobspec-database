@@ -1,0 +1,34 @@
+{
+    "application": "pytorch",
+    "details": {
+        "pbs_environment": {
+            "job_name": "train_model",
+            "project": "sit",
+            "nodes": "2",
+            "cpus_per_node": "8",
+            "gpus_per_node": "1",
+            "memory_per_node": "16G",
+            "os": "centos",
+            "os_version": "skylake",
+            "walltime": "02:00:00",
+            "software": "PYTORCH"
+        },
+        "modules": [
+            "apps/anaconda/3",
+            "compiler/gcc/9.1.0",
+            "compiler/gcc/9.1/openmpi/4.0.2",
+            "compiler/cuda/11.0/compilervars"
+        ],
+        "environment_variables": {
+            "LD_LIBRARY_PATH": "$LD_LIBRARY_PATH:$HOME/.conda/envs/dl/lib",
+            "WANDB_MODE": "offline"
+        },
+        "script_details": {
+            "command": "scripts/train.py --task base_slots --params slotformer/base_slots/configs/stosavi_clevrer_params.py --fp16 --ddp --cudnn",
+            "distributed_training": true,
+            "master_node": "$MASTER",
+            "slave_nodes": "$SLAVES",
+            "master_port": "$MPORT"
+        }
+    }
+}

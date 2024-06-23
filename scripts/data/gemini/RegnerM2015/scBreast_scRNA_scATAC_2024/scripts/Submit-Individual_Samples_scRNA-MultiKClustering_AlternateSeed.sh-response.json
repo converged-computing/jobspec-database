@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n\"application\": \"SLURM\",\n\"details\": {\n\"software\": [\n\"Singularity\",\n\"R\",\n\"conda\",\n\"docker\"\n],\n\"resource_requirements\": {\n\"cpus\": 32,\n\"memory\": \"96g\",\n\"partition\": \"allnodes\",\n\"storage\": \"/datastore\",\n\"docker_image\": \"regnerm/scbreast_2023:1.0.5\",\n\"r_script\": \"scripts/Individual_Samples_scRNA-MultiKClustering_AlternateSeed.R\"\n}\n}\n}\n```\n\nThis script uses **SLURM** (Simple Linux Utility for Resource Management) to manage the execution of a series of R scripts that run inside Docker containers. Here's a breakdown:\n\n**SLURM:**\n\n- The script uses SLURM to submit jobs for each sample/container ID. \n- The script specifies resource requirements for the initial submission job (e.g., `--cpus-per-task 1`, `--mem 4g`) and for each individual R script execution (e.g., `-c 32`, `--mem 96g`).\n- It uses SLURM's `sbatch` command to submit jobs and defines output files for each job.\n\n**Singularity:**\n\n- Singularity is used to run the R scripts in a Docker container. \n- It uses the `singularity exec` command to run the R script inside the specified container.\n- The `--bind` option allows the container to access the `/datastore` directory and the current working directory (`$PWD`).\n\n**Docker:**\n\n- The script uses a Docker image (`regnerm/scbreast_2023:1.0.5`) containing the necessary software and dependencies for running the R script.\n\n**R:**\n\n- The R script (`scripts/Individual_Samples_scRNA-MultiKClustering_AlternateSeed.R`) is passed as an argument to the `R CMD BATCH` command within the Docker container.\n- The `--args` flag allows the script to accept the sample ID as an input.\n\n**Conda:**\n\n- The script utilizes conda to activate a specific environment (`singularity`) that has Singularity installed. \n\n**Overall:**\n\nThis script demonstrates a workflow for running individual R scripts for different samples/containers using a containerized environment managed by SLURM. \n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 485,
+        "candidates_token_count": 526,
+        "total_token_count": 1011,
+        "cached_content_token_count": 0
+    }
+}

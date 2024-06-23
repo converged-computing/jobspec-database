@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"SLURM\",\n  \"details\": {\n    \"software\": [\n      \"accelerate\",\n      \"python\",\n      \"SLURM\",\n      \"conda\"\n    ],\n    \"resource_requirements\": {\n      \"nodes\": 1,\n      \"tasks_per_node\": 1,\n      \"gpus_per_node\": 8,\n      \"partition\": \"defq\",\n      \"output_path\": \"/mnt/home/f08944064/lighteval/logs/%x-%j.out\",\n      \"error_path\": \"/mnt/home/f08944064/lighteval/logs/%x-%j.err\",\n      \"environment_variables\": {\n        \"PROGRAM\": \"run_evals_accelerate.py --model_args \\\"pretrained=${1},trust_remote_code=True\\\" --override_batch_size 1 --output_dir=\\\"./evals/\\\" --tasks tasks_examples/open_llm_leaderboard_tasks.txt --model_parallel --use_chat_template\",\n        \"CMD\": \"python -u -m accelerate.commands.launch --rdzv_conf \\\"rdzv_backend=c10d,rdzv_endpoint=$MASTER_ADDR:$MASTER_PORT\\\" --main_process_ip $MASTER_ADDR --main_process_port $MASTER_PORT --machine_rank \\$SLURM_PROCID --num_machines $NNODES --num_processes 1 --role \\$(hostname -s|tr -dc '0-9'): --tee 3 run_evals_accelerate.py --model_args \\\"pretrained=${1},trust_remote_code=True\\\" --override_batch_size 1 --output_dir=\\\"./evals/\\\" --tasks tasks_examples/open_llm_leaderboard_tasks.txt --model_parallel --use_chat_template\"\n      },\n      \"optional\": [\n        \"start-xxx-user\",\n        \"stas-xxx\"\n      ]\n    }\n  }\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 2,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 1068,
+        "candidates_token_count": 475,
+        "total_token_count": 1543,
+        "cached_content_token_count": 0
+    }
+}

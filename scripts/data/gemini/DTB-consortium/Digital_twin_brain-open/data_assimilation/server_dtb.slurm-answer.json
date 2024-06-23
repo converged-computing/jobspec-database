@@ -1,0 +1,39 @@
+{
+    "application": "SLURM",
+    "details": {
+        "scheduler": "SLURM",
+        "job_name": "wy_server",
+        "partition": "kshdexclu04",
+        "requeue": "disabled",
+        "exclusive": "enabled",
+        "memory": "0",
+        "gpus": "4 DCUs per node",
+        "nodes": 151,
+        "excluded_nodes": "j10r2n07,e13r4n02,b01r2n17",
+        "output_file": "log/%j.o",
+        "error_file": "log/%j.e",
+        "environment_variables": {
+            "OMP_NUM_THREADS": "1",
+            "LOOPMAX": "100000",
+            "UCX_LOG_LEVEL": "debug"
+        },
+        "modules": {
+            "compiler/rocm": "4.0.1",
+            "compiler/cmake": "3.15.6"
+        },
+        "executable": "../cuda/tools/dist_simulator.sh",
+        "mpi_parameters": {
+            "bind_to": "none",
+            "hostfile": "${hostfile_path}",
+            "mca": {
+                "pml": "ucx",
+                "osc": "ucx"
+            }
+        },
+        "environment_variables_for_executable": {
+            "DMESG_LOG": "${dmesg_log}",
+            "DEBUG_LOG": "${debug_log}",
+            "OUTPUT_PATH": "${output_log}"
+        }
+    }
+}

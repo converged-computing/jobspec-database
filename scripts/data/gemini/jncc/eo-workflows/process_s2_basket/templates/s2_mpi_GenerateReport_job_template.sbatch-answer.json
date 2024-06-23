@@ -1,0 +1,57 @@
+{
+    "application": "Singularity",
+    "details": {
+        "container": "s2ArdContainer",
+        "command": "/app/exec.sh GenerateReport",
+        "arguments": [
+            "--dbFileName=s2ArdProcessing.db",
+            "--reportFileName=$reportFileName",
+            "--dem=$dem",
+            "$arcsiReprojection",
+            "--metadataConfigFile=$metadataConfigFile",
+            "$metadataTemplate",
+            "$arcsiCmdTemplate",
+            "--oldFilenameDateThreshold=$oldFilenameDateThreshold",
+            "--maxCogProcesses=$maxCogProcesses",
+            "--removeInputFiles",
+            "--local-scheduler"
+        ],
+        "resources": {
+            "slurm_partition": "short-serial",
+            "slurm_time_min": "03:00",
+            "slurm_time_max": "0-06:00:00",
+            "slurm_dependency": "afterok:$upstreamJobId",
+            "slurm_account": "defra_eo_jncc_s2_ard",
+            "mounts": [
+                {
+                    "source": "$reportMount",
+                    "target": "/report"
+                },
+                {
+                    "source": "$databaseMount",
+                    "target": "/database"
+                },
+                {
+                    "source": "$workingMount",
+                    "target": "/working"
+                },
+                {
+                    "source": "$stateMount",
+                    "target": "/state"
+                },
+                {
+                    "source": "$inputMount",
+                    "target": "/input"
+                },
+                {
+                    "source": "$staticMount",
+                    "target": "/static"
+                },
+                {
+                    "source": "$outputMount",
+                    "target": "/output"
+                }
+            ]
+        }
+    }
+}

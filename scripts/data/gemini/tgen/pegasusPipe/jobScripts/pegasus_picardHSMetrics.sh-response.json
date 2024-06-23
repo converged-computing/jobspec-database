@@ -1,0 +1,56 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"Picard\",\n  \"details\": {\n    \"language\": \"Bash\",\n    \"environment\": \"SLURM\",\n    \"resource_requirements\": {\n      \"time\": \"0-32:00:00\",\n      \"memory_per_cpu\": \"4096 MB\",\n      \"job_name\": \"pegasus_picHSMetrics\",\n      \"mail_user\": \"jetstream@tgen.org\",\n      \"mail_type\": \"FAIL\"\n    },\n    \"software_dependencies\": {\n      \"R\": \"2.15.2\",\n      \"Java\": \"1.8 or higher\",\n      \"Picard\": \"unknown version\",\n      \"SLURM\": \"unknown version\"\n    },\n    \"input_files\": [\n      \"${REF}\",\n      \"${BAMFILE}\",\n      \"${BAITS}\",\n      \"${TARGETS}\"\n    ],\n    \"output_files\": [\n      \"${BAMFILE}.picHSMetrics\",\n      \"${BAMFILE}.picStats.HsPerTargetCov\",\n      \"${BAMFILE}.picHSMetricsOut\",\n      \"${BAMFILE}.picHSMetricsPass\",\n      \"${BAMFILE}.picHSMetricsFail\",\n      \"${BAMFILE}.picHSMet.totalTime\"\n    ],\n    \"commands\": [\n      \"module load R/2.15.2\",\n      \"java -Xmx15g -jar ${PICARDPATH}/picard.jar CalculateHsMetrics\",\n      \"mv ${BAMFILE}.picHSMetricsOut ${BAMFILE}.picHSMetricsPass\",\n      \"mv ${BAMFILE}.picHSMetricsOut ${BAMFILE}.picHSMetricsFail\",\n      \"rm -f ${BAMFILE}.picHSMetricsInQueue\",\n      \"mv ${BAMFILE}.picHSMetrics ${RUNDIR}/stats/\",\n      \"mv ${BAMFILE}.picHSMetrics.pdf ${RUNDIR}/stats/\",\n      \"mv ${BAMFILE}.picStats.HsPerTargetCov ${RUNDIR}/stats/\"\n    ]\n  }\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 2,
+                    "blocked": false
+                }
+            ],
+            "citation_metadata": {
+                "citation_sources": [
+                    {
+                        "start_index": 1133,
+                        "end_index": 1294,
+                        "uri": "https://github.com/tgen/pegasusPipe",
+                        "license_": ""
+                    }
+                ]
+            },
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 604,
+        "candidates_token_count": 491,
+        "total_token_count": 1095,
+        "cached_content_token_count": 0
+    }
+}

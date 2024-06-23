@@ -1,0 +1,27 @@
+{
+    "application": "SLURM",
+    "details": {
+        "job_name": "dpo",
+        "output_file": "run_outputs/dpo.%j.out",
+        "cpus_per_task": 12,
+        "time": "2-24:00:00",
+        "gres": "gpu:a100_40gb:1",
+        "partition": "brown,red",
+        "mail_type": "BEGIN,FAIL,END",
+        "account": "researchers",
+        "dependencies": [
+            "poetry",
+            "torch"
+        ],
+        "script_commands": [
+            "hostname",
+            "nvidia-smi",
+            "module load poetry/1.5.1-GCCcore-12.3.0",
+            "poetry shell",
+            "poetry update",
+            "poetry install",
+            "pip install torch",
+            "python -m src.social_llama.training.dpo"
+        ]
+    }
+}

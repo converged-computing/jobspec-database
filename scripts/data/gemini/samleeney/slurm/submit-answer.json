@@ -1,0 +1,29 @@
+{
+    "application": "slurm",
+    "details": {
+        "scheduler": "Slurm",
+        "language": "bash",
+        "dependencies": [
+            "python 3.9.6",
+            "intel compiler",
+            "mpi",
+            "venv"
+        ],
+        "resources": {
+            "nodes": 1,
+            "tasks": 32,
+            "time": "1:00:00",
+            "partition": "icelake-himem",
+            "account": "ACEDO-SL2-CPU",
+            "output": "slurm-files/%A_%a.out"
+        },
+        "command": "mpirun -ppn $mpi_tasks_per_node -np $np $application $options",
+        "script_type": "array job",
+        "array_size": 20,
+        "environment": {
+            "OMP_NUM_THREADS": 1,
+            "I_MPI_PIN_DOMAIN": "omp:compact",
+            "I_MPI_PIN_ORDER": "scatter"
+        }
+    }
+}

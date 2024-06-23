@@ -1,0 +1,27 @@
+{
+    "application": "Singularity",
+    "details": {
+        "resource_requirements": {
+            "processor": "gpumps smt1",
+            "nodes": 1,
+            "walltime": "0:15",
+            "project": "hep113"
+        },
+        "log_files": {
+            "stdout": "/gpfs/alpine/hep113/world-shared/harvester/build-container-logs/build-container.%J.stdout",
+            "stderr": "/gpfs/alpine/hep113/world-shared/harvester/build-container-logs/build-container.%J.stderr"
+        },
+        "environment_variables": {
+            "CONTAINER_DIR": "{container}",
+            "XDG_RUNTIME_DIR": "unset"
+        },
+        "commands": [
+            "ls -A $CONTAINER_DIR",
+            "dirname $CONTAINER_DIR",
+            "mkdir -pv $container_path",
+            "singularity build --force --sandbox $CONTAINER_DIR {source_url}",
+            "mkdir $CONTAINER_DIR/ctrdata",
+            "rm -Rf $CONTAINER_DIR"
+        ]
+    }
+}

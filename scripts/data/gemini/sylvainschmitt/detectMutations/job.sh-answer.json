@@ -1,0 +1,24 @@
+{
+    "application": "Snakemake",
+    "details": {
+        "environment": {
+            "modules": [
+                "bioinfo/snakemake-5.25.0",
+                "system/singularity-3.7.3"
+            ]
+        },
+        "workflow": {
+            "snakefile": "Snakefile",
+            "singularity": true,
+            "singularity_args": "--containall",
+            "cores": 100,
+            "cluster_config": "config/ressources.genologin.yaml",
+            "cluster_command": "sbatch --cpus-per-task={cluster.cpus} --time={cluster.time} --mem={cluster.mem} -J {cluster.jobname} -o snake_subjob_log/{cluster.jobname}.%N.%j.out -e snake_subjob_log/{cluster.jobname}.%N.%j.err"
+        },
+        "resources": {
+            "time": "96:00:00",
+            "memory": "1G",
+            "cpus": 1
+        }
+    }
+}

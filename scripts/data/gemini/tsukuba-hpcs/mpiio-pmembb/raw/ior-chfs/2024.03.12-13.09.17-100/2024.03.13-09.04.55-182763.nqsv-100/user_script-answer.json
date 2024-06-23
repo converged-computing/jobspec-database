@@ -1,0 +1,59 @@
+{
+    "application": "IOR",
+    "details": {
+        "resource_requirements": {
+            "PBS_options": {
+                "account": "NBBG",
+                "walltime": "24:00:00",
+                "distribution": "distrib",
+                "USE_DEVDAX": "pmemkv",
+                "NUM_DEVDAX": 1
+            },
+            "environment_variables": {
+                "SPACK_ENV_NAME": "required",
+                "SCRIPT_DIR": "required",
+                "OUTPUT_DIR": "required"
+            },
+            "software": {
+                "spack": "required",
+                "chfs": "required",
+                "ior": "required",
+                "mpirun": "required"
+            },
+            "other": {
+                "chfs_mount_dir": "/scr/chfs",
+                "chfs_chunk_size": 524288,
+                "chfs_node_list_cache_timeout": 0,
+                "chfs_rpc_timeout_msec": 30000,
+                "chfs_log_priority": "notice",
+                "chfs_nthreads": 8,
+                "chfs_niothreads": 2,
+                "chfs_rdma_thresh": 32768,
+                "chfs_async_access": 0,
+                "chfs_lookup_local": 1,
+                "fi_universe_size": 4096
+            }
+        },
+        "workflow": {
+            "steps": [
+                "prepare output directory",
+                "start chfsd",
+                "wait for chfsd to start",
+                "run chlist",
+                "run dropcaches",
+                "run IOR write",
+                "run dropcaches",
+                "run IOR read remote",
+                "run dropcaches",
+                "run IOR read local",
+                "stop chfsd"
+            ],
+            "io_sizes": [
+                "512K"
+            ],
+            "ppns": [
+                32
+            ]
+        }
+    }
+}

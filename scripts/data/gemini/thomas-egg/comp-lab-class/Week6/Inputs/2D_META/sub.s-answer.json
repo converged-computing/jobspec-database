@@ -1,0 +1,30 @@
+{
+    "application": "Gromacs",
+    "details": {
+        "version": "2019.6",
+        "plumed_version": "Sept2020",
+        "resource_requirements": {
+            "nodes": 1,
+            "tasks_per_node": 3,
+            "cpus_per_task": 1,
+            "time": "1:00:00",
+            "memory": "3GB"
+        },
+        "input_files": [
+            "topolA.tpr",
+            "plumed.dat"
+        ],
+        "output_files": [
+            "trajectory.xtc",
+            "energy.edr",
+            "state.cpt",
+            "pullx.xvg"
+        ],
+        "commands": [
+            "module purge",
+            "source /scratch/work/courses/CHEM-GA-2671-2023fa/software/gromacs-2019.6-plumedSept2020/bin/GMXRC.bash.modules",
+            "gmx_mpi mdrun -s topolA.tpr -nsteps 5000000 -plumed plumed.dat"
+        ],
+        "notes": "This script uses the 'SBATCH' directives to define the resource requirements for a SLURM job. It purges existing modules and sources the Gromacs environment before running the 'mdrun' command with specific input files and parameters."
+    }
+}

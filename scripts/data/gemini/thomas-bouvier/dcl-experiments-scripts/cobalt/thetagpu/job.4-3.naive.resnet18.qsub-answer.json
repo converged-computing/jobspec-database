@@ -1,0 +1,61 @@
+{
+    "application": "MPI",
+    "details": {
+        "framework": "COBALT",
+        "resources": {
+            "nodes": 8,
+            "time": "0:35:00",
+            "queue": "full-node",
+            "filesystems": "home",
+            "email": "thomas.bouvier@inria.fr"
+        },
+        "environment": {
+            "spack": {
+                "path": "/home/tbouvier/git/spack-thetagpu/share/spack",
+                "env": "/home/tbouvier/git/spack-envs/thetagpu"
+            },
+            "wandb": {
+                "mode": "offline"
+            },
+            "ld_library_path": [
+                "/home/tbouvier/view/thetagpu/lib",
+                "/home/tbouvier/view/thetagpu/lib64",
+                "/home/tbouvier/view/thetagpu/lib/python3.10/site-packages/torch/lib",
+                "/lus/theta-fs0/software/thetagpu/openmpi/openmpi-4.1.4_ucx-1.14.0_gcc-9.4.0_cuda-11.4/lib",
+                "/usr/local/cuda-11/lib64"
+            ]
+        },
+        "script": {
+            "command": "mpiexec",
+            "args": [
+                "-np",
+                "64",
+                "-npernode",
+                "8",
+                "-hostfile",
+                "$COBALT_NODEFILE",
+                "-bind-to",
+                "none",
+                "-map-by",
+                "slot",
+                "-x",
+                "NCCL_DEBUG=INFO",
+                "-x",
+                "LD_LIBRARY_PATH",
+                "-x",
+                "WANDB_MODE",
+                "-x",
+                "PATH",
+                "python",
+                "../../main.py",
+                "--yaml-config",
+                "experiments_thetagpu.yaml",
+                "--config",
+                "baseline_naive_resnet18_scale",
+                "--log-level",
+                "info"
+            ],
+            "python_script": "../../main.py"
+        }
+    }
+}

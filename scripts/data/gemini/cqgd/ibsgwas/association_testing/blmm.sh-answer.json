@@ -1,0 +1,58 @@
+{
+    "application": "BOLT-LMM",
+    "details": {
+        "software": "BOLT-LMM 2.3.2",
+        "resources": {
+            "partition": "compute",
+            "nodes": [
+                "kgen0010",
+                "kgen0011",
+                "kgen0012",
+                "kgen0013"
+            ],
+            "tasks": 1,
+            "time": "6 hours",
+            "memory": "0 MB",
+            "cores": 24
+        },
+        "input_files": {
+            "genotype": {
+                "bed": "/gfs/work/ceijsbouts/ibs/plink/ukb_chr{1:22}_geno_qc.bed",
+                "bim": "/gfs/work/ceijsbouts/ibs/plink/ukb_chr{1:22}_geno_qc.bim",
+                "fam": "/gfs/work/ceijsbouts/ibs/plink/ukb_chr22_geno_qc.fam"
+            },
+            "phenotype": {
+                "file": "/gfs/work/ceijsbouts/ibs/covar/cc_cov.sample",
+                "column": "${CC_ID}"
+            },
+            "covariates": {
+                "file": "/gfs/work/ceijsbouts/ibs/covar/cc_cov.sample",
+                "columns": [
+                    "sex",
+                    "age",
+                    "agesq",
+                    "sexage",
+                    "sexagesq",
+                    "PC{1:20}"
+                ]
+            },
+            "LDscores": "/gfs/apps/bio/BOLT-LMM-2.3.2/tables/LDSCORE.1000G_EUR.tab.gz",
+            "genetic_map": "/gfs/apps/bio/BOLT-LMM-2.3.2/tables/genetic_map_hg19_withX.txt.gz",
+            "bgen": "/gfs/archive/jostins/ukbb/v3/imputation/ukb_imp_chr{1:22}_v3.bgen",
+            "sample": "/gfs/work/ceijsbouts/ibs/sample/ukb17670_imp_chr22_v3_s487327.sample",
+            "remove": "/gfs/work/ceijsbouts/ibs/remove/bolt.in_plink_but_not_imputed.FID_IID.968.txt"
+        },
+        "output_files": {
+            "stats": "/gfs/work/ceijsbouts/ibs/gwas/${CC_ID}/blmm_output.stats.gz",
+            "stats_bgen": "/gfs/work/ceijsbouts/ibs/gwas/${CC_ID}/blmm_output.bgen.stats.gz"
+        },
+        "parameters": {
+            "bgenMinMAF": 0.01,
+            "bgenMinINFO": 0.3,
+            "numThreads": 24,
+            "verboseStats": true,
+            "noBgenIDcheck": true,
+            "lmmForceNonInf": true
+        }
+    }
+}

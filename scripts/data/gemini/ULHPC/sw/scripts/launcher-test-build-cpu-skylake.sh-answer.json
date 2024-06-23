@@ -1,0 +1,38 @@
+{
+    "application": "Slurm",
+    "details": {
+        "software": [
+            "EasyBuild",
+            "iris.sh (optional)",
+            "common.bash"
+        ],
+        "resources": {
+            "nodes": 1,
+            "tasks_per_node": 4,
+            "cores_per_task": 7,
+            "partition": "batch",
+            "qos": "urgent",
+            "time_limit": "1-0:00:00",
+            "job_name": "RESIF-Test-CPU-Skylake",
+            "output_file": "logs/%x-%j.out",
+            "constraints": "skylake",
+            "dependency": "singleton"
+        },
+        "commands": [
+            "mkdir -p logs",
+            "parse_command_line",
+            "module purge",
+            "use_swset_modules",
+            "module load tools/EasyBuild",
+            "run_build"
+        ],
+        "environment_variables": [
+            "SLURM_SUBMIT_DIR",
+            "BASH_SOURCE",
+            "TOP_DIR",
+            "INCLUDE_DIR",
+            "SETTINGS_DIR",
+            "USE_SWSET_VERSION"
+        ]
+    }
+}

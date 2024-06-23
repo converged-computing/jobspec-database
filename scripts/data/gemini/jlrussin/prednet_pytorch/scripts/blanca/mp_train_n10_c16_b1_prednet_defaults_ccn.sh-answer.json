@@ -1,0 +1,33 @@
+{
+    "application": "SLURM",
+    "details": {
+        "queue": "blanca-ccn",
+        "memory": "32G",
+        "time": "72:00:00",
+        "nodes": "bnode[0202-0207,0211,0216,0221,0224]",
+        "tasks": 10,
+        "tasks_per_node": 1,
+        "cpus_per_task": 16,
+        "conda_environment": "pytorch_mpi",
+        "mpi_processes": 10,
+        "mpi_mapping": "node:PE=16",
+        "python_script": "main.py",
+        "script_arguments": {
+            "seed": 0,
+            "dataset": "CCN",
+            "train_data_path": "/pl/active/ccnlab/ccn_images/wwi_emer_imgs_20fg_8tick_rot1/train/",
+            "seq_len": 8,
+            "batch_size": 1,
+            "num_iters": 10000,
+            "model_type": "PredNet",
+            "results_dir": "../results/train_results",
+            "out_data_file": "mp_train_n10_c16_b1_prednet_defaults_ccn.json",
+            "checkpoint_path": "../model_weights/mp_train_n10_c16_b1_prednet_defaults_ccn.pt",
+            "record_loss_every": 200
+        },
+        "environment_variables": {
+            "MKL_NUM_THREADS": 16,
+            "OMP_NUM_THREADS": 16
+        }
+    }
+}

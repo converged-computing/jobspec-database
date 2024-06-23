@@ -1,0 +1,82 @@
+{
+    "application": "Magpie",
+    "software": [
+        {
+            "name": "Hadoop",
+            "version": "2.9.1",
+            "setup": "yes",
+            "setup_type": "MR",
+            "home": "${HOME}/hadoop-${HADOOP_VERSION}",
+            "local_dir": "/tmp/${USER}/hadoop",
+            "conf_files": "${HOME}/myconf",
+            "daemon_heap_max": "2000",
+            "namenode_heap_max": "2000",
+            "environment_extra": "${HOME}/hadoop-my-environment",
+            "job": "terasort",
+            "max_tasks_per_node": "8",
+            "default_map_tasks": "8",
+            "default_reduce_tasks": "8",
+            "child_heapsize": "2048",
+            "child_map_heapsize": "2048",
+            "child_reduce_heapsize": "4096",
+            "child_map_container_buffer": "256",
+            "child_reduce_container_buffer": "512",
+            "mapreduce_slowstart": "0.05",
+            "yarn_resource_memory": "32768",
+            "yarn_vmem_check": "false",
+            "yarn_pmem_check": "false",
+            "compression": "yes",
+            "io_sort_factor": "10",
+            "io_sort_mb": "100",
+            "parallel_copies": "10",
+            "terasort_size": "50000000",
+            "teragen_map_count": "4",
+            "terasort_reducer_count": "4",
+            "terasort_clear_cache": "no",
+            "terasort_output_replication": "1",
+            "terasort_run_terachecksum": "no",
+            "terasort_run_teravalidate": "no",
+            "decommission_hdfs_node_size": "8",
+            "filesystem_mode": "hdfsoverlustre",
+            "local_filesystem_blocksize": "33554432",
+            "hdfs_replication": "3",
+            "hdfs_blocksize": "134217728",
+            "hdfs_path": "/ssd/${USER}/hdfs",
+            "hdfs_path_clear": "yes",
+            "hdfsoverlustre_path": "/lustre/${USER}/hdfsoverlustre/",
+            "hdfsoverlustre_remove_locks": "yes",
+            "hdfsovernetworkfs_path": "/networkfs/${USER}/hdfsovernetworkfs/",
+            "hdfsovernetworkfs_remove_locks": "yes",
+            "rawnetworkfs_path": "/lustre/${USER}/rawnetworkfs/",
+            "localstore": "/ssd/${USER}/localstore/",
+            "localstore_clear": "yes"
+        },
+        {
+            "name": "Mahout",
+            "version": "0.13.0",
+            "setup": "yes",
+            "home": "${HOME}/apache-mahout-distribution-${MAHOUT_VERSION}",
+            "local_dir": "/tmp/${USER}/mahout",
+            "job": "clustersyntheticcontrol",
+            "opts": "-Djava.io.tmpdir=${MAHOUT_LOCAL_JOB_DIR}/tmp"
+        },
+        {
+            "name": "Zookeeper",
+            "setup": "yes"
+        }
+    ],
+    "resource_requirements": {
+        "java_home": "/usr/lib/jvm/jre-1.7.0/",
+        "scripts_home": "${HOME}/magpie",
+        "local_dir": "/tmp/${USER}/magpie",
+        "node_count": "<my_node_count>",
+        "time_in_minutes": "<my_time_in_minutes>",
+        "job_name": "<my_job_name>",
+        "partition": "<my_partition>",
+        "remote_cmd": "ssh",
+        "remote_cmd_opts": ""
+    },
+    "other_requirements": {
+        "mpirun_options": "-genvall -genv MV2_USE_APM 0"
+    }
+}

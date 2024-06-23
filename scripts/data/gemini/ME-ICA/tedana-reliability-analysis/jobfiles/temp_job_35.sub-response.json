@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"LSF\",\n  \"details\": {\n    \"resource_requirements\": {\n      \"cores\": 4,\n      \"memory\": \"Not specified\",\n      \"queue\": \"PQ_nbc\"\n    },\n    \"environment_variables\": {\n      \"NPROCS\": \"Number of cores assigned\",\n      \"OMP_NUM_THREADS\": \"Number of cores assigned\"\n    },\n    \"modules\": {\n      \"global/profile.modules\": \"Loaded from the $MODULESHOME directory\",\n      \"py3_environment\": \"Sourced from /home/data/nbc/data-analysis/py3_environment\"\n    },\n    \"script\": \"run_reliability_workflows.py\"\n  }\n}\n```\n\n**Explanation:**\n\n* **Application:** The script is using **LSF (Load Sharing Facility)**, a batch system for running jobs on a cluster.\n* **Details:**\n    * **Resource Requirements:** \n        * The script requests 4 cores (`BSUB -n 4`).\n        * It specifies a `span` of 4 processing tiles (`BSUB \u2013R \"span[ptile=4]\"`), but the exact meaning of this depends on the specific LSF implementation.\n        * It runs on the \"PQ_nbc\" queue.\n    * **Environment Variables:**\n        * `NPROCS` is set to the number of hosts assigned to the job (determined by `LSB_HOSTS`).\n        * `OMP_NUM_THREADS` is set to the value of `NPROCS`, indicating that the script is likely using OpenMP for parallel processing.\n    * **Modules:**\n        * The script loads modules from the `$MODULESHOME/../global/profile.modules` file. This likely configures the system environment for running the script.\n        * It sources a Python 3 environment from `/home/data/nbc/data-analysis/py3_environment`.\n    * **Script:** The script executes the `run_reliability_workflows.py` Python script with the argument `35`. \n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 259,
+        "candidates_token_count": 461,
+        "total_token_count": 720,
+        "cached_content_token_count": 0
+    }
+}

@@ -1,0 +1,27 @@
+{
+    "application": "SLURM",
+    "details": {
+        "resources": {
+            "nodes": 1,
+            "gpus": 2,
+            "cpus": 32
+        },
+        "queue": "nlp",
+        "partition": "nlp",
+        "nodes_list": "nlp-ada-2,nlp-a40-1",
+        "output_file": "fine_tuning_runs/slurm_%N_%j_out.txt",
+        "error_file": "fine_tuning_runs/slurm_%N_%j_err.txt",
+        "email_type": "fail",
+        "email_address": "zachary@campus.technion.ac.il",
+        "virtual_environment": ".depth/bin/activate",
+        "environment_variables": {
+            "DS_SKIP_CUDA_CHECK": 1,
+            "OMP_NUM_THREADS": "$SLURM_CPUS_PER_TASK"
+        },
+        "software": [
+            "deepspeed",
+            "nvidia-smi",
+            "train_encoder_decoder.py"
+        ]
+    }
+}

@@ -1,0 +1,32 @@
+{
+    "application": "SLURM",
+    "details": {
+        "scheduler": "SLURM",
+        "queue": "priority",
+        "partition": "priority",
+        "job_name": "merge",
+        "account": "isipedia",
+        "output": "{{s.log_dir}}/%x.out",
+        "error": "{{s.log_dir}}/%x.err",
+        "mail_type": "END,FAIL",
+        "mail_user": "{{s.user}}@pik-potsdam.de",
+        "tasks": 64,
+        "cpus_per_task": 1,
+        "time": "00-23:50:00",
+        "modules": [
+            "brotli/1.0.2",
+            "anaconda/5.0.0_py3",
+            "compiler/gnu/7.3.0",
+            "intel/2019.4"
+        ],
+        "environment_variables": [
+            "LD_LIBRARY_PATH=$LD_LIBRARY_PATH:{{s.conda_path}}/lib/libfabric/libfabric.so",
+            "FI_PROVIDER_PATH={{s.conda_path}}/lib/libfabric/prov",
+            "I_MPI_FABRICS=shm:ofi",
+            "I_MPI_PMI_LIBRARY=/p/system/slurm/lib/libpmi.so",
+            "SUBMITTED=1"
+        ],
+        "script": "merge_parallel.py",
+        "language": "Python"
+    }
+}

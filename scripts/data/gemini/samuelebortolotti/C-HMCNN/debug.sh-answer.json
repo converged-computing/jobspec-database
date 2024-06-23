@@ -1,0 +1,41 @@
+{
+    "application": "SLURM",
+    "details": {
+        "resource_requirements": {
+            "partition": "chaos",
+            "account": "shared-sml-staff",
+            "signal": "SIGTERM@120",
+            "gpu": "1",
+            "time": "20:00:00",
+            "memory": "10G",
+            "output_file": "/nfs/data_chaos/sbortolotti/logs/C-HMCNN/debug_resnet.out",
+            "error_file": "/nfs/data_chaos/sbortolotti/logs/C-HMCNN/debug_resnet.e"
+        },
+        "software": {
+            "python_environment": "/nfs/data_chaos/sbortolotti/pkgs/miniconda/envs/chmncc",
+            "wandb": "/nfs/data_chaos/sbortolotti/pkgs/miniconda/envs/chmncc/bin/wandb",
+            "chmncc": "/nfs/data_chaos/sbortolotti/code/C-HMCNN"
+        },
+        "script_purpose": "Runs the network debugger",
+        "command": "${python} -m chmncc debug --learning-rate 0.001 --batch-size 128 --test-batch-size 256 --device \"cuda\" --project chmncc --wandb true --network \"resnet\"",
+        "arguments": [
+            "--learning-rate",
+            "0.001",
+            "--batch-size",
+            "128",
+            "--test-batch-size",
+            "256",
+            "--device",
+            "cuda",
+            "--project",
+            "chmncc",
+            "--wandb",
+            "true",
+            "--network",
+            "resnet"
+        ],
+        "environment_variables": {
+            "KEY": "Required for wandb login"
+        }
+    }
+}

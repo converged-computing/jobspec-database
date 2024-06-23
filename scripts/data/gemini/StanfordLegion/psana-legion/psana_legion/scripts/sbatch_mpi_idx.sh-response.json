@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"Slurm\",\n  \"details\": {\n    \"job_name\": \"psana_legion\",\n    \"dependency\": \"singleton\",\n    \"nodes\": 16,\n    \"time\": \"00:30:00\",\n    \"qos\": \"debug\",\n    \"constraint\": \"knl,quad,cache\",\n    \"core_spec\": 4,\n    \"image\": \"docker:stanfordlegion/psana-mpi:latest\",\n    \"exclusive\": true,\n    \"mail_type\": \"ALL\",\n    \"account\": \"lcls\",\n    \"host_psana_dir\": \"$HOME/psana_legion/psana-legion\",\n    \"host_data_dir\": \"$SCRATCH/data/reg\",\n    \"sit_psdm_data\": \"$HOST_DATA_DIR/d/psdm\",\n    \"command\": \"shifter python $HOST_PSANA_DIR/psana_legion/mpi_idx.py\"\n  }\n}\n```\n\n**Explanation:**\n\n* **Application:** The script utilizes **Slurm** (Simple Linux Utility for Resource Management) for job scheduling and resource allocation.\n* **Details:** The script contains various Slurm directives, including:\n    * **job_name:** Specifies the name of the job.\n    * **dependency:** Ensures the job runs after a single instance of another job completes.\n    * **nodes:** Requests 16 nodes.\n    * **time:** Sets the maximum run time to 30 minutes.\n    * **qos:** Defines the quality of service (debug in this case).\n    * **constraint:** Specifies the desired hardware resources (Knights Landing processors, quad-core, and cache).\n    * **core_spec:** Requests 4 cores per node.\n    * **image:** Uses a Docker image called \"stanfordlegion/psana-mpi:latest\".\n    * **exclusive:** Instructs Shifter to preload the Docker image before execution.\n    * **mail_type:** Configures email notifications for all job events.\n    * **account:** Specifies the account used for billing.\n    * **host_psana_dir:** Defines the directory where Psana is located.\n    * **host_data_dir:** Specifies the location of data on the host system.\n    * **sit_psdm_data:** Sets the environment variable for accessing data.\n    * **command:** Executes the \"shifter\" command to run the Python script \"mpi_idx.py\" located in the `HOST_PSANA_DIR` directory.\n\nThe script uses a nested loop to execute the command with different node counts (`n`) and cores per task (`c`) values. `srun` is used to launch the command on multiple nodes and cores. \n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 435,
+        "candidates_token_count": 611,
+        "total_token_count": 1046,
+        "cached_content_token_count": 0
+    }
+}

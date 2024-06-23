@@ -1,0 +1,31 @@
+{
+    "application": "GATK",
+    "software": [
+        "PBS",
+        "java",
+        "GenomeAnalysisTK.jar"
+    ],
+    "resources": [
+        "72gb memory",
+        "1 node",
+        "1 core per node",
+        "36 hours walltime",
+        "mesabi queue",
+        "barley_RefSeq_v1.0 reference sequence",
+        "barley_RefSeq_v1.0 dictionary"
+    ],
+    "commands": [
+        "module load java",
+        "find",
+        "cut",
+        "grep",
+        "mkdir",
+        "java -jar ~/Soft/GenomeAnalysisTK-3.6/GenomeAnalysisTK.jar -T GenotypeGVCFs -R ${REF} -L ${CURRENT} ${GATK_IN[@]} --heterozygosity 0.008 --sample_ploidy 1 -o ${OUTPUT_DIR}/GATK_${CURRENT}.vcf"
+    ],
+    "input": [
+        "GVCFs from /panfs/roc/scratch/tkono/Genomic_Prediction/GVCFs/",
+        "barley_RefSeq_v1.0 reference sequence",
+        "barley_RefSeq_v1.0 dictionary"
+    ],
+    "output": "VCF files in /panfs/roc/scratch/tkono/Genomic_Prediction/Variants/Parts"
+}

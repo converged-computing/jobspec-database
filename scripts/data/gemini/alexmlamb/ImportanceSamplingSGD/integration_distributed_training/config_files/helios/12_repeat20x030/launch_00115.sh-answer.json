@@ -1,0 +1,51 @@
+{
+    "application": "PBS",
+    "details": {
+        "resource_requirements": {
+            "nodes": 1,
+            "gpus": 2,
+            "walltime": "4:00:00",
+            "account": "jvb-000-ag",
+            "feature": "k20"
+        },
+        "software_requirements": {
+            "python": true,
+            "theano": true,
+            "importance_sampling_sgd": true
+        },
+        "dependencies": {
+            "importance_sampling_sgd_root": "${HOME}/Documents/ImportanceSamplingSGD",
+            "config_file": "${IMPORTANCE_SAMPLING_SGD_ROOT}/integration_distributed_training/config_files/helios/12_repeat20x030/config_00115.py",
+            "bootstrap_file": "${HOME}/bootstrap_experiment_00115"
+        },
+        "processes": [
+            {
+                "name": "run_database.py",
+                "arguments": [
+                    "--config_file=${CONFIG_FILE}",
+                    "--bootstrap_file=${BOOTSTRAP_FILE}"
+                ]
+            },
+            {
+                "name": "run_master.py",
+                "arguments": [
+                    "--config_file=${CONFIG_FILE}",
+                    "--bootstrap_file=${BOOTSTRAP_FILE}"
+                ],
+                "environment_variables": {
+                    "THEANO_FLAGS": "device=gpu0,floatX=float32"
+                }
+            },
+            {
+                "name": "run_worker.py",
+                "arguments": [
+                    "--config_file=${CONFIG_FILE}",
+                    "--bootstrap_file=${BOOTSTRAP_FILE}"
+                ],
+                "environment_variables": {
+                    "THEANO_FLAGS": "device=gpu1,floatX=float32"
+                }
+            }
+        ]
+    }
+}

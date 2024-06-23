@@ -1,0 +1,28 @@
+{
+    "application": "SLURM",
+    "details": {
+        "resource_requirements": {
+            "nodes": 1,
+            "gpus": 4,
+            "tasks_per_node": 4,
+            "memory_per_cpu": "5000M",
+            "partition": "2080ti-long"
+        },
+        "environment": {
+            "conda_env": "embedding",
+            "debugging_flags": {
+                "NCCL_DEBUG": "INFO",
+                "PYTHONFAULTHANDLER": 1
+            },
+            "network_interface": "NCCL_SOCKET_IFNAME=^docker0,lo",
+            "cuda_module": "NCCL/2.4.7-1-cuda.10.0"
+        },
+        "script": "train.py",
+        "script_arguments": {
+            "gpus": 4,
+            "distributed_backend": "ddp",
+            "data_root": "/home/mprinzler/storage/iMaterialist",
+            "batch_size": 16
+        }
+    }
+}

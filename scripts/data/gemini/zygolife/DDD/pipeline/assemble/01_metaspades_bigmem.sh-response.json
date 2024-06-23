@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"SPAdes\",\n  \"details\": {\n    \"software\": [\n      \"SPAdes 3.15.2\",\n      \"pigz\"\n    ],\n    \"resources\": {\n      \"memory\": \"256 GB\",\n      \"cores\": \"32\",\n      \"partition\": \"intel,batch,highmem\",\n      \"output_directory\": \"logs\",\n      \"input_directory\": \"input\",\n      \"assembly_directory\": \"assembly\"\n    },\n    \"file_types\": [\n      \".csv\",\n      \".fq.gz\",\n      \".fasta\",\n      \".gfa\",\n      \".log\"\n    ]\n  }\n}\n```\n\nThis script is designed to run the **SPAdes** genome assembler. Here's a breakdown of the script and its requirements:\n\n**Software:**\n\n* **SPAdes 3.15.2:**  The core genome assembler used in this script. It's loaded via a module system.\n* **pigz:**  A utility for compressing and decompressing files, used for cleaning up the assembly output.\n\n**Resources:**\n\n* **Memory:** The script requests 256 GB of RAM (`--mem 256gb`).\n* **Cores:** It utilizes 32 CPU cores (`-n 32`).\n* **Partition:** The script runs on the \"intel,batch,highmem\" partition, suggesting a high-performance computing cluster with Intel processors, suitable for resource-intensive tasks.\n* **Output Directory:**  Logs are written to the \"logs\" directory (`--out logs/metaspades_bigmem.%a.log`).\n* **Input Directory:**  Reads are expected to be in the \"input\" directory.\n* **Assembly Directory:**  The assembled genomes are stored in the \"assembly\" directory.\n\n**File Types:**\n\n* **.csv:** The script reads a comma-separated file (`samples_prefix.csv`) containing metadata about the samples.\n* **.fq.gz:**  The script expects gzipped FASTQ files (`_R1.fq.gz` and `_R2.fq.gz`) as input.\n* **.fasta:**  The assembly results are output as FASTA files (including `scaffolds.fasta` and `contigs.fasta`).\n* **.gfa:**  A graph file is generated during the assembly process (`assembly_graph_after_simplification.gfa`).\n* **.log:**  Logs are generated for the assembly process (`spades.log`).\n\n**Script Logic:**\n\nThe script iterates through the samples listed in the `.csv` file, running SPAdes on each sample.  It checks for existing assemblies, runs SPAdes using the specified resources and parameters, and then cleans up the output files.\n\n**Note:** The script assumes a specific naming convention for the input files, with `_R1.fq.gz` and `_R2.fq.gz` suffixes for paired-end reads. It also utilizes variables like `$SLURM_ARRAY_TASK_ID`, suggesting it's intended to be run on a high-throughput computing environment like SLURM.\n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 698,
+        "candidates_token_count": 701,
+        "total_token_count": 1399,
+        "cached_content_token_count": 0
+    }
+}

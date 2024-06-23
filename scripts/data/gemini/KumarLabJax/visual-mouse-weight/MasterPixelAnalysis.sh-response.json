@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"SLURM\",\n  \"details\": {\n    \"job_name\": \"master_pixel_analysis\",\n    \"time\": \"6:00:00\",\n    \"ntasks\": 1,\n    \"cpus_per_task\": 1,\n    \"qos\": \"batch\",\n    \"mem\": \"16G\",\n    \"nice\": true,\n    \"modules\": \"singularity\",\n    \"environment_variables\": [\n      \"VIDEO_BATCH\",\n      \"SLURM_JOB_ID\",\n      \"SLURM_ARRAY_TASK_ID\",\n      \"ROOT_DIR\"\n    ],\n    \"software\": [\n      \"python3\",\n      \"singularity\",\n      \"sed\",\n      \"wc\",\n      \"sbatch\"\n    ],\n    \"files\": [\n      \"master_pixel_analysis.py\",\n      \"videos/batchfile.txt\",\n      \"/projects/kumar-lab/guzmam/fullSurvey/videos/${VIDEO_FILE}\",\n      \"${FULL_VIDEO_FILE%.*}_seg.avi\",\n      \"${FULL_VIDEO_FILE%.*}_ellfit.npz\",\n      \"/projects/kumar-lab/guzmam/environment/UPennInferImg.simg\"\n    ],\n    \"commands\": [\n      \"python3 /projects/kumar-lab/guzmam/fullSurvey/code/master_pixel_analysis.py ${FULL_VIDEO_FILE} ${FULL_VIDEO_FILE%.*}_ellfit.npz ${FULL_VIDEO_FILE%.*}_seg.avi\",\n      \"sbatch --export=ROOT_DIR=\\\"$(dirname \\\"${0}\\\")\\\",VIDEO_BATCH=\\\"${1}\\\" --array=\\\"1-${video_count}\\\" \\\"${0}\\\"\"\n    ]\n  }\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 769,
+        "candidates_token_count": 417,
+        "total_token_count": 1186,
+        "cached_content_token_count": 0
+    }
+}

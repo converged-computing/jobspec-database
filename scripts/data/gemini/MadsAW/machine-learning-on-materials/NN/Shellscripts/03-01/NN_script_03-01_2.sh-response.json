@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"LSF\",\n  \"details\": {\n    \"queue\": \"gpuv100\",\n    \"gpu_count\": 1,\n    \"gpu_mode\": \"exclusive_process\",\n    \"cpu_queue\": \"hpc\",\n    \"job_name\": \"NN_last\",\n    \"output_file\": \"output/NN_last-%J.out\",\n    \"cores\": 5,\n    \"core_distribution\": \"span[hosts=1]\",\n    \"memory_per_core\": \"6GB\",\n    \"runtime\": \"20:00\",\n    \"email_notification\": \"start and end\",\n    \"modules\": [\n      \"tensorflow/1.5-gpu-python-3.6.2\"\n    ],\n    \"python_script\": \"NN/NN_script.py\"\n  }\n}\n```\n\nThis script uses the **LSF** (Load Sharing Facility) workload management system. The script is set up to run on a GPU cluster with specific resource requirements and utilizes Python for its tasks. \n\nHere is a breakdown of the script:\n\n**LSF Settings:**\n* **Queue:** `gpuv100` (for GPU jobs) or `hpc` (for CPU jobs)\n* **GPU Count:** 1\n* **GPU Mode:** Exclusive process, meaning only this job can use the GPU.\n* **Job Name:** `NN_last`\n* **Output File:** `output/NN_last-%J.out` (where %J is the job ID)\n* **Cores:** 5\n* **Core Distribution:** `span[hosts=1]` (all cores must be on the same host)\n* **Memory per Core:** 6GB\n* **Runtime:** 20 hours\n* **Email Notification:**  The user receives email notifications when the job starts and ends.\n\n**Software Requirements:**\n* **TensorFlow:** Version 1.5 with GPU support and Python 3.6.2\n* **Python:** Version 3.6.2 (to run the script `NN/NN_script.py`)\n\n**Script Logic:**\nThe script utilizes nested loops to run a Python script (`NN_script.py`) with different parameter combinations. The parameters are:\n* `drop` (ranging from 0 to 0.7)\n* `N` (fixed at 100)\n* `nhidden` (ranging from 0 to 6)\n* `act` (fixed at `relu`)\n* `folder` (fixed at `03-01-2019 11.04`)\n* `func` (two options: `group_period_x_group_period` and `group_period_2x2 atomic_number`)\n\nThe script runs each parameter combination through the `NN/NN_script.py` script. \n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 484,
+        "candidates_token_count": 637,
+        "total_token_count": 1121,
+        "cached_content_token_count": 0
+    }
+}

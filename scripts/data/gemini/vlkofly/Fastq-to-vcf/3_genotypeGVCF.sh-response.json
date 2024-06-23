@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"GATK\",\n  \"details\": {\n    \"software\": [\n      \"GATK 3.7\",\n      \"parallel-20160622\"\n    ],\n    \"resources\": {\n      \"cpu\": 10,\n      \"memory\": \"400gb\",\n      \"scratch\": \"1200gb\",\n      \"walltime\": \"256:00:00\"\n    },\n    \"input\": {\n      \"samples\": \"gvcf_halleri_samples.txt\",\n      \"sourcedirs\": \"/a/b/c /d/g\",\n      \"reference\": \"/storage/brno3-cerit/home/filip_kolar/JIC_reference/alygenomes.fasta\",\n      \"scaffold_list\": \"/storage/brno3-cerit/home/filip_kolar/lyrata_parallel_scaffold_list.txt\"\n    },\n    \"output\": {\n      \"vcf\": \"vcf_final\"\n    },\n    \"environment\": {\n      \"scratch_dir\": \"$SCRATCHDIR\",\n      \"working_dir\": \"$PBS_O_WORKDIR\"\n    }\n  }\n}\n```\n\nThis script utilizes the following:\n\n* **Application:** GATK (Genome Analysis Toolkit) version 3.7\n* **Software:**\n    * GATK 3.7 for variant calling and analysis\n    * `parallel` (version 20160622) for parallelization \n* **Resources:**\n    * **CPU:** 10 cores\n    * **Memory:** 400 GB\n    * **Scratch Disk:** 1200 GB \n    * **Wall Time:** 256 hours\n* **Input:**\n    * **`samples`:** A text file containing a list of samples (one per line) \n    * **`sourcedirs`:** A string containing full paths to directories where g.vcf.gz files are stored (separated by spaces)\n    * **`ref`:** Full path to the reference genome FASTA file\n    * **`sc`:** Full path to a text file containing a list of scaffolds/chromosomes (one per line)\n* **Output:**\n    * **`outdir`:** The directory where the final VCF file and other output will be stored (default: `vcf_final`)\n* **Environment:**\n    * **`SCRATCHDIR`:**  The PBS scratch directory \n    * **`PBS_O_WORKDIR`:** The current working directory of the script\n\n**Script Functionality:**\n\nThe script performs variant calling for a set of samples using GATK's `GenotypeGVCFs` tool. It utilizes a parallel approach by splitting the analysis per scaffold and then merging the results. Key features include:\n\n* **Input Parameter Checking:** The script validates input parameters to ensure they are provided correctly.\n* **Data Preparation:** It copies relevant files (samples, scaffolds, reference genome) to the scratch directory.\n* **Parallel Genotyping:**  `parallel` is used to run `GenotypeGVCFs` on each scaffold in parallel. \n* **VCF Merging:**  The individual scaffold VCFs are merged into a single final VCF file.\n* **Output Handling:**  Final outputs are copied from the scratch directory to the user-specified output directory.\n\nThis script is designed for efficient large-scale variant calling using GATK and parallel processing. \n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 1613,
+        "candidates_token_count": 767,
+        "total_token_count": 2380,
+        "cached_content_token_count": 0
+    }
+}

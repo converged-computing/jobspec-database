@@ -1,0 +1,32 @@
+{
+    "application": "preseq",
+    "details": {
+        "modules": [
+            "preseq/3.2.0",
+            "BEDTools/2.30.0-GCC-10.2.0"
+        ],
+        "resources": {
+            "partition": "bigmem",
+            "cpus": 6,
+            "memory": "20Gb per cpu",
+            "output_files": [
+                "logs/preseq.%A_%a.out",
+                "logs/preseq.%A_%a.err"
+            ]
+        },
+        "dependencies": [
+            "bedtools"
+        ],
+        "input_files": [
+            "BAMDIR/*.dedup.filtered.bam"
+        ],
+        "output_files": [
+            "${PRESEQDIR}/BEDFiles/${name}.bed",
+            "${PRESEQDIR}/${name}_lc_extrap.txt"
+        ],
+        "commands": [
+            "bedtools bamtobed",
+            "preseq lc_extrap"
+        ]
+    }
+}

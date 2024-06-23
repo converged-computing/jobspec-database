@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"Slurm\",\n  \"details\": {\n    \"job_name\": \"Megatron-LM\",\n    \"nodes\": 32,\n    \"cpus_per_task\": 32,\n    \"memory\": \"1024G\",\n    \"docker_image\": \"registry-intl.cn-hongkong.aliyuncs.com/sixpublic/pytorch:23.10-py3\",\n    \"docker_command\": \"bash hkgai/launcher/scripts/pretrain/exp1/pretrain.sh\",\n    \"environment_variables\": {\n      \"LOGLEVEL\": \"INFO\",\n      \"WANDB_API_KEY\": \"YourOwnWandbAPIKey\",\n      \"MASTER_ADDR\": \"$head_node_ip\",\n      \"MASTER_PORT\": \"6000\",\n      \"NODE_RANK\": \"$SLURM_PROCID\",\n      \"NNODES\": \"32\",\n      \"GRAD_ACC_STEPS\": \"1\",\n      \"TASK_ID\": \"exp1.1\",\n      \"CUDA_DEVICE_MAX_CONNECTIONS\": \"10\",\n      \"OMP_NUM_THREADS\": \"10\",\n      \"NVIDIA_VISIBLE_DEVICES\": \"all\",\n      \"NCCL_SOCKET_IFNAME\": \"ibp\",\n      \"NCCL_IB_HCA\": \"mlx5\",\n      \"NCCL_DEBUG_SUBSYS\": \"ALL\",\n      \"GPUS_PER_NODE\": \"8\"\n    },\n    \"volumes\": [\n      {\n        \"host\": \"$PROJECT_ROOT/Megatron-LM\",\n        \"container\": \"/workspace/megatron\"\n      },\n      {\n        \"host\": \"$PROJECT_ROOT/dataset\",\n        \"container\": \"/workspace/dataset\"\n      },\n      {\n        \"host\": \"/run/mellanox/drivers\",\n        \"container\": \"/run/mellanox/drivers\",\n        \"mode\": \"shared\"\n      },\n      {\n        \"host\": \"/etc/network\",\n        \"container\": \"/etc/network\"\n      },\n      {\n        \"host\": \"/etc\",\n        \"container\": \"/host/etc\"\n      },\n      {\n        \"host\": \"/lib/udev\",\n        \"container\": \"/host/lib/udev\"\n      },\n      {\n        \"host\": \"$PROJECT_ROOT/checkpoints\",\n        \"container\": \"/workspace/checkpoints\"\n      }\n    ],\n    \"resources\": {\n      \"gpus\": \"all\",\n      \"shm_size\": \"1024g\",\n      \"ulimit\": {\n        \"memlock\": \"-1\"\n      },\n      \"network\": \"host\",\n      \"ipc\": \"host\",\n      \"privileged\": true\n    }\n  }\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 832,
+        "candidates_token_count": 644,
+        "total_token_count": 1476,
+        "cached_content_token_count": 0
+    }
+}

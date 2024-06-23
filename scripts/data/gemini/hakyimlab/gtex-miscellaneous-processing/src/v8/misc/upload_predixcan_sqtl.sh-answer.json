@@ -1,0 +1,38 @@
+{
+    "application": "predixcan",
+    "software": [
+        "bash",
+        "gcc",
+        "python",
+        "gsutil",
+        "bq"
+    ],
+    "resources": {
+        "walltime": "24 hours",
+        "nodes": "1 node",
+        "cores_per_node": "1 core",
+        "memory": "8 GB",
+        "storage": {
+            "local": "/gpfs/data/im-lab/nas40t2/abarbeira/projects/gtex_v8",
+            "cloud": "gs://predixcan"
+        },
+        "modules": [
+            "gcc/6.2.0",
+            "python/2.7.13"
+        ]
+    },
+    "output": {
+        "log": "logs_u/${PBS_JOBNAME}.o${PBS_JOBID}.log",
+        "error": "logs_u/${PBS_JOBNAME}.e${PBS_JOBID}.err"
+    },
+    "data_sources": [
+        "sp_imputed_gwas_gtexv8_en_splicing.csv",
+        "models_splicing_extra.csv.gz",
+        "models_splicing_weights.csv.gz"
+    ],
+    "data_destinations": [
+        "gtex-awg-im:GTEX_V8_ElasticNet_EUR_Splicing_2018_11_19.predixcan_results",
+        "gtex-awg-im:GTEX_V8_ElasticNet_EUR_Splicing_2018_11_19.models_extra",
+        "gtex-awg-im:GTEX_V8_ElasticNet_EUR_Splicing_2018_11_19.models_weights"
+    ]
+}

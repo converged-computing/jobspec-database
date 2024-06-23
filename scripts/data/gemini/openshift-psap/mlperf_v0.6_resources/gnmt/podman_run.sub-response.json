@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"SLURM\",\n  \"details\": {\n    \"partition\": \"mlperf\",\n    \"nodes\": 1,\n    \"wall_time\": \"12:00:00\",\n    \"job_name\": \"rnn_translator\",\n    \"memory\": \"all available\",\n    \"mail_type\": \"FAIL\",\n    \"tasks_per_node\": 8,\n    \"threads_per_core\": 2,\n    \"cores_per_socket\": 20,\n    \"benchmark\": \"rnn_translator\",\n    \"benchmark_name\": \"GNMT\",\n    \"container\": \"mlperf-nvidia:rnn_translator\",\n    \"data_dir\": \"/raid/data/wmt16_de_en\",\n    \"preprocessed_data_dir\": \"/raid/scratch/gnmt\",\n    \"log_dir\": \"/raid/results/rnn_translator\",\n    \"number_of_experiments\": 10,\n    \"system_logging\": true,\n    \"preprocess\": true,\n    \"system\": \"DGX1\",\n    \"docker_volumes\": \"-v /raid/data/wmt16_de_en:/data -v /raid/results/rnn_translator:/results -v /raid/scratch/gnmt:/preproc_data\",\n    \"docker_exec\": \"env NV_GPU=${NV_GPU} podman run --rm --net=host --uts=host --ipc=host --ulimit stack=67108864 --ulimit memlock=-1 -e NVIDIA_VISIBLE_DEVICES=ALL --cap-drop=ALL --security-opt label=type:nvidia_container_t --security-opt seccomp=unconfined --name=cont_${SLURM_JOB_ID} $NVIDIA_DEVICES\",\n    \"mlperf_host_os\": \"/etc/redhat-release\",\n    \"pull\": true,\n    \"preprocess_command\": \"python3 preprocess_data.py --preproc-data-dir /preproc_data --dataset-dir /data --max-length-train ${MAX_SEQ_LEN}\",\n    \"cache_clear_command\": \"sync && sudo /sbin/sysctl vm.drop_caches=3\",\n    \"benchmark_command\": \"./run_and_time.sh\",\n    \"environment_variables\": [\n      \"DGXSYSTEM=$DGXSYSTEM\",\n      \"MULTI_NODE=$MULTI_NODE\",\n      \"LR=$LR\",\n      \"TRAIN_BATCH_SIZE=$TRAIN_BATCH_SIZE\",\n      \"TEST_BATCH_SIZE=$TEST_BATCH_SIZE\",\n      \"WARMUP_STEPS=$WARMUP_STEPS\",\n      \"REMAIN_STEPS=$REMAIN_STEPS\",\n      \"DECAY_INTERVAL=$DECAY_INTERVAL\",\n      \"TARGET=$TARGET\",\n      \"NUMEPOCHS=$NUMEPOCHS\",\n      \"MAX_SEQ_LEN=$MAX_SEQ_LEN\",\n      \"EXTRA_OPTS=$EXTRA_OPTS\",\n      \"SLURM_JOB_ID=$SLURM_JOB_ID\",\n      \"SLURM_NTASKS_PER_NODE=$SLURM_NTASKS_PER_NODE\",\n      \"SLURM_NNODES=$SLURM_NNODES\"\n    ],\n    \"cleanup_command\": \"podman rm -f cont_${SLURM_JOB_ID}\"\n  }\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 2,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 2738,
+        "candidates_token_count": 770,
+        "total_token_count": 3508,
+        "cached_content_token_count": 0
+    }
+}

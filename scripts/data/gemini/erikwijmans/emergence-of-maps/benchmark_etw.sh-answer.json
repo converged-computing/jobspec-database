@@ -1,0 +1,30 @@
+{
+    "application": "Slurm",
+    "details": {
+        "job_name": "benchmarking",
+        "output_file": "benchmarking/{NGPU}.out",
+        "error_file": "benchmarking/{NGPU}.err",
+        "gpu_resources": "gres gpu:{NTASKS}",
+        "nodes": "{NNODES}",
+        "cpus_per_task": 10,
+        "tasks_per_node": "{NTASKS}",
+        "memory_per_cpu": "5625MB",
+        "partition": "learnfair",
+        "comment": "benchmarking",
+        "time_limit": "2:00:00",
+        "signal": "USR1@300",
+        "constraint": "volta32gb",
+        "exclusive_mode": true,
+        "conda_environment": "hsim",
+        "cuda_version": "10.0",
+        "cudnn_version": "v7.4-cuda.10.0",
+        "nccl_version": "2.4.7-1-cuda.10.0",
+        "environment_variables": [
+            "LD_LIBRARY_PATH=/usr/lib/x86_64-linux-gnu/nvidia-opengl:${{LD_LIBRARY_PATH}}",
+            "GLOG_minloglevel=2",
+            "MAGNUM_LOG=quiet",
+            "MASTER_ADDR=$(srun --ntasks=1 hostname 2>&1 | tail -n1)"
+        ],
+        "python_script": "nav_analysis.benchmark_distrib_main {TASK} {FKEY}"
+    }
+}

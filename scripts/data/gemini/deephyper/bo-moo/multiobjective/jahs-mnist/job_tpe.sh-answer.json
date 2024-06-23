@@ -1,0 +1,36 @@
+{
+    "application": "MPI",
+    "details": {
+        "framework": "DeepHyper",
+        "resources": {
+            "nodes": "40",
+            "system": "polaris",
+            "walltime": "03:00:00",
+            "queue": "prod",
+            "account": "datascience",
+            "filesystems": "grand:home"
+        },
+        "environment": {
+            "deephyper": "/lus/grand/projects/datascience/regele/polaris/deephyper-scalable-bo/build/activate-dhenv.sh",
+            "problem": "jahs",
+            "search": "tpe",
+            "timeout": "10200",
+            "seed": "9",
+            "nranks_per_node": "4",
+            "ndepth": "16",
+            "nnodes": "variable",
+            "ntotranks": "variable",
+            "omp_num_threads": "16",
+            "deephyper_log_dir": "results/jahs-tpe-{NNODES}-{SEED}",
+            "optuna_db_dir": "{DEEPHYPER_LOG_DIR}/optunadb",
+            "optuna_db_host": "{HOST}"
+        },
+        "database": {
+            "type": "PostgreSQL",
+            "database": "hpo"
+        },
+        "script": {
+            "name": "jahs_mpi_solve_tpe.py"
+        }
+    }
+}

@@ -1,0 +1,26 @@
+{
+    "application": "COBALT",
+    "details": {
+        "scheduler": "COBALT",
+        "resources": {
+            "nodes": "getenv(NODES)",
+            "walltime": "getenv(WALLTIME)",
+            "queue": "getenv(QUEUE)",
+            "project": "getenv_nospace(PROJECT)",
+            "output_file": "getenv_nospace(EXP_DIR)/output.txt",
+            "error_file": "getenv_nospace(EXP_DIR)/output.txt",
+            "working_directory": "getenv(EXP_DIR)"
+        },
+        "environment": {
+            "PYTHONPATH": "$PP:$PYTHONPATH",
+            "PATH": "$PYTHONPATH:$PATH",
+            "KMP_BLOCKTIME": "0",
+            "KMP_AFFINITY": "granularity=fine,verbose,compact,1,0",
+            "OMP_NUM_THREADS": "62",
+            "NUM_INTER_THREADS": "1",
+            "NUM_INTRA_THREADS": "62"
+        },
+        "modules": "miniconda-3.6/conda-4.4.10",
+        "command": "aprun -n getenv(PROCS) -N getenv(PPN) python $PBT_PY $PARAMS_FILE $EXP_DIR tc1 $EXP_ID"
+    }
+}

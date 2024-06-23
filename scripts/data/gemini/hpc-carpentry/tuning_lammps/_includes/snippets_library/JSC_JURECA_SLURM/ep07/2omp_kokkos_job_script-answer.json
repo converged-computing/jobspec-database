@@ -1,0 +1,26 @@
+{
+    "application": "LAMMPS",
+    "details": {
+        "resource_requirements": {
+            "nodes": 1,
+            "time": "00:10:00",
+            "partition": "devel",
+            "ntasks_per_node": 2,
+            "cpus_per_task": 12,
+            "account": "ecam"
+        },
+        "software": {
+            "modules": [
+                "Stages/Devel-2019a",
+                "intel-para/2019a",
+                "LAMMPS/3Mar2020-Python-3.6.8-kokkos"
+            ],
+            "environment_variables": {
+                "OMP_NUM_THREADS": "$SLURM_CPUS_PER_TASK",
+                "OMP_PROC_BIND": "spread",
+                "OMP_PLACES": "threads"
+            },
+            "command": "srun lmp -in in.rhodo -k on t $OMP_NUM_THREADS -sf kk"
+        }
+    }
+}

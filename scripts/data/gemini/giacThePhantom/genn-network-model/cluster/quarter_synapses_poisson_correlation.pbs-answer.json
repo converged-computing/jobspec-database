@@ -1,0 +1,30 @@
+{
+    "application": "beegenn",
+    "details": {
+        "resources": {
+            "cpu": "2",
+            "mpiprocs": "10",
+            "memory": "64GB",
+            "queue": "common_cpuQ"
+        },
+        "modules": [
+            "cuda-11.1",
+            "singularity-3.4.0"
+        ],
+        "software": {
+            "singularity": "docker://giacthephantom/beegenn:sleep",
+            "python": "python3 -m beegenn.plots.correlation"
+        },
+        "dependencies": [
+            "squashfs-tools"
+        ],
+        "bind_mounts": [
+            "$PBS_O_WORKDIR/genn-network-model/t_30_quarter_synapses:/t_30_quarter_synapses",
+            "$PBS_O_WORKDIR/outputs:/home/genn"
+        ],
+        "arguments": [
+            "/t_30_quarter_synapses",
+            "t30noinputquartersynapsespoissoncluster"
+        ]
+    }
+}

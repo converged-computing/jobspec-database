@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "Magpie\n```json\n{\n\"application\": \"Magpie\",\n\"software\": [\n{\n\"name\": \"Hadoop\",\n\"version\": \"2.7.3\",\n\"setup\": \"yes\",\n\"setupType\": \"HDFS2\",\n\"filesystem\": \"hdfsoverlustre\",\n\"home\": \"/home/user/hadoop-2.7.3\",\n\"localDir\": \"/tmp/user/hadoop\",\n\"confFiles\": null,\n\"daemonHeapMax\": \"1000\",\n\"namenodeHeapMax\": \"1000\",\n\"environmentExtra\": \"/home/user/hadoop-my-environment\",\n\"mode\": \"hdfsonly\",\n\"hdfsPath\": \"/ssd/user/hdfs\",\n\"hdfsClear\": null,\n\"lustrePath\": \"/lustre/user/hdfsoverlustre/\",\n\"lustreRemoveLocks\": null,\n\"networkfsPath\": \"/networkfs/user/hdfsovernetworkfs/\",\n\"networkfsRemoveLocks\": null,\n\"rawnetworkfsPath\": \"/lustre/user/rawnetworkfs/\",\n\"localstorePath\": \"/ssd/user/localstore/\",\n\"localstoreClear\": null,\n\"perJobHdfsPath\": null,\n\"scriptPath\": \"/home/user/my-job-script\",\n\"scriptArgs\": null,\n\"decommissionHdfsNodeSize\": null\n},\n{\n\"name\": \"Spark\",\n\"version\": \"2.2.1-bin-hadoop2.7\",\n\"setup\": \"yes\",\n\"home\": \"/home/user/spark-2.2.1-bin-hadoop2.7\",\n\"localDir\": \"/tmp/user/spark\",\n\"confFiles\": null,\n\"workerCoresPerNode\": null,\n\"workerMemoryPerNode\": null,\n\"workerDirectory\": \"/tmp/user/spark/work\",\n\"jobMemory\": \"2048\",\n\"driverMemory\": \"2048\",\n\"daemonHeapMax\": \"1000\",\n\"environmentExtra\": \"/home/user/spark-my-environment\",\n\"mode\": \"sparkpi\",\n\"defaultParallelism\": null,\n\"memoryFraction\": \"0.75\",\n\"storageMemoryFraction\": \"0.5\",\n\"shuffleMemoryFraction\": \"0.3\",\n\"deploySpreadout\": \"true\",\n\"jobClasspath\": null,\n\"jobLibraryPath\": null,\n\"jobJavaOpts\": null,\n\"localScratchDir\": \"/lustre/user/sparkscratch/\",\n\"localScratchDirClear\": null,\n\"useYarn\": \"yes\",\n\"yarnStagingDir\": \"file:///lustre/user/sparkStaging/\",\n\"sparkpiSlices\": \"4\",\n\"sparkWordCountFile\": null,\n\"sparkWordCountCopyInFile\": null,\n\"scriptPath\": \"/home/user/my-job-script\",\n\"scriptArgs\": null\n},\n{\n\"name\": \"Tachyon\",\n\"version\": \"0.6.1\",\n\"setup\": \"yes\",\n\"home\": \"/home/user/tachyon-0.6.1\",\n\"confFiles\": null,\n\"storeType\": \"SSD\",\n\"storePaths\": \"/ssd/user/tachyon\",\n\"storeQuota\": \"100\",\n\"journalFolder\": \"/lustre/user/tachyon/journal/\",\n\"workerOnMaster\": \"yes\",\n\"localDir\": \"/tmp/user/tachyon\",\n\"environmentExtra\": \"/home/user/tachyon-my-environment\",\n\"mode\": \"launch\"\n}\n],\n\"resources\": [\n{\n\"name\": \"JAVA_HOME\",\n\"value\": \"/usr/lib/jvm/jre-1.8.0/\"\n},\n{\n\"name\": \"MAGPIE_PYTHON\",\n\"value\": \"/usr/bin/python\"\n},\n{\n\"name\": \"MAGPIE_SCRIPTS_HOME\",\n\"value\": \"/home/user/magpie\"\n},\n{\n\"name\": \"MAGPIE_LOCAL_DIR\",\n\"value\": \"/tmp/user/magpie\"\n},\n{\n\"name\": \"MAGPIE_JOB_TYPE\",\n\"value\": \"spark\"\n},\n{\n\"name\": \"MAGPIE_SCRIPT_PATH\",\n\"value\": null\n},\n{\n\"name\": \"MAGPIE_SCRIPT_ARGS\",\n\"value\": null\n},\n{\n\"name\": \"MAGPIE_STARTUP_TIME\",\n\"value\": null\n},\n{\n\"name\": \"MAGPIE_SHUTDOWN_TIME\",\n\"value\": null\n},\n{\n\"name\": \"MAGPIE_ONE_TIME_RUN\",\n\"value\": null\n},\n{\n\"name\": \"MAGPIE_PRE_JOB_RUN\",\n\"value\": null\n},\n{\n\"name\": \"MAGPIE_POST_JOB_RUN\",\n\"value\": null\n},\n{\n\"name\": \"MAGPIE_ENVIRONMENT_VARIABLE_SCRIPT\",\n\"value\": null\n},\n{\n\"name\": \"MAGPIE_ENVIRONMENT_VARIABLE_SCRIPT_SHELL\",\n\"value\": null\n},\n{\n\"name\": \"MAGPIE_REMOTE_CMD\",\n\"value\": \"ssh\"\n},\n{\n\"name\": \"MAGPIE_REMOTE_CMD_OPTS\",\n\"value\": null\n},\n{\n\"name\": \"MPIRUN_OPTIONS\",\n\"value\": \"-genvall -genv MV2_USE_APM 0\"\n}\n]\n}\n```\nThis script runs the Magpie application. It is a collection of scripts that allow you to run Hadoop, Spark, and Tachyon on traditional HPC systems.  This script will launch an HDFS instance and use it as the backend for Spark.  It will also launch a Tachyon instance, but in this particular script, it will not be used directly by another application.  \n\nThe script includes several configuration options for each software.  These options can be used to customize the behavior of the software, such as the amount of memory to use, the number of cores to use, and the location of data.  The script also includes some convenience scripts that can be used to perform tasks before and after the main job is run.\n\nHere are some of the software and resource requirements:\n\n* **Hadoop**: Requires a Java runtime environment, and a Hadoop build. This script uses Hadoop 2.7.3.\n* **Spark**: Requires a Java runtime environment, a Spark build, and a Hadoop build.  This script uses Spark 2.2.1.\n* **Tachyon**: Requires a Java runtime environment and a Tachyon build. This script uses Tachyon 0.6.1.\n\nIn addition to the software requirements, the script also needs a certain amount of resources to run, such as memory, CPU cores, and disk space. The specific resource requirements will depend on the size of the data that is being processed and the complexity of the jobs that are being run.  The script also needs network connectivity between the nodes in the cluster.\n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 12311,
+        "candidates_token_count": 1550,
+        "total_token_count": 13861,
+        "cached_content_token_count": 0
+    }
+}

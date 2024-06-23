@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"IPython\",\n  \"software\": [\n    \"IPython\",\n    \"mpi4py\",\n    \"valgrind\",\n    \"Snudda\"\n  ],\n  \"resources\": {\n    \"partition\": \"main\",\n    \"nodes\": 1,\n    \"tasks\": 128,\n    \"cpus_per_task\": 2,\n    \"memory_per_cpu\": \"930M\",\n    \"time\": \"0:59:00\",\n    \"account\": \"naiss2023-5-231\"\n  },\n  \"environment_variables\": {\n    \"OMP_STACKSIZE\": \"128G\",\n    \"IPNWORKERS\": \"40\",\n    \"IPYTHONDIR\": \"/cfs/klemming/scratch/${USER:0:1}/$USER/.ipython\",\n    \"IPYTHON_PROFILE\": \"default\",\n    \"FI_CXI_DEFAULT_VNI\": \"Randomly generated value\",\n    \"CONTROLLERIP\": \"Read from controller_ip.txt\"\n  },\n  \"files\": [\n    \"controller_ip.txt\",\n    \"Dardel_runSnudda_twopop_separated.sh\",\n    \"../../ipcontroller_new.sh\",\n    \"snudda_env/bin/activate\"\n  ],\n  \"directories\": [\n    \"/cfs/klemming/scratch/${USER:0:1}/$USER/.ipython\",\n    \"log\",\n    \"Snudda\"\n  ],\n  \"commands\": [\n    \"module load snic-env\",\n    \"ulimit -s unlimited\",\n    \"srun -n 1 -N 1 -c 2 --exact --overlap --mem=0 ./../../ipcontroller_new.sh &\",\n    \"sleep 60\",\n    \"srun -n ${IPNWORKERS} -c 2 -N ${SLURM_JOB_NUM_NODES} --exact --overlap --mem=0 ipengine --location=${CONTROLLERIP} --profile=${IPYTHON_PROFILE} --mpi --ipython-dir=${IPYTHONDIR}  --timeout=30.0 c.EngineFactory.max_heartbeat_misses=10  c.MPI.use='mpi4py' 1> ipe_${SLURM_JOBID}.out 2> ipe_${SLURM_JOBID}.err &\",\n    \"sleep 30\",\n    \"srun -n 1 -N 1 --exact --overlap --mem=0 ./Dardel_runSnudda_twopop_separated.sh\",\n    \"wait\"\n  ]\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 2,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 1083,
+        "candidates_token_count": 617,
+        "total_token_count": 1700,
+        "cached_content_token_count": 0
+    }
+}

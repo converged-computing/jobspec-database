@@ -1,0 +1,53 @@
+{
+    "application": "Slurm",
+    "details": {
+        "resource_requirements": {
+            "partition": "cpu",
+            "tasks": 1,
+            "cpus_per_task": 2,
+            "memory_per_cpu": "4G",
+            "job_name": "reinforce_paml_2_traj200",
+            "output_file": "reinforce_paml_2_traj200_%j.log",
+            "array_tasks": "1-10"
+        },
+        "modules": [
+            "pytorch1.0-cuda9.0-python3.6"
+        ],
+        "environment": ". /h/abachiro/mjpro200-py.env",
+        "ulimit": "ulimit -u 1000",
+        "python_script": "parser.py",
+        "arguments": {
+            "algo": "reinforce",
+            "model_type": [
+                "paml",
+                "mle",
+                "model_free"
+            ],
+            "max_actions": 200,
+            "states_dim": [
+                2,
+                50
+            ],
+            "salient_states_dim": 2,
+            "extra_dims_stable": true,
+            "model_size": "small",
+            "initial_model_lr": [
+                "1e-4",
+                "1e-5"
+            ],
+            "real_episodes": 5,
+            "num_iters": 400,
+            "virtual_episodes": [
+                500,
+                2000
+            ],
+            "rs": "$SLURM_ARRAY_TASK_ID",
+            "save_checkpoints_training": true,
+            "file_id": [
+                "fid4_$SLURM_ARRAY_TASK_ID",
+                "fid_$SLURM_ARRAY_TASK_ID"
+            ],
+            "verbose": 100
+        }
+    }
+}

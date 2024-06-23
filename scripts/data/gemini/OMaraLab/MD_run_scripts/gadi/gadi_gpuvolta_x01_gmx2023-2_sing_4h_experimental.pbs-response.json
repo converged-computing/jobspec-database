@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n\"application\": \"GROMACS\",\n\"software\": [\n\"singularity\",\n\"gromacs/2021.4-gpuvolta\",\n\"perl\"\n],\n\"resources\": [\n{\n\"name\": \"walltime\",\n\"value\": \"04:00:00\"\n},\n{\n\"name\": \"memory\",\n\"value\": \"32GB\"\n},\n{\n\"name\": \"jobfs\",\n\"value\": \"16000MB\"\n},\n{\n\"name\": \"GPUs\",\n\"value\": 1\n},\n{\n\"name\": \"CPUs\",\n\"value\": 12\n},\n{\n\"name\": \"MPI\",\n\"value\": \"hyperthread\"\n},\n{\n\"name\": \"storage\",\n\"value\": \"scratch/q95+gdata/q95\"\n}\n],\n\"other\": [\n\"module load singularity\",\n\"module load gromacs/2021.4-gpuvolta\",\n\"export OMP_NUM_THREADS=12\",\n\"export CUDA_VISIBLE_DEVICES=$(seq 0 $(( $PBS_NGPUS-1 )) | tr  '\\r\\n' ',')\"\n]\n}\n```\n\n**Explanation:**\n\n* **Application:** The script runs a GROMACS molecular dynamics simulation.\n* **Software:**\n    * **Singularity:** The script utilizes Singularity containers to run GROMACS. \n    * **Gromacs/2021.4-gpuvolta:** This specific version of GROMACS is loaded using a module.\n    * **Perl:** Used for parsing the log file and mdp file.\n* **Resources:**  The script requests the following resources from the PBS queue:\n    * **Walltime:** 4 hours\n    * **Memory:** 32 GB\n    * **Job File System:** 16 GB\n    * **GPUs:** 1\n    * **CPUs:** 12\n    * **MPI:** Hyperthreading is enabled.\n    * **Storage:**  Uses scratch and gdata storage.\n* **Other:**  The script sets up several environment variables:\n    * **module load singularity:** Loads the Singularity module.\n    * **module load gromacs/2021.4-gpuvolta:** Loads the GROMACS module.\n    * **export OMP_NUM_THREADS=12:** Sets the number of OpenMP threads to 12.\n    * **export CUDA_VISIBLE_DEVICES...:**  Sets the CUDA environment variable to make the GPUs visible to the GROMACS simulation. \n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 1163,
+        "candidates_token_count": 582,
+        "total_token_count": 1745,
+        "cached_content_token_count": 0
+    }
+}

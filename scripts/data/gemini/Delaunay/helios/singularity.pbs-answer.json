@@ -1,0 +1,27 @@
+{
+    "application": "Singularity",
+    "details": {
+        "resource_requirements": {
+            "account": "colosse-users",
+            "advanced_resources": "MILA2019",
+            "feature": "k80",
+            "nodes": "1:gpus=1",
+            "walltime": "00:10:00"
+        },
+        "software": {
+            "image": "/rap/jvb-000-aa/COURS2019/etudiants/ift6759.simg",
+            "python_script": "mnist.py"
+        },
+        "environment_variables": {
+            "RAP": "/rap/jvb-000-aa/COURS2019/etudiants/$USER",
+            "FOLDERS": "$RAP,$HOME",
+            "SINGULARITY_EXEC": "singularity exec --nv --bind $FOLDERS $IMAGE"
+        },
+        "commands": {
+            "module_purge": "module --force purge",
+            "path_update": "PATH=$PATH:/opt/software/singularity-3.0/bin/",
+            "working_directory": "cd \"${PBS_O_WORKDIR}\"",
+            "python_script_execution": "$SINGULARITY_EXEC python mnist.py"
+        }
+    }
+}

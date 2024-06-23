@@ -1,0 +1,40 @@
+{
+    "application": "Slurm",
+    "details": {
+        "job_name": "psana_legion_bb",
+        "dependency": "singleton",
+        "nodes": 17,
+        "time": "00:30:00",
+        "qos": "debug",
+        "constraint": "haswell",
+        "image": "docker:stanfordlegion/psana-mpi:latest",
+        "exclusive": true,
+        "mail_type": "ALL",
+        "account": "lcls",
+        "data_source": "DW persistentdw name=slaughte_data_noepics",
+        "psana_location": "$HOME/psana_legion/psana-legion",
+        "data_location": "$DW_PERSISTENT_STRIPED_slaughte_data_noepics/reg",
+        "environment_variables": {
+            "SIT_PSDM_DATA": "$HOST_DATA_DIR/d/psdm",
+            "EAGER": 1,
+            "SLURM_HOSTFILE": "$PWD/nodelist.txt"
+        },
+        "script_execution": {
+            "command": "srun -n $(( n * c + 1 )) -N $(( n + 1 )) --cpus-per-task $(( 64 / c )) --cpu_bind threads --distribution=arbitrary --output rax_n\"$n\"_c\"$c\".log shifter python $HOST_PSANA_DIR/psana_legion/mpi_rax.py",
+            "node_counts": [
+                1,
+                2,
+                4,
+                8,
+                16
+            ],
+            "cores_per_node": [
+                64
+            ]
+        },
+        "other_tools": [
+            "make_nodelist.py",
+            "shifter"
+        ]
+    }
+}

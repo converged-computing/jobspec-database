@@ -1,0 +1,39 @@
+{
+    "application": "SLURM",
+    "details": {
+        "job_name": "aud",
+        "partition": "learnlab",
+        "nodes": 1,
+        "gpus_per_node": 8,
+        "ntasks_per_node": 8,
+        "cpus_per_task": 10,
+        "time": "24:00:00",
+        "mem": "240GB",
+        "signal": "USR1@120",
+        "constraint": "volta32gb",
+        "output": "/checkpoint/%u/jobs/%A.out",
+        "error": "/checkpoint/%u/jobs/%A.err",
+        "python_module": "torch.distributed.launch",
+        "python_script": "main_finetune_as.py",
+        "arguments": {
+            "log_dir": "/checkpoint/berniehuang/mae/as_exp/$SLURM_JOB_ID",
+            "output_dir": "/checkpoint/berniehuang/mae/as_exp/$SLURM_JOB_ID",
+            "model": "vit_base_patch16",
+            "dataset": "audioset",
+            "data_train": "/checkpoint/berniehuang/ast/egs/audioset/data/datafiles/train.json",
+            "data_eval": "/checkpoint/berniehuang/ast/egs/audioset/data/datafiles/eval_19k.json",
+            "label_csv": "/checkpoint/berniehuang/ast/egs/audioset/data/class_labels_indices.csv",
+            "finetune": "$ckpt",
+            "roll_mag_aug": "True",
+            "epochs": 60,
+            "blr": "$blr",
+            "batch_size": 8,
+            "warmup_epochs": 4,
+            "first_eval_ep": 15,
+            "dist_eval": "True",
+            "mask_2d": "True",
+            "mask_t_prob": 0.2,
+            "mask_f_prob": 0.2
+        }
+    }
+}

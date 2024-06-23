@@ -1,0 +1,46 @@
+{
+    "application": "Slurm",
+    "details": {
+        "scheduler": "Slurm",
+        "job_name": "coupled",
+        "resources": {
+            "nodes": 21,
+            "cores_per_node": 8,
+            "threads_per_core": 2,
+            "gpus": 1,
+            "walltime": "00:10:00"
+        },
+        "environment": {
+            "modules": "modules.sh",
+            "FI_CXI_RX_MATCH_MODE": "software",
+            "OMP_PROC_BIND": "true",
+            "OMP_NUM_THREADS": 14
+        },
+        "applications": {
+            "coupler": {
+                "executable": "$MEMBERWORK/phy122/coupler-build-frontier/pcms/test/xgc_n0_server",
+                "ranks": 8,
+                "cores": 1,
+                "gpus": 1,
+                "threads": 1,
+                "bind": "closest"
+            },
+            "xgc_totalf": {
+                "executable": "$MEMBERWORK/phy122/coupler-build-frontier/xgc-delta-f/bin/xgc-es-cpp-gpu",
+                "ranks": 128,
+                "cores": 14,
+                "gpus": 1,
+                "bind": "closest"
+            },
+            "xgc_deltaf": {
+                "executable": "$MEMBERWORK/phy122/coupler-build-frontier/xgc-delta-f/bin/xgc-es-cpp-gpu",
+                "ranks": 32,
+                "cores": 14,
+                "gpus": 1,
+                "bind": "closest",
+                "tasks_per_node": 4
+            }
+        },
+        "output": "${SLURM_JOB_ID}.out"
+    }
+}

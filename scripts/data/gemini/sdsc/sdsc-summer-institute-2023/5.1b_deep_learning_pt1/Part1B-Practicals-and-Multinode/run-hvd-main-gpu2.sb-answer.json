@@ -1,0 +1,26 @@
+{
+    "application": "TensorFlow",
+    "details": {
+        "resource_requirements": {
+            "nodes": 2,
+            "tasks_per_node": 4,
+            "cpus_per_task": 8,
+            "memory": "368G",
+            "gpus": 4,
+            "time": "00:05:00"
+        },
+        "software_dependencies": {
+            "compiler": "gcc/10.2.0",
+            "mpi": "openmpi/4.1.3",
+            "container": "singularitypro/3.9",
+            "tensorflow": "tensorflow-latest.sif"
+        },
+        "environment_variables": [
+            "OMPI_MCA_btl='self,vader'",
+            "UCX_TLS='shm,rc,ud,dc'",
+            "UCX_NET_DEVICES='mlx5_0:1'",
+            "UCX_MAX_RNDV_RAILS=1"
+        ],
+        "command": "mpirun -n 8 singularity exec --bind /expanse,/scratch --nv /cm/shared/apps/containers/singularity/tensorflow/tensorflow-latest.sif python3 ./SI2023_MNIST_wHVD_exercise.py > stdout-gpu2x4.txt"
+    }
+}

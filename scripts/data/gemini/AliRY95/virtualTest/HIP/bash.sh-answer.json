@@ -1,0 +1,44 @@
+{
+    "application": "SLURM",
+    "details": {
+        "software": [
+            "PrgEnv-amd",
+            "CPE-23.02-rocmcc-5.3.0-GPU-softs",
+            "HIP"
+        ],
+        "resources": {
+            "account": "cad14948",
+            "job_name": "VirtualFunction",
+            "constraint": "MI250",
+            "nodes": 1,
+            "exclusive": true,
+            "time": "00:01:00",
+            "gpus_per_node": 1,
+            "output": "out.out",
+            "error": "err.err"
+        },
+        "ulimits": {
+            "stack": "unlimited",
+            "data_area": "unlimited",
+            "core_file_size": "unlimited",
+            "memory": "unlimited",
+            "open_files": "unlimited",
+            "processes": "unlimited"
+        },
+        "environment_variables": {
+            "HIP_PATH": "/opt/rocm-5.5.1/hip"
+        },
+        "commands": [
+            "module purge",
+            "module load PrgEnv-amd",
+            "module load CPE-23.02-rocmcc-5.3.0-GPU-softs",
+            "module list",
+            "rocminfo",
+            "module list",
+            "cd ${SLURM_SUBMIT_DIR}",
+            "make clean",
+            "make",
+            "run -n 1 -- ./HIP_virtualTest"
+        ]
+    }
+}

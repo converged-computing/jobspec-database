@@ -1,0 +1,36 @@
+{
+    "application": "AlphaFold",
+    "details": {
+        "version": "2.3.1",
+        "queue": "gpuqueue",
+        "cores": 10,
+        "memory": "30 GB",
+        "gpu": "4 GPUs (shared, exclusive)",
+        "runtime": "10 hours",
+        "modules": [
+            "alphafold/2.3.1/af_2.3.1",
+            "cuda/11.7"
+        ],
+        "environment_variables": {
+            "OPENMM_CPU_THREADS": "8",
+            "NVIDIA_VISIBLE_DEVICES": "all",
+            "TF_FORCE_UNIFIED_MEMORY": "1",
+            "TF_FORCE_GPU_ALLOW_GROWTH": "true",
+            "XLA_PYTHON_CLIENT_MEM_FRACTION": "8.0",
+            "XLA_PYTHON_CLIENT_ALLOCATOR": "platform",
+            "XLA_PYTHON_CLIENT_PREALLOCATE": "false",
+            "XLA_FLAGS": "--xla_gpu_force_compilation_parallelism=1"
+        },
+        "data_directory": "/lila/data/shared_resources/alphafold-db",
+        "output_directory": "test-alphafold-multimer",
+        "fasta_file": "test_multimer.fasta",
+        "target_date": "2023-11-01",
+        "model_indices": "0,1,2,3",
+        "mode": "multimer",
+        "database": "full_dbs",
+        "output_files": {
+            "stdout": "test-af-multimer-$LSB_JOBID.out",
+            "stderr": "test-af-multimer-$LSB_JOBID.err"
+        }
+    }
+}

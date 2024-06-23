@@ -1,0 +1,34 @@
+{
+    "application": "Slurm",
+    "details": {
+        "job_name": "save_k0_monthly",
+        "output_file": "%x_%j.out",
+        "cores": 12,
+        "nodes": 1,
+        "partition": "huce_intel",
+        "memory": "35000 MB",
+        "time": "0-02:00",
+        "mail_type": "END",
+        "mail_user": "hnesser@g.harvard.edu",
+        "environment": {
+            "conda_environment": "TROPOMI_inversion",
+            "python_version": "Anaconda3/5.0.1-fasrc01"
+        },
+        "script": "generate_k0_monthly.py",
+        "arguments": [
+            "MEMORY_GB",
+            "DATA_DIR",
+            "OUTPUT_DIR",
+            "CODE_DIR"
+        ],
+        "resources": {
+            "data_dir": "${DATA_DIR}",
+            "output_dir": "${OUTPUT_DIR}",
+            "code_dir": "${CODE_DIR}",
+            "memory_gb": 45
+        },
+        "cleanup": {
+            "remove_directory": "${OUTPUT_DIR}dask-worker-space"
+        }
+    }
+}

@@ -1,0 +1,52 @@
+{
+    "application": "SLURM",
+    "details": {
+        "job_name": "principled-pre-training",
+        "nodes": 1,
+        "gpus": 2,
+        "cpus_per_task": 32,
+        "partition": "nlp",
+        "account": "nlp",
+        "nodes_list": "nlp-ada-2,nlp-a40-1",
+        "stdout": "fine_tuning_runs/slurm_%N_%j_out.txt",
+        "stderr": "fine_tuning_runs/slurm_%N_%j_err.txt",
+        "mail_type": "fail",
+        "mail_user": "zachary@campus.technion.ac.il",
+        "virtual_environment": ".depth/bin/activate",
+        "deepspeed_arguments": {
+            "no_local_rank": true,
+            "master_port": 10002,
+            "num_gpus": 2
+        },
+        "training_arguments": {
+            "mode": "ft",
+            "num_gpus": 2,
+            "num_cpus": 32,
+            "precision": "bf16",
+            "model.model_implementation": "depth",
+            "deepspeed.use_deepspeed": true,
+            "logging.wandb": true,
+            "model.compile": false,
+            "data.input_length": 256,
+            "data.target_length": 16,
+            "data.data_collator": "depth",
+            "optim.total_steps": 3000,
+            "optim.warmup_steps": 300,
+            "optim.base_lr": 1e-05,
+            "optim.batch_size": 16,
+            "optim.grad_acc": 1,
+            "evaluate.every_steps": 100,
+            "logging.every_steps": 10,
+            "checkpoint.every_steps": 10000,
+            "checkpoint.checkpoint_path": "checkpoints/pre_train/from_pretrained/depth/allenai_c4_en/lr_0_0001_linear_bsz_200_shuffle_p_0_5/2024-04-09_19-16/checkpoint-256000",
+            "downstream.benchmark_dataset": "cola",
+            "optim.lr_scheduler": "constant_with_warmup"
+        },
+        "other_requirements": {
+            "nvidia-smi": true,
+            "deepspeed": true,
+            "train_encoder_decoder.py": true,
+            "wandb": true
+        }
+    }
+}

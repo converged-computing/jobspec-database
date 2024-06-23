@@ -1,0 +1,36 @@
+{
+    "application": "SLURM",
+    "details": {
+        "partition": "gpu",
+        "output_file": "slurm_logs/slurm-%A-%a.out",
+        "error_file": "slurm_logs/slurm-%A-%a.err",
+        "job_name": "glue",
+        "gpu": "a40",
+        "gpu_count": 1,
+        "memory": "30g",
+        "cpu_cores": 4,
+        "time_limit": "48:00:00",
+        "array_range": "0-1%2",
+        "software": [
+            "python",
+            "transformers",
+            "wandb",
+            "huggingface_datasets",
+            "pytorch"
+        ],
+        "resource_requirements": {
+            "transformers_cache": "checkpoints/hf_model",
+            "huggingface_datasets_cache": "checkpoints/hf_model",
+            "huggingface_metrics_cache": "checkpoints/hf_model",
+            "task_name": "mnli",
+            "metric": "accuracy",
+            "adapter_config": "lora",
+            "pretrained_adapter": "merged_adapters/pure_lora/initialization_30_lora_rte/glue/",
+            "wandb_entity": "adapter-merge",
+            "wandb_project": "glue.mnli",
+            "wandb_watch": "all",
+            "report_to": "wandb",
+            "train_file": "split-train-set/mnli-1k-0.json"
+        }
+    }
+}

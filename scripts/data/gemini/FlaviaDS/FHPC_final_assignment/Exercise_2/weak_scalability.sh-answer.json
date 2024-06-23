@@ -1,0 +1,32 @@
+{
+    "application": "SLURM",
+    "details": {
+        "job_name": "script",
+        "output_file": "log.out",
+        "partition": "EPYC",
+        "nodes": 1,
+        "exclusive": true,
+        "tasks": 1,
+        "cpus_per_task": 64,
+        "time": "02:00:00",
+        "nodelist": "epyc[005]",
+        "modules": [
+            "architecture/AMD",
+            "openBLAS/0.3.21-omp",
+            "mkl"
+        ],
+        "environment_variables": {
+            "OMP_NUM_THREADS": "64",
+            "OMP_PLACES": "cores",
+            "OMP_PROC_BIND": "spread"
+        },
+        "executables": [
+            "gemm_oblas.x",
+            "gemm_mkl.x"
+        ],
+        "output_files": [
+            "weak_scalability/double/cores_spread_oblas.csv",
+            "weak_scalability/double/cores_spread_mkl.csv"
+        ]
+    }
+}

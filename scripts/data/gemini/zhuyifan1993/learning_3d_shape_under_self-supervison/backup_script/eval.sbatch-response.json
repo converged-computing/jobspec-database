@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"SLURM\",\n  \"details\": {\n    \"job_name\": \"zyf_thesis\",\n    \"cpus_per_task\": 4,\n    \"partition\": \"day\",\n    \"mem_per_cpu\": \"3G\",\n    \"gres\": \"gpu:1\",\n    \"time\": \"1-0\",\n    \"error_output\": \"job.%J.err\",\n    \"standard_output\": \"job.%J.out\",\n    \"mail_type\": \"ALL\",\n    \"mail_user\": \"yifan.zhu@student.uni-tuebingen.de\",\n    \"container_image\": \"/common/singularityImages/TCML-Cuda10_0_TF1_15_2_PT1_4.simg\",\n    \"python_script\": \"~/evaluation.py\",\n    \"model_save_path\": \"~/model/\",\n    \"data_path\": \"/scratch/$SLURM_JOB_ID/MNIST/\"\n  }\n}\n```\n\n**Explanation:**\n\n* **SLURM**: The script uses the SLURM workload manager to manage the execution of the TensorFlow code. \n* **Singularity Container**: The TensorFlow code is executed within a Singularity container, which ensures a consistent environment for the job.\n* **Resource Requirements**:\n    * **CPU**: The job requests 4 CPUs.\n    * **Memory**: The job requests 12 GB of memory (3 GB per CPU).\n    * **GPU**: The job requests 1 GPU.\n    * **Time**: The job has a maximum runtime of 1 hour.\n* **Data Handling**:\n    * **Data Copying**: The script copies the MNIST dataset from a shared location to the job's scratch folder.\n    * **Checkpoints**:  The script saves checkpoints to the user's home directory to preserve progress in case the job fails.\n* **Code Execution**:\n    * The script runs the `evaluation.py` script within the Singularity container.\n    * The script passes the model save path and MNIST data path as arguments to the Python script.\n    * The `echo DONE!` command is used to indicate the completion of the script. \n\n**Note:** This script demonstrates the use of SLURM to manage the execution of a TensorFlow code within a Singularity container. It shows how to define job parameters, allocate resources, manage data, and execute code within a controlled environment.\n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 528,
+        "candidates_token_count": 544,
+        "total_token_count": 1072,
+        "cached_content_token_count": 0
+    }
+}

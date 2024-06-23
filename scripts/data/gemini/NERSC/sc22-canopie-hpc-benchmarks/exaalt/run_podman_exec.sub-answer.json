@@ -1,0 +1,61 @@
+{
+    "application": "LAMMPS",
+    "details": {
+        "software": [
+            "podman",
+            "LAMMPS",
+            "MPICH",
+            "Kokkos",
+            "CUDA",
+            "NVIDIA persistenced",
+            "SLURM"
+        ],
+        "resources": [
+            "GPU",
+            "CPU",
+            "MPI",
+            "network",
+            "disk space",
+            "shared memory"
+        ],
+        "environment variables": [
+            "MPICH_GPU_SUPPORT_ENABLED",
+            "LD_PRELOAD",
+            "OMP_NUM_THREADS",
+            "LD_LIBRARY_PATH",
+            "PODMAN_FLAGS",
+            "PODMAN_EXEC_FLAGS",
+            "IMAGE"
+        ],
+        "libraries": [
+            "libmpi_gtl_cuda.so.0",
+            "Kokkos"
+        ],
+        "file system": [
+            "/tmp",
+            "/run/nvidia-persistenced",
+            "/opt/workdir"
+        ],
+        "execution": [
+            "srun",
+            "podman-mpi-exec"
+        ],
+        "configuration": [
+            "in.run",
+            "files/*",
+            "log._NREP_"
+        ],
+        "slurm directives": [
+            "-C gpu",
+            "-t 00:45:00",
+            "-J LAMMPS_SNAP_podman_exec",
+            "-o LAMMPS_SNAP_podman_exec.o%j",
+            "-A nstaff_g",
+            "-n _NTASKS_",
+            "--cpus-per-task=32",
+            "--gpus-per-task=1",
+            "--gpu-bind=none",
+            "-q early_science"
+        ]
+    }
+}

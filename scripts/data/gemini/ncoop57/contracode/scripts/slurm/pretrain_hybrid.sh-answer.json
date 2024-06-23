@@ -1,0 +1,49 @@
+{
+    "application": "SLURM",
+    "details": {
+        "job_name": "contrastive_pretrain_dist_hybrid",
+        "output": "/home/eecs/paras/slurm/coderep/%j_pretrain_hybrid.log",
+        "tasks": 1,
+        "memory": "400000",
+        "time": "250:00:00",
+        "excluded_nodes": "atlas,blaze,r16",
+        "environment_variables": {
+            "PATH": "/data/paras/miniconda3/bin:$PATH",
+            "DATA_CACHE": "/data/paras/data_cache",
+            "FREE_PORT": "generated at runtime"
+        },
+        "arguments": {
+            "BATCHSIZE": "64",
+            "LR": "4e-4",
+            "RUNNAME": "required",
+            "CUDA_VISIBLE_DEVICES": "environment variable",
+            "CUDA_DEVICE_ORDER": "environment variable",
+            "SLURM_JOB_ID": "environment variable"
+        },
+        "dependencies": {
+            "python": "required for argument parsing",
+            "torch": "installed with pip",
+            "representjs": "installed with pip",
+            "npm": "installed for representjs"
+        },
+        "data": {
+            "codesearchnet_javascript": "synced from /work/paras/representjs/data/codesearchnet_javascript to DATA_CACHE"
+        },
+        "training_script": "representjs/pretrain_distributed.py",
+        "training_arguments": {
+            "num_epochs": 200,
+            "batch_size": "BATCHSIZE",
+            "lr": "LR",
+            "num_workers": 8,
+            "subword_regularization_alpha": 0,
+            "program_mode": "contrastive",
+            "loss_mode": "hybrid",
+            "save_every": 5000,
+            "train_filepath": "$DATA_CACHE/codesearchnet_javascript/javascript_augmented.pickle",
+            "spm_filepath": "$DATA_CACHE/codesearchnet_javascript/csnjs_8k_9995p_unigram_url.model",
+            "min_alternatives": 1,
+            "dist_url": "tcp://localhost:$FREE_PORT",
+            "rank": 0
+        }
+    }
+}

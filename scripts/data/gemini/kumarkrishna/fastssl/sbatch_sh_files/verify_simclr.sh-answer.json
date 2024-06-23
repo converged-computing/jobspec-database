@@ -1,0 +1,24 @@
+{
+    "application": "SLURM",
+    "details": {
+        "scheduler": "SLURM",
+        "partition": "long",
+        "gres": "gpu:rtx8000:1",
+        "memory": "16GB",
+        "time": "2:00:00 (cifar10) or 6:30:00 (stl10)",
+        "cpus_per_gpu": "4",
+        "output": "sbatch_out/verify_simclr.%A.out",
+        "error": "sbatch_err/verify_simclr.%A.err",
+        "job_name": "verify_simclr",
+        "environment": ". /etc/profile\nmodule load anaconda/3\nconda activate ffcv_new",
+        "python_script": "scripts/train_model.py",
+        "config_files": "configs/cc_SimCLR.yaml, configs/cc_precache.yaml, configs/cc_classifier.yaml",
+        "datasets": "cifar10 or stl10",
+        "model_names": "resnet50proj, resnet50feat",
+        "batch_size": "256 (stl10) or 512 (cifar10)",
+        "temperature": "0.1",
+        "projector_dim": "128",
+        "seed": "42",
+        "scratch_directory": "$SCRATCH"
+    }
+}

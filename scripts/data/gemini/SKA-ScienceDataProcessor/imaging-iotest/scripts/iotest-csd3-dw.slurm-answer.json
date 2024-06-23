@@ -1,0 +1,22 @@
+{
+    "application": "iotest",
+    "software": [
+        "openmpi3",
+        "hdf5",
+        "gnu7"
+    ],
+    "resources": [
+        "skylake partition",
+        "SKA-SDP-SL2-CPU account",
+        "DW jobdw capacity=148TB access_mode=striped,private type=scratch",
+        "lfs setstripe -S 1M -c -1 $DW_JOB_STRIPED"
+    ],
+    "environment_variables": [
+        "I_MPI_JOB_RESPECT_PROCESS_PLACEMENT=0",
+        "I_MPI_PIN_DOMAIN=omp:compact",
+        "OMP_NUM_THREADS=$num_threads",
+        "OMP_PROC_BIND=true",
+        "OMP_PLACES=sockets",
+        "MCA_PARAMS=\"--mca btl openib,self,vader  --mca btl_openib_if_include mlx5_0:1\""
+    ]
+}

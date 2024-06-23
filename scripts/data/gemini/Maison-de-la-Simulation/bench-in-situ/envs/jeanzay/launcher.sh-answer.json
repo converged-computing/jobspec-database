@@ -1,0 +1,26 @@
+{
+    "application": "Slurm",
+    "details": {
+        "job_name": "bench_insitu",
+        "output_file": "%x_%j.out",
+        "time_limit": "00:10:00",
+        "tasks_per_node": 1,
+        "total_tasks": 4,
+        "nodes": 4,
+        "gpu_per_node": 1,
+        "cpus_per_task": 8,
+        "account": "wuc@a100",
+        "environment": {
+            "OMP_NUM_THREADS": "${SLURM_CPUS_PER_TASK}",
+            "OMP_PLACES": "cores",
+            "LD_LIBRARY_PATH": "/gpfslocalsup/pub/anaconda-py3/2023.09/envs/python-3.11.5/lib:$LD_LIBRARY_PATH"
+        },
+        "software": {
+            "python_environment": "deisa/bin/activate",
+            "pdi": "pdi/share/pdi/env.sh",
+            "dask": "dask scheduler --protocol tcp --scheduler-file=${SCHEFILE}",
+            "insitu": "python -O in-situ/fft_updated.py",
+            "simulation": "build/main ${BASE_DIR}/envs/jeanzay/setup.ini ${BASE_DIR}/envs/jeanzay/io_deisa.yml --kokkos-map-device-id-by=mpi_rank"
+        }
+    }
+}

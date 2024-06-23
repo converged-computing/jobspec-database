@@ -1,0 +1,38 @@
+{
+    "application": "ParaView",
+    "details": {
+        "software": [
+            "sarus",
+            "daint-gpu",
+            "ParaView",
+            "pyfr"
+        ],
+        "resources": {
+            "slurm": {
+                "job_name": "{{ jobName }}",
+                "account": "{{ account }}",
+                "time": "00:05:00",
+                "nodes": "{{ ntasks }}",
+                "ntasks_per_node": 1,
+                "partition": "{{ partition }}",
+                "constraint": "{{ constraint }}",
+                "reservation": "{{ reservation }}"
+            },
+            "environment_variables": {
+                "workdir": "{{ jobDir }}",
+                "final_output_dir": "{{ jobDir }}"
+            },
+            "modules": [
+                "sarus",
+                "daint-gpu",
+                "ParaView"
+            ]
+        },
+        "commands": [
+            "cd {{ jobDir }}",
+            "sarus run --mount=type=bind,src=$(pwd),dst=/pyfr --workdir=/pyfr ethcscs/pyfr:1.12.0-cuda11.3-mpich3.1.4-ubuntu20.04 pyfr export inc-cylinder.pyfrm $a ${name}.vtu",
+            "srun pvbatch post_proc.py ${workdir}",
+            "convert  -delay 50 $(ls -v1 ${workdir}/imag*.png) ${final_output_dir}/imag.gif"
+        ]
+    }
+}

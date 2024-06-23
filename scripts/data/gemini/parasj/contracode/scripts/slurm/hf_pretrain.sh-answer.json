@@ -1,0 +1,42 @@
+{
+    "application": "slurm",
+    "details": {
+        "job_name": "hf_pretrain_bert",
+        "output_file": "/home/eecs/paras/slurm/coderep/%j_hf_pretrain_bert.log",
+        "tasks": 1,
+        "memory": "400000",
+        "time": "125:00:00",
+        "excluded_nodes": "atlas,blaze,r16",
+        "environment_variables": {
+            "PATH": "/data/paras/miniconda3/bin:$PATH",
+            "DATA_CACHE": "/data/paras/data_cache",
+            "FREE_PORT": "set by script",
+            "BATCHSIZE": "64 (default)",
+            "LR": "4e-4 (default)",
+            "RUNNAME": "required, no default",
+            "TRANSFORMERS_CACHE": "/data/paras/data_cache/hf_cache",
+            "CUDA_VISIBLE_DEVICES": "set by user",
+            "CUDA_DEVICE_ORDER": "set by user",
+            "SLURM_JOB_ID": "set by slurm"
+        },
+        "dependencies": {
+            "python": "3.x",
+            "torch": "installed via pip",
+            "contracode": "installed via pip",
+            "npm": "installed via npm"
+        },
+        "data_sources": {
+            "data_cache": "/data/paras/data_cache",
+            "hf_cache": "/data/paras/data_cache/hf_cache",
+            "vocab_file": "./data/vocab/8k_bpe/8k_bpe-vocab.txt",
+            "train_data_file": "$DATA_CACHE/hf_data/augmented_pretrain_df.train.txt",
+            "eval_data_file": "$DATA_CACHE/hf_data/augmented_pretrain_df.test.txt"
+        },
+        "execution_steps": [
+            "print system statistics",
+            "set up experiment dependencies",
+            "download data",
+            "run train script"
+        ]
+    }
+}

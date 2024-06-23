@@ -1,0 +1,37 @@
+{
+    "application": "Slurm",
+    "details": {
+        "scheduler": "Slurm",
+        "job_name": "ExaHyPE-EulerFlow",
+        "output_file": "ExaHyPE-EulerFlow.%A.out",
+        "error_file": "ExaHyPE-EulerFlow.%A.err",
+        "time_limit": "01:00:00",
+        "exclusive": "True",
+        "partition": "test.q",
+        "nodes": "1",
+        "tasks_per_node": "1",
+        "cpus_per_task": "1",
+        "mail_user": "dominic.e.charrier@durham.ac.uk",
+        "mail_type": "END",
+        "array_range": "1,12,24",
+        "modules": [
+            "slurm",
+            "intel/xe_2017.2",
+            "intelmpi/intel/2017.2",
+            "gcc",
+            "likwid"
+        ],
+        "environment_variables": {
+            "TBB_SHLIB": "-L/ddn/apps/Cluster-Apps/intel/xe_2017.2/tbb/lib/intel64/gcc4.7 -ltbb",
+            "I_MPI_FABRICS": "shm:dapl"
+        },
+        "executable": "ExaHyPE-EulerFlow-p3-$sharedMem-$compiler",
+        "specification_file": "benchmarks/multicore/$prefix-t$tasksPerNode-c$coresPerTask.exahype",
+        "likwid_metrics": [
+            "MEM",
+            "FLOPS_DP",
+            "L2CACHE",
+            "BRANCH"
+        ]
+    }
+}

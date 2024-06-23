@@ -1,0 +1,56 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"PBS\",\n  \"details\": {\n    \"resource_requirements\": {\n      \"nodes\": \"1\",\n      \"ppn\": \"4\",\n      \"pmem\": \"16gb\",\n      \"walltime\": \"00:30:00\",\n      \"account\": \"open\"\n    },\n    \"software_requirements\": {\n      \"gcc\": \"8.3.1\",\n      \"bedtools\": \"2.27.1\",\n      \"bwa\": \"0.7.15\",\n      \"samtools\": \"1.5\",\n      \"anaconda3\": null,\n      \"genopipe\": null\n    },\n    \"script_details\": {\n      \"commands\": [\n        \"sed \\\"9q;d\\\" depth_simulations.txt\",\n        \"awk '{print $1}'  <(echo $INFO)\",\n        \"awk '{print $2}'  <(echo $INFO)\",\n        \"awk '{print $3}'  <(echo $INFO)\",\n        \"bash ../scripts/simulate.sh -i $PBS_ARRAYID -d $DEPTH -s $SEED -g $GENOME -o $OUTPUT\",\n        \"bash ../scripts/align.sh -i $PBS_ARRAYID -g ../input/sacCer3.fa -o $OUTPUT -t 4\",\n        \"date +%s\",\n        \"echo \\\"${LOCUS} ${DEPTH} simulate in ${runtime}\\\"\"\n      ],\n      \"variables\": [\n        \"WRK\",\n        \"INFO\",\n        \"LOCUS\",\n        \"DEPTH\",\n        \"BASE\",\n        \"GENOME\",\n        \"OUTPUT\",\n        \"SEED\",\n        \"start\",\n        \"end\",\n        \"runtime\"\n      ]\n    }\n  }\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "citation_metadata": {
+                "citation_sources": [
+                    {
+                        "start_index": 613,
+                        "end_index": 781,
+                        "uri": "https://github.com/CEGRcode/GenoPipe",
+                        "license_": ""
+                    }
+                ]
+            },
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 431,
+        "candidates_token_count": 412,
+        "total_token_count": 843,
+        "cached_content_token_count": 0
+    }
+}

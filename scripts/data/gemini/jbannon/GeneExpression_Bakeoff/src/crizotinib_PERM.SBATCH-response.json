@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"SLURM\",\n  \"details\": {\n    \"job_name\": \"SVM_Array\",\n    \"nodes\": 2,\n    \"tasks_per_node\": 2,\n    \"cpus_per_task\": 2,\n    \"time\": \"96:00:00\",\n    \"memory\": \"20GB\",\n    \"array_range\": \"0-5\",\n    \"singularity_image\": \"/scratch/work/public/singularity/cuda11.6.124-cudnn8.4.0.27-devel-ubuntu20.04.4.sif\",\n    \"overlay\": \"/scratch/jjb509/GeneExpression_Bakeoff/src/my_overlay.ext3:ro\",\n    \"environment_file\": \"/ext3/env.sh\",\n    \"python_script\": \"perm_test.py\",\n    \"drug\": \"crizotinib\",\n    \"models\": [\"LogisticRegression\", \"RandomForest\", \"Poly_SVC\", \"RBF_SVC\", \"Linear_SVC\"]\n  }\n}\n```\n\n**Explanation:**\n\n* **SLURM:** The script uses `sbatch` commands, indicating that it's running on the SLURM workload manager.\n* **Details:**\n    * The script defines a job named `SVM_Array` and allocates resources for it: 2 nodes, 2 tasks per node, 2 CPUs per task, 96 hours runtime, 20GB memory.\n    * It also defines an array of tasks (0-5) for the job.\n    * The script uses Singularity to run a container image with CUDA 11.6.124 and cuDNN 8.4.0.27.\n    * The script mounts an overlay file system to the container.\n    * The script sources an environment file (`env.sh`) inside the container.\n    * The script executes a Python script `perm_test.py` with specific arguments, including a drug name (`crizotinib`) and a model from a list of models. \n    * The model used depends on the index of the array task (`SLURM_ARRAY_TASK_ID`). \n    \nThis script demonstrates a typical workflow for running machine learning experiments on a high-performance computing cluster using SLURM, Singularity containers, and Python. \n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 285,
+        "candidates_token_count": 535,
+        "total_token_count": 820,
+        "cached_content_token_count": 0
+    }
+}

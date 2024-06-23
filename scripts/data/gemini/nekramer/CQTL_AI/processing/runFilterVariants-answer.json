@@ -1,0 +1,31 @@
+{
+    "application": "Snakemake",
+    "details": {
+        "environment": {
+            "python": "3.6.6",
+            "virtualenv": "env",
+            "requirements": "config/requirements.txt"
+        },
+        "resources": {
+            "slurm": {
+                "job_name": "filterVariants",
+                "time": "10-00:00:00",
+                "nodes": 1,
+                "tasks": 1,
+                "cores": 1,
+                "partition": "general",
+                "memory": "2gb",
+                "output": "%x-%j.out"
+            },
+            "snakemake": {
+                "jobs": 100,
+                "max_jobs_per_second": 5,
+                "rerun_incomplete": true,
+                "snakefile": "snakefiles/filterVariants.smk",
+                "cluster_config": "config/cluster.yaml",
+                "cluster_status": "./scripts/status.py",
+                "until": "concatVariantHets_part2"
+            }
+        }
+    }
+}

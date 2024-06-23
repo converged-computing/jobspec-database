@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"SLURM\",\n  \"details\": {\n    \"job_name\": \"benchopt_run\",\n    \"ntasks\": 1,\n    \"ntasks_per_node\": 1,\n    \"gres\": \"gpu:1\",\n    \"cpus_per_task\": 10,\n    \"time\": \"02:00:00\",\n    \"output\": \"%x_%A_%a.out\",\n    \"error\": \"%x_%A_%a.out\",\n    \"qos\": \"qos_gpu-t3\",\n    \"distribution\": \"block:block\",\n    \"hint\": \"nomultithread\",\n    \"array\": \"0-95\",\n    \"modules\": [\n      \"pytorch-gpu/py3/1.10.1\"\n    ],\n    \"environment_variables\": {\n      \"PYTHONUSERBASE\": \"$WORK/.local_torch\",\n      \"PATH\": \"$WORK/.local_torch/bin:$PATH\"\n    },\n    \"working_directory\": \"$WORK/benchmark_resnet_classif\",\n    \"command\": \"benchopt run .\"\n  }\n}\n```\n\nThis script is running under the **SLURM** workload manager. The script is launching a job with the name `benchopt_run` that utilizes one task, one task per node, and one GPU. The job requests 10 CPUs per task and runs for a maximum of two hours.  The output and error logs are saved in the format `%x_%A_%a.out`.  The job uses the `qos_gpu-t3` quality of service class and employs block distribution.  It also specifies a hint `nomultithread` and uses an array job spanning from 0 to 95.\n\nThe script loads the `pytorch-gpu/py3/1.10.1` module and sets the `PYTHONUSERBASE` environment variable to `$WORK/.local_torch`. It also modifies the `PATH` variable to include `$WORK/.local_torch/bin`.\n\nThe script defines a `BASIC_CMD` that runs `benchopt run .` with specific arguments. It then defines an array of optimization options using a loop, and finally runs the `BASIC_CMD` with the optimization option specified by the `SLURM_ARRAY_TASK_ID` environment variable. \n\nThis script is likely running a benchmark of different optimization algorithms (Adam and SGD) for training a ResNet model using PyTorch. It explores variations of hyperparameters such as weight decay, learning rate schedule, and data augmentation. \n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 686,
+        "candidates_token_count": 566,
+        "total_token_count": 1252,
+        "cached_content_token_count": 0
+    }
+}

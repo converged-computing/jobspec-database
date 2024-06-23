@@ -1,0 +1,30 @@
+{
+    "application": "LSF",
+    "details": {
+        "scheduler": "LSF",
+        "job_name": "exclusive_read",
+        "output_file": "job%J-exclusive_read.stdout",
+        "error_file": "job%J-exclusive_read.stderr",
+        "user": "foerster@stce.rwth-aachen.de",
+        "node_selection": "hpcwork",
+        "memory": "1020000",
+        "wall_time": "4800",
+        "num_processors": "128",
+        "compiler": "gcc/4.8",
+        "libraries": [
+            "papi-5.1.0",
+            "spl-transformer"
+        ],
+        "tests": [
+            "exclusive_read"
+        ],
+        "commands": [
+            "make test",
+            "rsync -av $SPLDIR/ $SPLcOnHPCWORK",
+            "cmake CMakeLists.txt && make",
+            "make clean",
+            "make adjoint_test_app_opt",
+            "./adjoint_test_app_opt $t"
+        ]
+    }
+}

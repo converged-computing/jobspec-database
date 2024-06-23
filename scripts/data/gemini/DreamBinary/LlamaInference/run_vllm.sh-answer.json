@@ -1,0 +1,32 @@
+{
+    "application": "Ray",
+    "details": {
+        "resource_manager": "SLURM",
+        "gpu_type": "Nvidia A100",
+        "gpu_count": 8,
+        "node_count": 2,
+        "communication_protocol": "IB",
+        "libraries": [
+            "Anaconda",
+            "CUDA 12.2",
+            "PyTorch 1.4.0 (GPU)",
+            "NCCL",
+            "Ray"
+        ],
+        "environment_activation": "aa",
+        "python_script": "script/main.py",
+        "python_arguments": "--dataset data/scrambled_sampled_dataset.json --model Llama-2-70b-hf --run vllm --redis_password \"$redis_password\" --num_gpus 16",
+        "logging": {
+            "log_dir": "log_${SLURM_JOB_ID}",
+            "gpu_log": "log_${SLURM_JOB_ID}/gpu.log"
+        },
+        "configuration": {
+            "redis_password": "5241590000000000",
+            "NCCL_DEBUG": "INFO",
+            "NCCL_IB_DISABLE": "0",
+            "NCCL_IB_HCA": "mlx5_bond_0",
+            "NCCL_SOCKET_IFNAME": "bond0",
+            "NCCL_IB_GID_INDEX": "3"
+        }
+    }
+}

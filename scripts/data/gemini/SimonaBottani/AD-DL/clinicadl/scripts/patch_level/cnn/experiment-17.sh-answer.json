@@ -1,0 +1,59 @@
+{
+    "application": "clinicadl",
+    "software": [
+        "clinicadl",
+        "conda",
+        "bash"
+    ],
+    "resources": {
+        "partition": "gpu_p1",
+        "time": "20:00:00",
+        "memory": "60G",
+        "cpus": 10,
+        "threads_per_core": 1,
+        "tasks": 1,
+        "workdir": "/gpfswork/rech/zft/upd53tc/jobs/AD-DL/train/patch_level/multi_cnn",
+        "output": "./exp17/pytorch_job_%j.out",
+        "error": "./exp17/pytorch_job_%j.err",
+        "job_name": "exp17_cnn",
+        "gpu": 1,
+        "array": "0-4"
+    },
+    "environment": {
+        "conda_env": "clinicadl_env_py37",
+        "http_proxy": "http://10.10.2.1:8123",
+        "https_proxy": "http://10.10.2.1:8123"
+    },
+    "arguments": {
+        "network": "Conv4_FC3",
+        "network_type": "multi",
+        "cohort": "ADNI",
+        "date": "reproducibility_results_2",
+        "num_cnn": 36,
+        "use_extracted_patches": 1,
+        "caps_dir": "$SCRATCH/../commun/datasets/${COHORT}_rerun",
+        "tsv_path": "$HOME/code/AD-DL/data/$COHORT/lists_by_diagnosis/train",
+        "output_dir": "$SCRATCH/results/$DATE/",
+        "num_processors": 32,
+        "gpu": 1,
+        "preprocessing": "linear",
+        "task": "sMCI pMCI",
+        "splits": 5,
+        "split": "$SLURM_ARRAY_TASK_ID",
+        "epochs": 200,
+        "batch": 32,
+        "baseline": 0,
+        "accumulation": 1,
+        "evaluation": 20,
+        "lr": "1e-5",
+        "weight_decay": "1e-3",
+        "greedy_learning": 0,
+        "sigmoid": 0,
+        "normalization": 1,
+        "patience": 20,
+        "t_bool": 1,
+        "t_path": "$SCRATCH/results/$DATE/patch3D_model-Conv4_FC3_preprocessing-linear_task-autoencoder_baseline-0_norm-1_multi-cnn_splits-5",
+        "t_diff": 0,
+        "options": "--use_gpu --minmaxnormalization --transfer_learning_path $T_PATH --transfer_learning_multicnn"
+    }
+}

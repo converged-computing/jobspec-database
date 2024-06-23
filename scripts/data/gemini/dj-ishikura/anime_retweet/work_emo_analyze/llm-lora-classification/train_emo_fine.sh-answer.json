@@ -1,0 +1,26 @@
+{
+    "application": "accelerate",
+    "details": {
+        "resource_requirements": {
+            "cpu": 8,
+            "memory": "64G",
+            "gpu": 1
+        },
+        "docker_image": "imc.tut.ac.jp/transformers-pytorch-cuda118:4.31.0",
+        "software_requirements": {
+            "poetry": "required",
+            "python": "required",
+            "accelerate": "required",
+            "transformers": "required",
+            "pytorch": "required",
+            "cuda": "required"
+        },
+        "environment_variables": {
+            "TORCH_HOME": "${PBS_O_WORKDIR}/.cache/torch",
+            "TRANSFORMERS_CACHE": "${PBS_O_WORKDIR}/.cache/transformers",
+            "HF_HOME": "${PBS_O_WORKDIR}/.cache/huggingface",
+            "TORCH_USE_CUDA_DSA": 1
+        },
+        "script_arguments": "src/train_emo_fine.py --model_name rinna/japanese-gpt-neox-3.6b"
+    }
+}

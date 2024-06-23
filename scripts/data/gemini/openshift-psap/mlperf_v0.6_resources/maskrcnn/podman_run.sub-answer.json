@@ -1,0 +1,28 @@
+{
+    "application": "Slurm",
+    "details": {
+        "partition": "mlperf",
+        "nodes": 1,
+        "walltime": "12:00:00",
+        "job_name": "object_detection",
+        "exclusive": true,
+        "memory": "all available",
+        "mail_type": "FAIL",
+        "tasks_per_node": 8,
+        "threads_per_core": 2,
+        "cores_per_socket": 20,
+        "benchmark": "object_detection",
+        "benchmark_name": "MASKRCNN",
+        "container": "mlperf-nvidia:object_detection",
+        "data_dir": "/raid/data/coco-2017",
+        "log_dir": "/raid/results/object_detection",
+        "nexp": 5,
+        "syslogging": 1,
+        "dgxsystem": "DGX1",
+        "ibdevices": "$DGXIBDEVICES",
+        "docker_volumes": "-v $DATADIR:/data -v $LOGDIR:/results",
+        "docker_exec": "env NV_GPU=${NV_GPU} podman run --rm --net=host --uts=host --ipc=host --ulimit stack=67108864 --ulimit memlock=-1 -e NVIDIA_VISIBLE_DEVICES=ALL --cap-drop=ALL --security-opt label=type:nvidia_container_t --security-opt seccomp=unconfined --name=cont_${SLURM_JOB_ID} $IBDEVICES",
+        "mlperf_host_os": "$(cat /etc/redhat-release)",
+        "pull": "0"
+    }
+}

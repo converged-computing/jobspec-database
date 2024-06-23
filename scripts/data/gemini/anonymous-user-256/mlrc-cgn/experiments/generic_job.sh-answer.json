@@ -1,0 +1,33 @@
+{
+    "application": "SLURM",
+    "details": {
+        "partition": "gpu_shared_course",
+        "gpu": 1,
+        "job_name": "SampleJob",
+        "ntasks": 1,
+        "cpus_per_task": 2,
+        "time": "10:00:00",
+        "memory": "32000M",
+        "output_file": "slurm/output_%A.out",
+        "modules": [
+            "2021",
+            "Anaconda3/2021.05"
+        ],
+        "environment": "gcn-gpu",
+        "code": [
+            "python imagenet_eval_contributions.py",
+            "python evaluate_imagenet_sketch.py",
+            "python imagenet_eval_ood_benchmark.py  --classifier resnet50 --ood_dataset in-mini --num_workers 2",
+            "python imagenet_eval_ood_benchmark.py  --classifier resnet50 --ood_dataset in-sketch --num_workers 2",
+            "python imagenet_eval_ood_benchmark.py  --classifier resnet50-from-scratch --ood_dataset in-a --weight_path experiments/weights/resnet50_from_scratch_model_best.pth.tar --num_workers 2",
+            "python imagenet_eval_ood_benchmark.py  --classifier resnet50 --ood_dataset in-stylized --num_workers 2",
+            "python imagenet_eval_ood_benchmark.py  --classifier cgn-ensemble --ood_dataset in-mini --num_workers 2 --weight_path cgn_framework/imagenet/weights/classifier_on_in-mini_model_best.pth",
+            "python imagenet_eval_ood_benchmark.py  --classifier cgn-ensemble --ood_dataset in-sketch --num_workers 2 --weight_path cgn_framework/imagenet/weights/classifier_on_in-mini_model_best.pth",
+            "python imagenet_eval_ood_benchmark.py  --classifier cgn-ensemble --ood_dataset in-stylized --num_workers 2 --weight_path cgn_framework/imagenet/weights/classifier_on_in-mini_model_best.pth",
+            "python imagenet_eval_ood_benchmark.py  --classifier cgn-ensemble --ood_dataset in-a --num_workers 2 --weight_path cgn_framework/imagenet/weights/classifier_on_in-mini_model_best.pth",
+            "python mnist_pipeline.py",
+            "python mnist_analysis.py",
+            "python imagenet_pipeline.py"
+        ]
+    }
+}

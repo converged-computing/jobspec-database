@@ -1,0 +1,29 @@
+{
+    "application": "Dask",
+    "details": {
+        "container": "pangeo-latest.sif",
+        "scheduler_file": "scheduler.json",
+        "singularity_bindpath": "/group:/group,/scratch:/scratch,/run:/run,$HOME:$HOME",
+        "environment_variables": [
+            "SINGULARITYENV_PREPEND_PATH=/srv/conda/envs/notebook/bin:/srv/conda/condabin:/srv/conda/bin",
+            "SINGULARITYENV_XDG_RUNTIME_DIR=",
+            "SINGULARITYENV_DASK_DISTRIBUTED__WORKER__MEMORY__PAUSE=False",
+            "SINGULARITYENV_DASK_DISTRIBUTED__WORKER__MEMORY__TERMINATE=False"
+        ],
+        "slurm_parameters": [
+            "--account=pawsey0106",
+            "--ntasks=10",
+            "--cpus-per-task=1",
+            "--mem-per-cpu=16G",
+            "--time=1:00:00",
+            "-J acolite-worker",
+            "-o acolite-worker-%J.out",
+            "-e acolite-worker-%J.err"
+        ],
+        "dask_worker_parameters": [
+            "--scheduler-file $scheduler_file",
+            "--nthreads $SLURM_CPUS_PER_TASK",
+            "--memory-limit auto"
+        ]
+    }
+}

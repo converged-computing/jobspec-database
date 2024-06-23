@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"AMBER\",\n  \"details\": {\n    \"software\": [\n      \"openmpi\",\n      \"CUDA\",\n      \"AMBER\"\n    ],\n    \"resources\": {\n      \"nodes\": 1,\n      \"tasks\": 32,\n      \"partition\": \"test\",\n      \"time\": \"01:00:00\",\n      \"output_file\": \"./job.out\",\n      \"job_name\": \"amber_minize\",\n      \"environment_variables\": [\n        \"CUDA_VISIBLE_DEVICES\",\n        \"CUDA_HOME\",\n        \"AMBERHOME\"\n      ]\n    }\n  }\n}\n```\n\nThe script runs an AMBER simulation, likely performing a minimization of a protein structure. Here's a breakdown of the script:\n\n* **SBATCH directives:** These lines set up the job using SLURM (Simple Linux Utility for Resource Management). They specify:\n    * **--nodes=1**: Use one compute node.\n    * **--ntasks=32**: Allocate 32 tasks (processes) for the job.\n    * **-p test**: Run the job on the \"test\" partition.\n    * **--time=01:00:00**: Allocate 1 hour of wall time for the job.\n    * **--output=./job.out**: Write output to the \"job.out\" file.\n    * **--job-name=amber_minize**: Give the job the name \"amber_minize\".\n    * **--export=ALL**: Export all environment variables to the job's environment.\n* **module load openmpi/4.0.6-gcc-8.4.1**: Loads the openmpi module (version 4.0.6 compiled with GCC 8.4.1) for running MPI programs.\n* **export CUDA_VISIBLE_DEVICES=0,1**: Makes CUDA devices 0 and 1 visible to the application, enabling GPU acceleration.\n* **export CUDA_HOME=/opt/spack/opt/spack/linux-rhel8-icelake/gcc-8.4.1/cuda-11.0.3-mwxjoa2nfce32sfsxxxz66oza5p5tr35/****: Sets the CUDA_HOME environment variable, pointing to the installation directory of CUDA (version 11.0.3).\n* **export AMBERHOME=/home/akhanna2/data/test_amber_modifications/amber20**: Sets the AMBERHOME environment variable, pointing to the installation directory of AMBER (version 20).\n* **module list**: Prints a list of currently loaded modules.\n* **echo $LD_LIBRARY_PATH**: Prints the current value of the LD_LIBRARY_PATH environment variable, which specifies directories to search for shared libraries.\n* **echo $PATH**: Prints the current value of the PATH environment variable, which specifies directories to search for executable files.\n* **mpirun -np 32 $AMBERHOME/bin/sander.MPI -O -i box_min.in -o min.out -p solute_solvent_box.prmtop -c solute_solvent_box.inpcrd -r min.ncrst -x min.mdcrd -inf min.info**: This is the core command that executes the AMBER simulation:\n    * **mpirun**: Runs the sander.MPI executable using MPI.\n    * **-np 32**: Specifies that 32 processes should be used.\n    * **$AMBERHOME/bin/sander.MPI**: The path to the sander.MPI executable.\n    * **-O**: Turns on optimization.\n    * **-i box_min.in**: The input file containing the simulation parameters.\n    * **-o min.out**: The output file to write simulation data.\n    * **-p solute_solvent_box.prmtop**: The topology file describing the system.\n    * **-c solute_solvent_box.inpcrd**: The coordinate file containing the initial positions of the atoms.\n    * **-r min.ncrst**: The restart file to save the coordinates and velocities.\n    * **-x min.mdcrd**: The trajectory file to save the coordinates at different times.\n    * **-inf min.info**: The information file to store simulation information.\n\nThis script is likely part of a larger workflow that involves preparing the simulation input files, analyzing the results, and possibly visualizing the trajectory. \n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 334,
+        "candidates_token_count": 1004,
+        "total_token_count": 1338,
+        "cached_content_token_count": 0
+    }
+}

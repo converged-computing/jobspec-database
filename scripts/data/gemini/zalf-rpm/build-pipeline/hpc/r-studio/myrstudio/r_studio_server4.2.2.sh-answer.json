@@ -1,0 +1,34 @@
+{
+    "application": "RStudio Server",
+    "details": {
+        "job_scheduler": "SLURM",
+        "runtime": "8 hours",
+        "tasks": 1,
+        "cpus_per_task": 40,
+        "singularity_image": "SINGULARITY_IMAGE",
+        "container_environment": {
+            "OMP_NUM_THREADS": "${SLURM_JOB_CPUS_PER_NODE}",
+            "R_LIBS_USER": "${HOMEDIR}/R/rocker-rstudio/4.2",
+            "SINGULARITY_BIND": "${workdir}/run:/run,${workdir}/tmp:/tmp,${workdir}/database.conf:/etc/rstudio/database.conf,${workdir}/rsession.sh:/etc/rstudio/rsession.sh,${workdir}/var/lib/rstudio-server:/var/lib/rstudio-server",
+            "SINGULARITYENV_RSTUDIO_SESSION_TIMEOUT": "0",
+            "SINGULARITYENV_PASSWORD": "$PASSW",
+            "SINGULARITYENV_USER": "$(id -un)"
+        },
+        "data_sources": {
+            "MOUNT_DATA_SOURCE1": "MOUNT_DATA_SOURCE1",
+            "MOUNT_DATA_SOURCE2": "MOUNT_DATA_SOURCE2",
+            "MOUNT_DATA_SOURCE3": "MOUNT_DATA_SOURCE3"
+        },
+        "mount_points": {
+            "/project": "$MOUNT_PROJECT",
+            "/data": "$MOUNT_DATA",
+            "/myhome": "$MOUNT_CLUSTERHOME"
+        },
+        "dependencies": {
+            "singularity": "required",
+            "python": "required",
+            "sqlite": "required",
+            "pam": "required"
+        }
+    }
+}

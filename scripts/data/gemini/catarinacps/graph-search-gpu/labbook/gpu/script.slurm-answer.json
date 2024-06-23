@@ -1,0 +1,24 @@
+{
+    "application": "SLURM",
+    "details": {
+        "scheduler": "SLURM",
+        "resources": {
+            "time": "24:00:00",
+            "partition": "draco",
+            "nodes": "1",
+            "mail_type": "END,FAIL",
+            "mail_user": "hcpsilva@inf.ufrgs.br"
+        },
+        "environment": {
+            "CUDA_INSTALLATION": "/usr/local/cuda-10.1"
+        },
+        "software": {
+            "code_dir": "CODE_DIR",
+            "exp_dir": "CODE_DIR/labbook/gpu"
+        },
+        "commands": {
+            "build": "make CUDA_OPT=NVIDIA CUDA_PATH=$CUDA_INSTALLATION",
+            "run": "./build/gsg cuda -b $block_size $method data/$instance > $log_file"
+        }
+    }
+}

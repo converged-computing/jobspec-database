@@ -1,0 +1,26 @@
+{
+    "application": "Slurm",
+    "details": {
+        "resources": {
+            "gpu": 1,
+            "cpus": 3
+        },
+        "queue": "all",
+        "qos": "default",
+        "job_name": "WBattack",
+        "output_file": "logs/%A_%a.stdout",
+        "error_file": "logs/%A_%a.stderr",
+        "signal_handling": {
+            "USR1": "restart",
+            "TERM": "ignore"
+        },
+        "array_tasks": [
+            "oracle_attack_using_NN.py --model_path supervised_model_checkpoints/best_model_supervised_resnet50_QMNIST_defender_whole-0.0001-normal-normal_gallant-wildflower-1.pth --results_dir supervised_normal_whole_attack_using_NN --dataset_path data/QMNIST_ppml.pickle --attack_mode forward_target_domain --N 3000 --zip"
+        ],
+        "excluded_nodes": "n[1-5,51-55]",
+        "other_software": [
+            "python",
+            "oracle_attack_using_NN.py"
+        ]
+    }
+}

@@ -1,0 +1,33 @@
+{
+    "application": "LSF",
+    "details": {
+        "queue": "debug",
+        "project": "MAT190",
+        "job_name": "LLVMTernaryThermo4PFM",
+        "output_file": "LLVMTernaryThermo4PFM.o%J",
+        "walltime": "1:00",
+        "nodes": 1,
+        "modules": [
+            "llvm/15",
+            "boost",
+            "cmake",
+            "python",
+            "cuda"
+        ],
+        "environment_variables": {
+            "OMP_NUM_THREADS": "1",
+            "LIBOMPTARGET_INFO": "31"
+        },
+        "execution_command": [
+            "jsrun -n1 -a1 -c7 -g1 -d packed -b packed:7 nvprof ./drivers/loopCALPHADConcSolverTernary 1000 2",
+            "jsrun -n1 -a1 -c7 -g1 -d packed -b packed:7 nvprof ./drivers/loopCALPHADConcSolverTernary 10000 2",
+            "jsrun -n1 -a1 -c7 -g1 -d packed -b packed:7 nvprof ./drivers/loopCALPHADConcSolverTernary 100000 2",
+            "jsrun -n1 -a1 -c7 -g1 -d packed -b packed:7 nvprof ./drivers/loopCALPHADConcSolverTernary 1000000 2",
+            "jsrun -n1 -a1 -c7 -g1 -d packed -b packed:7 nvprof ./drivers/loopCALPHADConcSolverTernary 10000000 2"
+        ],
+        "software": [
+            "nvprof",
+            "jsrun"
+        ]
+    }
+}

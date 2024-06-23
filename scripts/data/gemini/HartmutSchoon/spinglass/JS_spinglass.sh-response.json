@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"Slurm\",\n  \"details\": {\n    \"job_name\": \"SG_L4\",\n    \"output_file\": \"./logs/slurm-%j.out\",\n    \"error_file\": \"./logs/slurm_error-%j.out\",\n    \"mail_type\": \"ALL\",\n    \"mail_user\": \"hartmut.schoon@uni-oldenburg.de\",\n    \"partition\": \"carl.p\",\n    \"time\": \"3-00:00\",\n    \"nodes\": 2,\n    \"cpus_per_task\": 1,\n    \"mem\": \"1G\",\n    \"mem_per_cpu\": \"1G\",\n    \"ntasks\": 10,\n    \"array\": \"1-10:1%4\",\n    \"parallel_command\": \"parallel -N 1 --delay 0.2 -j $SLURM_NTASKS --joblog ./logs/parallel_$SLURM_JOB_ID.log\",\n    \"srun_command\": \"srun -n1\",\n    \"executable\": \"./spinglass.sh\",\n    \"environment_variable\": \"RUST_BACKTRACE=full\"\n  }\n}\n```\n\nThis script is designed to run a simulation using the `spinglass.sh` script on a cluster managed by Slurm. \n\nHere's a breakdown of the key parts and their functions:\n\n* **Slurm Options:** These lines set up the job parameters for Slurm, including:\n    * Job name, output and error file locations, mail notifications, resource requests (nodes, cpus, memory), and the use of job arrays.\n* **Parallel Execution:** The script utilizes the `parallel` command to run the `spinglass.sh` script 10 times in parallel using 10 tasks. \n* **`srun` Command:**  The `srun` command is used to launch the `spinglass.sh` script on a single node, ensuring that each task runs on its own node.\n* **Environment Variable:** The `RUST_BACKTRACE=full` environment variable enables more detailed debugging information. \n\n**Note:** The script requires the `spinglass.sh` script to be present in the same directory. \n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 422,
+        "candidates_token_count": 512,
+        "total_token_count": 934,
+        "cached_content_token_count": 0
+    }
+}

@@ -1,0 +1,37 @@
+{
+    "application": "relion",
+    "software": {
+        "spack": {
+            "version": "0.17.3",
+            "instance": {
+                "name": "gpu",
+                "version": "b",
+                "dir": "/cm/shared/apps/spack/0.17.3/gpu/b"
+            }
+        },
+        "relion": {
+            "version": "3.1.4",
+            "compiler": "gcc@10.2.0",
+            "variants": "+allow_ctf_in_sagd +cuda cuda_arch=70,80 +double ~double-gpu ~gui ~ipo ~mklfft",
+            "dependencies": "^fftw@3.3.10/$(spack find --format '{hash:7}' fftw@3.3.10 % ${SPACK_COMPILER} +mpi ~openmp ^openmpi@4.1.3)"
+        },
+        "fftw": {
+            "version": "3.3.10",
+            "compiler": "gcc@10.2.0",
+            "variants": "+mpi ~openmp",
+            "dependencies": "^openmpi@4.1.3"
+        },
+        "openmpi": {
+            "version": "4.1.3"
+        },
+        "scheduler": "slurm"
+    },
+    "resources": {
+        "nodes": 1,
+        "tasks": 1,
+        "cpus": 10,
+        "memory": "93G",
+        "gpus": 1,
+        "time": "01:00:00"
+    }
+}

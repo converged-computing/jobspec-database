@@ -1,0 +1,40 @@
+{
+    "application": "SLURM",
+    "details": {
+        "job_name": "ppo_agent",
+        "tasks": 1,
+        "memory": "24G",
+        "cores": 32,
+        "output_file": "ppo_agent.log",
+        "gpus": 1,
+        "partition": "short",
+        "email_notifications": [
+            "FAIL",
+            "END",
+            "ARRAY_TASKS"
+        ],
+        "email_address": "mgm4@cin.ufpe.br",
+        "modules": [
+            "Python3.10",
+            "Xvfb",
+            "freeglut",
+            "glew",
+            "MuJoCo"
+        ],
+        "python_environment": "$HOME/.pyvenvs/rl",
+        "script": "run_ppo.py",
+        "arguments": [
+            "--cuda",
+            "--gym-id",
+            "$1",
+            "--total-timesteps",
+            "1000000",
+            "--capture-video",
+            "--num-envs",
+            "16",
+            "--track",
+            "--video-freq",
+            "10"
+        ]
+    }
+}

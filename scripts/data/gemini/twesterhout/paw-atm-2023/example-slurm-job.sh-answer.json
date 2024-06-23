@@ -1,0 +1,31 @@
+{
+    "application": "SLURM",
+    "details": {
+        "scheduler": "SLURM",
+        "partition": "thin",
+        "time": "01:00:00",
+        "nodes": 64,
+        "cores": 128,
+        "exclusive": true,
+        "excluded_nodes": "tcn377",
+        "job_name": "64_matrixVectorProduct",
+        "environment_variables": {
+            "GASNET_BACKTRACE": 1,
+            "GASNET_PHYSMEM_MAX": "167 GB"
+        },
+        "container_runtime": "apptainer",
+        "container_image": "BenchmarkMatrixVectorProduct.sif",
+        "executable": "BenchmarkMatrixVectorProduct",
+        "mpi": "pmix",
+        "data_files": "data/heisenberg_chain_${chainLength}_symm.yaml",
+        "arguments": {
+            "numLocales": "$numLocales",
+            "kHamiltonian": "data/heisenberg_chain_${chainLength}_symm.yaml",
+            "kDisplayTimings": "true",
+            "kNumConsumerTasks": "$numConsumerTasks",
+            "kRemoteBufferSize": "$remoteBufferSize",
+            "kCacheNumberBits": "$cacheNumberBits",
+            "kFactor": "$numLocales"
+        }
+    }
+}

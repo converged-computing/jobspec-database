@@ -1,0 +1,33 @@
+{
+    "application": "SLURM",
+    "details": {
+        "job_name": "llama7",
+        "account": "kempner_lab",
+        "output_file": "/n/holyscratch01/kempner_lab/Lab/logs/%j.log",
+        "nodes": 16,
+        "tasks_per_node": 4,
+        "gpus_per_node": 4,
+        "cpus_per_task": 16,
+        "time_limit": "167:00:00",
+        "memory": "all",
+        "partition": "kempner_project",
+        "environment_variables": {
+            "OMP_NUM_THREADS": "$SLURM_CPUS_PER_TASK",
+            "MPICH_GPU_SUPPORT_ENABLED": 1,
+            "MIOPEN_USER_DB_PATH": "/tmp/${USER}-miopen-cache-${SLURM_JOB_ID}",
+            "MIOPEN_CUSTOM_CACHE_DIR": "${MIOPEN_USER_DB_PATH}",
+            "PYTHONPATH": ".:${PYTHONPATH}",
+            "PYTORCH_HIP_ALLOC_CONF": "max_split_size_mb:512",
+            "DATA_PATH": "/n/home06/dgroeneveld/data/preprocessed/olmo-mix",
+            "EVAL_DATA_PATH": "/n/home06/dgroeneveld/data/eval-data",
+            "CHECKPOINTS_PATH": "/n/home06/dgroeneveld/checkpoints",
+            "PYTORCH_KERNEL_CACHE_PATH": "/tmp/pytorch_kernel_cache/"
+        },
+        "command": "scripts/run_with_environment.sh $HOME/miniconda3/envs/LLM/bin/python -u scripts/train.py configs/llama7.yaml --run_name=kempner_llama7_${SLURM_JOB_ID} --save_folder=/n/holyscratch01/kempner_lab/Lab/checkpoints/${SLURM_JOB_ID}/ --data.num_workers=4 --device_train_microbatch_size=6 --time_limit=$((167 * 60 * 60)) --model.flash_attention=true ${@}",
+        "software": {
+            "python": "scripts/train.py",
+            "miniconda3": "/n/home06/dgroeneveld/miniconda3",
+            "environment": "LLM"
+        }
+    }
+}

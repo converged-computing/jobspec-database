@@ -1,0 +1,28 @@
+{
+    "application": "SLURM",
+    "details": {
+        "job_name": "train_spec_norm",
+        "output_file": "outLogs/train_model_%A_%a.out",
+        "error_file": "outLogs/train_model_%A_%a.err",
+        "memory": "100Gb",
+        "nodes": 1,
+        "cpus_per_task": 20,
+        "time": "1-00:00:00",
+        "partition": "normal",
+        "gpu_type": "a100",
+        "gpu_count": 4,
+        "array_range": "0-11",
+        "modules": [
+            "openmind/miniconda",
+            "openmind/cudnn/11.5-v8.3.3.40",
+            "openmind/cuda/12.3"
+        ],
+        "conda_environment": "/om/user/rphess/conda_envs/pytorch_2_tv",
+        "python_script": "train.py",
+        "script_arguments": {
+            "job_id": "$SLURM_ARRAY_TASK_ID",
+            "gpus": 4,
+            "num_workers": 5
+        }
+    }
+}

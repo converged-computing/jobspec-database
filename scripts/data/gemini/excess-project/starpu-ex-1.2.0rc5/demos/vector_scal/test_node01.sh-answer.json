@@ -1,0 +1,65 @@
+{
+    "application": "PBS",
+    "details": {
+        "job_name": "vector_scal",
+        "queue": "night",
+        "output_file": "/nas_home/hpcfapix/$PBS_JOBID.out",
+        "error_file": "/nas_home/hpcfapix/$PBS_JOBID.err",
+        "walltime": "00:60:00",
+        "nodes": "1:node01:ppn=20",
+        "modules": [
+            "amd/app-sdk/3.0.124.132-GA",
+            "mpi/mpich/3.1-gnu-4.9.2",
+            "compiler/cuda/7.0",
+            "numlib/intel/mkl/11.1",
+            "compiler/gnu/4.9.2"
+        ],
+        "environment_variables": {
+            "ROOT": "/nas_home/hpcfapix/MF/starpu-ex-1-2-0rc5",
+            "LIB": "${ROOT}/bin/lib",
+            "LIB_MF": "/opt/mf/stable/16.6/lib",
+            "LD_LIBRARY_PATH": "$LD_LIBRARY_PATH:$LIB:${LIB_MF}",
+            "EXECUTABLE": "${ROOT}/demos/vector_scal/vector_scal",
+            "DBKEY_FILE": "/nas_home/hpcfapix/.mf/dbkey/${PBS_JOBID}",
+            "PBS_USER": "hpcfapix",
+            "STARPU_SCHED": "dmda",
+            "STARPU_CALIBRATE": "1",
+            "STARPU_PROFILING": "1",
+            "STARPU_HISTORY_MAX_ERROR": "50",
+            "MF_USER": "${PBS_USER}",
+            "MF_TASKID": "${PBS_JOBNAME}",
+            "MF_EXPID": "${DBKEY}"
+        },
+        "execution_details": {
+            "sleep_time": 20,
+            "loop_variables": {
+                "n": {
+                    "start": 630784000,
+                    "end": 1024000000,
+                    "step": 65536000
+                },
+                "i": {
+                    "start": 0,
+                    "end": 20,
+                    "step": 1
+                }
+            },
+            "executable": "${EXECUTABLE}",
+            "command_arguments": "-NX ${n}"
+        },
+        "hardware_configurations": {
+            "cpu": {
+                "enabled": true,
+                "cores": 1
+            },
+            "gpu": {
+                "enabled": true,
+                "cores": 1
+            },
+            "opencl": {
+                "enabled": true,
+                "cores": 1
+            }
+        }
+    }
+}

@@ -1,0 +1,83 @@
+{
+    "application": "SLURM",
+    "details": {
+        "slurm_options": [
+            {
+                "option": "--output",
+                "value": "yfcc-2m-%j.log"
+            },
+            {
+                "option": "--nodes",
+                "value": "1"
+            },
+            {
+                "option": "--ntasks-per-node",
+                "value": "4"
+            },
+            {
+                "option": "--cpus-per-task",
+                "value": "8"
+            },
+            {
+                "option": "--time",
+                "value": "47:59:00"
+            },
+            {
+                "option": "--mem",
+                "value": "192GB"
+            },
+            {
+                "option": "--gres",
+                "value": "gpu:4"
+            },
+            {
+                "option": "--wait-all-nodes",
+                "value": "1"
+            },
+            {
+                "option": "--job-name",
+                "value": "yfcc-2m"
+            },
+            {
+                "option": "--mail-type",
+                "value": "BEGIN,END"
+            },
+            {
+                "option": "--mail-user",
+                "value": "bf996@nyu.edu"
+            },
+            {
+                "option": "--dependency",
+                "value": "afterany:24469882"
+            }
+        ],
+        "modules": "purge",
+        "environment_variables": [
+            {
+                "variable": "OMP_NUM_THREADS",
+                "value": "$SLURM_CPUS_PER_TASK"
+            },
+            {
+                "variable": "MASTER_PORT",
+                "value": "random port between 10000 and 65500"
+            },
+            {
+                "variable": "MASTER_ADDR",
+                "value": "$(hostname -s).hpc.nyu.edu"
+            }
+        ],
+        "command": "srun --cpu_bind=v --accel-bind=v /bin/bash src/script/run-singularity.bash /bin/bash -c 'export PYTHONPATH=\"$PYTHONPATH:$PWD/src\"; python src/training/main.py --report-to wandb --train-data=\"/scratch/bf996/open_clip/yfcc-subsets/yfcc-random-2m.csv\" --csv-separator \",\" --imagenet-a \"/imagenet-a\" --imagenet-r \"/imagenet-r\" --imagenet-val \"/imagenet/val/\" --imagenet-v2 \"/scratch/bf996/datasets\" --imagenet-s \"/imagenet-sketch\" --zeroshot-frequency=8 --save-frequency 4 --warmup 2000 --batch-size=256 --epochs=32 --workers=8 --model=RN50 --local-loss --gather-with-grad'",
+        "software": [
+            "Singularity",
+            "Python"
+        ],
+        "datasets": [
+            "yfcc-random-2m.csv",
+            "imagenet-a",
+            "imagenet-r",
+            "imagenet/val/",
+            "imagenet-v2",
+            "imagenet-sketch"
+        ]
+    }
+}

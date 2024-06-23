@@ -1,0 +1,41 @@
+{
+    "application": "PBS",
+    "details": {
+        "resource_requirements": {
+            "walltime": "2:00:00",
+            "nodes": 1,
+            "gres": "atlas1%atlas2"
+        },
+        "software": {
+            "score-p": {
+                "SCOREP_EXPERIMENT_DIRECTORY": "${RUN}-${EXEC}-${PBS_JOBID}",
+                "SCOREP_ENABLE_PROFILING": "true",
+                "SCOREP_SAMPLING_EVENTS": "PAPI_TOT_CYC@1000000",
+                "SCOREP_ENABLE_TRACING": "true",
+                "SCOREP_ENABLE_UNWINDING": "true",
+                "SCOREP_TOTAL_MEMORY": "512M",
+                "SCOREP_PROFILING_MAX_CALLPATH_DEPTH": 50,
+                "SCOREP_CUDA_ENABLE": "'kernel','kernel_serial','kernel_counter','memcpy'",
+                "SCOREP_CUDA_BUFFER": "512M",
+                "SCOREP_CUDA_BUFFER_CHUNK": "8M",
+                "SCOREP_OPENACC_ENABLE": "'regions','wait','enqueue','device_alloc','kernel_properties','variable_names'"
+            },
+            "aprun": {
+                "version": null,
+                "arguments": "-n 16 ${MEMBERWORK}/${PROJFOLDER}/bin/${EXEC} -da_grid_x 300 -da_grid_y 300 -da_grid_z 300 -config $MEMBERWORK/${PROJFOLDER}/configs/PETSc_SolverOptions_GAMG.info"
+            },
+            "rsync": {
+                "version": null,
+                "arguments": {
+                    "sync_run_folder": "-Pravq --delete ${RUN_PATH} ${MEMBERWORK}/${PROJFOLDER}",
+                    "sync_bin_configs": "-Pravq ${RUN_BASE}/../bin ${MEMBERWORK}/${PROJFOLDER}",
+                    "sync_results": "-Pravq ${MEMBERWORK}/${PROJFOLDER}/${RUN} ${RUN_BASE}"
+                }
+            },
+            "other": {
+                "source": "${PBS_O_WORKDIR}/scripts/set_up_environment.sh",
+                "execution_command": "${MEMBERWORK}/${PROJFOLDER}/bin/${EXEC}"
+            }
+        }
+    }
+}

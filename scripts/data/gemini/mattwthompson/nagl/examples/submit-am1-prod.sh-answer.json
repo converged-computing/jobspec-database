@@ -1,0 +1,36 @@
+{
+    "application": "LSF",
+    "details": {
+        "job_name": "am1",
+        "wall_time_limit": "02:00",
+        "output_path": "%J.o",
+        "error_output_path": "%J.e",
+        "queue": "gpuqueue",
+        "gpu_options": {
+            "num": "1",
+            "j_exclusive": "yes",
+            "mode": "shared",
+            "mps": "no"
+        },
+        "memory_limit": "5G",
+        "conda_environment": "nagl",
+        "conda_environment_file": "conda-env.yml",
+        "cuda_version": "11.0",
+        "python_script": "train-am1-q-model.py",
+        "script_arguments": {
+            "train_set": [
+                "data-sets/labelled/ChEMBL_eps_78.sqlite",
+                "data-sets/labelled/ZINC_eps_78.sqlite"
+            ],
+            "train_batch_size": 256,
+            "val_set": "data-sets/labelled/enamine-10240.sqlite",
+            "test_set": "data-sets/labelled/OpenFF-Industry-Benchmark-Season-1-v1-1.sqlite",
+            "n_gcn_layers": 5,
+            "n_gcn_hidden_features": 128,
+            "n_am1_layers": 2,
+            "n_am1_hidden_features": 64,
+            "learning_rate": 0.001,
+            "n_epochs": 400
+        }
+    }
+}

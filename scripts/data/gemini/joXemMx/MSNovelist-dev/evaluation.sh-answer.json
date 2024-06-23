@@ -1,0 +1,57 @@
+{
+    "application": "LSF",
+    "details": {
+        "resources": {
+            "cores": 12,
+            "memory": "8192 MB",
+            "scratch": "20000 MB",
+            "gpus": 0
+        },
+        "environment": {
+            "MSNOVELIST_BASE": "/msnovelist",
+            "JAVA_HOME": "/usr",
+            "COMPUTERNAME": "DOCKER",
+            "TF_CPP_MIN_LOG_LEVEL": 3,
+            "conda_env": "msnovelist-env"
+        },
+        "software": {
+            "python": {
+                "scripts": [
+                    "/msnovelist/evaluation.py",
+                    "/msnovelist/evaluation/identity_ranking_with_metrics.py",
+                    "/msnovelist/evaluation/top_similarity_with_metrics.py",
+                    "/msnovelist/evaluation/top_rediscovery.py"
+                ]
+            },
+            "other": [
+                "tar",
+                "conda"
+            ]
+        },
+        "files": {
+            "input": [
+                "$TRAINED_CONFIG_DIR/*.yaml",
+                "$EVAL_CONFIG_DIR/*.yaml"
+            ],
+            "output": [
+                "/msnovelist-data/logs/eval.%J.log",
+                "$TMPDIR/eval_${LSB_JOBID}.yaml",
+                "${EVAL_DIR}/eval_${LSB_JOBID}-*.pkl",
+                "$TMPDIR/tarball/${TAG}/eval_${LSB_JOBID}_*",
+                "$TMPDIR/eval_${LSB_JOBID}${UTAG}.tar.gz",
+                "${EVAL_DIR}/eval_${LSB_JOBID}${UTAG}.tar.gz"
+            ]
+        },
+        "workflow": {
+            "description": "This script is running a series of evaluations using a machine learning model trained with different configurations. It evaluates the model's performance on different datasets and stores the results in various formats.",
+            "steps": [
+                "Activate conda environment",
+                "Iterate through all trained configurations",
+                "Iterate through all evaluation configurations",
+                "Run evaluation scripts",
+                "Create and store evaluation results",
+                "Package results into a tar archive"
+            ]
+        }
+    }
+}

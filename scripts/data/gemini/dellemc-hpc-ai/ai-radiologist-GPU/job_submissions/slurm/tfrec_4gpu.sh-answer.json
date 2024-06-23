@@ -1,0 +1,25 @@
+{
+    "application": "SLURM",
+    "details": {
+        "resource_requirements": {
+            "nodes": 1,
+            "tasks_per_node": 4,
+            "walltime": "15:00:00",
+            "job_name": "tfrec_4gpu",
+            "output_file": "outputs/tfrec_4gpu-%J.o",
+            "error_file": "outputs/tfrec_4gpu-%J.o",
+            "partition": "gpuq",
+            "features": "c4140,m,32gb,v100"
+        },
+        "software_requirements": {
+            "cuda": "10.0.130",
+            "gcc": "7.2.0",
+            "conda_environment": "docker_pip2",
+            "mpi": "openmpi-4.0.0-flags-ucx"
+        },
+        "python_script": "chexnet_densenet_tfrec.py",
+        "python_arguments": "--batch_size=64 --epochs=10 --skip_eval=1 --write_weights=0",
+        "mpi_command": "mpirun",
+        "mpi_arguments": "-np 4 --map-by socket"
+    }
+}

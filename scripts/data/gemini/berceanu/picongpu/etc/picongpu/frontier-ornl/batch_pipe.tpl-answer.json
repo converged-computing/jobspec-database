@@ -1,0 +1,57 @@
+{
+    "application": "PIConGPU",
+    "other_software": [
+        "openpmd-pipe",
+        "python",
+        "cuda_memtest",
+        "MPI",
+        "ADIOS2",
+        "SLURM",
+        "sbcast",
+        "openPMD"
+    ],
+    "resource_requirements": {
+        "hardware": {
+            "nodes": {
+                "quantity": "!TBG_nodes_adjusted",
+                "requirements": [
+                    "NVMe",
+                    "GPU",
+                    "CPU"
+                ]
+            },
+            "gpus": {
+                "quantity": "!TBG_devicesPerNode",
+                "type": "NVIDIA"
+            },
+            "cpus": {
+                "quantity": "!TBG_coresPerGPU",
+                "type": "Cray"
+            }
+        },
+        "software": {
+            "modules": "TBG_profile",
+            "libraries": [
+                "MPICH",
+                "libMPI",
+                "libfabric"
+            ],
+            "environment_variables": [
+                "OMP_NUM_THREADS",
+                "OPENPMD_CHUNK_DISTRIBUTION",
+                "MPICH_OFI_NIC_POLICY",
+                "PMI_MMAP_SYNC_WAIT_TIME",
+                "PIC_USE_THREADED_MPI",
+                "MPICH_OFI_CXI_PID_BASE",
+                "LD_LIBRARY_PATH",
+                "PATH"
+            ]
+        },
+        "storage": {
+            "output_directory": "simOutput"
+        },
+        "network": {
+            "type": "single_node_vni,job_vni"
+        }
+    }
+}

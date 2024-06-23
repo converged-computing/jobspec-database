@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"LSF\",\n  \"details\": {\n    \"queue\": \"lowpriority\",\n    \"gpu_count\": 1,\n    \"gpu_mode\": \"exclusive_process\",\n    \"container_image\": \"docker.optum.com/dhanley2/bert:pytorch_build\",\n    \"nodes\": 1,\n    \"resource_requirements\": \"span[ptile=4]\",\n    \"output_file\": \"log_train_%J\",\n    \"command\": \"cd /share/dhanley2/recursion/$WDIR  && python3 downsize_6channel.py  --targetpath mount/256X256X6 --dimsize 256\",\n    \"script\": \"downsize_6channel.py\",\n    \"arguments\": \"--targetpath mount/256X256X6 --dimsize 256\"\n  }\n}\n```\n\nThis script is running under the **LSF** (Load Sharing Facility) batch system. \n\nHere's a breakdown of the script's details:\n\n* **queue:** The job is submitted to the `lowpriority` queue.\n* **gpu_count:** The job requires one GPU (`N_GPU=1`).\n* **gpu_mode:** The GPU is set to `exclusive_process` mode, meaning the GPU is dedicated to this job.\n* **container_image:** The job uses a Docker container with the image `docker.optum.com/dhanley2/bert:pytorch_build`.\n* **nodes:** The job requires one node (`-n 1`).\n* **resource_requirements:** The job requires a certain amount of resources, defined by `-R \"span[ptile=4]\"` (the specific meaning of this depends on the LSF configuration).\n* **output_file:** The job's output will be directed to a file named `log_train_%J`, where `%J` is replaced with the job ID.\n* **command:** The actual command to be executed on the remote node is `cd /share/dhanley2/recursion/$WDIR  && python3 downsize_6channel.py  --targetpath mount/256X256X6 --dimsize 256`.\n* **script:** The command calls the script `downsize_6channel.py`.\n* **arguments:** The script is given the arguments `--targetpath mount/256X256X6 --dimsize 256`. \n\nThe script seems to be running a Python script called `downsize_6channel.py` that potentially manipulates images. The script is using a Docker container with a specific image for running the Python script. \n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 313,
+        "candidates_token_count": 600,
+        "total_token_count": 913,
+        "cached_content_token_count": 0
+    }
+}

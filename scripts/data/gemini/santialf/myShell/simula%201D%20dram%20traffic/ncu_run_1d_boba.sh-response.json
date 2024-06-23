@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"SLURM\",\n  \"details\": {\n    \"partition\": \"a100q\",\n    \"time_limit\": \"0-15:00\",\n    \"output_file\": \"slurm.%N.%j.out\",\n    \"error_file\": \"slurm.%N.%j.err\",\n    \"gpus_per_node\": 1,\n    \"environment_variables\": {\n      \"PATH\": \"$PATH:/usr/local/cuda/bin\"\n    },\n    \"commands\": [\n      \"nvidia-smi\",\n      \"nvcc --version\",\n      \"make\",\n      \"srun ncu -k spmv_1D -c 1 --metrics dram__bytes.sum ./rows_per_thread \\\"path_to_input_matrix\\\"\",\n      \"gunzip -c \\\"path_to_input_matrix\\\" > \\\"path_to_decompressed_matrix\\\"\",\n      \"rm \\\"path_to_decompressed_matrix\\\"\"\n    ],\n    \"software_dependencies\": [\n      \"SLURM\",\n      \"CUDA\",\n      \"GNU make\",\n      \"ncu\",\n      \"gzip\",\n      \"rows_per_thread\"\n    ],\n    \"resource_requirements\": {\n      \"partition\": \"a100q\",\n      \"gpu\": \"1\",\n      \"time_limit\": \"15 minutes\",\n      \"storage\": {\n        \"temporary\": \"/work/$USER/tmp8\"\n      }\n    }\n  }\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 2,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 1032,
+        "candidates_token_count": 353,
+        "total_token_count": 1385,
+        "cached_content_token_count": 0
+    }
+}

@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "Seismic Modelling\n\n```json\n{\n  \"application\": \"Seismic Modelling\",\n  \"software\": [\n    \"xmeshfem3D\",\n    \"xgenerate_databases\",\n    \"xspecfem3D\",\n    \"xcubedsphere_topo\",\n    \"xcubedsphere_topo_FindOcean\"\n  ],\n  \"resource_requirements\": {\n    \"computing_resources\": {\n      \"nodes\": \"NNODE\",\n      \"processors_per_node\": 40\n    },\n    \"time_limits\": {\n      \"meshing\": \"00:20:00\",\n      \"generating_databases\": \"00:30:00\",\n      \"solver\": \"18:00:00\"\n    },\n    \"modules\": [\n      \"openmpi\",\n      \"intel\"\n    ]\n  },\n  \"input_files\": [\n    \"DATA/Par_file\",\n    \"DATA/meshfem3D_files/interfaces.dat\",\n    \"DATA/meshfem3D_files/topo_Moho.dat\",\n    \"DATA/meshfem3D_files/topo_Midcrust.dat\",\n    \"DATA/meshfem3D_files/SA_real_topo.dat\",\n    \"DATA/meshfem3D_files/real_bathymetry_topography\"\n  ],\n  \"output_files\": [\n    \"OUTPUT_FILES/DATABASES_MPI/DATABASES_MPI*/*/\",\n    \"OUTPUT_FILES/DATABASES_MPI/*\",\n    \"OUTPUT_FILES/*\",\n    \"log.err\",\n    \"log.log\"\n  ]\n}\n```\n\nThe script utilizes several software components for seismic modeling:\n\n* **xmeshfem3D:** Generates a 3D finite element mesh based on the provided input parameters.\n* **xgenerate_databases:** Creates databases necessary for the seismic wave propagation simulations.\n* **xspecfem3D:** Solves the seismic wave equations using a spectral element method to produce seismograms.\n* **xcubedsphere_topo:**  Transforms topography data from longitude-latitude coordinates to XI and ETA coordinates, which are used in the modeling framework.\n* **xcubedsphere_topo_FindOcean:**  Identifies ocean areas based on the provided bathymetry data.\n\nThe script requires a specific configuration of computing resources, including:\n\n* **Nodes:** The number of nodes needed for parallel execution (determined based on the number of processors).\n* **Processors per Node:**  The script utilizes 40 processors per node, implying a specific hardware setup.\n* **Time Limits:** The script allocates specific time limits for different stages of the simulation, including meshing, database generation, and the solver.\n* **Modules:**  The script requires specific modules for compiling and running the software, including \"openmpi\" and \"intel.\" \n\nThe script takes several input files, such as:\n\n* **DATA/Par_file:**  Contains parameters for the simulation, including the number of processors.\n* **DATA/meshfem3D_files/interfaces.dat:**  Specifies the discontinuities in the Earth's structure.\n* **DATA/meshfem3D_files/topo_Moho.dat, topo_Midcrust.dat, SA_real_topo.dat:**  Bathymetry and topography data.\n* **DATA/meshfem3D_files/real_bathymetry_topography:**  Data for identifying ocean areas.\n\nThe script generates several output files, including:\n\n* **OUTPUT_FILES/DATABASES_MPI/DATABASES_MPI*/*/:  Databases generated for the simulation.\n* **OUTPUT_FILES/DATABASES_MPI/*:  Directories containing the generated databases.\n* **OUTPUT_FILES/*:  Output files from the simulation.\n* **log.err, log.log:**  Error and log files from the job submission.\n\nThe script also leverages the PBS (Portable Batch System) job scheduler for managing parallel execution, using commands such as `sbatch` to submit jobs and specify dependencies between them. The script handles the submission of three separate jobs: one for meshing, one for generating databases, and one for the solver.  The jobs are designed to run sequentially, with each job depending on the completion of the previous job.\n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 2790,
+        "candidates_token_count": 932,
+        "total_token_count": 3722,
+        "cached_content_token_count": 0
+    }
+}

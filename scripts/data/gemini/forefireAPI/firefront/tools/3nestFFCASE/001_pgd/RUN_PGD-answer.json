@@ -1,0 +1,51 @@
+{
+    "application": "Slurm",
+    "details": {
+        "job_name": "FCAST_PGD",
+        "nodes": 1,
+        "tasks": 4,
+        "partition": "intel",
+        "time": "20:00:00",
+        "email": "batti.filippi@@gmail.com",
+        "email_type": "all",
+        "software": [
+            "PREP_PGD",
+            "PREP_NEST_PGD",
+            "makePickleCoordinates.py"
+        ],
+        "environment_variables": [
+            "MESONH",
+            "MPIRUN"
+        ],
+        "input_files": [
+            "PRE_PGD1.nam_2000m",
+            "PRE_PGD1.nam_400m",
+            "PRE_PGD1.nam_80m",
+            "ECOCLIMAP_v2.0.*",
+            "srtm_europe.*",
+            "CLAY_HWSD_MOY.*",
+            "SAND_HWSD_MOY.*"
+        ],
+        "output_files": [
+            "PGDdomain.kml"
+        ],
+        "commands": [
+            "ulimit -c 0",
+            "ulimit -s unlimited",
+            "hostname",
+            ". ~/runMNH",
+            "ln -sf $MESONH/PGD/ECOCLIMAP_v2.0.* .",
+            "ln -sf $MESONH/PGD/srtm_europe.* .",
+            "ln -sf $MESONH/PGD/CLAY_HWSD_MOY.* .",
+            "ln -sf $MESONH/PGD/SAND_HWSD_MOY.* .",
+            "cp PRE_PGD1.nam_2000m PRE_PGD1.nam",
+            "time ${MPIRUN} PREP_PGD${XYZ}",
+            "cp PRE_PGD1.nam_400m PRE_PGD1.nam",
+            "time ${MPIRUN} PREP_PGD${XYZ}",
+            "cp PRE_PGD1.nam_80m PRE_PGD1.nam",
+            "time ${MPIRUN} PREP_PGD${XYZ}",
+            "time ${MPIRUN} PREP_NEST_PGD${XYZ}",
+            "/gpfs/home/UDCPP/filippi_j/soft/bin/python2.7 makePickleCoordinates.py > PGDdomain.kml"
+        ]
+    }
+}

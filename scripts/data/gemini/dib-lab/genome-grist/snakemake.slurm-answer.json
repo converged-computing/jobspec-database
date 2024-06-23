@@ -1,0 +1,26 @@
+{
+    "application": "Snakemake",
+    "details": {
+        "scheduler": "SLURM",
+        "environment": "conda",
+        "environment_name": "grist3",
+        "resources": {
+            "partition": "bmm",
+            "nodes": 1,
+            "tasks": 1,
+            "cores": 32,
+            "time": "5-0",
+            "memory": "120000",
+            "additional_resources": [
+                {
+                    "name": "mem_mb",
+                    "value": "210000"
+                }
+            ]
+        },
+        "commands": [
+            "genome-grist run conf-paper.yml -k --unlock -j 4",
+            "genome-grist run conf-paper.yml -k --resources mem_mb=210000 -j 32 summarize_tax summarize_gather summarize_mapping"
+        ]
+    }
+}

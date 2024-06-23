@@ -1,0 +1,44 @@
+{
+    "application": "MAESTRO",
+    "details": {
+        "resource_requirements": {
+            "walltime": "04:00:00",
+            "nodes": "128",
+            "ppn": "32",
+            "xe": true
+        },
+        "software": {
+            "modules": [
+                "craype-hugepages2M",
+                "perftools"
+            ],
+            "environment_variables": [
+                "PSC_OMP_AFFINITY=FALSE",
+                "OMP_NUM_THREADS=8",
+                "MPICH_PTL_OTHER_EVENTS=16384",
+                "MPICH_UNEX_BUFFER_SIZE=100000000",
+                "MPICH_MAX_SHORT_MSG_SIZE=10000"
+            ]
+        },
+        "execution": {
+            "mpi_tasks": 512,
+            "mpi_tasks_per_numa_node": 1,
+            "openmp_threads_per_mpi_task": 8,
+            "command": "./main.Linux.Cray.mpi.omp.exe inputs3d.256.5dr.eq.dx_4levs ${restartString}"
+        },
+        "system": {
+            "platform": "Blue Waters",
+            "nodes_count": 26864,
+            "node_types": {
+                "xe": {
+                    "processors": "AMD 6276 'interlagos'",
+                    "cores": 32,
+                    "numa_nodes": 4
+                },
+                "xk": {
+                    "processors": "??"
+                }
+            }
+        }
+    }
+}

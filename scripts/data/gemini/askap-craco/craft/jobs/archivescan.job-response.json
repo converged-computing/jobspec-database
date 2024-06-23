@@ -1,0 +1,56 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"Slurm\",\n  \"details\": {\n    \"tasks\": 4,\n    \"tasks_per_node\": 4,\n    \"time\": \"36:00:00\",\n    \"cluster\": \"zeus\",\n    \"partition\": \"copyq\",\n    \"mail_type\": \"FAIL\",\n    \"mail_user\": \"keith.bannister@csiro.au\",\n    \"output\": \"/group/askap/ban115/craft/archive/logfiles/archivescan-%j.out\",\n    \"environment_variables\": [\n      \"CRAFT=/home/ban115/craft/craft/\",\n      \"NTASKS=$SLURM_TASKS_PER_NODE\",\n      \"CRAFTDATA=/scratch2/askap/askapops/craft/co/\",\n      \"OUTDIR=askap-craft/co\",\n      \"logfile=/group/askap/ban115/craft/archive/archived_scans.txt\",\n      \"tempdir=/group/askap/ban115/craft/archive/tartemp/\"\n    ],\n    \"modules\": [\n      \"mpibash\",\n      \"gcc/4.9.0\"\n    ],\n    \"commands\": [\n      \"tar\",\n      \"mkdir\",\n      \"cp\",\n      \"find\",\n      \"pshell\"\n    ]\n  }\n}\n```\n\nThis script utilizes the **Slurm** workload manager to run a process that archives data from a directory structure. Here's a breakdown of the script:\n\n* **Slurm Configuration:** The script starts by defining several Slurm parameters:\n    * `--ntasks`:  Specifies the total number of tasks (processes) to run (4 in this case).\n    * `--ntasks-per-node`: Indicates the number of tasks to run on each node (also 4).\n    * `--time`: Defines the maximum runtime for the job (36 hours).\n    * `--cluster`: Specifies the cluster where the job should be run (`zeus`).\n    * `--partition`: Identifies the partition (resource allocation) to use (`copyq`).\n    * `--mail-type`: Sets the email notification type (`FAIL` only on failure).\n    * `--mail-user`: The email address to receive notifications.\n    * `--output`: The location for writing job output logs.\n    * `--export=NONE`: Prevents the export of environment variables from the submission script.\n\n* **Environment Setup:** \n    * `export CRAFT`: Sets the path to the CRAFT software directory.\n    * `export PATH`:  Modifies the PATH environment variable to include CRAFT directories.\n    * `export PYTHONPATH`: Sets the PYTHONPATH to include CRAFT Python modules.\n    * `NTASKS=$SLURM_TASKS_PER_NODE`: Sets the `NTASKS` variable to the number of tasks per node.\n\n* **Module Loading:** \n    * `module swap PrgEnv-cray PrgEnv-gnu`: Switches the programming environment to GNU.\n    * `module load mpibash`: Loads the `mpibash` module (likely for MPI-related tasks).\n    * `module unload gcc/4.9.0`: Unloads the `gcc/4.9.0` module (likely to avoid conflicts).\n\n* **Data Processing:** \n    * The script loops through a list of directories (`$@`). For each directory:\n        * It creates a tarball of the directory's contents (`contents.tar`).\n        * It copies metadata files (`.meta`) associated with the data.\n        * It uploads the tarball and metadata to a remote system using `pshell`.\n        * It records the successful import in a logfile (`archived_scans.txt`).\n\n* **Error Handling:**\n    * The script includes error handling for various steps, such as:\n        * Checking for the existence of directories.\n        * Handling errors during tar creation and import.\n        * Deleting temporary files.\n\nThe script uses multiple tools:\n\n* **Slurm:** The primary workload manager, used to submit and manage the job.\n* **tar:**  For creating tarball archives.\n* **mkdir:** For creating directories.\n* **cp:** For copying files.\n* **find:** For searching for files.\n* **pshell:**  A tool for interacting with a remote system (likely Mediaflux).\n\nThe script works within a specific workflow and environment likely related to the Australian SKA Pathfinder (ASKAP) telescope, where CRAFT is used for data analysis. \n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "citation_metadata": {
+                "citation_sources": [
+                    {
+                        "start_index": 431,
+                        "end_index": 591,
+                        "uri": "https://github.com/askap-craco/craft",
+                        "license_": ""
+                    }
+                ]
+            },
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 1295,
+        "candidates_token_count": 1012,
+        "total_token_count": 2307,
+        "cached_content_token_count": 0
+    }
+}

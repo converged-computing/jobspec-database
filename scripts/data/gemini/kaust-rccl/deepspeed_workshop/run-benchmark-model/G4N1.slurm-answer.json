@@ -1,0 +1,28 @@
+{
+    "application": "SLURM",
+    "details": {
+        "job_name": "g4n1",
+        "gpus": 4,
+        "gpus_per_node": 4,
+        "nodes": 1,
+        "ntasks": 4,
+        "cpus_per_task": 4,
+        "time": "00:15:00",
+        "constraint": "a100",
+        "reservation": "A100",
+        "modules": [
+            "dl",
+            "deepspeed/0.8.3"
+        ],
+        "environment_variables": {
+            "NCCL_DEBUG": "INFO",
+            "NCCL_TREE_THRESHOLD": 0,
+            "NCCL_SOCKET_IFNAME": "ib0",
+            "NCCL_NET_GDR_LEVEL": 4,
+            "NCCL_TOPO_DUMP_FILE": "./nccl_dump.log.${SLURM_JOB_NAME}",
+            "MAX_JOBS": "${SLURM_CPUS_PER_TASK}",
+            "master_ip": "obtained from hostfile"
+        },
+        "script_execution": "./run-big-model.sh"
+    }
+}

@@ -1,0 +1,34 @@
+{
+    "application": "slurm",
+    "details": {
+        "resource_requirements": {
+            "walltime": "24:00:00",
+            "processor_cores": 1,
+            "nodes": 1,
+            "cpus_per_task": 5
+        },
+        "job_name": "rs4a",
+        "output_file": "rs4a-slurm.%N.%j.out",
+        "error_file": "rs4a-slurm.%N.%j.err",
+        "modules": [],
+        "code": [
+            "python -u -c \"import PyHipp as pyh;",
+            "import DataProcessingTools as DPT;",
+            "import time;",
+            "import os;",
+            "t0 = time.time();",
+            "print(time.localtime());",
+            "DPT.objects.processDirs(dirs=None, objtype=pyh.RPLSplit, channel=[*range(97,125)], SkipHPC=False, HPCScriptsDir = '/data/src/PyHipp/', SkipLFP=False, SkipHighPass=False, SkipSort=False);",
+            "print(time.localtime());",
+            "print(time.time()-t0);\"",
+            "aws sns publish --topic-arn arn:aws:sns:ap-southeast-1:538542324509:awsnotify --message \"RPLSplit_4a_JobDone\""
+        ],
+        "libraries": [
+            "PyHipp",
+            "DataProcessingTools"
+        ],
+        "other_dependencies": [
+            "aws cli"
+        ]
+    }
+}

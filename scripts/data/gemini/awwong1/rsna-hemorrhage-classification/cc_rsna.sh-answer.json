@@ -1,0 +1,38 @@
+{
+    "application": "SLURM",
+    "details": {
+        "resource_requirements": {
+            "nodes": 1,
+            "gpus": "4 v100",
+            "cpus_per_task": 16,
+            "memory": "0",
+            "time": "23 hours",
+            "account": "def-hindle",
+            "mail_user": "awwong1@ualberta.ca"
+        },
+        "modules": [
+            "arch/avx512",
+            "StdEnv/2018.3"
+        ],
+        "environment": {
+            "python_virtual_environment": "venv"
+        },
+        "dataset": {
+            "source": "~/scratch/datasets/rsna-intracranial-hemorrhage-detection.tar",
+            "destination": "${SLURM_TMPDIR}/rsna/"
+        },
+        "script": {
+            "name": "main.py",
+            "parameters": {
+                "rsna-base": "${datasetdir}rsna-intracranial-hemorrhage-detection",
+                "batch-size": 256,
+                "epochs": 5,
+                "test-batch-size": 128,
+                "model": "resnet101",
+                "checkpoint": "${model}.${iter}.pth",
+                "submission": "submission.${model}.${iter}.csv",
+                "tb-log": "runs/${model}.${iter}"
+            }
+        }
+    }
+}

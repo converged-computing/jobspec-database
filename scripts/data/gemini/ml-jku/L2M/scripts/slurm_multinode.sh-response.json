@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"SLURM\",\n  \"details\": {\n    \"account\": \"X\",\n    \"qos\": \"X\",\n    \"partition\": \"X\",\n    \"nodes\": 2,\n    \"tasks_per_node\": 1,\n    \"gpus\": 2,\n    \"output_path\": \"OUTPUT_PATH\",\n    \"conda_environment\": \"mddt\",\n    \"python_script\": \"main.py\",\n    \"hydra_config\": {\n      \"launcher\": {\n        \"type\": \"torchrun\",\n        \"nnodes\": 2,\n        \"nproc_per_node\": 2,\n        \"max_nodes\": 2,\n        \"rdzv_id\": 84210,\n        \"rdzv_backend\": \"c10d\",\n        \"rdzv_endpoint\": \"${head_node_ip}:29501\"\n      },\n      \"ddp\": true,\n      \"experiment_name\": \"mddt_pretrain\",\n      \"seed\": 42,\n      \"env_params\": \"multi_domain_mtdmc\",\n      \"agent_params\": {\n        \"kind\": \"MDDT\",\n        \"model_kwargs\": \"multi_domain_mtdmc\",\n        \"data_paths\": \"mt40v2_dmc10\",\n        \"replay_buffer_kwargs\": \"multi_domain_mtdmc\",\n        \"accumulation_steps\": 2,\n        \"use_amp\": true,\n        \"batch_size\": 256\n      },\n      \"run_params\": \"pretrain\",\n      \"eval_params\": \"pretrain_disc\"\n    }\n  }\n}\n```\n\n**Explanation:**\n\n* **SLURM:** This script uses the **SLURM** workload manager to run a job on a high-performance computing cluster.\n* **Details:**\n    * **Account:** The user account associated with the job.\n    * **QoS:** The quality-of-service level requested for the job.\n    * **Partition:** The specific resource partition on the cluster for the job.\n    * **Nodes:** The number of nodes required for the job (2 in this case).\n    * **Tasks per node:**  The number of tasks to run per node (1 in this case).\n    * **GPUs:** The number of GPUs requested for the job (2).\n    * **Output path:** The path to store the job's output.\n    * **Conda environment:**  The script uses the 'mddt' conda environment.\n    * **Python script:** The script executes the 'main.py' python script.\n    * **Hydra configuration:**  The script utilizes the Hydra framework for configuration management. The configuration details are specified in the `python main.py` command using the `-m` option, including:\n      * **Launcher:**  `torchrun` is used to launch the training process with distributed data parallelism.\n      * **Distributed settings:**  The script configures a distributed training setup using `torchrun` and sets the number of nodes, processes per node, and communication parameters. \n      * **Experiment details:**  The script defines experiment parameters like `experiment_name`, `seed`, and configuration options for the environment, agent, running, and evaluation. \n\nThe script utilizes multiple features of SLURM and Hydra to configure a distributed training job on a high-performance computing cluster. \n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 504,
+        "candidates_token_count": 771,
+        "total_token_count": 1275,
+        "cached_content_token_count": 0
+    }
+}

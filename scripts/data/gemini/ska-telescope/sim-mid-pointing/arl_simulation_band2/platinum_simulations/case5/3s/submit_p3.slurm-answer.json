@@ -1,0 +1,29 @@
+{
+    "application": "dask",
+    "software": [
+        "dask-scheduler",
+        "dask-worker",
+        "python"
+    ],
+    "resource_requirements": {
+        "nodes": 16,
+        "tasks": 17,
+        "memory": "16GB per worker",
+        "wallclock_time": "23:59:59",
+        "project": "SKA-SDP",
+        "partition": "compute"
+    },
+    "environment_variables": {
+        "PYTHONPATH": "ARL",
+        "ARL_DASK_SCHEDULER": "${scheduler}:8786"
+    },
+    "commands": [
+        "dask-scheduler --port=8786",
+        "dask-worker --host ${host} --nprocs 1 --nthreads 1 --memory-limit 16GB --local-directory /mnt/storage-ssd/tim/dask-workspace/${host} $scheduler:8786",
+        "python  ../../../../pointing_simulation_distributed.py --context s3sky --rmax 1e5 --flux_limit 0.003 --show True --seed 18051955  --pbtype MID_GRASP --memory 32 --integration_time 3 --use_agg True --time_series wind --time_chunk 1800 --shared_directory ../../../../shared | tee pointing_simulation.log"
+    ],
+    "files": [
+        "pointing_simulation_distributed.py",
+        "shared"
+    ]
+}

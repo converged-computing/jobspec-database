@@ -1,0 +1,73 @@
+{
+    "application": "ARPEGE",
+    "details": {
+        "job_management": {
+            "scheduler": "SLURM",
+            "partition": "normal256",
+            "nodes": 40,
+            "tasks_per_node": 32,
+            "threads_per_task": 4,
+            "time_limit": "00:40:00",
+            "memory_per_node": "247000",
+            "exclusive": true,
+            "environment_variables": {
+                "MYLIB": "user-defined",
+                "HOMEPACK": "user-defined",
+                "TESTDIR": "user-defined"
+            },
+            "job_name": "arome_e700"
+        },
+        "software": {
+            "mpi": {
+                "wrapper": "mpiauto",
+                "implementation": "Intel MPI"
+            },
+            "openmp": {
+                "implementation": "OpenMP"
+            },
+            "other": [
+                "grib_api",
+                "rttov"
+            ]
+        },
+        "resource_requirements": {
+            "file_systems": {
+                "global": "$TMPDIR",
+                "work": "$WORKDIR/benchmarks",
+                "local": "$TMPDIR"
+            },
+            "profiling": {
+                "enabled": true,
+                "type": "DrHook"
+            },
+            "environment_variables": {
+                "OMP_STACKSIZE": "4G",
+                "KMP_STACKSIZE": "4G",
+                "KMP_MONITOR_STACKSIZE": "4G",
+                "I_MPI_HARD_FINALIZE": 1,
+                "I_MPI_SCALABLE_OPTIMIZATION": 0,
+                "I_MPI_DAPL_UD_RNDV_EP_NUM": 4,
+                "I_MPI_SHM_SPIN_COUNT": 10,
+                "I_MPI_SPIN_COUNT": 10,
+                "DR_HOOK": 1,
+                "DR_HOOK_OPT": "prof",
+                "MPL_MBX_SIZE": 2048000000,
+                "EC_PROFILE_HEAP": 0,
+                "EC_PROFILE_MEM": 0,
+                "EC_MPI_ATEXIT": 0,
+                "EC_MEMINFO": 0,
+                "OPENBLAS_NUM_THREADS": 1,
+                "MKL_CBWR": "AUTO,STRICT",
+                "MKL_NUM_THREADS": 1,
+                "MKL_DEBUG_CPU_TYPE": 5,
+                "FTRACE_JOB": 1,
+                "ECHO_MPSH": "OFF",
+                "OUTPUT_LISTING": "YES",
+                "ARCHIVE_AND_ZIP_ODB": 0,
+                "DR_HOOK_IGNORE_SIGNALS": -1,
+                "DR_HOOK_SILENT": 1,
+                "DR_HOOK_SHOW_PROCESS_OPTIONS": 0
+            }
+        }
+    }
+}

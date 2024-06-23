@@ -1,0 +1,38 @@
+{
+    "application": "SLURM",
+    "details": {
+        "resource_requirements": {
+            "nodes": 5,
+            "tasks": 5,
+            "cpus_per_task": 24,
+            "memory": "200GB",
+            "gpus": 4,
+            "partition": "a100",
+            "time": "20-00:00:00",
+            "exclude_nodes": "gpu101,gpu113"
+        },
+        "software": {
+            "python": "for port allocation and running training script",
+            "srun": "for launching tasks on nodes",
+            "train_multi_gpus.py": "the training script"
+        },
+        "environment_variables": {
+            "GPUS_PER_NODE": "number of GPUs on each node",
+            "MAIN_HOST": "the hostname of the main node",
+            "MASTER_ADDR": "the IP address of the main node",
+            "MASTER_PORT": "the port for communication between nodes",
+            "NNODES": "number of nodes",
+            "WORLD_SIZE": "total number of GPUs across all nodes",
+            "NCCL_IB_DISABLE": "disable infiniband for gloo backend",
+            "OMP_NUM_THREADS": "set to 1",
+            "NCCL_DEBUG": "set to INFO"
+        },
+        "output": {
+            "logs": [
+                "logs/mgpus_%x-%j.out",
+                "logs/mgpus_%x-%j.err",
+                "logs/log_for_${SLURM_JOB_ID}_node_${i}.log"
+            ]
+        }
+    }
+}

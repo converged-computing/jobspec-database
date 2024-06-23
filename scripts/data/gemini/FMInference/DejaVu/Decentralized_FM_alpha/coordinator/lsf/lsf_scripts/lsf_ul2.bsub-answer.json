@@ -1,0 +1,28 @@
+{
+    "application": "Python",
+    "details": {
+        "scheduler": "LSF",
+        "resources": {
+            "cores": 1,
+            "memory": "8000 MB",
+            "gpus": 1,
+            "gpu_memory": "10000 MB"
+        },
+        "modules": [
+            "gcc/6.3.0",
+            "cuda/11.0.3"
+        ],
+        "environment": "pipeline",
+        "libraries": [
+            "NCCL",
+            "GLOO"
+        ],
+        "script": "dist_inference_runner_w_euler_coordinator.py",
+        "arguments": {
+            "DIST_CONF": "--pp-mode pipe_async_sample_enc_dec_mask --pipeline-group-size 16 --cuda-id 0",
+            "MODEL_CONF": "--model-type t5 --model-name /nfs/iiscratch-zhang.inf.ethz.ch/export/zhang/export/fm/pretrained_models/ul2-new --num-iters 99999999999",
+            "INFERENCE_CONF": "--budget 20800 --num-layers 2",
+            "COOR_CONF": "--coordinator-server-ip 129.132.93.116"
+        }
+    }
+}

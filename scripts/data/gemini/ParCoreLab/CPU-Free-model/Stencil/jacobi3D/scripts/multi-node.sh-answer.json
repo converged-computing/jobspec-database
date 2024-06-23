@@ -1,0 +1,66 @@
+{
+    "application": "SLURM",
+    "details": {
+        "script_purpose": "This script uses SLURM to run a benchmark comparing the performance of different data transfer methods in a multi-node GPU cluster.",
+        "slurm_options": [
+            "SBATCH -J multi-node-test",
+            "SBATCH --nodes 2",
+            "SBATCH --gres=gpu:2",
+            "SBATCH --ntasks=4",
+            "SBATCH --ntasks-per-node=2",
+            "SBATCH --cpus-per-task 16",
+            "SBATCH -A proj16",
+            "SBATCH -p palamut-cuda",
+            "SBATCH --time=1:00:00",
+            "SBATCH -o %x_%j.log"
+        ],
+        "modules": ". ./scripts/modules_truba.sh > /dev/null",
+        "executables": {
+            "jacobi": "./jacobi -s 1",
+            "jacobi_nvshmem": "./jacobi_nvshmem -s 1"
+        },
+        "parameters": {
+            "NUM_ITER": "Number of iterations (default: 10000)",
+            "NUM_RUNS": "Number of runs for each configuration (default: 5)",
+            "STARTING_NX": "Initial size of the grid (default: 512)",
+            "MAX_NUM_GPUS": "Maximum number of GPUs to use (default: 8)",
+            "CUDA_VISIBLE_DEVICES_SETTING": "Array of strings defining which GPUs to use for each configuration"
+        },
+        "data_transfer_methods": {
+            "version_name_to_idx_map": {
+                "Baseline Copy": 0,
+                "Baseline Copy Overlap": 1,
+                "Baseline P2P": 2,
+                "Baseline Single Copy": 3,
+                "Single Stream 1TB": 4,
+                "Single Stream 2TB": 5,
+                "Double Stream": 6,
+                "Baseline Copy (No compute)": 7,
+                "Baseline Copy Overlap (No Compute)": 8,
+                "Baseline P2P (No Compute)": 9,
+                "Single Stream 1TB (No Compute)": 10,
+                "Single Stream 2TB (No Compute)": 11,
+                "Double Stream (No Compute)": 12
+            },
+            "version_name_to_idx_map_nvshmem": {
+                "NVSHMEM Baseline": 0,
+                "NVSHMEM Baseline Optimized": 1,
+                "NVSHMEM Single Stream 1TB": 2,
+                "NVSHMEM Single Stream 2TB": 3,
+                "NVSHMEM Double Stream": 4,
+                "NVSHMEM Single Stream All TB Partitoned": 5,
+                "NVSHMEM Baseline (No Compute)": 6,
+                "NVSHMEM Baseline Optimized (No Compute)": 7,
+                "NVSHMEM Single Stream 1TB (No Compute)": 8,
+                "NVSHMEM Single Stream 2TB (No Compute)": 9,
+                "NVSHMEM Double Stream (No Compute)": 10,
+                "NVSHMEM Single Stream All TB Partitoned (No Compute)": 11
+            }
+        },
+        "benchmark": "Jacobi solver",
+        "resource_requirements": [
+            "Multi-node cluster with GPUs",
+            "SLURM environment"
+        ]
+    }
+}

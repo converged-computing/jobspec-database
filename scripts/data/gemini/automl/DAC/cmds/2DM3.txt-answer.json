@@ -1,0 +1,18 @@
+{
+    "application": "SLURM",
+    "details": {
+        "partition": "bosch_cpu-cascadelake",
+        "cores": 1,
+        "array_tasks": "1-25",
+        "output_log": "experiments/logs/%x.%N.%A.%a.out",
+        "error_log": "experiments/logs/%x.%N.%A.%a.err",
+        "virtual_env": "dac",
+        "steps": 1000000,
+        "evaluation_runs": 10,
+        "evaluation_interval": 5000,
+        "experiment_name": "2D3M",
+        "experiment_directory": "experiments/sigmoidm_DDQN_1_50_${experi}/${SLURM_ARRAY_TASK_ID}",
+        "python_script": "dac/train/train_chainer_agent_on_toy.py",
+        "script_arguments": "--eval-n-runs 10 --eval-interval ${evali} --checkpoint_frequency ${cfreq} --outdir ${expdir} --seed ${SLURM_ARRAY_TASK_ID} --scenario ${experi}"
+    }
+}

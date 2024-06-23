@@ -1,0 +1,27 @@
+{
+    "application": "SLURM",
+    "details": {
+        "scheduler": "SLURM",
+        "job_name": "restormer-universal-rician-15",
+        "account": "delia-mp",
+        "nodes": 1,
+        "tasks_per_node": 1,
+        "cpus_per_task": 64,
+        "error_file": "/p/scratch/delia-mp/lin4/experiment_result/restormer/0803-universal-rician-15/error-%j.err",
+        "output_file": "/p/scratch/delia-mp/lin4/experiment_result/restormer/0803-universal-rician-15/output-%j.out",
+        "time_limit": "24:00:00",
+        "partition": "dc-gpu",
+        "gpu_resources": "gpu:4",
+        "environment": {
+            "SRUN_CPUS_PER_TASK": "$SLURM_CPUS_PER_TASK",
+            "MASTER_ADDR": "hostname (resolved to IP)",
+            "NCCL_DEBUG": "INFO",
+            "CUDA_VISIBLE_DEVICES": "0,1,2,3",
+            "NUM_GPU_PER_NODE": 4,
+            "CONFIG": "Denoising/Options/GaussianGrayDenoising_Restormer_universal_rician_15.yml"
+        },
+        "python_module": "torch.distributed.launch",
+        "python_script": "basicsr/train.py",
+        "python_arguments": "-opt $CONFIG --launcher pytorch"
+    }
+}

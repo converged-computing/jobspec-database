@@ -1,0 +1,51 @@
+{
+    "application": "Slurm",
+    "details": {
+        "scheduler": "Slurm",
+        "job_name": "mpi_scale",
+        "partition": "EPYC",
+        "nodes": 4,
+        "exclusive": true,
+        "tasks_per_node": 128,
+        "memory": "490G",
+        "time": "02:00:00",
+        "output_file": "scale_mpi_epyc_job_%j.out",
+        "modules": [
+            "openMPI/4.1.5/gnu/12.2.1"
+        ],
+        "environment_variables": {
+            "OMP_PLACES": "cores",
+            "OMP_PROC_BIND": "close"
+        },
+        "executable": "gameoflife.x",
+        "arguments": [
+            "-i",
+            "-k",
+            "$SIZE",
+            "-f",
+            "pattern_random$SIZE"
+        ],
+        "output_format": "csv",
+        "output_file_name": "scale_mpi_epyc_$(hostname)_$now.csv",
+        "output_fields": [
+            "action",
+            "world_size",
+            "number_of_steps",
+            "number_of_steps_between_file_dumps",
+            "mpi_size",
+            "omp_get_max_threads",
+            "total_time",
+            "t_io",
+            "t_io_accumulator",
+            "t_io_accumulator_average"
+        ],
+        "run_types": [
+            "scalability -i",
+            "scalability -e"
+        ],
+        "run_parameters": [
+            "SIZE",
+            "threads"
+        ]
+    }
+}

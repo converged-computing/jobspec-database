@@ -1,0 +1,33 @@
+{
+    "application": "espnet",
+    "details": {
+        "resource_requirements": {
+            "nodes": 1,
+            "gpus": 2,
+            "tasks_per_node": 2,
+            "memory": 0,
+            "partition": "gpu_v100"
+        },
+        "environment": {
+            "conda_environment": "espnet",
+            "python_faulthandler": true,
+            "nccl_debug": "WARN"
+        },
+        "python_script": "local/st_train.py",
+        "configuration_file": "conf/train.yaml",
+        "data": {
+            "data_name": "MUST-C/en-de",
+            "dictionary": "../lang_1spm/train_sp.en-de.de_bpe8000_units_tc.txt",
+            "train_json": "../data/${data_name}/wav2vec/data/train/data_bpe8000.lc.rm_tc.json",
+            "valid_json": "../data/${data_name}/wav2vec/data/dev/data_bpe8000.lc.rm_tc.json"
+        },
+        "training_parameters": {
+            "num_nodes": 1,
+            "gpus": 1,
+            "seed": 42,
+            "verbose": 1,
+            "accelerator": "ddp",
+            "num_workers": 4
+        }
+    }
+}

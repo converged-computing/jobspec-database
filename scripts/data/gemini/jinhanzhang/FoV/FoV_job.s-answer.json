@@ -1,0 +1,33 @@
+{
+    "application": "Jupyter Notebook",
+    "details": {
+        "slurm_requirements": {
+            "job_name": "jpllm",
+            "nodes": 1,
+            "cpus_per_task": 1,
+            "memory": "32GB",
+            "time": "47:59:00",
+            "gres": "gpu:a100:1"
+        },
+        "modules": [
+            "cudnn/8.6.0.163-cuda11",
+            "cuda/11.3.1"
+        ],
+        "ssh_tunneling": {
+            "ports": [
+                "log-1",
+                "log-2",
+                "log-3"
+            ],
+            "port_range": "10000-65500"
+        },
+        "singularity_image": "/scratch/work/public/singularity/cuda11.8.86-cudnn8.7-devel-ubuntu22.04.2.sif",
+        "overlay_ext3": "/scratch/$USER/fov_env/my_pytorch.ext3",
+        "env_script": "/ext3/env.sh",
+        "jupyter_notebook_options": {
+            "no_browser": true,
+            "port": "$port",
+            "notebook_dir": "$(pwd)"
+        }
+    }
+}

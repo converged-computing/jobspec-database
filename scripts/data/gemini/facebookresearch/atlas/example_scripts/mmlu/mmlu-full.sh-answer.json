@@ -1,0 +1,76 @@
+{
+    "application": "SLURM",
+    "details": {
+        "resource_requirements": {
+            "cpus": 80,
+            "nodes": 8,
+            "gpus": 8,
+            "time": "8:00:00",
+            "partition": "learnlab",
+            "constraint": "volta32gb"
+        },
+        "software_requirements": {
+            "python": "train.py",
+            "model": "google/t5-${size}-lm-adapt"
+        },
+        "data_requirements": {
+            "train_data": "${DATA_DIR}/data/mmlu_data/full/train.jsonl",
+            "eval_data": "${DATA_DIR}/data/mmlu_data/full/combined_valid.jsonl ${DATA_DIR}/data/mmlu_data/full/combined_test.jsonl",
+            "pretrained_model": "${DATA_DIR}/models/atlas/${size}",
+            "pretrained_index": "${DATA_DIR}/indices/atlas/wiki/${size}"
+        },
+        "output_paths": {
+            "output_file": "run_dir/%A.out",
+            "error_file": "run_dir/%A.err",
+            "save_dir": "${DATA_DIR}/experiments/"
+        },
+        "other": {
+            "job_name": "mmlu",
+            "experiment_name": "$SLURM_JOB_ID-${size}-mmlu-full",
+            "precision": "fp32",
+            "port": "random between 15000-16000"
+        },
+        "parameters": {
+            "shuffle": "True",
+            "train_retriever": "True",
+            "gold_score_mode": "ppmean",
+            "use_gradient_checkpoint_reader": "True",
+            "use_gradient_checkpoint_retriever": "True",
+            "precision": "fp32",
+            "shard_optim": "True",
+            "shard_grads": "True",
+            "temperature_gold": 0.1,
+            "temperature_score": 0.1,
+            "refresh_index": 100000000000,
+            "target_maxlength": 16,
+            "reader_model_type": "google/t5-${size}-lm-adapt",
+            "dropout": 0.1,
+            "lr": 5e-05,
+            "lr_retriever": 1e-05,
+            "scheduler": "linear",
+            "weight_decay": 0.01,
+            "text_maxlength": 512,
+            "model_path": "${PRETRAINED_MODEL}",
+            "train_data": "${TRAIN_FILE}",
+            "eval_data": "${EVAL_FILES}",
+            "per_gpu_batch_size": 1,
+            "n_context": 30,
+            "retriever_n_context": 30,
+            "name": "${EXPERIMENT_NAME}",
+            "checkpoint_dir": "${SAVE_DIR}",
+            "eval_freq": 150,
+            "log_freq": 4,
+            "total_steps": 2000,
+            "warmup_steps": 50,
+            "save_freq": 10000000000,
+            "main_port": "$port",
+            "write_results": "True",
+            "task": "multiple_choice",
+            "multiple_choice_train_permutations": "all",
+            "multiple_choice_eval_permutations": "cyclic",
+            "index_mode": "flat",
+            "query_side_retriever_training": "True",
+            "load_index_path": "${PRETRAINED_INDEX}"
+        }
+    }
+}

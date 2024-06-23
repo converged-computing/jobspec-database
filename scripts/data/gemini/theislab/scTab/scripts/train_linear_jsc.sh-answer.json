@@ -1,0 +1,60 @@
+{
+    "application": "SLURM",
+    "details": {
+        "resource_requirements": {
+            "account": "hai_cellnet",
+            "nodes": 1,
+            "time": "24:00:00",
+            "partition": "booster",
+            "gres": "gpu:4"
+        },
+        "software_requirements": {
+            "modules": [
+                "Stages/2023",
+                "GCC/11.3.0",
+                "OpenMPI/4.1.4",
+                "CUDA/11.7",
+                "cuDNN/8.6.0.163-CUDA-11.7",
+                "NCCL/default-CUDA-11.7",
+                "Python/3.10.4"
+            ],
+            "virtual_environment": "merlin-torch",
+            "script_path": "git/cellnet/scripts",
+            "python_script": "py_scripts/train_linear.py"
+        },
+        "execution_details": {
+            "processes": 4,
+            "cpus_per_task": 12,
+            "cpu_binding": "verbose,socket",
+            "gpus_per_process": 1,
+            "output_files": [
+                "slurm_out/out.%j",
+                "slurm_out/err.%j",
+                "slurm_out/out_gpu0.%j",
+                "slurm_out/err_gpu0.%j",
+                "slurm_out/out_gpu1.%j",
+                "slurm_out/err_gpu1.%j",
+                "slurm_out/out_gpu2.%j",
+                "slurm_out/err_gpu2.%j",
+                "slurm_out/out_gpu3.%j",
+                "slurm_out/err_gpu3.%j"
+            ],
+            "script_arguments": {
+                "cluster": "jsc",
+                "version": [
+                    "version_1",
+                    "version_2",
+                    "version_3",
+                    "version_4"
+                ],
+                "epochs": 35,
+                "seed": [
+                    1,
+                    2,
+                    3,
+                    4
+                ]
+            }
+        }
+    }
+}

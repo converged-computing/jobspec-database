@@ -1,0 +1,40 @@
+{
+    "application": "DeepSpeed",
+    "details": {
+        "framework": "PyTorch",
+        "accelerator": "GPU",
+        "compute_nodes": 64,
+        "gpus_per_node": 8,
+        "tasks_per_node": 8,
+        "cpus_per_task": 3,
+        "scheduler": "Slurm",
+        "library": "ROCM",
+        "memory": "N/A (Not specified in script)",
+        "runtime": "2 hours",
+        "environment": {
+            "conda": true,
+            "module": "PrgEnv-gnu, gcc/11.2.0, rocm/5.6.0",
+            "variables": {
+                "ROCM_HOME": "/opt/rocm-5.6.0",
+                "TRANSFORMERS_OFFLINE": 1,
+                "HF_DATASETS_OFFLINE": 1,
+                "OMP_NUM_THREADS": 1,
+                "NCCL_DEBUG": "INFO",
+                "FI_CXI_ATS": 0,
+                "LD_LIBRARY_PATH": "/opt/rocm-5.6.0/rccl/build:$PWD/aws-ofi-rccl/src/.libs/:/opt/cray/libfabric/1.15.2.0/lib64/:/opt/rocm-5.6.0/lib",
+                "FI_LOG_LEVEL": "info",
+                "NCCL_NET_GDR_LEVEL": 3,
+                "MASTER_ADDR": "N/A (Derived from hostnames)",
+                "MASTER_PORT": 32768,
+                "ranks_per_node": 8,
+                "gpus_per_rank": 1,
+                "ranks_total": 512,
+                "https_proxy": "https://proxy.ccs.ornl.gov:3128",
+                "http_proxy": "http://proxy.ccs.ornl.gov:3128",
+                "WANDB_MODE": "offline",
+                "WANDB_RUN_GROUP": "Enwiki_EXPERIMENT-ROCM-SLURM",
+                "data_path": "../../data_enwiki_text_document"
+            }
+        }
+    }
+}

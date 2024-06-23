@@ -1,0 +1,44 @@
+{
+    "application": "PBS",
+    "details": {
+        "software": [
+            "Grendel CUDA",
+            "Python (Manually installed)",
+            "Python2.7 (Shared)",
+            "cmake",
+            "nvidia-smi"
+        ],
+        "resources": [
+            "nodes=1:ppn=3",
+            "walltime=48:00:00",
+            "queue=qfermi",
+            "CUDA 5.5.22",
+            "GCC 4.6.4"
+        ],
+        "commands": [
+            "source /com/gcc/4.6.4/load.sh",
+            "export PATH=$HOME/bin:$PATH",
+            "export PATH=$CUDAPATH/bin:$PATH",
+            "export LD_LIBRARY_PATH=$CUDAPATH/lib64:$CUDAPATH/lib:$LD_LIBRARY_PATH",
+            "export PYTHONPATH=$HOME/.local/lib/python:$PYTHONPATH",
+            "export PYTHONPATH=$HOME/.local/lib64/python:$PYTHONPATH",
+            "export PATH=/home/adc/.local/bin:$PATH",
+            "export PYTHONPATH=$PYTHON/lib:$PYTHONPATH",
+            "export PATH=$PYTHON/bin:$PATH",
+            "echo `whoami`@`hostname`",
+            "echo \"Start at `date`\"",
+            "cp -r $ORIGDIR/* $WORKDIR",
+            "cd $WORKDIR",
+            "nvidia-smi",
+            "rm CMakeCache.txt",
+            "cmake . && make",
+            "cd python",
+            "python continue_sim.py halfshear-darcy-sigma0=20000.0-k_c=3.5e-13-mu=1.797e-07-velfac=1.0-shear 1 0 &",
+            "python continue_sim.py halfshear-darcy-sigma0=20000.0-k_c=3.5e-13-mu=1.797e-08-velfac=1.0-shear 1 1 &",
+            "python continue_sim.py halfshear-darcy-sigma0=20000.0-k_c=3.5e-13-mu=1.797e-09-velfac=1.0-shear 1 2 &",
+            "wait",
+            "cp $WORKDIR/output/* $ORIGDIR/output/",
+            "echo \"End at `date`\""
+        ]
+    }
+}

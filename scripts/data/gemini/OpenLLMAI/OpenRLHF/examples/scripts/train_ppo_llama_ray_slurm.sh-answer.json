@@ -1,0 +1,39 @@
+{
+    "application": "Ray",
+    "details": {
+        "framework": "Ray",
+        "language": "Python",
+        "runtime": "Docker",
+        "image": "nvcr.io/nvidia/pytorch:23.12-py3",
+        "libraries": [
+            "ray[default]",
+            "pytorch"
+        ],
+        "resources": {
+            "compute": {
+                "nodes": 2,
+                "tasks_per_node": 1
+            },
+            "memory": "all available",
+            "storage": {
+                "mounts": [
+                    "$PROJECT_PATH:/openrlhf",
+                    "$HOME/.cache:/root/.cache",
+                    "/dev/null:/root/.bashrc"
+                ]
+            }
+        },
+        "job_type": "distributed training",
+        "job_name": "{ACCOUNT}-openrlhf",
+        "logging": {
+            "output_file": "out.log",
+            "job_log": "logs/train_ppo_llama_ray-$SLURM_JOB_ID.log"
+        },
+        "configuration": {
+            "partition": "{PARTITION}",
+            "account": "{ACCOUNT}",
+            "time_limit": "{LIMIT_TIME}",
+            "email_notification": "FAIL"
+        }
+    }
+}

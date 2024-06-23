@@ -1,0 +1,19 @@
+{
+    "application": "SLURM",
+    "details": {
+        "job_name": "motif_intersection",
+        "output_file": "./output/%j.%x.out",
+        "cluster": "cm2_tiny",
+        "partition": "cm2_tiny",
+        "environment": "NONE",
+        "tasks": 5,
+        "time": "05:00:00",
+        "modules": [
+            "slurm_setup",
+            "julia/1.8.2"
+        ],
+        "executable": "mpiexec",
+        "arguments": "-n 5 julia --project=\".\" -- ./scripts/main.jl ../input/cluster/motif_intersection.jl",
+        "monitoring_command": "sacct -j $SLURM_JOB_ID --format=jobid,start,end,CPUTime,Elapsed,ExitCode"
+    }
+}

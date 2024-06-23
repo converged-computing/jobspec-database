@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"Slurm\",\n  \"details\": {\n    \"resource_requirements\": {\n      \"nodes\": 2,\n      \"tasks_per_node\": 8,\n      \"walltime\": \"15:00:00\",\n      \"job_name\": \"tfrec_8gpu\",\n      \"output_file\": \"outputs/tfrec_8gpu-%J.o\",\n      \"error_file\": \"outputs/tfrec_8gpu-%J.o\",\n      \"partition\": \"gpuq\",\n      \"features\": \"c4140,m,32gb,v100\"\n    },\n    \"software_requirements\": {\n      \"cuda\": \"10.0.130\",\n      \"gcc\": \"7.2.0\",\n      \"python_environment\": \"docker_pip2\",\n      \"mpi\": \"openmpi-4.0.0-flags-ucx\"\n    },\n    \"python_script\": \"chexnet_densenet_tfrec.py\",\n    \"command\": \"mpirun -np 8 --map-by socket  python chexnet_densenet_tfrec.py --batch_size=64  --epochs=10 --skip_eval=1 --write_weights=0\",\n    \"alternative_command\": \"horovodrun -np 1 python $HOME/models/chexnet/official_resnet_tf_1.12.0.py  --batch_size=128  --epochs=10\"\n  }\n}\n```\n\n**Explanation:**\n\n* **Slurm:** This script uses Slurm, a popular workload manager and job scheduler, to manage the resource allocation and execution of the job.\n* **Resource Requirements:** The script requests 2 nodes with 8 tasks per node, a walltime of 15 hours, a job name \"tfrec_8gpu\", specific output and error files, the \"gpuq\" partition, and specific hardware features.\n* **Software Requirements:**  The script utilizes specific versions of CUDA toolkit, GCC compiler, and a Python environment named \"docker_pip2.\" It also uses Open MPI for parallel processing. \n* **Python Script:** The main task is executed by the \"chexnet_densenet_tfrec.py\" Python script. \n* **Commands:** The script uses `mpirun` (with MPI) to run the Python script on 8 processes. The script also includes an alternative command using `horovodrun` (a distributed training framework). \n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 486,
+        "candidates_token_count": 574,
+        "total_token_count": 1060,
+        "cached_content_token_count": 0
+    }
+}

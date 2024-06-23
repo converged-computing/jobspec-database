@@ -1,0 +1,31 @@
+{
+    "application": "SLURM",
+    "details": {
+        "job_name": "MULTINODE",
+        "partition": "gpu",
+        "nodes": 2,
+        "tasks": 2,
+        "memory": "24G",
+        "memory_per_cpu": "12G",
+        "gpus": 2,
+        "gpus_per_node": 1,
+        "excluded_nodes": "gn[07,11-12,14,22,24-25]",
+        "exclusive": true,
+        "output_file": "multinode.log",
+        "modules": [
+            "python/anaconda3",
+            "compilers/cmake-3.20",
+            "compilers/gcc-8.3.0",
+            "gpu/cuda-11.1"
+        ],
+        "conda_environment": "mark15",
+        "command": "train_multinode.py --epochs 1 --batch_size 10 --fp16 --zero_stage 2 --dalle_output_file_name ../models/dalle-birds --image_text_folder ../data/birds-merged/ --vae_path ../models/vae-birds-final.pt --wandb_name dalle --wandb_entity darayavaus --distributed_backend deepspeed",
+        "deepspeed_parameters": {
+            "num_gpus": 2,
+            "num_nodes": 2
+        },
+        "distributed_training": true,
+        "world_size": 2,
+        "communication_path": "/trinity/home/d.cherniuk/transformer_project/scripts/comm.txt"
+    }
+}

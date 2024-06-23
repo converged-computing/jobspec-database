@@ -1,0 +1,32 @@
+{
+    "application": "Slurm",
+    "details": {
+        "resource_requests": {
+            "nodes": 1,
+            "tasks_per_node": 8,
+            "cpus_per_task": 16,
+            "memory": 0,
+            "gpus": 8
+        },
+        "software_requirements": {
+            "modules": [
+                "rocm-5.4.2",
+                "ucx-1.13.1",
+                "ompi/4.1.4"
+            ],
+            "singularity_image": "/shared/apps/bin/pytorch_rocm5.4.2_ubuntu20.04_py3.8_pytorch_2.0.0_preview.sif",
+            "python_version": "3.8"
+        },
+        "script_execution": {
+            "script_path": "/var/lib/jenkins/pytorch-micro-benchmarking/micro_benchmarking_pytorch.py",
+            "arguments": {
+                "network": "resnet50",
+                "batch-size": 512,
+                "iterations": 1000,
+                "dataparallel": true,
+                "device_ids": "0,1,2,3,4,5,6,7"
+            },
+            "tmp_directory": "/tmp/$USER/tmp-$$"
+        }
+    }
+}

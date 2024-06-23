@@ -1,0 +1,57 @@
+{
+    "application": "SLURM",
+    "details": {
+        "job_scheduler": "SLURM",
+        "partition": "c16s",
+        "nodes": 1,
+        "tasks_per_node": 1,
+        "job_name": "STREAM_TASK_AFFINITY_TEST",
+        "output_file": "sbatch_output.txt",
+        "time_limit": "00:30:00",
+        "exclusive_mode": true,
+        "executable": "./solver.exe",
+        "input_data": "../DATA/2.mtx",
+        "version": "rel",
+        "parallelism": {
+            "kmp_task_stealing_constraint": 0,
+            "omp_places": "cores",
+            "omp_proc_bind": "spread",
+            "omp_num_threads": 64,
+            "cg_num_tasks": 1024,
+            "par_producer": 1
+        },
+        "affinity": {
+            "thread_selection_strategy": [
+                "first",
+                "random",
+                "lowest_wl",
+                "round_robin",
+                "private"
+            ],
+            "map_mode": [
+                "thread",
+                "domain",
+                "combined"
+            ],
+            "page_selection_strategy": [
+                "first_page_of_first_affinity",
+                "divide_in_n",
+                "every_n_th",
+                "first_and_last",
+                "binary",
+                "first"
+            ],
+            "page_weight_strategy": [
+                "first",
+                "majority",
+                "by_affinity",
+                "size"
+            ],
+            "threshold": 4
+        },
+        "modules": [
+            "intel/18.0",
+            "omp/task_aff.${PROG_VERSION}"
+        ]
+    }
+}

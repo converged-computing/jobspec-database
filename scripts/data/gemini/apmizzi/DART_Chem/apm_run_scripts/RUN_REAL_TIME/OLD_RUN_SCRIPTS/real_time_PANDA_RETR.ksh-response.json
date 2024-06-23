@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n\"Application\": \"WRF-Chem\",\n\"Software Requirements\": [\n\"WPS\",\n\"WRFDA\",\n\"WRF\",\n\"WRFCHEM\",\n\"DART\",\n\"IDL\",\n\"MATLAB\",\n\"ncea\",\n\"ncks\",\n\"ncflint\"\n],\n\"Resource Requirements\": [\n\"SCRATCH_DIR\",\n\"WORK_DIR\",\n\"ACD_DIR\",\n\"FRAPPE_DIR\",\n\"EXPERIMENT_DIR\",\n\"RUN_DIR\",\n\"TRUNK_DIR\",\n\"WPS_DIR_v3p4p1\",\n\"WPS_DIR_v3p7p1\",\n\"WPS_DIR_v3p8p1\",\n\"WPS_DIR\",\n\"WPS_GEOG_DIR\",\n\"WRFCHEM_DIR\",\n\"WRFDA_DIR\",\n\"DART_DIR\",\n\"BUILD_DIR\",\n\"WRF_DIR\",\n\"HYBRID_SCRIPTS_DIR\",\n\"ADJUST_EMISS_DIR\",\n\"EXPERIMENT_DATA_DIR\",\n\"MOZBC_DATA_DIR\",\n\"EXPERIMENT_STATIC_FILES\",\n\"EXPERIMENT_WRFCHEMI_DIR\",\n\"EXPERIMENT_WRFFIRECHEMI_DIR\",\n\"EXPERIMENT_WRFBIOCHEMI_DIR\",\n\"EXPERIMENT_COLDENS_DIR\",\n\"EXPERIMENT_PREPBUFR_DIR\",\n\"EXPERIMENT_MOPITT_CO_DIR\",\n\"EXPERIMENT_IASI_CO_DIR\",\n\"EXPERIMENT_IASI_O3_DIR\",\n\"EXPERIMENT_AIRNOW_DIR\",\n\"EXPERIMENT_PANDA_DIR\",\n\"EXPERIMENT_MODIS_AOD_DIR\",\n\"EXPERIMENT_GFS_DIR\",\n\"EXPERIMENT_DUST_DIR\",\n\"EXPERIMENT_HIST_IO_DIR\",\n\"VTABLE_DIR\",\n\"BE_DIR\",\n\"PERT_CHEM_INPUT_DIR\",\n\"PERT_CHEM_EMISS_DIR\",\n\"RUN_BAND_DEPTH_DIR\",\n\"GEOGRID_DIR\",\n\"METGRID_DIR\",\n\"REAL_DIR\",\n\"WRFCHEM_MET_IC_DIR\",\n\"WRFCHEM_MET_BC_DIR\",\n\"EXO_COLDENS_DIR\",\n\"SEASONS_WES_DIR\",\n\"WRFCHEM_BIO_DIR\",\n\"WRFCHEM_FIRE_DIR\",\n\"WRFCHEM_CHEMI_DIR\",\n\"WRFCHEM_CHEM_EMISS_DIR\",\n\"WRFCHEM_INITIAL_DIR\",\n\"WRFCHEM_CYCLE_CR_DIR\",\n\"WRFCHEM_CYCLE_FR_DIR\",\n\"WRFCHEM_LAST_CYCLE_CR_DIR\",\n\"PREPBUFR_MET_OBS_DIR\",\n\"MOPITT_CO_OBS_DIR\",\n\"IASI_CO_OBS_DIR\",\n\"IASI_O3_OBS_DIR\",\n\"AIRNOW_CO_OBS_DIR\",\n\"AIRNOW_O3_OBS_DIR\",\n\"PANDA_CO_OBS_DIR\",\n\"PANDA_O3_OBS_DIR\",\n\"PANDA_PM25_OBS_DIR\",\n\"MODIS_AOD_OBS_DIR\",\n\"COMBINE_OBS_DIR\",\n\"PREPROCESS_OBS_DIR\",\n\"WRFCHEM_CHEM_ICBC_DIR\",\n\"DART_FILTER_DIR\",\n\"UPDATE_BC_DIR\",\n\"BAND_DEPTH_DIR\",\n\"ENSEMBLE_MEAN_INPUT_DIR\",\n\"ENSEMBLE_MEAN_OUTPUT_DIR\",\n\"REAL_TIME_DIR\",\n\"PROJ_NUMBER\",\n\"PROJ_NUMBER_ACD\",\n\"PROJ_NUMBER_NSC\",\n\"GENERAL_JOB_CLASS\",\n\"GEOGRID_TIME_LIMIT\",\n\"GEOGRID_NUM_TASKS\",\n\"GEOGRID_TASKS_PER_NODE\",\n\"GEOGRID_JOB_CLASS\",\n\"WRFCHEM_TIME_LIMIT\",\n\"WRFCHEM_NUM_TASKS\",\n\"WRFCHEM_TASKS_PER_NODE\",\n\"WRFCHEM_JOB_CLASS\",\n\"WRFDA_TIME_LIMIT\",\n\"WRFDA_NUM_TASKS\",\n\"WRFDA_TASKS_PER_NODE\",\n\"WRFDA_JOB_CLASS\",\n\"FILTER_TIME_LIMIT\",\n\"FILTER_NUM_TASKS\",\n\"FILTER_TASKS_PER_NODE\",\n\"FILTER_JOB_CLASS\",\n\"MISC_TIME_LIMIT\",\n\"MISC_NUM_TASKS\",\n\"MISC_TASKS_PER_NODE\",\n\"MISC_JOB_CLASS\"\n]\n}\n```\n\nThis script is designed to run a real-time WRF-Chem data assimilation system. It sets up the environment, runs various components, and manages the data flow for a complete cycle. Here's a breakdown of the script's functionality:\n\n**Environment Setup:**\n\n* **Cycle Date-Time:** Defines the start and end date-time of the assimilation cycle.\n* **Observation Error Factors:** Sets the observational error factors for different instruments (MOPITT, IASI).\n* **Retrieval Type:** Specifies the type of retrieval used for MOPITT and IASI observations.\n* **Run Options:** Sets various run flags for different components, like the fine scale forecast, special forecasts, and data interpolation.\n* **Code Versions:** Specifies the versions of the different software used.\n* **Root Directories:** Defines the locations of scratch, work, and archive directories.\n* **Dependent Data Directories:** Sets the paths to various input data directories, including model forecasts, static files, emissions, and observations.\n* **Forecast Parameters:** Sets the forecast period, number of ensemble members, and grid parameters.\n* **Computer Parameters:** Specifies the project number, job class, and resource allocation for each component.\n* **Run Directories:** Defines the directories for storing the output of different components.\n* **WPS Parameters:** Sets the single file flag, horizontal scale, and table types.\n* **WRF Preprocess Parameters:** Defines the latitudinal and longitudinal domain of the simulation.\n* **Perturb CHEM Parameters:** Sets the spread factors for chemistry and fire emissions.\n\n**Component Execution:**\n\n* **geogrid:** Generates the geographic grid.\n* **ungrib:** Converts GRIB files to WPS format.\n* **metgrid:** Interpolate meteorological data onto the WRF grid.\n* **real:** Runs the real component to generate initial conditions.\n* **pert_wrfchem_met_ic:** Runs WRFDA to generate perturbed initial conditions for each ensemble member.\n* **pert_wrfchem_met_bc:** Runs WRFDA to generate perturbed boundary conditions for each ensemble member.\n* **exo_coldens:** Calculates exosphere coldens.\n* **seasons_wes:** Calculates seasonal WES.\n* **wrfchem_bio:** Runs WRF-Chem with biogenic emissions.\n* **wrfchem_fire:** Runs WRF-Chem with fire emissions.\n* **wrfchem_chemi:** Runs WRF-Chem with anthropogenic emissions.\n* **pert_wrfchem_chem_icbc:** Perturbs the WRF-Chem initial and boundary conditions.\n* **pert_wrfchem_chem_emiss:** Perturbs the WRF-Chem emissions.\n* **mopitt_co_obs:** Reads MOPITT CO observations from HDF files and converts them to ASCII format.\n* **iasi_co_obs:** Reads IASI CO observations from HDF files and converts them to ASCII format.\n* **iasi_o3_obs:** Reads IASI O3 observations from HDF files and converts them to ASCII format.\n* **airnow_o3_obs:** Reads AIRNOW O3 observations from CSV files and converts them to ASCII format.\n* **airnow_co_obs:** Reads AIRNOW CO observations from CSV files and converts them to ASCII format.\n* **panda_co_obs:** Reads PANDA CO observations from CSV files and converts them to ASCII format.\n* **panda_o3_obs:** Reads PANDA O3 observations from CSV files and converts them to ASCII format.\n* **panda_pm25_obs:** Reads PANDA PM2.5 observations from CSV files and converts them to ASCII format.\n* **modis_aod_obs:** Reads MODIS AOD observations from HDF files and converts them to ASCII format.\n* **prepbufr_met_obs:** Reads and converts NCEP prepBUFR files to ASCII format.\n* **combine_obs:** Combines observations from different sources into a single obs_seq file.\n* **preprocess_obs:** Preprocesses observations for DART.\n* **wrfchem_initial:** Runs an initial WRF-Chem simulation for each ensemble member.\n* **dart_filter:** Runs the DART filter to assimilate observations and generate an analysis.\n* **update_bc:** Updates the boundary conditions for the coarse resolution grid.\n* **wrfchem_cycle_cr:** Runs a cycle of WRF-Chem simulations for each ensemble member on the coarse resolution grid.\n* **band_depth:** Determines the deepest ensemble member.\n* **ensmean_cycle_fr:** Runs a cycle of WRF-Chem simulations on the fine resolution grid, starting from the ensemble mean or the deepest member.\n* **ensemble_mean_input:** Calculates the ensemble mean of the input fields.\n* **ensemble_mean_output:** Calculates the ensemble mean of the output fields.\n\n**Workflow:**\n\nThe script iterates through the assimilation cycles, executing each component based on the run flags and date conditions. The overall workflow is designed for real-time operation, where each cycle is completed before the next one begins.\n\n**Data Flow:**\n\n* Input data is processed and stored in designated directories.\n* Observations are read, converted, and combined into a single obs_seq file.\n* WRF-Chem simulations are run for each ensemble member.\n* DART assimilation is performed using the observations and background forecasts.\n* Output data from the WRF-Chem simulations and DART analysis are stored in separate directories.\n\nThis script is a complex and well-structured implementation of a real-time WRF-Chem data assimilation system. The script relies on a variety of software tools and resources to perform its tasks. The detailed information about each component's input and output files, as well as the job scheduling, is essential for understanding the overall workflow.\n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 83777,
+        "candidates_token_count": 2276,
+        "total_token_count": 86053,
+        "cached_content_token_count": 0
+    }
+}

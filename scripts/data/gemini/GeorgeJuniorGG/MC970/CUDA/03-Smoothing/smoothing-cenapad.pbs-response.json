@@ -1,0 +1,116 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"PBS\",\n  \"details\": {\n    \"job_name\": \"smoothing\",\n    \"queue\": \"testegpu\",\n    \"error_output\": \"job_output.err\",\n    \"standard_output\": \"job_output.out\",\n    \"walltime\": \"00:25:00\",\n    \"modules\": [\n      \"gcc/9.4.0\",\n      \"cmake/3.21.3-gcc-9.4.0\",\n      \"cuda/11.5.0-gcc-9.4.0\"\n    ],\n    \"cmake_options\": [\n      \"CMAKE_BUILD_TYPE=Release\",\n      \"CMAKE_CUDA_COMPILER=/opt/pub/spack/cuda/11.5.0/gcc/9.4.0/bin/nvcc\"\n    ],\n    \"build_commands\": [\n      \"make\"\n    ],\n    \"test_inputs\": [\n      \"tests/1.in\",\n      \"tests/2.in\",\n      \"tests/3.in\",\n      \"tests/4.in\",\n      \"tests/5.in\"\n    ],\n    \"output_files\": [\n      \"build/parallel.1.out\",\n      \"build/parallel.2.out\",\n      \"build/parallel.3.out\",\n      \"build/parallel.4.out\",\n      \"build/parallel.5.out\",\n      \"build/serial.1.out\",\n      \"build/serial.2.out\",\n      \"build/serial.3.out\",\n      \"build/serial.4.out\",\n      \"build/serial.5.out\",\n      \"build/parallel.1.time\",\n      \"build/parallel.2.time\",\n      \"build/parallel.3.time\",\n      \"build/parallel.4.time\",\n      \"build/parallel.5.time\",\n      \"build/serial.1.time\",\n      \"build/serial.2.time\",\n      \"build/serial.3.time\",\n      \"build/serial.4.time\",\n      \"build/serial.5.time\",\n      \"runtime.csv\"\n    ],\n    \"commands\": [\n      \"cmake -E remove -f build\",\n      \"cmake -E make_directory build\",\n      \"cd build\",\n      \"cmake ../ -DCMAKE_BUILD_TYPE=Release -DCMAKE_CUDA_COMPILER=/opt/pub/spack/cuda/11.5.0/gcc/9.4.0/bin/nvcc\",\n      \"cd ..\",\n      \"cd build\",\n      \"make\",\n      \"cd ..\",\n      \"build/parallel tests/1.in 1>build/parallel.1.out 2>build/parallel.1.time\",\n      \"build/serial tests/1.in 1>build/serial.1.out 2>build/serial.1.time\",\n      \"cmp tests/1.out.ppm build/parallel.1.out >&2\",\n      \"ser=$(<build/serial.1.time)\",\n      \"par=$(<build/parallel.1.time)\",\n      \"speedup=$(bc -l <<< \\\"scale=4; $ser/$par\\\")\",\n      \"echo \\\"  Serial runtime: ${ser}s\\\"\",\n      \"echo \\\"Parallel runtime: ${par}s\\\"\",\n      \"echo \\\"         Speedup: ${speedup}x\\\"\",\n      \"if [[ ! -f runtime.csv ]]; then echo \\\"# Input,Serial time,Parallel time,Speedup\\\" > runtime.csv; fi\",\n      \"if [ $diff_status -eq 0 ]; then echo \\\"$a,$ser,$par,$speedup\\\" >> runtime.csv; fi\",\n      \"build/parallel tests/2.in 1>build/parallel.2.out 2>build/parallel.2.time\",\n      \"build/serial tests/2.in 1>build/serial.2.out 2>build/serial.2.time\",\n      \"cmp tests/2.out.ppm build/parallel.2.out >&2\",\n      \"ser=$(<build/serial.2.time)\",\n      \"par=$(<build/parallel.2.time)\",\n      \"speedup=$(bc -l <<< \\\"scale=4; $ser/$par\\\")\",\n      \"echo \\\"  Serial runtime: ${ser}s\\\"\",\n      \"echo \\\"Parallel runtime: ${par}s\\\"\",\n      \"echo \\\"         Speedup: ${speedup}x\\\"\",\n      \"if [[ ! -f runtime.csv ]]; then echo \\\"# Input,Serial time,Parallel time,Speedup\\\" > runtime.csv; fi\",\n      \"if [ $diff_status -eq 0 ]; then echo \\\"$a,$ser,$par,$speedup\\\" >> runtime.csv; fi\",\n      \"build/parallel tests/3.in 1>build/parallel.3.out 2>build/parallel.3.time\",\n      \"build/serial tests/3.in 1>build/serial.3.out 2>build/serial.3.time\",\n      \"cmp tests/3.out.ppm build/parallel.3.out >&2\",\n      \"ser=$(<build/serial.3.time)\",\n      \"par=$(<build/parallel.3.time)\",\n      \"speedup=$(bc -l <<< \\\"scale=4; $ser/$par\\\")\",\n      \"echo \\\"  Serial runtime: ${ser}s\\\"\",\n      \"echo \\\"Parallel runtime: ${par}s\\\"\",\n      \"echo \\\"         Speedup: ${speedup}x\\\"\",\n      \"if [[ ! -f runtime.csv ]]; then echo \\\"# Input,Serial time,Parallel time,Speedup\\\" > runtime.csv; fi\",\n      \"if [ $diff_status -eq 0 ]; then echo \\\"$a,$ser,$par,$speedup\\\" >> runtime.csv; fi\",\n      \"build/parallel tests/4.in 1>build/parallel.4.out 2>build/parallel.4.time\",\n      \"build/serial tests/4.in 1>build/serial.4.out 2>build/serial.4.time\",\n      \"cmp tests/4.out.ppm build/parallel.4.out >&2\",\n      \"ser=$(<build/serial.4.time)\",\n      \"par=$(<build/parallel.4.time)\",\n      \"speedup=$(bc -l <<< \\\"scale=4; $ser/$par\\\")\",\n      \"echo \\\"  Serial runtime: ${ser}s\\\"\",\n      \"echo \\\"Parallel runtime: ${par}s\\\"\",\n      \"echo \\\"         Speedup: ${speedup}x\\\"\",\n      \"if [[ ! -f runtime.csv ]]; then echo \\\"# Input,Serial time,Parallel time,Speedup\\\" > runtime.csv; fi\",\n      \"if [ $diff_status -eq 0 ]; then echo \\\"$a,$ser,$par,$speedup\\\" >> runtime.csv; fi\",\n      \"build/parallel tests/5.in 1>build/parallel.5.out 2>build/parallel.5.time\",\n      \"build/serial tests/5.in 1>build/serial.5.out 2>build/serial.5.time\",\n      \"cmp tests/5.out.ppm build/parallel.5.out >&2\",\n      \"ser=$(<build/serial.5.time)\",\n      \"par=$(<build/parallel.5.time)\",\n      \"speedup=$(bc -l <<< \\\"scale=4; $ser/$par\\\")\",\n      \"echo \\\"  Serial runtime: ${ser}s\\\"\",\n      \"echo \\\"Parallel runtime: ${par}s\\\"\",\n      \"echo \\\"         Speedup: ${speedup}x\\\"\",\n      \"if [[ ! -f runtime.csv ]]; then echo \\\"# Input,Serial time,Parallel time,Speedup\\\" > runtime.csv; fi\",\n      \"if [ $diff_status -eq 0 ]; then echo \\\"$a,$ser,$par,$speedup\\\" >> runtime.csv; fi\"\n    ]\n  }\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "citation_metadata": {
+                "citation_sources": [
+                    {
+                        "start_index": 1288,
+                        "end_index": 1481,
+                        "uri": "https://github.com/victorrigatto/mc970-parallel-computing",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 1828,
+                        "end_index": 2124,
+                        "uri": "https://github.com/caiopardal/MC970",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 1956,
+                        "end_index": 2221,
+                        "uri": "https://github.com/mc970-1s23/CENAPAD-Tutorial",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 2506,
+                        "end_index": 2802,
+                        "uri": "https://github.com/caiopardal/MC970",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 2634,
+                        "end_index": 2899,
+                        "uri": "https://github.com/mc970-1s23/CENAPAD-Tutorial",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 3184,
+                        "end_index": 3480,
+                        "uri": "https://github.com/caiopardal/MC970",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 3312,
+                        "end_index": 3577,
+                        "uri": "https://github.com/mc970-1s23/CENAPAD-Tutorial",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 3862,
+                        "end_index": 4158,
+                        "uri": "https://github.com/caiopardal/MC970",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 3990,
+                        "end_index": 4255,
+                        "uri": "https://github.com/mc970-1s23/CENAPAD-Tutorial",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 4540,
+                        "end_index": 4836,
+                        "uri": "https://github.com/caiopardal/MC970",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 4668,
+                        "end_index": 4933,
+                        "uri": "https://github.com/mc970-1s23/CENAPAD-Tutorial",
+                        "license_": ""
+                    }
+                ]
+            },
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 532,
+        "candidates_token_count": 1856,
+        "total_token_count": 2388,
+        "cached_content_token_count": 0
+    }
+}

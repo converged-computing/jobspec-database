@@ -1,0 +1,36 @@
+{
+    "application": "SLURM",
+    "details": {
+        "software": [
+            "Python",
+            "conda",
+            "CUDA 11.6"
+        ],
+        "resources": {
+            "nodes": 1,
+            "tasks_per_node": 1,
+            "cpus_per_task": 8,
+            "partition": "fasse_gpu",
+            "time": "7:59:00",
+            "memory": "32G",
+            "gpus": 1,
+            "array_size": 5
+        },
+        "script_details": {
+            "commands": [
+                "python train_sim_embs.py --silent --sim $((2*SLURM_ARRAY_TASK_ID)) --output results-sim6 --d 6 --method pca",
+                "python train_sim_embs.py --silent --sim $((2*SLURM_ARRAY_TASK_ID)) --output results-sim6 --d 6 --method tsne",
+                "python train_sim_embs.py --silent --sim $((2*SLURM_ARRAY_TASK_ID)) --output results-sim6 --d 6 --method cvae",
+                "python train_sim_embs.py --silent --sim $((2*SLURM_ARRAY_TASK_ID)) --output results-sim6 --d 6 --method crae",
+                "python train_sim_embs.py --silent --sim $((2*SLURM_ARRAY_TASK_ID)) --output results-sim6 --d 6 --method resnet",
+                "python train_sim_embs.py --silent --sim $((2*SLURM_ARRAY_TASK_ID)) --output results-sim6 --d 6 --method unet",
+                "python train_sim_embs.py --silent --sim $((2*SLURM_ARRAY_TASK_ID + 1)) --output results-sim6 --d 6 --method pca",
+                "python train_sim_embs.py --silent --sim $((2*SLURM_ARRAY_TASK_ID + 1)) --output results-sim6 --d 6 --method tsne",
+                "python train_sim_embs.py --silent --sim $((2*SLURM_ARRAY_TASK_ID + 1)) --output results-sim6 --d 6 --method cvae",
+                "python train_sim_embs.py --silent --sim $((2*SLURM_ARRAY_TASK_ID + 1)) --output results-sim6 --d 6 --method crae",
+                "python train_sim_embs.py --silent --sim $((2*SLURM_ARRAY_TASK_ID + 1)) --output results-sim6 --d 6 --method resnet",
+                "python train_sim_embs.py --silent --sim $((2*SLURM_ARRAY_TASK_ID + 1)) --output results-sim6 --d 6 --method unet"
+            ]
+        }
+    }
+}

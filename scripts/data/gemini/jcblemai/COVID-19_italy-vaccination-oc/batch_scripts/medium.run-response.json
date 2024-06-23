@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"Slurm\",\n  \"details\": {\n    \"resource_requirements\": {\n      \"nodes\": 1,\n      \"tasks_per_node\": 1,\n      \"cpus_per_task\": 36,\n      \"memory\": \"180G\",\n      \"time\": \"7-0\",\n      \"array\": \"0-15\",\n      \"qos\": \"week\"\n    },\n    \"environment_variables\": {\n      \"MDL_DAYS\": 90,\n      \"MDL_NNODES\": 107,\n      \"F_DIR\": \"`date +%Y-%m-%d`-${MDL_NNODES}_${MDL_DAYS}/\",\n      \"F_PREFIX\": \"week\",\n      \"OMP_NUM_THREADS\": \"$SLURM_CPUS_PER_TASK\"\n    },\n    \"modules\": {\n      \"restore\": \"COVID_OCP\"\n    },\n    \"python_environment\": {\n      \"virtual_env\": \"$HOME/venvs/$SYS_TYPE/bin/activate\",\n      \"LD_LIBRARY_PATH\": \"$LD_LIBRARY_PATH:$HOME/src/hsl/20190503_${SYS_TYPE}/lib\",\n      \"LD_PRELOAD\": \"$MKLROOT/lib/intel64/libmkl_rt.so\"\n    },\n    \"executable\": \"python\",\n    \"script\": \"main.py\",\n    \"arguments\": \"-s ${SLURM_ARRAY_TASK_ID} -t $MDL_DAYS -n $MDL_NNODES -f $F_PREFIX -d $F_DIR --use_matlab False --optimize True\",\n    \"output\": \"${F_DIR}out${SLURM_ARRAY_TASK_ID}.txt\"\n  }\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 2,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 748,
+        "candidates_token_count": 414,
+        "total_token_count": 1162,
+        "cached_content_token_count": 0
+    }
+}

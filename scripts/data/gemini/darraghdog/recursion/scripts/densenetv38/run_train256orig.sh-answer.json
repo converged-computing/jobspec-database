@@ -1,0 +1,16 @@
+{
+    "application": "bsub",
+    "details": {
+        "queue": "lowpriority",
+        "gpu_request": "num=1:mode=exclusive_process",
+        "gpu_count": 1,
+        "container_image": "darraghdog/kaggle:apex_build",
+        "command": "python3 trainorig.py --accum 16 --logmsg Recursion-addexpt-cut1-$SIZE --nbags 20 --epochs 100 --fold $FOLD --lr 0.00025 --lrmult 20 --batchsize 64 --workpath scripts/$WDIR --probsname probs_$SIZE --cutmix_prob 1.0 --precision half --beta 1.0 --imgpath data/mount/256X256X6/ --weightsname weights/pytorch_cut_model_256_densenet$FOLD.bin",
+        "working_directory": "/share/dhanley2/recursion/scripts/$WDIR",
+        "output_file": "log_train_%J",
+        "resource_requirements": {
+            "processors": 1,
+            "memory": "span[ptile=4]"
+        }
+    }
+}

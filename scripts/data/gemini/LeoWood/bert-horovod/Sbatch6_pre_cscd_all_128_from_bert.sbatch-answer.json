@@ -1,0 +1,36 @@
+{
+    "application": "TensorFlow",
+    "details": {
+        "framework": "TensorFlow",
+        "distributed training": "Horovod",
+        "resource requirements": {
+            "nodes": 4,
+            "tasks_per_node": 4,
+            "cpus_per_task": 8,
+            "GPUs": 16,
+            "GPU type": "AMD Radeon Instinct MI250"
+        },
+        "input data": "TFRecord files stored at /work1/zzx6320/lh/Projects/bert/data/cscd_all/",
+        "model": "BERT model: Chinese_L-12_H-768_A-12",
+        "pre-trained model": "/public/home/zzx6320/lh/Projects/bert/models/chinese_L-12_H-768_A-12/chinese_L-12_H-768_A-12/bert_model.ckpt",
+        "output directory": "/work1/zzx6320/lh/Projects/bert/outputs/Pre6_cscd_all_128_64_from_bert",
+        "training parameters": {
+            "sequence length": 128,
+            "batch size": 64,
+            "learning rate": 2e-05,
+            "training steps": 3000000,
+            "checkpoint saving frequency": 1000
+        },
+        "environment variables": {
+            "MIOPEN_USER_DB_PATH": "/tmp/tensorflow-miopen-${USER}-2.8",
+            "MIOPEN_DEBUG_DISABLE_FIND_DB": "1",
+            "HOROVOD_HIERARCHICAL_ALLREDUCE": "1",
+            "LD_LIBRARY_PATH": "environment variable"
+        },
+        "MPI": {
+            "mpirun command": "mpirun -np ${num_DCU} --hostfile ${DIR}/hostfile-tmp -mca pml ucx -x UCX_TLS=sm,rc,rocm_cpy,rocm_gdr,rocm_ipc -x LD_LIBRARY_PATH -mca coll_hcoll_enable 0 --bind-to none",
+            "UCX transport": "sm,rc,rocm_cpy,rocm_gdr,rocm_ipc"
+        },
+        "job scheduler": "SLURM"
+    }
+}

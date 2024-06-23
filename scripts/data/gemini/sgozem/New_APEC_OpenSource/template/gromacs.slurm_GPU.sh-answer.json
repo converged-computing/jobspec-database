@@ -1,0 +1,24 @@
+{
+    "application": "GROMACS",
+    "details": {
+        "version": "2019.6",
+        "resources": {
+            "nodes": 1,
+            "cores": 16,
+            "time": "23:59:00",
+            "memory": "16G",
+            "queue": "qGPU48",
+            "gpu": "V100:1",
+            "account": "CHEM9C4"
+        },
+        "commands": [
+            "gmx mdrun -nt 16 -s $Project.tpr -o $Project.trr -x $Project.xtc -c final-$Project.gro -nb gpu"
+        ],
+        "environment_variables": [
+            "Project=$SLURM_JOB_NAME",
+            "WorkDir=/scratch/$SLURM_JOB_ID",
+            "InpDir=NOMEDIRETTORI",
+            "outdir=NOMEDIRETTORI/output"
+        ]
+    }
+}

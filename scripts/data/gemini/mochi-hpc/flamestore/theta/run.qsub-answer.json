@@ -1,0 +1,27 @@
+{
+    "application": "flamestore",
+    "details": {
+        "runtime": "bash",
+        "scheduler": "COBALT",
+        "resources": {
+            "nodes": 3,
+            "time": "0:10:00",
+            "queue": "debug-flat-quad",
+            "storage": {
+                "path": "/dev/shm",
+                "size": "1G"
+            },
+            "pdomain": "flamestore"
+        },
+        "software": {
+            "flamestore": "spack load -r flamestore",
+            "aprun": "aprun -cc none -n 1 -N 1 -p ${pdomain} -L ${nodes[0]}",
+            "python": "/home/carns/bin/run_on_all_nids.py",
+            "modulepath": "$HOME/flamestore/spack/share/spack/modules/cray-cnl6-mic_knl"
+        },
+        "environment_variables": {
+            "MPICH_GNI_NDREG_ENTRIES": "1024",
+            "MODULEPATH": "$MODULEPATH:$HOME/flamestore/spack/share/spack/modules/cray-cnl6-mic_knl"
+        }
+    }
+}

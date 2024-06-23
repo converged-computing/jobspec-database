@@ -1,0 +1,53 @@
+{
+    "application": "GROMACS",
+    "details": {
+        "modules": [
+            "libraries/fftw-3.3.8",
+            "compilers/nvcc/cuda-10",
+            "codes/gromacs/2019_jm9"
+        ],
+        "resources": {
+            "nodes": "jm5",
+            "processors_per_node": 16,
+            "queue": "batch1"
+        },
+        "software": {
+            "gromacs": "2019_jm9",
+            "cuda": "10",
+            "fftw": "3.3.8"
+        },
+        "commands": [
+            "gmx grompp",
+            "gmx mdrun"
+        ],
+        "input_files": [
+            "*.top",
+            "*.itp",
+            "*.mdp",
+            "equi*.gro",
+            "equi*.cpt"
+        ],
+        "output_files": [
+            "run1.tpr",
+            "run2.tpr",
+            "run1.gro",
+            "run1.cpt",
+            "run2.gro",
+            "run2.cpt"
+        ],
+        "log_files": [
+            "log/grompp_1st.log",
+            "log/mdrun1.log",
+            "log/grompp_2nd.log",
+            "log/mdrun2.log"
+        ],
+        "parameters": {
+            "nsteps": [
+                50000,
+                10000000
+            ],
+            "nb": "gpu",
+            "nt": 2
+        }
+    }
+}

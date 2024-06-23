@@ -1,0 +1,35 @@
+{
+    "application": "SLURM",
+    "details": {
+        "job_name": "pretrain_3dfront_bedroom",
+        "output_file": "./slurm_jobs/job_%j.log",
+        "mail_type": "FAIL",
+        "memory": "300gb",
+        "gpu_types": "rtx_a6000|rtx_3090|rtx_2080",
+        "gpu_count": 4,
+        "cpus_per_task": 32,
+        "qos": "normal",
+        "partition": "submit",
+        "conda_env": "sceneprior",
+        "python_script": "main.py",
+        "python_arguments": [
+            "start_deform=False",
+            "resume=False",
+            "finetune=False",
+            "weight=[]",
+            "distributed.num_gpus=4",
+            "data.dataset=3D-Front",
+            "data.split_type=bed",
+            "data.n_views=20",
+            "data.aug=False",
+            "device.num_workers=32",
+            "train.batch_size=128",
+            "train.epochs=800",
+            "train.freeze=[]",
+            "scheduler.latent_input.milestones=[400]",
+            "scheduler.generator.milestones=[400]",
+            "log.if_wandb=True",
+            "exp_name=pretrain_3dfront_bedroom"
+        ]
+    }
+}

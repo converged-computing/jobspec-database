@@ -1,0 +1,48 @@
+{
+    "application": "SLURM",
+    "details": {
+        "job_name": "k_shot",
+        "tasks": 1,
+        "cpus_per_task": 3,
+        "time": "2:00:00",
+        "memory": "8000M",
+        "partition": "gpu_shared_course",
+        "gpu": 1,
+        "modules": [
+            "pre2019",
+            "Python/3.6.3-foss-2017b",
+            "cuDNN/7.0.5-CUDA-9.0.176",
+            "NCCL/2.0.5-CUDA-9.0.176"
+        ],
+        "environment_variables": {
+            "LD_LIBRARY_PATH": "/hpc/eb/Debian9/cuDNN/7.1-CUDA-8.0.44-GCCcore-5.4.0/lib64:$LD_LIBRARY_PATH"
+        },
+        "python_dependencies": "requirements.txt",
+        "script": "k_shot_testing.py",
+        "arguments": {
+            "model_path": "~/results_Multitask_SentimentAnalysis_batch32_mlp768_lr5e-5_iter3000/best_test*_model.pt",
+            "batch_size": 32,
+            "mlp_dims": 768,
+            "lr": "5e-5",
+            "model": "MTL",
+            "task": [
+                "IronySubtaskA",
+                "IronySubtaskB",
+                "Abuse",
+                "Politeness"
+            ],
+            "k": [
+                4,
+                8,
+                16
+            ],
+            "num_updates": [
+                5,
+                25,
+                100,
+                300
+            ],
+            "episodes": "new_episodes/${task}_k${k}.pkl"
+        }
+    }
+}

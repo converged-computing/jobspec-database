@@ -1,0 +1,27 @@
+{
+    "application": "LSF",
+    "details": {
+        "queue": "{{ job['queue'] }}",
+        "processors": 16,
+        "walltime": "6:00",
+        "memory": "300000",
+        "docker": "liambindle/mypyenv",
+        "job_name": "E2 regrid rst",
+        "job_group": "/$USER/E2",
+        "output_file": "lsf-regrid-%J-output.txt",
+        "conda_environment": "py36",
+        "script_execution": {
+            "python_module": "gcpy.cs_regrid",
+            "input_file": "/scratch1/liam.bindle/GCHPctm-13.0.0-alpha.3-Standard-1yr/gcchem_internal_checkpoint.20160601_0000z.nc4",
+            "output_file": "initial_restart_file.nc",
+            "grid_parameters": {
+                "stretch_factor": "{{ grid['stretch_factor'] }}",
+                "target_lon": "{{ grid['target_lon'] }}",
+                "target_lat": "{{ grid['target_lat'] }}",
+                "cs_res": "{{ grid['cs_res'] }}"
+            },
+            "input_format": "stacked",
+            "output_format": "stacked"
+        }
+    }
+}

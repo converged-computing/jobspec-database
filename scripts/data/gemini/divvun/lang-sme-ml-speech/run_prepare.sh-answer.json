@@ -1,0 +1,28 @@
+{
+    "application": "SLURM",
+    "details": {
+        "resource_requirements": {
+            "job_name": "TestGPUOnSaga",
+            "account": "nn9866k",
+            "time": "00:05:00",
+            "memory_per_cpu": "512M",
+            "partition": "accel",
+            "gres": "gpu:1"
+        },
+        "software_requirements": {
+            "modules": [
+                "PyTorch/1.4.0-fosscuda-2019b-Python-3.7.4"
+            ],
+            "python_script": "train_tacotron.py"
+        },
+        "monitoring": {
+            "tool": "nvidia-smi",
+            "metrics": [
+                "timestamp",
+                "utilization.gpu",
+                "utilization.memory"
+            ],
+            "output_file": "gpu_util-$SLURM_JOB_ID.csv"
+        }
+    }
+}

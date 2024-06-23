@@ -1,0 +1,56 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"PBS\",\n  \"details\": {\n    \"job_name\": \"multi_run\",\n    \"nodes\": 2,\n    \"cpus_per_node\": 40,\n    \"gpus_per_node\": 2,\n    \"gpu_model\": \"a100\",\n    \"memory_per_node\": \"245gb\",\n    \"walltime\": \"72:00:00\",\n    \"modules\": [\n      \"cuda/11.6.2-gcc/9.5.0\",\n      \"nccl/2.11.4-1-gcc/9.5.0-cu11_6-nvP-nvV-nvA\",\n      \"openmpi/4.1.3-gcc/9.5.0-cu11_6-nvP-nvV-nvA-ucx\",\n      \"anaconda3/2022.05-gcc/9.5.0\"\n    ],\n    \"environment\": \"hf_env\",\n    \"model_name\": \"codellama/CodeLlama-13b-hf\",\n    \"deepspeed_config\": \"deepspeed_configs/llama_z3_offload.json\",\n    \"dataset_name\": \"AshtonIsNotHere/nlp_pp_code_dataset\",\n    \"output_dir\": \"${PBS_O_WORKDIR/home/scratch}/output/nlp_pp_codellama_CodeLlama-13b-hf_timestamp\",\n    \"run_script\": \"run.sh\",\n    \"run_command\": \"run_clm.py --deepspeed ${SCRIPT_DIR}/deepspeed_configs/llama_z3_offload.json --model_name_or_path $model_name --output_dir ${OUTPUT_DIR} --ddp_timeout 9000 --dataset_name AshtonIsNotHere/nlp_pp_code_dataset --per_device_train_batch_size 1 --per_device_eval_batch_size 1 --do_train --do_eval --learning_rate 2e-5 --weight_decay 0.1 --gradient_accumulation_steps 8 --warmup_ratio 0.1 --evaluation_strategy epoch --save_strategy epoch --load_best_model_at_end --report_to wandb --torch_dtype bfloat16 --num_train_epochs 5 --block_size 1024 --gradient_checkpointing --run_name z3_codellama_CodeLlama-13b-hf\"\n  }\n}\n```\n\n**Explanation:**\n\n* **PBS:** The script is a PBS (Portable Batch System) script used for submitting and managing jobs on a high-performance computing cluster.\n* **Job Details:** The script defines various parameters for the job, including:\n    * Job Name (`#PBS -N multi_run`)\n    * Resources requested (`#PBS -l`) such as nodes, CPUs, GPUs, memory, and wall time.\n    * Output and error logs (`#PBS -j oe`)\n* **Environment Setup:**\n    * Sets environment variables for Hugging Face cache (`HF_HOME`), NCCL debugging (`NCCL_DEBUG`), and asynchronous error handling (`NCCL_ASYNC_ERROR_HANDLING`).\n    * Loads necessary modules for CUDA, NCCL, OpenMPI, and Anaconda.\n* **Directory Navigation:** Navigates to the script directory (`$SCRIPT_DIR`) and prints the current working directory.\n* **Environment Activation:** Activates the conda environment named \"hf_env\".\n* **Parallel Processing:**\n    * Calculates the number of nodes, CPUs, GPUs, and processes based on PBS information.\n    * Creates an output directory for the job.\n* **Torch Extensions:** Sets the directory for Torch extensions.\n* **Running the Script:**\n    * Uses `pbsdsh` to run the script (`run.sh`) on all nodes in parallel.\n    * Passes arguments to the script, including the hostname, user, environment name, number of nodes, number of GPUs, and the command to run (`run_clm.py`).\n* **Training Parameters:** The script includes parameters for training a language model using DeepSpeed, including:\n    * Model name (`model_name_or_path`)\n    * Output directory (`output_dir`)\n    * Dataset name (`dataset_name`)\n    * Batch size (`per_device_train_batch_size`, `per_device_eval_batch_size`)\n    * Learning rate (`learning_rate`)\n    * Weight decay (`weight_decay`)\n    * Gradient accumulation steps (`gradient_accumulation_steps`)\n    * Warmup ratio (`warmup_ratio`)\n    * Evaluation and save strategies (`evaluation_strategy`, `save_strategy`)\n    * Reporting to WandB (`report_to`)\n    * Data type (`torch_dtype`)\n    * Number of epochs (`num_train_epochs`)\n    * Block size (`block_size`)\n    * Gradient checkpointing (`gradient_checkpointing`)\n    * Run name (`run_name`)\n\nThe JSON output provides a structured way to represent the information extracted from the script, making it easier to understand and process. \n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "citation_metadata": {
+                "citation_sources": [
+                    {
+                        "start_index": 780,
+                        "end_index": 1356,
+                        "uri": "https://github.com/ashtonomy/nlp_pp_code_completion",
+                        "license_": ""
+                    }
+                ]
+            },
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 837,
+        "candidates_token_count": 1163,
+        "total_token_count": 2000,
+        "cached_content_token_count": 0
+    }
+}

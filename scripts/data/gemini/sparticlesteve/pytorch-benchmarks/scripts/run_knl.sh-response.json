@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"PyTorch\",\n  \"details\": {\n    \"version\": \"1.7.1\",\n    \"backend\": \"mpi\",\n    \"models\": \"alexnet resnet50 lstm cnn3d transformer\",\n    \"clean\": false,\n    \"environment_variables\": {\n      \"OMP_NUM_THREADS\": \"68\",\n      \"KMP_AFFINITY\": \"granularity=fine,compact,1,0\",\n      \"KMP_BLOCKTIME\": \"1\",\n      \"BENCHMARK_RESULTS_PATH\": \"$SCRATCH/pytorch-benchmarks/results/knl-1.7.1-mpi-n${SLURM_JOB_NUM_NODES}\"\n    },\n    \"modules\": \"pytorch/$version\",\n    \"script_execution\": {\n      \"train\": \"python train.py configs/${model}.yaml -d $backend --output-dir $BENCHMARK_RESULTS_PATH/$model\",\n      \"parse\": \"python parse.py $BENCHMARK_RESULTS_PATH -o $BENCHMARK_RESULTS_PATH/results.txt\"\n    },\n    \"slurm_settings\": {\n      \"nodes\": \"1\",\n      \"partition\": \"regular\",\n      \"time\": \"4:00:00\",\n      \"job_name\": \"pytorch-bm-knl\",\n      \"output_file\": \"logs/%x-%j.out\",\n      \"constraint\": \"knl\"\n    }\n  }\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 557,
+        "candidates_token_count": 340,
+        "total_token_count": 897,
+        "cached_content_token_count": 0
+    }
+}

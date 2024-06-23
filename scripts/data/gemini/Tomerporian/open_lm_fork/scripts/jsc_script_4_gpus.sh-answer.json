@@ -1,0 +1,42 @@
+{
+    "application": "slurm",
+    "details": {
+        "resource_requirements": {
+            "account": "transfernetx",
+            "nodes": 1,
+            "exclude_nodes": "jwb[0026,0098,0193,0631,0731,0729,0801,0807,0833,0964,1021]",
+            "gres": "gpu:4",
+            "ntasks_per_node": 4,
+            "cpus_per_task": 12,
+            "time": "6:00:00",
+            "partition": "booster",
+            "job_name": "openlm",
+            "output_file": "logs/%x_%j.out",
+            "mail_type": "FAIL",
+            "mail_user": "tomerporian@mail.tau.ac.il"
+        },
+        "conda_environment": "py9",
+        "python_package": "open_lm",
+        "libraries": [
+            "open_lm",
+            "wandb",
+            "nccl",
+            "ucx"
+        ],
+        "environment_variables": {
+            "NCCL_IB_TIMEOUT": "50",
+            "UCX_RC_TIMEOUT": "4s",
+            "NCCL_IB_RETRY_CNT": "10",
+            "CUDA_VISIBLE_DEVICES": "0,1,2,3",
+            "NCCL_ASYNC_ERROR_HANDLING": "1",
+            "SRUN_CPUS_PER_TASK": "${SLURM_CPUS_PER_TASK}",
+            "MASTER_PORT": "12802",
+            "MASTER_ADDR": "master_addr\"i\"",
+            "OPEN_CLIP_HOME": "/p/project/ccstdl/$USER/open_lm_fork",
+            "PYTHONPATH": "$PYTHONPATH:${OPEN_CLIP_HOME}",
+            "LOGS": "/p/scratch/ccstdl/porian1/$3",
+            "WANDB_MODE": "offline"
+        },
+        "command": "srun --cpu_bind=v --accel-bind=gn --threads-per-core=1 python -u -m open_lm.main --name \"$2\" --logs $LOGS  --config $1"
+    }
+}

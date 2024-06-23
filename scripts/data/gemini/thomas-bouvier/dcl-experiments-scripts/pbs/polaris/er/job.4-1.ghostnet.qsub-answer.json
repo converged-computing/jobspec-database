@@ -1,0 +1,34 @@
+{
+    "application": "MPI",
+    "details": {
+        "environment": {
+            "spack": {
+                "version": "unknown",
+                "setup": "${HOME}/git/spack-polaris/share/spack/setup-env.sh"
+            },
+            "spack_env": "/home/tbouvier/git/spack-envs/polaris",
+            "wandb": {
+                "mode": "offline"
+            }
+        },
+        "resources": {
+            "nodes": {
+                "count": "NNODES",
+                "cores_per_node": 4,
+                "ranks_per_node": "NRANKS_PER_NODE",
+                "threads_per_rank": "NTHREADS"
+            },
+            "walltime": "1:30:00",
+            "queue": "preemptable",
+            "filesystem": "home"
+        },
+        "script": {
+            "language": "python",
+            "execution": "mpiexec -n ${NTOTRANKS} --ppn ${NRANKS_PER_NODE} --depth=${NDEPTH} --cpu-bind depth ./set_affinity_gpu_polaris.sh python ../../main.py --yaml-config experiments_polaris.yaml --config er_ghostnet_scale --log-level info",
+            "data_transfer": {
+                "dataset": "/grand/VeloC/tbouvier/datasets/ImageNet_blurred",
+                "local_storage": "/local/scratch/"
+            }
+        }
+    }
+}

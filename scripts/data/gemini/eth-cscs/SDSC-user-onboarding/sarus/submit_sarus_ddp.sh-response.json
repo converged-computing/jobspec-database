@@ -1,0 +1,62 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"SLURM\",\n  \"details\": {\n    \"job_name\": \"sdsc-ddp\",\n    \"time\": \"00:05:00\",\n    \"nodes\": 4,\n    \"tasks_per_node\": 1,\n    \"cpus_per_task\": 12,\n    \"constraint\": \"gpu\",\n    \"partition\": \"debug\",\n    \"account\": \"sd00\",\n    \"output_file\": \"logs/slurm-%x.%j.out\",\n    \"error_file\": \"logs/slurm-%x.%j.err\",\n    \"modules\": [\n      \"daint-gpu\",\n      \"sarus\"\n    ],\n    \"environment_variables\": [\n      \"OMP_NUM_THREADS\",\n      \"NCCL_DEBUG\",\n      \"NCCL_NET_GDR_LEVEL\",\n      \"MASTER_ADDR\"\n    ],\n    \"command\": \"srun -ul sarus run --workdir \\\"$(pwd)\\\" --mount type=bind,source=/scratch,destination=/scratch --mount type=bind,source=${HOME},destination=${HOME} nvcr.io/nvidia/pytorch:23.09-py3 bash -c \\\"source ./export_DDP_vars.sh python -u ${args}\\\"\",\n    \"other_software\": [\n      \"sarus\",\n      \"nvcr.io/nvidia/pytorch:23.09-py3\"\n    ]\n  }\n}\n``` \n\nThis JSON object provides a breakdown of the script's key elements:\n\n* **application**: The main application running is **SLURM**.\n* **details**: \n    * **job_name**:  The name given to the job for tracking.\n    * **time**:  The maximum execution time allotted to the job.\n    * **nodes**: The number of nodes requested for the job.\n    * **tasks_per_node**: The number of tasks to run per node.\n    * **cpus_per_task**: The number of CPU cores allocated to each task.\n    * **constraint**:  Specific hardware requirements, in this case, GPUs.\n    * **partition**:  The queue or resource pool the job is submitted to.\n    * **account**:  The user's account associated with the job.\n    * **output_file**:  The file where standard output is directed.\n    * **error_file**:  The file where error messages are written.\n    * **modules**:  Software packages loaded for the job's execution.\n    * **environment_variables**:  Environment variables set for specific software requirements.\n    * **command**: The command executed by the script within the SLURM environment. This includes `srun` for parallel execution, `sarus` for containerization, and the actual Python script execution.\n    * **other_software**:  Other software packages used in the script, including `sarus` for containerization and `nvcr.io/nvidia/pytorch:23.09-py3` for the PyTorch framework. \n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "citation_metadata": {
+                "citation_sources": [
+                    {
+                        "start_index": 532,
+                        "end_index": 723,
+                        "uri": "https://github.com/eth-cscs/SDSC-user-onboarding",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 598,
+                        "end_index": 763,
+                        "uri": "https://github.com/eth-cscs/SDSC-user-onboarding",
+                        "license_": ""
+                    }
+                ]
+            },
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 393,
+        "candidates_token_count": 688,
+        "total_token_count": 1081,
+        "cached_content_token_count": 0
+    }
+}

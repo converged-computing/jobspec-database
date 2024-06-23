@@ -1,0 +1,62 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n\"application\": \"TensorFlow\",\n\"details\": {\n\"modules\": [\n\"datascience/tensorflow-1.13\",\n\"cray-hdf5-parallel/1.10.2.0\"\n],\n\"environment_variables\": [\n\"HDF5_USE_FILE_LOCKING=FALSE\",\n\"PYTHONPATH=$PYTHONPATH:/lus/theta-fs0/projects/datascience/keceli/pip_ffn\",\n\"TFRECORDFILE=/lus/theta-fs0/projects/datascience/keceli/run/f3n/training/tf_record_file\",\n\"GROUNDTRUTH=/lus/theta-fs0/projects/datascience/keceli/run/f3n/training/groundtruth.h5\",\n\"GRAYSCALE=/lus/theta-fs0/projects/datascience/keceli/run/f3n/training/grayscale_maps.h5\",\n\"TRAINER=/gpfs/mira-home/keceli/ffn/keceli_ffn/train_hvd.py\",\n\"NRANK_PER_NODE=1\",\n\"NTHREAD_PER_CORE=1\",\n\"NNODE=$COBALT_JOBSIZE\",\n\"NINTER=1\",\n\"MKL_DYNAMIC=false\",\n\"OMP_NESTED=false\",\n\"KMP_BLOCKTIME=0\",\n\"OPTIMIZER=adam\",\n\"LRATE=0.001\",\n\"SHARDING_RULE=0\",\n\"SCALING_RULE=0\",\n\"XLA=0\",\n\"BATCHSIZE=64\",\n\"NTHREAD=$((NTHREAD_PER_CORE*64/NRANK_PER_NODE))\",\n\"NRANK=$((NRANK_PER_NODE*NNODE))\",\n\"MKLTHREAD=$NTHREAD\",\n\"TRAINDIR=train_${MYNAME}_b${BATCHSIZE}_n${NNODE}_p${NRANK}_t${NTHREAD}_i${NINTER}_m${MKLTHREAD}_d${MKL_DYNAMIC}_n${OMP_NESTED}_kk${KMP_BLOCKTIME}__r${LRATE}_o${OPTIMIZER}_s${SHARDING_RULE}${SCALING_RULE}_${COBALT_JOBID}_${XALT_COBALT_QUEUE}\"\n],\n\"command\": \"aprun -n $NRANK -N $NRANK_PER_NODE -e MKLDNN_VERBOSE=0 -e MKL_VERBOSE=0 -e MKL_DYNAMIC=$MKL_DYNAMIC -e OMP_NESTED=$OMP_NESTED  -e KMP_BLOCKTIME=${KMP_BLOCKTIME} -e KMP_AFFINITY=granularity=fine,compact,1,0 -e OMP_NUM_THREADS=$NTHREAD -e MKL_NUM_THREADS=$MKLTHREAD -cc depth -d $NTHREAD -j $NTHREAD_PER_CORE python $TRAINER \\\\    --train_coords $TFRECORDFILE \\\\    --data_volumes valdation1:${GRAYSCALE}:raw \\\\    --label_volumes valdation1:${GROUNDTRUTH}:stack \\\\    --model_name convstack_3d.ConvStack3DFFNModel \\\\    --model_args \\\"{\\\\\\\"depth\\\\\\\": 12, \\\\\\\"fov_size\\\\\\\": [33, 33, 33], \\\\\\\"deltas\\\\\\\": [8, 8, 8]}\\\" \\\\    --image_mean 128 \\\\    --image_stddev 33 \\\\    --batch_size $BATCHSIZE \\\\    --optimizer $OPTIMIZER \\\\    --max_steps 400000000 \\\\    --summary_rate_secs 400 \\\\    --scaling_rule $SCALING_RULE \\\\    --sharding_rule $SHARDING_RULE \\\\    --num_intra_threads $NTHREAD \\\\    --num_inter_threads $NINTER \\\\    --train_dir $TRAINDIR &> log_${TRAINDIR}.txt &\"\n}\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "citation_metadata": {
+                "citation_sources": [
+                    {
+                        "start_index": 265,
+                        "end_index": 528,
+                        "uri": "",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 1653,
+                        "end_index": 1868,
+                        "uri": "https://www.opensourceagenda.com/projects/google-ffn",
+                        "license_": ""
+                    }
+                ]
+            },
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 1111,
+        "candidates_token_count": 901,
+        "total_token_count": 2012,
+        "cached_content_token_count": 0
+    }
+}

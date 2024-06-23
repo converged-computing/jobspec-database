@@ -1,0 +1,28 @@
+{
+    "application": "SLURM",
+    "details": {
+        "job_name": "run7",
+        "output_file": "slurm-%j.out",
+        "error_file": "slurm-%j.err",
+        "partition": "small-gpu",
+        "nodes": 2,
+        "tasks_per_node": 20,
+        "time": "20:00:00",
+        "modules": [
+            "singularity/3.4.2",
+            "openmpi/gcc/64/3.1.4"
+        ],
+        "libraries": [
+            "/lib64/libibverbs/*",
+            "/lib64/libmlx5.so*",
+            "/lib64/libibverbs.so*",
+            "/lib64/libnl*.so*"
+        ],
+        "libdir": "/usr/local/nvidia/lib",
+        "cuda_visible_devices": "0,1",
+        "simulation_directory": "/lustre/groups/barbalab/mesnardo/rollingpitching/independence/run7",
+        "input_directory": "/mnt",
+        "image": "/SEAS/home/mesnardo/images/petibm-rollingpitching_petibm0.5.1-xenial.sif",
+        "command": "mpirun singularity exec --bind $ib,$simudir:$indir --nv $img petibm-rollingpitching -directory $indir -probes $indir/probes.yaml -options_left -log_view ascii:$indir/view.log"
+    }
+}

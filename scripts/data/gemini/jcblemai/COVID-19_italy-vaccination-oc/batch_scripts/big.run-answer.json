@@ -1,0 +1,35 @@
+{
+    "application": "Slurm",
+    "details": {
+        "software": [
+            "Python",
+            "MATLAB (optional)",
+            "Intel MKL",
+            "HSL"
+        ],
+        "resource_requirements": {
+            "nodes": 1,
+            "tasks_per_node": 1,
+            "cpus_per_task": 36,
+            "memory": "180G",
+            "time": "15 hours",
+            "qos": "fortnight",
+            "modules": "COVID_OCP",
+            "environment_variables": {
+                "MDL_DAYS": 150,
+                "MDL_NNODES": 107,
+                "F_DIR": "date-format-${MDL_NNODES}_${MDL_DAYS}/",
+                "F_PREFIX": "week",
+                "OMP_NUM_THREADS": "$SLURM_CPUS_PER_TASK",
+                "LD_LIBRARY_PATH": "$LD_LIBRARY_PATH:$HOME/src/hsl/20190503_${SYS_TYPE}/lib",
+                "LD_PRELOAD": "$MKLROOT/lib/intel64/libmkl_rt.so"
+            }
+        },
+        "script_details": {
+            "script_type": "Bash",
+            "array_jobs": true,
+            "array_range": "0-11",
+            "output_files": "${F_DIR}out${SLURM_ARRAY_TASK_ID}.txt"
+        }
+    }
+}

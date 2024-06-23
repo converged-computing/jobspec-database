@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"SLURM\",\n  \"details\": {\n    \"software\": [\n      \"Python\",\n      \"PyTorch\",\n      \"nvidia-smi\"\n    ],\n    \"resources\": {\n      \"compute\": {\n        \"nodes\": 1,\n        \"cpus-per-gpu\": 2,\n        \"gpus\": {\n          \"type\": \"v100-32g\",\n          \"count\": 2\n        }\n      },\n      \"time\": \"02:00:00\",\n      \"account\": \"PAS0396\",\n      \"environment\": \"pt\"\n    },\n    \"files\": [\n      \"main.py\",\n      \"/users/PAS1939/vishal/datasets/librispeech/train_full_960.csv\",\n      \"logs/conf_16L128H4A_asr.log\",\n      \"/users/PAS1939/vishal/saved_models/debug_ddp.pth.tar\"\n    ]\n  }\n}\n```\n\nThe script is using SLURM (Simple Linux Utility for Resource Management) to manage the execution of a distributed training job for a PyTorch model.\n\nHere's a breakdown of the script:\n\n* **SLURM directives:**\n    * `#SBATCH --time=02:00:00`: Specifies the maximum runtime of the job as 2 hours.\n    * `#SBATCH --job-name=ASR-DDP-check`: Sets the job name to \"ASR-DDP-check\".\n    * `#SBATCH --nodes=1`: Requests 1 compute node for the job.\n    * `#SBATCH --gpus-per-node=v100-32g:2`: Requests 2 v100-32g GPUs on each node.\n    * `#SBATCH --cpus-per-gpu=2`: Allocates 2 CPUs per GPU.\n    * `#SBATCH --account=PAS0396`: Specifies the account for billing purposes.\n    * `#SBATCH --array=0-1:1`: Runs the job as an array with two tasks (0 and 1).\n\n* **Environment setup:**\n    * `source activate pt`: Activates the \"pt\" environment, likely containing the necessary Python libraries like PyTorch.\n    * `nvidia-smi`: Displays information about the GPUs, useful for checking availability and configuration.\n    * `echo $PATH`: Prints the current environment path.\n    * `cd $SLURM_SUBMIT_DIR`: Changes the working directory to the directory where the script was submitted.\n    * `echo $SLURM_JOB_NODELIST`: Prints the list of nodes allocated to the job.\n\n* **Distributed training:**\n    * `python -m torch.distributed.launch --nproc_per_node=2 main.py`: Executes the \"main.py\" script using PyTorch's distributed launch utility.\n        * `--nproc_per_node=2`: Specifies that two processes should be launched on each node.\n    * The remaining arguments define parameters for the training process, including:\n        * `--nnodes 2`: Number of nodes in the cluster.\n        * `--gpus 2`: Number of GPUs per node.\n        * `--node_rank ${SLURM_ARRAY_TASK_ID}`: Rank of the current node in the cluster.\n        * `--nepochs 60`: Number of epochs for training.\n        * `--epochs-done 0`: Number of epochs already completed.\n        * `--train-path`: Path to the training data.\n        * `--logging-file`: Path to the logging file.\n        * `--save-path`: Path to save the trained model.\n        * `--ckpt-path`: Path to a checkpoint file for resuming training (empty in this case).\n        * `--enc-type`: Type of encoder used in the model.\n        * `--batch-size`: Size of the training batch.\n        * `--bsz-small`: Size of a smaller batch used for validation or other purposes.\n        * `--in-dim`: Input dimension of the model.\n        * `--n-layer`: Number of layers in the encoder.\n        * `--hid-tr`: Hidden dimension of the transformer.\n        * `--nhead`: Number of attention heads in the transformer.\n        * `--hid-pr`: Hidden dimension of the projection layer.\n        * `--lr`: Learning rate.\n        * `--clip`: Gradient clipping value.\n        * `--dropout`: Dropout probability.\n\nThis script utilizes SLURM to efficiently utilize the resources of a high-performance computing cluster for training a deep learning model using distributed training with PyTorch.\n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 468,
+        "candidates_token_count": 1068,
+        "total_token_count": 1536,
+        "cached_content_token_count": 0
+    }
+}

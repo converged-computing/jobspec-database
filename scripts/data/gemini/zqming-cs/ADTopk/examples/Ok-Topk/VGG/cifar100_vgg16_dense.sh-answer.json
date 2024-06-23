@@ -1,0 +1,35 @@
+{
+    "application": "SLURM",
+    "details": {
+        "resource_requirements": {
+            "nodes": 16,
+            "tasks": 16,
+            "tasks_per_node": 1,
+            "cpus_per_task": 12,
+            "constraint": "gpu",
+            "partition": "normal",
+            "time": "02:30:00",
+            "output": "16nodes_vgg_dense.txt"
+        },
+        "software_requirements": {
+            "modules": "daint-gpu",
+            "conda_env": "py39",
+            "mpi_implementation": "mpiexec"
+        },
+        "python_environment": {
+            "script": "main_trainer.py",
+            "arguments": {
+                "dnn": "vgg16",
+                "dataset": "cifar100",
+                "max_epochs": "100",
+                "batch_size": "128",
+                "nworkers": "8",
+                "data_dir": "/path/to/data",
+                "lr": "0.01",
+                "nwpernode": "1",
+                "nstepsupdate": "1",
+                "sigma_scale": "2.5"
+            }
+        }
+    }
+}

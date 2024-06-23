@@ -1,0 +1,32 @@
+{
+    "application": "Slurm",
+    "details": {
+        "resource_requirements": {
+            "nodes": 1,
+            "tasks": 1,
+            "partition": "LongJobs",
+            "gpus": 1,
+            "memory": "30000 Mb",
+            "time": "3-08:00:00"
+        },
+        "software_requirements": {
+            "cuda": "/opt/cuda-9.0.176.1/",
+            "cudnn": "/opt/cuDNN-7.0/",
+            "python": "/home/${STUDENT_ID}/miniconda3/bin/activate mlp",
+            "script": "train.py"
+        },
+        "environment_variables": {
+            "CUDA_HOME": "/opt/cuda-9.0.176.1/",
+            "CUDNN_HOME": "/opt/cuDNN-7.0/",
+            "STUDENT_ID": "$(whoami)",
+            "LD_LIBRARY_PATH": "${CUDNN_HOME}/lib64:${CUDA_HOME}/lib64:$LD_LIBRARY_PATH",
+            "LIBRARY_PATH": "${CUDNN_HOME}/lib64:$LIBRARY_PATH",
+            "CPATH": "${CUDNN_HOME}/include:$CPATH",
+            "PATH": "${CUDA_HOME}/bin:${PATH}",
+            "PYTHON_PATH": "$PATH",
+            "TMPDIR": "/disk/scratch/${STUDENT_ID}/",
+            "TMP": "/disk/scratch/${STUDENT_ID}/",
+            "DATASET_DIR": "${TMP}/datasets/"
+        }
+    }
+}

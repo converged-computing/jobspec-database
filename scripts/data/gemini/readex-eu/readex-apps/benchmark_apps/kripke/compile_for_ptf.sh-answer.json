@@ -1,0 +1,47 @@
+{
+    "application": "SCOREP",
+    "details": {
+        "runtime": "30 minutes",
+        "nodes": 1,
+        "tasks_per_node": 1,
+        "cpus_per_task": 24,
+        "account": "p_readex",
+        "memory": "62GB",
+        "environment": {
+            "readex_env/set_env_ptf.source": "Sets environment variables for Readex",
+            "scripts_$READEX_MACHINE/environment.sh": "Sets environment variables for specific machine"
+        },
+        "compilation": {
+            "compiler": "scorep",
+            "flags": {
+                "online_access": "Enable online access to profiling data",
+                "user": "Enable user-level profiling",
+                "mpp": "mpi",
+                "thread": "none",
+                "nomemory": "Disable memory profiling",
+                "FILTER_GCC": "Instrument filter for GCC compiler",
+                "FILTER_ICC": "Instrument filter for ICC compiler"
+            },
+            "build_system": "cmake",
+            "make": "Build the project using make"
+        },
+        "testing": {
+            "command": "srun -n 24 ./kripke",
+            "parameters": {
+                "procs": "2,2,6",
+                "niter": "20",
+                "nest": "GZD",
+                "zones": "4,4,4",
+                "groups": "200"
+            }
+        },
+        "profiling_tools": {
+            "SCOREP": "Performance analysis tool",
+            "MERIC": "Performance analysis tool"
+        },
+        "kernel_locations": {
+            "main": "src/kripke.cpp",
+            "compute": "src/Kripke/Sweep_Solver.cpp"
+        }
+    }
+}

@@ -1,0 +1,37 @@
+{
+    "application": "Slurm",
+    "details": {
+        "job_name": "train_imagenet",
+        "memory": "32GB",
+        "output_file": "out_%A_%j.log",
+        "gpus": "4 RTX 8000",
+        "cpus": "16 per task",
+        "time_limit": "47:59:00",
+        "modules": [
+            "python/intel/3.8.6",
+            "cuda/10.2.89"
+        ],
+        "virtual_environment": "/scratch/aaj458/venv",
+        "python_script": "train_smooth.py",
+        "dataset": "ImageNet",
+        "model": "resnet50",
+        "training_parameters": {
+            "batch_size": 128,
+            "learning_rate": 0.1,
+            "workers": 16,
+            "noise_standard_deviation": 1.0,
+            "adversarial_training": true,
+            "attack": "PGD",
+            "attack_steps": 1,
+            "epsilon": 255,
+            "patch_size": 224,
+            "patch_strength": 30,
+            "patch_mode": "patch",
+            "multi_noise_training": true,
+            "epochs": 1,
+            "parallel": true,
+            "number_noise_vectors": 1,
+            "gradient_attack": false
+        }
+    }
+}

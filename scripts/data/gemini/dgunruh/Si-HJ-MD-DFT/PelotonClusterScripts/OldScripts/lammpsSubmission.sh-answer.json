@@ -1,0 +1,21 @@
+{
+    "application": "LAMMPS",
+    "details": {
+        "resource_requirements": {
+            "nodes": 2,
+            "tasks": 2,
+            "cpus_per_task": 32,
+            "time": "24:00:00",
+            "partition": "med2"
+        },
+        "software": {
+            "lammps": "module load lammps",
+            "mpirun": "mpirun lmp_mpi",
+            "sed": "sed -rie"
+        },
+        "scripts": {
+            "createAmorphousSi.in": "mpirun lmp_mpi -var s $s -var d $dumpA -var ds $dumpsnapA -in createAmorphousSi.in",
+            "mergeAmorphousCrystalline.in": "mpirun lmp_mpi -var s $s -var d $dumpI -var dA $dumpA -var ds $dumpsnapI -in mergeAmorphousCrystalline.in"
+        }
+    }
+}

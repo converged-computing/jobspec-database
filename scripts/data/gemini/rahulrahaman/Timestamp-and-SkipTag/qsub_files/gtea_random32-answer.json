@@ -1,0 +1,29 @@
+{
+    "application": "PBS",
+    "details": {
+        "resource_requirements": {
+            "nodes": 1,
+            "cpus": 10,
+            "memory": "40gb",
+            "gpus": 1,
+            "mpi_processes": 1,
+            "walltime": "24:00:00"
+        },
+        "software": {
+            "singularity_image": "/app1/common/singularity-img/3.0.0/pytorch_1.4_cuda10.0-cudnn7-devel-ubuntu18.04-py36.simg",
+            "python_version": "3.6",
+            "python_packages": [
+                "wandb"
+            ]
+        },
+        "script": {
+            "name": "gtea_gen32",
+            "commands": [
+                "python runcodes/run_em_generalized.py --split 1 --select_f data/gtea_random32frame_selection_s3.pkl --init_epoch 50 --sample_rate 1 --use_mse --use_conf --cudad 0 --base_dir /hpctmp/e0367435/video_segmentation/gtea/ --lr 0.0005 --epochs 250 --batch_size 8 --train_batch_size 20 --postprocess",
+                "python runcodes/run_em_generalized.py --split 2 --select_f data/gtea_random32frame_selection_s3.pkl --init_epoch 50 --sample_rate 1 --use_mse --use_conf --cudad 0 --base_dir /hpctmp/e0367435/video_segmentation/gtea/ --lr 0.0005 --epochs 250 --batch_size 8 --train_batch_size 20 --postprocess",
+                "python runcodes/run_em_generalized.py --split 3 --select_f data/gtea_random32frame_selection_s3.pkl --init_epoch 50 --sample_rate 1 --use_mse --use_conf --cudad 0 --base_dir /hpctmp/e0367435/video_segmentation/gtea/ --lr 0.0005 --epochs 250 --batch_size 8 --train_batch_size 20 --postprocess",
+                "python runcodes/run_em_generalized.py --split 4 --select_f data/gtea_random32frame_selection_s3.pkl --init_epoch 50 --sample_rate 1 --use_mse --use_conf --cudad 0 --base_dir /hpctmp/e0367435/video_segmentation/gtea/ --lr 0.0005 --epochs 250 --batch_size 8 --train_batch_size 20 --postprocess"
+            ]
+        }
+    }
+}

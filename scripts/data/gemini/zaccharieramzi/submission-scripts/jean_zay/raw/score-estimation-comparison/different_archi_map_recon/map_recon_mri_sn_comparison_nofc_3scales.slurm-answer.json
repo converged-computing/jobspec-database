@@ -1,0 +1,22 @@
+{
+    "application": "SLURM",
+    "details": {
+        "scheduler": "SLURM",
+        "job_name": "nofc_3scales_map_recon_mri",
+        "tasks": 1,
+        "tasks_per_node": 1,
+        "gpus": 1,
+        "cpus_per_task": 10,
+        "time": "20:00:00",
+        "queue": "qos_gpu-t3",
+        "output_file": "nofc_3scales_map_recon_mri%A_%a.out",
+        "error_file": "nofc_3scales_map_recon_mri%A_%a.out",
+        "array_tasks": 7,
+        "dependency": "afterok:387635",
+        "conda_environment": "fastmri-tf-2.1.0",
+        "python_version": "2.3.0",
+        "python_module": "tensorflow-gpu",
+        "script_path": "nsec/mri/map_reconstruction.py",
+        "script_arguments": "-n 1000000 -nps 50.0 -b 2 -c CORPD_FBK -is 64 -h -e 0.000001 -sn ${opt[$SLURM_ARRAY_TASK_ID]} --no-fcon -sc 3"
+    }
+}

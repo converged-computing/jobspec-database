@@ -1,0 +1,34 @@
+{
+    "application": "SLURM",
+    "details": {
+        "job_name": "$2$3",
+        "output_file": "./job_out/%x.train-%A.out",
+        "error_file": "./job_err/%x.train-%A.err",
+        "nodelist": "ilps-cn$1",
+        "partition": "gpu",
+        "gpu_count": 1,
+        "cores": 8,
+        "memory": "30G",
+        "time": "4-00:00:00",
+        "environment": {
+            "bashrc": "${HOME}/.bashrc",
+            "conda_environment": "tds_py37_pt",
+            "PYTHONPATH": "./",
+            "OMP_NUM_THREADS": 2
+        },
+        "python_command": "python -m torch.distributed.launch --nproc_per_node=1 --master_port 29501 ./$2/Run.py",
+        "arguments": {
+            "mode": "train",
+            "debug": 0,
+            "data_dir": "/ivi/ilps/personal/jpei/TDS",
+            "model_name": "$2",
+            "exp_name": "$3",
+            "other_params": "$4"
+        },
+        "example_commands": [
+            "sh train.sh 101 CTDS _base $4_other_params",
+            "sh train.sh 106 CTDS _ng1000 --num_negative_samples=1000",
+            "sh train.sh 104 CTDS _ng1000_bs64 --num_negative_samples=1000 --train_batch_size=64"
+        ]
+    }
+}

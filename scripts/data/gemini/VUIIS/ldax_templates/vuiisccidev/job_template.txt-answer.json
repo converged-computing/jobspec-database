@@ -1,0 +1,57 @@
+{
+    "application": "Slurm",
+    "details": {
+        "resource_allocation": {
+            "nodes": 1,
+            "tasks": "${job_ppn}",
+            "walltime": "${job_walltime}",
+            "memory": "${job_memory}mb"
+        },
+        "email_notification": {
+            "recipient": "${job_email}",
+            "options": "${job_email_options}"
+        },
+        "output_file": "${job_output_file}",
+        "tmp_directory": "$TMPDIR",
+        "xnat_settings": {
+            "host": "${XNAT_HOST}",
+            "user": "${XNAT_USER}",
+            "session_limit": 40,
+            "sleep_max": 300,
+            "sleep_short": 120
+        },
+        "docker_image": "/data/mcr/singularity/mega_docker/vuiiscci_mega_docker_4.1.0-2020-04-22.img",
+        "environment_variables": [
+            "PYTHONNOUSERSITE=TRUE",
+            "OPENBLAS_NUM_THREADS=1",
+            "LM_LICENSE_FILE=9327@vm-infr-license.vampire",
+            "PYTHONPATH=/data/mcr/masimatlab/trunk/xnatspiders/python/:/data/mcr/masimatlab/trunk/xnatspiders/SpiderUtils/",
+            "PATH=\"$PATH\":/usr/local/matlab/2013a/bin:/data/mcr/fsl5/bin/:/data/mcr/camino/bin/:/data/mcr/masimatlab/trunk/xnatspiders/python/justinlib_v1_1_0/xnatlib:/data/mcr/masimatlab/trunk/xnatspiders/python/justinlib_v1_1_0/pythonlib",
+            "FSLDIR=/data/mcr/fsl5",
+            "CAMINO_HEAP_SIZE=30000",
+            "FREESURFER_HOME=/data/mcr/freesurfer",
+            "FREESURFER_PBS_TEMPLATE=/data/mcr/masimatlab/trunk/xnatspiders/pbs_templates/FreesurferReconAllWithQC_PBS_template.txt"
+        ],
+        "software": [
+            "smemwatch",
+            "curl",
+            "singularity",
+            "matlab",
+            "python27",
+            "fsl",
+            "camino",
+            "freesurfer",
+            "xvfb-run"
+        ],
+        "commands": [
+            "uname -a",
+            "mkdir -p $TMPDIR",
+            "cp /data/mcr/ldax_setup/bashrc_ldax /home/vuiisccidev/.bashrc",
+            "source /home/vuiisccidev/.bashrc",
+            "cp -r /data/mcr/ldax_setup/matlab /home/vuiisccidev/",
+            "source /data/mcr/fsl5/etc/fslconf/fsl.sh",
+            "source /data/mcr/freesurfer/SetUpFreeSurfer.sh",
+            "${job_cmds}"
+        ]
+    }
+}

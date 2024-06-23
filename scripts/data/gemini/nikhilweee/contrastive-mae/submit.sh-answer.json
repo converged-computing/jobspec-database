@@ -1,0 +1,22 @@
+{
+    "application": "SLURM",
+    "details": {
+        "resource_requirements": {
+            "memory": "64GB",
+            "time": "6 hours",
+            "cpus": "1",
+            "gpus": "1"
+        },
+        "output_directory": "sbatch_logs",
+        "job_name": "pretrain_cont_norm_kq",
+        "singularity_image": "/scratch/work/public/singularity/cuda11.3.0-cudnn8-devel-ubuntu20.04.sif",
+        "overlay": "/scratch/nv2099/images/overlay-50G-10M.ext3:ro",
+        "conda_environment": "vit_mae",
+        "python_script": "main_pretrain.py",
+        "script_arguments": {
+            "loss_type": "cont",
+            "batch_size": 128,
+            "output_dir": "runs/${SLURM_JOB_NAME}_${SLURM_JOB_ID}"
+        }
+    }
+}

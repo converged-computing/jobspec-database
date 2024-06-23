@@ -1,0 +1,53 @@
+{
+    "application": "DeepSpeed",
+    "details": {
+        "framework": "PyTorch",
+        "accelerator": "GPU",
+        "device": "AMD Radeon Instinct MI250X",
+        "scheduler": "Slurm",
+        "resources": {
+            "nodes": 1,
+            "gpus": 8,
+            "cpus": 24,
+            "memory": "unknown"
+        },
+        "libraries": {
+            "ROCm": "5.6.0",
+            "NCCL": "unknown version",
+            "DeepSpeed": "unknown version",
+            "Transformers": "unknown version",
+            "Hugging Face Datasets": "unknown version"
+        },
+        "environment variables": {
+            "TRANSFORMERS_OFFLINE": "1",
+            "HF_DATASETS_OFFLINE": "1",
+            "OMP_NUM_THREADS": "1",
+            "NCCL_DEBUG": "INFO",
+            "FI_CXI_ATS": "0",
+            "LD_LIBRARY_PATH": "/opt/rocm-5.6.0/rccl/build:$PWD/aws-ofi-rccl/src/.libs/:/opt/cray/libfabric/1.15.2.0/lib64/:/opt/rocm-5.6.0/lib",
+            "FI_LOG_LEVEL": "info",
+            "NCCL_NET_GDR_LEVEL": "3",
+            "MASTER_ADDR": "unknown",
+            "MASTER_PORT": "32768",
+            "WANDB_MODE": "offline",
+            "WANDB_RUN_GROUP": "TEST_EXPERIMENT-ROCM-SLURM",
+            "https_proxy": "https://proxy.ccs.ornl.gov:3128",
+            "http_proxy": "http://proxy.ccs.ornl.gov:3128"
+        },
+        "training parameters": {
+            "model": "RWKV-LM",
+            "data": "rwkv5-world-slimpajama-1_text_document_1",
+            "data type": "binidx",
+            "vocabulary size": 65536,
+            "context length": 4096,
+            "epochs": 10,
+            "steps per epoch": 100,
+            "learning rate": "5e-5 to 1e-5",
+            "batch size": 8,
+            "layers": 32,
+            "embedding size": 4096,
+            "precision": "bf16",
+            "strategy": "deepspeed_stage_3"
+        }
+    }
+}

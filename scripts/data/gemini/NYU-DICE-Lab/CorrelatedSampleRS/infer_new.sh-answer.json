@@ -1,0 +1,30 @@
+{
+    "application": "SLURM",
+    "details": {
+        "software": [
+            "singularity",
+            "python",
+            "CUDA 11.1.1",
+            "cuDNN 8",
+            "pytorch",
+            "resnet110"
+        ],
+        "resources": {
+            "nodes": 1,
+            "tasks_per_node": 1,
+            "cpus_per_task": 1,
+            "memory": "16GB",
+            "gpu": "RTX 8000 (1)",
+            "time": "23:59:00"
+        },
+        "container": "/scratch/aaj458/singularity_containers/cuda11.1.1-cudnn8-devel-ubuntu20.04.sif",
+        "overlay": "/scratch/aaj458/singularity_containers/my_pytorch.ext3:ro",
+        "environment": "/ext3/env.sh",
+        "data": [
+            "/scratch/aaj458/data/Cifar10/",
+            "salman_models/pretrained_models/cifar10/PGD_2steps/eps_255/cifar10/resnet110/noise_0.50/checkpoint.pth.tar"
+        ],
+        "output": "out_%A_%j.log",
+        "job_name": "certify_infer_minmax"
+    }
+}

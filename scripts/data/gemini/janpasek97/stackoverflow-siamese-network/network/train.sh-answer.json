@@ -1,0 +1,44 @@
+{
+    "application": "PBS",
+    "details": {
+        "job_name": "BiDirCodeEncoder2L2Cls_f1",
+        "resources": {
+            "nodes": 1,
+            "cpus": 3,
+            "gpus": 1,
+            "gpu_type": "cuda75",
+            "memory": "24gb",
+            "local_scratch": "30gb",
+            "walltime": "23:00:00"
+        },
+        "queue": "gpu",
+        "email_options": "abe",
+        "modules": [
+            "python-3.6.2-gcc",
+            "python36-modules-gcc",
+            "tensorflow-2.0.0-gpu-python3"
+        ],
+        "environment_variables": {
+            "PYTHONUSERBASE": "/storage/brno3-cerit/home/pasekj/.local",
+            "PATH": "$PYTHONUSERBASE/bin:$PATH",
+            "PYTHONPATH": "$SCRATCHDIR/SiameseSearch_BP:$PYTHONPATH"
+        },
+        "script_execution": {
+            "working_directory": "$SCRATCHDIR/SiameseSearch_BP",
+            "command": "python3 network/main.py --model $MODEL_NAME --loss $LOSS --embedding $EMBEDDING > $SCRATCHDIR/stdout.txt",
+            "output_directory": "$DATADIR/out/console/$MODEL_NAME\"_$LOSS\""
+        },
+        "post_processing": {
+            "output_directories": [
+                "$DATADIR/out/logs/$MODEL_NAME\"_$LOSS\"",
+                "$DATADIR/out/checkpoints/$MODEL_NAME\"_$LOSS\""
+            ],
+            "copied_files": [
+                "$SCRATCHDIR/SiameseSearch_BP/network/logs",
+                "$SCRATCHDIR/SiameseSearch_BP/network/checkpoints",
+                "$SCRATCHDIR/stdout.txt"
+            ],
+            "cleanup": true
+        }
+    }
+}

@@ -1,0 +1,53 @@
+{
+    "application": "Ray",
+    "details": {
+        "resource_requirements": {
+            "cobalt": {
+                "time": "180",
+                "nodes": "128",
+                "queue": "default",
+                "account": "datascience",
+                "email": "spawar@anl.gov",
+                "attributes": {
+                    "enable_ssh": "1",
+                    "ssds": "required",
+                    "ssd_size": "128"
+                }
+            },
+            "modules": [
+                "intelpython36",
+                "mvapich2"
+            ],
+            "libraries": {
+                "openfoam": "/home/projects/OpenFOAM/OpenFOAM-5.x",
+                "anaconda": "/soft/datascience/anaconda3"
+            },
+            "environment_variables": {
+                "LD_LIBRARY_PATH": "${FOAM_LIBBIN}:${FOAM_LIBBIN}/mpi:${LD_LIBRARY_PATH}",
+                "KMP_BLOCKTIME": "0",
+                "KMP_AFFINITY": "disabled",
+                "OMP_PROC_BIND": "'spread,close'",
+                "OMP_NESTED": "'TRUE'",
+                "MPICH_GNI_FORK_MODE": "FULLCOPY",
+                "PMI_NO_FORK": "1",
+                "LC_ALL": "C.UTF-8",
+                "LANG": "C.UTF-8",
+                "PATH": "/soft/libraries/mpi/mvapich2/gcc/bin/:$PATH"
+            },
+            "conda_environment": "rllib_env1_fenics"
+        },
+        "execution": {
+            "command": "aprun",
+            "arguments": [
+                "-n",
+                "$COBALT_JOBSIZE",
+                "-N",
+                "1",
+                "--cc",
+                "none",
+                "python",
+                "start_ray.py"
+            ]
+        }
+    }
+}

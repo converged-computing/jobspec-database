@@ -1,0 +1,132 @@
+{
+    "application": "Magpie",
+    "software": [
+        {
+            "name": "Hadoop",
+            "version": "not specified",
+            "setup_type": "not specified",
+            "notes": "Hadoop may be setup depending on the selected job type."
+        },
+        {
+            "name": "Spark",
+            "version": "2.4.3",
+            "setup_type": "STANDALONE/YARN",
+            "notes": "Spark setup depends on SPARK_SETUP_TYPE. Spark Core, Spark Job and SparkPi/WordCount configurations are included"
+        },
+        {
+            "name": "Zookeeper",
+            "version": "not specified",
+            "setup_type": "not specified",
+            "notes": "Zookeeper may be setup depending on the selected job type."
+        },
+        {
+            "name": "LSF",
+            "version": "not specified",
+            "setup_type": "not specified",
+            "notes": "LSF is the scheduler used for the script. It handles job submission and resource allocation."
+        },
+        {
+            "name": "Python",
+            "version": "not specified",
+            "setup_type": "not specified",
+            "notes": "Python is used for PySpark and other tasks."
+        }
+    ],
+    "resource_requirements": [
+        {
+            "name": "nodes",
+            "value": "<my_node_count>",
+            "notes": "Node count should include one node for the head/management/master node.  For example, if you want 8 compute nodes to process data, specify 9 nodes below. Also take into account additional nodes needed for other services."
+        },
+        {
+            "name": "time",
+            "value": "<my_time_in_hours:minutes>",
+            "notes": "Note defaults of MAGPIE_STARTUP_TIME & MAGPIE_SHUTDOWN_TIME, this timelimit should be a fair amount larger than them combined."
+        },
+        {
+            "name": "queue",
+            "value": "<my_queue>",
+            "notes": "Queue to launch job in"
+        },
+        {
+            "name": "java_home",
+            "value": "/usr/lib/jvm/jre-1.8.0/",
+            "notes": "Necessary for most projects."
+        },
+        {
+            "name": "magpie_scripts_home",
+            "value": "${HOME}/magpie",
+            "notes": "Directory your launching scripts/files are stored."
+        },
+        {
+            "name": "magpie_local_dir",
+            "value": "/tmp/${USER}/magpie",
+            "notes": "Path to store data local to each cluster node, typically something in /tmp. This will store local conf files and log files for your job."
+        },
+        {
+            "name": "spark_home",
+            "value": "${HOME}/spark-${SPARK_VERSION}",
+            "notes": "Path to your Spark build/binaries."
+        },
+        {
+            "name": "spark_local_dir",
+            "value": "/tmp/${USER}/spark",
+            "notes": "Path to store data local to each cluster node, typically something in /tmp. This will store local conf files and log files for your job."
+        },
+        {
+            "name": "spark_worker_cores_per_node",
+            "value": "not specified",
+            "notes": "Worker Cores per Node. If not specified, a reasonable estimate will be calculated based on number of CPUs on the system."
+        },
+        {
+            "name": "spark_worker_memory_per_node",
+            "value": "not specified",
+            "notes": "Worker Memory. Specified in M. If not specified, a reasonable estimate will be calculated based on total memory available and number of CPUs on the system."
+        },
+        {
+            "name": "spark_worker_directory",
+            "value": "/tmp/${USER}/spark/work",
+            "notes": "Directory to run applications in, which will include both logs and scratch space for local jars."
+        },
+        {
+            "name": "spark_job_memory",
+            "value": "not specified",
+            "notes": "Memory for spark jobs.  Defaults to being set equal to SPARK_WORKER_MEMORY_PER_NODE, but users may wish to lower it if multiple Spark jobs will be submitted at the same time."
+        },
+        {
+            "name": "spark_driver_memory",
+            "value": "not specified",
+            "notes": "Beginning in Spark 1.0, driver memory could be configured separately from executor memory."
+        },
+        {
+            "name": "spark_daemon_heap_max",
+            "value": "not specified",
+            "notes": "Heap maximum for Spark daemons, specified in megs. If not specified, defaults to 1000."
+        },
+        {
+            "name": "spark_local_scratch_dir",
+            "value": "/lustre/${USER}/sparkscratch/",
+            "notes": "By default, if Hadoop is setup with a file system, the Spark local scratch directory, where scratch data is placed, will automatically be calculated and configured."
+        },
+        {
+            "name": "spark_yarn_staging_dir",
+            "value": "not specified",
+            "notes": "By default, Spark w/ Yarn will use your home directory for staging files for a job. This home directory must be accessible by all nodes."
+        },
+        {
+            "name": "spark_sparkpi_slices",
+            "value": "not specified",
+            "notes": "Number of \"slices\" to parallelize in Pi estimation. Generally speaking, more should lead to more accurate estimates."
+        },
+        {
+            "name": "spark_sparkwordcount_file",
+            "value": "not specified",
+            "notes": "Specify the file to do the word count on."
+        },
+        {
+            "name": "spark_sparkwordcount_copy_in_file",
+            "value": "not specified",
+            "notes": "In some cases, a file must be copied in before it can be used."
+        }
+    ]
+}

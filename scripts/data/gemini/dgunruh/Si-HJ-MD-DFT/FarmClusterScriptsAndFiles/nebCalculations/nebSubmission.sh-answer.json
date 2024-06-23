@@ -1,0 +1,44 @@
+{
+    "application": "Slurm",
+    "details": {
+        "job_name": "mergeSi2",
+        "tasks": 64,
+        "tasks_per_node": 16,
+        "cores_per_task": 1,
+        "memory": "50G",
+        "partition": "med2",
+        "runtime": "0-00:30",
+        "output_file": "outputs/cSiaSiMD-%j.output",
+        "email": "dgunruh@ucdavis.edu",
+        "email_type": "END, FAIL",
+        "array_tasks": "33-64",
+        "software": {
+            "openmpi": "module load openmpi",
+            "lammps": "../lammps_3Mar2020/build/lmp_mpi"
+        },
+        "input_files": [
+            "inputs/neb_input_${temp}.out",
+            "inputs/neb_end_${temp}.out",
+            "inputs/neb_atoms_${temp}.out"
+        ],
+        "output_files": [
+            "logfiles/${log}/log.lammps",
+            "screenfiles/screen${temp}",
+            "neb_calc_result_${temp}_${s}_${t}"
+        ],
+        "variables": {
+            "OMP_NUM_THREADS": 1,
+            "j": "$SLURM_JOB_ID",
+            "t": "$SLURM_ARRAY_TASK_ID",
+            "s": "$j",
+            "temp": "aSi${t}",
+            "log": "aSi/${temp}",
+            "addendum": 55,
+            "beginning": "inputs/neb_input_${temp}.out",
+            "ending": "inputs/neb_end_${temp}.out",
+            "idfile": "inputs/neb_atoms_${temp}.out",
+            "dump": "neb_calc_result_${temp}_${s}_${t}",
+            "pNum": 32
+        }
+    }
+}

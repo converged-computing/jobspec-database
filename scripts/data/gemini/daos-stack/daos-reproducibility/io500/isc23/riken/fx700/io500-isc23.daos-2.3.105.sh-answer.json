@@ -1,0 +1,41 @@
+{
+    "application": "IO500",
+    "details": {
+        "software": [
+            "daos",
+            "mpirun",
+            "io500-isc23"
+        ],
+        "resource_requirements": {
+            "slurm": {
+                "job_name": "d5_DFS",
+                "output": "log.io500_dfs.daos_daos0.10-48.300sec.%J",
+                "error": "log.io500_dfs.daos_daos0.10-48.300sec.%J",
+                "partition": "fx700",
+                "exclusive": true,
+                "licenses": "daos_daos0",
+                "nodelist": "fx[00-09]",
+                "nodes": 10,
+                "ntasks_per_node": 48,
+                "ntasks_per_core": 1,
+                "time": "4:00:00"
+            },
+            "daos": {
+                "hostlist": "daos0",
+                "pool": "u0001407",
+                "cont": "cont0",
+                "fuse": "/tmp/$USER/daos_${DAOS_POOL}_${DAOS_CONT}"
+            },
+            "mpi": {
+                "bind_to": "core",
+                "arguments": "-genvall -genv DAOS_POOL $DAOS_POOL -genv DAOS_CONT $DAOS_CONT"
+            },
+            "environment_variables": {
+                "IO500_MODE": "--mode=extended",
+                "SLEEP_SEC": 300,
+                "FI_OFI_RXM_USE_SRX": 1,
+                "FI_VERBS_PREFER_XRC": 1
+            }
+        }
+    }
+}

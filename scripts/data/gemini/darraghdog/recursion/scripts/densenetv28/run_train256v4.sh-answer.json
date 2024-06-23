@@ -1,0 +1,55 @@
+{
+    "application": "LSF",
+    "software": [
+        "python3",
+        "docker",
+        "bsub"
+    ],
+    "resource_requirements": {
+        "gpu": {
+            "count": 1,
+            "mode": "exclusive_process"
+        },
+        "memory": {
+            "amount": "4 cores"
+        },
+        "container": {
+            "image": "docker.optum.com/dhanley2/bert:cgan_build"
+        },
+        "storage": {
+            "path": "/share/dhanley2/recursion/scripts/$WDIR"
+        },
+        "data": {
+            "path": "/share/dhanley2/recursion/scripts/$WDIR"
+        }
+    },
+    "script": {
+        "name": "trainv4.py",
+        "arguments": [
+            "--logmsg",
+            "Recursion-negative-diff",
+            "--nbags",
+            "20",
+            "--epochs",
+            "60",
+            "--fold",
+            "$FOLD",
+            "--lr",
+            "0.000025",
+            "--lrmult",
+            "20",
+            "--batchsize",
+            "32",
+            "--workpath",
+            "scripts/$WDIR",
+            "--cutmix_prob",
+            "1.0",
+            "--beta",
+            "1.0",
+            "--imgpath",
+            "data/mount/256X256X6/",
+            "--weightsname",
+            "weights/pytorch_model_v4_densenet$FOLD.bin"
+        ]
+    }
+}

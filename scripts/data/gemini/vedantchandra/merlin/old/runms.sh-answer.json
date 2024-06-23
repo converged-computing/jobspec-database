@@ -1,0 +1,33 @@
+{
+    "application": "SLURM",
+    "details": {
+        "job_name": "fitMAGE",
+        "cores": 1,
+        "runtime": "0-03:00",
+        "partitions": [
+            "conroy_priority",
+            "itc_cluster",
+            "shared",
+            "serial_requeue"
+        ],
+        "constraint": "intel",
+        "memory_per_cpu": "3500",
+        "output_file": "logs/msfit_%a.out",
+        "error_file": "logs/msfit_%a.err",
+        "account": "conroy_lab",
+        "array_range": "0-79",
+        "modules": [
+            "python"
+        ],
+        "environment_source": [
+            "/n/home03/vchandra/.bashrc",
+            "activate outerhalo"
+        ],
+        "working_directory": "/n/home03/vchandra/outerhalo/08_mage/",
+        "python_script": "01_runstar.py",
+        "python_arguments": [
+            "${SLURM_ARRAY_TASK_ID}",
+            "--version='h3'"
+        ]
+    }
+}

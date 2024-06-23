@@ -1,0 +1,25 @@
+{
+    "application": "PBS",
+    "details": {
+        "job_name": "multi_run",
+        "nodes": 2,
+        "cpus_per_node": 40,
+        "gpus_per_node": 2,
+        "gpu_model": "a100",
+        "memory_per_node": "245gb",
+        "walltime": "72:00:00",
+        "modules": [
+            "cuda/11.6.2-gcc/9.5.0",
+            "nccl/2.11.4-1-gcc/9.5.0-cu11_6-nvP-nvV-nvA",
+            "openmpi/4.1.3-gcc/9.5.0-cu11_6-nvP-nvV-nvA-ucx",
+            "anaconda3/2022.05-gcc/9.5.0"
+        ],
+        "environment": "hf_env",
+        "model_name": "codellama/CodeLlama-13b-hf",
+        "deepspeed_config": "deepspeed_configs/llama_z3_offload.json",
+        "dataset_name": "AshtonIsNotHere/nlp_pp_code_dataset",
+        "output_dir": "${PBS_O_WORKDIR/home/scratch}/output/nlp_pp_codellama_CodeLlama-13b-hf_timestamp",
+        "run_script": "run.sh",
+        "run_command": "run_clm.py --deepspeed ${SCRIPT_DIR}/deepspeed_configs/llama_z3_offload.json --model_name_or_path $model_name --output_dir ${OUTPUT_DIR} --ddp_timeout 9000 --dataset_name AshtonIsNotHere/nlp_pp_code_dataset --per_device_train_batch_size 1 --per_device_eval_batch_size 1 --do_train --do_eval --learning_rate 2e-5 --weight_decay 0.1 --gradient_accumulation_steps 8 --warmup_ratio 0.1 --evaluation_strategy epoch --save_strategy epoch --load_best_model_at_end --report_to wandb --torch_dtype bfloat16 --num_train_epochs 5 --block_size 1024 --gradient_checkpointing --run_name z3_codellama_CodeLlama-13b-hf"
+    }
+}

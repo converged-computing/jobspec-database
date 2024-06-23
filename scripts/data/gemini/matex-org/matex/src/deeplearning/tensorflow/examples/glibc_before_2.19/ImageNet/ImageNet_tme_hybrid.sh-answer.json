@@ -1,0 +1,31 @@
+{
+    "application": "Slurm",
+    "details": {
+        "job_name": "ImageNet.Hybrid",
+        "output_file": "ImageNet.Hybrid.out.%j",
+        "error_file": "ImageNet.Hybrid.err.%j",
+        "libraries": [
+            "lib/x86_64-linux-gnu/ld-linux-x86-64.so.2",
+            "PNETCDF_INSTALL_DIR/lib",
+            "FAKE_SYSTEM_LIBS/lib",
+            "FAKE_SYSTEM_LIBS/lib/x86_64-linux-gnu",
+            "FAKE_SYSTEM_LIBS/usr/lib64/gconv",
+            "FAKE_SYSTEM_LIBS/usr/lib64/audit",
+            "LD_LIBRARY_PATH"
+        ],
+        "python_home": "PYTHONHOME",
+        "python_script": "hybrid_timetest.py",
+        "parameters": [
+            "--train_batch",
+            "--iterations",
+            "--network"
+        ],
+        "networks": [
+            "AlexNet",
+            "InceptionV3",
+            "ResNet50",
+            "GoogLeNet"
+        ],
+        "command": "mpirun --map-by node -n $nodes --mca opal_event_include poll"
+    }
+}

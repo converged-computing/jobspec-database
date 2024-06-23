@@ -1,0 +1,56 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"SLURM\",\n  \"details\": {\n    \"resource_requirements\": {\n      \"nodes\": 4,\n      \"tasks_per_node\": 4,\n      \"cpus_per_task\": 8,\n      \"gpus_per_node\": 4,\n      \"gpu_type\": \"dcu\"\n    },\n    \"software\": {\n      \"mpirun\": {\n        \"options\": {\n          \"np\": \"num_DCU\",\n          \"hostfile\": \"${DIR}/hostfile-tmp\",\n          \"mca pml\": \"ucx\",\n          \"UCX_TLS\": \"sm,rc,rocm_cpy,rocm_gdr,rocm_ipc\",\n          \"LD_LIBRARY_PATH\": \"\",\n          \"mca coll_hcoll_enable\": \"0\",\n          \"bind-to\": \"none\"\n        }\n      },\n      \"python\": {\n        \"script\": \"run_pretraining_hvd.py\",\n        \"arguments\": {\n          \"input_file\": \"${input_files}\",\n          \"bert_config_file\": \"/public/home/zzx6320/lh/Projects/bert/models/chinese_L-12_H-768_A-12/chinese_L-12_H-768_A-12/bert_config.json\",\n          \"output_dir\": \"/work1/zzx6320/lh/Projects/bert/outputs/Pre7_cscd_all_128_64_from_scratch\",\n          \"max_seq_length\": \"128\",\n          \"do_train\": \"True\",\n          \"do_eval\": \"True\",\n          \"train_batch_size\": \"64\",\n          \"learning_rate\": \"2e-5\",\n          \"num_train_steps\": \"3000000\",\n          \"save_checkpoints_steps\": \"1000\"\n        }\n      },\n      \"horovod\": {\n        \"environment_variables\": {\n          \"HOROVOD_HIERARCHICAL_ALLREDUCE\": \"1\"\n        }\n      },\n      \"MIOPEN\": {\n        \"environment_variables\": {\n          \"MIOPEN_USER_DB_PATH\": \"/tmp/tensorflow-miopen-${USER}-2.8\",\n          \"MIOPEN_DEBUG_DISABLE_FIND_DB\": \"1\"\n        }\n      }\n    }\n  }\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "citation_metadata": {
+                "citation_sources": [
+                    {
+                        "start_index": 694,
+                        "end_index": 840,
+                        "uri": "https://github.com/LeoWood/bert-horovod",
+                        "license_": ""
+                    }
+                ]
+            },
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 1716,
+        "candidates_token_count": 582,
+        "total_token_count": 2298,
+        "cached_content_token_count": 0
+    }
+}

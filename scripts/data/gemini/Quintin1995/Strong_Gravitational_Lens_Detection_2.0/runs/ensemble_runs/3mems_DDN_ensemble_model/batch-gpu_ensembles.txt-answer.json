@@ -1,0 +1,30 @@
+{
+    "application": "Slurm",
+    "details": {
+        "runtime": "15:00:00",
+        "memory": "128000",
+        "nodes": 1,
+        "partition": "gpu",
+        "gpu_type": "v100",
+        "gpu_count": 1,
+        "job_name": "ensembles",
+        "array_tasks": "1-10",
+        "python_version": "3.7.4",
+        "modules": [
+            {
+                "name": "TensorFlow",
+                "version": "2.1.0-fosscuda-2019b-Python-3.7.4"
+            },
+            {
+                "name": "matplotlib",
+                "version": "3.1.1-fosscuda-2019b-Python-3.7.4"
+            },
+            {
+                "name": "scikit-image",
+                "version": "0.16.2-fosscuda-2019b-Python-3.7.4"
+            }
+        ],
+        "script": "create_input_dep_ensemble.py",
+        "script_arguments": "--run=runs/ensemble_runs/run${SLURM_ARRAY_TASK_ID}.yaml"
+    }
+}

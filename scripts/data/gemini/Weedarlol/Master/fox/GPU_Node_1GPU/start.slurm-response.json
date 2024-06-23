@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"Slurm\",\n  \"details\": {\n    \"software\": [\n      \"CUDA/11.7.0\",\n      \"OpenMPI/4.1.4-GCC-11.3.0\"\n    ],\n    \"resources\": {\n      \"partition\": \"PARTITION\",\n      \"nodes\": \"NODES\",\n      \"memory\": \"4G per GPU\",\n      \"time\": \"14:00:00\",\n      \"tasks_per_node\": \"1\",\n      \"cpus_per_task\": \"1\",\n      \"gpus_per_node\": \"1\"\n    },\n    \"script_generation\": {\n      \"script_name\": \"slurm_script_${SCENARIO}_${PARTITION}.sh\",\n      \"script_contents\": \"#!/bin/bash\\n\\n#SBATCH --job-name=${SCENARIO}_${PARTITION}\\n#SBATCH --account=ec12\\n#SBATCH --mem-per-gpu=4G\\n#SBATCH -p ${PARTITION}\\n#SBATCH -N ${NODES}                                   # Antall Noder\\n#SBATCH -t 14:00:00\\n#SBATCH --ntasks-per-node=1                   # Antall tasks en kj\u00f8rere p\u00e5 hver node, 1 Task = 1 MPI\\n#SBATCH --cpus-per-task=1                     # Antall CPUer en vil allokere, er 64 cores per CPU, s\u00e5 kan i teorien bare trenge \u00e5 \u00f8ke dene n\u00e5r -n > 64\\n#SBATCH --gpus-per-node=1                           # Antall GPUer en allokerer per task, s\u00e5 totale antall GPU delt p\u00e5 antall noder. NUM_GPUS\\n#SBATCH --output=output/${SCENARIO}_${PARTITION}.out\\n#SBATCH --error=error/${SCENARIO}_${PARTITION}.err\\n\\nmodule purge\\nmodule load CUDA/11.7.0\\nmodule load OpenMPI/4.1.4-GCC-11.3.0\\n\\n\\nnvcc $SOURCES -o out_${SCENARIO}_${PARTITION} -I$CPATH -L$LD_LIBRARY_PATH /cluster/software/EL9/easybuild/software/OpenMPI/4.1.4-GCC-11.3.0/lib/libmpi.so -O3\\n\\nmpirun -np ${NODES}  out_${SCENARIO}_${PARTITION} $VAR1 $VAR2 $VAR3 $VAR4 $VAR5 $VAR6 $VAR7 $VAR8 $VAR9\\n\\n\\n\\nexit 0\\n\\n\"\n    },\n    \"execution\": {\n      \"command\": \"sbatch ${TEMP_SCRIPT}\"\n    }\n  }\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 958,
+        "candidates_token_count": 634,
+        "total_token_count": 1592,
+        "cached_content_token_count": 0
+    }
+}

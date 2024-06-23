@@ -1,0 +1,64 @@
+{
+    "application": "Gromacs",
+    "software": [
+        "gcc/6.4.0",
+        "openmpi/3.1.2",
+        "cmake/3.10.0"
+    ],
+    "resources": {
+        "partition": "short",
+        "constraint": "E5-2680v4@2.40GHz",
+        "ntasks": 4,
+        "ntasks_per_node": 4,
+        "cpus_per_task": 7,
+        "threads_per_core": 1,
+        "mem_per_cpu": "2G",
+        "time": "23:55:00"
+    },
+    "simulation_setup": {
+        "cutoff": "8",
+        "gromacs_executable": "{PATH_TO_GROMACS}/bin/gmx_mpi",
+        "files_directory": "./"
+    },
+    "simulation_steps": [
+        "energy_minimization",
+        "sbm_simulation"
+    ],
+    "simulation_parameters": {
+        "energy_minimization": {
+            "mdp_file": "steep.mdp",
+            "topology_file": "postfusion_with_glycans_pre_TM.top",
+            "initial_coordinates_file": "prefusion_with_glycans_bb.gro",
+            "reference_coordinates_file": "height_95/rr_95.gro",
+            "index_file": "index.ndx",
+            "max_warnings": 1,
+            "omp_threads": 8,
+            "max_wall_time": "24"
+        },
+        "sbm_simulation": {
+            "mdp_file": "base.mdp",
+            "topology_file": "postfusion_with_glycans_pre_TM.top",
+            "initial_coordinates_file": "prefusion_with_glycans_bb_${SLURM_ARRAY_TASK_ID}.gro",
+            "reference_coordinates_file": "height_95/rr_95.gro",
+            "index_file": "index.ndx",
+            "max_warnings": 1,
+            "omp_threads": 7,
+            "mpi_ranks": 1,
+            "max_wall_time": "1",
+            "dd": "1 1 1"
+        }
+    },
+    "transition_check": {
+        "distance_calculation": {
+            "groups": "TM, HG",
+            "output_file": "distrz.xvg"
+        },
+        "cutoff_value": "8"
+    },
+    "continuation_run": {
+        "resub_script": "resub.slurm",
+        "height": "95",
+        "rep_id": "${SLURM_ARRAY_TASK_ID}",
+        "fd": "${FILES_DIR}"
+    }
+}

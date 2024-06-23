@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n\"application\": \"NWChem\",\n\"software\": [\n\"Intel Fortran/C/C++ commercial compilers 2013 with MKL library 2013\",\n\"OpenMPI-Intel local installation\",\n\"PGI compiler\",\n\"libnumma\",\n\"Python\",\n\"mpif90\",\n\"mpicc\",\n\"mpirun\"\n],\n\"resource_requirements\": {\n\"nodes\": 1,\n\"processors_per_node\": 12,\n\"walltime\": \"100:00:00\",\n\"memory\": \"24g\",\n\"queue\": \"batch\",\n\"scratch_directory\": \"/mnt/local/$USER/$PBS_JOBID\"\n}\n}\n```\n\nThe script is running a NWChem calculation.  It relies on a number of software packages:\n\n* **Intel Fortran/C/C++ commercial compilers 2013 with MKL library 2013:** The script explicitly sources the Intel compiler environment variables to use these compilers and the MKL math library for optimization.\n* **OpenMPI-Intel local installation:** The script sets up environment variables to use a locally installed OpenMPI version compiled against Intel compilers. This is crucial for parallel execution of NWChem.\n* **PGI compiler:** The script sources the PGI compiler environment, likely to be used for compiling other parts of the workflow, but it isn't explicitly used for NWChem.\n* **libnumma:** The script adds libnumma to the library path, which helps in managing memory and improving performance on NUMA (Non-Uniform Memory Access) systems.\n* **Python:** The script uses Python for version checks.\n* **mpif90, mpicc, mpirun:** These are the MPI compiler and runtime tools used by OpenMPI.\n\nThe script also specifies the following resource requirements for the calculation through PBS (Portable Batch System):\n\n* **nodes:** 1 -  The calculation requires one compute node.\n* **processors_per_node:** 12 -  The calculation is allocated 12 processors on the node.\n* **walltime:** 100:00:00 - The maximum time allowed for the calculation is 100 hours.\n* **memory:** 24g - The calculation requires a minimum of 24 GB of memory.\n* **queue:** batch - The calculation is submitted to the \"batch\" queue.\n* **scratch_directory:** /mnt/local/$USER/$PBS_JOBID - The script sets up a local scratch directory on the compute node for temporary files.\n \nThe script also sets a few environment variables:\n\n* **OMP_NUM_THREADS=1:**  This sets the number of threads to use per process to 1. This might be for single-threaded execution of the NWChem code, or the calculation might be using MPI for parallelization.\n* **MKL_DYNAMIC=\"FALSE\"**:  This disables dynamic scaling of the MKL library, which might be required to prevent memory issues.\n* **MKL_NUM_THREADS=1**:  This sets the number of threads for the MKL library to 1. \n* **OMP_DYNAMIC=\"FALSE\"**:  This disables dynamic threading for OpenMP, likely to ensure consistent resource usage.\n* **TMPDIR=/mnt/local/$USER/$PBS_JOBID**: The script defines a local scratch directory for the calculation, which is frequently used for temporary files.\n\nFinally, the script executes the NWChem calculation using `mpirun` with the specified number of processors. It also copies the input file to the scratch directory, runs the calculation, and copies the results back to the working directory."
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 1867,
+        "candidates_token_count": 798,
+        "total_token_count": 2665,
+        "cached_content_token_count": 0
+    }
+}

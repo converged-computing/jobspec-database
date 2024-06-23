@@ -1,0 +1,32 @@
+{
+    "application": "Slurm",
+    "details": {
+        "job_name": "compile-mpi",
+        "queue": "scarf",
+        "nodes": 1,
+        "tasks_per_node": 8,
+        "time": "60:00",
+        "output_file": "compile-mpi-%j.log",
+        "error_file": "compile-mpi-%j.err",
+        "modules": [
+            "foss",
+            "CMake/3.16.4-GCCcore-9.3.0"
+        ],
+        "dependencies": [
+            "ANTLR4",
+            "Conan",
+            "CMake",
+            "OpenMPI"
+        ],
+        "build_system": "CMake",
+        "compiler": "g++",
+        "compiler_flags": "-std=c++17 -pthread",
+        "build_options": {
+            "PARALLEL": true,
+            "BUILD_ANTLR_RUNTIME": true,
+            "ANTLR_EXECUTABLE": "${BASE_DIR}/${ANTLR_JAR}",
+            "BUILD_ANTLR_ZIPFILE": "${BASE_DIR}/${ANTLR_ZIP}"
+        },
+        "parallel_jobs": 8
+    }
+}

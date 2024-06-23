@@ -1,0 +1,51 @@
+{
+    "application": "Merlin",
+    "details": {
+        "resource_requirements": {
+            "time": "10 hours",
+            "partition": "long",
+            "compute_nodes": "DGX",
+            "gpus": 1,
+            "memory": "40GB",
+            "cpus_per_gpu": 8
+        },
+        "software_requirements": {
+            "container": "merlin-prod.sif",
+            "python": "run_merlin.py",
+            "libraries": [
+                "Horovod",
+                "PMIX",
+                "DS12"
+            ]
+        },
+        "data_requirements": {
+            "data_dir": "/scratch/shared/pwesolowski/mgr-pipeline/joined-recommender",
+            "workflow_dir": "/scratch/shared/pwesolowski/mgr-pipeline/merlin"
+        },
+        "parameters": {
+            "batch_size": [
+                8192,
+                16384,
+                32768
+            ],
+            "blocksize": [
+                "512MiB",
+                "1GiB",
+                "2GiB"
+            ],
+            "parts_per_chunk": [
+                1,
+                2,
+                3
+            ],
+            "cufile_thread_count": [
+                4,
+                8,
+                16,
+                32,
+                64
+            ],
+            "epochs": 5
+        }
+    }
+}

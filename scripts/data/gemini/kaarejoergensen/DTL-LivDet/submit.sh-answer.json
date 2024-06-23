@@ -1,0 +1,32 @@
+{
+    "application": "Python",
+    "details": {
+        "scheduler": "LSF",
+        "queue": "gpuv100",
+        "job_name": "DTL",
+        "cores": 8,
+        "gpu": "1 GPU (exclusive process mode), 32GB",
+        "memory": "12GB per core",
+        "memory_limit": "15GB",
+        "walltime": "24 hours",
+        "environment": {
+            "cuda": "10.1",
+            "cudnn": "v7.6.5.32-prod-cuda-10.1",
+            "python": "3.7.3",
+            "pipenv": "requirements.txt"
+        },
+        "commands": [
+            "source /dtu/sw/dcc/dcc-sw.bash",
+            "nvidia-smi",
+            "cd ~/Documents/DTL-LivDet || exit",
+            "pipenv lock -r > requirements.txt",
+            "pip install -r requirements.txt --user",
+            "cd src || exit",
+            "python3 Main.py --mode test --data_path /work3/s144852/dtl/LivDet2009",
+            "python3 Main.py --mode test --data_path /work3/s144852/dtl/LivDet2011",
+            "python3 Main.py --mode test --data_path /work3/s144852/dtl/LivDet2013",
+            "python3 Main.py --mode test --data_path /work3/s144852/dtl/LivDet2015",
+            "python3 Main.py --mode test --data_path /work3/s144852/dtl/LivDet2017"
+        ]
+    }
+}

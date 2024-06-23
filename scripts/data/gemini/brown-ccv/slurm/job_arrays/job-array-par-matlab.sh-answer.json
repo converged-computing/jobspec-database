@@ -1,0 +1,24 @@
+{
+    "application": "MATLAB",
+    "details": {
+        "resource_requirements": {
+            "time": "00:05:00",
+            "nodes": 1,
+            "tasks_per_node": 1,
+            "cpus_per_task": 2,
+            "memory_per_cpu": "4G"
+        },
+        "job_handling": {
+            "name": "arrayjob-matlab",
+            "output_file_format": "%x-%A_%a.out",
+            "array_range": "1-4"
+        },
+        "module_requirements": "matlab/R2021a",
+        "matlab_options": {
+            "nodisplay": true,
+            "threaded": true,
+            "script": "multi_parfor('$tmpdir', $SLURM_ARRAY_TASK_ID), exit"
+        },
+        "temporary_directory": "~/matlab_temp_dir/$SLURM_ARRAY_TASK_ID"
+    }
+}

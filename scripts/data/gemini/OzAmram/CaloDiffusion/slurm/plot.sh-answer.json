@@ -1,0 +1,41 @@
+{
+    "application": "Singularity",
+    "details": {
+        "resource_requirements": {
+            "partition": "wc_gpu",
+            "nodes": 1,
+            "gpu_type": "TYPE",
+            "gpu_count": 1,
+            "constraint": "CONSTRAINT",
+            "memory": "MEMORY"
+        },
+        "software": {
+            "apptainer": "module load apptainer",
+            "singularity_cachedir": "/work1/cms_mlsim/oamram/",
+            "home_directory": "/work1/cms_mlsim/oamram/CaloDiffusion/",
+            "docker_image": "/cvmfs/unpacked.cern.ch/registry.hub.docker.com/fnallpc/fnallpc-docker:pytorch-1.9.0-cuda11.1-cudnn8-runtime-singularity",
+            "python_version": "3.x",
+            "pytorch_version": "1.9.0"
+        },
+        "scripts": {
+            "plot.py": "python plot.py --config MDIR/config.json --model MODEL --data_folder /wclustre/cms_mlsim/denoise/CaloChallenge/ --model_loc MDIR/MNAME --plot_folder ../plots/JOB_NAME --nevts NEVTS  --batch_size BATCH_SIZE --sample --sample_algo SAMPLE_ALGO --sample_offset SAMPLE_OFFSET --sample_steps SAMPLE_STEPS --job_idx JOBIDX --layer_model LAYMODEL",
+            "evaluate.py": "python evaluate.py -i MDIR/generated_MTAG.h5 -r /wclustre/cms_mlsim/denoise/CaloChallenge/dataset_2_eval_25k.h5 -d 2 --output_dir ../../plots/JOB_NAME/challenge_plots/ -m all"
+        },
+        "data_paths": {
+            "data_folder": "/wclustre/cms_mlsim/denoise/CaloChallenge/",
+            "model_location": "MDIR/MNAME",
+            "config_file": "MDIR/config.json",
+            "generated_data_file": "MDIR/generated_MTAG.h5",
+            "evaluation_data_file": "/wclustre/cms_mlsim/denoise/CaloChallenge/dataset_2_eval_25k.h5"
+        },
+        "output_paths": {
+            "log_file": "JOB_OUT/log_plot_JOBIDX.txt",
+            "plot_folder": "../plots/JOB_NAME",
+            "challenge_plots_folder": "../../plots/JOB_NAME/challenge_plots/"
+        },
+        "environment_variables": {
+            "HOME": "/work1/cms_mlsim/oamram/CaloDiffusion/",
+            "SINGULARITY_CACHEDIR": "/work1/cms_mlsim/oamram/"
+        }
+    }
+}

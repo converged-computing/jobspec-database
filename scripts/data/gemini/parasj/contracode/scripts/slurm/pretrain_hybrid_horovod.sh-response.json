@@ -1,0 +1,68 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"SLURM\",\n  \"details\": {\n    \"job_name\": \"contrastive_pretrain_dist_hybrid\",\n    \"output_file\": \"/home/eecs/paras/slurm/coderep/%j_pretrain_hybrid.log\",\n    \"tasks\": 1,\n    \"memory\": \"400000\",\n    \"time\": \"250:00:00\",\n    \"excluded_nodes\": \"atlas,blaze,r16\",\n    \"environment_variables\": {\n      \"PATH\": \"/data/paras/miniconda3/bin:$PATH\",\n      \"DATA_CACHE\": \"/data/paras/data_cache\",\n      \"FREE_PORT\": \"output of `python -c 'import socket; s=socket.socket(); s.bind((\"\", 0)); print(s.getsockname()[1])'`\",\n      \"BATCHSIZE\": \"default 64\",\n      \"LR\": \"default 4e-4\",\n      \"RUNNAME\": \"required\",\n      \"CUDA_VISIBLE_DEVICES\": \"environment variable\",\n      \"CUDA_DEVICE_ORDER\": \"environment variable\",\n      \"SLURM_JOB_ID\": \"environment variable\",\n      \"FREE_PORT\": \"environment variable\"\n    },\n    \"software_dependencies\": {\n      \"python\": \"for script execution, environment variables, and argument parsing\",\n      \"pip\": \"for installing torch, horovod, and contracode\",\n      \"torch\": \"for deep learning\",\n      \"horovod\": \"for distributed training\",\n      \"contracode\": \"for code representation\",\n      \"npm\": \"for installing javascript dependencies\",\n      \"horovodrun\": \"for running distributed training\"\n    },\n    \"data_requirements\": {\n      \"codesearchnet_javascript\": \"data set for training\",\n      \"csnjs_8k_9995p_unigram_url.model\": \"sentencepiece model\"\n    },\n    \"script_execution\": {\n      \"command\": \"horovodrun -np $NUMGPU python representjs/pretrain_horovod.py $RUNNAME --num_epochs=200 --batch_size=$BATCHSIZE --lr=$LR --num_workers=16 \\\\ \\\n    --subword_regularization_alpha $SW_REG_ALPHA --program_mode contrastive --loss_mode hybrid --save_every 5000 \\\\ \\\n    --train_filepath=\\\"$DATA_CACHE/codesearchnet_javascript/javascript_augmented.pickle\\\" \\\\ \\\n    --spm_filepath=\\\"$DATA_CACHE/codesearchnet_javascript/csnjs_8k_9995p_unigram_url.model\\\" \\\\ \\\n    --min_alternatives 1 --n_encoder_layers $N_ENCODER_LAYERS --d_model $D_MODEL --n_head $N_HEAD --max_length $MAX_LENGTH\"\n    }\n  }\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 2,
+                    "blocked": false
+                }
+            ],
+            "citation_metadata": {
+                "citation_sources": [
+                    {
+                        "start_index": 1449,
+                        "end_index": 1645,
+                        "uri": "https://github.com/anonymousCLAW/anonymous-codebase",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 1508,
+                        "end_index": 1919,
+                        "uri": "https://github.com/parasj/contracode",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 1781,
+                        "end_index": 2023,
+                        "uri": "https://github.com/anonymousCLAW/anonymous-codebase",
+                        "license_": ""
+                    }
+                ]
+            },
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 936,
+        "candidates_token_count": 685,
+        "total_token_count": 1621,
+        "cached_content_token_count": 0
+    }
+}

@@ -1,0 +1,42 @@
+{
+    "application": "SLURM",
+    "details": {
+        "resource_requirements": {
+            "partition": "EPYC",
+            "nodes": 1,
+            "exclusive": true,
+            "tasks_per_node": 128,
+            "memory": "490G",
+            "time": "02:00:00"
+        },
+        "modules": [
+            "mkl/latest",
+            "openBLAS/0.3.23-omp"
+        ],
+        "environment_variables": {
+            "OMP_PLACES": "cores",
+            "OMP_PROC_BIND": "spread",
+            "LD_LIBRARY_PATH": "/u/dssc/slippo00/PROJECT_sl_and_gv/Foundations_of_HPC_2022/Assignment/exercise2/blis/lib:$LD_LIBRARY_PATH"
+        },
+        "parameters": {
+            "current_type": "EPYC",
+            "current_policy": "spread",
+            "size": 10000,
+            "num_iterations": 5
+        },
+        "executables": [
+            "sgemm_blis_opt.x",
+            "dgemm_blis_opt.x"
+        ],
+        "output_files": {
+            "summary_csv": "csv_results_scalability_EPYC/{{executable}}_EPYC_10000_spread_summary.csv",
+            "detailed_csv": "csv_results_scalability_EPYC/{{executable}}_EPYC_10000_spread_detailed.csv"
+        },
+        "matrix_multiplication_code": {
+            "path": "./{{executable}}"
+        },
+        "other_details": {
+            "script_purpose": "Perform scalability testing of matrix multiplication code using different libraries (MKL, BLIS, OpenBLAS) and configurations"
+        }
+    }
+}

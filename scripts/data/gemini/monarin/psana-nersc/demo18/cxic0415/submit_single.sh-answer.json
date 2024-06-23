@@ -1,0 +1,26 @@
+{
+    "application": "Slurm",
+    "details": {
+        "resource_manager": "Slurm",
+        "account": "m2859",
+        "job_name": "ps2cctbx",
+        "nodes": 100,
+        "constraints": "knl,quad,cache",
+        "time_limit": "02:00:00",
+        "docker_image": "docker:monarin/ps2cctbx:latest",
+        "exclusive_access": true,
+        "qos": "premium",
+        "environment_variables": {
+            "PMI_MMAP_SYNC_WAIT_TIME": 600,
+            "MAX_EVENTS": 0
+        },
+        "script_files": [
+            "process_batch.phil",
+            "index_single.sh"
+        ],
+        "command": "shifter ./index_single.sh cxic0415 50 0 none $MAX_EVENTS ${PWD}/output",
+        "tasks": 6800,
+        "cores_per_task": 4,
+        "cpu_binding": "cores"
+    }
+}

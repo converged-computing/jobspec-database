@@ -1,0 +1,28 @@
+{
+    "application": "SLURM",
+    "details": {
+        "scheduler": "SLURM",
+        "account": "dune",
+        "job_name": "blip_segmentation_test",
+        "constraint": "gpu",
+        "queue": "shared",
+        "time": "24:00:00",
+        "nodes": 1,
+        "tasks": 1,
+        "cores_per_task": 32,
+        "gpus_per_task": 1,
+        "gpus_per_node": 1,
+        "gpu_bind": "none",
+        "dependency": "afterok:<optimize_blip_segmentation_prep_id>",
+        "array": "0-9",
+        "container": "docker:infophysics/blip:latest",
+        "volumes": [
+            "/pscratch/sd/${USER:0:1}/${USER}/$SLURM_JOB_ID/$SLURM_ARRAY_TASK_ID:/local_scratch",
+            "/global/cfs/cdirs/dune/users/${USER}:/local_blip",
+            "/global/cfs/cdirs/dune/users/${USER}:/local_data"
+        ],
+        "script": "blip_segmentation_optimize.sh",
+        "hyper_parameter_file": "${LOCAL_BLIP}/hyper_parameter_data.csv",
+        "hyper_parameter_config": "${LOCAL_BLIP}/hyper_parameter_data.csv:$(head -n $((SLURM_ARRAY_TASK_ID+1)) \"${LOCAL_BLIP}/hyper_parameter_data.csv\" | tail -1 | tr -d '\r')/hyper_parameter_config.yaml"
+    }
+}

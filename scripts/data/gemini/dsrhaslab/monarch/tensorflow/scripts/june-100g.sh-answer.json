@@ -1,0 +1,38 @@
+{
+    "application": "Slurm",
+    "details": {
+        "job_name": "job",
+        "output_file": "job.o%j",
+        "error_file": "job.e%j",
+        "queue": "rtx",
+        "nodes": 1,
+        "tasks": 1,
+        "runtime": "30:00:00",
+        "root_directory": "${HOME}/maypaper",
+        "repository": "thesis",
+        "workspace": "${ROOT_DIR}/${REPO}",
+        "data_directory": "/scratch1/07854/dantas/shared",
+        "lustre_dataset": "${DATA}/imagenet_processed/100g_tfrecords",
+        "target_directory": "${ROOT_DIR}/results/tensorflow/june",
+        "server_configs": "${WORKSPACE}/configurations/frontera/tf_controller_placement_100g_disk.yaml",
+        "modules": [
+            "remora",
+            "gcc/8.3.0",
+            "cuda/10.1",
+            "cudnn/7.6.5",
+            "nccl/2.5.6"
+        ],
+        "environment_variables": {
+            "CC": "/opt/apps/gcc/8.3.0/bin/gcc",
+            "MONARCH_CONFIGS_PATH": "${HOME}/maypaper/thesis/configurations/frontera/tf_placement_100g_disk.yaml"
+        },
+        "epochs": 3,
+        "batch_size": 256,
+        "models": [
+            "lenet",
+            "alexnet",
+            "resnet"
+        ],
+        "training_script": "./train.sh"
+    }
+}

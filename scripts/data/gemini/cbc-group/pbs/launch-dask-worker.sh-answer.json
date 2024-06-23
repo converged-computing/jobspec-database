@@ -1,0 +1,37 @@
+{
+    "application": "Dask",
+    "details": {
+        "resource_requirements": {
+            "gpu": {
+                "enabled": true,
+                "gpu_id_assignment": "dynamic, using /opt/bin/get_gpuid"
+            },
+            "cpu": {
+                "cores": "${nprocs}",
+                "threads_per_core": "${nthreads}"
+            },
+            "memory": "${mem}",
+            "storage": {
+                "scratch_space": "/scratch/$USER/dask-worker-space"
+            }
+        },
+        "software_dependencies": {
+            "conda": {
+                "environment": {
+                    "base": "${conda_base}",
+                    "stack": "${env_name}"
+                }
+            },
+            "dask": {
+                "scheduler_file": "${HOME}/scheduler.json"
+            }
+        },
+        "job_submission_system": {
+            "system": "PBS",
+            "options": {
+                "job_array": "oe",
+                "notification": "abe"
+            }
+        }
+    }
+}

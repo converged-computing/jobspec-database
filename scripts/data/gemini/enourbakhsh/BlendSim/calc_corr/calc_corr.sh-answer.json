@@ -1,0 +1,36 @@
+{
+    "application": "SLURM",
+    "details": {
+        "resource_requirements": {
+            "account": "m1727",
+            "mail_type": "END",
+            "mail_user": "erfan@ucdavis.edu"
+        },
+        "software_dependencies": {
+            "python": "/2.7-anaconda-4.4",
+            "PrgEnv-gnu": "installed",
+            "mpi4py": "installed",
+            "treecorr": "installed"
+        },
+        "environment": {
+            "Cori": "erfanxyz-1",
+            "Edison": "erfanxyz-edison"
+        },
+        "execution": {
+            "script": "calc_corr.py",
+            "arguments": [
+                "$1",
+                "$2",
+                "$3",
+                "$4",
+                "$SLURM_JOB_ID",
+                "$omp_threads"
+            ],
+            "parallelism": {
+                "threads": "omp_threads",
+                "nodes": "$SLURM_JOB_NUM_NODES",
+                "tasks": "$SLURM_TASKS_PER_NODE"
+            }
+        }
+    }
+}

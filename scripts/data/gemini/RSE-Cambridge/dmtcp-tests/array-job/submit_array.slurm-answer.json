@@ -1,0 +1,29 @@
+{
+    "application": "dmtcp_launch",
+    "details": {
+        "software": [
+            "dmtcp/2.6.0-intel-17.0.4",
+            "rhel7/default-peta4"
+        ],
+        "resources": {
+            "nodes": 1,
+            "tasks": 1,
+            "cpus_per_task": 1,
+            "time": "00:01:00",
+            "partition": "skylake",
+            "ulimit_stacksize": 8192
+        },
+        "environment_variables": {
+            "DMTCP_QUIET": "2"
+        },
+        "commands": {
+            "coordinator": "dmtcp_coordinator --daemon --coord-logfile dmtcp_log.txt --exit-after-ckpt --exit-on-last -i $tint --port-file cport.txt -p 0",
+            "restart": "dmtcp_restart -p $cport -i $tint ckpt*.dmtcp",
+            "launch": "dmtcp_launch --rm --infiniband --no-gzip -h localhost -p $cport $runcmd"
+        },
+        "other": [
+            "This script uses the SLURM workload manager to run an array of jobs.",
+            "The script uses DMTCP to checkpoint and restart the application."
+        ]
+    }
+}

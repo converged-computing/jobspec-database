@@ -1,0 +1,41 @@
+{
+    "application": "TensorFlow",
+    "details": {
+        "framework": "TensorFlow",
+        "model": "ResNet50",
+        "batch_size": 64,
+        "data_dir": "/bazel",
+        "data_name": "imagenet",
+        "num_batches": 100,
+        "distributed_training": "Horovod",
+        "resource_requirements": {
+            "nodes": 1,
+            "cpu_cores": 40,
+            "gpus": 8,
+            "mpi_processes": 8,
+            "walltime": "02:00:00",
+            "queue": "dgx",
+            "project": "21170158",
+            "job_name": "ML"
+        },
+        "environment_variables": {
+            "SINGULARITYENV_LD_LIBRARY_PATH": "/home/users/astar/scei/jamesche/mylib/openmpi-1.10.7-cuda9-gnu4/lib:$SINGULARITYENV_LD_LIBRARY_PATH",
+            "SINGULARITYENV_OMP_NUM_THREADS": "4"
+        },
+        "singularity_image": "/home/users/astar/scei/jamesche/dgx1/aitest/ub1604-python2-horovod-gpu.simg",
+        "mpi_options": {
+            "num_processes": 8,
+            "binding": "none",
+            "mapping": "slot",
+            "environment_variables": [
+                "NCCL_DEBUG=INFO",
+                "LD_LIBRARY_PATH",
+                "PATH"
+            ],
+            "mca_options": {
+                "pml": "ob1",
+                "btl": "^openib"
+            }
+        }
+    }
+}

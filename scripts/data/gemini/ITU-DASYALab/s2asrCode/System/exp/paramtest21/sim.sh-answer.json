@@ -1,0 +1,40 @@
+{
+    "application": "SLURM",
+    "details": {
+        "software": [
+            "python3",
+            "src/AM.py",
+            "src/AM_eval.py"
+        ],
+        "resources": {
+            "nodes": 1,
+            "cores": 24,
+            "memory": "120000M",
+            "gpus": 4,
+            "queue": "desktop",
+            "time_limit": "13:00:00",
+            "output_file": "./logs/sim-p21-%A-%a-%N.out"
+        },
+        "parameters": {
+            "batch_size": 96,
+            "eval_batch_size": 24,
+            "LSTM_size": 800,
+            "LSTM_Layer_count": 5,
+            "conv_output": 600,
+            "conv_width": 11,
+            "max_frames": 1670,
+            "dropout": 0.05,
+            "input_tfrecord": "FE_data/LibriSpeech/train*.tfrecord",
+            "input_tfrecord_eval": "FE_data/LibriSpeech/dev*.tfrecord",
+            "dictionary": "EN_chars",
+            "model": "StreamSpeechM33",
+            "activation_function": "relu",
+            "num_epochs": 1,
+            "name": "sim-p21-$SLURM_ARRAY_JOB_ID",
+            "paramnum": "para20",
+            "training_directory": "models/para20/sim-p21-$SLURM_ARRAY_JOB_ID/",
+            "beam_width": 256,
+            "beamsearch_smoothing": 0.0
+        }
+    }
+}

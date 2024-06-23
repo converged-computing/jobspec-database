@@ -1,0 +1,43 @@
+{
+    "application": "GROMACS",
+    "details": {
+        "slurm": {
+            "partition": "tcb",
+            "job_name": "5VKE_lb_25-122_0",
+            "wall_time": "23:30:00",
+            "nodes": 1,
+            "mpi_processes_per_node": 8,
+            "gpu_nodes": true,
+            "gpus_per_node": 2,
+            "gpu_node_name": "gpu04",
+            "output_file": "job-%j.out",
+            "error_file": "job-%j.err",
+            "email_address": "sergio.perez.conesa@scilifelab.se",
+            "email_type": "FAIL"
+        },
+        "modules": {
+            "gromacs_version": "2020.5"
+        },
+        "command": "gmx mdrun",
+        "arguments": {
+            "verbose": true,
+            "max_hours": 23,
+            "topology_file": "topol${var}.tpr",
+            "pin_on": true,
+            "output_prefix": "step$var",
+            "checkpoint_file": "step${var}.cpt"
+        },
+        "input_files": {
+            "topology_file": "topol.top",
+            "index_file": "index.ndx",
+            "coordinate_file": "opt.gro"
+        },
+        "output_files": {
+            "trajectory_file": "step${var}.gro",
+            "checkpoint_file": "step${var}.cpt"
+        },
+        "dependencies": {
+            "gromacs_installation": true
+        }
+    }
+}

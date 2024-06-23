@@ -1,0 +1,42 @@
+{
+    "application": "SLURM",
+    "details": {
+        "job_name": "genderrun",
+        "partition": "learnfair",
+        "nodes": 1,
+        "array": 1,
+        "tasks_per_node": 1,
+        "gpus": 1,
+        "memory_per_cpu": "2048 MB",
+        "cpus_per_task": 4,
+        "signal": "USR1",
+        "open_mode": "truncate",
+        "time": "72:00:00",
+        "mail_user": "adirendu@fb.com",
+        "mail_type": "fail",
+        "modules": [
+            "anaconda3/5.0.1",
+            "cuda/10.1",
+            "cudnn/v7.6-cuda.10.0"
+        ],
+        "conda_environment": "easyNMT",
+        "python_scripts": [
+            "translate.py",
+            "tag.py",
+            "align.py",
+            "score.py"
+        ],
+        "input_files": [
+            "generated/$size/source.en",
+            "grammars/occupation_list.txt",
+            "generated/$size/source.ans"
+        ],
+        "output_files": [
+            "generated/$size/$model/target.$tgt",
+            "generated/$size/$model/target.$tgt.tok",
+            "generated/$size/$model/target.$tgt.tag",
+            "generated/$size/$model/target.$tgt.tok.result",
+            "generated/$size/$model/target.$tgt.tok.scores"
+        ]
+    }
+}

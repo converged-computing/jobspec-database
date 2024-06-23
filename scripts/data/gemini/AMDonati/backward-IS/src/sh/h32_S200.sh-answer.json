@@ -1,0 +1,44 @@
+{
+    "application": "SLURM",
+    "details": {
+        "job_name": "H32-S200",
+        "qos": "qos_gpu-t3",
+        "tasks": 1,
+        "gpus": 1,
+        "array": "1-100",
+        "cpus_per_task": 8,
+        "mem_per_cpu": "8g",
+        "output": "slurm_out_2/h32-S200-%j.out",
+        "error": "slurm_out_2/h32-S200-%j.err",
+        "time": "20:00:00",
+        "modules": [
+            "pytorch-gpu/py3/1.7.1",
+            "conda"
+        ],
+        "conda_env": "back-is",
+        "python_path": "src:${PYTHONPATH}",
+        "script": "src/estimate.py",
+        "arguments": [
+            "-data_path",
+            "output/RNN_weather/RNN_h32_ep15_bs64_maxsamples20000/20210417-080320/seq_len200",
+            "-model_path",
+            "output/RNN_weather/RNN_h32_ep15_bs64_maxsamples20000/20210417-080320/model.pt",
+            "-out_path",
+            "100_runs/${SLURM_ARRAY_TASK_ID}",
+            "-num_particles",
+            "1000",
+            "-backward_samples",
+            "32",
+            "-sigma_init",
+            "0.1",
+            "-sigma_y",
+            "0.1",
+            "-sigma_h",
+            "0.1",
+            "-pms",
+            "1",
+            "-particles_pms",
+            "3000"
+        ]
+    }
+}

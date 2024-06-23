@@ -1,0 +1,39 @@
+{
+    "application": "SLURM",
+    "details": {
+        "resources": {
+            "nodes": 1,
+            "cores": 4
+        },
+        "logging": {
+            "stdout": "logs/fakenews/slurm.%N.%j.out",
+            "stderr": "logs/fakenews/slurm.%N.%j.err"
+        },
+        "environment": {
+            "python": "${PYTHON_ENV_PATH}python",
+            "home_path": "${HOME_PATH}",
+            "wandb_tags": "${MODEL_NAME},${TASK_NAME}"
+        },
+        "script": {
+            "action_steps": 200,
+            "epochs": 20,
+            "task_name": "fakenews-new",
+            "model_name": "${MODEL_NAME}",
+            "seed": "${SEED}",
+            "max_seq_len": 384,
+            "batch_size": 32,
+            "eval_batch_size": 128,
+            "learning_rate": 5e-05,
+            "grad_acc": 1,
+            "warmup": 0.06,
+            "weight_dec": 0.06,
+            "output_dir": "${HOME_PATH}models/${TASK_NAME}/${MODEL_NAME}/seed_${SEED}/ep_${EPOCHS}_bs_${BATCH_SIZE}_ga_${GRAD_ACC}_lr_${LEARNING_RATE}_seq_${MAX_SEQ_LEN}_warm_${WARMUP}_weight_${WEIGHT_DEC}"
+        },
+        "software": {
+            "python": "run_classification.py",
+            "library": "transformers",
+            "framework": "pytorch",
+            "wandb": "wandb"
+        }
+    }
+}

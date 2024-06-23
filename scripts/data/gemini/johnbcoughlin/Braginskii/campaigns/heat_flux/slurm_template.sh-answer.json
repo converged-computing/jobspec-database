@@ -1,0 +1,32 @@
+{
+    "application": "SLURM",
+    "details": {
+        "job_name": "heat_flux",
+        "account": "amath",
+        "partition": "ckpt",
+        "nodes": 1,
+        "gpus_per_task": 1,
+        "gpus": 8,
+        "cpus_per_task": 2,
+        "array": "1-@@NTASKS@@",
+        "memory": "20G",
+        "time": "48:00:00",
+        "workdir": "@@WORKDIR@@",
+        "output": "@@WORKDIR@@/sims/HF-%a/sim.log",
+        "error": "@@WORKDIR@@/sims/HF-%a/sim.err",
+        "modules": [
+            "julia"
+        ],
+        "environment_variables": {
+            "OPENBLAS_NUM_THREADS": 1
+        },
+        "julia_version": "julia --version",
+        "julia_project": "../..",
+        "julia_startup_file": "no",
+        "julia_script": "main.jl",
+        "julia_arguments": [
+            "--run",
+            "$SLURM_ARRAY_TASK_ID"
+        ]
+    }
+}

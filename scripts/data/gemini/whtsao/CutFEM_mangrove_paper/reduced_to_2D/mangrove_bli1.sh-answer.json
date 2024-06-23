@@ -1,0 +1,36 @@
+{
+    "application": "Proteus",
+    "details": {
+        "version": "1.8.1",
+        "modules": [
+            "proteus/1.8.1"
+        ],
+        "environment_variables": [
+            "PROTEUS_ARCH=linux",
+            "PYTHONPATH=/project/cekees/cekees/proteus/1.7.5/lib/python3.7/site-packages:$PYTHONPATH",
+            "PATH=${PROJECT}/bin:${PROJECT}/proteus/1.7.5/bin:${PATH}",
+            "LD_LIBRARY_PATH=${PROJECT}/proteus/1.7.5/lib:${PROJECT}/proteus/1.7.5/lib64:${LD_LIBRARY_PATH}"
+        ],
+        "runtime_environment": {
+            "slurm_job_name": "cox_2D_BL_ti1",
+            "slurm_nodes": 4,
+            "slurm_tasks": 192,
+            "slurm_threads_per_process": 1,
+            "slurm_walltime": "72:00:00",
+            "slurm_partition": "workq",
+            "slurm_account": "loni_ceds3d"
+        },
+        "script_execution": {
+            "command": "srun parun -l5 -v -p --TwoPhaseFlow cox_flume2DV.py -C 'he=0.02 mangrove_porous=False filename='inp_BL_TI1.csv' final_Time=59.99'",
+            "input_files": [
+                "*.py",
+                "*.csv",
+                "*.sh"
+            ],
+            "output_files": [
+                "o.out",
+                "e.err"
+            ]
+        }
+    }
+}

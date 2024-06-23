@@ -1,0 +1,70 @@
+{
+    "application": "LSF",
+    "details": {
+        "resource_requirements": {
+            "queue": "gpuv100",
+            "gpu_count": "1",
+            "gpu_mode": "exclusive_process",
+            "cpu_queue": "hpc",
+            "job_name": "NN_03-01",
+            "output_file": "output/NN_03-01-%J.out",
+            "cores": "5",
+            "core_distribution": "span[hosts=1]",
+            "memory_per_core": "6GB",
+            "runtime": "20:00",
+            "email_on_start": true,
+            "email_on_end": true
+        },
+        "modules": {
+            "loaded": [
+                "tensorflow/1.5-gpu-python-3.6.2"
+            ],
+            "purged": [
+                "all"
+            ]
+        },
+        "script": {
+            "language": "bash",
+            "function": "NN_script.py",
+            "parameters": [
+                "drop",
+                "N",
+                "activation",
+                "nhidden",
+                "folder",
+                "func"
+            ],
+            "loop_variables": {
+                "drop": [
+                    "0.2",
+                    "0.25",
+                    "0.3",
+                    "0.4"
+                ],
+                "N": [
+                    "250",
+                    "350",
+                    "400",
+                    "450",
+                    "550"
+                ],
+                "nhidden": [
+                    "2"
+                ],
+                "act": [
+                    "sigmoid"
+                ],
+                "folder": [
+                    "03-01-2019 11.04",
+                    "09-01-2019 12.57",
+                    "11-10-2018 11.36"
+                ],
+                "func": [
+                    "group_period_x_group_period",
+                    "group_period_2x2",
+                    "atomic_number"
+                ]
+            }
+        }
+    }
+}

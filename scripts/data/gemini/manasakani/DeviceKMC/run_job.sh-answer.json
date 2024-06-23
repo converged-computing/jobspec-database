@@ -1,0 +1,43 @@
+{
+    "application": "Slurm",
+    "details": {
+        "account": "hck",
+        "tasks": 1,
+        "tasks_per_node": 1,
+        "cpus_per_task": 1,
+        "constraint": "gpu",
+        "time": "05:00:00",
+        "job_name": "test",
+        "output": "run.out",
+        "error": "run.err",
+        "modules": [
+            "intel-oneapi/2022.1.0",
+            "daint-gpu/21.09",
+            "cudatoolkit/21.3_11.2",
+            "gcc/9.3.0"
+        ],
+        "environment_variables": {
+            "OMP_NUM_THREADS": "4"
+        },
+        "executable": "runKMC",
+        "parameters": "parameters.txt",
+        "tests": [
+            {
+                "directory": "./tests/1-potential",
+                "command": "srun -n $SLURM_NTASKS ../../bin/runKMC parameters.txt"
+            },
+            {
+                "directory": "./tests/2-globaltemp",
+                "command": "srun -n $SLURM_NTASKS ../../bin/runKMC parameters.txt"
+            },
+            {
+                "directory": "./tests/3-localtemp",
+                "command": "srun -n $SLURM_NTASKS ../../bin/runKMC parameters.txt"
+            },
+            {
+                "directory": "./tests/prod_2xstructure",
+                "command": "srun -n $SLURM_NTASKS ../../bin/runKMC parameters.txt"
+            }
+        ]
+    }
+}

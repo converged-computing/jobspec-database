@@ -1,0 +1,105 @@
+{
+    "application": "SLURM",
+    "details": {
+        "resource_requirements": {
+            "job_name": "stencil-bench",
+            "ntasks": 8,
+            "gres": "gpu:8",
+            "partition": "hgx2q",
+            "time": "03:00:00",
+            "output": "sbatch_output_%j.log"
+        },
+        "software_requirements": {
+            "modules": {
+                "source": "./scripts/modules.sh"
+            },
+            "binaries": {
+                "jacobi": "./jacobi",
+                "jacobi_nvshmem": "./jacobi_nvshmem"
+            },
+            "libraries": {
+                "MPI": "Required for nvshmem versions",
+                "CUDA": "Required for all versions"
+            }
+        },
+        "script_parameters": {
+            "MAX_NUM_GPUS": 8,
+            "MAX_NX": 16384,
+            "MAX_NY": 16384,
+            "STARTING_NX": 4096,
+            "STARTING_NY": 4096,
+            "NUM_ITER": 100000,
+            "NUM_RUNS": 5
+        },
+        "execution_flow": {
+            "loop_1": {
+                "variable": "STARTING_NX",
+                "start": 16384,
+                "end": 16384,
+                "increment": "x2"
+            },
+            "loop_2": {
+                "variable": "version_name",
+                "source": "version_name_to_idx_map"
+            },
+            "loop_3": {
+                "variable": "NUM_GPUS",
+                "start": 1,
+                "end": "MAX_NUM_GPUS",
+                "increment": 1
+            },
+            "loop_4": {
+                "variable": "i",
+                "start": 1,
+                "end": "NUM_RUNS",
+                "increment": 1
+            },
+            "loop_5": {
+                "variable": "version_name",
+                "source": "version_name_to_idx_map_nvshmem"
+            },
+            "loop_6": {
+                "variable": "NP",
+                "start": 1,
+                "end": "MAX_NUM_GPUS",
+                "increment": 1
+            },
+            "loop_7": {
+                "variable": "i",
+                "start": 1,
+                "end": "NUM_RUNS",
+                "increment": 1
+            }
+        },
+        "benchmark_types": [
+            "Baseline Copy",
+            "Baseline Copy Overlap",
+            "Baseline P2P",
+            "Single Stream 1TB",
+            "Single Stream 2TB",
+            "Double Stream",
+            "Baseline Copy (No compute)",
+            "Baseline Copy Overlap (No Compute)",
+            "Baseline P2P (No Compute)",
+            "Single Stream 1TB (No Compute)",
+            "Single Stream 2TB (No Compute)",
+            "Double Stream (No Compute)",
+            "NVSHMEM Baseline",
+            "NVSHMEM Baseline Optimized",
+            "NVSHMEM Single Stream 1TB",
+            "NVSHMEM Single Stream 2TB",
+            "NVSHMEM Double Stream",
+            "NVSHMEM Baseline (No Compute)",
+            "NVSHMEM Baseline Optimized (No Compute)",
+            "NVSHMEM Single Stream 1TB (No Compute)",
+            "NVSHMEM Single Stream 2TB (No Compute)",
+            "NVSHMEM Double Stream (No Compute)"
+        ],
+        "data_processing": {
+            "output": {
+                "format": "Execution Time",
+                "units": "Time units not specified in the script"
+            }
+        }
+    }
+}

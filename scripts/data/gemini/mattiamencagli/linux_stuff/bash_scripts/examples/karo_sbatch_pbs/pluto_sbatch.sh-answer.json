@@ -1,0 +1,42 @@
+{
+    "application": "Slurm",
+    "details": {
+        "software": [
+            "PLUTO",
+            "Nvidia-smi",
+            "Python3",
+            "Make",
+            "Nsys",
+            "Ncu",
+            "Mpirun"
+        ],
+        "resources": {
+            "account": "DD-23-44 or FTA-23-25",
+            "partition": "qcpu",
+            "time": "20 minutes",
+            "nodes": 1,
+            "tasks": 128,
+            "cpus": 1,
+            "gpus": 4,
+            "modules": "pluto_mod"
+        },
+        "commands": [
+            "nvidia-smi",
+            "python3 test_pluto.py --auto-update",
+            "python3 test_pluto.py --start-from 0:0",
+            "pluto_select 3",
+            "make -j -B",
+            "nsys profile --trace=cuda,mpi,nvtx,openacc --force-overwrite true -o report_MHD_highorder_BLAST_B1_gpu4_leo mpirun -np 4 ./pluto",
+            "nsys profile --force-overwrite true -o report_MHD_BLAST_B3_304cube_leo_o2 ./pluto -maxsteps 10 -xres 304",
+            "ncu --target-processes all -k regex:Particles_LP_UpdateSpectra_325 --set=full --import-source=yes --launch-count 1 --launch-skip 100 -f -o NCUreport_MM_leo ./pluto -xres 304",
+            "make -j -B",
+            "nsys profile --trace=cuda,mpi,nvtx,openacc --force-overwrite true -o report_nsys_MM_leo ./pluto",
+            "ncu --target-processes all -k regex:Particles_LP_UpdateSpectra_323 --set=full --import-source=yes --launch-count 1 --launch-skip 194 -f true -o NCUreport_MM2_leo \"./pluto\" -no-write",
+            "ncu --kernel-name Particles_LP_UpdateSpectra_323 --set=full --import-source=yes --launch-skip 194 --launch-count 1 \"./pluto\" -no-write",
+            "./pluto",
+            "mpirun -np 128 ./pluto -maxsteps 60",
+            "mpirun -np ${NG} ./pluto -maxsteps 60",
+            "cp -v pluto.0.log plutolog_KAROcpu_${NN}"
+        ]
+    }
+}

@@ -1,0 +1,52 @@
+{
+    "application": "obsproc",
+    "software": [
+        "libjpeg",
+        "grib_util",
+        "netcdf",
+        "intel",
+        "craype",
+        "cray-mpich",
+        "cray-pals",
+        "cfp",
+        "bufr_dump"
+    ],
+    "resources": {
+        "queue": "dev",
+        "walltime": "00:20:00",
+        "account": "OBSPROC-DEV",
+        "nodes": "1",
+        "cpus_per_node": "14",
+        "memory": "100gb",
+        "debug": "true",
+        "place": "vscatter"
+    },
+    "other": {
+        "environment_variables": {
+            "envir": "prod",
+            "userROOT": "/lfs/h2/emc/obsproc/noscrub/$USER",
+            "obsproc_ver": "v1.0",
+            "obsproc_ver_pckg": "v1.0.0",
+            "bufr_dump_ver": "1.0.0",
+            "obsNET": "obsproc",
+            "PACKAGEROOTpara": "/lfs/h1/ops/para/packages",
+            "HOMEobsproc": "${userROOT}/install/obsproc-rmprep",
+            "SENDECF": "NO",
+            "SENDDBN": "NO",
+            "SENDSDM": "NO",
+            "TANK": "$DCOMROOT",
+            "DATAROOT": "/lfs/h2/emc/stmp/$USER",
+            "jlogfile": "/lfs/h2/emc/stmp/$USER/${JTYP}.$PDY.jlogfile",
+            "COMOUT_ROOT": "${DATAROOT}/CRON/${DESC}/com",
+            "COMPONENT": "atmos",
+            "DEBUG_LEVEL": "3",
+            "LOUD": "on",
+            "KEEPDATA": "YES"
+        },
+        "scripts": [
+            "$HOMEobsproc/jobs/JOBSPROC_GLOBAL_DUMP",
+            "/u/$USER/bin/cycqsub /lfs/h2/emc/obsproc/noscrub/Shelley.Melchior/triggers/jglobal_dump_post.wc2.pbs",
+            "/u/$USER/bin/cycqsub /lfs/h2/emc/obsproc/noscrub/Shelley.Melchior/triggers/jglobal_prep.wc2.pbs"
+        ]
+    }
+}

@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"YAMBO\",\n  \"details\": {\n    \"software\": [\n      \"YAMBO\",\n      \"SLURM\"\n    ],\n    \"resources\": {\n      \"nodes\": 1,\n      \"tasks_per_node\": 16,\n      \"cpus_per_task\": 1,\n      \"partition\": \"cpu\",\n      \"time\": \"0:30:00\",\n      \"account\": \"d2021-135-users\",\n      \"memory_per_cpu\": \"2000MB\",\n      \"job_name\": \"mos2\",\n      \"environment_variables\": {\n        \"OMP_NUM_THREADS\": \"${SLURM_CPUS_PER_TASK}\"\n      }\n    },\n    \"input_files\": [\n      \"i01-GW\"\n    ],\n    \"output_files\": [\n      \"summary_01_${POL_BANDS}bands.txt\",\n      \"job_${label}\",\n      \"out_${label}\",\n      \"i01-GW_${label}\",\n      \"o-${jdir}.qp\"\n    ],\n    \"commands\": [\n      \"module purge\",\n      \"module use /ceph/hpc/data/d2021-135-users/modules\",\n      \"module load YAMBO/5.1.1-FOSS-2022a\",\n      \"sed \\\"s/NGsBlkXp=.*/NGsBlkXp=${NGsBlkXp_Ry} Ry/; % BndsRnXp/{n;s/.*/  1 |  ${POL_BANDS} |/}\\\" $file0 > $filein\",\n      \"srun --mpi=pmix -n ${SLURM_NTASKS} yambo -F $filein -J $jdir -C $cdir\",\n      \"grep -v '#' ${cdir}/o-${jdir}.qp|head -n 1| awk '{print $3+$4}'\",\n      \"grep -v '#' ${cdir}/o-${jdir}.qp|tail -n 1| awk '{print $3+$4}'\",\n      \"echo $E_GW_c - $E_GW_v |bc\",\n      \"echo ${NGsBlkXp_Ry} '        ' ${E_GW_v} '        ' ${E_GW_c} '        ' ${GAP_GW} >> summary_01_${POL_BANDS}bands.txt\"\n    ]\n  }\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 2,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 612,
+        "candidates_token_count": 578,
+        "total_token_count": 1190,
+        "cached_content_token_count": 0
+    }
+}

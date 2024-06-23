@@ -1,0 +1,44 @@
+{
+    "application": "SLURM",
+    "details": {
+        "job_name": "BNC_TST",
+        "account": "project_465000157",
+        "time": "12:00:00",
+        "memory_per_cpu": "7G",
+        "cpus_per_task": 8,
+        "nodes": 16,
+        "tasks_per_node": 8,
+        "gpus_per_node": 8,
+        "partition": "pilot",
+        "output_file": "report/%j.out",
+        "signals": [
+            "B:TERM"
+        ],
+        "modules": [
+            "LUMI/22.08",
+            "cray-python/3.9.12.1",
+            "rocm/5.0.2"
+        ],
+        "environment_variables": {
+            "PS1": "$",
+            "NCCL_SOCKET_IFNAME": "hsn",
+            "OMP_NUM_THREADS": "$SLURM_CPUS_PER_TASK",
+            "OPENBLAS_VERBOSE": 2,
+            "PYTHONUSERBASE": "/projappl/project_465000157/.local",
+            "PATH": "/projappl/project_465000157/.local/bin:$PATH",
+            "PYTHONPATH": "/projappl/project_465000157/.local/lib/python3.9/site-packages:$PYTHONPATH",
+            "WANDB_MODE": "offline",
+            "NCCL_NSOCKS_PERTHREAD": 4,
+            "NCCL_SOCKET_NTHREADS": 2,
+            "NCCL_MIN_CHANNELS": 32,
+            "MASTER_PORT": "10000 + (SLURM_JOBID last 4 digits)",
+            "WORLD_SIZE": "SLURM_NNODES * SLURM_NTASKS_PER_NODE",
+            "MASTER_ADDR": "first hostname from scontrol show hostnames \"$SLURM_JOB_NODELIST\""
+        },
+        "python_script": "train.py",
+        "python_arguments": "--batch_size 256 --max_steps 31250 $@ ",
+        "python_version": "3.9.12.1",
+        "framework": "PyTorch",
+        "distributed_training": "DDP"
+    }
+}

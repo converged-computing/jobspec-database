@@ -1,0 +1,47 @@
+{
+    "application": "Slurm",
+    "details": {
+        "resource_requirements": {
+            "nodes": 144,
+            "tasks": 576,
+            "tasks_per_node": 4,
+            "cpus_per_task": 12,
+            "time": "1:30:00",
+            "partition": "booster",
+            "gres": "gpu:4"
+        },
+        "software_requirements": {
+            "modules": [
+                "Stages/2023",
+                "GCC",
+                "OpenMPI",
+                "CUDA",
+                "imkl",
+                "CMake",
+                "Boost",
+                "git"
+            ],
+            "executable": "../ChASE/build/examples/2_input_output/2_input_output_mgpu"
+        },
+        "other": {
+            "environment_variables": {
+                "SRUN_CPUS_PER_TASK": "${SLURM_CPUS_PER_TASK}",
+                "OMP_NUM_THREADS": "${SRUN_CPUS_PER_TASK}"
+            },
+            "parameters": {
+                "DMAX": 120,
+                "N": 360000,
+                "path_in": 0,
+                "isMatGen": true,
+                "nev": 2250,
+                "nex": 750,
+                "complex": 0,
+                "tol": 1e-10,
+                "opt": "S",
+                "deg": 20,
+                "mode": "R",
+                "maxIter": 1
+            }
+        }
+    }
+}

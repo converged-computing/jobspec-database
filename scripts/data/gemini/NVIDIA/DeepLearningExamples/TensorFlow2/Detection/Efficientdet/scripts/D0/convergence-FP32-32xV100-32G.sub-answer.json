@@ -1,0 +1,36 @@
+{
+    "application": "SLURM",
+    "details": {
+        "software": [
+            "Python 3",
+            "EfficientDet",
+            "TensorFlow 2",
+            "PMIx",
+            "NVCR.io/nvidia/effdet:21.09-tf2"
+        ],
+        "resources": {
+            "compute": {
+                "nodes": "${SLURM_JOB_NUM_NODES}",
+                "tasks_per_node": 8,
+                "gpus": 1
+            },
+            "memory": "0",
+            "time": "8:00:00",
+            "storage": {
+                "checkpointdir": "/workspace/checkpoints",
+                "datadir": "/workspace/coco"
+            }
+        },
+        "parameters": {
+            "batch_size": 40,
+            "epochs": 350,
+            "learning_rate": 1.0,
+            "warmup_epochs": 90,
+            "ema": 0.999,
+            "momentum": 0.95,
+            "training_mode": "traineval",
+            "model_name": "efficientdet-d0",
+            "backbone_init": "/workspace/checkpoints/efficientnet-b0-joc"
+        }
+    }
+}

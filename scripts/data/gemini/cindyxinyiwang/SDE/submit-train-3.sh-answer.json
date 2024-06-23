@@ -1,0 +1,29 @@
+{
+    "application": "SLURM",
+    "details": {
+        "resources": {
+            "gpu": "1",
+            "time": "1000:00:00",
+            "nodes": "1",
+            "memory": "12g"
+        },
+        "job_name": "multlin",
+        "environment_variables": {
+            "PYTHONPATH": "$(pwd)",
+            "CUDA_VISIBLE_DEVICES": "3"
+        },
+        "version": "v7_abl_s1",
+        "output_directory": "outputs_\"$version\"",
+        "scripts_directory": "scripts/cfg_\"$version\"",
+        "commands": [
+            "mkdir -p outputs_\"$version\"",
+            "ls scripts/cfg_\"$version\"/",
+            "grep -v trans.sh$",
+            "basename $f .sh",
+            "touch outputs_\"$version\"/$f1.started",
+            "hostname",
+            "nvidia-smi",
+            "./scripts/cfg_\"$version\"/$f"
+        ]
+    }
+}

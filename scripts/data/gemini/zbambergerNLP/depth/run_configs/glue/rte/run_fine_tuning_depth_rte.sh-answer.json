@@ -1,0 +1,34 @@
+{
+    "application": "SLURM",
+    "details": {
+        "job_name": "principled-pre-training",
+        "nodes": 1,
+        "gpus": 2,
+        "cpus_per_task": 32,
+        "account": "nlp",
+        "partition": "nlp",
+        "nodes_list": "nlp-ada-[1,2]",
+        "output_file": "fine_tuning_runs/slurm_%N_%j_out.txt",
+        "error_file": "fine_tuning_runs/slurm_%N_%j_err.txt",
+        "mail_type": "fail",
+        "mail_user": "zachary@campus.technion.ac.il",
+        "virtual_environment": ".depth/bin/activate",
+        "environment_variables": {
+            "DS_SKIP_CUDA_CHECK": 1,
+            "OMP_NUM_THREADS": "$SLURM_CPUS_PER_TASK"
+        },
+        "framework": "deepspeed",
+        "model": "DEPTH",
+        "precision": "bf16",
+        "downstream_dataset": "RTE",
+        "checkpoint_path": "checkpoints/depth/from_pretrained/lr_0_001/batch_size_256/2024-02-18_12-45",
+        "total_steps": 4000,
+        "base_lr": 1e-05,
+        "batch_size": 128,
+        "grad_acc": 1,
+        "evaluate_every_steps": 100,
+        "logging_every_steps": 10,
+        "checkpoint_every_steps": 1000,
+        "lr_scheduler": "linear"
+    }
+}

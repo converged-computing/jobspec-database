@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"SLURM\",\n  \"details\": {\n    \"job_name\": \"big_train\",\n    \"output_file\": \"multinode-o-%x.%j\",\n    \"error_file\": \"multinode-e-%x.%j\",\n    \"partition\": \"big_suma_rtx3090\",\n    \"nodes\": 2,\n    \"gpus\": 4,\n    \"time\": \"72:00:00\",\n    \"cpus_per_gpu\": 16,\n    \"qos\": \"big_qos\",\n    \"environment\": {\n      \"conda_environment\": \"<env_name>\",\n      \"script_directory\": \"<path_to_script>\",\n      \"NCCL_P2P_DISABLE\": 1,\n      \"NCCL_ASYNC_ERROR_HANDLING\": 1,\n      \"CUDA_LAUNCH_BLOCKING\": 1,\n      \"PORT\": 29509,\n      \"SCRIPT\": \"/scratch/sd-scripts/sdxl_train_network.py \",\n      \"SCRIPT_ARGS\": \" \\\n    --config_file /scratch/train_config.toml\",\n      \"LAUNCHER\": \"/scratch/miniconda3/envs/kohya/bin/accelerate launch\"\n    },\n    \"accelerate_arguments\": {\n      \"single_node\": {\n        \"num_processes\": \"$gpu_count\"\n      },\n      \"multi_node\": {\n        \"num_processes\": \"$gpu_count\",\n        \"num_machines\": \"$SLURM_NNODES\",\n        \"rdzv_backend\": \"c10d\",\n        \"main_process_ip\": \"$head_node_ip\",\n        \"main_process_port\": \"$PORT\",\n        \"machine_rank\": \"$NODE_RANK\"\n      }\n    },\n    \"software\": {\n      \"python\": \"conda\",\n      \"deep_learning_framework\": \"pytorch\",\n      \"distributed_training\": \"accelerate\",\n      \"communication_library\": \"NCCL\"\n    }\n  }\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 1506,
+        "candidates_token_count": 482,
+        "total_token_count": 1988,
+        "cached_content_token_count": 0
+    }
+}

@@ -1,0 +1,35 @@
+{
+    "application": "maggrid",
+    "details": {
+        "resource_requirements": {
+            "nodes": 1,
+            "tasks": 5,
+            "cpus_per_task": 16,
+            "memory": "12000",
+            "memory_per_cpu": "10G",
+            "time": "03:00:00",
+            "partition": "long"
+        },
+        "environment_variables": {
+            "SHTC_FILE": "Required",
+            "MAGGRID_FILE": "Required",
+            "OMP_NUM_THREADS": "${SLURM_CPUS_PER_TASK:-1}"
+        },
+        "dependencies": {
+            "maggrid": "Executable"
+        },
+        "logging": {
+            "error_log": "logs/%x.%J.err.txt",
+            "output_log": "logs/%x.%J.out.txt"
+        },
+        "system_calls": {
+            "hostname": "For host information",
+            "hostname -A": "For host information",
+            "hostname -f": "For host information",
+            "which julia": "Optional: Checks for Julia installation",
+            "ulimit -c unlimited": "Enables core dumps",
+            "cat /proc/sys/kernel/core_pattern": "Provides core dump configuration",
+            "ls -lR /var/lib/apport": "Lists apport directory contents"
+        }
+    }
+}

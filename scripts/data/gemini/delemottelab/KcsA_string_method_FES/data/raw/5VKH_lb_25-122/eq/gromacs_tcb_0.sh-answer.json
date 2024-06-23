@@ -1,0 +1,54 @@
+{
+    "application": "Gromacs",
+    "details": {
+        "partition": "tcb",
+        "job_name": "5VKH_25-122_lb",
+        "wall_clock_time": "23:30:00",
+        "nodes": 1,
+        "mpi_processes_per_node": 8,
+        "gpu_nodes": true,
+        "gpus_per_node": 2,
+        "gpu_node_name": "gpu04",
+        "output_file": "job-%j.out",
+        "error_file": "job-%j.err",
+        "email_address": "sergio.perez.conesa@scilifelab.se",
+        "email_type": "FAIL",
+        "modules": [
+            "gromacs/2020.2"
+        ],
+        "simulation_time": "23",
+        "input_files": [
+            "NPTres${var}.mdp",
+            "opt.gro",
+            "topol.top",
+            "index.ndx",
+            "topol_pp.top",
+            "step${var}.cpt"
+        ],
+        "output_files": [
+            "topol.tpr",
+            "step${var}.gro",
+            "step${var}.cpt"
+        ],
+        "commands": [
+            "gmx grompp",
+            "gmx mdrun"
+        ],
+        "flags": [
+            "-maxwarn 2",
+            "-f",
+            "-c",
+            "-p",
+            "-o",
+            "-n",
+            "-pp",
+            "-r",
+            "-v",
+            "-maxh",
+            "-s",
+            "-pin on",
+            "-deffnm",
+            "-cpi"
+        ]
+    }
+}

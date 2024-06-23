@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"Slurm\",\n  \"details\": {\n    \"job_name\": \"qb_04vs_14400f-40w_naive-fine\",\n    \"num_tasks\": 41,\n    \"time\": \"160 minutes\",\n    \"output_file\": \"/ceph/grid/home/sg7710/diploma/distributed-rendering-diploma/logs/%A.sbatch.qb_04vs_14400f-40w_naive-fine.log\",\n    \"cpus_per_task\": 4,\n    \"mem_per_cpu\": \"2G\",\n    \"tasks_per_core\": 1,\n    \"wait_all_nodes\": true,\n    \"constraint\": \"zen3\",\n    \"dependency\": \"singleton\",\n    \"runtime\": {\n      \"master_server\": {\n        \"application\": \"Rust\",\n        \"executable\": \"master\",\n        \"arguments\": [\n          \"--host\",\n          \"0.0.0.0\",\n          \"--port\",\n          \"9940\",\n          \"--logFilePath\",\n          \"$JOB_LOG_DIRECTORY_PATH/$LOG_NAME.master.log\",\n          \"run-job\",\n          \"--resultsDirectory\",\n          \"$RESULTS_DIRECTORY\",\n          \"$JOB_FILE_PATH\"\n        ]\n      },\n      \"workers\": {\n        \"application\": \"Singularity\",\n        \"image\": \"$RUN_BASE_DIRECTORY/blender-3.6.0.sif\",\n        \"arguments\": [\n          \"$RUN_BASE_DIRECTORY/target/release/worker\",\n          \"--logFilePath\",\n          \"$JOB_LOG_DIRECTORY_PATH/$LOG_NAME.worker.$i.log\",\n          \"--masterServerHost\",\n          \"$SERVER_NODE_HOSTNAME\",\n          \"--masterServerPort\",\n          \"$SERVER_PORT\",\n          \"--baseDirectory\",\n          \"$RUN_BASE_DIRECTORY\",\n          \"--blenderBinary\",\n          \"/usr/bin/blender\"\n        ]\n      }\n    },\n    \"resources\": {\n      \"blender_project\": \"$RUN_BASE_DIRECTORY/blender-projects/04_very-simple\",\n      \"job_file\": \"$BLENDER_PROJECT_DIRECTORY/nsc-jobs/04_very-simple_measuring_14400f-40w_naive-fine.toml\",\n      \"results_directory\": \"$BLENDER_PROJECT_DIRECTORY/results\",\n      \"server_port\": 9940\n    }\n  }\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 957,
+        "candidates_token_count": 589,
+        "total_token_count": 1546,
+        "cached_content_token_count": 0
+    }
+}

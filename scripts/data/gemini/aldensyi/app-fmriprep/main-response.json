@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n\"application\": \"fmriprep\",\n\"software_requirements\": [\n\"bl2bids\",\n\"jq\",\n\"fmriprep\",\n\"singularity\",\n\"dipy\",\n\"freesurfer\"\n],\n\"resource_requirements\": {\n\"nodes\": \"1\",\n\"ppn\": \"16\",\n\"walltime\": \"9:00:00\",\n\"vmem\": \"28gb\",\n\"memory_gb\": \"14\",\n\"n_procs\": \"16\",\n\"omp_nthreads\": \"16\",\n\"nthreads\": \"16\"\n},\n\"file_requirements\": {\n\"config.json\": \"JSON file containing configuration parameters\",\n\"bids\": \"BIDS dataset directory\",\n\"license.txt\": \"File containing FreeSurfer license\"\n},\n\"output_directory\": \"out\",\n\"work_directory\": \"work\",\n\"templateflow_directory\": \"templateflow\",\n\"freesurfer_directory\": \"freesurfer\"\n}\n```\n\nThis JSON object provides details about the application, software requirements, resource requirements, file requirements, output directory, work directory, templateflow directory, and freesurfer directory. \n\n**Explanation of the script:**\n\n1. **Job Submission:** The script starts with PBS directives for resource allocation on a cluster. It requests 1 node with 16 cores, 9 hours of walltime, and 28 GB of memory.\n2. **Setup and Configuration:**\n    * It sets debugging flags and defines the working directory. \n    * It uses `jq` to extract configuration values from a JSON file (`config.json`) that includes information about the input data (T1w, T2w, fMRI, FreeSurfer) and desired output parameters.\n    * It sets up the FreeSurfer environment, including copying the FreeSurfer directory if provided.\n    * It configures `fmriprep` to use a specific plugin (`LegacyMultiProc`) for multi-processing.\n3. **Running fmriprep:**\n    * It uses `singularity` to run `fmriprep` within a containerized environment.\n    * It sets various `fmriprep` options:\n        * `--notrack`: Disables data tracking.\n        * `--resource-monitor`: Enables resource monitoring.\n        * `--md-only-boilerplate`: Generates only the basic metadata boilerplate.\n        * `--stop-on-first-crash`: Stops the analysis immediately upon encountering an error.\n        * `--use-plugin`: Uses the `multi_proc.yml` plugin.\n        * `--output-spaces`: Sets the desired output space for the analysis.\n        * `--cifti-output`: Sets the resolution for CIFTI output.\n        * `--omp-nthreads` and `--nthreads`: Sets the number of threads for multi-processing.\n        * `--force-bbr`: Forces the use of Boundary-Based Registration (BBR).\n        * `--use-syn-sdc warn`: Uses the `syn_sdc` method for spatial normalization with warnings.\n        * `--aroma`: Enables the AROMA artifact removal pipeline.\n        * `--skip-bids-validation`: Skips BIDS validation.\n        * `--fs-subjects-dir`: Sets the path to the FreeSurfer subjects directory.\n        * `--skull-strip-template`: Sets the skull-stripping template.\n        * `--work-dir`: Sets the working directory.\n        * `--fs-license-file`: Specifies the FreeSurfer license file.\n    * It runs `fmriprep` on the BIDS dataset and outputs the results to the `outdir` directory.\n4. **Post-processing:**\n    * It runs a script (`fmriprep2bl.sh`) to organize the output in a BrainLife-compatible format.\n    * It uses `singularity` to execute another container (`brainlife/dipy`) to create a parcellation JSON file.\n    * It cleans up temporary files and directories.\n\nThis script is a well-structured workflow for running fmriprep on a cluster, leveraging containers and specific configurations for efficiency and flexibility.\n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 1562,
+        "candidates_token_count": 921,
+        "total_token_count": 2483,
+        "cached_content_token_count": 0
+    }
+}

@@ -1,0 +1,49 @@
+{
+    "application": "Megatron-LM",
+    "details": {
+        "framework": "PyTorch",
+        "language": "Python",
+        "model": "SantaCoder 1B",
+        "hardware": {
+            "nodes": 3,
+            "gpus": 24,
+            "cpus": 192,
+            "gpu_type": "A100"
+        },
+        "resources": {
+            "partition": "gpu_p5",
+            "account": "cnw@a100",
+            "time_limit": "20:00:00",
+            "output_file": "%x-%j.out",
+            "environment_variables": {
+                "TRANSFORMERS_CACHE": "$six_ALL_CCFRWORK/models",
+                "HF_DATASETS_CACHE": "$six_ALL_CCFRWORK/datasets",
+                "HF_MODULES_CACHE": "$six_ALL_CCFRWORK/modules",
+                "HF_METRICS_CACHE": "$six_ALL_CCFRWORK/metrics",
+                "HF_DATASETS_OFFLINE": 1,
+                "TRANSFORMERS_OFFLINE": 1
+            }
+        },
+        "training_parameters": {
+            "training_steps": 150000,
+            "batch_size": 64,
+            "learning_rate": 0.0004,
+            "weight_decay": 0.1,
+            "optimizer": "AdamW",
+            "fp16": true,
+            "checkpoint_path": "/gpfswork/rech/ajs/commun/code/bigcode/finetune/santacoderlong64bs",
+            "data_paths": {
+                "train": "/gpfswork/rech/ajs/commun/code/bigcode/finetune/train",
+                "validation": "/gpfswork/rech/ajs/commun/code/bigcode/finetune/train"
+            },
+            "tokenizer_file": "/gpfswork/rech/ajs/commun/code/bigcode/bigcode-evaluation-harness/santacoder/tokenizer.json"
+        },
+        "distributed_training": {
+            "distributed_backend": "torch.distributed.run",
+            "world_size": 24,
+            "nproc_per_node": 8,
+            "master_addr": "$(scontrol show hostnames $SLURM_JOB_NODELIST | head -n 1)",
+            "master_port": 6001
+        }
+    }
+}

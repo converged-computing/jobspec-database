@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n\"application\": \"Slurm\",\n\"details\": {\n\"scheduler\": \"Slurm\",\n\"resources\": {\n\"nodes\": 32,\n\"walltime\": \"08:00\",\n\"cores_per_node\": 16,\n\"queue\": \"rhel7G\",\n\"modules\": \"ride_modules_cuda.sh\",\n\"output_files\": [\"albanyCDash.out\", \"albanyCDash.err\", \"modules_trilinos.out\", \"modules_albany.out\", \"nightly_log_rideAlbany.txt\", \"results_cuda\"],\n\"scripts\": [\"nightly_cron_script_trilinos_ride.sh\", \"nightly_cron_script_albany_ride.sh\", \"process_results_ctest.sh\", \"send_email_ctest.sh\", \"cronjob_hack.batch\"]\n},\n\"commands\": {\n\"cleaning\": [\"rm -rf repos\", \"rm -rf build\", \"rm -rf ctest_nightly.cmake.work\", \"rm -rf nightly_log*\", \"rm -rf results*\", \"rm -rf slurm*\", \"rm -rf modules*out\"],\n\"environment\": \"ulimit -c 0\",\n\"configuration\": [\"cat trilinos ctest_nightly.cmake.frag >& ctest_nightly.cmake\", \"cat albany ctest_nightly.cmake.frag >& ctest_nightly.cmake\"],\n\"execution\": [\"bash -c -l \\\"source ride_modules_cuda.sh >& modules_trilinos.out; bash nightly_cron_script_trilinos_ride.sh\\\"\", \"bash -c -l \\\"source ride_modules_cuda.sh >& modules_albany.out; bash nightly_cron_script_albany_ride.sh\\\"\", \"scp nightly_log_rideAlbany.txt ikalash@mockba.ca.sandia.gov:rideCDash/Albany\", \"bash process_results_ctest.sh\", \"scp results_cuda ikalash@mockba.ca.sandia.gov:rideCDash/Albany\", \"bash send_email_ctest.sh\"],\n\"resubmission\": \"bsub -b $X -q rhel7G < /ascldap/users/ikalash/nightlyCDash/cronjob_hack.batch\"\n}\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 2,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 471,
+        "candidates_token_count": 530,
+        "total_token_count": 1001,
+        "cached_content_token_count": 0
+    }
+}

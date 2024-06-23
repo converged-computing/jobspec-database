@@ -1,0 +1,42 @@
+{
+    "application": "SuperLU_dist",
+    "software": [
+        "cmake",
+        "PrgEnv-nvidia",
+        "cudatoolkit",
+        "cray-libsci",
+        "nvshmem/2.11.0",
+        "parmetis",
+        "metis",
+        "MPICH",
+        "BLAS",
+        "LAPACK",
+        "CUDA",
+        "NVSHMEM"
+    ],
+    "resource_requirements": {
+        "compute_nodes": "Perlmutter Slingshot 11 GPU compute nodes",
+        "qos": "regular_ss11",
+        "modules": [
+            "cmake",
+            "PrgEnv-nvidia",
+            "cudatoolkit",
+            "cray-libsci",
+            "nvshmem/2.11.0"
+        ],
+        "environment_variables": [
+            "LD_LIBRARY_PATH",
+            "NVSHMEM_HOME",
+            "MPIEXEC_NUMPROC_FLAG",
+            "MPIEXEC_EXECUTABLE",
+            "MPIEXEC_MAX_NUMPROCS",
+            "CUDA_HOME"
+        ],
+        "compiler_flags": [
+            "  -std=c11 -DPRNTlevel=1 -DPROFlevel=0 -DDEBUGlevel=0 -DAdd_ -I${NVSHMEM_HOME}/include",
+            "  -I${NVSHMEM_HOME}/include -I${MPICH_DIR}/include -ccbin=/opt/cray/pe/craype/2.7.30/bin/CC",
+            "-DCMAKE_CUDA_ARCHITECTURES=80"
+        ],
+        "make_flags": "-j16"
+    }
+}

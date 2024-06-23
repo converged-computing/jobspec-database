@@ -1,0 +1,47 @@
+{
+    "application": "SLURM",
+    "software": [
+        "Singularity",
+        "MONAI Core",
+        "PyTorch",
+        "NCCL",
+        "torch.distributed"
+    ],
+    "resources": {
+        "nodes": 1,
+        "tasks": 1,
+        "gpus": 8,
+        "cpus": 8,
+        "memory": "200gb",
+        "time": "2:00:00",
+        "partition": "hpg-ai",
+        "exclusive": true
+    },
+    "dependencies": {
+        "python": "singularity exec --nv --bind /blue/vendor-nvidia/hju/data/BTCV:/mnt /blue/vendor-nvidia/hju/monaicore0.9.1 python3",
+        "training_script": "/home/user/monai_uf_tutorials/btcv_modify/main.py"
+    },
+    "environment_variables": {
+        "NCCL_DEBUG": "INFO",
+        "TORCH_DISTRIBUTED_DEBUG": "DETAIL",
+        "NCCL_ASYNC_ERROR_HANDLING": "1"
+    },
+    "other_details": {
+        "training_command": [
+            "--distributed",
+            "--logdir=/mnt",
+            "--data_dir=/mnt",
+            "--json_list=dataset_0.json",
+            "--roi_x=96",
+            "--roi_y=96",
+            "--roi_z=96",
+            "--feature_size=48",
+            "--batch_size=1",
+            "--val_every=1",
+            "--max_epochs=3",
+            "--save_checkpoint",
+            "--noamp"
+        ],
+        "container_build_script": "build_container.sh"
+    }
+}

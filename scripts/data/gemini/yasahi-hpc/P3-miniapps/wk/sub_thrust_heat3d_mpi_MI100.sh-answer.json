@@ -1,0 +1,28 @@
+{
+    "application": "heat3d_mpi",
+    "details": {
+        "framework": "MPI",
+        "library": "thrust",
+        "resource_requirements": {
+            "scheduler": "SLURM",
+            "partition": "amdrome",
+            "node": "amd1",
+            "nodes": 1,
+            "tasks": 1,
+            "gpus_per_node": 1,
+            "cpus_per_task": 64,
+            "gpus_per_task": 1,
+            "walltime": "00:10:00",
+            "output": "./stdout_%J",
+            "error": "./stderr_%J"
+        },
+        "modules": {
+            "openmpi": "4.1.1"
+        },
+        "environment_variables": {
+            "OMP_NUM_THREADS": "${SLURM_CPUS_PER_TASK}",
+            "ROCR_VISIBLE_DEVICES": "1,2,3"
+        },
+        "command": "mpirun -n ${SLURM_NTASKS} ../build/miniapps/heat3d_mpi/thrust/heat3d_mpi --nx 512 --ny 512 --nz 512 --px 1 --py 1 --pz 1 --nbiter 1000 --freq_diag 0"
+    }
+}

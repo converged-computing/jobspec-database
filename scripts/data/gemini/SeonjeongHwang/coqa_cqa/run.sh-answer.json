@@ -1,0 +1,32 @@
+{
+    "application": "SLURM",
+    "details": {
+        "job_name": "CQA_v1.0",
+        "output_file": "CQA_v1.0.%j.out",
+        "queue": "A100-pci",
+        "runtime": "72:00:00",
+        "nodes": 1,
+        "tasks_per_node": 1,
+        "gpu_devices": 1,
+        "conda_environment": "chain",
+        "modules": [
+            "cuda/11.0",
+            "cuDNN/cuda/11.0/8.0.4.30"
+        ],
+        "python_script": "run_cqa.py",
+        "model_name": "bert-large-cased",
+        "domain": "wikipedia",
+        "epochs": 4,
+        "batch_size": 8,
+        "learning_rate": "1e-5",
+        "warmup_proportion": 0.0,
+        "num_turns": 2,
+        "output_dir": "output-cmp",
+        "result_dir": "4.8.1e-5.0.0-wikipedia",
+        "evaluation_scripts": [
+            "run_cqa_inference.py",
+            "tool/convert_coqa.py",
+            "tool/eval_coqa.py"
+        ]
+    }
+}

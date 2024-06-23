@@ -1,0 +1,54 @@
+{
+    "application": "LAMMPS",
+    "details": {
+        "version": "2022.5.04_130",
+        "container": "singularity",
+        "image": "/shared/apps/bin/lammps_2022.5.04_130.sif",
+        "gpu_platform": "ROCm 5.2.3",
+        "nodes": 1,
+        "tasks_per_node": 2,
+        "cpus_per_task": 8,
+        "memory": "64GB",
+        "gpus": 2,
+        "mpi_implementation": "OpenMPI",
+        "parallelism": "MPI",
+        "accelerator": "GPU",
+        "gpu_awareness": "CUDA-aware",
+        "neigh_method": "full",
+        "communication": "device",
+        "qeq_method": "full",
+        "newton_method": "on",
+        "output": "log files in /tmp/$USER/gpu2-$$ and copied to the working directory",
+        "simulations": [
+            {
+                "name": "LJ",
+                "steps": 600,
+                "input": "in.lj"
+            },
+            {
+                "name": "EAM",
+                "steps": 300,
+                "input": "in.eam"
+            },
+            {
+                "name": "TERSOFF",
+                "steps": 300,
+                "input": "in.tersoff",
+                "neigh_method": "half",
+                "binsize": 5.6
+            },
+            {
+                "name": "REAXFF",
+                "steps": 300,
+                "input": "in.reaxc.hns",
+                "neigh_method": "half"
+            },
+            {
+                "name": "SNAP",
+                "steps": 400,
+                "input": "in.snap.exaalt",
+                "neigh_method": "half"
+            }
+        ]
+    }
+}

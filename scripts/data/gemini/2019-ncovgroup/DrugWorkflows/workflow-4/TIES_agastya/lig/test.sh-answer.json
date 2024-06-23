@@ -1,0 +1,41 @@
+{
+    "application": "NAMD",
+    "details": {
+        "scheduler": "LSF",
+        "resources": {
+            "nodes": 13,
+            "cores": 91,
+            "threads": 1,
+            "memory": "Not specified",
+            "walltime": "5 minutes"
+        },
+        "modules": [
+            "spectrum-mpi",
+            "fftw"
+        ],
+        "libraries": {
+            "NAMD": "/gpfs/alpine/world-shared/bip115/NAMD_binaries/summit/NAMD_LATEST_Linux-POWER-MPI-smp-Summit/namd2"
+        },
+        "command_line_arguments": {
+            "jsrun": {
+                "bind": "rs",
+                "n": 6,
+                "p": 6,
+                "r": 6,
+                "g": 0,
+                "c": 7
+            },
+            "NAMD": {
+                "ppn": 7,
+                "pemap": "0-83:4,88-171:4",
+                "commap": "0,28,56,88,116,144",
+                "replicas": 6
+            },
+            "tclmain": [
+                "eq0-replicas.conf",
+                "eq1-replicas.conf",
+                "sim1-replicas.conf"
+            ]
+        }
+    }
+}

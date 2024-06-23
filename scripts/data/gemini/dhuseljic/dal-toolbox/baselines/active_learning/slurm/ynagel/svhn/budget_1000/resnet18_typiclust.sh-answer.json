@@ -1,0 +1,35 @@
+{
+    "application": "SLURM",
+    "details": {
+        "resource_requirements": {
+            "memory": "32gb",
+            "tasks": 1,
+            "cpus_per_task": 8,
+            "gpu": 1,
+            "partition": "main"
+        },
+        "job_name": "al_baselines",
+        "output_directory": "/mnt/stud/home/ynagel/logs/al_baselines",
+        "environment": {
+            "conda_environment": "/mnt/stud/home/ynagel/dal-toolbox/venv",
+            "working_directory": "~/dal-toolbox/experiments/active_learning"
+        },
+        "python_script": "active_learning.py",
+        "python_script_arguments": {
+            "model": "resnet18",
+            "model.optimizer.lr": "1e-2",
+            "model.optimizer.weight_decay": "5e-3",
+            "model.train_batch_size": 32,
+            "model.num_epochs": 250,
+            "dataset": "SVHN",
+            "dataset_path": "/mnt/stud/home/ynagel/data",
+            "al_strategy": "typiclust",
+            "al_strategy.subset_size": 30000,
+            "al_cycle.n_init": 100,
+            "al_cycle.acq_size": 100,
+            "al_cycle.n_acq": 9,
+            "random_seed": "$SLURM_ARRAY_TASK_ID",
+            "output_dir": "/mnt/stud/home/ynagel/dal-toolbox/results/al_baselines/SVHN/resnet18/typiclust/budget_1000/seed${random_seed}/"
+        }
+    }
+}

@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"LSF\",\n  \"details\": {\n    \"queue\": \"gpuv100\",\n    \"job_name\": \"tune_mmd\",\n    \"job_array\": \"1-24\",\n    \"cores\": 1,\n    \"gpu\": \"1 (exclusive_process)\",\n    \"walltime\": \"5:00\",\n    \"memory\": \"5GB\",\n    \"environment\": {\n      \"PYTHONHOME\": \"unset\",\n      \"PYTHONPATH\": \"unset\",\n      \"conda_env\": \"miniconda3\",\n      \"cuda_version\": \"11.6\",\n      \"cuda_samples_path\": \"/appl/cuda/11.6.0/samples/bin/x86_64/linux/release\"\n    },\n    \"scripts\": [\n      \"src/train_mmd.py\",\n      \"src/tune_bm.py\"\n    ],\n    \"parameters\": {\n      \"seed\": [0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2],\n      \"bm\": [1, 10, 20, 30, 40, 60, 80, 100, 1, 10, 20, 30, 40, 60, 80, 100, 1, 10, 20, 30, 40, 60, 80, 100],\n      \"conditional\": \"false\",\n      \"e\": 0.2,\n      \"n\": 0.2,\n      \"bx\": 1,\n      \"bw\": 2,\n      \"bz\": 1,\n      \"by\": 1\n    }\n  }\n}\n```\n\n**Explanation:**\n\n* **Application:** The script is written for LSF (Load Sharing Facility), a batch system for running jobs on a cluster.\n* **Details:**\n    * **Queue:** The script requests to run on the \"gpuv100\" queue, indicating it requires a GPU with the NVIDIA v100 architecture.\n    * **Job Name:** The job is named \"tune_mmd\" and is an array job with 24 tasks.\n    * **Cores:**  The script requests 1 core for each task.\n    * **GPU:** It requests 1 GPU with \"exclusive_process\" mode, meaning the GPU is dedicated solely to this job.\n    * **Walltime:** The maximum runtime allowed for each task is 5 hours.\n    * **Memory:** Each task requests 5GB of system memory.\n    * **Environment:**  The script unsets `PYTHONHOME` and `PYTHONPATH` variables. It then activates a Miniconda3 environment and loads the CUDA 11.6 module. Finally, it uses a path to the CUDA 11.6.0 sample binaries.\n    * **Scripts:** The script runs two Python scripts: `train_mmd.py` and `tune_bm.py`.\n    * **Parameters:** The scripts receive parameters that vary depending on the task within the job array. These parameters include `seed`, `bm`, `conditional`, `e`, `n`, `bx`, `bw`, `bz`, and `by`. The `seed` and `bm` parameters are arrays defining different values for each task.\n\nThis script leverages LSF and GPU resources to run multiple experiments (defined by the job array) with different parameters. The experiments involve running two Python scripts: `train_mmd.py` and `tune_bm.py`. \n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 791,
+        "candidates_token_count": 863,
+        "total_token_count": 1654,
+        "cached_content_token_count": 0
+    }
+}

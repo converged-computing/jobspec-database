@@ -1,0 +1,58 @@
+{
+    "application": "DeepSpeed",
+    "details": {
+        "framework": "PyTorch",
+        "model": "GPT-2",
+        "deepspeed_config": "ds_config.json",
+        "hardware": {
+            "compute": "AMD ROCm 5.4.0",
+            "interconnect": "NCCL",
+            "nodes": 4,
+            "gpus_per_node": 8,
+            "ranks_per_node": 8,
+            "gpus_per_rank": 1
+        },
+        "slurm": {
+            "partition": "batch",
+            "account": "STF218",
+            "job_name": "gpt_megatron_4N",
+            "time": "00:20:00"
+        },
+        "environment": {
+            "conda_environment": "/lustre/orion/world-shared/stf218/sajal/TORCH2/env-py310-rccl-megatron-new",
+            "LD_PRELOAD": "/usr/lib64/libcrypto.so /usr/lib64/libssh.so.4 /usr/lib64/libssl.so.1.1",
+            "TRANSFORMERS_OFFLINE": "1",
+            "HF_DATASETS_OFFLINE": "1",
+            "NCCL_DEBUG": "INFO",
+            "TORCH_EXTENSIONS_DIR": "$PWD/deepspeed",
+            "HF_HOME": "$PWD/hfdata",
+            "OMP_NUM_THREADS": "1",
+            "CUDA_DEVICE_MAX_CONNECTIONS": "1",
+            "CUDA_VISIBLE_DEVICES": "0,1,2,3,4,5,6,7",
+            "MASTER_ADDR": "dynamically assigned"
+        },
+        "training_parameters": {
+            "tensor_model_parallel_size": 8,
+            "pipeline_model_parallel_size": 2,
+            "num_layers": 24,
+            "hidden_size": 2064,
+            "num_attention_heads": 24,
+            "seq_length": 2048,
+            "max_position_embeddings": 2048,
+            "micro_batch_size": 2,
+            "lr": 0.00015,
+            "train_iters": 1000,
+            "lr_decay_iters": 50,
+            "lr_decay_style": "cosine",
+            "lr_warmup_fraction": 0.01,
+            "log_interval": 10,
+            "save_interval": 500,
+            "eval_interval": 100,
+            "eval_iters": 10,
+            "checkpoint_path": "checkpoints/gpt2_345m",
+            "vocab_file": "gpt2-vocab.json",
+            "merge_file": "gpt2-merges.txt",
+            "data_path": "/lustre/orion/world-shared/stf218/sajal/mtds/gptdata/gpttext_article_document"
+        }
+    }
+}

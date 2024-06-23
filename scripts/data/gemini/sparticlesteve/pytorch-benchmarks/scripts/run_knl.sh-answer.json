@@ -1,0 +1,28 @@
+{
+    "application": "PyTorch",
+    "details": {
+        "version": "1.7.1",
+        "backend": "mpi",
+        "models": "alexnet resnet50 lstm cnn3d transformer",
+        "clean": false,
+        "environment_variables": {
+            "OMP_NUM_THREADS": "68",
+            "KMP_AFFINITY": "granularity=fine,compact,1,0",
+            "KMP_BLOCKTIME": "1",
+            "BENCHMARK_RESULTS_PATH": "$SCRATCH/pytorch-benchmarks/results/knl-1.7.1-mpi-n${SLURM_JOB_NUM_NODES}"
+        },
+        "modules": "pytorch/$version",
+        "script_execution": {
+            "train": "python train.py configs/${model}.yaml -d $backend --output-dir $BENCHMARK_RESULTS_PATH/$model",
+            "parse": "python parse.py $BENCHMARK_RESULTS_PATH -o $BENCHMARK_RESULTS_PATH/results.txt"
+        },
+        "slurm_settings": {
+            "nodes": "1",
+            "partition": "regular",
+            "time": "4:00:00",
+            "job_name": "pytorch-bm-knl",
+            "output_file": "logs/%x-%j.out",
+            "constraint": "knl"
+        }
+    }
+}

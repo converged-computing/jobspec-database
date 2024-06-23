@@ -1,0 +1,28 @@
+{
+    "application": "TensorFlow",
+    "details": {
+        "resource_requirements": {
+            "partition": "gpu",
+            "nodes": "2",
+            "ppn": "1",
+            "gpus": "4",
+            "walltime": "0:10:00",
+            "account": "lpt2_pilot_2018",
+            "job_name": "tf_workers"
+        },
+        "software_requirements": {
+            "OpenMPI": "loaded",
+            "conda_environment": "py27-tf-source",
+            "CUDA": "9.1.85",
+            "NCCL": "2.1.15-1+cuda9.1_x86_64"
+        },
+        "script_actions": {
+            "change_directory": "$VSC_DATA/tf-distribution-strategy/multi-node/workers",
+            "source_CLUSTER_SPEC": "export_CLUSTER_SPEC.sh",
+            "launch_workers": [
+                "mpirun -np 1 --map-by node python worker_0.py",
+                "mpirun -np 1 --map-by node python worker_1.py"
+            ]
+        }
+    }
+}

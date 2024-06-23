@@ -1,0 +1,47 @@
+{
+    "application": "Slurm",
+    "details": {
+        "resource_requirements": {
+            "wallclock_time": "${sbatchTime}",
+            "tasks": "${sbatchNTasks}",
+            "cores_per_task": "${sbatchCpusPerTask}",
+            "memory": "${sbatchMemory}",
+            "output_filename": "${sbatchOutputFilename}",
+            "mail_alerts": "${sbatchMailAlerts}",
+            "mail_to": "${sbatchMailTo}",
+            "job_name": "${sbatchJobName}",
+            "queue": "${sbatchQueue}",
+            "ssd_node": "${sbatchSSD}",
+            "scratch_storage": "${sbatchScratchStorage}"
+        },
+        "software_requirements": {
+            "docker": true,
+            "bzip2": true,
+            "tar": true
+        },
+        "data_transfer": {
+            "source": "Lustre",
+            "destination": "Node-local scratch directory",
+            "data_files": [
+                "${lusRelDatPath}",
+                "${lusRelDsnPath}",
+                "${lusRelImgPath}"
+            ],
+            "output_files": [
+                "node_data.tar.bz2"
+            ]
+        },
+        "processing_steps": [
+            "Create node-local scratch directory",
+            "Copy GTEx data to scratch directory",
+            "Copy GTEx design matrix to scratch directory",
+            "Uncompress data and design matrix",
+            "Copy Docker image to scratch directory",
+            "Load Docker image",
+            "Run Docker image with GTEx data",
+            "Remove Docker image",
+            "Archive, compress, and transfer output to Lustre",
+            "Clean node-local scratch directory"
+        ]
+    }
+}

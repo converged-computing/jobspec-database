@@ -1,0 +1,41 @@
+{
+    "application": "GCHP",
+    "details": {
+        "platform": "LSF",
+        "queue": "rvmartin",
+        "nodes": 720,
+        "walltime": "36:00",
+        "memory": "300GB",
+        "docker_image": "registry.gsc.wustl.edu/sleong/base-engineering",
+        "job_name": "C360",
+        "group": "/liam.bindle/C360",
+        "email": "liam.bindle@wustl.edu",
+        "output_file": "lsf-%J.txt",
+        "environment_variables": {
+            "TMPDIR": "$__LSF_JOB_TMPDIR__",
+            "OMP_NUM_THREADS": "1",
+            "I_MPI_ADJUST_GATHERV": "3",
+            "I_MPI_ADJUST_ALLREDUCE": "12",
+            "I_MPI_DAPL_UD": "enable",
+            "I_MPI_SHM_HEAP_VSIZE": "512"
+        },
+        "runtime_environment": {
+            "ulimit": {
+                "coredumpsize": 0,
+                "memorylocked": "unlimited",
+                "maxproc": 50000,
+                "vmemoryuse": "unlimited",
+                "stacksize": "unlimited"
+            }
+        },
+        "restart_mechanism": {
+            "semaphores": {
+                "CONTINUE_SEM": "continue from latest restart file",
+                "REQUEUE_SEM": "requeue job after finish"
+            },
+            "restart_file": "gcchem_internal_checkpoint*.nc4"
+        },
+        "output_logging": "<SSD>_<RTS>.log",
+        "mpi_implementation": "mpirun"
+    }
+}

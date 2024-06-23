@@ -1,0 +1,30 @@
+{
+    "application": "Slurm",
+    "details": {
+        "job_name": "restricted_benchopt_run",
+        "tasks": 1,
+        "tasks_per_node": 1,
+        "gpus": 1,
+        "cpus_per_task": 10,
+        "time": "02:00:00",
+        "output_file": "%x_%A_%a.out",
+        "error_file": "%x_%A_%a.out",
+        "qos": "qos_gpu-t3",
+        "distribution": "block:block",
+        "hint": "nomultithread",
+        "array_range": "0-9",
+        "modules": [
+            "pytorch-gpu/py3/1.10.1"
+        ],
+        "python_version": "py3",
+        "software": [
+            "benchopt"
+        ],
+        "environment_variables": {
+            "PYTHONUSERBASE": "$WORK/.local_torch",
+            "PATH": "$WORK/.local_torch/bin:$PATH"
+        },
+        "working_directory": "$WORK/benchmark_resnet_classif",
+        "command": "benchopt run ."
+    }
+}

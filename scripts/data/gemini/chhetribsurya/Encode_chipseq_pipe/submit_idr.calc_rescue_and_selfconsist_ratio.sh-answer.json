@@ -1,0 +1,48 @@
+{
+    "application": "Bash",
+    "details": {
+        "dependencies": [
+            "Idr.calc_rescue_and_selfconsist_ratio.sh"
+        ],
+        "resources": {
+            "files": [
+                "rep1_lib.txt",
+                "rep2_lib.txt",
+                "control1_lib.txt",
+                "control2_lib.txt",
+                "ALL_TF_FILE_NAME",
+                "$REP1_FILE_NAME",
+                "$REP2_FILE_NAME",
+                "$CONTROL1_FILE_NAME",
+                "$CONTROL2_FILE_NAME"
+            ],
+            "directories": [
+                "/gpfs/gpfs1/home/schhetri/python",
+                "/gpfs/gpfs1/home/snewberry/interrupt/encode/spp_and_idr/idr_testing",
+                "$BASE_DIR/IDR_${R1}_${R2}"
+            ]
+        },
+        "environment variables": [
+            "BASE_DIR",
+            "RUN_PATH",
+            "RATIO_OUTPUT_DIR"
+        ],
+        "commands": [
+            "source /gpfs/gpfs1/home/schhetri/python/anaconda_python_version3.sh",
+            "source activate python3",
+            "mkdir $RATIO_OUTPUT_DIR",
+            "readarray LIB_REP1 < $REP1_FILE_NAME",
+            "readarray LIB_REP2 < $REP2_FILE_NAME",
+            "readarray LIB_CONTROL1 < $CONTROL1_FILE_NAME",
+            "readarray LIB_CONTROL2 < $CONTROL2_FILE_NAME",
+            "readarray ALL_LIB < $ALL_TF_FILE_NAME",
+            "echo ${LIB_REP1[@]} | tr \" \" \"\\n\" | tr \"\\n\" \" \"",
+            "echo ${LIB_REP2[@]} | tr \" \" \"\\n\" | tr \"\\n\" \" \"",
+            "echo ${LIB_CONTROL1[@]} | tr \" \" \"\\n\" | tr \"\\n\" \" \"",
+            "echo ${LIB_CONTROL2[@]} | tr \" \" \"\\n\" | tr \"\\n\" \" \"",
+            "echo ${ALL_LIB[@]} | tr \" \" \"\\n\" | sort -u | tr \"\\n\" \" \"",
+            "$RUN_PATH/Idr.calc_rescue_and_selfconsist_ratio.sh $Nt_IDR_THRESHOLD_FILE $Np_IDR_THRESHOLD_FILE $N1_IDR_THRESHOLD_FILE $N2_IDR_THRESHOLD_FILE $IDR_DIR/${R1}_${R2}_rescue_and_self_consistency_ratio.txt"
+        ],
+        "script purpose": "This script appears to process IDR (Irreproducible Discovery Rate) results from chromatin immunoprecipitation sequencing (ChIP-seq) experiments."
+    }
+}

@@ -1,0 +1,35 @@
+{
+    "application": "Slurm",
+    "details": {
+        "software": [
+            "Python",
+            "Keras",
+            "Open MPI",
+            "Slurm"
+        ],
+        "resources": {
+            "nodes": "1 or more",
+            "libraries": {
+                "Keras": "pre-installed or specified",
+                "Open MPI": "pre-installed or specified"
+            },
+            "files": {
+                "keras_timetest.py": "present in the current working directory",
+                "ImageNet.Keras.out.%j": "output file",
+                "ImageNet.Keras.err.%j": "error file"
+            },
+            "environment variables": {
+                "PYTHONHOME": "set to the python installation directory",
+                "train_batch": "set to the batch size"
+            }
+        },
+        "execution": {
+            "commands": [
+                "mpirun --map-by node -n $nodes --mca opal_event_include poll $PYTHONHOME/bin/python $PWD/keras_timetest.py --train_batch $train_batch --iterations 500 --network \"AlexNet\"",
+                "mpirun --map-by node -n $nodes --mca opal_event_include poll $PYTHONHOME/bin/python $PWD/keras_timetest.py --train_batch $train_batch --iterations 500 --network \"InceptionV3\"",
+                "mpirun --map-by node -n $nodes --mca opal_event_include poll $PYTHONHOME/bin/python $PWD/keras_timetest.py --train_batch $train_batch --iterations 500 --network \"ResNet50\"",
+                "mpirun --map-by node -n $nodes --mca opal_event_include poll $PYTHONHOME/bin/python $PWD/keras_timetest.py --train_batch $train_batch --iterations 500 --network \"GoogLeNet\""
+            ]
+        }
+    }
+}

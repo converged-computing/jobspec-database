@@ -1,0 +1,34 @@
+{
+    "application": "Ray",
+    "details": {
+        "software": [
+            "PrgEnv-gcc/4.8.5",
+            "Ray",
+            "Singularity"
+        ],
+        "resource_requirements": {
+            "nodes": 4,
+            "gpu": 1,
+            "memory": "not specified",
+            "time": "72 hours",
+            "queue": "slacgpu",
+            "project": "cryoem",
+            "environment": {
+                "MODULEPATH": "/usr/share/Modules/modulefiles:/opt/modulefiles:/afs/slac/package/singularity/modulefiles",
+                "ip_head": "dynamically determined",
+                "redis_password": "dynamically generated"
+            }
+        },
+        "script_description": "The script starts a Ray cluster with a head node and worker nodes distributed across multiple machines using LSF. It then runs a Singularity container containing a pipeline script on the head node, utilizing GPUs and binding local directories to the container.",
+        "data_access": {
+            "binds": [
+                "/gpfs",
+                "/scratch",
+                "/gpfs/slac/cryo/fs1/u/nmiolane/data:/data",
+                "/gpfs/slac/cryo/fs1/u/nmiolane:/home",
+                "/gpfs/slac/cryo/fs1/u/nmiolane/results:/results"
+            ]
+        },
+        "command": "singularity run --bind /gpfs,/scratch --bind /gpfs/slac/cryo/fs1/u/nmiolane/data:/data --bind /gpfs/slac/cryo/fs1/u/nmiolane:/home --bind /gpfs/slac/cryo/fs1/u/nmiolane/results:/results --nv ../simgs/pipeline.simg"
+    }
+}

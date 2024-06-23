@@ -1,0 +1,75 @@
+{
+    "application": "SLURM",
+    "details": {
+        "job_name": "jobhafsgraph",
+        "account": "hwrfv3",
+        "qos": "batch",
+        "nodes": 10,
+        "tasks_per_node": 12,
+        "cpus_per_task": 1,
+        "time": "01:00:00",
+        "partition": "xjet",
+        "output": "jobhafsgraph.log.%j",
+        "error": "jobhafsgraph.log.%j",
+        "mem": 0,
+        "exclusive": true,
+        "working_directory": ".",
+        "environment_variables": {
+            "HOMEgraph": "/mnt/lfs4/HFIP/hwrfv3/${USER}/hafs_graphics",
+            "USHgraph": "/mnt/lfs4/HFIP/hwrfv3/${USER}/hafs_graphics/ush",
+            "DRIVERSH": "/mnt/lfs4/HFIP/hwrfv3/${USER}/hafs_graphics/ush/driverAtmos.sh",
+            "COMhafs": "/hafs/com/${YMDH}/${STORMID}",
+            "WORKgraph": "/hafs/com/${YMDH}/${STORMID}/../../../${YMDH}/${STORMID}/emc_graphics",
+            "COMgraph": "/hafs/com/${YMDH}/${STORMID}/emc_graphics",
+            "cartopyDataDir": "/mnt/lfs4/HFIP/hwrfv3/local/share/cartopy",
+            "TOTAL_TASKS": "${TOTAL_TASKS:-${SLURM_NTASKS:-480}}",
+            "NCTSK": "${NCTSK:-10}",
+            "NCNODE": "${NCNODE:-10}",
+            "OMP_NUM_THREADS": "${OMP_NUM_THREADS:-1}"
+        },
+        "scripts": [
+            "graph_pre_job.sh.inc",
+            "graph_runcmd.sh.inc",
+            "plot_mslp_wind10m.py",
+            "plot_tsfc_mslp_wind10m.py",
+            "plot_t2m_mslp_wind10m.py",
+            "plot_heatflux_wind10m.py",
+            "plot_shtflux_wind10m.py",
+            "plot_lhtflux_wind10m.py",
+            "plot_precip_mslp_thk.py",
+            "plot_reflectivity.py",
+            "plot_goes_ir13.py",
+            "plot_goes_wv9.py",
+            "plot_ssmisf17_mw37ghz.py",
+            "plot_ssmisf17_mw91ghz.py",
+            "plot_850mb_200mb_vws.py",
+            "plot_rhmidlev_hgt_wind.py",
+            "plot_temp_hgt_wind.py",
+            "plot_rh_hgt_wind.py",
+            "plot_vort_hgt_wind.py",
+            "plot_streamline_wind.py",
+            "plot_tempanomaly_hgt_wind.py"
+        ],
+        "commands": [
+            "date",
+            "mkdir -p ${WORKgraph}",
+            "cd ${WORKgraph}",
+            "rm -f $cmdfile",
+            "touch $cmdfile",
+            "chmod u+x ./$cmdfile",
+            "${APRUNC} ${MPISERIAL} -m ./$cmdfile",
+            "date",
+            "echo 'job done'"
+        ],
+        "other_software": [
+            "SLURM",
+            "APRUN",
+            "MPISERIAL"
+        ],
+        "resource_requirements": {
+            "memory": "0",
+            "processors": 480,
+            "disk_space": "unknown"
+        }
+    }
+}

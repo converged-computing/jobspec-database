@@ -1,0 +1,47 @@
+{
+    "application": "IPython",
+    "software": [
+        "IPython",
+        "mpi4py",
+        "valgrind",
+        "Snudda"
+    ],
+    "resources": {
+        "partition": "main",
+        "nodes": 1,
+        "tasks": 128,
+        "cpus_per_task": 2,
+        "memory_per_cpu": "930M",
+        "time": "0:59:00",
+        "account": "naiss2023-5-231"
+    },
+    "environment_variables": {
+        "OMP_STACKSIZE": "128G",
+        "IPNWORKERS": "40",
+        "IPYTHONDIR": "/cfs/klemming/scratch/${USER:0:1}/$USER/.ipython",
+        "IPYTHON_PROFILE": "default",
+        "FI_CXI_DEFAULT_VNI": "Randomly generated value",
+        "CONTROLLERIP": "Read from controller_ip.txt"
+    },
+    "files": [
+        "controller_ip.txt",
+        "Dardel_runSnudda_twopop_separated.sh",
+        "../../ipcontroller_new.sh",
+        "snudda_env/bin/activate"
+    ],
+    "directories": [
+        "/cfs/klemming/scratch/${USER:0:1}/$USER/.ipython",
+        "log",
+        "Snudda"
+    ],
+    "commands": [
+        "module load snic-env",
+        "ulimit -s unlimited",
+        "srun -n 1 -N 1 -c 2 --exact --overlap --mem=0 ./../../ipcontroller_new.sh &",
+        "sleep 60",
+        "srun -n ${IPNWORKERS} -c 2 -N ${SLURM_JOB_NUM_NODES} --exact --overlap --mem=0 ipengine --location=${CONTROLLERIP} --profile=${IPYTHON_PROFILE} --mpi --ipython-dir=${IPYTHONDIR}  --timeout=30.0 c.EngineFactory.max_heartbeat_misses=10  c.MPI.use='mpi4py' 1> ipe_${SLURM_JOBID}.out 2> ipe_${SLURM_JOBID}.err &",
+        "sleep 30",
+        "srun -n 1 -N 1 --exact --overlap --mem=0 ./Dardel_runSnudda_twopop_separated.sh",
+        "wait"
+    ]
+}

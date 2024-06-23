@@ -1,0 +1,26 @@
+{
+    "application": "SLURM",
+    "details": {
+        "job_name": "3node",
+        "nodes": 3,
+        "tasks_per_node": 3,
+        "cpus_per_task": 42,
+        "memory_per_cpu": "3850M",
+        "gpus": "3 (ampere_a100)",
+        "partition": "gpu",
+        "time": "00:30:00",
+        "account": "su007-hf-gpu",
+        "modules": [
+            "GCC/10.2.0",
+            "CUDA/11.1.1",
+            "OpenMPI/4.0.5",
+            "PyTorch/1.9.0"
+        ],
+        "python_script": "PGCN.py",
+        "environment_variables": {
+            "MASTER_PORT": "10000 + (last 4 digits of SLURM_JOBID)",
+            "WORLD_SIZE": "number of nodes * tasks per node",
+            "MASTER_ADDR": "first node name from SLURM_JOB_NODELIST"
+        }
+    }
+}

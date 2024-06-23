@@ -1,0 +1,49 @@
+{
+    "application": "NekRS",
+    "software_requirements": [
+        "cmake",
+        "gcc",
+        "cuda",
+        "openmpi",
+        "nekrs",
+        "occa"
+    ],
+    "resource_requirements": [
+        "gpu:a100-sxm4-40gb:8",
+        "ntasks-per-node:8",
+        "cpus-per-task:32",
+        "unlimited stack size",
+        "numactl"
+    ],
+    "configuration": {
+        "ompi": {
+            "pml": "ucx",
+            "btl": "vader,tcp,openib,smcuda",
+            "osc": "ucx",
+            "io": "romio321"
+        },
+        "ucx": {
+            "tls": "rc,sm,cuda",
+            "rndv_scheme": "put_zcopy",
+            "rndv_thresh": 1024
+        },
+        "nekrs": {
+            "gpu_mpi": 1
+        },
+        "romio": {
+            "hints": [
+                "romio_no_indep_rw true",
+                "romio_cb_write enable",
+                "romio_ds_write enable",
+                "romio_cb_read enable",
+                "romio_ds_read enable",
+                "cb_buffer_size 16777216",
+                "cb_config_list *:1"
+            ]
+        },
+        "occa": {
+            "cxx": "g++",
+            "cxxflags": "-O2 -ftree-vectorize -funroll-loops -march=native -mtune=native"
+        }
+    }
+}

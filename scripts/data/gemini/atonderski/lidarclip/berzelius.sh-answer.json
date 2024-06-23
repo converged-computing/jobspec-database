@@ -1,0 +1,26 @@
+{
+    "application": "SLURM",
+    "details": {
+        "nodes": 1,
+        "gpus": 1,
+        "time": "3-00:00:00",
+        "output": "/proj/nlp4adas/users/%u/logs/%j.out",
+        "account": "berzelius-2022-117",
+        "container": "/proj/nlp4adas/containers/lidar-clippin.sif",
+        "command": "python3 -u train.py --data-dir=/my_data --checkpoint-save-dir=/checkpoints $@ ",
+        "environment": {
+            "MASTER_PORT": "$RANDOM",
+            "PYTHONPATH": "/workspace/lidar-clippin/"
+        },
+        "binds": [
+            "/proj/nlp4adas/users/$USER:/workspace",
+            "/proj/nlp4adas/checkpoints:/checkpoints",
+            "/proj/nlp4adas/features:/features",
+            "/proj/nlp4adas/datasets/once:/my_data",
+            "/proj/nlp4adas/users/$USER/lidar-clippin/SST/mmdet3d/ops/sst/sst_ops.py:/sst/mmdet3d/ops/sst/sst_ops.py",
+            "/proj/nlp4adas/users/$USER/lidar-clippin/SST/mmdet3d/models/backbones/sst_v1.py:/sst/mmdet3d/models/backbones/sst_v1.py",
+            "/proj/nlp4adas/users/$USER/lidar-clippin/SST/mmdet3d/models/backbones/sst_v2.py:/sst/mmdet3d/models/backbones/sst_v2.py",
+            "/proj/nlp4adas/users/$USER/lidar-clippin/SST/mmdet3d/models/voxel_encoders/utils.py:/sst/mmdet3d/models/voxel_encoders/utils.py"
+        ]
+    }
+}

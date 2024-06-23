@@ -1,0 +1,28 @@
+{
+    "application": "SLURM",
+    "details": {
+        "memory": "32GB",
+        "time": "1 hour",
+        "output_logs": "logs/%A_%a_%x.txt",
+        "job_name": "pkl_env",
+        "array_tasks": [
+            0,
+            1,
+            2,
+            3,
+            4
+        ],
+        "gpu": "1 RTX8000 GPU",
+        "nodelist": "all nodes with 'gr' in the name",
+        "cpus_per_task": 1,
+        "singularity_image": "/scratch/work/public/singularity/cuda11.3.0-cudnn8-devel-ubuntu20.04.sif",
+        "singularity_overlay": "/scratch/nv2099/images/overlay-50G-10M.ext3:ro",
+        "conda_environment": "spiel",
+        "python_script": "/home/nv2099/projects/mcs/pkl_obs/env.py",
+        "script_arguments": {
+            "model": "rnn",
+            "train_traj": "trajectories/traj-${num}-*.pkl",
+            "label": "${num}"
+        }
+    }
+}

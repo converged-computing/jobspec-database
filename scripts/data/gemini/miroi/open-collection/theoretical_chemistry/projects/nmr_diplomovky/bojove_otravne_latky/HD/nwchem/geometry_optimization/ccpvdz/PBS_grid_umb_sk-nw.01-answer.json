@@ -1,0 +1,45 @@
+{
+    "application": "NWChem",
+    "software": [
+        "Intel Fortran/C/C++ commercial compilers 2013",
+        "MKL library 2013",
+        "PGI compilers",
+        "OpenMPI-Intel 4.0.1",
+        "python",
+        "mpif90",
+        "mpicc",
+        "mpirun"
+    ],
+    "resources": [
+        "PBS (Portable Batch System)",
+        "Intel 2013 compilers",
+        "Intel MKL 2013 math library",
+        "libnuma",
+        "OpenMPI-Intel local installation",
+        "local scratch directory (/mnt/local/$USER/$PBS_JOBID)"
+    ],
+    "environment_variables": [
+        "LD_LIBRARY_PATH",
+        "PATH",
+        "PMIX_MCA_gds",
+        "NWCHEM_EXECUTABLE",
+        "TMPDIR",
+        "OMP_NUM_THREADS",
+        "MKL_DYNAMIC",
+        "OMP_DYNAMIC",
+        "MKL_NUM_THREADS"
+    ],
+    "commands": [
+        "source /mnt/apps/intel/bin/compilervars.sh intel64",
+        "source /mnt/apps/intel/composer_xe_2013_sp1.1.106/mkl/bin/mklvars.sh intel64",
+        "source /mnt/apps/pgi/environment.sh",
+        "export LD_LIBRARY_PATH=/home/milias/bin/lib64_libnuma:$LD_LIBRARY_PATH",
+        "export PATH=/home/milias/bin/openmpi-4.0.1_suites/openmpi-4.0.1_Intel14_GNU6.3g++/bin:$PATH",
+        "export LD_LIBRARY_PATH=/home/milias/bin/openmpi-4.0.1_suites/openmpi-4.0.1_Intel14_GNU6.3g++/lib:$LD_LIBRARY_PATH",
+        "export PMIX_MCA_gds=hash",
+        "export NWCHEM_EXECUTABLE=/home/milias/Work/qch/software/nwchem_suite/nwchem_master/bin/LINUX64/nwchem",
+        "mkdir $TMPDIR",
+        "mpirun -np $NPROCS_PBS  $NWCHEM_EXECUTABLE  $PBS_O_WORKDIR/$project.nw  > $PBS_O_WORKDIR/$project.out",
+        "cp $TMPDIR/HD_geom_ccpvdz*   $PBS_O_WORKDIR/."
+    ]
+}

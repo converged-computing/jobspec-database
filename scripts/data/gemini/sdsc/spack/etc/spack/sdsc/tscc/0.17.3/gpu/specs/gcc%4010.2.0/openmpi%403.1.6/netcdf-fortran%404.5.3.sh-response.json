@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"spack\",\n  \"details\": {\n    \"scheduler\": \"slurm\",\n    \"spack_version\": \"0.17.3\",\n    \"spack_instance\": \"gpu\",\n    \"spack_instance_dir\": \"/cm/shared/apps/spack/0.17.3/gpu\",\n    \"package\": \"netcdf-fortran@4.5.3\",\n    \"compiler\": \"gcc@10.2.0\",\n    \"variants\": \"~doc +pic +shared\",\n    \"dependencies\": \"^netcdf-c@4.8.1/$(spack find --format '{hash:7}' netcdf-c@4.8.1 % ${SPACK_COMPILER} +mpi ^openmpi@3.1.6)\",\n    \"spec\": \"${SPACK_PACKAGE} % ${SPACK_COMPILER} ${SPACK_VARIANTS} ${SPACK_DEPENDENCIES}\",\n    \"job_name\": \"netcdf-fortran@4.5.3\",\n    \"account\": \"sys200\",\n    \"partition\": \"hotel-gpu\",\n    \"nodes\": 1,\n    \"tasks_per_node\": 1,\n    \"cpus_per_task\": 8,\n    \"gpu\": \"gpu1\",\n    \"time\": \"00:30:00\",\n    \"output\": \"%x.o%j.%N\"\n  }\n}\n```\n\n**Explanation of the script and its requirements:**\n\n* **Application:** This script uses **Spack** to manage and install software packages. Spack is a package manager for scientific software, enabling users to install and manage complex software stacks across different platforms and architectures. \n* **Scheduler:** The script utilizes **Slurm** (Simple Linux Utility for Resource Management) as the job scheduler. Slurm is a common scheduler for HPC systems, managing resource allocation and job execution.\n* **Spack Setup:**\n    * It defines a Spack instance directory (`SPACK_INSTANCE_DIR`) and configures Spack using environment variables.\n    * The script specifies the Spack package to be installed (`SPACK_PACKAGE`), the compiler (`SPACK_COMPILER`), variants (`SPACK_VARIANTS`), and dependencies (`SPACK_DEPENDENCIES`).\n    * It utilizes `spack spec` to concretize the package specification and `spack install` to install the package. \n* **Job Execution:**\n    * The script uses Slurm commands (`sbatch`, `scontrol`) for job submission and management.\n    * It sets up job dependencies, ensuring that the `py-mpi4py@3.1.2.sh` script runs after the current script finishes. \n* **Resource Requirements:**\n    * The script requests a single node (``--nodes=1``), one task per node (``--ntasks-per-node=1``), and eight CPUs per task (``--cpus-per-task=8``) for the job.\n    * It also requests a specific GPU (``-w gpu1``) and sets a maximum execution time (``--time=00:30:00``). \n* **Output:**\n    * It specifies an output file format (``--output=%x.o%j.%N``) to store job information.\n\nThis script demonstrates how to leverage Spack, Slurm, and other tools to manage complex software installations and execution on an HPC system. \n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 808,
+        "candidates_token_count": 770,
+        "total_token_count": 1578,
+        "cached_content_token_count": 0
+    }
+}

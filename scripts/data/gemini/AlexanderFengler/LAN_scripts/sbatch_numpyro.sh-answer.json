@@ -1,0 +1,33 @@
+{
+    "application": "SLURM",
+    "details": {
+        "job_name": "numpyro_sampler",
+        "account": "carney-frankmj-condo",
+        "output_file": "slurm/numpyro_sampler_%A_%a.out",
+        "runtime": "2:00:00",
+        "memory": "16G",
+        "cores": 8,
+        "nodes": 1,
+        "gpu": "1",
+        "array_tasks": 10,
+        "modules": [
+            "cudnn/8.1.0",
+            "cuda/11.1.1",
+            "gcc/10.2"
+        ],
+        "conda_env": "pymc-gpu",
+        "python_script": "run_inference_numpyro.py",
+        "script_arguments": [
+            "--model",
+            "ddm",
+            "--modeltype",
+            "singlesubject",
+            "--nwarmup",
+            "100",
+            "--nmcmc",
+            "100",
+            "--idrange",
+            "10"
+        ]
+    }
+}

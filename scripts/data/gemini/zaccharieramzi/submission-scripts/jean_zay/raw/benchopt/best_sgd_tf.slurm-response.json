@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"Slurm\",\n  \"details\": {\n    \"job_name\": \"benchopt_run_best_sgd\",\n    \"tasks\": 1,\n    \"tasks_per_node\": 1,\n    \"gpu\": 1,\n    \"cpus_per_task\": 10,\n    \"time\": \"02:00:00\",\n    \"output\": \"%x_%A_%a.out\",\n    \"error\": \"%x_%A_%a.out\",\n    \"qos\": \"qos_gpu-dev\",\n    \"distribution\": \"block:block\",\n    \"hint\": \"nomultithread\",\n    \"modules\": [\n      \"pytorch-gpu/py3/1.10.1\"\n    ],\n    \"environment_variables\": {\n      \"PYTHONUSERBASE\": \"$WORK/.local_torch\",\n      \"PATH\": \"$WORK/.local_torch/bin:$PATH\",\n      \"TMPDIR\": \"$JOBSCRATCH\"\n    },\n    \"working_directory\": \"$WORK/benchmark_resnet_classif\",\n    \"command\": \"benchopt run . -o *18 -d cifar[*,random_state=42,with_validation=False] -r 1 -n 200 --timeout 10800 -f sgd-tf[batch_size=128,coupled_weight_decay=0.0005,data_aug=True,*,lr_schedule=cosine,momentum=0.9,nesterov=True]\"\n  }\n}\n```\n\n**Explanation:**\n\n* **Slurm:** The script utilizes the Slurm workload manager to manage and execute the job. \n* **Job Configuration:** The script defines various parameters for the Slurm job, such as:\n    * **Job Name:** benchopt_run_best_sgd\n    * **Resources:** 1 task, 1 task per node, 1 GPU, 10 CPUs per task\n    * **Time Limit:** 2 hours\n    * **Output & Error Files:** %x_%A_%a.out \n    * **Quality of Service:** qos_gpu-dev\n    * **Distribution:** block:block\n    * **Hint:** nomultithread\n* **Modules:** The script loads the 'pytorch-gpu/py3/1.10.1' module, ensuring the correct PyTorch version is available.\n* **Environment Variables:** The script sets up specific environment variables for the job:\n    * **PYTHONUSERBASE:** Defines the location for local PyTorch installation\n    * **PATH:** Adds the local PyTorch bin directory to the system's PATH variable\n    * **TMPDIR:** Sets the temporary directory for the job\n* **Working Directory:** The script changes the working directory to \"$WORK/benchmark_resnet_classif\"\n* **Command:** The script runs the 'benchopt' command with specific arguments, indicating that it is likely running a benchmark for a ResNet classification model, specifically using the 'sgd-tf' optimizer with various parameters.\n\n**Summary:** The script uses Slurm to run a benchmark experiment, likely for a ResNet classification model, leveraging PyTorch and the 'benchopt' tool. It utilizes specific optimization parameters and configurations to execute the experiment. \n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 369,
+        "candidates_token_count": 724,
+        "total_token_count": 1093,
+        "cached_content_token_count": 0
+    }
+}

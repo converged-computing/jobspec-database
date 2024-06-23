@@ -1,0 +1,100 @@
+{
+    "application": "Deep Learning",
+    "software": [
+        "Bash",
+        "Python",
+        "Torchrun",
+        "DeepSpeed",
+        "HuggingFace Transformers",
+        "Ray"
+    ],
+    "resources": [
+        "GPU (1)",
+        "SLURM (normal partition)",
+        "Ethernet network interface (eth0)"
+    ],
+    "libraries": [
+        "torch",
+        "transformers",
+        "datasets",
+        "deepspeed",
+        "ray",
+        "json",
+        "argparse"
+    ],
+    "data_format": "JSONL",
+    "model_types": [
+        "T5",
+        "Flan-T5",
+        "LLaMa",
+        "Vicuna"
+    ],
+    "tasks": [
+        "DocQA",
+        "DG",
+        "DHG",
+        "DS"
+    ],
+    "training_parameters": {
+        "epochs": 2,
+        "batch_size": {
+            "t5-small": 16,
+            "t5-base": 16,
+            "t5-large": 16,
+            "flan-t5-small": 16,
+            "flan-t5-base": 16,
+            "flan-t5-large": 16,
+            "t5-3b": 16,
+            "flan-t5-3b": 16,
+            "llama-7b": 2,
+            "lmsys/vicuna-7b-v1.5": 2,
+            "allenai/OLMo-7B": 2,
+            "t5-11b": 2,
+            "flan-t5-11b": 2,
+            "meta-llama/Llama-2-13b-chat-hf": 2,
+            "kollama-13b": 2,
+            "upstage/SOLAR-10.7B-v1.0": 2,
+            "lmsys/vicuna-13b-v1.5": 2,
+            "mistralai/Mixtral-8x7B-Instruct-v0.1": 2,
+            "llama-33b": 4
+        },
+        "gradient_accumulation_steps": {
+            "t5-small": 1,
+            "t5-base": 1,
+            "t5-large": 1,
+            "flan-t5-small": 1,
+            "flan-t5-base": 1,
+            "flan-t5-large": 1,
+            "t5-3b": 1,
+            "flan-t5-3b": 1,
+            "llama-7b": 8,
+            "lmsys/vicuna-7b-v1.5": 8,
+            "allenai/OLMo-7B": 8,
+            "t5-11b": 8,
+            "flan-t5-11b": 8,
+            "meta-llama/Llama-2-13b-chat-hf": 8,
+            "kollama-13b": 8,
+            "upstage/SOLAR-10.7B-v1.0": 8,
+            "lmsys/vicuna-13b-v1.5": 8,
+            "mistralai/Mixtral-8x7B-Instruct-v0.1": 8,
+            "llama-33b": 4
+        },
+        "learning_rate": 2e-05,
+        "weight_decay": 0,
+        "warmup_ratio": 0.04,
+        "lr_scheduler_type": "cosine",
+        "deepspeed_config": {
+            "7b": "ds_config_7b.json",
+            "13b": "ds_config_13b.json",
+            "33b": "ds_config_33b.json"
+        }
+    },
+    "inference_parameters": {
+        "num_gpus": 4,
+        "ray_num_gpus": 1
+    },
+    "data_preprocessing_parameters": {
+        "preprocessing_num_workers": 1,
+        "model_max_length": 2048
+    }
+}

@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"SLURM\",\n  \"details\": {\n    \"job_name\": \"testJob\",\n    \"time_limit\": \"01:00:00\",\n    \"nodes\": 1,\n    \"tasks_per_node\": 1,\n    \"output_file\": \"cpuinfo.out\",\n    \"error_file\": \"cpuinfo.err\",\n    \"commands\": [\n      \"env | grep \\\"^SLURM\\\" | sort\",\n      \"cat /proc/cpuinfo | grep \\\"model name\\\" | uniq\",\n      \"srun cat /proc/cpuinfo | grep \\\"model name\\\" | uniq\"\n    ],\n    \"resources\": [\n      \"CPU\"\n    ]\n  }\n}\n``` \n\n**Explanation:**\n\n* **Application:** The script is designed to run within the **SLURM** workload manager. \n* **Details:**\n    * The script utilizes SLURM directives to manage the job's execution, including:\n        * `--job-name`: Defines the job name as \"testJob\".\n        * `--time`: Sets a time limit of 1 hour for the job.\n        * `--nodes`: Requests a single node for execution.\n        * `--ntasks`: Specifies 1 task to run on the node.\n        * `--output` and `--error`: Defines output and error file names. \n    * The script then executes several commands:\n        * Displays all environment variables set by SLURM using `env | grep \"^SLURM\" | sort`.\n        * Prints the \"model name\" from the `/proc/cpuinfo` file using `cat /proc/cpuinfo | grep \"model name\" | uniq`.\n        * Uses `srun` to execute the same command, effectively launching the command within the SLURM environment.\n    * **Resources:** The script primarily requires CPU resources to execute its commands.\n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 260,
+        "candidates_token_count": 430,
+        "total_token_count": 690,
+        "cached_content_token_count": 0
+    }
+}

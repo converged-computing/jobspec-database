@@ -1,0 +1,31 @@
+{
+    "application": "SLURM",
+    "details": {
+        "resources": {
+            "gpu": 2,
+            "cpu": 4,
+            "memory": "85G",
+            "time": "12 hours",
+            "partition": "main"
+        },
+        "modules": [
+            "cuda/10.1",
+            "python/3.7"
+        ],
+        "virtual_environment": "lm",
+        "dependencies": [
+            "transformers",
+            "python-dateutil",
+            "attrs",
+            "importlib-metadata"
+        ],
+        "commands": [
+            "git clone https://github.com/Tikquuss/lm",
+            "pip install -r requirements.txt",
+            "chmod +x cluster.sh",
+            "salloc --gres=gpu:2 -c 4 --mem=32Gb --time=12:00:00 --partition=main --job-name=KABROLG",
+            "srun --gres=gpu:2 -c 4 --mem=32Gb --time=12:00:00 --partition=main --job-name=KABROLG . cluster.sh",
+            "sbatch . cluster.sh"
+        ]
+    }
+}

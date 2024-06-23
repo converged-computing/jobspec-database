@@ -1,0 +1,56 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n\"application\": \"deepspeed\",\n\"details\": {\n\"slurm_requirements\": {\n\"job_name\": \"cpt-7b-test\",\n\"output\": \"logs/%x-%j.log\",\n\"error\": \"logs/%x-%j.log\",\n\"partition\": \"MoE\",\n\"ntasks_per_node\": 1,\n\"cpus_per_task\": 32,\n\"mem\": 0,\n\"nodes\": 1,\n\"gres\": \"gpu:8\"\n},\n\"python_environment\": {\n\"conda_environment\": \"smoe\",\n\"OMP_NUM_THREADS\": 16,\n\"LOGLEVEL\": \"INFO\"\n},\n\"model_type\": \"llama_moe\",\n\"pretrained_model\": \"/mnt/petrelfs/share_data/quxiaoye/models/llama_7B_MoE_16Select4-l2_norm_bak\",\n\"tokenizer_path\": \"/mnt/petrelfs/share_data/quxiaoye/models/llama_7B\",\n\"dataset_dir\": \"/mnt/petrelfs/share_data/quxiaoye/pretrain_LLAMA_all_data_processed\",\n\"hyperparameters\": {\n\"lr\": 1e-4,\n\"final_lr_portion\": 0.1,\n\"per_device_train_batch_size\": 16,\n\"per_device_eval_batch_size\": 1,\n\"gradient_accumulation_steps\": 2,\n\"block_size\": 2048,\n\"num_tokens\": \"1*10^11\",\n\"seed\": 1227,\n\"deepspeed_config_file\": \"conf/deepspeed/bf16_zero1_default.json\",\n\"max_steps\": \"$(echo \\\"${num_tokens} / ($block_size * $per_device_train_batch_size * $gradient_accumulation_steps * $num_nodes * $num_gpu_per_node)\\\" | bc)\",\n\"max_train_samples\": \"$(echo \\\"${num_tokens} / $block_size\\\" | bc)\",\n\"global_bs\": \"$(echo \\\"$per_device_train_batch_size * $gradient_accumulation_steps * $num_nodes * $num_gpu_per_node\\\" | bc)\",\n\"tokens_per_batch\": \"$(echo \\\"$global_bs * $block_size\\\" | bc)\",\n\"data_cache\": \"resources/cache\",\n\"output_dir\": \"outputs/$SLURM_JOB_NAME-$SLURM_JOB_ID\"\n},\n\"other_resources\": {\n\"srun_command\": \"srun torchrun --nnodes ${num_nodes} --nproc_per_node ${num_gpu_per_node} --node_rank $SLURM_NODEID --rdzv_id $RANDOM --rdzv_backend c10d --rdzv_endpoint $head_node:29518 smoe/entrypoint/cpt/cpt_fpt.py --deepspeed ${deepspeed_config_file} --model_name_or_path ${pretrained_model} --model_type ${model_type} --tokenizer_name_or_path ${tokenizer_path} --dataset_dir ${dataset_dir} --data_cache_dir ${data_cache} --validation_split_percentage 0.001 --per_device_train_batch_size ${per_device_train_batch_size} --per_device_eval_batch_size ${per_device_eval_batch_size} --do_train --seed ${seed} --bf16 --num_train_epochs 1 --final_lr_portion ${final_lr_portion} --optim adamw_torch --adam_beta1 0.9 --adam_beta2 0.95 --learning_rate ${lr} --weight_decay 0.1 --max_grad_norm 1.0 --warmup_steps 2000 --max_steps ${max_steps} --max_train_samples ${max_train_samples} --save_strategy steps --save_total_limit 2 --save_steps 1000 --dataloader_num_workers 0 --gradient_accumulation_steps ${gradient_accumulation_steps} --block_size ${block_size} --output_dir ${output_dir} --overwrite_output_dir --ddp_timeout 30000 --ddp_find_unused_parameters False --torch_dtype bfloat16 --gradient_checkpointing --logging_first_step True --logging_strategy steps --logging_steps 10 --log_level info --log_level_replica warning --log_on_each_node False --report_to none\"\n}\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "citation_metadata": {
+                "citation_sources": [
+                    {
+                        "start_index": 1807,
+                        "end_index": 2059,
+                        "uri": "https://github.com/ymcui/Chinese-LLaMA-Alpaca",
+                        "license_": ""
+                    }
+                ]
+            },
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 2060,
+        "candidates_token_count": 1089,
+        "total_token_count": 3149,
+        "cached_content_token_count": 0
+    }
+}

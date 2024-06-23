@@ -1,0 +1,50 @@
+{
+    "application": "Slurm",
+    "details": {
+        "job_name": "train_lstm",
+        "tasks": 1,
+        "cpus_per_task": 3,
+        "tasks_per_node": 1,
+        "time": "24:00:00",
+        "memory": "60000M",
+        "partition": "gpu_shared_course",
+        "gpus": 1,
+        "modules": [
+            "eb",
+            "Python/3.6.3-foss-2017b",
+            "cuDNN/7.0.5-CUDA-9.0.176",
+            "NCCL/2.0.5-CUDA-9.0.176"
+        ],
+        "libraries": [
+            "/hpc/eb/Debian9/cuDNN/7.1-CUDA-8.0.44-GCCcore-5.4.0/lib64"
+        ],
+        "script": "main.py",
+        "arguments": [
+            "--generator",
+            "SentenceVAE",
+            "--dataset_class",
+            "LyricsRawDataset",
+            "--loss",
+            "VAELoss",
+            "--batch_size",
+            "16",
+            "--device",
+            "cuda",
+            "--eval_freq",
+            "100",
+            "--embedding_size",
+            "256",
+            "--hidden_dim",
+            "64",
+            "--genre",
+            "Pop",
+            "Rock",
+            "Hip-Hop",
+            "Metal",
+            "Country",
+            "--run_name",
+            "sentence-vae-genre-"
+        ],
+        "output": "output/train-sentence-vae-genre-genre-seed-42.out"
+    }
+}

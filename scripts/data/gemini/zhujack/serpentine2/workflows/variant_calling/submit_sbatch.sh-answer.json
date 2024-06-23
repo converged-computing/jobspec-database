@@ -1,0 +1,31 @@
+{
+    "application": "Snakemake",
+    "details": {
+        "modules": [
+            "python/3.4.3",
+            "R/3.2.0_gcc-4.4.7",
+            "rpy2/2.6.1-R_3.2.0"
+        ],
+        "resources": {
+            "serpentine": "/data/Clinomics/Tools/serpentine2",
+            "samplesheet": "Clinomics_pipeline_samplesheet.txt",
+            "config": "${SERPENTINE_HOME}/config_common.json",
+            "snakefile": "${SERPENTINE_HOME}/workflows/variant_calling/Snakefile",
+            "jobscript": "${SERPENTINE_HOME}/jobscript.sh",
+            "stats": "serpentine_${NOW}.stats",
+            "log": "serpentine_${NOW}.log",
+            "cluster": "sbatch -p ccr -e log/{params.rulename}.%j.e -o log/{params.rulename}.%j.o {params.batch}"
+        },
+        "dependencies": [
+            "do_samplesheet2json.R",
+            "Snakefile",
+            "jobscript.sh"
+        ],
+        "parameters": {
+            "jobname": "cln.{rulename}.{jobid}",
+            "cores": 10,
+            "threads": 1,
+            "jobs": 3000
+        }
+    }
+}

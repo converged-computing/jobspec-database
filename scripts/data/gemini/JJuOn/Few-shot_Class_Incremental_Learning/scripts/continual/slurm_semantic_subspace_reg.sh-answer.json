@@ -1,0 +1,46 @@
+{
+    "application": "Slurm",
+    "details": {
+        "resources": {
+            "nodes": 1,
+            "tasks_per_node": 1,
+            "cpus_per_task": 4,
+            "gpus": "volta:1",
+            "time": "15-00:00",
+            "constraint": "xeon-g6"
+        },
+        "other_software": {
+            "python": "eval_incremental.py",
+            "model": "resnet18"
+        },
+        "data": {
+            "data_path": "data",
+            "dumped_path": "dumped",
+            "backbone_path": "${DUMPED_PATH}/backbones/continual/resnet18/${SEED}/resnet18_last.pth"
+        },
+        "parameters": {
+            "n_shots": 5,
+            "classifier": "linear",
+            "eval_mode": "few-shot-incremental-fine-tune",
+            "min_novel_epochs": 20,
+            "learning_rate": 0.002,
+            "freeze_backbone_at": 1,
+            "test_base_batch_size": 2000,
+            "continual": true,
+            "num_workers": 0,
+            "n_queries": 25,
+            "lmbd_reg_transform_w": 0.2,
+            "target_train_loss": 0.0,
+            "label_pull": 0.2,
+            "set_seed": 2,
+            "lmbd_reg_novel": 0.1,
+            "glove": true,
+            "temperature": 3.0,
+            "weight_decay": 0.0005,
+            "n_base_support_samples": 1,
+            "n_ways": 10,
+            "memory_replay": 1,
+            "reuse_novel": true
+        }
+    }
+}

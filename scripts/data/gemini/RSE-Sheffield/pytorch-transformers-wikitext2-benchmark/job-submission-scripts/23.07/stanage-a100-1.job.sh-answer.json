@@ -1,0 +1,28 @@
+{
+    "application": "apptainer",
+    "details": {
+        "resource_requirements": {
+            "time": "2:00:00",
+            "partition": "gpu",
+            "qos": "gpu",
+            "gres": "gpu:a100:1",
+            "cpus_per_task": 12,
+            "mem": "82G"
+        },
+        "image_path": "/mnt/parscratch/users/$USER/pytorch-transformers-wikitext2-benchmark/transformers-benchmark-23.07.sif",
+        "environment_variables": {
+            "HF_HOME": "/mnt/hf_home/${SLURM_JOB_ID}",
+            "TMPDIR": "/tmp/${SLURM_JOB_ID}"
+        },
+        "bind_paths": [
+            {
+                "source": "$(pwd)",
+                "target": "/mnt"
+            },
+            {
+                "source": "${TMPDIR}",
+                "target": "/tmp"
+            }
+        ]
+    }
+}

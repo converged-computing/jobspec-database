@@ -1,0 +1,28 @@
+{
+    "application": "gromacs",
+    "details": {
+        "software": "gromacs-2022.3_20230206.sif",
+        "resources": {
+            "partition": "GPU",
+            "gres": "mps:20",
+            "ntasks": 24,
+            "cpus-per-task": 1,
+            "time": "182:00:00",
+            "qos": "elevated",
+            "mail-type": "FAIL,END",
+            "mail-user": "telegram:5545394160"
+        },
+        "environment_variables": {
+            "SIFPATH": "$SIFDIR/gromacs",
+            "SIFIMG": "gromacs-2022.3_20230206.sif",
+            "MDNAME": "md_0_1",
+            "CPTFILE": "${MDNAME}.cpt",
+            "OMP_NUM_THREADS": "$num_proc",
+            "MPI_NUM_PROCS": 1,
+            "LD_LIBRARY_PATH": ""
+        },
+        "commands": {
+            "mdrun": "singularity run --nv -B ${PWD}:/host_pwd --pwd /host_pwd $SIFPATH/$SIFIMG gmx mdrun -ntmpi $MPI_NUM_PROCS -nb gpu -pin on -v -ntomp $OMP_NUM_THREADS -deffnm $MDNAME -cpi ${CPTFILE}"
+        }
+    }
+}

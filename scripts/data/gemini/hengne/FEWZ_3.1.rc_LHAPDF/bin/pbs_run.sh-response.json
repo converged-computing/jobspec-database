@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "PBS\nThe script uses the PBS (Portable Batch System) to run a simulation on a cluster. The script sets up a PBS job submission script that specifies the following:\n\n* **Resources:** \n    * **Time limit:** 08:00:00 (8 hours)\n    * **Cores per node:** 24 (CPN variable)\n    * **MPI width:** Determined based on the number of sectors to be processed, ensuring it's a multiple of 24 (MPP_WID variable)\n* **Job Name:** The job is named after the run directory (RUNDIR variable).\n* **Error and Output files:** Error and output files are named based on the PBS job ID.\n* **Environment Variables:** The script exports the `CUBACORES` variable, sets the working directory, and executes the simulation using `aprun` (MPI_RUN variable) with the specified number of processes.\n\nThe script also performs the following:\n\n* **Defines Execution Variables:** Sets variables for the boson type (`BOSON`), input file (`INFILE`), output file extension (`OUTFILE`), histogram file (`HISTFILE`), run directory (`RUNDIR`), and PDF directory (`PDFDIR`).\n* **Determines the Number of Sectors:** Extracts the number of sectors from the input file (`INFILE`) using a Python script (`scripts/get_sects.py`).\n* **Creates Parallel Directory Structure:** Utilizes another Python script (`scripts/create_parallel.py`) to set up the parallel directory structure based on the specified sectors.\n* **Copies Executable and Histogram Files:** Copies the simulation executable (`EXEC`) and the histogram file (`HISTFILE`) to the run directory.\n* **Compiles MPI Wrapper:** Compiles a C++ wrapper (`scripts/fewz_mpiwrap.cc`) for the MPI execution using `mpicc` (MPI_CC variable).\n* **Prepares Job Submission Script:** Generates the PBS submission script (`$RUNDIR/$RUNDIR.pbs`), including the necessary PBS directives and commands to execute the simulation.\n* **Submits Job:** Submits the job to the PBS queue using `qsub`.\n\nThe script also includes instructions for post-processing the output files using a `finish.sh` script.\n\n```json\n{\n  \"application\": \"PBS\",\n  \"details\": {\n    \"resources\": {\n      \"time_limit\": \"08:00:00\",\n      \"cores_per_node\": 24,\n      \"mpi_width\": \"Determined based on the number of sectors, a multiple of 24\"\n    },\n    \"job_name\": \"Run directory name\",\n    \"error_and_output_files\": \"Based on PBS job ID\",\n    \"environment_variables\": {\n      \"CUBACORES\": \"0\",\n      \"working_directory\": \"$PBS_O_WORKDIR\",\n      \"MPI_RUN\": \"aprun\"\n    },\n    \"script_actions\": [\n      \"Defines execution variables\",\n      \"Determines the number of sectors\",\n      \"Creates parallel directory structure\",\n      \"Copies executable and histogram files\",\n      \"Compiles MPI wrapper\",\n      \"Prepares job submission script\",\n      \"Submits job to PBS queue\",\n      \"Provides post-processing instructions\"\n    ]\n  }\n}\n```\n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 1686,
+        "candidates_token_count": 721,
+        "total_token_count": 2407,
+        "cached_content_token_count": 0
+    }
+}

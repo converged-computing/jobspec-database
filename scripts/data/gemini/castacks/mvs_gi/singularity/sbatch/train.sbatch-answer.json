@@ -1,0 +1,24 @@
+{
+    "application": "SLURM",
+    "details": {
+        "resource_requirements": {
+            "partition": "GPU",
+            "nodes": 1,
+            "time": "2-00:00:00",
+            "job_name": "t-lightning",
+            "gpus": "v100-32:8",
+            "tasks_per_node": 1,
+            "cpus_per_task": 5,
+            "output_file": "job-%A-%a.out",
+            "error_file": "job-%A-%a.err",
+            "email": "cpulling@andrew.cmu.edu",
+            "email_type": [
+                "BEGIN",
+                "END",
+                "FAIL",
+                "ARRAY_TASKS"
+            ]
+        },
+        "command": "srun 'bash' train.job ${SLURM_ARRAY_TASK_ID}"
+    }
+}

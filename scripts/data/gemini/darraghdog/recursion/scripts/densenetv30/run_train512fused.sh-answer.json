@@ -1,0 +1,49 @@
+{
+    "application": "LSF",
+    "details": {
+        "queue": "lowpriority",
+        "gpu": {
+            "num": 1,
+            "mode": "exclusive_process"
+        },
+        "container_image": "darraghdog/kaggle:apex_build",
+        "resources": {
+            "nodes": 1,
+            "processors": 4
+        },
+        "script": {
+            "command": "python3 trainfused.py",
+            "arguments": [
+                "--logmsg",
+                "Recursion-same-diff-512-fp16-fused",
+                "--nbags",
+                "20",
+                "--epochs",
+                "60",
+                "--fold",
+                "0",
+                "--lr",
+                "0.000025",
+                "--lrmult",
+                "20",
+                "--batchsize",
+                "16",
+                "--workpath",
+                "scripts/densenetv30",
+                "--probsname",
+                "probs_512",
+                "--cutmix_prob",
+                "1.0",
+                "--precision",
+                "half",
+                "--beta",
+                "1.0",
+                "--imgpath",
+                "data/mount/512X512X6/",
+                "--weightsname",
+                "weights/pytorch_model_512_fused_densenet0.bin"
+            ],
+            "working_directory": "/share/dhanley2/recursion/scripts/densenetv30"
+        }
+    }
+}

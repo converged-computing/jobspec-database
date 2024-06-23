@@ -1,0 +1,50 @@
+{
+    "application": "SLURM",
+    "details": {
+        "partition": "hopper-prod",
+        "gpus": 8,
+        "cpus": 80,
+        "tasks": 1,
+        "output": "slurm/logs/%x_%j.out",
+        "requeue": true,
+        "array": "0-3",
+        "exclusive": true
+    },
+    "software": [
+        "poetry",
+        "accelerate",
+        "deepspeed",
+        "wandb",
+        "git",
+        "cuda/12.2"
+    ],
+    "libraries": [
+        "transformers",
+        "datasets",
+        "evaluate",
+        "torch",
+        "numpy",
+        "pandas",
+        "scipy",
+        "sklearn",
+        "seaborn",
+        "matplotlib"
+    ],
+    "models": [
+        "EleutherAI/pythia-6.9b-deduped",
+        "EleutherAI/pythia-2.8b-deduped",
+        "EleutherAI/pythia-1b-deduped",
+        "EleutherAI/pythia-410m-deduped"
+    ],
+    "datasets": [
+        "cleanrl/summarize_from_feedback_tldr_3_filtered_oai_preprocessing_1704563162",
+        "cleanrl/summarize_from_feedback_oai_preprocessing_1704563162"
+    ],
+    "hyperparameters": {
+        "lr": 3e-06,
+        "local_rollout_forward_batch_size": 2,
+        "gradient_accumulation_steps": 64,
+        "local_micro_batch_size": 1,
+        "local_eval_batch_size": 1
+    }
+}

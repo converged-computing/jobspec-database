@@ -1,0 +1,40 @@
+{
+    "application": "Benchmarking",
+    "details": {
+        "software": [
+            "CLAMR",
+            "CabanaMD"
+        ],
+        "resources": [
+            "SLURM",
+            "spack",
+            "git",
+            "lustre1",
+            "bash"
+        ],
+        "dependencies": [
+            "GNU bc",
+            "cut"
+        ],
+        "job_parameters": {
+            "job_name": "CLAMR_{NUM_NODES} or CBNMD_{NUM_NODES}",
+            "nodes": "1,2,4,8,16",
+            "tasks_per_node": "32",
+            "cpus_per_task": "1",
+            "time": "1:00:00",
+            "partition": "pbatch",
+            "sockets_per_node": "2",
+            "cores_per_socket": "18"
+        },
+        "data_storage": {
+            "CLAMR": "/p/lustre1/$(whoami)/CLAMR",
+            "CabanaMD": "/p/lustre1/$(whoami)/CabanaMD"
+        },
+        "other_notes": [
+            "This script is designed to run benchmarking tests for CLAMR and CabanaMD on a SLURM cluster.",
+            "It uses spack to install and manage the software dependencies.",
+            "The script iterates over different job sizes (node count) and runs the benchmarks for each size.",
+            "The results are stored in files named CLAMR_QUARTZ_{NUM_NODES}_{NUM_PROC_PER_NODE}.txt and CABANAMD_QUARTZ_{NUM_NODES}_{NUM_PROC_PER_NODE}.txt"
+        ]
+    }
+}

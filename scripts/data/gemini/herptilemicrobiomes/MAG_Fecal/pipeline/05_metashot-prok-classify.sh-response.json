@@ -1,0 +1,62 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"Nextflow\",\n  \"software\": [\n    \"Singularity\",\n    \"GTDBTk\",\n    \"Metashot\",\n    \"Nextflow\"\n  ],\n  \"resources\": [\n    \"CPU (48 cores)\",\n    \"Memory (128 GB)\",\n    \"Scratch space\",\n    \"GTDBTk database (/srv/projects/db/gtdbtk/207_v2)\",\n    \"Singularity cache directory (/bigdata/stajichlab/shared/singularity_cache)\"\n  ],\n  \"input\": \"samples.csv\",\n  \"output\": \"results_bins_gtkdb\",\n  \"environment\": \"SLURM\",\n  \"configuration\": [\n    \"process-classify.config\",\n    \"metashot-classify.cfg\",\n    \"nextflow\"\n  ],\n  \"commands\": [\n    \"module load singularity\",\n    \"module load workspace/scratch\",\n    \"export NXF_SINGULARITY_CACHEDIR=/bigdata/stajichlab/shared/singularity_cache/\",\n    \"mkdir -p $OUTFOLDER $RUNDIR\",\n    \"tail -n +2 $SAMPFILE | sed -n ${N}p | while read STRAIN SHOTGUN\",\n    \"mkdir -p $OUT\",\n    \"pushd $RUNDIR\",\n    \"if [ ! -f process.config ]; then ln -s ../process-classify.config process.config; ln -s ../process-classify.config ./; fi\",\n    \"if [ ! -f metashot-qual.cfg ]; then ln -s ../metashot-classify.cfg ./; fi\",\n    \"if [ ! -f nextflow ]; then ln -s ../nextflow ./; fi\",\n    \"./nextflow run metashot/prok-classify -c metashot-classify.cfg --genomes \\\"$BINFOLDER/*.fa\\\" --gtdbtk_db /srv/projects/db/gtdbtk/207_v2 --outdir $OUT --max_cpus $CPU --scratch $SCRATCH\"\n  ]\n}\n```\n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "citation_metadata": {
+                "citation_sources": [
+                    {
+                        "start_index": 557,
+                        "end_index": 699,
+                        "uri": "https://github.com/herptilemicrobiomes/MAG_Fecal",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 837,
+                        "end_index": 1309,
+                        "uri": "https://github.com/herptilemicrobiomes/MAG_Fecal",
+                        "license_": ""
+                    }
+                ]
+            },
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 568,
+        "candidates_token_count": 484,
+        "total_token_count": 1052,
+        "cached_content_token_count": 0
+    }
+}

@@ -1,0 +1,39 @@
+{
+    "application": "Score-P",
+    "other_software": [
+        "OpenMPI",
+        "readex_env"
+    ],
+    "resource_requirements": {
+        "nodes": 5,
+        "cpus_per_node": 24,
+        "mpi_processes_per_node": 2,
+        "omp_threads_per_process": 12,
+        "accelerator": true,
+        "x86_adapt": true,
+        "walltime": "24:00:00"
+    },
+    "environment_variables": {
+        "PBS_ENVIRONMENT": "PBS_BATCH",
+        "LOC": "/path/to/working/directory",
+        "PSC_CPU_BIND": "$BIND_TO_SOCKETS",
+        "LD_LIBRARY_PATH": "$LD_LIBRARY_PATH:/usr/local/lib",
+        "SCOREP_SUBSTRATE_PLUGINS": "rrl",
+        "SCOREP_RRL_PLUGINS": "cpu_freq_plugin,uncore_freq_plugin,OpenMPTP",
+        "SCOREP_RRL_VERBOSE": "WARN",
+        "SCOREP_METRIC_PLUGINS": "x86_energy_sync_plugin",
+        "SCOREP_METRIC_X86_ENERGY_SYNC_PLUGIN": "*/E",
+        "SCOREP_METRIC_PLUGINS_SEP": ";",
+        "SCOREP_METRIC_X86_ENERGY_SYNC_PLUGIN_CONNECTION": "INBAND",
+        "SCOREP_METRIC_X86_ENERGY_SYNC_PLUGIN_VERBOSE": "WARN",
+        "SCOREP_METRIC_X86_ENERGY_SYNC_PLUGIN_STATS_TIMEOUT_MS": "1000",
+        "SCOREP_MPI_ENABLE_GROUPS": "ENV",
+        "OMP_NUM_THREADS": "12",
+        "PHASE": "main_phase"
+    },
+    "commands": [
+        "module purge",
+        "source ./readex_env/set_env_ptf_rapl.source",
+        "psc_frontend --apprun=\"./test/amg2013_ptf -P 2 2 2 -r 40 40 40\" --mpinumprocs=8 --ompnumthreads=12 --phase=$PHASE --tune=readex_intraphase --config-file=readex_config_ptf.xml --force-localhost --info=2 --selective-info=AutotuneAll,AutotunePlugins 2>&1 | tee -a $TMPFILE"
+    ]
+}

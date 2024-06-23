@@ -1,0 +1,32 @@
+{
+    "application": "SLURM",
+    "details": {
+        "nodes": 1,
+        "tasks_per_node": 2,
+        "gpus": "a100:2",
+        "cpus_per_task": 16,
+        "memory": "253GB",
+        "time": "48:00:00",
+        "job_name": "finetune_gpt",
+        "output_file": "finetune_gpt_%A_%a.out",
+        "environment": {
+            "MASTER_ADDR": "$(hostname -s)",
+            "MASTER_PORT": "$(shuf -i 10000-65500 -n 1)",
+            "WORLD_SIZE": 2,
+            "CUDA_VERSION": "11.6.2",
+            "LR": "0.0003",
+            "OPTIMIZER": "Adam"
+        },
+        "python_script": "/scratch/eo41/vqgan-gpt/finetune.py",
+        "data_path": "/vast/eo41/data/konkle_ood/vehicle_vs_nonvehicle/nonvehicle",
+        "vqgan_config_path": "/scratch/eo41/vqgan-gpt/vqgan_pretrained_models/say_32x32_8192.yaml",
+        "vqgan_model_path": "/scratch/eo41/vqgan-gpt/vqgan_pretrained_models/say_32x32_8192.ckpt",
+        "gpt_config": "GPT_gimel",
+        "resume_path": "",
+        "save_dir": "/scratch/eo41/vqgan-gpt/gpt_finetuned_models",
+        "save_freq": 50,
+        "save_prefix": "scratch_gimel_konkle_nonvehicle",
+        "batch_size": 8,
+        "num_workers": 16
+    }
+}

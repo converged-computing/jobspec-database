@@ -1,0 +1,29 @@
+{
+    "application": "Slurm",
+    "details": {
+        "partition": "medium",
+        "time": "24:00:00",
+        "cpus_per_task": 128,
+        "account": "project_2004600",
+        "output": "logs/%j.out",
+        "error": "logs/%j.err",
+        "modules": [
+            "pytorch"
+        ],
+        "cache": {
+            "directory": "/scratch/$SLURM_JOB_ACCOUNT/datasets_cache_$SLURM_JOBID",
+            "environment_variable": "HF_DATASETS_CACHE"
+        },
+        "python_script": "prepare_data.py",
+        "python_script_arguments": [
+            "--data",
+            "texts",
+            "--tokenizer",
+            "tokenizer",
+            "--output_dir",
+            "processed",
+            "--num_workers",
+            "$SLURM_CPUS_PER_TASK"
+        ]
+    }
+}

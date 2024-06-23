@@ -1,0 +1,35 @@
+{
+    "application": "bandwidthTest",
+    "details": {
+        "environment": {
+            "virtual": true,
+            "name": "tf_env",
+            "packages": [
+                "tensorflow==2.4",
+                "pandas",
+                "dahuffman",
+                "scipy"
+            ]
+        },
+        "modules": [
+            "tensorrt/7.2.1.6-cuda-11.0",
+            "cudnn/v8.0.5.39-prod-cuda-11.0"
+        ],
+        "resources": {
+            "queue": "gpuv100",
+            "cores": 4,
+            "gpu": {
+                "count": 1,
+                "mode": "exclusive_process"
+            },
+            "walltime": "24:00",
+            "memory": "10GB",
+            "gpu_memory": "32GB"
+        },
+        "commands": [
+            "bandwidthTest",
+            "nvidia-smi",
+            "python3 main.py -dir \"test\" -ds \"cifar\" -e 3 -m 1 -type entropy -so 3 -coeff 0.0 1.0"
+        ]
+    }
+}

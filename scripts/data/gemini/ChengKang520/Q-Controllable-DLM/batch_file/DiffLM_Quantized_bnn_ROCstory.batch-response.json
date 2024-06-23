@@ -1,0 +1,62 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"Slurm\",\n  \"details\": {\n    \"resource_requirements\": {\n      \"partition\": \"amdgpu\",\n      \"time\": \"24:00:00\",\n      \"gres\": \"gpu:1\",\n      \"ntasks_per_node\": 1,\n      \"mem_per_gpu\": \"32000\"\n    },\n    \"software\": {\n      \"python\": \"3.x\",\n      \"pytorch\": \"1.9.0\",\n      \"mpi\": \"openmpi\",\n      \"slurm\": \"unknown version\"\n    },\n    \"libraries\": [\n      \"PyTorch/1.9.0-fosscuda-2020b\"\n    ],\n    \"environment_variables\": {\n      \"OMP_MCA_mpi_warn_on_fork\": \"0\"\n    },\n    \"commands\": [\n      \"hostname\",\n      \"pwd\",\n      \"mpirun -np 1 python improved-diffusion/scripts/run_train.py --quant_m ${quant_m} --weight_i_width ${weight_i_width} --weight_f_width ${weight_f_width} --diff_steps 2000 --model_arch transformer --lr 0.0001 --lr_anneal_steps 400000 --seed 101 --noise_schedule sqrt --in_channel 128 --modality roc --submit no --padding_mode pad --app \\\"--predict_xstart True --training_mode e2e --vocab_size 11043 --roc_train ./datasets/ROCstory \\\" --notes xstart_e2e --bsz 64\",\n      \"mpirun -np 1 python improved-diffusion/scripts/batch_decode.py /home/kangchen/Diffusion-LM-main/improved-diffusion/quantized_diffusion_models/diff_roc_${quant_m}_${weight_i_width}_${weight_f_width}*/ -1.0 ema\",\n      \"mpirun -np 1 python train_run.py --quant_m ${quant_m} --weight_i_width ${weight_i_width} --weight_f_width ${weight_f_width} --experiment e2e-tgt-tree --app \\\"--init_emb /home/kangchen/Diffusion-LM-main/improved-diffusion/quantized_diffusion_models/diff_roc_bnn_0_0_pad_rand128_transformer_lr0.0001_0.0_2000_sqrt_Lsimple_h128_s2_d0.1_sd101_xstart_e2e/ --n_embd 16 --learned_emb yes \\\" --pretrained_model bert-base-uncased --epoch 6 --bsz 10\",\n      \"mpirun -np 1 python improved-diffusion/scripts/infill.py --quant_m ${quant_m} --weight_i_width ${weight_i_width} --weight_f_width ${weight_f_width} --model_path /home/kangchen/Diffusion-LM-main/improved-diffusion/quantized_diffusion_models/diff_roc_${quant_m}_${weight_i_width}_${weight_f_width}_pad_rand128_transformer_lr0.0001_0.0_2000_sqrt_Lsimple_h128_s2_d0.1_sd101_xstart_e2e/ema_0.9999_200000.pt --eval_task_ 'control_tree' --use_ddim True --notes \\\"tree_adagrad\\\" --eta 1. --verbose pipe\"\n    ],\n    \"working_directory\": \"/home/kangchen/Diffusion-LM-main/\"\n  }\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "citation_metadata": {
+                "citation_sources": [
+                    {
+                        "start_index": 703,
+                        "end_index": 985,
+                        "uri": "https://github.com/XiangLi1999/Diffusion-LM",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 848,
+                        "end_index": 1018,
+                        "uri": "https://github.com/vvhg1/classifier-free-language-diffusion",
+                        "license_": ""
+                    }
+                ]
+            },
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 992,
+        "candidates_token_count": 900,
+        "total_token_count": 1892,
+        "cached_content_token_count": 0
+    }
+}

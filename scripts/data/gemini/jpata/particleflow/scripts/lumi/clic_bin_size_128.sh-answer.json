@@ -1,0 +1,49 @@
+{
+    "application": "Singularity",
+    "details": {
+        "software": [
+            "Python 3",
+            "TensorFlow 2.12",
+            "ROCm 5.6",
+            "MIOPEN",
+            "NCCL",
+            "hep_tfds",
+            "tensorflow_datasets",
+            "mlpf"
+        ],
+        "resource_requirements": {
+            "compute": {
+                "nodes": 1,
+                "tasks_per_node": 1,
+                "cpus_per_task": 32
+            },
+            "memory": "160G",
+            "gpu": {
+                "gpus_per_task": 4
+            },
+            "partition": "small-g",
+            "time_limit": "3-00:00:00"
+        },
+        "environment_variables": {
+            "IMG": "/scratch/project_465000301/tf-rocm5.6-tf2.12.simg",
+            "PYTHONPATH": "hep_tfds",
+            "TFDS_DATA_DIR": "/scratch/project_465000301/tensorflow_datasets",
+            "MIOPEN_DISABLE_CACHE": "true",
+            "MIOPEN_USER_DB_PATH": "/tmp/${USER}-${SLURM_JOB_ID}-miopen-cache",
+            "MIOPEN_CUSTOM_CACHE_DIR": "${MIOPEN_USER_DB_PATH}",
+            "TF_CPP_MAX_VLOG_LEVEL": "-1",
+            "ROCM_PATH": "/opt/rocm",
+            "NCCL_DEBUG": "WARN",
+            "MIOPEN_ENABLE_LOGGING": "1",
+            "MIOPEN_ENABLE_LOGGING_CMD": "1",
+            "MIOPEN_LOG_LEVEL": "4",
+            "LD_LIBRARY_PATH": "/opt/rocm/lib/"
+        },
+        "script_commands": [
+            "cd /scratch/project_465000301/particleflow",
+            "module load LUMI/22.08 partition/G",
+            "singularity exec --env LD_LIBRARY_PATH=/opt/rocm/lib/ --rocm $IMG rocm-smi --showdriverversion --showmeminfo vram",
+            "singularity exec --rocm -B /scratch/project_465000301 -B /tmp --env LD_LIBRARY_PATH=/opt/rocm/lib/ $IMG python3 mlpf/pipeline.py train --config parameters/clic/clic_bin_size_128.yaml --plot-freq 1 --num-cpus 32 --batch-multiplier 5 --plot-freq 1"
+        ]
+    }
+}

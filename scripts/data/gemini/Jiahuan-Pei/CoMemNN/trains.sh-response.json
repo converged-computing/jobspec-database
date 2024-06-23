@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"SLURM\",\n  \"details\": {\n    \"job_name\": \"$2$3\",\n    \"output_file\": \"./job_out/%x.train-%A.out\",\n    \"error_file\": \"./job_err/%x.train-%A.err\",\n    \"nodelist\": \"ilps-cn$1\",\n    \"partition\": \"gpu\",\n    \"gpu_count\": 1,\n    \"cores\": 8,\n    \"memory\": \"30G\",\n    \"time\": \"4-00:00:00\",\n    \"environment\": {\n      \"bashrc\": \"${HOME}/.bashrc\",\n      \"conda_environment\": \"tds_py37_pt\",\n      \"PYTHONPATH\": \"./\",\n      \"OMP_NUM_THREADS\": 2\n    },\n    \"python_command\": \"python -m torch.distributed.launch --nproc_per_node=1 --master_port 29501 ./$2/Run.py\",\n    \"arguments\": {\n      \"mode\": \"train\",\n      \"debug\": 0,\n      \"data_dir\": \"/ivi/ilps/personal/jpei/TDS\",\n      \"model_name\": \"$2\",\n      \"exp_name\": \"$3\",\n      \"other_params\": \"$4\"\n    },\n    \"example_commands\": [\n      \"sh train.sh 101 CTDS _base $4_other_params\",\n      \"sh train.sh 106 CTDS _ng1000 --num_negative_samples=1000\",\n      \"sh train.sh 104 CTDS _ng1000_bs64 --num_negative_samples=1000 --train_batch_size=64\"\n    ]\n  }\n}\n```\n\n**Explanation of the Script:**\n\n* **SLURM:** The script uses SLURM (Simple Linux Utility for Resource Management) to submit and manage a batch job.\n* **Job Name:** The job name is dynamically generated using the model name ($2) and experiment setting ($3).\n* **Output and Error Files:** The output and error files are directed to specific directories with filenames based on the job ID and other parameters.\n* **Node List:** The script specifies a nodelist using the node number provided in $1.\n* **Partition:** The job is scheduled on the \"gpu\" partition, indicating a need for GPU resources.\n* **GPU Count:** The job requests one GPU.\n* **Cores:** The job requests 8 cores.\n* **Memory:** The job requests 30GB of memory.\n* **Time:** The job requests a runtime of 4 days.\n* **Environment:** The script sources the user's bashrc and activates a conda environment named \"tds_py37_pt\". It sets the PYTHONPATH and OMP_NUM_THREADS environment variables.\n* **Python Command:** The script executes a Python command using `torch.distributed.launch` to run the training script `Run.py` with specific arguments. \n\n**The script's purpose is to submit a training job for a machine learning model using SLURM, leveraging GPU resources, and specifying various configurations and parameters.** \n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 423,
+        "candidates_token_count": 728,
+        "total_token_count": 1151,
+        "cached_content_token_count": 0
+    }
+}

@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"SLURM\",\n  \"details\": {\n    \"job_name\": \"ni_principled-pre-training\",\n    \"nodes\": 1,\n    \"gpus\": 2,\n    \"cpus_per_task\": 32,\n    \"nodes_list\": \"bruno1,bruno2,dym-lab,dym-lab2,galileo1,galileo2,newton3,newton4,newton5,nlp-a40-1,nlp-ada-1,nlp-ada-2,tdk-bm4\",\n    \"output_file\": \"fine_tuning_runs/slurm_%N_%j_out.txt\",\n    \"error_file\": \"fine_tuning_runs/slurm_%N_%j_err.txt\",\n    \"email_type\": \"fail\",\n    \"email_address\": \"zachary@campus.technion.ac.il\",\n    \"environment_variables\": {\n      \"DS_SKIP_CUDA_CHECK\": 1,\n      \"OMP_NUM_THREADS\": \"$SLURM_CPUS_PER_TASK\"\n    },\n    \"software\": {\n      \"deepspeed\": \"deepspeed --no_local_rank --master_port=30026 --num_gpus=2 train_encoder_decoder.py\"\n    },\n    \"parameters\": {\n      \"num_gpus\": 2,\n      \"num_cpus\": 32,\n      \"precision\": \"bf16\",\n      \"model.model_implementation\": \"hf_t5\",\n      \"deepspeed.use_deepspeed\": \"true\",\n      \"logging.wandb\": \"true\",\n      \"model.compile\": \"false\",\n      \"data.data_collator\": \"custom_t5\",\n      \"dataset.streaming\": \"false\",\n      \"optim.epochs\": 3,\n      \"optim.base_lr\": 1e-5,\n      \"optim.batch_size\": 64,\n      \"optim.grad_acc\": 1,\n      \"optim.warmup_steps\": 0,\n      \"evaluate.every_steps\": 100,\n      \"logging.every_steps\": 50,\n      \"checkpoint.every_steps\": 10_000,\n      \"checkpoint.output_dir\": \"./checkpoints\",\n      \"checkpoint.checkpoint_path\": \"checkpoints/pre_train/from_pretrained/hf_t5/allenai/c4_en/lr_0_0001_inverse_sqrt_bsz_200_shuffle_p_0_5/2024-04-03_20-31/checkpoint-256000\",\n      \"mode\": \"ft\",\n      \"downstream.benchmark_constants\": \"ni\",\n      \"optim.lr_scheduler\": \"constant\"\n    }\n  }\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 670,
+        "candidates_token_count": 676,
+        "total_token_count": 1346,
+        "cached_content_token_count": 0
+    }
+}

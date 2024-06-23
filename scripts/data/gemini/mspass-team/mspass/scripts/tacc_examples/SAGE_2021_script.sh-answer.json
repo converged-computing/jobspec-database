@@ -1,0 +1,60 @@
+{
+    "application": "Singularity",
+    "details": {
+        "container_image": "mspass_latest.sif",
+        "scheduler": {
+            "role": "scheduler",
+            "env_vars": {
+                "MSPASS_WORK_DIR": "$WORK_DIR",
+                "MSPASS_ROLE": "scheduler"
+            }
+        },
+        "workers": {
+            "role": "worker",
+            "env_vars": {
+                "MSPASS_WORK_DIR": "$WORK_DIR",
+                "MSPASS_TMP_DATA_DIR": "/tmp/data_files",
+                "MSPASS_SCRATCH_DATA_DIR": "$WORK_DIR/data_files",
+                "MSPASS_SCHEDULER_ADDRESS": "$NODE_HOSTNAME",
+                "MSPASS_WORKER_ARG": "--nprocs 48 --nthreads 1",
+                "MSPASS_ROLE": "worker"
+            }
+        },
+        "db": {
+            "role": "db",
+            "env_vars": {
+                "MSPASS_DB_PATH": "tmp",
+                "MSPASS_WORK_DIR": "$WORK_DIR",
+                "MSPASS_TMP_DATA_DIR": "/tmp/data_files",
+                "MSPASS_SCRATCH_DATA_DIR": "$WORK_DIR/data_files",
+                "MSPASS_ROLE": "db"
+            }
+        },
+        "frontend": {
+            "role": "frontend",
+            "env_vars": {
+                "MSPASS_WORK_DIR": "$WORK_DIR",
+                "MSPASS_SCHEDULER_ADDRESS": "$NODE_HOSTNAME",
+                "MSPASS_DB_ADDRESS": "$NODE_HOSTNAME",
+                "MSPASS_SLEEP_TIME": "$SLEEP_TIME",
+                "MSPASS_ROLE": "frontend"
+            }
+        },
+        "resource_requirements": {
+            "slurm": {
+                "job_name": "mspass",
+                "stdout_file": "mspass.o%j",
+                "queue": "normal",
+                "nodes": 2,
+                "mpi_tasks": 2,
+                "runtime": "02:00:00",
+                "allocation": "MsPASS"
+            },
+            "mpi": {
+                "implementation": "hydra",
+                "worker_nodes": "$(SLURM_NNODES-1)",
+                "processes_per_node": 1
+            }
+        }
+    }
+}

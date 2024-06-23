@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n\"application\": \"MPI\",\n\"details\": {\n\"slurm\": {\n\"account\": \"cstdl\",\n\"nodes\": 64,\n\"tasks_per_node\": 4,\n\"gres\": \"gpu:4\",\n\"cpus_per_task\": 10,\n\"partition\": \"booster\",\n\"output\": \"%j_0_log.out\"\n},\n\"conda_env\": \"/p/project/ccstdl/nakamura2/llama-recipe-torch2.1_cuda-11.8\",\n\"network\": {\n\"NCCL_IB_TIMEOUT\": 50,\n\"UCX_RC_TIMEOUT\": \"4s\",\n\"NCCL_IB_RETRY_CNT\": 10,\n\"CUDA_VISIBLE_DEVICES\": \"0,1,2,3\",\n\"NCCL_ASYNC_ERROR_HANDLING\": 1\n},\n\"training_settings\": {\n\"epochs\": 50,\n\"optimizer\": {\n\"lr\": 1e-4,\n\"lr_min\": 1e-5,\n\"lr_decay\": 0.80,\n\"lr_warmup\": 0.05,\n\"lr_decay_style\": \"cosine\",\n\"weight_decay\": 0.1\n},\n\"seed\": 42,\n\"dataset\": {\n\"num_workers_dataloader\": 2\n},\n\"checkpoint_path\": \"/p/home/jusers/nakamura2/juwels/nakamura2/ABCI-llama-recipes/checkpoints/\",\n\"batch_size\": {\n\"batch_size\": 2,\n\"global_batch_size\": 1024,\n\"gradient_accumulation_steps\": 128\n},\n\"model\": {\n\"model_name\": \"/p/home/jusers/nakamura2/juwels/.cache/huggingface/hub/models--codellama--CodeLlama-34b-hf/snapshots/fda69408949a7c6689a3cf7e93e632b8e70bb8ad\",\n\"tokenizer_name\": \"/p/home/jusers/nakamura2/juwels/.cache/huggingface/hub/models--codellama--CodeLlama-34b-hf/snapshots/fda69408949a7c6689a3cf7e93e632b8e70bb8ad\"\n},\n\"streaming_datasets_train_path\": \"/p/project/ccstdl/nakamura2/ABCI-llama-recipes/sample_datasets\",\n\"wandb_name\": \"llama2-7b_${NODE_TYPE}_SLURM_NNODES_${SLURM_NNODES}_FSDP_NUM_GPUS_${NUM_GPUS}_GLOBAL_BATCH_SIZE_${GLOBAL_BATCH_SIZE}\",\n\"estimated_total_iterations\": 17500\n},\n\"mpi_settings\": {\n\"np\": 256,\n\"npernode\": 4,\n\"hostfile\": \"./hostfile/hostfile_${SLURM_JOB_ID}\",\n\"master_addr\": \"$master_addr\",\n\"master_port\": 12802,\n\"bind_to\": \"none\",\n\"map_by\": \"slot\"\n},\n\"python_script\": \"examples/finetuning.py\",\n\"script_arguments\": {\n\"enable_fsdp\": True,\n\"low_cpu_fsdp\": True,\n\"peft_method\": \"None\",\n\"mixed_precision\": True,\n\"pure_bf16\": True,\n\"num_epochs\": 50,\n\"save_model\": True,\n\"save_optimizer\": True,\n\"save_interval_iteration\": 500,\n\"save_checkpoint_path\": \"/p/home/jusers/nakamura2/juwels/nakamura2/ABCI-llama-recipes/checkpoints/\",\n\"use_mpi\": True,\n\"use_fast_kernels\": True,\n\"fsdp_activation_checkpointing\": True\n}\n}\n}\n```\n\n**Explanation:**\n\n* **Application:**  The script uses **MPI** (Message Passing Interface) to distribute the workload across multiple nodes, indicated by the `mpirun` command.\n* **Details:**\n    * **SLURM:** This script utilizes the SLURM (Simple Linux Utility for Resource Management) workload manager. The script defines specific resource requirements like the number of nodes, tasks per node, GPUs, and the partition to run on.\n    * **Conda Environment:** It uses a conda environment named `/p/project/ccstdl/nakamura2/llama-recipe-torch2.1_cuda-11.8`.\n    * **Network Configuration:**  It sets specific environment variables related to network communication for efficient GPU communication.\n    * **Training Settings:** The script defines various parameters for training a large language model, including the number of epochs, learning rate, batch size, and checkpointing settings.\n    * **Dataset:** The script uses the `samsum_dataset` and specifies the number of workers to use for the dataloader.\n    * **MPI Settings:** The script configures MPI parameters for running the model on multiple nodes, including the number of processes per node, the hostfile, and communication settings.\n    * **Python Script:** The script runs a Python script named `examples/finetuning.py`.\n    * **Script Arguments:**  The script provides numerous arguments to the Python script for model training, including specific options for the `finetuning.py` script.\n\n**Output Format:**\n\n* The output is in raw JSON format, suitable for parsing by machines.\n* The JSON object contains the `application` and `details` fields.\n* The `details` field provides further information about SLURM, Conda environment, network configuration, training settings, and MPI settings. \n* The specific settings and values are provided in a nested structure for clarity. \n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 1576,
+        "candidates_token_count": 1357,
+        "total_token_count": 2933,
+        "cached_content_token_count": 0
+    }
+}

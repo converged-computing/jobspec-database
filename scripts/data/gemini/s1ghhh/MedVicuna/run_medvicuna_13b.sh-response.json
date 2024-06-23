@@ -1,0 +1,62 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"SLURM\",\n  \"details\": {\n    \"job_name\": \"test\",\n    \"partition\": \"long\",\n    \"nodes\": 2,\n    \"output_file\": \"/l/users/hongyiwa/guoheng.sun/medvicuna_%j.out\",\n    \"memory\": \"200G\",\n    \"gpu\": 4,\n    \"cpus_per_task\": 12,\n    \"conda_environment\": \"fschat\",\n    \"model_name\": \"eachadea/vicuna-13b-1.1\",\n    \"data_path\": \"./medVicuna.json\",\n    \"output_dir\": \"output_medvicuna_13b/\",\n    \"training_epochs\": 3,\n    \"train_batch_size\": 1,\n    \"eval_batch_size\": 32,\n    \"gradient_accumulation_steps\": 32,\n    \"save_strategy\": \"epoch\",\n    \"save_total_limit\": 10,\n    \"learning_rate\": \"2e-5\",\n    \"weight_decay\": 0.0,\n    \"warmup_ratio\": 0.04,\n    \"lr_scheduler_type\": \"cosine\",\n    \"logging_steps\": 1,\n    \"model_max_length\": 1024,\n    \"gradient_checkpointing\": true,\n    \"lazy_preprocess\": true,\n    \"deepspeed_config\": \"./configs/default_offload_opt_param.json\",\n    \"tf32\": true,\n    \"log_file\": \"./medvicuna_13b.log\"\n  }\n}\n```\n\nThis script is using **SLURM** to manage the job execution on a cluster. It requires the following resources:\n\n* **2 nodes** with **4 GPUs** each, totaling **8 GPUs**\n* **24 CPU cores per node** (12 CPUs per task * 2 tasks per node)\n* **200GB of memory** per node \n\nThe script utilizes **conda** to activate the **fschat** environment, which presumably contains the necessary packages for training the model. \n\nIt downloads the **MedVicuna** dataset from Hugging Face and then uses **torchrun** to train a **vicuna-13b-1.1** model, configured with various hyperparameters and utilizing the **deepspeed** library for efficient training. The **WandB_MODE** is set to **offline**, indicating that no logging to Weights & Biases will be done. \n\nThe script utilizes **scontrol** to retrieve the hostnames and IP address of the head node, enabling communication between the nodes during distributed training. \n\nOverall, this script is designed to train a large language model on a cluster environment, taking advantage of distributed computing and various optimization techniques. \n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "citation_metadata": {
+                "citation_sources": [
+                    {
+                        "start_index": 464,
+                        "end_index": 628,
+                        "uri": "https://github.com/s1ghhh/MedVicuna",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 634,
+                        "end_index": 833,
+                        "uri": "https://github.com/s1ghhh/MedVicuna",
+                        "license_": ""
+                    }
+                ]
+            },
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 664,
+        "candidates_token_count": 645,
+        "total_token_count": 1309,
+        "cached_content_token_count": 0
+    }
+}

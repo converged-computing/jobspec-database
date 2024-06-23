@@ -1,0 +1,32 @@
+{
+    "application": "SuperLU",
+    "details": {
+        "environment": {
+            "modules": [
+                "essl",
+                "netlib-lapack/3.8.0",
+                "gcc/7.4.0",
+                "cmake",
+                "cuda/9.2.148"
+            ]
+        },
+        "resources": {
+            "partition": "regular",
+            "license": "SCRATCH",
+            "time": "00:20:00",
+            "constraint": "haswell"
+        },
+        "execution": {
+            "launcher": "jsrun",
+            "arguments": {
+                "nodes": "RS_VAL",
+                "tasks_per_node": "RANK_PER_RS",
+                "cores_per_task": "TH_PER_RS",
+                "gpus_per_node": "GPU_PER_RS",
+                "binding": "packed:$NTH",
+                "mpi_args": "-x PAMI_DISABLE_CUDA_HOOK=1 -disable_gpu_hooks"
+            },
+            "profiling": "nvprof --profile-from-start off"
+        }
+    }
+}

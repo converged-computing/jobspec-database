@@ -1,0 +1,68 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n\"application\": \"Trilinos\",\n\"details\": {\n\"resource_requirements\": {\n\"nodes\": 1,\n\"time\": \"05:00:00\",\n\"account\": \"cfd116\",\n\"mail_type\": \"BEGIN,END\"\n},\n\"software_requirements\": {\n\"compiler\": \"HIPCC\",\n\"libraries\": [\n\"CRAY_MPICH\",\n\"CRAY_LIBSCI\",\n\"CRAY_BINUTILS\",\n\"ZLIB\"\n],\n\"modules\": {\n\"load_modules.sh\": {\n\"source\": \"${TRILINOS_SRC}/packages/tpetra/scripts/PerformanceTesting/crusher/load_modules.sh\"\n}\n},\n\"build_system\": \"CMake\",\n\"build_type\": \"RELEASE\"\n},\n\"configuration\": {\n\"source_dir\": \"${TRILINOS_SRC}\",\n\"build_dir\": \"${TRILINOS_BUILD}\",\n\"trilinos_install_dir\": \"${trilinos_install_dir}\",\n\"cmake_options\": \"${CMAKE_OPTIONS}\",\n\"args\": {\n\"general\": [\n\"-GNinja\",\n\"-D Trilinos_TEST_CATEGORIES=PERFORMANCE\",\n\"-D Trilinos_ENABLE_Fortran:BOOL=OFF\",\n\"-D CMAKE_INSTALL_PREFIX:PATH=${trilinos_install_dir}\",\n\"-D CMAKE_BUILD_TYPE:STRING=$BUILD_TYPE\",\n\"-D MPI_USE_COMPILER_WRAPPERS:BOOL=OFF\",\n\"-D MPI_EXEC_NUMPROCS_FLAG:STRING=--ntasks\",\n\"-D MPI_EXEC:STRING=srun\",\n\"-D Trilinos_EXTRA_LINK_FLAGS:STRING=-L${ROCM_PATH}/lib -lamdhip64\",\n\"-D CMAKE_CXX_COMPILER:PATH=$HIP_PATH/bin/hipcc\",\n\"-D CMAKE_CXX_FLAGS:STRING=-I${CRAY_MPICH_DIR}/include\",\n\"-D CMAKE_C_COMPILER:PATH=$HIP_PATH/bin/hipcc\",\n\"-D CMAKE_C_FLAGS:STRING=-I${CRAY_MPICH_DIR}/include\",\n\"-D Trilinos_EXTRA_LINK_FLAGS:STRING=-L${CRAY_MPICH_DIR}/lib -lmpi -L${CRAY_MPICH_ROOTDIR}/gtl/lib -lmpi_gtl_hsa -L/${CRAY_BINUTILS_VERSION}/cce/x86_64/lib -lcraymath -lu -lf\",\n\"-D BUILD_SHARED_LIBS:BOOL=ON\",\n\"-D Trilinos_ENABLE_TESTS:BOOL=OFF\",\n\"-D Trilinos_ENABLE_ALL_OPTIONAL_PACKAGES:BOOL=OFF\",\n\"-D Trilinos_ENABLE_CXX11:BOOL=ON\",\n\"-D Trilinos_ENABLE_EXPLICIT_INSTANTIATION:BOOL=ON\",\n\"-D Trilinos_ASSERT_MISSING_PACKAGES:BOOL=OFF\",\n\"-D Trilinos_ALLOW_NO_PACKAGES:BOOL=OFF\",\n\"-D Trilinos_ENABLE_OpenMP:BOOL=OFF\",\n\"-D Trilinos_ENABLE_Amesos:BOOL=ON\",\n\"-D Trilinos_ENABLE_Amesos2:BOOL=ON\",\n\"-D Amesos2_ENABLE_SuperLU:BOOL=OFF\",\n\"-D Amesos2_ENABLE_KLU2:BOOL=ON\",\n\"-D Trilinos_ENABLE_AztecOO:BOOL=ON\",\n\"-D Trilinos_ENABLE_Belos:BOOL=ON\",\n\"-D Trilinos_ENABLE_Epetra:BOOL=ON\",\n\"-D Trilinos_ENABLE_EpetraExt:BOOL=ON\",\n\"-D Trilinos_ENABLE_Galeri:BOOL=ON\",\n\"-D Trilinos_ENABLE_Ifpack:BOOL=ON\",\n\"-D Trilinos_ENABLE_Ifpack2:BOOL=ON\",\n\"-D Ifpack2_ENABLE_TESTS:BOOL=ON\",\n\"-D Trilinos_ENABLE_Kokkos:BOOL=ON\",\n\"-D Kokkos_ENABLE_OPENMP:BOOL=OFF\",\n\"-D Kokkos_ENABLE_HIP:BOOL=ON\",\n\"-D Kokkos_ARCH_ZEN3:BOOL=ON\",\n\"-D Kokkos_ARCH_VEGA90A:BOOL=ON\",\n\"-D Kokkos_ENABLE_DEPRECATED_CODE:BOOL=OFF\",\n\"-D Trilinos_ENABLE_KokkosKernels:BOOL=ON\",\n\"-D Trilinos_ENABLE_ML:BOOL=ON\",\n\"-D Trilinos_ENABLE_MueLu:BOOL=ON\",\n\"-D MueLu_ENABLE_Epetra:BOOL=OFF\",\n\"-D MueLu_ENABLE_Kokkos_Refactor:BOOL=ON\",\n\"-D MueLu_ENABLE_TESTS:BOOL=ON\",\n\"-D MueLu_ENABLE_EXAMPLES:BOOL=ON\",\n\"-D Trilinos_ENABLE_Panzer:BOOL=ON\",\n\"-D Trilinos_ENABLE_PanzerMiniEM:BOOL=ON\",\n\"-D PanzerMiniEM_ENABLE_EXAMPLES:BOOL=ON\",\n\"-D PanzerMiniEM_ENABLE_TESTS:BOOL=ON\",\n\"-D Trilinos_ENABLE_Percept:BOOL=OFF\",\n\"-D Trilinos_ENABLE_Teko:BOOL=ON\",\n\"-D Trilinos_ENABLE_Tpetra:BOOL=ON\",\n\"-D Tpetra_ENABLE_EXAMPLES:BOOL=ON\",\n\"-D Tpetra_ENABLE_TESTS:BOOL=ON\",\n\"-D Tpetra_INST_HIP:BOOL=ON\",\n\"-D Tpetra_INST_SERIAL:BOOL=ON\",\n\"-D Tpetra_INST_OPENMP:BOOL=OFF\",\n\"-D Tpetra_INST_DOUBLE:BOOL=ON\",\n\"-D Trilinos_ENABLE_Gtest:BOOL=OFF\",\n\"-D Trilinos_ENABLE_Teuchos:BOOL=ON\",\n\"-D Teuchos_KOKKOS_PROFILING:BOOL=ON\",\n\"-D Trilinos_ENABLE_Xpetra:BOOL=ON\",\n\"-D Xpetra_ENABLE_Kokkos_Refactor:BOOL=ON\",\n\"-D Xpetra_ENABLE_Epetra:BOOL=OFF\",\n\"-D Trilinos_ENABLE_Zoltan:BOOL=ON\",\n\"-D Trilinos_ENABLE_Zoltan2:BOOL=ON\",\n\"-D TPL_ENABLE_BLAS:BOOL=ON\",\n\"-D TPL_BLAS_LIBRARIES=${CRAY_LIBSCI_PREFIX_DIR}/lib/libsci_cray.a\",\n\"-D TPL_ENABLE_LAPACK:BOOL=ON\",\n\"-D TPL_LAPACK_LIBRARIES=${CRAY_LIBSCI_PREFIX_DIR}/lib/libsci_cray.a\",\n\"-D TPL_ENABLE_Boost:BOOL=OFF\",\n\"-D TPL_ENABLE_HDF5:BOOL=OFF\",\n\"-D TPL_ENABLE_Netcdf:BOOL=OFF\",\n\"-D TPL_ENABLE_METIS:BOOL=ON\",\n\"-D TPL_ENABLE_ParMETIS:BOOL=ON\",\n\"-D TPL_ENABLE_SuperLU:BOOL=OFF\",\n\"-D TPL_ENABLE_Zlib:BOOL=ON\",\n\"-D Zlib_INCLUDE_DIRS:PATH=${OLCF_ZLIB_ROOT}/include\",\n\"-D Zlib_LIBRARY_DIRS:PATH=${OLCF_ZLIB_ROOT}/lib\"\n],\n\"environment_variables\": {\n\"TRILINOS_SRC\": \"${TRILINOS_SRC}\",\n\"TRILINOS_BUILD\": \"${TRILINOS_BUILD}\",\n\"BUILD_TYPE\": \"${BUILD_TYPE}\",\n\"all_proxy\": \"socks://proxy.ccs.ornl.gov:3128/\",\n\"ftp_proxy\": \"ftp://proxy.ccs.ornl.gov:3128/\",\n\"http_proxy\": \"http://proxy.ccs.ornl.gov:3128/\",\n\"https_proxy\": \"http://proxy.ccs.ornl.gov:3128/\",\n\"no_proxy\": \"'localhost,127.0.0.0/8,*.ccs.ornl.gov,*.ncrc.gov',*.olcf.ornl.gov\",\n\"THE_REAL_NETCDF_C_ROOT\": \"${CRAY_NETCDF_DIR}/crayclang/10.0\",\n\"HIPFLAGS\": \"--amdgpu-target=gfx90a\",\n\"PE_MPICH_GTL_DIR_amd_gfx90a\": \"-L${CRAY_MPICH_ROOTDIR}/gtl/lib\",\n\"PE_MPICH_GTL_LIBS_amd_gfx90a\": \"-lmpi_gtl_hsa\"\n}\n},\n\"build_command\": \"numactl -C $(seq -s, 0 2 $NUMTHREADS) ninja -j $(seq -s, 0 2 $NUMTHREADS | tr ',' '\\n' | wc -l)\",\n\"numthreads\": 31\n}\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "citation_metadata": {
+                "citation_sources": [
+                    {
+                        "start_index": 1908,
+                        "end_index": 2075,
+                        "uri": "http://blog.goo.ne.jp/dalab-gnct/c/73d68e1ab0c560e14e2e19ade93f6a49/2",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 1993,
+                        "end_index": 2151,
+                        "uri": "https://github.com/sunethwarna/test_documentation",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 4128,
+                        "end_index": 4288,
+                        "uri": "https://github.com/ExaWorks/SDK",
+                        "license_": ""
+                    }
+                ]
+            },
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 2833,
+        "candidates_token_count": 2074,
+        "total_token_count": 4907,
+        "cached_content_token_count": 0
+    }
+}

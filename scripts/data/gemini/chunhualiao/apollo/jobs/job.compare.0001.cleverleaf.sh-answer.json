@@ -1,0 +1,50 @@
+{
+    "application": "Cleverleaf",
+    "details": {
+        "runtime": "bash",
+        "scheduler": "SLURM",
+        "resource_requirements": {
+            "nodes": 2,
+            "time": "300",
+            "partition": "pbatch",
+            "account": "asccasc",
+            "mail_user": "wood67@llnl.gov",
+            "mail_type": "ALL",
+            "requeue": true,
+            "exclusive": true,
+            "job_name": "APOLLO:COMPARE.1.cleverleaf.test"
+        },
+        "environment_variables": {
+            "EXPERIMENT_JOB_TITLE": "COMPARE.0001.cleverleaf",
+            "APPLICATION_RANKS": "1",
+            "SOS_AGGREGATOR_COUNT": "1",
+            "EXPERIMENT_NODE_COUNT": "2",
+            "EXPERIMENT_BASE": "/p/lustre2/${USER}/experiments/apollo",
+            "SOS_WORK": "${EXPERIMENT_BASE}/${EXPERIMENT_JOB_TITLE}.${SLURM_JOB_ID}",
+            "SOS_EVPATH_MEETUP": "${SOS_WORK}/daemons",
+            "RETURN_PATH": "`pwd`",
+            "CLEVERLEAF_APOLLO_BINARY": " ${SOS_WORK}/bin/cleverleaf-apollo-release ",
+            "CLEVERLEAF_NORMAL_BINARY": " ${SOS_WORK}/bin/cleverleaf-normal-release ",
+            "CLEVERLEAF_TRACED_BINARY": " ${SOS_WORK}/bin/cleverleaf-traced-release ",
+            "CLEVERLEAF_INPUT": "${SOS_WORK}/cleaf_triple_pt_25.in",
+            "SRUN_CLEVERLEAF": " --cpu-bind=none -c 36 -o ${SOS_WORK}/output/cleverleaf.%4t.stdout -N ${WORK_NODE_COUNT} -n ${APPLICATION_RANKS} -r 1 ",
+            "KMP_WARNINGS": "0",
+            "KMP_AFFINITY": "noverbose,nowarnings,norespect,granularity=fine,explicit,proclist=[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35]",
+            "OPENMP_TRACE_OUTPUT_FILE": "${SOS_WORK}"
+        },
+        "dependencies": [
+            "common_unsetenv.sh",
+            "common_spack.sh",
+            "common_setenv.sh",
+            "common_copy_files.sh",
+            "common_launch_sos.sh",
+            "common_srun_cmds.sh",
+            "common_parting.sh"
+        ],
+        "software": [
+            "cleverleaf-apollo-release",
+            "cleverleaf-normal-release",
+            "cleverleaf-traced-release"
+        ]
+    }
+}

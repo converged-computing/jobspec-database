@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"Singularity\",\n  \"details\": {\n    \"slurm\": {\n      \"qos\": \"%qos\",\n      \"partition\": \"%partition\",\n      \"nodes\": \"%nodes\",\n      \"wall_time\": \"%wall_time\",\n      \"job_name\": \"%job_name\",\n      \"gpus\": \"%gpus\"\n    },\n    \"modules\": \"%modules\",\n    \"scratch\": {\n      \"host\": \"%scratch_host\",\n      \"inputs\": \"%inputs\",\n      \"outputs\": \"%outputs\"\n    },\n    \"container\": {\n      \"image\": \"%container\",\n      \"command\": \"%container_command\"\n    }\n  }\n}\n```\n\nThis script uses Singularity to run a containerized application on a Slurm cluster. Here's a breakdown of the script's functionality:\n\n**1. Slurm Parameters:**\n- The script defines several Slurm parameters to specify job requirements, including:\n    - **qos:** Quality of Service\n    - **partition:** Node partition to run the job on\n    - **nodes:** Number of nodes to use\n    - **time:** Maximum wall-clock time for the job\n    - **job-name:** Name for the Slurm job\n    - **gres:** GPU resources requested (e.g., `gpu:4` for 4 GPUs)\n\n**2. Modules:**\n- The script uses the `module` command to load specific software modules required for the job. The `%modules` placeholder represents the module names to be loaded.\n\n**3. Job Parameters:**\n- The script defines various job parameters, including:\n    - **job_id:** Unique job ID generated from Slurm job/array IDs\n    - **scratch:** Path to a temporary scratch directory on the host\n    - **inputs:** List of files or directories to be copied to the scratch directory before the job execution\n    - **outputs:** List of files or directories to be copied from the scratch directory after the job execution\n    - **container:** Path to the Singularity container image\n    - **container_command:** Command to be executed inside the Singularity container\n\n**4. Setting up Scratch:**\n- The script creates the scratch directory and copies the input files to it.\n\n**5. Monitoring and Running the Job:**\n- It uses `nvidia-smi` to monitor GPU usage and logs the output to a file.\n- The script executes the Singularity container using the specified command (`container_command`).\n\n**6. Copying Outputs:**\n- After the job completes, the script copies the output files from the scratch directory to the working directory.\n\n**7. Clean-up:**\n- The script cleans up the scratch directory.\n\nThe script provides a framework for running containerized applications on Slurm clusters using Singularity. You can customize the parameters and commands to suit your specific needs. \n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 638,
+        "candidates_token_count": 621,
+        "total_token_count": 1259,
+        "cached_content_token_count": 0
+    }
+}

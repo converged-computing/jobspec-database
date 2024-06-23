@@ -1,0 +1,32 @@
+{
+    "application": "Benchmarking",
+    "details": {
+        "build_system": "CMake",
+        "compiler": "GCC",
+        "modules": [
+            "cmake/3.17.3",
+            "gcc"
+        ],
+        "build_path": "BUILD_PATH=$SCRIPT_DIR/../build",
+        "source_path": "SOURCE_PATH=$SCRIPT_DIR/../",
+        "binary_path": "END2END_BIN_PATH=$BUILD_PATH/end2end-bench",
+        "parallel_jobs": "make -C $BUILD_PATH -j 20 end2end-bench",
+        "scheduler": "SLURM",
+        "scheduler_options": {
+            "cpus_per_task": 40,
+            "nodes": 1,
+            "account": "def-mmehride",
+            "output_file": "log_$EXPERIMENT_NAME.%j.%N.out",
+            "time_limit": "1:00:00",
+            "constraints": "cascade"
+        },
+        "environment_variables": {
+            "MKL_ENABLE_INSTRUCTIONS": "AVX512",
+            "OMP_PROC_BIND": "true"
+        },
+        "benchmark_options": {
+            "benchmark_counters_tabular": "true",
+            "benchmark_out": "end2end.json"
+        }
+    }
+}

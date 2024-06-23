@@ -1,0 +1,45 @@
+{
+    "application": "Slurm",
+    "details": {
+        "job_name": "mixer_real",
+        "output_file": "MIXER_REAL-%A_%a.txt",
+        "error_file": "MIXER_REAL-%A_%a.txt",
+        "account": "p697_norment",
+        "time": "24:00:00",
+        "cpus_per_task": 16,
+        "mem_per_cpu": "8000M",
+        "array_range": "1-20",
+        "modules": [
+            "singularity/3.7.1"
+        ],
+        "environment_variables": [
+            "COMORMENT=/ess/p697/data/durable/s3-api/github/comorment",
+            "SINGULARITY_BIND=$COMORMENT/mixer/reference:/REF:ro",
+            "SIF=$COMORMENT/mixer/singularity",
+            "MIXER_COMMON_ARGS=\"--ld-file /REF/ldsc/1000G_EUR_Phase3_plink/1000G.EUR.QC.@.run4.ld --bim-file /REF/ldsc/1000G_EUR_Phase3_plink/1000G.EUR.QC.@.bim --threads 16\"",
+            "REP=\"rep${SLURM_ARRAY_TASK_ID}\"",
+            "EXTRACT=\"--extract /REF/ldsc/1000G_EUR_Phase3_plink/1000G.EUR.QC.prune_maf0p05_rand2M_r2p8.$REP.snps\"",
+            "PYTHON=\"singularity exec --home=$PWD:/home $SIF/mixer.sif python\""
+        ],
+        "singularity_image": "$SIF/mixer.sif",
+        "python_executable": "python",
+        "mixer_commands": [
+            "fit1",
+            "fit2",
+            "test1",
+            "test2"
+        ],
+        "input_files": [
+            "SCZ.sumstats.gz",
+            "INT.sumstats.gz"
+        ],
+        "output_files": [
+            "SCZ.fit.$REP.json",
+            "INT.fit.$REP.json",
+            "SCZ_vs_INT.fit.$REP.json",
+            "SCZ.test.$REP",
+            "INT.test.$REP",
+            "SCZ_vs_INT.test.$REP"
+        ]
+    }
+}

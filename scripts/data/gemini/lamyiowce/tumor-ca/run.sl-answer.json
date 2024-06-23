@@ -1,0 +1,24 @@
+{
+    "application": "SLURM",
+    "details": {
+        "account": "G74-17",
+        "nodes": 1,
+        "partition": "topola",
+        "cpus_per_task": 24,
+        "array_tasks": "1-32",
+        "output_file": "slurm%A_%a.out",
+        "mail_type": "END",
+        "mail_user": "j.bazinska@student.uw.edu.pl",
+        "environment_variables": {
+            "LD_LIBRARY_PATH": "/icm/home/bazinska/miniconda3/lib:$LD_LIBRARY_PATH"
+        },
+        "executable": "./tumor",
+        "arguments": [
+            "../resources/tumors/out-vnw-tr1-st0-0a-initial.json",
+            "../protocol_generator/data/protocol_times_${SLURM_ARRAY_TASK_ID}.csv",
+            "./results/generated/",
+            "${SLURM_ARRAY_TASK_ID}",
+            "144000"
+        ]
+    }
+}

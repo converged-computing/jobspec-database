@@ -1,0 +1,42 @@
+{
+    "application": "SLURM",
+    "details": {
+        "resource_allocation": {
+            "wait_all_nodes": 1,
+            "nodes": 1,
+            "tasks": 1,
+            "tasks_per_node": 1,
+            "gpus": 4,
+            "gpus_per_task": 4,
+            "cpus_per_task": 4,
+            "memory": "200gb",
+            "partition": "hpg-ai",
+            "exclusive": true,
+            "time": "4:00:00"
+        },
+        "software": {
+            "module": "singularity",
+            "container": "/blue/vendor-nvidia/hju/monaicore0.8.1",
+            "python": "python3"
+        },
+        "environment_variables": {
+            "NCCL_DEBUG": "INFO",
+            "TORCH_DISTRIBUTED_DEBUG": "DETAIL",
+            "NCCL_ASYNC_ERROR_HANDLING": 1
+        },
+        "training_script": {
+            "path": "$HOME/monai_uf_tutorials/monaicore_multigpu/unet_ddp/unet_training_ddp.py"
+        },
+        "pt_launch_utilities": {
+            "path": "$HOME/monai_uf_tutorials/monaicore_multigpu/util_multigpu",
+            "scripts": [
+                "pt_multinode_helper_funcs.sh",
+                "run_on_node.sh",
+                "run_on_multinode.sh"
+            ]
+        },
+        "commands": {
+            "launch": "srun --unbuffered \"$PT_LAUNCH_SCRIPT\" \"$(realpath $PT_LAUNCH_UTILS_PATH)\" \"$TRAINING_CMD\" \"$PYTHON_PATH\""
+        }
+    }
+}

@@ -1,0 +1,63 @@
+{
+    "application": "LSF",
+    "details": {
+        "shell": "bash",
+        "operating_systems": [
+            "RHEL 5",
+            "RHEL 6"
+        ],
+        "run_levels": [
+            "3",
+            "5"
+        ],
+        "resource_requirements": {
+            "nodes": 2,
+            "memory": "3000",
+            "walltime": "4:15",
+            "queue": "dev",
+            "project": "NWPS-T2O",
+            "modules": [
+                "prod_envir",
+                "prod_util",
+                "PrgEnv-intel",
+                "iobuf",
+                "HDF5-serial-intel-haswell/1.8.9",
+                "NetCDF-intel-haswell/4.2",
+                "python/3.6.3",
+                "jasper-gnu-haswell/1.900.1",
+                "png-intel-haswell/1.2.49",
+                "zlib-intel-haswell/1.2.7",
+                "nco-gnu-haswell/4.4.4",
+                "cfp-intel-sandybridge"
+            ],
+            "environment_variables": {
+                "IOBUF_PARAMS": "*:count=4:size=32M:prefetch=1:preflush=1",
+                "FORT_BUFFERED": "true",
+                "NWPSplatform": "DEVWCOSS",
+                "MP_PGMMODEL": "mpmd",
+                "MP_CSS_INTERRUPT": "yes",
+                "WFO": "%WFO%",
+                "siteid": "${WFO}",
+                "SITEID": "${WFO^^}",
+                "N": "1",
+                "KEEPDATA": "YES",
+                "model": "nwps",
+                "MODEL": "${model^^}",
+                "envir": "para",
+                "DEVWCOSS_USER": "$(whoami)",
+                "COMROOT": "/gpfs/hps3/ptmp/${DEVWCOSS_USER}/data/retro/com",
+                "job": "pnwps_${WFO}_fc_cg1_ret",
+                "jobid": "pnwps_${WFO}_fc_cg1_ret.$$",
+                "jlogfile": "${COMROOT}/logs/${envir}/jlogfile.${job}",
+                "WCOSS_SYSTEM": "$( echo $COMROOTp1 | cut -c7 )d1",
+                "WCOSS_SYSTEM_COM": "$( echo $COMROOTp1 | cut -c7-9 )",
+                "NWROOT": "${NWPSdir}"
+            }
+        },
+        "upstream_dependency": {
+            "job_name": "pnwps_%WFO%_prep_ret",
+            "log_file": "${COMROOT}/logs/${envir}/jlogfile.pnwps_%WFO%_prep_ret"
+        },
+        "executable": "${NWROOT}/dev/jobs/J${MODEL}_FORECAST_RET"
+    }
+}

@@ -1,0 +1,44 @@
+{
+    "application": "ungrib",
+    "software_details": {
+        "MPAS": {
+            "version": "gcc@9.4.0",
+            "dependency_management": "Spack"
+        },
+        "ungrib": {
+            "path": "/mnt/beegfs/julio.fernandez/MPAS/testcase/runs/GFS2/2021060100/wpsprd/ungrib.exe",
+            "libraries": [
+                "/usr/lib64/libjasper.so*",
+                "/home/julio.fernandez/local/lib64"
+            ],
+            "environment_variables": {
+                "LD_LIBRARY_PATH": "/home/julio.fernandez/local/lib64"
+            }
+        },
+        "MPI": {
+            "implementation": "OpenMPI",
+            "environment_variables": {
+                "PMI_NO_FORK": "1",
+                "OMPI_MCA_btl_openib_allow_ib": "1",
+                "OMPI_MCA_btl_openib_if_include": "mlx5_0:1",
+                "PMIX_MCA_gds": "hash"
+            }
+        }
+    },
+    "resource_requirements": {
+        "scheduler": "Slurm",
+        "job_name": "gfs4mpas",
+        "nodes": 1,
+        "partition": "batch",
+        "tasks_per_node": 1,
+        "walltime": "00:30:00",
+        "output_file": "/mnt/beegfs/julio.fernandez/MPAS/testcase/runs/GFS2/2021060100/logs/my_job_ungrib.o%j",
+        "error_file": "/mnt/beegfs/julio.fernandez/MPAS/testcase/runs/GFS2/2021060100/logs/my_job_ungrib.e%j",
+        "ulimits": {
+            "stack_size": "unlimited",
+            "core_file_size": "unlimited",
+            "virtual_memory": "unlimited",
+            "data_segment_size": "unlimited"
+        }
+    }
+}

@@ -1,0 +1,34 @@
+{
+    "application": "SLURM",
+    "details": {
+        "resources": {
+            "gpus": 8,
+            "gpus_per_node": 4,
+            "ntasks": 2,
+            "nodes": 2,
+            "cpus_per_task": 16,
+            "time": "00:30:00",
+            "mem": "200G",
+            "account": "ibex-cs"
+        },
+        "software": {
+            "singularity": "module load singularity",
+            "image": "./pytorch_22.08-py3.sif",
+            "bind_mount": "/ibex/ai/home/shaima0d/KSL_Trainings",
+            "env_vars": {
+                "OMP_NUM_THREADS": 1,
+                "NCCL_SOCKET_IFNAME": "ib0",
+                "NCCL_DEBUG": "INFO"
+            },
+            "python_script": "train_ddp.py",
+            "python_package": "torch.distributed.launch"
+        },
+        "distribution": {
+            "distributed_training": true,
+            "nproc_per_node": 4,
+            "nnodes": 2,
+            "master_addr": "${master_ip}",
+            "master_port": 10121
+        }
+    }
+}

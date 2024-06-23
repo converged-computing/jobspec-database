@@ -1,0 +1,29 @@
+{
+    "application": "SLURM",
+    "details": {
+        "cluster": "<clustername>",
+        "partition": "<partitionname>",
+        "account": "<accountname>",
+        "job name": "evaluate",
+        "output file": "logs/evaluate.out",
+        "GPU per node": 0,
+        "CPU cores/threads": 16,
+        "memory per node": "128000M",
+        "max time": "0-24:00",
+        "tasks": 1,
+        "priority": 1,
+        "environment variables": {
+            "OMP_NUM_THREADS": "$SLURM_CPUS_PER_TASK"
+        },
+        "python script": "src/evaluate.py",
+        "script arguments": [
+            "$dataset",
+            "$predictor",
+            "--n_threads=$n_threads",
+            "--n_seeds=$n_seeds",
+            "--n_train=$n_train",
+            "--joint_training",
+            "$kwargs"
+        ]
+    }
+}

@@ -1,0 +1,48 @@
+{
+    "application": "SLURM",
+    "details": {
+        "resource_requirements": {
+            "cores": 20,
+            "wall_time": "20 hours",
+            "nodes": 1,
+            "gpus": 4,
+            "queue": "cidsegpu1_contrib_res",
+            "partition": "cidsegpu1"
+        },
+        "software_requirements": {
+            "modules": [
+                "anaconda3/5.3.0"
+            ],
+            "conda_environment": "secenv",
+            "python_script": "model2/run_model.py",
+            "model_name": "t5-base"
+        },
+        "data_paths": [
+            "data/CASIE_processed/train.csv",
+            "data/CASIE_processed/test.csv",
+            "/scratch/uananthe/thesis/text_ev_casie_512_10_64"
+        ],
+        "output_paths": [
+            "/scratch/uananthe/ADD_t5_casie_text_ev_5121064.%j.out",
+            "/scratch/uananthe/ADD_t5_casie_text_ev_5121064.%j.err"
+        ],
+        "environment_variables": [
+            "TRANSFORMERS_CACHE=/scratch/mparmar3/.cache/",
+            "PYTHONPATH=$PYTHONPATH:/home/mparmar3/.conda/envs/mihir_pytorch/lib/python3.7/site-packages/"
+        ],
+        "parameters": {
+            "do_train": "true",
+            "num_train_epochs": "10",
+            "max_source_length": "512",
+            "text_column": "text",
+            "summary_column": "event_triggers",
+            "per_device_train_batch_size": "16",
+            "per_device_eval_batch_size": "16",
+            "gradient_accumulation_steps": "4",
+            "predict_with_generate": "true",
+            "save_strategy": "steps",
+            "save_steps": "500",
+            "overwrite_output_dir": "true"
+        }
+    }
+}

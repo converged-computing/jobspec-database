@@ -1,0 +1,30 @@
+{
+    "application": "SLURM",
+    "details": {
+        "job_name": "sgemm_epyc",
+        "partition": "EPYC",
+        "nodes": 1,
+        "exclusive": true,
+        "ntasks_per_node": 64,
+        "memory": "490G",
+        "time": "02:00:00",
+        "output": "sgemm_epyc_job_%j.out",
+        "modules": [
+            "architecture/AMD",
+            "openMPI/4.1.4/gnu/12.2.1",
+            "mkl",
+            "openBLAS/0.3.23-omp"
+        ],
+        "environment_variables": [
+            "OMP_PLACES=cores",
+            "OMP_PROC_BIND=close",
+            "LD_LIBRARY_PATH=/u/dssc/mdepet00/assignment/exercise2/blis/lib:$LD_LIBRARY_PATH"
+        ],
+        "executable": "sgemm_$LIB.x",
+        "arguments": [
+            "$SIZE",
+            "$SIZE",
+            "$SIZE"
+        ]
+    }
+}

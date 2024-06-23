@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"Slurm\",\n  \"details\": {\n    \"software\": [\n      \"PLUTO\",\n      \"Nvidia-smi\",\n      \"Python3\",\n      \"Make\",\n      \"Nsys\",\n      \"Ncu\",\n      \"Mpirun\"\n    ],\n    \"resources\": {\n      \"account\": \"DD-23-44 or FTA-23-25\",\n      \"partition\": \"qcpu\",\n      \"time\": \"20 minutes\",\n      \"nodes\": 1,\n      \"tasks\": 128,\n      \"cpus\": 1,\n      \"gpus\": 4,\n      \"modules\": \"pluto_mod\"\n    },\n    \"commands\": [\n      \"nvidia-smi\",\n      \"python3 test_pluto.py --auto-update\",\n      \"python3 test_pluto.py --start-from 0:0\",\n      \"pluto_select 3\",\n      \"make -j -B\",\n      \"nsys profile --trace=cuda,mpi,nvtx,openacc --force-overwrite true -o report_MHD_highorder_BLAST_B1_gpu4_leo mpirun -np 4 ./pluto\",\n      \"nsys profile --force-overwrite true -o report_MHD_BLAST_B3_304cube_leo_o2 ./pluto -maxsteps 10 -xres 304\",\n      \"ncu --target-processes all -k regex:Particles_LP_UpdateSpectra_325 --set=full --import-source=yes --launch-count 1 --launch-skip 100 -f -o NCUreport_MM_leo ./pluto -xres 304\",\n      \"make -j -B\",\n      \"nsys profile --trace=cuda,mpi,nvtx,openacc --force-overwrite true -o report_nsys_MM_leo ./pluto\",\n      \"ncu --target-processes all -k regex:Particles_LP_UpdateSpectra_323 --set=full --import-source=yes --launch-count 1 --launch-skip 194 -f true -o NCUreport_MM2_leo \\\"./pluto\\\" -no-write\",\n      \"ncu --kernel-name Particles_LP_UpdateSpectra_323 --set=full --import-source=yes --launch-skip 194 --launch-count 1 \\\"./pluto\\\" -no-write\",\n      \"./pluto\",\n      \"mpirun -np 128 ./pluto -maxsteps 60\",\n      \"mpirun -np ${NG} ./pluto -maxsteps 60\",\n      \"cp -v pluto.0.log plutolog_KAROcpu_${NN}\"\n    ]\n  }\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 851,
+        "candidates_token_count": 661,
+        "total_token_count": 1512,
+        "cached_content_token_count": 0
+    }
+}

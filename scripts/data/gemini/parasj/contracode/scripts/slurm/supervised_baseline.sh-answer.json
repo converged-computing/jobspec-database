@@ -1,0 +1,46 @@
+{
+    "application": "slurm",
+    "details": {
+        "job_name": "contrastive_pretrain",
+        "output_file": "/home/eecs/paras/slurm/coderep/%j_supervised_baseline.log",
+        "tasks": 1,
+        "memory": "256000 MB",
+        "time": "125:00:00",
+        "excluded_nodes": "atlas,blaze,r16",
+        "environment_variables": {
+            "PATH": "/data/paras/miniconda3/bin:$PATH",
+            "DATA_CACHE": "/data/paras/data_cache",
+            "FREE_PORT": "dynamically assigned",
+            "BATCHSIZE": "default 16, can be overridden",
+            "LR": "default '1e-4', can be overridden",
+            "PROGRAM_MODE": "default 'identity', can be overridden",
+            "LABEL_MODE": "default 'identifier', can be overridden",
+            "N_DECODER_LAYERS": "default 4, can be overridden",
+            "SUBWORD_REGULARIZATION": "default 0, can be overridden",
+            "DATASET_LIMIT": "default '-1', can be overridden",
+            "RUNNAME": "required",
+            "CUDA_VISIBLE_DEVICES": "environment variable",
+            "CUDA_DEVICE_ORDER": "environment variable",
+            "SLURM_JOB_ID": "environment variable"
+        },
+        "required_software": [
+            "python",
+            "torch",
+            "representjs (installed from source)",
+            "npm"
+        ],
+        "data_requirements": {
+            "data_cache": "/data/paras/data_cache",
+            "codesearchnet_javascript": "/work/paras/representjs/data/codesearchnet_javascript"
+        },
+        "script_execution": {
+            "commands": [
+                "rsync -avhW --no-compress --progress /work/paras/representjs/data/codesearchnet_javascript $DATA_CACHE",
+                "pip install torch",
+                "pip install -e .",
+                "npm install",
+                "python representjs/main.py train --run_name \"$RUNNAME-$SLURM_JOB_ID\" --program_mode $PROGRAM_MODE --label_mode $LABEL_MODE --n_decoder_layers=$N_DECODER_LAYERS --subword_regularization_alpha $SUBWORD_REGULARIZATION --num_epochs 150 --save_every 5 --batch_size $BATCHSIZE --num_workers 8 --lr $LR --train_filepath $DATA_CACHE/codesearchnet_javascript/javascript_train_supervised.jsonl.gz --eval_filepath $DATA_CACHE/codesearchnet_javascript/javascript_valid_0.jsonl.gz --spm_filepath $DATA_CACHE/codesearchnet_javascript/csnjs_8k_9995p_unigram_url.model --limit_dataset_size $DATASET_LIMIT"
+            ]
+        }
+    }
+}

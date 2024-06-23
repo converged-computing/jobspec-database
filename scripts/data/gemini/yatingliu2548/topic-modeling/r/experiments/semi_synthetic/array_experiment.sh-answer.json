@@ -1,0 +1,27 @@
+{
+    "application": "SLURM",
+    "details": {
+        "software": [
+            "R/4.2.0",
+            "matlab",
+            "Rscript"
+        ],
+        "resources": {
+            "memory": "10G",
+            "time": "35:00:00",
+            "partition": "broadwl",
+            "account": "pi-cdonnat",
+            "tasks": 1,
+            "job_name": "array",
+            "output_file": "experiments/logs/array_%A_%a.out",
+            "error_file": "experiments/logs/array_%A_%a.err",
+            "array": "1-20",
+            "scratch_directory": "$SCRATCH/topic_modeling/r/"
+        },
+        "script_execution": {
+            "experiment_id": "${SLURM_ARRAY_JOB_ID}_${SLURM_ARRAY_TASK_ID}",
+            "experiment_name": "$3-$1-$2-$4-${id_experiment}",
+            "experiment_script": "experiments/synthetic_AP.R"
+        }
+    }
+}

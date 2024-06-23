@@ -1,0 +1,38 @@
+{
+    "application": "MPI",
+    "details": {
+        "software": [
+            "conda",
+            "mpiexec",
+            "python",
+            "nvidia-smi"
+        ],
+        "resources": {
+            "compute_nodes": 10,
+            "walltime": "2:30:00",
+            "filesystems": [
+                "home",
+                "grand"
+            ],
+            "queue": "prod",
+            "account": "STlearn",
+            "environment_variables": {
+                "MPICH_GPU_SUPPORT_ENABLED": "1",
+                "NCCL_COLLNET_ENABLE": "1",
+                "NCCL_NET_GDR_LEVEL": "PHB",
+                "MASTER_ADDR": "hostname -s",
+                "NNODES": "wc -l < $PBS_NODEFILE",
+                "NRANKS_PER_NODE": "nvidia-smi -L | wc -l",
+                "NTOTRANKS": "NNODES * NRANKS_PER_NODE",
+                "NDEPTH": "16",
+                "OMP_NUM_THREADS": "8"
+            },
+            "libraries": [
+                "conda 3DCNN"
+            ],
+            "scripts": [
+                "set_affinity_gpu_polaris.sh"
+            ]
+        }
+    }
+}

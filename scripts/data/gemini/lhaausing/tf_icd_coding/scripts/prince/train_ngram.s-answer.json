@@ -1,0 +1,36 @@
+{
+    "application": "Slurm",
+    "details": {
+        "resource_requirements": {
+            "nodes": 1,
+            "tasks_per_node": 4,
+            "cpus_per_task": 1,
+            "gpus": "gpu:p40:4",
+            "time": "24:00:00",
+            "memory": "64GB",
+            "job_name": "bert_icd_pred",
+            "mail_type": "END",
+            "mail_user": "xl3119@nyu.edu",
+            "output": "/scratch/xl3119/tf_icd/ngram_ns28_bs32_seed66.log"
+        },
+        "software_requirements": {
+            "singularity_image": "/beegfs/work/public/singularity/centos-7.8.2003.sif",
+            "overlay_ext3": "/scratch/xl3119/tf_icd/overlay-10GB-400K.ext3",
+            "modules": [
+                "anaconda3/5.3.1",
+                "cuda/10.1.105",
+                "gcc/6.3.0"
+            ],
+            "conda_environment": "/ext3/cenv",
+            "python_script": "run.py",
+            "model_name": "bert_base",
+            "n_epochs": 60,
+            "batch_size": 48,
+            "ngram_size": 28,
+            "n_gpu": 4,
+            "checkpt_path": "../global_bert_base_ns28_mp${maxpool_size}_seed66sepcls_invw.pt",
+            "data_dir": "../data",
+            "seed": 66
+        }
+    }
+}

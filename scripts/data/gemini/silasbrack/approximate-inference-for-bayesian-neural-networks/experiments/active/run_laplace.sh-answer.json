@@ -1,0 +1,30 @@
+{
+    "application": "LSF",
+    "details": {
+        "job_name": "active_l",
+        "output_file": "active_%J.out",
+        "queue": "gpuv100",
+        "gpu_request": "num=1:mode=exclusive_process",
+        "walltime": "24:00",
+        "resource_requirements": {
+            "memory": "16GB",
+            "hosts": "1"
+        },
+        "modules": [
+            "python3/3.9.6",
+            "cuda/11.3"
+        ],
+        "virtual_environment": "venv",
+        "python_script": "src/train_active.py",
+        "script_arguments": [
+            "data=mnist",
+            "training.epochs=3",
+            "training.active_queries=5",
+            "training.initial_pool=50",
+            "training.query_size=10",
+            "inference=laplace",
+            "inference/model=convnet",
+            "inference.device=cuda"
+        ]
+    }
+}

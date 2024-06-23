@@ -1,0 +1,65 @@
+{
+    "application": "LSF",
+    "details": {
+        "queue": "gpuv100",
+        "job_name": "gp75",
+        "num_cores": 8,
+        "gpu": {
+            "type": "gpuv100",
+            "num": 1,
+            "mode": "exclusive_process"
+        },
+        "walltime": "10:00",
+        "memory": "2GB",
+        "gpu_memory": "32GB",
+        "nodes": 1,
+        "output_file": "logs/gp75-%J.out",
+        "error_file": "logs/gp75-%J.err",
+        "modules": [
+            "cuda/12.4"
+        ],
+        "environment": "penv",
+        "python_script": "experiments/applications/gaussian_process/train/optim_logml_gpytorch_adaptive.py",
+        "python_script_args": [
+            "--name",
+            "gpytorch75",
+            "--seed",
+            "$seed",
+            "--num_matvecs",
+            "$num_matvecs",
+            "--num_samples",
+            "$num_samples",
+            "--num_epochs",
+            "$num_epochs",
+            "--cg_tol",
+            "$cg_tol",
+            "--dataset",
+            "$dataset",
+            "--rank_precon",
+            "$rank_precon",
+            "--num_partitions",
+            "10"
+        ],
+        "python_script2": "experiments/applications/gaussian_process/train/optim_logml_adjoints_adaptive.py",
+        "python_script_args2": [
+            "--name",
+            "adjoints75",
+            "--seed",
+            "$seed",
+            "--num_matvecs",
+            "$num_matvecs",
+            "--num_samples",
+            "$num_samples",
+            "--num_epochs",
+            "$num_epochs",
+            "--cg_tol",
+            "$cg_tol",
+            "--dataset",
+            "$dataset",
+            "--rank_precon",
+            "$rank_precon",
+            "--num_partitions",
+            "10"
+        ]
+    }
+}

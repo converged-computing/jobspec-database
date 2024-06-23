@@ -1,0 +1,33 @@
+{
+    "application": "Slurm",
+    "details": {
+        "resource_requirements": {
+            "partition": "amdgpu",
+            "time": "24:00:00",
+            "gres": "gpu:1",
+            "ntasks_per_node": 1,
+            "mem_per_gpu": "32000"
+        },
+        "software": {
+            "python": "3.x",
+            "pytorch": "1.9.0",
+            "mpi": "openmpi",
+            "slurm": "unknown version"
+        },
+        "libraries": [
+            "PyTorch/1.9.0-fosscuda-2020b"
+        ],
+        "environment_variables": {
+            "OMP_MCA_mpi_warn_on_fork": "0"
+        },
+        "commands": [
+            "hostname",
+            "pwd",
+            "mpirun -np 1 python improved-diffusion/scripts/run_train.py --quant_m ${quant_m} --weight_i_width ${weight_i_width} --weight_f_width ${weight_f_width} --diff_steps 2000 --model_arch transformer --lr 0.0001 --lr_anneal_steps 400000 --seed 101 --noise_schedule sqrt --in_channel 128 --modality roc --submit no --padding_mode pad --app \"--predict_xstart True --training_mode e2e --vocab_size 11043 --roc_train ./datasets/ROCstory \" --notes xstart_e2e --bsz 64",
+            "mpirun -np 1 python improved-diffusion/scripts/batch_decode.py /home/kangchen/Diffusion-LM-main/improved-diffusion/quantized_diffusion_models/diff_roc_${quant_m}_${weight_i_width}_${weight_f_width}*/ -1.0 ema",
+            "mpirun -np 1 python train_run.py --quant_m ${quant_m} --weight_i_width ${weight_i_width} --weight_f_width ${weight_f_width} --experiment e2e-tgt-tree --app \"--init_emb /home/kangchen/Diffusion-LM-main/improved-diffusion/quantized_diffusion_models/diff_roc_bnn_0_0_pad_rand128_transformer_lr0.0001_0.0_2000_sqrt_Lsimple_h128_s2_d0.1_sd101_xstart_e2e/ --n_embd 16 --learned_emb yes \" --pretrained_model bert-base-uncased --epoch 6 --bsz 10",
+            "mpirun -np 1 python improved-diffusion/scripts/infill.py --quant_m ${quant_m} --weight_i_width ${weight_i_width} --weight_f_width ${weight_f_width} --model_path /home/kangchen/Diffusion-LM-main/improved-diffusion/quantized_diffusion_models/diff_roc_${quant_m}_${weight_i_width}_${weight_f_width}_pad_rand128_transformer_lr0.0001_0.0_2000_sqrt_Lsimple_h128_s2_d0.1_sd101_xstart_e2e/ema_0.9999_200000.pt --eval_task_ 'control_tree' --use_ddim True --notes \"tree_adagrad\" --eta 1. --verbose pipe"
+        ],
+        "working_directory": "/home/kangchen/Diffusion-LM-main/"
+    }
+}

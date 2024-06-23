@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"SLURM\",\n  \"details\": {\n    \"scheduler\": \"SLURM\",\n    \"partition\": \"learnfair\",\n    \"job_name\": \"evalopenclip\",\n    \"nodes\": 1,\n    \"tasks_per_node\": 8,\n    \"cpus_per_gpu\": 10,\n    \"gpus\": 8,\n    \"output_file\": \"/data/home/amroabbas/projects/open_clip/src/jobs/eval.%j_%A.out\",\n    \"error_file\": \"/data/home/amroabbas/projects/open_clip/src/jobs/eval.%j_%A.error\",\n    \"time\": \"25\",\n    \"array\": \"18-36:2\",\n    \"environment\": {\n      \"MASTER_PORT\": \"12802\",\n      \"PYTHONFAULTHANDLER\": \"1\",\n      \"CUDA_LAUNCH_BLOCKING\": \"0\",\n      \"HOSTNAMES\": \"scontrol show hostnames \\\"$SLURM_JOB_NODELIST\\\"\",\n      \"MASTER_ADDR\": \"scontrol show hostnames \\\"$SLURM_JOB_NODELIST\\\" | head -n 1\",\n      \"COUNT_NODE\": \"scontrol show hostnames \\\"$SLURM_JOB_NODELIST\\\" | wc -l\",\n      \"PYTHONPATH\": \"$PYTHONPATH:$PWD/src\",\n      \"keep_complex_samples\": \"False\",\n      \"keep_hard\": \"True\"\n    },\n    \"conda_env\": \"/data/home/amroabbas/projects/clipenv1/bin/activate\",\n    \"command\": \"srun --cpu_bind=v --accel-bind=gn python -u training/main.py \\\\    --imagenet-val /datasets01/imagenet_full_size/061417/val \\\\    --model ViT-B-32 \\\\    --pretrained /checkpoint/amroabbas/datapruning/openclip-for-density-based-pruning/new_exps/random/amro_random_0.6_cont_Apr24/checkpoints/epoch_${SLURM_ARRAY_TASK_ID}.pt \\\\    --logs /checkpoint/amroabbas/datapruning/openclip-for-density-based-pruning/new_exps/eval/eval-random/amro_random_0.6 \\\\    --name eval_ep${SLURM_ARRAY_TASK_ID}\",\n    \"framework\": \"python\"\n  }\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 761,
+        "candidates_token_count": 597,
+        "total_token_count": 1358,
+        "cached_content_token_count": 0
+    }
+}

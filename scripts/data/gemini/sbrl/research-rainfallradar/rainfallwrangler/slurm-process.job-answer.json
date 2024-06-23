@@ -1,0 +1,37 @@
+{
+    "application": "SLURM",
+    "details": {
+        "job_name": "RWrangle",
+        "nodes": 1,
+        "tasks_per_node": 1,
+        "output_file": "%j.%N.%a.rainwrangle.out.log",
+        "error_file": "%j.%N.%a.rainwrangle.err.log",
+        "partition": "compute",
+        "time_limit": "3-00:00:00",
+        "memory": "8096",
+        "modules": [
+            "utilities/multi",
+            "readline/7.0",
+            "gcc/10.2.0",
+            "python/anaconda/4.6/miniconda/3.7"
+        ],
+        "dependencies": [
+            "conda",
+            "npm",
+            "srun"
+        ],
+        "environment_variables": [
+            "RAINFALL",
+            "WATER",
+            "OUTPUT",
+            "COUNT_FILE",
+            "ARGS"
+        ],
+        "commands": [
+            "src/index.mjs recordify",
+            "src/index.mjs uniq",
+            "sbatch ./slurm-jsonl2tfrecord.job"
+        ],
+        "additional_information": "The script uses SLURM to submit a job to a high-performance computing cluster. The job runs a series of commands to process rainfall data and generate a tfrecord dataset. The script uses various modules and environment variables to configure the execution environment."
+    }
+}

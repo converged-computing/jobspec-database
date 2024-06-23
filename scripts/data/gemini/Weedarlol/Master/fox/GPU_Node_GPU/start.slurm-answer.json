@@ -1,0 +1,32 @@
+{
+    "application": "Slurm",
+    "details": {
+        "language": "Bash",
+        "libraries": [
+            "CUDA/11.7.0",
+            "OpenMPI/4.1.4-GCC-11.3.0",
+            "NCCL/2.12.12-GCCcore-11.3.0-CUDA-11.7.0"
+        ],
+        "compiler": "nvcc",
+        "run_environment": "Slurm",
+        "resource_requirements": {
+            "memory": "4G per GPU",
+            "nodes": "Depends on the scenario",
+            "tasks_per_node": "1",
+            "CPUs_per_task": "1",
+            "GPUs_per_task": "Depends on the scenario",
+            "GPUs_per_node": "Depends on the scenario",
+            "time_limit": "14:00:00"
+        },
+        "input_files": [
+            "main.cu",
+            "programs/jacobi.cu",
+            "programs/cuda_functions.cu"
+        ],
+        "output_files": [
+            "output/${SCENARIO}_${PARTITION}.out",
+            "error/${SCENARIO}_${PARTITION}.err"
+        ],
+        "execution_command": "mpirun -n 2 out_${SCENARIO}_${PARTITION} $VAR1 $VAR2 $VAR3 $VAR4 $VAR5 $VAR6 $VAR7 $VAR8 $VAR9"
+    }
+}

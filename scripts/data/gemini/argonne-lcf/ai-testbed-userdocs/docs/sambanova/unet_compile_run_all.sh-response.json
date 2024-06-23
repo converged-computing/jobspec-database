@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n\"application\": \"UNET_TRAIN\",\n\"software\": [\n\"Python\",\n\"SambaFlow\",\n\"MPICH\",\n\"UNET\",\n\"SambaLoader\"\n],\n\"resources\": [\n\"CPU\",\n\"GPU\",\n\"RDMA\",\n\"MPI\",\n\"Data Storage\"\n],\n\"environment\": [\n\"OMP_NUM_THREADS\",\n\"SF_RNT_NUMA_BIND\",\n\"SF_RNT_FSM_POLL_BUSY_WAIT\",\n\"SF_RNT_DMA_POLL_BUSY_WAIT\",\n\"SAMBA_CCL_USE_PCIE_TRANSPORT\"\n],\n\"libraries\": [\n\"unet.py\",\n\"unet_hook.py\",\n\"unet_batch.sh\"\n],\n\"files\": [\n\"out/unet_train_${BS}_${2}_${i}/unet_train_${BS}_${2}_${i}.pef\",\n\"compile_${BS}_${2}_${i}.log\",\n\"out/unet_train_${BS}_${2}_NP/unet_train_${BS}_${2}_NP.pef\",\n\"compile_${BS}_${2}_NP.log\",\n\"run_unet_${BS}_${2}_single.log\",\n\"run_unet_${BS}_${2}_${NP}.log\",\n\"log_dir_unet_train_kaggle\",\n\"log_dir_unet_${NP}_train_kaggle\",\n\"${UNET}/jsons/hd_files/hd_unet_${HD}.json\",\n\"${UNET}/jsons/compiler_configs/unet_compiler_configs_no_inst.json\"\n],\n\"arguments\": [\n\"BS\",\n\"HD\",\n\"NUM_WORKERS\"\n],\n\"command\": [\n\"python ${UNET}/unet.py compile\",\n\"python ${UNET}/unet_hook.py run\",\n\"sbatch --gres=rdu:1 --tasks-per-node 8  --nodes 2 --nodelist sm-02,sm-01 --cpus-per-task=16 ./unet_batch.sh\"\n]\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 1879,
+        "candidates_token_count": 500,
+        "total_token_count": 2379,
+        "cached_content_token_count": 0
+    }
+}

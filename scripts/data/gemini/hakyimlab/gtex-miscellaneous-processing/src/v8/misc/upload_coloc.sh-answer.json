@@ -1,0 +1,26 @@
+{
+    "application": "PBS",
+    "details": {
+        "job_name": "upload_coloc",
+        "walltime": "24:00:00",
+        "nodes": "1:ppn=1",
+        "memory": "4gb",
+        "output_log": "logs_u/${PBS_JOBNAME}.o${PBS_JOBID}.log",
+        "error_log": "logs_u/${PBS_JOBNAME}.e${PBS_JOBID}.err",
+        "modules": [
+            "gcc/6.2.0",
+            "miniconda2"
+        ],
+        "environment": "numa_gc",
+        "storage": "/gpfs/data/im-lab/nas40t2/abarbeira/projects/gtex_v8/coloc",
+        "cloud_storage": "gs://coloc/",
+        "commands": [
+            "tar -czvpf $EP results_enloc_priors",
+            "gsutil cp -a public-read $EP gs://coloc/",
+            "mv $EP $STORE",
+            "tar -czvpf $EPBSE results_enloc_priors_bse",
+            "gsutil cp -a public-read $EPBSE gs://coloc/",
+            "mv $EPBSE $STORE"
+        ]
+    }
+}

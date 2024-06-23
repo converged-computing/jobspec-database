@@ -1,0 +1,53 @@
+{
+    "application": "SLURM",
+    "details": {
+        "software": [
+            "python",
+            "train_finetune.py",
+            "SLURM",
+            "bash"
+        ],
+        "resource_requirements": {
+            "partition": "learnfair",
+            "output_path": "/checkpoint/pillutla/pfl/outs/%A_%a.out",
+            "nodes": 1,
+            "cpus_per_task": 10,
+            "memory": "40G",
+            "gpu": 1,
+            "time": "2:00:00"
+        },
+        "environment": {
+            "bashrc": "~/.bashrc",
+            "conda_environment": "pyt19"
+        },
+        "data": {
+            "dataset": "gldv2",
+            "pretrained_model_path": "/checkpoint/pillutla/pfl/saved_models3/${pretrained_name}/checkpoint.pt",
+            "logdir": "/checkpoint/pillutla/pfl/outputs3",
+            "savedir": "/checkpoint/pillutla/pfl/saved_models3"
+        },
+        "model": {
+            "model_name": "resnet18"
+        },
+        "training_params": {
+            "train_batch_size": 64,
+            "eval_batch_size": 128,
+            "lr": "1e-3",
+            "client_var_l2_reg_coef": [
+                1000,
+                100,
+                10,
+                1,
+                0.1
+            ],
+            "num_epochs_personalization": [
+                5
+            ],
+            "seed": 1,
+            "personalize_on_client": "adapter",
+            "pfl_algo": "fedalt",
+            "init": "pretrained",
+            "state": "stateful"
+        }
+    }
+}

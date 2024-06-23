@@ -1,0 +1,56 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"Slurm\",\n  \"details\": {\n    \"job_name\": \"cpt-llama2_random_scale4_112gpus_dynamic_data\",\n    \"output_file\": \"/mnt/petrelfs/share_data/quxiaoye/runs/llama2_random_scale4_112gpus_dynamic_data/%x-%j.log\",\n    \"error_file\": \"/mnt/petrelfs/share_data/quxiaoye/runs/llama2_random_scale4_112gpus_dynamic_data/%x-%j.log\",\n    \"partition\": \"MoE\",\n    \"nodes\": 14,\n    \"tasks_per_node\": 1,\n    \"cpus_per_task\": 64,\n    \"memory\": 0,\n    \"gpus_per_node\": 8,\n    \"quota_type\": \"reserved\",\n    \"conda_environment\": \"smoe\",\n    \"environment_variables\": {\n      \"OMP_NUM_THREADS\": \"32\",\n      \"LOGLEVEL\": \"INFO\"\n    },\n    \"model_type\": \"llama_moe\",\n    \"pretrained_model\": \"/mnt/petrelfs/share_data/quxiaoye/models/LlamaMoEForCausalLM/Random/llama2_7B-16Select4-up_proj-Scale4.0\",\n    \"tokenizer_path\": \"/mnt/petrelfs/share_data/quxiaoye/models/llama2_7B\",\n    \"dataset_dir\": \"/mnt/petrelfs/share_data/quxiaoye/SlimPajama_processed\",\n    \"validation_dir\": \"/mnt/petrelfs/share_data/quxiaoye/data/llama1_7B_val_set_tokenized\",\n    \"learning_rate\": \"2e-4\",\n    \"final_lr_portion\": \"0.1\",\n    \"per_device_train_batch_size\": 8,\n    \"per_device_eval_batch_size\": 8,\n    \"gradient_accumulation_steps\": 4,\n    \"block_size\": 4096,\n    \"num_tokens\": \"200*10^9\",\n    \"warmup_tokens\": \"15*10^8\",\n    \"eval_tokens\": \"2.5*10^9\",\n    \"seed\": 1227,\n    \"deepspeed_config_file\": \"conf/deepspeed/bf16_zero1_default.json\",\n    \"num_selects\": 4,\n    \"data_cache\": \"resources/cache\",\n    \"base_dir\": \"/mnt/petrelfs/share_data/quxiaoye/runs/llama2_random_scale4_112gpus_dynamic_data\",\n    \"output_dir\": \"${base_dir}/outputs/${SLURM_JOB_NAME}-${SLURM_JOB_ID}\",\n    \"command\": \"torchrun\",\n    \"arguments\": {\n      \"--nnodes\": \"${num_nodes}\",\n      \"--nproc_per_node\": \"${num_gpu_per_node}\",\n      \"--node_rank\": \"${SLURM_NODEID}\",\n      \"--rdzv_id\": \"$RANDOM\",\n      \"--rdzv_backend\": \"c10d\",\n      \"--rdzv_endpoint\": \"${head_node}:29518\",\n      \"smoe/entrypoint/cpt/cpt_fpt.py\": [\n        \"--prob_map\",\n        \"sheared_llama\",\n        \"--deepspeed\",\n        \"${deepspeed_config_file}\",\n        \"--model_name_or_path\",\n        \"${pretrained_model}\",\n        \"--model_type\",\n        \"${model_type}\",\n        \"--tokenizer_name_or_path\",\n        \"${tokenizer_path}\",\n        \"--dataset_dir\",\n        \"${dataset_dir}\",\n        \"--data_cache_dir\",\n        \"${data_cache}\",\n        \"--validation_dir\",\n        \"${validation_dir}\",\n        \"--per_device_train_batch_size\",\n        \"${per_device_train_batch_size}\",\n        \"--per_device_eval_batch_size\",\n        \"${per_device_eval_batch_size}\",\n        \"--do_train\",\n        \"--evaluation_strategy\",\n        \"steps\",\n        \"--eval_steps\",\n        \"${eval_steps}\",\n        \"--seed\",\n        \"${seed}\",\n        \"--bf16\",\n        \"--num_train_epochs\",\n        \"1\",\n        \"--final_lr_portion\",\n        \"${final_lr_portion}\",\n        \"--optim\",\n        \"adamw_torch\",\n        \"--adam_beta1\",\n        \"0.9\",\n        \"--adam_beta2\",\n        \"0.95\",\n        \"--learning_rate\",\n        \"${lr}\",\n        \"--weight_decay\",\n        \"0.1\",\n        \"--max_grad_norm\",\n        \"1.0\",\n        \"--warmup_steps\",\n        \"${warmup_steps}\",\n        \"--max_steps\",\n        \"${max_steps}\",\n        \"--max_train_samples\",\n        \"${max_train_samples}\",\n        \"--save_strategy\",\n        \"steps\",\n        \"--save_total_limit\",\n        \"1\",\n        \"--save_steps\",\n        \"${eval_steps}\",\n        \"--dataloader_num_workers\",\n        \"0\",\n        \"--dataloader_pin_memory\",\n        \"True\",\n        \"--gradient_accumulation_steps\",\n        \"${gradient_accumulation_steps}\",\n        \"--block_size\",\n        \"${block_size}\",\n        \"--output_dir\",\n        \"${output_dir}\",\n        \"--overwrite_output_dir\",\n        \"--ddp_timeout\",\n        \"3600\",\n        \"--ddp_find_unused_parameters\",\n        \"False\",\n        \"--torch_dtype\",\n        \"bfloat16\",\n        \"--gradient_checkpointing\",\n        \"--logging_first_step\",\n        \"True\",\n        \"--logging_strategy\",\n        \"steps\",\n        \"--logging_steps\",\n        \"5\",\n        \"--log_level\",\n        \"info\",\n        \"--log_level_replica\",\n        \"warning\",\n        \"--log_on_each_node\",\n        \"False\",\n        \"--report_to\",\n        \"none\",\n        \"--gate_type\",\n        \"TopKBalancedNoisyGate\",\n        \"--calculator_type\",\n        \"UniversalCalculator\",\n        \"--num_selects\",\n        \"${num_selects}\"\n      ]\n    },\n    \"software\": [\n      \"Slurm\",\n      \"conda\",\n      \"torchrun\",\n      \"deepspeed\",\n      \"python\",\n      \"git\"\n    ]\n  }\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "citation_metadata": {
+                "citation_sources": [
+                    {
+                        "start_index": 2408,
+                        "end_index": 2596,
+                        "uri": "https://github.com/we1k/Randeng-MLT-PromptCBLUE",
+                        "license_": ""
+                    }
+                ]
+            },
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 2784,
+        "candidates_token_count": 1581,
+        "total_token_count": 4365,
+        "cached_content_token_count": 0
+    }
+}

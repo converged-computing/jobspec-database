@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"Spack\",\n  \"details\": {\n    \"scheduler\": \"Slurm\",\n    \"spack_version\": \"0.17.3\",\n    \"spack_instance_name\": \"cpu\",\n    \"spack_instance_dir\": \"/cm/shared/apps/spack/0.17.3/cpu\",\n    \"intel_license_file\": \"40000@elprado.sdsc.edu:40200@elprado.sdsc.edu\",\n    \"spack_package\": \"valgrind@3.17.0\",\n    \"spack_compiler\": \"intel@19.1.1.217\",\n    \"spack_variants\": \"~boost +mpi +only64bit +ubsan\",\n    \"spack_dependencies\": \"^mvapich2@2.3.7/$(spack find --format '{hash:7}' mvapich2@2.3.7 % ${SPACK_COMPILER})\",\n    \"spack_spec\": \"valgrind@3.17.0 % intel@19.1.1.217 ~boost +mpi +only64bit +ubsan ^mvapich2@2.3.7/$(spack find --format '{hash:7}' mvapich2@2.3.7 % intel@19.1.1.217)\"\n  }\n}\n```\n\nThis script uses **Spack** to install **Valgrind** version 3.17.0. Here's a breakdown of the script's functionality:\n\n1. **Setup:**\n    - Uses Slurm for job scheduling and resource allocation.\n    - Defines environment variables for the script's execution, including date, time, system name, scheduler, and Spack related information.\n2. **Spack Configuration:**\n    - Loads the Slurm module.\n    - Sources the Spack environment setup script.\n    - Sets environment variables related to Intel compiler licensing and the specific Spack package, compiler, variants, and dependencies for Valgrind.\n3. **Spack Installation:**\n    - Uses `spack spec` to concretize the Spack specification, ensuring that the dependencies are met.\n    - Uses `spack install` to install Valgrind, using the specified number of Slurm tasks and ensuring the installation fails fast if any errors occur.\n4. **Module Refresh:**\n    - Refreshes the Lmod module environment to reflect the newly installed Spack package.\n5. **Dependent Job Submission:**\n    - Submits a dependent job `mpip@3.5.sh` that runs after the Valgrind installation is complete.\n\nThis script demonstrates how Spack is used for package management and dependency resolution within a high-performance computing environment. \n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 829,
+        "candidates_token_count": 625,
+        "total_token_count": 1454,
+        "cached_content_token_count": 0
+    }
+}

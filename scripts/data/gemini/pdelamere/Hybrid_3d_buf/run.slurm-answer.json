@@ -1,0 +1,28 @@
+{
+    "application": "Slurm",
+    "details": {
+        "partition": "t1standard",
+        "number_of_tasks": 115,
+        "tasks_per_node": 23,
+        "modules": [
+            "slurm",
+            "intel/2016",
+            "openmpi/intel/1.10.7",
+            "PrgEnv-intel/2016",
+            "python/anaconda3-2.5.0"
+        ],
+        "software": [
+            "chinook_setup",
+            "mpirun",
+            "python"
+        ],
+        "resource_requirements": {
+            "ulimits": [
+                "ulimit -s unlimited",
+                "ulimit -f unlimited",
+                "ulimit -l unlimited"
+            ],
+            "machinefile_generation": "srun -l /bin/hostname | sort -n | awk '{print $2}' > ./nodes.$SLURM_JOB_ID"
+        }
+    }
+}

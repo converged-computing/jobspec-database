@@ -1,0 +1,30 @@
+{
+    "application": "SLURM",
+    "details": {
+        "scheduler": "SLURM",
+        "nodes": 1,
+        "exclusive": true,
+        "gpus": "a100:4",
+        "partition": "stsi",
+        "time": "600:00:00",
+        "job_name": "1_train_GS",
+        "output": "%x.oe%j",
+        "error": "%x.oe%j",
+        "modules": [
+            "samtools/1.10",
+            "R",
+            "pytorch/1.8.0py38-cuda"
+        ],
+        "commands": [
+            "module purge",
+            "module load samtools/1.10",
+            "module load R",
+            "module load pytorch/1.8.0py38-cuda",
+            "bash 1_train_GS.sh $new_indir A100"
+        ],
+        "resource_requirements": {
+            "memory": "240G",
+            "cpu": "96"
+        }
+    }
+}

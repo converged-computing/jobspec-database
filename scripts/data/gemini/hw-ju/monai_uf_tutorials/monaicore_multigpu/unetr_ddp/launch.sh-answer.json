@@ -1,0 +1,28 @@
+{
+    "application": "SLURM",
+    "details": {
+        "software": [
+            "Singularity",
+            "PyTorch",
+            "NCCL",
+            "MONAI"
+        ],
+        "resources": {
+            "nodes": 1,
+            "tasks": 1,
+            "gpus": 4,
+            "cpus": 4,
+            "memory": "200gb",
+            "time": "4:00:00",
+            "partition": "hpg-ai"
+        },
+        "environment_variables": {
+            "NCCL_DEBUG": "INFO",
+            "TORCH_DISTRIBUTED_DEBUG": "DETAIL",
+            "NCCL_ASYNC_ERROR_HANDLING": 1,
+            "TRAINING_SCRIPT": "/path/to/unetr_btcv_ddp.py",
+            "PYTHON_PATH": "singularity exec --nv --bind /blue/vendor-nvidia/hju/data/unetr_data:/mnt /blue/vendor-nvidia/hju/monaicore0.8.1 python3",
+            "PT_LAUNCH_UTILS_PATH": "/path/to/util_multigpu"
+        }
+    }
+}

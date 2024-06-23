@@ -1,0 +1,51 @@
+{
+    "application": "SLURM",
+    "details": {
+        "script_language": "Bash",
+        "software": [
+            "R",
+            "DESeq2",
+            "Salmon",
+            "STAR",
+            "tximport"
+        ],
+        "resource_requirements": {
+            "cpus": 8,
+            "memory": "30G",
+            "time": "00-05:00:00",
+            "queue": "short"
+        },
+        "dependencies": [
+            "afterany:793158"
+        ],
+        "output_files": [
+            "/home/jmendietaes/jobsSlurm/outErr/%x_%A_%a.out",
+            "/home/jmendietaes/jobsSlurm/outErr/%x_%A_%a.err"
+        ],
+        "folder_structure": {
+            "basePath": "${basePath}/bamfiles/valid/",
+            "salmonOut": "${outpath}/counts",
+            "outpath": "${basePath}/furtherAnalysis/${projectName}",
+            "subScripts": "/home/jmendietaes/programas/pipelines/mRNA/cluster/sub-scripts"
+        },
+        "variables": {
+            "basePath": "path to folder structure for chip analysis",
+            "projectName": "project name",
+            "posibleControls": "comma separated string with all possible control IDs",
+            "R": "/home/jmendietaes/programas/miniconda3/envs/Renv/bin/Rscript",
+            "nCPU": "$SLURM_CPUS_PER_TASK"
+        },
+        "commands": [
+            "mkdir -p ${outpath}/DESeq2_batchCorrect",
+            "${R} ${subScripts}/02a_NR_DESeq2_KO-diffExpr.r \\",
+            "--countTable ${salmonOut}/tximportMerge.gene_counts.tsv \\",
+            "--outdir ${outpath}/DESeq2_batchCorrect/ \\",
+            "--outprefix \"RNA_DESeq2\"\\",
+            "--cores ${nCPU} \\",
+            "--controls ${posibleControls}",
+            "mkdir -p ${outpath}/DESeq2_batchCorrect/gatheredDESeq",
+            "cd ${outpath}/DESeq2_batchCorrect/gatheredDESeq",
+            "ln -s ../*results* . ;"
+        ]
+    }
+}

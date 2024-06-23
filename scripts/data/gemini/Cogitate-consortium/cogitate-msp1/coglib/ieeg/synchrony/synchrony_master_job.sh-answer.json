@@ -1,0 +1,33 @@
+{
+    "application": "slurm",
+    "details": {
+        "environment": {
+            "modules": [
+                "Anaconda3/2020.11"
+            ],
+            "conda_env": "/hpc/users/$USER/.conda/envs/cogitate_ecog",
+            "pythonpath": "/hpc/users/$USER/sw/github/ECoG"
+        },
+        "resources": {
+            "partition": "xnat",
+            "exclude_node": "cn12",
+            "nodes": 1,
+            "cpus_per_task": 64,
+            "memory_per_cpu": "8GB",
+            "mail_type": [
+                "BEGIN",
+                "END"
+            ],
+            "mail_user": "simon.henin@nyumc.org",
+            "time": "1-24:00:00",
+            "output": "/mnt/beegfs/XNAT/COGITATE/ECoG/phase_2/processed/bids/derivatives/synchrony_analysis/slurm-%A_%a.out",
+            "job_name": "synchrony"
+        },
+        "script": {
+            "arguments": [
+                "--config"
+            ],
+            "code": "python synchrony/synchrony_master.py --config \"${config}\""
+        }
+    }
+}

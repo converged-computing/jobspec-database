@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"SLURM\",\n  \"details\": {\n    \"resources\": {\n      \"memory\": \"32GB\",\n      \"tasks\": 1,\n      \"cpus_per_task\": 8,\n      \"gpu\": 1\n    },\n    \"partition\": \"main\",\n    \"array_tasks\": \"1-3\",\n    \"job_name\": \"udal\",\n    \"output_file\": \"/mnt/stud/work/ynagel/logs/udal/%A_%a__%x.log\"\n  },\n  \"environment\": {\n    \"virtual_environment\": \"/mnt/stud/home/ynagel/dal-toolbox/venv/bin/activate\",\n    \"working_directory\": \"/mnt/stud/home/ynagel/dal-toolbox/experiments/udal/\"\n  },\n  \"script\": \"active_learning.py\",\n  \"arguments\": {\n    \"model\": \"resnet18_labelsmoothing\",\n    \"dataset\": \"IMAGENET100\",\n    \"dataset_path\": \"/mnt/datasets/imagenet/ILSVRC2012/\",\n    \"al_strategy\": \"margin\",\n    \"al_cycle.n_init\": 2048,\n    \"al_cycle.init_pool_file\": \"/mnt/stud/home/ynagel/dal-toolbox/experiments/udal/initial_pools/IMAGENET100/random_2048_seed${random_seed}.json\",\n    \"al_cycle.acq_size\": 2048,\n    \"al_cycle.n_acq\": 9,\n    \"output_dir\": \"/mnt/stud/work/ynagel/results/udal/active_learning/IMAGENET100/resnet18_labelsmoothing/margin/N_INIT2048__ACQ_SIZE2048__N_ACQ9/seed${random_seed}/\",\n    \"random_seed\": \"$SLURM_ARRAY_TASK_ID\"\n  }\n}\n```\n\n**Explanation:**\n\n* **SLURM:** The script is designed to run on a SLURM cluster, a workload manager for high-performance computing. \n* **Resource Requirements:** The script requests 32GB of memory, 1 task with 8 CPUs per task, and 1 GPU.\n* **Partition:** It specifies the \"main\" partition for job execution.\n* **Array Jobs:** The `--array=1-3` flag indicates this is an array job running 3 instances of the script with different `SLURM_ARRAY_TASK_ID` values.\n* **Environment:** The script sets up a virtual environment using `source /mnt/stud/home/ynagel/dal-toolbox/venv/bin/activate` and changes the working directory to `/mnt/stud/home/ynagel/dal-toolbox/experiments/udal/`.\n* **Script Execution:**  The script executes the `active_learning.py` Python script with the provided arguments.\n* **Arguments:**  The script passes various arguments to `active_learning.py`, including model parameters, dataset details, active learning strategy, and output directory specifications. \n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 521,
+        "candidates_token_count": 715,
+        "total_token_count": 1236,
+        "cached_content_token_count": 0
+    }
+}

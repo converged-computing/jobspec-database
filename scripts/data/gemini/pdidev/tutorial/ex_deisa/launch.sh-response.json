@@ -1,0 +1,56 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n\"application\": \"Dask\",\n\"details\": {\n\"scheduler\": {\n\"launch command\": \"srun --cpu-bind=verbose --ntasks=1 --nodes=1 -l --output=scheduler.log dask-scheduler --interface ib0 --scheduler-file=$SCHEFILE\",\n\"scheduler file\": \"scheduler.json\"\n},\n\"workers\": {\n\"launch command\": \"srun --cpu-bind=verbose -l --output=worker-%t.log dask-worker --interface ib0 --local-directory /tmp --nprocs $NWORKERPNODE --scheduler-file=${SCHEFILE}\",\n\"number of workers per node\": 4\n},\n\"client\": {\n\"launch command\": \"`which python` client.py\",\n\"connection information\": \"obtained from scheduler file\"\n},\n\"simulation\": {\n\"launch command\": \"srun --ntasks=$NPROC --ntasks-per-node=$NPROCPNODE -l ./simulation\",\n\"total processes\": 4,\n\"processes per node\": 4\n},\n\"slurm\": {\n\"job name\": \"dask-cluster\",\n\"account\": \"dask_coupling\",\n\"time limit\": \"01:00:00\",\n\"nodes\": 1,\n\"partition\": \"cpu_med\",\n\"exclusive\": true\n},\n\"environment\": {\n\"interface\": \"ib0\",\n\"local directory\": \"/tmp\"\n}\n}\n}\n```\n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "citation_metadata": {
+                "citation_sources": [
+                    {
+                        "start_index": 281,
+                        "end_index": 437,
+                        "uri": "https://github.com/pdidev/tutorial",
+                        "license_": ""
+                    }
+                ]
+            },
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 459,
+        "candidates_token_count": 332,
+        "total_token_count": 791,
+        "cached_content_token_count": 0
+    }
+}

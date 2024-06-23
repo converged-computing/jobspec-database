@@ -1,0 +1,56 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"PBS\",\n  \"details\": {\n    \"queue\": \"normal\",\n    \"nodes\": \"1\",\n    \"cpus\": \"1\",\n    \"walltime\": \"4:00:00\",\n    \"stdout\": \"/nobackup/gamatull/stdout\",\n    \"stderr\": \"/nobackup/gamatull/stderr\",\n    \"script\": \"/u/gamatull/scripts/LST/sc3_pixelcount_MOYD11A2.sh\",\n    \"environment_variables\": {\n      \"SENS\": \"MYD or MOD\",\n      \"INSENS\": \"/nobackupp8/gamatull/dataproces/LST/${SENS}11A2_mean_msk\",\n      \"OUTSENS\": \"/nobackupp8/gamatull/dataproces/LST/${SENS}11A2_mean_msk/txt\",\n      \"RAMDIR\": \"/dev/shm\"\n    },\n    \"commands\": [\n      \"gdal_edit.py  -a_nodata -1   $INSENS/${SENS}_CLOUD3k_day${day}_wgs84.tif\",\n      \"pkinfo -hist -i  $INSENS/${SENS}_CLOUD3k_day${day}_wgs84.tif |  awk -v day=$day \\'{ if (NR==1) {   printf (\"%i \" , day ) ; printf (\"%i \" , $2) } else {   printf (\"%i\\\\n\" , $2) }  }\\'\",\n      \"sort -k 1,1 -g\"\n    ],\n    \"resources\": {\n      \"input_files\": [\n        \"/nobackup/gamatull/dataproces/LST/geo_file/list_day.txt\",\n        \"$INSENS/${SENS}_CLOUD3k_day${day}_wgs84.tif\"\n      ],\n      \"output_files\": [\n        \"$OUTSENS/count_CLOUD3k.txt\"\n      ]\n    }\n  }\n}\n```\n\n**Explanation:**\n\n* **Application:** The script is primarily designed to run as a **PBS (Portable Batch System)** job. \n* **Details:**\n    * **Queue:**  The job is submitted to the \"normal\" queue.\n    * **Nodes & CPUs:**  The job requires 1 node with 1 CPU.\n    * **Walltime:**  The job is allowed to run for a maximum of 4 hours (4:00:00).\n    * **Output:** Standard output (stdout) and error (stderr) are redirected to specific files on the system.\n    * **Script:** The script itself is located at `/u/gamatull/scripts/LST/sc3_pixelcount_MOYD11A2.sh`.\n    * **Environment Variables:**  The script uses several environment variables:\n        * `SENS`:  This variable will be set either to \"MYD\" or \"MOD\" based on how the script is invoked (likely through a loop).\n        * `INSENS`: Specifies the input directory for data.\n        * `OUTSENS`:  Specifies the output directory for results.\n        * `RAMDIR`: Defines the RAM directory, likely for temporary files.\n    * **Commands:** The script utilizes commands like `gdal_edit.py`, `pkinfo`, `awk`, and `sort` to perform operations on geospatial data. \n    * **Resources:**  The script requires input files (likely lists of days and geospatial data) and generates an output file containing pixel counts.\n\n**Additional Notes:**\n\n* **Purpose:**  Based on the commands and file names, this script likely counts pixels in cloud masks for MODIS (Moderate Resolution Imaging Spectroradiometer) data. \n* **Data Processing:**  The use of `gdal_edit.py` and `pkinfo` suggests that the script is processing geospatial data, possibly related to Earth observation.\n\n**Key Points:**\n\n* This script is a PBS job designed for processing geospatial data.\n* It uses specific commands and environment variables for data processing.\n* It involves reading input files, manipulating data, and producing output files. \n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "citation_metadata": {
+                "citation_sources": [
+                    {
+                        "start_index": 563,
+                        "end_index": 850,
+                        "uri": "https://github.com/selvaje/YaleRep",
+                        "license_": ""
+                    }
+                ]
+            },
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 470,
+        "candidates_token_count": 923,
+        "total_token_count": 1393,
+        "cached_content_token_count": 0
+    }
+}

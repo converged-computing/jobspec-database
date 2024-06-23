@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"Slurm\",\n  \"details\": {\n    \"job_name\": \"r2_train_nextvit\",\n    \"output_file\": \"/mnt/sandbox1/%u/logs/%A_%x\",\n    \"partition\": \"gpu\",\n    \"gpus\": 4,\n    \"tasks_per_node\": 4,\n    \"cpus_per_gpu\": 8,\n    \"time\": \"150:00:00\",\n    \"excluded_nodes\": \"stc01sppamxnl004\",\n    \"memory_per_gpu\": \"60G\",\n    \"environment\": {\n      \"conda_environment\": \"cvml\",\n      \"NCCL_NSOCKS_PERTHREAD\": 4,\n      \"NCCL_SOCKET_NTHREADS\": 2,\n      \"NCCL_MIN_CHANNELS\": 32,\n      \"OMP_NUM_THREADS\": 1,\n      \"OPENBLAS_NUM_THREADS\": 1,\n      \"MKL_NUM_THREADS\": 1,\n      \"NUMEXPR_NUM_THREADS\": 1,\n      \"CILK_NWORKERS\": 1,\n      \"TBB_MAX_NUM_THREADS\": 1,\n      \"PL_GLOBAL_SEED\": 304,\n      \"COLUMNS\": 100\n    },\n    \"python_script\": \"/home/$USER/git/JupiterCVML/kore/scripts/train_seg.py\",\n    \"config_files\": [\n      \"$CVML_DIR/kore/configs/defaults/halo_seg_training_params.yml\",\n      \"$CVML_DIR/kore/configs/options/highres_experiments_training_params.yml\",\n      \"/home/alex.li/git/scripts/training/nextvit.yml\"\n    ],\n    \"additional_arguments\": [\n      \"--batch_size 28\",\n      \"--run-id ${EXP}_nextvit_rev2_subset_norm\",\n      \"--loss.weight_norm_coef .01\"\n    ]\n  }\n}\n```\n\nThis script uses **Slurm** as a workload manager to submit and run a Python script.\n\n**Software Requirements:**\n\n* **Slurm:** For job submission and management.\n* **Conda:** For managing the Python environment \"cvml\".\n* **Python:**  For running the training script.\n* **NCCL:** For communication between GPUs.\n* **OpenBLAS:** For optimized BLAS operations.\n* **MKL:** For optimized math library.\n* **NumExpr:** For numerical expression evaluation.\n* **CILK:** For parallel processing.\n* **TBB:** For threading.\n* **PyTorch Lightning:** For training the model (implied by the script's structure and configuration file names).\n\n**Resource Requirements:**\n\n* **GPU:** 4 GPUs required\n* **CPU:**  32 CPUs in total (8 CPUs per GPU)\n* **Memory:** 60 GB of memory per GPU\n* **Time:** 150 hours\n\n**Script Logic:**\n\n1. **Setup:**\n   * Sets environment variables for optimized performance.\n   * Activates the \"cvml\" conda environment.\n   * Sets the working directory to /mnt/sandbox1/$USER.\n2. **Job Submission:**\n   * Uses `srun` to run the Python script with specific parameters.\n3. **Training:**\n   * The Python script `train_seg.py` is likely responsible for training a model using PyTorch Lightning. \n   * It utilizes provided configuration files to set up the training process.\n   *  The script also sets specific arguments like batch size, run ID, and loss weight normalization coefficient.\n\nThe script's configuration suggests it aims to train a segmentation model for the Halo dataset using the NextViT architecture. The training is likely performed with a particular focus on high-resolution data and using a subset of the data for training.\n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 757,
+        "candidates_token_count": 883,
+        "total_token_count": 1640,
+        "cached_content_token_count": 0
+    }
+}

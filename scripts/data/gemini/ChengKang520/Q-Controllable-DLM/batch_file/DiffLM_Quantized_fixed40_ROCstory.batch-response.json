@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"Slurm\",\n  \"details\": {\n    \"partition\": \"amdgpu\",\n    \"time\": \"24:00:00\",\n    \"gres\": \"gpu:1\",\n    \"tasks_per_node\": 1,\n    \"memory_per_gpu\": \"32000\",\n    \"job_name\": \"Q_fixed40_ROCstory\",\n    \"error_file\": \"Q_fixed40_ROCstory.err\",\n    \"output_file\": \"Q_fixed40_ROCstory.out\",\n    \"mail_user\": \"kangchen@fel.cvut.cz\",\n    \"mail_type\": \"ALL\",\n    \"software\": {\n      \"PyTorch\": \"1.9.0-fosscuda-2020b\",\n      \"OpenMPI\": \"disable MPI warnings\"\n    },\n    \"environment\": {\n      \"activation\": \"EnvDiff/bin/activate\",\n      \"working_directory\": \"/home/kangchen/Diffusion-LM-main/\",\n      \"quantization_method\": \"fixed40\",\n      \"weight_input_width\": 4,\n      \"weight_fractional_width\": 0,\n      \"training_script\": \"improved-diffusion/scripts/run_train.py\",\n      \"training_arguments\": {\n        \"quantization_method\": \"fixed40\",\n        \"weight_input_width\": 4,\n        \"weight_fractional_width\": 0,\n        \"diffusion_steps\": 2000,\n        \"model_architecture\": \"transformer\",\n        \"learning_rate\": 0.0001,\n        \"learning_rate_annealing_steps\": 400000,\n        \"seed\": 101,\n        \"noise_schedule\": \"sqrt\",\n        \"input_channel\": 128,\n        \"modality\": \"roc\",\n        \"submit\": \"no\",\n        \"padding_mode\": \"pad\",\n        \"application\": \"--predict_xstart True --training_mode e2e --vocab_size 11043 --roc_train ./datasets/ROCstory \",\n        \"notes\": \"xstart_e2e\",\n        \"batch_size\": 64\n      },\n      \"decoding_script\": \"improved-diffusion/scripts/batch_decode.py\",\n      \"decoding_arguments\": {\n        \"model_path\": \"/home/kangchen/Diffusion-LM-main/improved-diffusion/quantized_diffusion_models/diff_roc_${quant_m}_${weight_i_width}_${weight_f_width}*/\",\n        \"ema\": -1.0\n      }\n    }\n  }\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 995,
+        "candidates_token_count": 635,
+        "total_token_count": 1630,
+        "cached_content_token_count": 0
+    }
+}

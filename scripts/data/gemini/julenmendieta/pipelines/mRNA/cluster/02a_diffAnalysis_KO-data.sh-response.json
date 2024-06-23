@@ -1,0 +1,56 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"SLURM\",\n  \"details\": {\n    \"script_language\": \"Bash\",\n    \"software\": [\n      \"R\",\n      \"DESeq2\",\n      \"Salmon\",\n      \"STAR\",\n      \"tximport\"\n    ],\n    \"resource_requirements\": {\n      \"cpus\": 8,\n      \"memory\": \"30G\",\n      \"time\": \"00-05:00:00\",\n      \"queue\": \"short\"\n    },\n    \"dependencies\": [\n      \"afterany:793158\"\n    ],\n    \"output_files\": [\n      \"/home/jmendietaes/jobsSlurm/outErr/%x_%A_%a.out\",\n      \"/home/jmendietaes/jobsSlurm/outErr/%x_%A_%a.err\"\n    ],\n    \"folder_structure\": {\n      \"basePath\": \"${basePath}/bamfiles/valid/\",\n      \"salmonOut\": \"${outpath}/counts\",\n      \"outpath\": \"${basePath}/furtherAnalysis/${projectName}\",\n      \"subScripts\": \"/home/jmendietaes/programas/pipelines/mRNA/cluster/sub-scripts\"\n    },\n    \"variables\": {\n      \"basePath\": \"path to folder structure for chip analysis\",\n      \"projectName\": \"project name\",\n      \"posibleControls\": \"comma separated string with all possible control IDs\",\n      \"R\": \"/home/jmendietaes/programas/miniconda3/envs/Renv/bin/Rscript\",\n      \"nCPU\": \"$SLURM_CPUS_PER_TASK\"\n    },\n    \"commands\": [\n      \"mkdir -p ${outpath}/DESeq2_batchCorrect\",\n      \"${R} ${subScripts}/02a_NR_DESeq2_KO-diffExpr.r \\\\\",\n      \"--countTable ${salmonOut}/tximportMerge.gene_counts.tsv \\\\\",\n      \"--outdir ${outpath}/DESeq2_batchCorrect/ \\\\\",\n      \"--outprefix \\\"RNA_DESeq2\\\"\\\\\",\n      \"--cores ${nCPU} \\\\\",\n      \"--controls ${posibleControls}\",\n      \"mkdir -p ${outpath}/DESeq2_batchCorrect/gatheredDESeq\",\n      \"cd ${outpath}/DESeq2_batchCorrect/gatheredDESeq\",\n      \"ln -s ../*results* . ;\"\n    ]\n  }\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 2,
+                    "blocked": false
+                }
+            ],
+            "citation_metadata": {
+                "citation_sources": [
+                    {
+                        "start_index": 1121,
+                        "end_index": 1589,
+                        "uri": "https://github.com/julenmendieta/pipelines",
+                        "license_": ""
+                    }
+                ]
+            },
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 838,
+        "candidates_token_count": 561,
+        "total_token_count": 1399,
+        "cached_content_token_count": 0
+    }
+}

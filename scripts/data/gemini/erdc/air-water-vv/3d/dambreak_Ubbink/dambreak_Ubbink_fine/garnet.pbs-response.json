@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"proteus\",\n  \"details\": {\n    \"scheduler\": \"PBS\",\n    \"resources\": {\n      \"nodes\": 8,\n      \"cores_per_node\": 32,\n      \"mpi_processes\": 32,\n      \"walltime\": \"8 hours\",\n      \"queue\": \"standard\",\n      \"job_name\": \"ubbink3df\",\n      \"error_and_output\": \"combined\",\n      \"email_on_abort\": \"true\",\n      \"email_on_begin\": \"true\",\n      \"email_address\": \"cekees@gmail.com\"\n    },\n    \"environment\": {\n      \"modules_file\": \"/opt/modules/default/etc/modules.sh\",\n      \"proteus_environment_file\": \"/lustre/shared/projects/proteus/garnet.gnu.sh\"\n    },\n    \"execution\": {\n      \"command\": \"aprun -n 256 parun dambreak_Ubbink_fine_so.py -F -l 5 -v -O ../../../inputTemplates/petsc.options.asm -D $WORKDIR/ubbink3df.$PBS_JOBID\",\n      \"arguments\": {\n        \"-F\": \"Flag\",\n        \"-l\": \"5\",\n        \"-v\": \"Flag\",\n        \"-O\": \"../../../inputTemplates/petsc.options.asm\",\n        \"-D\": \"$WORKDIR/ubbink3df.$PBS_JOBID\"\n      }\n    }\n  }\n}\n```\n\n**Explanation:**\n\n* **Application:** The script explicitly requests \"proteus\" as the application using `#PBS -l application=proteus`.\n* **Scheduler:** The script uses the Portable Batch System (PBS) for resource allocation.\n* **Resources:**  The script requests:\n    * 8 nodes\n    * 32 cores per node\n    * 32 MPI processes\n    * A walltime of 8 hours\n    * The \"standard\" queue\n* **Job Name:** The script assigns the name \"ubbink3df\" to the job using `#PBS -N`.\n* **Error and Output:**  The `#PBS -j oe` directive combines error and output into a single file.\n* **Email Notifications:**  The script configures email notifications on job abort (`#PBS -m eba`) and job beginning (`#PBS -m eba`). The email address is \"cekees@gmail.com\".\n* **Environment:**\n    * The script sources the \"modules.sh\" file for module management.\n    * It also sources the \"garnet.gnu.sh\" file, likely specific to the Proteus environment.\n* **Execution:**\n    * The `aprun -n 256` command launches the program using 256 processes.\n    * `parun` is likely a command within the Proteus environment for parallel execution.\n    *  \"dambreak_Ubbink_fine_so.py\" is the Python script being run.\n    * The `-F`, `-l`, `-v`, and `-O` flags control the execution of the script.\n    * The `-D` flag specifies the directory for output.\n\n**Important Notes:**\n\n*  The script relies on various environment variables set by the PBS system, such as `$PBS_O_WORKDIR` and `$PBS_JOBID`. \n* The script likely uses the Proteus library (https://proteus.readthedocs.io/) for computational fluid dynamics simulations.\n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 2,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 278,
+        "candidates_token_count": 791,
+        "total_token_count": 1069,
+        "cached_content_token_count": 0
+    }
+}

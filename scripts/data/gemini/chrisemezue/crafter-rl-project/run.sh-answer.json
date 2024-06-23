@@ -1,0 +1,34 @@
+{
+    "application": "SLURM",
+    "details": {
+        "software": [
+            "Python 3",
+            "CUDA Toolkit 11.3",
+            "ffmpeg"
+        ],
+        "resources": {
+            "GPU": "1",
+            "memory": "100GB",
+            "time": "72 hours",
+            "modules": [
+                "python/3",
+                "cudatoolkit/11.3"
+            ],
+            "environment": {
+                "IMAGEIO_FFMPEG_EXE": "/home/mila/c/chris.emezue/scratch/ffmpeg-git-20220910-amd64-static/ffmpeg"
+            },
+            "output": "/home/mila/c/chris.emezue/crafter-ood/slurm_no_scoreboard/slurmoutput_%j.txt",
+            "error": "/home/mila/c/chris.emezue/crafter-ood/slurm_no_scoreboard/slurmerror_%j.txt"
+        },
+        "script": "main.py",
+        "arguments": [
+            "--profile=oc_ca",
+            "--logger.type wandb",
+            "--wandb_entity world-models-rl",
+            "--wandb_tag debug_attn_patch_8_stride_8",
+            "--fe.patch_size 8",
+            "--fe.patch_stride 8",
+            "--save_folder_for_attn_maps /home/mila/c/chris.emezue/scratch/crafter-attn"
+        ]
+    }
+}

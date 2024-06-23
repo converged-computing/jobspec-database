@@ -1,0 +1,35 @@
+{
+    "application": "slurm",
+    "details": {
+        "job_name": "imgkfc16",
+        "stdout_output_file": "imgnet_kfc16.o%j",
+        "nodes": 16,
+        "mpi_tasks": 64,
+        "run_time": "12:00:00",
+        "email": "XXX",
+        "queue": "v100",
+        "allocation": "XXX",
+        "software": [
+            "mpiexec",
+            "python",
+            "horovod",
+            "kfac",
+            "resnet50"
+        ],
+        "resource_requirements": {
+            "hostfile": "/tmp/hostfile",
+            "scripts": [
+                "./scripts/cp_imagenet_to_temp.sh",
+                "examples/horovod_imagenet_resnet.py"
+            ],
+            "parameters": [
+                "--kfac-update-freq",
+                "--kfac-cov-update-freq",
+                "--damping",
+                "--epochs",
+                "--lr-decay",
+                "--model"
+            ]
+        }
+    }
+}

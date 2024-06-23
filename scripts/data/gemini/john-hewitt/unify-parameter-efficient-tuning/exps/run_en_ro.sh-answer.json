@@ -1,0 +1,48 @@
+{
+    "application": "MachineTranslation",
+    "details": {
+        "framework": "PyTorch",
+        "library": "HuggingFace Transformers",
+        "model": "facebook/mbart-large-cc25",
+        "dataset": "WMT16 ro-en",
+        "resources": {
+            "nodes": 1,
+            "gpus": "a100:2",
+            "memory": "30 GB",
+            "cpus": 3
+        },
+        "training_params": {
+            "batch_size": 10,
+            "max_steps": 50000,
+            "max_tokens_per_batch": 4096,
+            "gradient_accumulation_steps": 4,
+            "num_train_epochs": 30,
+            "warmup_updates": 0,
+            "max_grad_norm": 1,
+            "learning_rate": 5e-05,
+            "lr_scheduler_type": "polynomial",
+            "label_smoothing_factor": 0.1,
+            "weight_decay": 0.01
+        },
+        "evaluation_params": {
+            "evaluation_strategy": "steps",
+            "save_steps": 5000,
+            "metric": "loss",
+            "max_eval_samples": 1600
+        },
+        "other": {
+            "attn_mode": "prefix",
+            "attn_option": "concat",
+            "attn_composition": "add",
+            "attn_bn": 30,
+            "ffn_mode": "adapter",
+            "ffn_option": "parallel",
+            "ffn_adapter_layernorm_option": "none",
+            "ffn_adapter_init_option": "lora",
+            "ffn_adapter_scalar": 4,
+            "ffn_bn": 512,
+            "unfreeze": "ef_",
+            "report_to": "none"
+        }
+    }
+}

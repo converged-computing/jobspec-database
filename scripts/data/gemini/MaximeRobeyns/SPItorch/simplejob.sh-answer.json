@@ -1,0 +1,27 @@
+{
+    "application": "SLURM",
+    "details": {
+        "job_name": "spitorch",
+        "partition": "cnu",
+        "tasks": 1,
+        "gpus_per_task": "A100:1",
+        "gpu_bind": "per_task:1",
+        "cpus_per_task": 8,
+        "mem_per_gpu": "32G",
+        "time": "0-10:00:00",
+        "output": "output.log",
+        "environment_variables": {
+            "SPS_HOME": "$(pwd)/deps/fsps",
+            "PYTORCH_CUDA_ALLOC_CONF": "max_split_size_mb:256",
+            "NCCL_BLOCKING_WAIT": 1
+        },
+        "modules": {
+            "lang": "python/anaconda/3.9.7-2021.12-tensorflow.2.7.0"
+        },
+        "conda_env": "/user/work/`whoami`/condaenvs/spivenv",
+        "scripts": [
+            "spt/modelling/simulation.py",
+            "spt/inference/inference.py"
+        ]
+    }
+}

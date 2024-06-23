@@ -1,0 +1,54 @@
+{
+    "application": "Caffe",
+    "details": {
+        "environment": {
+            "software": [
+                "cmake/3.1.3",
+                "gcc/4.9.3",
+                "cudatoolkit",
+                "protocol-buffer",
+                "hdf5",
+                "boost/1.63.0",
+                "glog",
+                "gflags",
+                "leveldb",
+                "lmdb",
+                "opencv",
+                "snappy",
+                "mlsl",
+                "cudnn-5.1"
+            ],
+            "libraries": [
+                "protocol-buffer",
+                "hdf5",
+                "boost",
+                "glog",
+                "gflags",
+                "leveldb",
+                "lmdb",
+                "opencv",
+                "snappy",
+                "mlsl",
+                "cudnn"
+            ]
+        },
+        "resource_requirements": {
+            "nodes": "1",
+            "processors": "1",
+            "memory": "xkhimem",
+            "walltime": "02:00:00"
+        },
+        "script_execution": {
+            "execution_environment": "PBS",
+            "job_name": "caffe",
+            "data_source": {
+                "path": "/scratch/sciteam/tp2u2/imagenet"
+            },
+            "execution_commands": [
+                "aprun -n 1 -N 1 cp -r /scratch/sciteam/tp2u2/imagenet/ilsvrc12_*_small_lmdb /tmp/",
+                "aprun -n 1 -N 1 cp /scratch/sciteam/tp2u2/imagenet/imagenet_mean_small.binaryproto /tmp/",
+                "aprun -n 1 -N 1 build/tools/caffe train --solver=models/default_resnet_50/solver_small.prototxt > log-resnet50-1node-1K20-5k-${i}.log 2>&1"
+            ]
+        }
+    }
+}

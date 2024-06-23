@@ -1,0 +1,41 @@
+{
+    "application": "fmriprep",
+    "details": {
+        "software": [
+            "Singularity",
+            "FreeSurfer",
+            "fmriprep"
+        ],
+        "resources": {
+            "slurm": {
+                "job_name": "fmriprep",
+                "time": "48:00:00",
+                "nodes": 1,
+                "cpus_per_task": 24,
+                "memory": "24000",
+                "partition": "long",
+                "output_file": "/scratch/glerma/logs/%x-%A-%a.out",
+                "error_file": "/scratch/glerma/logs/%x-%A-%a.err"
+            },
+            "fmriprep": {
+                "output_spaces": "fsnative fsaverage",
+                "aroma": true,
+                "threads": 12,
+                "memory": "16G"
+            },
+            "singularity": {
+                "image": "/scratch/glerma/containers/fmriprep_21.0.2.sif"
+            }
+        },
+        "files": {
+            "bids_dir": "$STUDY",
+            "derivatives_dir": "derivatives/fmriprep_21.0.2",
+            "participants_tsv": "${BIDS_DIR}/participants.tsv",
+            "freesurfer_license": "${BIDS_DIR}/.freesurfer.txt",
+            "local_freesurfer_dir": "$STUDY/data/derivatives/freesurfer-7.2.0",
+            "templateflow_host_home": "$HOMES/.cache/templateflow",
+            "fmriprep_host_cache": "$HOMES/.cache/fmriprep",
+            "fmriprep_work_dir": "$HOMES/.work/fmriprep"
+        }
+    }
+}

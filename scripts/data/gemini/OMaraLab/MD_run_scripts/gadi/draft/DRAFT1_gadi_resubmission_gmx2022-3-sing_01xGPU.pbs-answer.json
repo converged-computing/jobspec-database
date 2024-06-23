@@ -1,0 +1,48 @@
+{
+    "application": "GROMACS",
+    "software": {
+        "gromacs": "gromacs_2022.3.sif",
+        "singularity": "singularity",
+        "perl": "perl"
+    },
+    "resources": {
+        "compute": {
+            "nodes": 1,
+            "cpus": 12,
+            "gpus": 1,
+            "mpi": "hyperthread"
+        },
+        "memory": "32GB",
+        "storage": {
+            "scratch": "scratch/bd36",
+            "gdata": "gdata/q95",
+            "jobfs": "16000MB",
+            "tmp": "/scratch/bd23/aq8103/tmp/"
+        },
+        "queue": "gpuvolta",
+        "walltime": "04:00:00"
+    },
+    "dependencies": {
+        "files": [
+            "${SLURM_JOB_NAME}.mdp",
+            "${SLURM_JOB_NAME}_start.gro",
+            "${SLURM_JOB_NAME}.top",
+            "${SLURM_JOB_NAME}.ndx",
+            "${SLURM_JOB_NAME}.cpt",
+            "${SLURM_JOB_NAME}.log"
+        ]
+    },
+    "description": "This script runs GROMACS simulations in 4 hour blocks with checkpointing and resubmission.  It utilizes Singularity containers for a consistent environment.",
+    "notes": [
+        "This script requires a GROMACS singularity container to be available.",
+        "The script name should not end with '.sh'.",
+        "The '.mdp' file should exist in the same directory as the script.",
+        "The script automatically resubmits itself until the simulation is complete.",
+        "The script uses the `errexit` function to handle errors and terminate the job sequence.",
+        "The `GMX` and `GMXMDRUN` variables specify the paths to the GROMACS executable within the Singularity container.",
+        "The script performs a GROMPP step if no TPR file exists, indicating the first run.",
+        "The script runs the MD simulation for 3.95 hours using the `GMXMDRUN` command.",
+        "The script checks the log file for the number of steps completed and the mdp file for the desired number of steps.",
+        "If the simulation is not complete, the script resubmits itself."
+    ]
+}

@@ -1,0 +1,35 @@
+{
+    "application": "PBS",
+    "details": {
+        "resource_requirements": {
+            "nodes": 40,
+            "system": "polaris",
+            "placement": "scatter",
+            "walltime": "03:00:00",
+            "queue": "prod",
+            "account": "datascience",
+            "filesystems": "grand:home"
+        },
+        "environment": {
+            "DEEPHYPER_LOG_DIR": "results/$problem-$search-$NNODES-$SEED",
+            "OPTUNA_DB_DIR": "$DEEPHYPER_LOG_DIR/optunadb",
+            "OPTUNA_DB_HOST": "$HOST",
+            "NRANKS_PER_NODE": 4,
+            "NDEPTH": "64 / $NRANKS_PER_NODE",
+            "NNODES": "`wc -l < $PBS_NODEFILE`",
+            "NTOTRANKS": "$NNODES * $NRANKS_PER_NODE",
+            "OMP_NUM_THREADS": "$NDEPTH",
+            "problem": "jahs",
+            "search": "tpe",
+            "timeout": 10200,
+            "SEED": "${PBS_ARRAY_INDEX}"
+        },
+        "software": {
+            "python": "3",
+            "mpiexec": "v3.1.4",
+            "postgres": "13",
+            "deephyper-scalable-bo": "latest",
+            "set_affinity_gpu_polaris.sh": "latest"
+        }
+    }
+}

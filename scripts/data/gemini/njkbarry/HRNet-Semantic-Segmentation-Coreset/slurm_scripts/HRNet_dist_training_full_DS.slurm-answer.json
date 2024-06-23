@@ -1,0 +1,35 @@
+{
+    "application": "SLURM",
+    "details": {
+        "partition": "gpu-a100",
+        "nodes": 1,
+        "job_name": "HRNet-dist-training-full-DS",
+        "account": "punim1896",
+        "ntasks": 1,
+        "cpus_per_task": 16,
+        "gres": "gpu:4",
+        "mem": 245760,
+        "mail_user": "njbarry@student.unimelb.edu.au",
+        "mail_type": [
+            "BEGIN",
+            "FAIL",
+            "END"
+        ],
+        "time": "0-23:0:00",
+        "working_directory": "/data/gpfs/projects/punim1896/coresets/repositories/HRNet-Semantic-Segmentation/",
+        "modules": [
+            "fosscuda/2020b",
+            "pytorch/1.7.1-python-3.8.6",
+            "opencv/4.5.1-python-3.8.6-contrib",
+            "pyyaml/5.3.1-python-3.8.6",
+            "cython/0.29.22",
+            "ninja/1.10.1-python-3.8.6",
+            "tqdm/4.60.0"
+        ],
+        "command": [
+            "source venv/bin/activate",
+            "python -m torch.distributed.launch --nproc_per_node=4 tools/train.py --cfg experiments/cityscapes/seg_hrnet_ocr_w48_train_512x1024_sgd_lr1e-2_wd5e-4_bs_12_epoch484.yaml"
+        ],
+        "monitor_command": "my-job-stats -a -n -s"
+    }
+}

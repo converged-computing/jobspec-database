@@ -1,0 +1,30 @@
+{
+    "application": "NAMD",
+    "details": {
+        "software": [
+            "NAMD 2.11 (MPISMP)",
+            "srun (SLURM)"
+        ],
+        "resources": {
+            "partition": "mf_nes2.8",
+            "memory": "8gb",
+            "walltime": "72:00:00",
+            "cores": 8,
+            "nodes": 1,
+            "tasks": 2
+        },
+        "files": [
+            "*.inp",
+            "*.log",
+            "*.coor",
+            "*.vel",
+            "*.xsc"
+        ],
+        "commands": [
+            "module load namd/2.11-MPISMP",
+            "module list",
+            "cd $SLURM_SUBMIT_DIR",
+            "srun --propagate=STACK --cpu_bind=v,sockets --cpus-per-task=$cpt namd2 ++ppn $((cpt-1)) +isomalloc_sync $fname-cpt.inp > $fname-cpt.log"
+        ]
+    }
+}

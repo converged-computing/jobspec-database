@@ -1,0 +1,39 @@
+{
+    "application": "PBS",
+    "details": {
+        "job_name": "predixcan.pbs",
+        "shell": "/bin/bash",
+        "walltime": "0:30:00",
+        "nodes": "2:ppn=2",
+        "memory": "2gb",
+        "output_file": "./${PBS_JOBNAME}.o${PBS_JOBID}",
+        "error_file": "./${PBS_JOBNAME}.e${PBS_JOBID}",
+        "modules": [
+            "gcc/6.2.0",
+            "python/3.5.0"
+        ],
+        "environment_variables": {
+            "MKL_NUM_THREADS": "1",
+            "OPEN_BLAS_NUM_THREADS": "1",
+            "NUMEXPR_NUM_THREADS": "1",
+            "OMP_NUM_THREADS": "1"
+        },
+        "working_directory": "/gpfs/data/im-lab/nas40t2/prajagopal/predixcan",
+        "script": "PrediXcan.py",
+        "arguments": [
+            "--predict",
+            "--dosages",
+            "/gpfs/data/im-lab/nas40t2/prajagopal/predixcan/genotype/",
+            "--dosages_prefix",
+            "BRCA_chr",
+            "--samples",
+            "/gpfs/data/im-lab/nas40t2/prajagopal/predixcan/samples.txt",
+            "--weights",
+            "/gpfs/data/im-lab/nas40t2/abarbeira/projects/gtex_v8/models_v1/eqtl/elastic_net_models/en_Breast_Mammary_Tissue.db",
+            "--pheno",
+            "/gpfs/data/im-lab/nas40t2/prajagopal/predixcan/phenotype/BRCA_white.fam",
+            "--output_prefix",
+            "/gpfs/data/im-lab/nas40t2/prajagopal/predixcan/results"
+        ]
+    }
+}

@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n\"application\": \"SLURM\",\n\"details\": {\n\"job_name\": \"cpt-llama2_random_scale4_112gpus_dynamic_data\",\n\"output_file\": \"/mnt/petrelfs/share_data/quxiaoye/runs/llama2_random_scale4_112gpus_dynamic_data/%x-%j.log\",\n\"error_file\": \"/mnt/petrelfs/share_data/quxiaoye/runs/llama2_random_scale4_112gpus_dynamic_data/%x-%j.log\",\n\"partition\": \"MoE\",\n\"tasks_per_node\": 1,\n\"cpus_per_task\": 64,\n\"memory\": 0,\n\"nodes\": 14,\n\"gpus\": 8,\n\"quota_type\": \"reserved\",\n\"conda_environment\": \"smoe\",\n\"model_type\": \"llama_moe\",\n\"pretrained_model\": \"/mnt/petrelfs/share_data/quxiaoye/models/LlamaMoEForCausalLM/Random/llama2_7B-16Select4-up_proj-Scale4.0\",\n\"tokenizer_path\": \"/mnt/petrelfs/share_data/quxiaoye/models/llama2_7B\",\n\"dataset_dir\": \"/mnt/petrelfs/share_data/quxiaoye/SlimPajama_processed\",\n\"validation_dir\": \"/mnt/petrelfs/share_data/quxiaoye/data/llama1_7B_val_set_tokenized\",\n\"learning_rate\": \"2e-4\",\n\"final_lr_portion\": \"0.1\",\n\"per_device_train_batch_size\": 8,\n\"per_device_eval_batch_size\": 8,\n\"gradient_accumulation_steps\": 4,\n\"block_size\": 4096,\n\"num_tokens\": \"200*10^9\",\n\"warmup_tokens\": \"15*10^8\",\n\"eval_tokens\": \"2.5*10^9\",\n\"seed\": 1227,\n\"deepspeed_config_file\": \"conf/deepspeed/bf16_zero1_default.json\",\n\"num_selects\": 4,\n\"data_cache\": \"resources/cache\",\n\"base_dir\": \"/mnt/petrelfs/share_data/quxiaoye/runs/llama2_random_scale4_112gpus_dynamic_data\",\n\"output_dir\": \"$base_dir/outputs/$SLURM_JOB_NAME-$SLURM_JOB_ID\",\n\"comment\": \"llama 2 7B, random 4/16\",\n\"environment_variables\": {\n\"OMP_NUM_THREADS\": \"32\",\n\"LOGLEVEL\": \"INFO\"\n},\n\"framework\": \"PyTorch\",\n\"library\": \"deepspeed\",\n\"training_parameters\": {\n\"max_steps\": \"max_steps=$(echo \\\"${num_tokens} / ($block_size * $per_device_train_batch_size * $gradient_accumulation_steps * $num_nodes * $num_gpu_per_node)\\\" | bc)\",\n\"max_train_samples\": \"max_train_samples=$(echo \\\"${num_tokens} / ($block_size)\\\" | bc)\",\n\"global_batch_size\": \"global_bs=$(echo \\\"$per_device_train_batch_size * $gradient_accumulation_steps * $num_nodes * $num_gpu_per_node\\\" | bc)\",\n\"tokens_per_batch\": \"tokens_per_batch=$(echo \\\"$global_bs * $block_size\\\" | bc)\",\n\"warmup_steps\": \"warmup_steps=$(echo \\\"$warmup_tokens / ($tokens_per_batch)\\\" | bc)\",\n\"eval_steps\": \"eval_steps=$(echo \\\"$eval_tokens / ($tokens_per_batch)\\\" | bc)\"\n},\n\"distributed_training\": {\n\"strategy\": \"DDP\",\n\"nodes\": 14,\n\"gpus_per_node\": 8,\n\"communication_backend\": \"c10d\",\n\"rdzv_backend\": \"c10d\"\n},\n\"model_architecture\": \"MoE\",\n\"gate_type\": \"TopKBalancedNoisyGate\",\n\"calculator_type\": \"UniversalCalculator\",\n\"data_parallelism\": {\n\"strategy\": \"DataParallel\"\n}\n}\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 2705,
+        "candidates_token_count": 1047,
+        "total_token_count": 3752,
+        "cached_content_token_count": 0
+    }
+}

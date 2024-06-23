@@ -1,0 +1,49 @@
+{
+    "application": "deepspeed",
+    "other_software": [
+        "python3",
+        "bash",
+        "wc",
+        "tr",
+        "awk",
+        "sed",
+        "mkdir",
+        "date",
+        "hostname",
+        "which",
+        "tee"
+    ],
+    "resource_requirements": {
+        "pbs": {
+            "walltime": "06:00:00",
+            "account": "argonne_tpc",
+            "queue": "prod",
+            "nodes": 48,
+            "filesystems": "eagle:home"
+        },
+        "conda": {
+            "env": "anl_release_q4v2"
+        },
+        "deepspeed": {
+            "config": "ds_stage${ZERO_STAGE}_mb${MICRO_BATCH}_gb${GLOBAL_BATCH}_pp${PP}_${DTYPE}.json",
+            "zero_stage": "${ZERO_STAGE}",
+            "micro_batch": "${MICRO_BATCH}",
+            "global_batch": "${GLOBAL_BATCH}",
+            "pipeline_parallel": "${PP}",
+            "dtype": "${DTYPE}"
+        },
+        "model": {
+            "type": "llama-seq${SEQ}-pp${PP}-tp${TP}-${NLAYERS}layers-${HEADS}heads-${HIDDEN}hidden",
+            "layers": "${NLAYERS}",
+            "heads": "${HEADS}",
+            "hidden_size": "${HIDDEN}",
+            "sequence_length": "${SEQ}"
+        },
+        "training": {
+            "learning_rate": "${LR}",
+            "train_iterations": "${TRAIN_ITER}",
+            "save_interval": "${SAVE_INTERVAL}",
+            "activation_checkpointing": "${USE_ACTIVATION_CHECKPOINTING}"
+        }
+    }
+}

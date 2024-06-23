@@ -1,0 +1,44 @@
+{
+    "application": "Picard",
+    "details": {
+        "language": "Bash",
+        "environment": "SLURM",
+        "resource_requirements": {
+            "time": "0-32:00:00",
+            "memory_per_cpu": "4096 MB",
+            "job_name": "pegasus_picHSMetrics",
+            "mail_user": "jetstream@tgen.org",
+            "mail_type": "FAIL"
+        },
+        "software_dependencies": {
+            "R": "2.15.2",
+            "Java": "1.8 or higher",
+            "Picard": "unknown version",
+            "SLURM": "unknown version"
+        },
+        "input_files": [
+            "${REF}",
+            "${BAMFILE}",
+            "${BAITS}",
+            "${TARGETS}"
+        ],
+        "output_files": [
+            "${BAMFILE}.picHSMetrics",
+            "${BAMFILE}.picStats.HsPerTargetCov",
+            "${BAMFILE}.picHSMetricsOut",
+            "${BAMFILE}.picHSMetricsPass",
+            "${BAMFILE}.picHSMetricsFail",
+            "${BAMFILE}.picHSMet.totalTime"
+        ],
+        "commands": [
+            "module load R/2.15.2",
+            "java -Xmx15g -jar ${PICARDPATH}/picard.jar CalculateHsMetrics",
+            "mv ${BAMFILE}.picHSMetricsOut ${BAMFILE}.picHSMetricsPass",
+            "mv ${BAMFILE}.picHSMetricsOut ${BAMFILE}.picHSMetricsFail",
+            "rm -f ${BAMFILE}.picHSMetricsInQueue",
+            "mv ${BAMFILE}.picHSMetrics ${RUNDIR}/stats/",
+            "mv ${BAMFILE}.picHSMetrics.pdf ${RUNDIR}/stats/",
+            "mv ${BAMFILE}.picStats.HsPerTargetCov ${RUNDIR}/stats/"
+        ]
+    }
+}

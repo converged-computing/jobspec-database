@@ -1,0 +1,32 @@
+{
+    "application": "PBS",
+    "details": {
+        "resources": {
+            "processors": 1,
+            "memory": "4GB",
+            "walltime": "100 hours",
+            "queue": "fluxod",
+            "qos": "flux"
+        },
+        "modules": [
+            "R/3.5.0",
+            "r-biomed-libs/3.5.0"
+        ],
+        "software": [
+            "Rscript"
+        ],
+        "commands": [
+            "cat $PBS_NODEFILE",
+            "qstat -f $PBS_JOBID",
+            "cd $PBS_O_WORKDIR",
+            "make data/temp/best_hp_results_Decision_Tree_$seed.csv",
+            "Rscript code/learning/main.R $seed \"Decision_Tree\"",
+            "echo \"Script complete\"",
+            "echo \"qsub working directory absolute is\"",
+            "echo $PBS_O_WORKDIR",
+            "qstat -f $PBS_JOBID",
+            "exit"
+        ],
+        "script_type": "shell"
+    }
+}

@@ -1,0 +1,29 @@
+{
+    "application": "SLURM",
+    "details": {
+        "job_name": "ASpot",
+        "output_file": "log/%x.%3a.%A.out",
+        "error_file": "log/%x.%3a.%A.err",
+        "time_limit": "5-00:00:00",
+        "gpu_type": "v100",
+        "gpu_count": 1,
+        "cpus_per_task": 6,
+        "nodes": 1,
+        "memory": "90G",
+        "excluded_nodes": "gpu212-14",
+        "environment": {
+            "conda_environment": "CALF-pytorch",
+            "cuda_version": "10.1.243"
+        },
+        "python_script": "src/main.py",
+        "script_arguments": [
+            "--SoccerNet_path=/ibex/scratch/giancos/SoccerNet_calibration/",
+            "--features=ResNET_TF2_PCA512.npy",
+            "--num_features=512",
+            "--model_name=CALF_subj_SBATCH",
+            "--batch_size 32",
+            "--evaluation_frequency 20",
+            "--chunks_per_epoch 18000"
+        ]
+    }
+}

@@ -1,0 +1,42 @@
+{
+    "application": "GROMACS",
+    "details": {
+        "version": "2021.6",
+        "environment": "foss-2022a",
+        "modules": [
+            "2022",
+            "GROMACS/2021.6-foss-2022a"
+        ],
+        "scheduler": "SLURM",
+        "nodes": 1,
+        "cores": 48,
+        "partition": "genoa",
+        "walltime": "1:00:00",
+        "array_task_ids": [
+            1,
+            2,
+            3,
+            4,
+            5
+        ],
+        "exclusive": true,
+        "openmp_threads": 1,
+        "input_files": [
+            "step7_production.mdp",
+            "step6.6_equilibration.gro",
+            "system.top",
+            "index.ndx",
+            "rep${rep}/step7_production_rep${rep}.cpt"
+        ],
+        "output_files": [
+            "rep${rep}/step7_production_rep${rep}.tpr",
+            "rep${rep}/mdout.mdp",
+            "rep${rep}/step7_production_rep${rep}.cpt",
+            "rep${rep}/rep${rep}_md.log"
+        ],
+        "commands": [
+            "gmx grompp",
+            "gmx_mpi mdrun"
+        ]
+    }
+}

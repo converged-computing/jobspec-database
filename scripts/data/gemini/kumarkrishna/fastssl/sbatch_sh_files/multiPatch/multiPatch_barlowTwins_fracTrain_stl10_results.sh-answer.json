@@ -1,0 +1,29 @@
+{
+    "application": "SLURM",
+    "details": {
+        "resource_requirements": {
+            "partition": "long",
+            "gpu": "rtx8000",
+            "memory": "20GB",
+            "time": "20:00:00",
+            "cpus_per_gpu": 4
+        },
+        "software_requirements": {
+            "conda_environment": "ffcv_new",
+            "python_script": "scripts/train_model_multiPatch.py",
+            "config_files": [
+                "configs/cc_barlow_twins.yaml",
+                "configs/cc_precache.yaml",
+                "configs/cc_classifier.yaml"
+            ]
+        },
+        "other_requirements": {
+            "wandb": {
+                "group": "eigengroup",
+                "project": "multiPatch-Barlow-best-hparam-ep100-stl10"
+            },
+            "scratch_directory": "$SCRATCH/ffcv/ffcv_datasets/{dataset}",
+            "checkpoints_directory": "$SCRATCH/fastssl/checkpoints{train_frac}_mp_stl10_barlow"
+        }
+    }
+}

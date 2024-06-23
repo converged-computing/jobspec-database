@@ -1,0 +1,32 @@
+{
+    "application": "SLURM",
+    "details": {
+        "resource_requirements": {
+            "nodes": 1,
+            "cpus_per_task": 24,
+            "ntasks_per_node": 1,
+            "time": "0-04:00:00",
+            "partition": "amdgpufast",
+            "gres": "gpu:1",
+            "mem": "60G"
+        },
+        "software_requirements": {
+            "modules": [
+                "spconv/2.1.21-foss-2021a-CUDA-11.3.1",
+                "PyTorch-Geometric/2.0.2-foss-2021a-CUDA-11.3.1-PyTorch-1.10.0"
+            ],
+            "python_packages": [
+                "torch",
+                "torch.distributed"
+            ],
+            "other_requirements": {
+                "NCCL_LL_THRESHOLD": 1,
+                "NCCL_P2P_DISABLE": 1
+            }
+        },
+        "script_execution": {
+            "command": "python test_wod.py --config_path 'configs/wod/wod_f0_0_intensity.yaml' --mode 'test' --save 'True'",
+            "output_file": "/home/gebreawe/Model_logs/Segmentation/ST-UDA/logs/wod_64beam_infer_train_f0_0_intensity_valeo%j.log"
+        }
+    }
+}

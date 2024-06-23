@@ -1,0 +1,62 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"slurm\",\n  \"details\": {\n    \"software\": [\n      \"python\",\n      \"torch\",\n      \"nvidia-smi\",\n      \"megatron-lm\",\n      \"srun\"\n    ],\n    \"resources\": {\n      \"nodes\": 4,\n      \"gpus\": 4,\n      \"cores\": 40,\n      \"memory\": \"32GB\",\n      \"time\": \"00:10:00\"\n    },\n    \"libraries\": [\n      \"torch.distributed\"\n    ],\n    \"environment\": {\n      \"LAUNCHER\": \"python -u -m torch.distributed.launch --nproc_per_node $GPUS_PER_NODE --nnodes $NNODES --master_addr $MASTER_ADDR --master_port $MASTER_PORT\",\n      \"CMD\": \"`pwd`/pretrain_gpt.py --tensor-model-parallel-size $TP_SIZE --pipeline-model-parallel-size $PP_SIZE $GPT_ARGS $OUTPUT_ARGS --save $SAVE_CHECKPOINT_PATH --load $SAVE_CHECKPOINT_PATH --data-path $DATA_PATH --data-impl mmap --split 949,50,1 --distributed-backend nccl\"\n    },\n    \"input\": {\n      \"data_path\": \"$six_ALL_CCFRWORK/datasets-custom/openwebtext-10k/meg-gpt2_text_document\",\n      \"vocab_file\": \"$CHECKPOINT_PATH/gpt2-vocab.json\",\n      \"merge_file\": \"$CHECKPOINT_PATH/gpt2-merges.txt\",\n      \"checkpoint_path\": \"$six_ALL_CCFRWORK/models-custom/megatron-gpt2/megatron_lm_345m_v0.0/release\",\n      \"save_checkpoint_path\": \"$six_ALL_CCFRSCRATCH/checkpoints/gpt2-1-node\"\n    }\n  }\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "citation_metadata": {
+                "citation_sources": [
+                    {
+                        "start_index": 370,
+                        "end_index": 532,
+                        "uri": "https://github.com/TurkuNLP/finngen-tools",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 540,
+                        "end_index": 802,
+                        "uri": "https://github.com/rct-ai/rct-bigmodel-train",
+                        "license_": ""
+                    }
+                ]
+            },
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 1741,
+        "candidates_token_count": 460,
+        "total_token_count": 2201,
+        "cached_content_token_count": 0
+    }
+}

@@ -1,0 +1,25 @@
+{
+    "application": "Slurm",
+    "details": {
+        "resources": {
+            "cores": "cores=$(( $(echo $SLURM_JOB_CPUS_PER_NODE | cut -d'(' -f 1) / 2 ))",
+            "time": "06:00:00",
+            "qos": "regular",
+            "constraint": "haswell",
+            "mail-type": "ALL"
+        },
+        "environment": {
+            "LD_LIBRARY_PATH": "$PWD/../../core:\"$PWD\"/../../tensorflow/ops:\"$LD_LIBRARY_PATH\""
+        },
+        "software": {
+            "tensorflow": "source ../../deps/tensorflow/env.sh",
+            "python": "python task_bench.py"
+        },
+        "parameters": {
+            "NGRAPHS": "${NGRAPHS:-1}",
+            "PATTERN": "${PATTERN:-stencil_1d}",
+            "RADIX": "${RADIX:-5}",
+            "STEPS": "${STEPS:-8192}"
+        }
+    }
+}

@@ -1,0 +1,56 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"Slurm\",\n  \"details\": {\n    \"slurm\": {\n      \"partition\": \"mlperf\",\n      \"nodes\": 1,\n      \"walltime\": \"12:00:00\",\n      \"jobname\": \"reinforcement\",\n      \"exclusive_node_access\": true,\n      \"memory\": \"all available\",\n      \"mail_type\": \"FAIL\",\n      \"threads_per_core\": 2,\n      \"cores_per_socket\": 20\n    },\n    \"docker\": {\n      \"image\": \"mlperf-nvidia:reinforcement\",\n      \"data_dir\": \"/raid/data\",\n      \"results_dir\": \"/raid/results/reinforcement\",\n      \"volumes\": [\n        \"/raid/data:/data\",\n        \"/raid/results/reinforcement:/results\",\n        \"/opt/reinforcement/minigo/piazza:/opt/reinforcement/minigo/piazza\"\n      ],\n      \"gpu_devices\": \"NVIDIA_VISIBLE_DEVICES\",\n      \"execution_command\": \"nvidia-docker run --init --rm --net=host --uts=host --ipc=host --ulimit stack=67108864 --ulimit memlock=-1 --name=cont_${SLURM_JOB_ID} --security-opt seccomp=unconfined $IBDEVICES\"\n    },\n    \"mpi\": {\n      \"hostfile\": \"/dev/shm/mpi/${SLURM_JOB_ID}/mpi_hosts\",\n      \"config_file\": \"/dev/shm/mpi/${SLURM_JOB_ID}/mca_params.conf\"\n    },\n    \"benchmark\": {\n      \"name\": \"MINIGO\",\n      \"nexp\": 10,\n      \"seed\": \"randomly generated\"\n    }\n  }\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "citation_metadata": {
+                "citation_sources": [
+                    {
+                        "start_index": 740,
+                        "end_index": 900,
+                        "uri": "https://github.com/mlcommons/training_results_v0.6",
+                        "license_": ""
+                    }
+                ]
+            },
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 4038,
+        "candidates_token_count": 426,
+        "total_token_count": 4464,
+        "cached_content_token_count": 0
+    }
+}

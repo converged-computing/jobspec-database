@@ -1,0 +1,46 @@
+{
+    "application": "SLURM",
+    "details": {
+        "job_name": "ddppo",
+        "output_log": "slurm/logs/%j.log",
+        "error_log": "slurm/logs/%j.err",
+        "cpus_per_task": 10,
+        "gpus_per_task": 1,
+        "ntasks_per_node": 8,
+        "nodes": 4,
+        "mem_per_cpu": "5GB",
+        "constraint": "volta32gb",
+        "partition": "devlab",
+        "time": "72:00:00",
+        "requeue": true,
+        "comment": "NeurIPS deadline 5/19/2022",
+        "environment_variables": {
+            "MAGNUM_LOG": "quiet",
+            "MAGNUM_GPU_VALIDATION": "ON",
+            "LD_LIBRARY_PATH": "/usr/lib/x86_64-linux-gnu/nvidia-opengl:${LD_LIBRARY_PATH}",
+            "MAIN_ADDR": "output of `srun --ntasks=1 hostname 2>&1 | tail -n1`"
+        },
+        "modules": [
+            "cuda/11.0",
+            "cudnn/v8.0.3.33-cuda.11.0",
+            "NCCL/2.7.8-1-cuda.11.0"
+        ],
+        "python_script": "habitat_baselines.run",
+        "python_script_arguments": [
+            "--exp-config habitat_baselines/config/pointnav/ddppo_pointnav_hm3d.yaml",
+            "--run-type train",
+            "TENSORBOARD_DIR data/hm3d/tb/${tag}",
+            "CHECKPOINT_FOLDER data/hm3d/ckpt/${tag}",
+            "TASK_CONFIG.SEED ${seed}",
+            "TRAINER_NAME ddppo-e2b",
+            "RL.PPO.entropy_coef $entropy",
+            "RL.E2B.bonus_coef $bonus_coef",
+            "RL.E2B.ridge $ridge",
+            "RL.E2B.inv_dynamics_epochs 0",
+            "RL.E2B.embedding idm",
+            "TOTAL_NUM_STEPS 5e8",
+            "NUM_UPDATES -1",
+            "NUM_CHECKPOINTS 100"
+        ]
+    }
+}

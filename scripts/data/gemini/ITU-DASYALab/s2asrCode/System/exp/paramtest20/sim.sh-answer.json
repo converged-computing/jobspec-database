@@ -1,0 +1,59 @@
+{
+    "application": "SLURM",
+    "details": {
+        "script_language": "bash",
+        "job_name": "sim-p20",
+        "output_file": "./logs/sim-p20-%A-%a-%N.out",
+        "nodes": 1,
+        "array_size": 20,
+        "time_limit": "13:00:00",
+        "cores_per_node": 24,
+        "partition": "desktop",
+        "gpus_per_node": 4,
+        "memory_per_node": "120000M",
+        "python_modules": [
+            "src/AM.py",
+            "src/AM_eval.py"
+        ],
+        "libraries": [
+            "tensorflow"
+        ],
+        "parameters": {
+            "batch_size": 240,
+            "eval_batch_size": 60,
+            "LSTM_size": 800,
+            "LSTM_Layer_count": 5,
+            "conv_output": 600,
+            "conv_width": 11,
+            "max_frames": 1670,
+            "dropout": 0.05,
+            "input_tfrecord": "FE_data/LibriSpeech/train*.tfrecord",
+            "input_tfrecord_eval": "FE_data/LibriSpeech/dev*.tfrecord",
+            "dictionary": "EN_chars",
+            "model": "StreamSpeechM33",
+            "activation_function": "relu",
+            "num_epochs": 1,
+            "name": "sim-p20-$SLURM_ARRAY_JOB_ID",
+            "paramnum": "para20",
+            "training_directory": "models/para20/sim-p20-$SLURM_ARRAY_JOB_ID/",
+            "beam_width": 256,
+            "beamsearch_smoothing": 0.0
+        },
+        "resources": {
+            "gpu": {
+                "count": 4,
+                "type": "unknown"
+            },
+            "cpu": {
+                "count": 24,
+                "type": "unknown"
+            },
+            "memory": {
+                "size": "120000M"
+            }
+        },
+        "dependencies": [
+            "tensorflow"
+        ]
+    }
+}

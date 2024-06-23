@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n\"application\": \"SLURM\",\n\"details\": {\n\"resource_requirements\": {\n\"partition\": \"main\",\n\"cpus_per_task\": 8,\n\"gres\": \"gpu:2\",\n\"mem\": \"48G\"\n},\n\"software_requirements\": {\n\"modules\": {\n\"miniconda\": \"3\",\n\"cuda\": \"11.7\"\n},\n\"conda_environment\": \"edm\",\n\"packages\": [\n\"pytorch\",\n\"cudatoolkit\",\n\"blobfile\"\n]\n},\n\"script_execution\": {\n\"data_transfer\": {\n\"source\": \"/home/mila/k/karam.ghanem/Diffusion/cifar10_png/train\",\n\"destination\": \"/network/datasets/cifar10_train\",\n\"location\": \"$SLURM_TMPDIR\"\n},\n\"job_launch\": {\n\"command\": \"torchrun\",\n\"arguments\": {\n\"nproc_per_node\": 2,\n\"nnodes\": \"$WORLD_SIZE\",\n\"rdzv_id\": \"$SLURM_JOB_ID\",\n\"rdzv_backend\": \"c10d\",\n\"rdzv_endpoint\": \"$RDV_ADDR\",\n\"standalone\": true,\n\"nproc_per_node\": 1\n},\n\"script\": \"train.py\",\n\"arguments_script\": \"--outdir=training-runs --data=/network/scratch/k/karam.ghanem/datasets/cifar10/cifar10-32x32.zip --cond=1 --arch=ddpmpp --batch-gpu=32\"\n},\n\"post_execution\": {\n\"data_transfer\": {\n\"source\": \"$SLURM_TMPDIR\",\n\"destination\": \"/network/scratch/k/karam.ghanem\"\n}\n}\n}\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 813,
+        "candidates_token_count": 433,
+        "total_token_count": 1246,
+        "cached_content_token_count": 0
+    }
+}

@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"SLURM\",\n  \"details\": {\n    \"job_name\": \"restormer-universal-mixed-50\",\n    \"account\": \"delia-mp\",\n    \"nodes\": 1,\n    \"tasks_per_node\": 1,\n    \"cpus_per_task\": 64,\n    \"error_file\": \"/p/scratch/delia-mp/lin4/experiment_result/restormer/0803-universal-mixed-25/error-%j.err\",\n    \"output_file\": \"/p/scratch/delia-mp/lin4/experiment_result/restormer/0803-universal-mixed-25/output-%j.out\",\n    \"time\": \"24:00:00\",\n    \"partition\": \"dc-gpu\",\n    \"gres\": \"gpu:4\",\n    \"environment\": \"restormer_env\",\n    \"python_package\": \"basicsr\",\n    \"script\": \"train.py\",\n    \"config_file\": \"Denoising/Options/GaussianGrayDenoising_Restormer_universal_mixed_25.yml\",\n    \"gpu_devices\": \"0,1,2,3\",\n    \"num_gpus_per_node\": 4,\n    \"communication_method\": \"NCCL\"\n  }\n}\n```\n\nThis script is running within the **SLURM** workload manager. It uses SLURM to manage resources, including nodes, CPUs, GPUs, and time.  \n\nHere's a breakdown of the script and its requirements:\n\n**SLURM Settings:**\n\n* **job-name:**  restormer-universal-mixed-50\n* **account:**  delia-mp \n* **nodes:** 1  (requests one compute node)\n* **ntasks-per-node:** 1 (one task per node)\n* **cpus-per-task:** 64  (64 CPU cores per task)\n* **error:**  /p/scratch/delia-mp/lin4/experiment_result/restormer/0803-universal-mixed-25/error-%j.err (path for error output)\n* **output:** /p/scratch/delia-mp/lin4/experiment_result/restormer/0803-universal-mixed-25/output-%j.out (path for standard output)\n* **time:** 24:00:00  (24 hours of runtime)\n* **partition:** dc-gpu (specifies the partition of the cluster to use)\n* **gres:** gpu:4 (requests 4 GPUs)\n\n**Software and Resource Requirements:**\n\n* **Environment:**  The script sources a virtual environment called \"restormer_env\", likely containing the necessary Python packages.\n* **Python package:** The script uses the 'basicsr' Python package. \n* **Configuration:** The script loads a configuration file named \"GaussianGrayDenoising_Restormer_universal_mixed_25.yml\" located in the \"Denoising/Options\" directory.\n* **GPU:**  The script utilizes four GPUs (CUDA_VISIBLE_DEVICES=0,1,2,3) and sets NUM_GPU_PER_NODE=4.\n* **Communication:** It uses the NCCL library for distributed training and enables NCCL debug logging.\n\n**Script Execution:**\n\n* **srun:** The script uses the 'srun' command to execute the main Python script (\"train.py\") on the requested resources.\n* **torch.distributed.launch:** It launches the Python script in a distributed manner, using the `nproc_per_node` argument to specify the number of processes to run per node.\n\n**Additional Notes:**\n\n* The `MASTER_ADDR` and `MASTER_PORT` environment variables are set up to facilitate communication between processes in a distributed setting.\n* The script assumes the `basicsr` package and configuration file are in the appropriate locations. \n* It's good practice to include comments explaining the script's purpose and how it works."
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 693,
+        "candidates_token_count": 924,
+        "total_token_count": 1617,
+        "cached_content_token_count": 0
+    }
+}

@@ -1,0 +1,30 @@
+{
+    "application": "Slurm",
+    "details": {
+        "job_name": "maelstrom-vef",
+        "account": "deepacf",
+        "nodes": 2,
+        "tasks": 8,
+        "cpus_per_task": 24,
+        "output": "logs/jewels-booster-out.%j",
+        "error": "logs/jewels-booster-err.%j",
+        "time": "00:30:00",
+        "gres": "gpu:4",
+        "partition": "booster",
+        "modules": [
+            "Stages/2022",
+            "GCCcore/.11.2.0",
+            "TensorFlow/2.6.0-CUDA-11.5",
+            "GCC/11.2.0",
+            "OpenMPI/4.1.2",
+            "mpi4py/3.1.3",
+            "Horovod/0.24.3"
+        ],
+        "environment": {
+            "SRUN_CPUS_PER_TASK": "${SLURM_CPUS_PER_TASK}",
+            "LD_PRELOAD": "/p/home/jusers/nipen1/juwels/local/lib/libvefprospector_full.so",
+            "files": "/p/scratch/deepacf/maelstrom/maelstrom_data/ap1/air_temperature//5TB/202???01T*.nc"
+        },
+        "command": "maelstrom-train --config etc/d1-4/opt1_e1.yml etc/d1-4/loader_debug.yml etc/d1-4/common.yml -m unet_f16_l6_c1_p2 -o results/vef --test=0"
+    }
+}

@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n\"application\": \"Horovod\",\n\"software\": [\n\"SLURM\",\n\"MPI\",\n\"UCX\",\n\"Python\",\n\"TensorFlow\",\n\"Horovod\",\n\"MiOpen\"\n],\n\"resources\": [\n\"4 nodes\",\n\"32 CPU cores per node\",\n\"4 GPUs per node (DCU)\"\n],\n\"files\": [\n\"/work1/zzx6320/lh/Projects/bert/data/cscd_all_wwm/pre_training_O_cscd_128_wwm_cmesh.tfrecord\",\n\"/work1/zzx6320/lh/Projects/bert/data/cscd_all_wwm/pre_training_S_cscd_128_wwm_cmesh.tfrecord\",\n\"/work1/zzx6320/lh/Projects/bert/data/cscd_all_wwm/pre_training_TF_cscd_128_wwm_cmesh.tfrecord\",\n\"/work1/zzx6320/lh/Projects/bert/data/cscd_all_wwm/pre_training_TK_cscd_128_wwm_cmesh.tfrecord\",\n\"/work1/zzx6320/lh/Projects/bert/data/cscd_all_wwm/pre_training_TP_cscd_128_wwm_cmesh.tfrecord\",\n\"/work1/zzx6320/lh/Projects/bert/data/cscd_all_wwm/pre_training_TV_cscd_128_wwm_cmesh.tfrecord\",\n\"/work1/zzx6320/lh/Projects/bert/data/cscd_all_wwm/pre_training_P_cscd_128_wwm_cmesh.tfrecord\",\n\"/work1/zzx6320/lh/Projects/bert/data/cscd_all_wwm/pre_training_TB_cscd_128_wwm_cmesh.tfrecord\",\n\"/work1/zzx6320/lh/Projects/bert/data/cscd_all_wwm/pre_training_TG_cscd_128_wwm_cmesh.tfrecord\",\n\"/work1/zzx6320/lh/Projects/bert/data/cscd_all_wwm/pre_training_TL_cscd_128_wwm_cmesh.tfrecord\",\n\"/work1/zzx6320/lh/Projects/bert/data/cscd_all_wwm/pre_training_TQ_cscd_128_wwm_cmesh.tfrecord\",\n\"/work1/zzx6320/lh/Projects/bert/data/cscd_all_wwm/pre_training_U_cscd_128_wwm_cmesh.tfrecord\",\n\"/work1/zzx6320/lh/Projects/bert/data/cscd_all_wwm/pre_training_Q_cscd_128_wwm_cmesh.tfrecord\",\n\"/work1/zzx6320/lh/Projects/bert/data/cscd_all_wwm/pre_training_TD_cscd_128_wwm_cmesh.tfrecord\",\n\"/work1/zzx6320/lh/Projects/bert/data/cscd_all_wwm/pre_training_TH_cscd_128_wwm_cmesh.tfrecord\",\n\"/work1/zzx6320/lh/Projects/bert/data/cscd_all_wwm/pre_training_TM_cscd_128_wwm_cmesh.tfrecord\",\n\"/work1/zzx6320/lh/Projects/bert/data/cscd_all_wwm/pre_training_TS_cscd_128_wwm_cmesh.tfrecord\",\n\"/work1/zzx6320/lh/Projects/bert/data/cscd_all_wwm/pre_training_V_cscd_128_wwm_cmesh.tfrecord\",\n\"/work1/zzx6320/lh/Projects/bert/data/cscd_all_wwm/pre_training_R_cscd_128_wwm_cmesh.tfrecord\",\n\"/work1/zzx6320/lh/Projects/bert/data/cscd_all_wwm/pre_training_TE_cscd_128_wwm_cmesh.tfrecord\",\n\"/work1/zzx6320/lh/Projects/bert/data/cscd_all_wwm/pre_training_TJ_cscd_128_wwm_cmesh.tfrecord\",\n\"/work1/zzx6320/lh/Projects/bert/data/cscd_all_wwm/pre_training_TN_cscd_128_wwm_cmesh.tfrecord\",\n\"/work1/zzx6320/lh/Projects/bert/data/cscd_all_wwm/pre_training_TU_cscd_128_wwm_cmesh.tfrecord\",\n\"/work1/zzx6320/lh/Projects/bert/data/cscd_all_wwm/pre_training_X_cscd_128_wwm_cmesh.tfrecord\",\n\"/public/home/zzx6320/lh/Projects/bert/models/chinese_L-12_H-768_A-12/chinese_L-12_H-768_A-12/bert_config.json\"\n],\n\"environment_variables\": [\n\"MIOPEN_USER_DB_PATH\",\n\"MIOPEN_DEBUG_DISABLE_FIND_DB\",\n\"HOROVOD_HIERARCHICAL_ALLREDUCE\",\n\"LD_LIBRARY_PATH\"\n],\n\"parameters\": [\n\"input_files\",\n\"bert_config_file\",\n\"output_dir\",\n\"max_seq_length\",\n\"do_train\",\n\"do_eval\",\n\"train_batch_size\",\n\"learning_rate\",\n\"num_train_steps\",\n\"save_checkpoints_steps\"\n]\n}\n```\n\nThis script is running a distributed training job for a BERT model using Horovod on 4 nodes, each with 4 GPUs. The script uses SLURM to allocate resources and sets up the necessary environment variables for Horovod, MiOpen and UCX. It then uses `mpirun` to launch the training process, distributing the work across all 16 GPUs. \n\nHere is a breakdown of the script's actions:\n\n1. **Setup and Resource Allocation:**\n   - The script starts with a series of `#SBATCH` directives, which are used to request resources from the SLURM scheduler. These directives allocate 4 nodes (with `-N 4`), each with 4 GPUs (`--gres=dcu:4`) and 8 CPUs per task (`--cpus-per-task=8`). The job name is set to `pre_all_scrach` (`-J pre_all_scrach`).\n\n2. **Environment Setup:**\n   - `export MIOPEN_USER_DB_PATH=/tmp/tensorflow-miopen-${USER}-2.8` sets the path for the MiOpen user database.\n   - `export MIOPEN_DEBUG_DISABLE_FIND_DB=1` disables the MiOpen database lookup during debugging.\n   - `export HOROVOD_HIERARCHICAL_ALLREDUCE=1` enables the hierarchical allreduce algorithm for Horovod, which can improve communication efficiency.\n\n3. **Data and Configuration:**\n   -  `input_files` lists the paths to the TFRecord files containing the training data.\n   - `bert_config_file` specifies the path to the BERT configuration file.\n   - `output_dir` defines the directory for saving the model checkpoints and training logs.\n\n4. **Training with Horovod:**\n   -  `mpirun` is used to launch the training script `run_pretraining_hvd.py` using Horovod.\n   -  `-np ${num_DCU}` specifies the number of processes to launch, which is determined by the number of GPUs.\n   - `--hostfile ${DIR}/hostfile-tmp` indicates the host file containing the list of machines participating in the training.\n   -  The `-x` flags pass environment variables to the training script. \n   - `--bind-to none` instructs `mpirun` to let the operating system handle the process binding.\n\n5. **Training Parameters:**\n   - `--max_seq_length 128` sets the maximum sequence length for the input data.\n   - `--do_train True` indicates that the script should perform training.\n   - `--do_eval True` indicates that the script should perform evaluation.\n   - `--train_batch_size 64` specifies the batch size for training.\n   - `--learning_rate 2e-5` sets the learning rate for the optimizer.\n   - `--num_train_steps 1000000` sets the total number of training steps.\n   - `--save_checkpoints_steps 1000` sets the frequency at which checkpoints should be saved.\n\nThis script is likely part of a larger project for training a BERT model for a specific language task. It leverages the power of distributed training with Horovod to speed up the training process and efficiently utilize multiple GPUs.\n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 1714,
+        "candidates_token_count": 2223,
+        "total_token_count": 3937,
+        "cached_content_token_count": 0
+    }
+}

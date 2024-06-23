@@ -1,0 +1,19 @@
+{
+    "application": "Slurm",
+    "details": {
+        "resource_requirements": {
+            "qos": "%qos",
+            "partition": "%partition",
+            "nodes": 1,
+            "wallclock_time": "01:00:00",
+            "gres": "gpu:1"
+        },
+        "modules": "%modules",
+        "scratch_host": "%scratch_host",
+        "inputs": "datasets/MNIST",
+        "outputs": "output_$job_id",
+        "container": "sciml-bench_cu11.sif",
+        "container_command": "sciml-bench run MNIST_torch --output_dir=./output_$job_id --dataset_dir=/scratch_mount/MNIST",
+        "run_command": "singularity exec --nv --bind $scratch:/scratch_mount --pwd /scratch_mount $container $container_command"
+    }
+}

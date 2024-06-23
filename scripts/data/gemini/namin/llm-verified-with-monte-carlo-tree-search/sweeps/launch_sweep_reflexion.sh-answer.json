@@ -1,0 +1,35 @@
+{
+    "application": "Slurm",
+    "details": {
+        "job_name": "vmcts",
+        "output_file": "/n/holyscratch01/kempner_fellows/Users/dbrandfonbrener/vmcts/logs/%A_%a.out",
+        "nodes": 1,
+        "tasks_per_node": 1,
+        "gpus_per_node": 1,
+        "cpus_per_task": 16,
+        "time": "1:00:00",
+        "memory": "250GB",
+        "account": "kempner_fellows",
+        "partition": "kempner_requeue",
+        "constraint": "a100",
+        "array": "0-500%20",
+        "environment": {
+            "conda_environment": "verify",
+            "PYTHONPATH": ".:${PYTHONPATH}",
+            "model_arg_temps": "(0.2 0.4 0.6 0.8 1.0)",
+            "model_arg_topp": 0.95,
+            "model_arg_topk": 0,
+            "token_limit": 5000,
+            "run_number": "$[$SLURM_ARRAY_TASK_ID/5]",
+            "hyperparam_number": "$[$SLURM_ARRAY_TASK_ID%5]",
+            "model_arg_temp_idx": "$[$hyperparam_number]",
+            "model_arg_temp": "${model_arg_temps[$model_arg_temp_idx]}",
+            "WANDB_USERNAME": "seas",
+            "WANDB_PROJECT": "vmcts",
+            "WANDB_GROUP": "reflexion-sweep-1",
+            "WANDB_NAME": "$run_number/$model_arg_temp",
+            "SEED": "$run_number"
+        },
+        "script": "run_reflexion.py"
+    }
+}

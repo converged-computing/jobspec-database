@@ -1,0 +1,30 @@
+{
+    "application": "COBALT",
+    "details": {
+        "modules": [
+            "datascience/tensorflow-1.13",
+            "datascience/horovod-0.16.1",
+            "cray-hdf5-parallel/1.10.2.0"
+        ],
+        "environment_variables": {
+            "HDF5_USE_FILE_LOCKING": "FALSE",
+            "PYTHONPATH": "$PYTHONPATH:/lus/theta-fs0/projects/datascience/keceli/pip_ffn"
+        },
+        "resources": {
+            "nodes": "NNODE",
+            "ranks_per_node": "NRANK_PER_NODE",
+            "threads_per_core": "NTHREAD_PER_CORE",
+            "ranks": "NRANK",
+            "threads_per_rank": "NTHREAD"
+        },
+        "script": {
+            "name": "run_inference.py",
+            "path": "/home/keceli/ffn/google_ffn/run_inference.py",
+            "arguments": [
+                "--inference_request='(contents of config.txt)'",
+                "--bounding_box 'start { x:0 y:0 z:0 } size { x:250 y:250 z:250 }'"
+            ]
+        },
+        "command": "aprun -n $NRANK -N $NRANK_PER_NODE -e MKL_VERBOSE=0 -e MKLDNN_VERBOSE=0 -e KMP_BLOCKTIME=0 -e KMP_AFFINITY=granularity=fine,compact,1,0 -e OMP_NUM_THREADS=$NTHREAD -cc depth -d $NTHREAD -j $NTHREAD_PER_CORE python $MYSCRIPT \\"
+    }
+}

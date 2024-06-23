@@ -1,0 +1,55 @@
+{
+    "application": "SuperLU",
+    "details": {
+        "libraries": [
+            "CUDA",
+            "ESSL",
+            "CMake",
+            "NVSHMEM",
+            "MPI"
+        ],
+        "resources": {
+            "nodes": 1,
+            "partition": "regular",
+            "license": "SCRATCH",
+            "time": "00:20:00",
+            "constraint": {
+                "edison": "0",
+                "cori": "haswell"
+            },
+            "environment_variables": {
+                "NVSHMEM_MPI_LIB_NAME": "libmpi_ibm.so",
+                "NVSHMEM_LMPI": "-lmpi_ibm",
+                "SUPERLU_ACC_SOLVE": "1",
+                "NVSHMEM_HOME": "/ccs/home/liuyangz/my_software/nvshmem_src_2.8.0-3/",
+                "NSUP": "256",
+                "NREL": "60",
+                "MAX_BUFFER_SIZE": "5000000000",
+                "OMP_NUM_THREADS": {
+                    "value": "dynamic",
+                    "description": "Number of threads per process"
+                }
+            },
+            "command": "jsrun",
+            "arguments": {
+                "-n": "Number of ranks",
+                "-a": "Number of processes per node",
+                "-c": "Number of columns in the matrix",
+                "-g": "Number of GPUs per process",
+                "-r": "Number of rows in the matrix"
+            },
+            "input_file": {
+                "directory": "$MEMBERWORK/csc289/matrix",
+                "name": "matrix file name"
+            },
+            "output_file": {
+                "directory": "./${MAT}_summit",
+                "name": "SLU.o_mpi_${NROW}x${NCOL}_OMP_${OMP_NUM_THREADS}_GPU_${mya}_${MYDATE}"
+            }
+        },
+        "script_purpose": {
+            "description": "This script is designed to run SuperLU, a high-performance linear algebra solver, on a cluster using the NVSHMEM library for communication. It iterates through a set of matrices, running SuperLU with different numbers of ranks, processes per node, and GPUs per process.",
+            "target_system": "Summit"
+        }
+    }
+}

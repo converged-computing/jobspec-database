@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n\"application\": \"CLM\",\n\"other_software\": [\n\"netcdf\",\n\"mpich\",\n\"cprnc\",\n\"newcprnc\",\n\"gmake\",\n\"gcc\",\n\"ftn\",\n\"ifort\",\n\"icc\",\n\"lf95\",\n\"g95\",\n\"make\",\n\"torque\",\n\"moab\",\n\"subversion\",\n\"ncl\"\n],\n\"resource_requirements\": [\n\"nodes\",\n\"tasks\",\n\"threads\",\n\"walltime\",\n\"queue\",\n\"memory\",\n\"environment_variables\"\n]\n}\n```\n\nThe script is a driver script for the offline testing of the Community Land Model (CLM), a component of the Community Climate System Model (CCSM). It is responsible for orchestrating the execution of various CLM tests, managing test environments, and reporting test results.\n\nThe script supports several different compute systems, each with its own configuration and resource requirements. The script uses specific environment variables and batch submission commands for each system.\n\nHere's a breakdown of the script's components:\n\n**1. Machine Detection:** The script first detects the hostname and sets appropriate variables based on the machine. Each machine has specific configurations for test environments, compilers, and resource requirements.\n\n**2. Batch Script Creation:** The script dynamically creates a batch script (`submit_script`) tailored to the detected machine. The batch script sets up environment variables, resource requests, and defines commands to execute the CLM tests. The content of the batch script varies depending on the machine.\n\n**3. Environment Variables:** The script sets numerous environment variables crucial for CLM testing. These include:\n    - **CLM_TASKS:** Specifies the number of MPI tasks for the test runs.\n    - **CLM_THREADS:** Specifies the number of OpenMP threads per task.\n    - **CLM_COMPSET:** Sets the CLM component set.\n    - **CSMDATA:** Defines the location of CCSM input data.\n    - **DIN_LOC_ROOT:** Sets the directory for dynamic input data.\n    - **CLM_RETAIN_FILES:**  Determines whether test files should be retained.\n    - **CLM_TESTDIR:** Specifies the working directory for the tests.\n    - **CLM_SCRIPTDIR:** Indicates the location of the test driver script.\n    - **CLM_ROOT:** Points to the root directory of the CLM source code.\n\n**4. Test Execution:** The script iterates through a list of tests defined in an input file (`input_file`). Each test is executed with appropriate commands, and results (pass/fail/skipped/pending) are logged. \n\n**5. Interactive and Batch Modes:** The script allows for both interactive and batch modes of execution. In interactive mode, the tests are executed immediately on the command line. In batch mode, the generated batch script is submitted to the queue for later execution.\n\n**6. Argument Parsing:** The script handles command-line arguments to control the execution mode (interactive, debug, compile-only, forced batch submission).\n\n**7. Help Message:** The script displays a help message with instructions on usage, arguments, and environment variables.\n\n**8. Error Handling:** The script includes error handling mechanisms to address situations like missing input files, failed test executions, and unsupported machines.\n\n**Key Software and Resource Requirements:**\n\n- **CLM:** The primary application.\n- **MPI:**  For parallel execution of CLM tests.\n- **OpenMP:** For multi-threading within each MPI task.\n- **NetCDF:**  For data input/output.\n- **cprnc:**  A utility for compressing and decompressing NetCDF files.\n- **gmake:**  A build tool used for compiling CLM.\n- **Compilers:**  The specific compiler needed for CLM depends on the machine (e.g., Intel, PGI, g95).\n- **Batch System:**  The batch system on the target machine (e.g., Torque, LSF, Cobalt) is used to submit and manage batch jobs.\n- **Nodes:**  Number of compute nodes required for the test runs.\n- **Tasks:**  Total number of MPI tasks.\n- **Threads:**  Number of OpenMP threads per task.\n- **Walltime:**  Maximum time allowed for the batch job to run.\n- **Queue:**  The batch queue where the job will be submitted.\n- **Memory:**  Total memory required for the job.\n- **Environment Variables:**  Several environment variables are needed to configure the CLM testing environment, including compiler paths, data locations, and runtime settings.\n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 8610,
+        "candidates_token_count": 1005,
+        "total_token_count": 9615,
+        "cached_content_token_count": 0
+    }
+}

@@ -1,0 +1,27 @@
+{
+    "application": "Slurm",
+    "details": {
+        "resource_requirements": {
+            "nodes": 1,
+            "gpus": 4,
+            "tasks_per_node": 4,
+            "cpus_per_task": 16,
+            "memory": "240000M",
+            "partition": "gpuA100x4",
+            "time": "2-00:00:00"
+        },
+        "software_requirements": {
+            "conda": "Required for environment activation",
+            "python": "Required for distill.py, prune.py, final_distill.py, save_final_ckpt.py"
+        },
+        "script_functions": {
+            "distillation": "Performs knowledge distillation using a teacher model (hubert-base-ls960.hf.pth) and a student model initialized with the same weights. Implements layer-wise distillation, with the option to use different loss functions like L2, L1, and cosine similarity.",
+            "pruning": "Prune the distilled student model based on specified units (conv, head, interm) using a target sparsity and sparsity warmup steps.",
+            "final_distillation": "Fine-tunes the pruned model with a lower learning rate to further improve performance.",
+            "saving": "Saves the final model and configuration for further use."
+        },
+        "data_requirements": {
+            "librispeech": "The Librispeech dataset is required for training and evaluation."
+        }
+    }
+}

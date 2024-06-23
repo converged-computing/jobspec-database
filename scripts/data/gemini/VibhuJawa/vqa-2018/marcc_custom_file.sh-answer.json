@@ -1,0 +1,37 @@
+{
+    "application": "pytorch",
+    "details": {
+        "resource_requirements": {
+            "nodes": 4,
+            "cores": 24,
+            "partition": "gpu",
+            "gpus": 4,
+            "time": "16:0:0"
+        },
+        "software_requirements": {
+            "cuda": "9.0",
+            "singularity": "2.4",
+            "python": "3.x"
+        },
+        "additional_info": {
+            "singularity_image": "shub://marcc-hpc/pytorch",
+            "scripts": [
+                "test.py",
+                "main1.py",
+                "extract_image_features.py"
+            ],
+            "script_arguments": {
+                "main1.py": [
+                    "--num-workers 8",
+                    "--batch-size 128",
+                    "--epochs 30",
+                    "--lr 1e-6"
+                ],
+                "extract_image_features.py": [
+                    "--data_split train2014",
+                    "--data_split val2014"
+                ]
+            }
+        }
+    }
+}

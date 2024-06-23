@@ -1,0 +1,37 @@
+{
+    "application": "MPI",
+    "details": {
+        "resource_requirements": {
+            "nodes": 10,
+            "walltime": "1:00:00",
+            "filesystems": [
+                "home",
+                "grand"
+            ],
+            "queue": "prod",
+            "account": "STlearn",
+            "job_type": "oe",
+            "job_name": "prod_HCP_main_step3_per_loss_age"
+        },
+        "software": {
+            "conda_environment": "3DCNN",
+            "modules": [
+                "conda"
+            ],
+            "mpi_implementation": "mpiexec",
+            "python_script": "main.py"
+        },
+        "environment_variables": {
+            "MPICH_GPU_SUPPORT_ENABLED": 1,
+            "NCCL_COLLNET_ENABLE": 1,
+            "NCCL_NET_GDR_LEVEL": "PHB",
+            "MASTER_ADDR": "`/bin/hostname -s`",
+            "NNODES": "`wc -l < $PBS_NODEFILE`",
+            "NRANKS_PER_NODE": "`nvidia-smi -L | wc -l`",
+            "NTOTRANKS": "`expr $NNODES \\* $NRANKS_PER_NODE`",
+            "NDEPTH": 16,
+            "OMP_NUM_THREADS": 8,
+            "OMP_PLACES": "threads"
+        }
+    }
+}

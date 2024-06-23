@@ -1,0 +1,36 @@
+{
+    "application": "nccl-tests",
+    "other_software": [
+        "hpcx-v2.9.0",
+        "infiniband-diags",
+        "pytorch:21.09-py3"
+    ],
+    "resources": [
+        "8 GPUs",
+        "8 tasks per node",
+        "440 GB memory",
+        "20 minutes run time"
+    ],
+    "environment_variables": [
+        "UCX_IB_PCI_RELAXED_ORDERING=on",
+        "NCCL_IB_PCI_RELAXED_ORDERING=1",
+        "UCX_TLS=rc",
+        "NCCL_SHARP_DISABLE=1",
+        "NCCL_COLLNET_ENABLE=0",
+        "NCCL_TOPO_FILE=/microsoft/ndv4-topo.xml",
+        "OMPI_MCA_pml=ucx",
+        "OMPI_MCA_btl=^openib"
+    ],
+    "container_mounts": [
+        "/opt/microsoft:/microsoft",
+        "$PWD:/nccl",
+        "/opt/hpcx-v2.9.0-gcc-MLNX_OFED_LINUX-5.4-1.0.3.0-ubuntu18.04-x86_64:/opt/hpcx"
+    ],
+    "commands": [
+        "apt update",
+        "apt-get install -y infiniband-diags",
+        "source /opt/hpcx/hpcx-init.sh",
+        "hpcx_load",
+        "/nccl/nccl-tests/build/all_reduce_perf -b8 -f 2 -g 1 -e 8G"
+    ]
+}

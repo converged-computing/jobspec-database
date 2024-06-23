@@ -1,0 +1,62 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n\"application\": \"Slurm\",\n\"details\": {\n\"resource_manager\": \"Slurm\",\n\"partition\": \"debug\",\n\"job_name\": \"merge_phase1_<tag_template>\",\n\"time\": \"00:20:00\",\n\"nodes\": 1,\n\"constraint\": \"haswell\",\n\"docker_image\": \"docker:mlxd/xfel:latest\",\n\"account\": \"lcls\",\n\"output_file\": \"1node_<tag_template>.log\",\n\"error_file\": \"1node_<tag_template>.err\",\n\"email\": \"loriordan@lbl.gov\",\n\"email_type\": \"ALL\",\n\"burst_buffer\": {\n\"type\": \"scratch\",\n\"capacity\": \"60GB\",\n\"access_mode\": \"striped\"\n},\n\"stage_in\": {\n\"source\": \"/global/cscratch1/sd/mlxd/sept_sprint/merge_multi/TAR_95-114\",\n\"destination\": \"$DW_JOB_STRIPED/TAR_95-114\",\n\"type\": \"directory\"\n},\n\"stage_out\": {\n\"source\": \"$DW_JOB_STRIPED/merge_multi\",\n\"destination\": \"/global/cscratch1/sd/mlxd/sept_sprint/merge_multi/bb\",\n\"type\": \"directory\"\n},\n\"environment_variables\": {\n\"TARDATA\": \"$DW_JOB_STRIPED/subsel/*.tar\",\n\"MERGE_ROOT\": \"$DW_JOB_STRIPED/merge_multi\",\n\"TAG\": \"1n_merge_<tag_template>\",\n\"MULTINODE\": \"True\"\n},\n\"software\": {\n\"python\": \"glob\",\n\"shifter\": \"shifter\",\n\"phenix\": \"setup_env.sh\"\n},\n\"commands\": {\n\"mkdir\": {\n\"directories\": [\n\"$DW_JOB_STRIPED/subsel\",\n\"$DW_JOB_STRIPED/merge_multi\",\n\"${MERGE_ROOT}/${TAG}\"\n]\n},\n\"ln\": {\n\"source\": \"${ii}\",\n\"destination\": \"$DW_JOB_STRIPED/subsel/\"\n},\n\"cp\": {\n\"source\": \"/global/cscratch1/sd/mlxd/sept_sprint/merge_multi/4ngz*\",\n\"destination\": \"$DW_JOB_STRIPED/merge_multi\"\n},\n\"srun\": {\n\"nodes\": 32,\n\"cores\": 2,\n\"cpu_bind\": \"cores\",\n\"command\": \"${1}/merge_cori.sh\"\n},\n\"source\": \"/global/project/projectdirs/lcls/mlxd/cctbx_merge/setup_env.sh\"\n},\n\"execution\": {\n\"cd\": \"$1\",\n\"srun\": \"srun -n 32 -c 2 --cpu_bind=cores shifter ${1}/merge_cori.sh\"\n}\n}\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 2,
+                    "blocked": false
+                }
+            ],
+            "citation_metadata": {
+                "citation_sources": [
+                    {
+                        "start_index": 482,
+                        "end_index": 638,
+                        "uri": "https://github.com/ExaFEL/exafel_project",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 638,
+                        "end_index": 780,
+                        "uri": "https://github.com/ExaFEL/exafel_project",
+                        "license_": ""
+                    }
+                ]
+            },
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 697,
+        "candidates_token_count": 687,
+        "total_token_count": 1384,
+        "cached_content_token_count": 0
+    }
+}

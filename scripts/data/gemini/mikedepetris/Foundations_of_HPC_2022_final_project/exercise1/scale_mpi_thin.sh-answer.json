@@ -1,0 +1,47 @@
+{
+    "application": "Slurm",
+    "details": {
+        "scheduler": "Slurm",
+        "job_name": "mpi_scale",
+        "working_directory": "/u/dssc/mdepet00/assignment/exercise1",
+        "partition": "THIN",
+        "nodes": 3,
+        "exclusive": true,
+        "tasks_per_node": 24,
+        "memory": "490G",
+        "time": "02:00:00",
+        "output_file": "scale_mpi_thin_job_%j.out",
+        "modules": [
+            "openMPI/4.1.5/gnu/12.2.1"
+        ],
+        "environment_variables": {
+            "OMP_PLACES": "cores",
+            "OMP_PROC_BIND": "close"
+        },
+        "executable": "gameoflife.x",
+        "arguments": [
+            "-i",
+            "-k",
+            "SIZE",
+            "-f",
+            "pattern_randomSIZE",
+            "-q",
+            "-r",
+            "-f",
+            "pattern_randomSIZE.pgm",
+            "-n",
+            "STEPS",
+            "-e",
+            "TYPE",
+            "-s",
+            "SNAPAT",
+            "-q"
+        ],
+        "mpi_command": "mpirun",
+        "mpi_options": {
+            "-np": "threads",
+            "--map-by": "core",
+            "--report-bindings": true
+        }
+    }
+}

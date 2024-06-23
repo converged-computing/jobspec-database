@@ -1,0 +1,52 @@
+{
+    "application": "Gromacs",
+    "details": {
+        "software": "Gromacs 2023.1",
+        "version": "2023.1",
+        "resources": {
+            "partition": "ampere",
+            "tasks": 1,
+            "cpus_per_task": 24,
+            "memory": "16G",
+            "time": "5-00:00:00"
+        },
+        "libraries": [
+            "OpenMP",
+            "MPI"
+        ],
+        "arguments": [
+            "-f",
+            "MDP",
+            "-c",
+            "WORK_DIR/nvt.gro",
+            "-r",
+            "WORK_DIR/nvt.gro",
+            "-p",
+            "TOPOL",
+            "-o",
+            "WORK_DIR/npt.tpr",
+            "-s",
+            "WORK_DIR/npt.tpr",
+            "-pme",
+            "gpu",
+            "-pmefft",
+            "gpu",
+            "-nb",
+            "gpu",
+            "-bonded",
+            "gpu",
+            "-pin",
+            "on",
+            "-pinstride",
+            "1",
+            "-deffnm",
+            "WORK_DIR/npt",
+            "-cpi",
+            "WORK_DIR/npt"
+        ],
+        "environment_variables": {
+            "OMP_NUM_THREADS": "SLURM_CPUS_PER_TASK",
+            "NTMPI": "SLURM_NTASKS"
+        }
+    }
+}

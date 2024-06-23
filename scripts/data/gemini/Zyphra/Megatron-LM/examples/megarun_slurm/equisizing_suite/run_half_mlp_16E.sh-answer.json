@@ -1,0 +1,30 @@
+{
+    "application": "SLURM",
+    "details": {
+        "job_name": "equiparam_32E",
+        "nodes": 2,
+        "excluded_nodes": "GPU6282",
+        "included_nodes": "GPU627A,GPU6278",
+        "docker_image": "zyphra/megatron_experimental:latest",
+        "docker_command": "/opt/Megatron-LM/examples/megarun_slurm/equisizing_suite/moe_half_mlp_16E.sh",
+        "docker_options": {
+            "network": "host",
+            "ipc": "host",
+            "privileged": true,
+            "shm_size": "1800gb",
+            "gpus": "all",
+            "expose": 2222,
+            "rm": true,
+            "environment_variables": {
+                "NCCL_IB_HCA": "mlx5_0,mlx5_3,mlx5_4,mlx5_5,mlx5_6,mlx5_7,mlx5_8,mlx5_9",
+                "NCCL_IB_CUDA_SUPPORT": 1
+            },
+            "volumes": {
+                "/mnt/shared/datasets/": "/datasets",
+                "/mnt/shared/checkpoints/": "/checkpoints",
+                "/mnt/shared/code/megarun/Megatron-LM/": "/opt/Megatron-LM"
+            }
+        },
+        "output_file": "/mnt/shared/slurm_logs/equiparam/half_mlp_16E.log"
+    }
+}

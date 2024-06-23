@@ -1,0 +1,21 @@
+{
+    "application": "Snakemake",
+    "details": {
+        "job_submission_system": "Slurm",
+        "job_name": "EBcache",
+        "output_file": "slogs/%x-%j.log",
+        "cores": 2,
+        "nodes": 1,
+        "memory_per_cpu": "500M",
+        "partition": "long",
+        "time_limit": "20:00:00",
+        "environment": "somvar-env",
+        "conda_environment_activation": "conda activate somvar-env",
+        "drmaa_options": " -p {cluster.partition} -t {cluster.t} --mem-per-cpu={cluster.mem} --nodes={cluster.nodes} -n {cluster.threads} -o ${LOGDIR}/{rule}-%j.log",
+        "snakemake_options": "--snakefile Snakefiles/EBcacheSnakefile --unlock --rerun-incomplete",
+        "snakemake_dag_generation": "--snakefile Snakefiles/EBcacheSnakefile --dag | dot -Tsvg > dax/EBcache_dag.svg",
+        "snakemake_cluster_submission": "--snakefile Snakefiles/EBcacheSnakefile --cluster-config configs/cluster/ebcache-cluster.json --use-conda --rerun-incomplete --drmaa \"$DRMAA\" -j 3000 -p -r -k",
+        "snakemake_cluster_submission_options": "-j 3000 -p -r -k",
+        "snakemake_cluster_submission_explanation": "-k ..keep going if job fails\n-p ..print out shell commands\n-P medium"
+    }
+}

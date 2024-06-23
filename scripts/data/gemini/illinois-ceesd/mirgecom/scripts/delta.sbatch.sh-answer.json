@@ -1,0 +1,31 @@
+{
+    "application": "MPI4Py",
+    "details": {
+        "environment": {
+            "SLURM": {
+                "nodes": 1,
+                "walltime": "00:30:00",
+                "partition": "gpuA40x4",
+                "tasks_per_node": 4,
+                "gpus_per_node": 4,
+                "gpu_bind": "single:1",
+                "account": "bbkf-delta-gpu",
+                "exclusive": true,
+                "no_requeue": true,
+                "gpus_per_task": 1
+            },
+            "OpenCL": {
+                "device": "Nvidia GPU",
+                "library": "pocl"
+            },
+            "MIRGE": {
+                "cache_root": "$(pwd)/.mirge-cache/",
+                "xdg_cache_home_root": "$(pwd)/.mirge-cache/xdg-cache/rank"
+            }
+        },
+        "script": {
+            "name": "pulse.py",
+            "command": "python -u -O -m mpi4py ./pulse.py"
+        }
+    }
+}

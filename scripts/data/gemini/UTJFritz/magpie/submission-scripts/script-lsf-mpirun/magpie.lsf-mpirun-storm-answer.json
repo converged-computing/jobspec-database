@@ -1,0 +1,69 @@
+{
+    "application": "Magpie",
+    "details": {
+        "software": [
+            {
+                "name": "Java",
+                "version": "1.7.0",
+                "required": true
+            },
+            {
+                "name": "Storm",
+                "version": "1.2.3",
+                "required": true,
+                "config": {
+                    "STORM_SETUP": "yes",
+                    "STORM_HOME": "${HOME}/apache-storm-${STORM_VERSION}",
+                    "STORM_LOCAL_DIR": "/tmp/${USER}/storm",
+                    "STORM_CONF_FILES": "${HOME}/myconf",
+                    "STORM_SUPERVISOR_SLOTS": "16",
+                    "STORM_DAEMON_HEAP_MAX": "1024",
+                    "STORM_WORKER_HEAP_MAX": "1024",
+                    "STORM_JOB": "stormwordcount"
+                }
+            },
+            {
+                "name": "Zookeeper",
+                "version": "3.4.14",
+                "required": true,
+                "config": {
+                    "ZOOKEEPER_SETUP": "yes",
+                    "ZOOKEEPER_REPLICATION_COUNT": "3",
+                    "ZOOKEEPER_SHARE_NODES": "no",
+                    "ZOOKEEPER_JOB": "zookeeperruok",
+                    "ZOOKEEPER_HOME": "${HOME}/zookeeper-${ZOOKEEPER_VERSION}",
+                    "ZOOKEEPER_CONF_FILES": "${HOME}/myconf",
+                    "ZOOKEEPER_DATA_DIR": "/lustre/${USER}/zookeeper",
+                    "ZOOKEEPER_DATA_DIR_CLEAR": "yes",
+                    "ZOOKEEPER_DATA_DIR_TYPE": "networkfs",
+                    "ZOOKEEPER_LOCAL_DIR": "/tmp/${USER}/zookeeper",
+                    "ZOOKEEPER_TICKTIME": "2000",
+                    "ZOOKEEPER_INITLIMIT": "10",
+                    "ZOOKEEPER_SYNCLIMIT": "5"
+                }
+            }
+        ],
+        "resource_requirements": {
+            "node_count": "<my_node_count>",
+            "time_limit": "<my_time_in_hours:minutes>",
+            "queue": "<my_queue>",
+            "job_name": "<my_job_name>"
+        },
+        "other": {
+            "MAGPIE_SCRIPTS_HOME": "${HOME}/magpie",
+            "MAGPIE_LOCAL_DIR": "/tmp/${USER}/magpie",
+            "MAGPIE_JOB_TYPE": "storm",
+            "MAGPIE_STARTUP_TIME": "30",
+            "MAGPIE_SHUTDOWN_TIME": "30",
+            "MAGPIE_ONE_TIME_RUN": "yes",
+            "MAGPIE_PRE_JOB_RUN": "${MAGPIE_SCRIPTS_HOME}/scripts/pre-job-run-scripts/my-pre-job-script",
+            "MAGPIE_POST_JOB_RUN": "${MAGPIE_SCRIPTS_HOME}/scripts/post-job-run-scripts/my-post-job-script",
+            "MAGPIE_PRE_EXECUTE_RUN": "${MAGPIE_SCRIPTS_HOME}/scripts/pre-job-run-scripts/my-pre-job-script",
+            "MAGPIE_POST_EXECUTE_RUN": "${MAGPIE_SCRIPTS_HOME}/scripts/post-job-run-scripts/my-post-job-script",
+            "MAGPIE_ENVIRONMENT_VARIABLE_SCRIPT": "${HOME}/my-job-env",
+            "MAGPIE_ENVIRONMENT_VARIABLE_SCRIPT_SHELL": "/bin/bash",
+            "MAGPIE_REMOTE_CMD": "ssh",
+            "MAGPIE_REMOTE_CMD_OPTS": ""
+        }
+    }
+}

@@ -1,0 +1,43 @@
+{
+    "application": "SLURM",
+    "details": {
+        "software": [
+            "torchvision/0.8.2-fosscuda-2020b-PyTorch-1.7.1",
+            "yolov5"
+        ],
+        "requirements": {
+            "resources": {
+                "memory": "25G",
+                "time": "30:00:00",
+                "partition": "gpu-long",
+                "tasks": 1,
+                "gpus": 1
+            },
+            "environment": {
+                "virtual_environment": "$HOME/venvs/yolo_env",
+                "data": {
+                    "datasets": "$SCRATCH/datasets",
+                    "yaml": "$CWD/symbols2.yaml",
+                    "training_data": "$HOME/training_data"
+                },
+                "output": {
+                    "project_directory": "$SCRATCH/training",
+                    "project_name": "yolo_model_4"
+                }
+            },
+            "script": {
+                "script_file": "train.py",
+                "arguments": [
+                    "--data $DATAYAML",
+                    "--project $PROJECTDIR",
+                    "--name $PROJECTNAME",
+                    "--weights yolov5m6.pt",
+                    "--batch 4",
+                    "--img 1280",
+                    "--device $CUDA_VISIBLE_DEVICES",
+                    "--epochs 400"
+                ]
+            }
+        }
+    }
+}

@@ -1,0 +1,33 @@
+{
+    "application": "SLURM",
+    "details": {
+        "job_name": "Nano-2d-trainer-20b-8nodes",
+        "tasks": 2,
+        "nodes": 2,
+        "gpus_per_task": 4,
+        "partition": "train",
+        "libraries": [
+            "torchrun",
+            "c10d",
+            "efa",
+            "NCCL"
+        ],
+        "script": "llama_finetuning.py",
+        "flags": [
+            "--enable_fsdp",
+            "--use_peft",
+            "--peft_method lora"
+        ],
+        "environment_variables": [
+            "FI_PROVIDER",
+            "LOGLEVEL",
+            "NCCL_DEBUG",
+            "NCCL_DEBUG_SUBSYS",
+            "PYTHONFAULTHANDLER",
+            "LD_LIBRARY_PATH",
+            "CUDA_LAUNCH_BLOCKING",
+            "NCCL_SOCKET_IFNAME",
+            "FI_EFA_USE_DEVICE_RDMA"
+        ]
+    }
+}

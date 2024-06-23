@@ -1,0 +1,34 @@
+{
+    "application": "Slurm",
+    "details": {
+        "job_name": "nccl-test",
+        "partition": "gpuA100x8",
+        "nodes": 2,
+        "gpus_per_node": 8,
+        "ntasks_per_node": 1,
+        "cpus_per_task": 64,
+        "memory": "240g",
+        "time": "00:10:00",
+        "output": "nccl-test-result-2nodes-%j.txt",
+        "account": "bcev-delta-gpu",
+        "modules": [
+            "gcc",
+            "openmpi/4.1.6",
+            "cuda/11.8.0"
+        ],
+        "environment_variables": {
+            "LD_LIBRARY_PATH": "/projects/bcev/jjia1/TOOLS/nccl/build/lib:/sw/spack/deltas11-2023-03/apps/linux-rhel8-zen3/gcc-11.4.0/openmpi-4.1.6-lranp74/lib:/sw/spack/deltas11-2023-03/apps/linux-rhel8-zen3/gcc-11.4.0/cuda-11.8.0-vfixfmc/lib64:$LD_LIBRARY_PATH",
+            "NNODES": 2,
+            "GPUS_PER_NODE": 8,
+            "DATA_BYTES": 1073741824
+        },
+        "commands": [
+            "route",
+            "nvidia-smi",
+            "./reduce_scatter_perf -b $DATA_BYTES -e $DATA_BYTES -g $GPUS_PER_NODE -d half",
+            "./all_gather_perf -b $DATA_BYTES -e $DATA_BYTES -g $GPUS_PER_NODE -d half",
+            "./alltoall_perf -b $DATA_BYTES -e $DATA_BYTES -g $GPUS_PER_NODE -d half"
+        ],
+        "working_directory": "/projects/bcev/jjia1/TOOLS/nccl-tests/build"
+    }
+}

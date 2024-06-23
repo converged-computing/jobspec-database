@@ -1,0 +1,30 @@
+{
+    "application": "SLURM",
+    "details": {
+        "job_name": "shb-test-jobs",
+        "account": "gts-sbryngelson3",
+        "nodes": 1,
+        "cores_per_node": 1,
+        "memory": "100GB",
+        "gpu": "2",
+        "time": "02:00:00",
+        "queue": "embers",
+        "output": "test.out",
+        "wait": true,
+        "mfc.sh": {
+            "load": {
+                "command": "p",
+                "mode": "GPU"
+            },
+            "test": {
+                "arguments": "-a -j 2 --gpu -g $gpu_ids -- -c phoenix"
+            }
+        },
+        "nvidia-smi": {
+            "command": "-L"
+        },
+        "seq": {
+            "command": "-s ' ' 0 $(($gpu_count-1))"
+        }
+    }
+}

@@ -1,0 +1,61 @@
+{
+    "application": "SLURM",
+    "details": {
+        "software": [
+            "mamba",
+            "python",
+            "torch",
+            "torchvision",
+            "torchaudio",
+            "monai",
+            "wget"
+        ],
+        "resources": {
+            "nodes": 1,
+            "cores": 12,
+            "gpu": "a100",
+            "gpu_count": 1,
+            "memory": "100G",
+            "partition": "general",
+            "time": "5-00:00:00",
+            "queue": "public",
+            "output_file": "%x_slurm_%j.out",
+            "error_file": "%xslurm_%j.err",
+            "mail_type": "ALL",
+            "mail_user": "zzhou82@asu.edu"
+        },
+        "dependencies": {
+            "requirements": "requirements.txt",
+            "pretrained_weights": "pretrained_weights/supervised_suprem_swinunetr_2100.pth"
+        },
+        "data": {
+            "path": "/scratch/zzhou82/data/Totalsegmentator_dataset/Totalsegmentator_dataset/"
+        },
+        "environment": {
+            "conda_env": "suprem",
+            "python_version": "3.9"
+        },
+        "training_parameters": {
+            "model_backbone": "swinunetr",
+            "log_name": "efficiency.$arch.$target_task.number$num_target_annotation",
+            "map_type": "$target_task",
+            "num_class": "$num_target_class",
+            "dataset_path": "$datapath",
+            "num_workers": 12,
+            "batch_size": 8,
+            "pretrain": "$suprem_path",
+            "percent": "$num_target_annotation"
+        },
+        "testing_parameters": {
+            "model_backbone": "swinunetr",
+            "log_name": "efficiency.$arch.$target_task.number$num_target_annotation",
+            "map_type": "$target_task",
+            "num_class": "$num_target_class",
+            "dataset_path": "$datapath",
+            "num_workers": 12,
+            "batch_size": 2,
+            "pretrain": "$checkpoint_path",
+            "train_type": "efficiency"
+        }
+    }
+}

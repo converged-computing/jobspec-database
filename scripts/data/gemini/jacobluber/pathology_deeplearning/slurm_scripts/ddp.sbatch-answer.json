@@ -1,0 +1,43 @@
+{
+    "application": "Slurm",
+    "details": {
+        "resource_requirements": {
+            "nodes": 2,
+            "partition": "gpu",
+            "gres": "gpu:k80:4",
+            "cpus_per_task": 8,
+            "mem": "100gb",
+            "time": "00:20:00",
+            "constraint": "gpuk80",
+            "ntasks_per_node": 4
+        },
+        "software_dependencies": [
+            "conda",
+            "nccl/2.7.8_cuda11.0",
+            "python",
+            "ddp"
+        ],
+        "environment_variables": [
+            "NCCL_DEBUG",
+            "NCCL_DEBUG_SUBSYS",
+            "NCCL_SOCKET_IFNAME",
+            "SLURM_JOB_NODELIST",
+            "SLURM_NODELIST",
+            "MASTER_ADDRESS"
+        ],
+        "script_path": "/home/luberjm/pl/code/experiment.py",
+        "arguments": {
+            "batch_size": 3,
+            "epochs": 2,
+            "gpus": 4,
+            "nodes": 2,
+            "workers": 32,
+            "custom_coords_file": "/home/luberjm/pl/code/pc.data",
+            "accelerator": "ddp",
+            "logging_name": "par",
+            "train_size": 1600,
+            "test_size": 400,
+            "read_coords": true
+        }
+    }
+}

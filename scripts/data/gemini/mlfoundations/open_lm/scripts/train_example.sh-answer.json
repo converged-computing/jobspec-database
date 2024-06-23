@@ -1,0 +1,77 @@
+{
+    "application": "open_lm",
+    "details": {
+        "software": [
+            "openmpi",
+            "cuda/11.8",
+            "python",
+            "open_lm",
+            "wandb"
+        ],
+        "resources": {
+            "partition": "g40",
+            "nodes": 16,
+            "tasks_per_node": 8,
+            "cpus_per_task": 12,
+            "output_file": "experiments/logs/%x_%j.out",
+            "comment": "nextgends",
+            "excluded_nodes": [
+                "ip-26-0-134-66",
+                "ip-26-0-140-150",
+                "ip-26-0-131-89",
+                "ip-26-0-133-67"
+            ],
+            "open_mode": "append",
+            "exclusive": true,
+            "data": [
+                "s3://s-laion/rpj_tokenized_upsampled_eleutherai/shard_{00000000..00099999}.tar",
+                "s3://s-laion/2T_no_rpj_tokenized_upsampled_25k_shards/shard_{00000000..00024999}.tar"
+            ],
+            "data_mix_weights": [
+                0.725,
+                0.275
+            ],
+            "training_samples": 25000000000
+        },
+        "environment_variables": {
+            "MASTER_ADDR": "hostname",
+            "MASTER_PORT": "12802",
+            "NCCL_PROTO": "simple",
+            "FI_EFA_FORK_SAFE": 1,
+            "FI_LOG_LEVEL": 1,
+            "FI_EFA_USE_DEVICE_RDMA": 1,
+            "NCCL_DEBUG": "info",
+            "PYTHONFAULTHANDLER": 1,
+            "CUDA_LAUNCH_BLOCKING": 0,
+            "OMPI_MCA_mtl_base_verbose": 1,
+            "FI_EFA_ENABLE_SHM_TRANSFER": 0,
+            "FI_PROVIDER": "efa",
+            "FI_EFA_TX_MIN_CREDITS": 64,
+            "NCCL_TREE_THRESHOLD": 0,
+            "PYTHONPATH": "$PYTHONPATH:/admin/home-mitchellw/git/open_lm"
+        },
+        "training_parameters": {
+            "batch_size": "BATCHSIZE",
+            "learning_rate": "LR",
+            "model": "MODEL",
+            "weight_decay": "WD",
+            "experiment_name": "EXP_NAME",
+            "workers": 2,
+            "precision": "amp_bfloat16",
+            "grad_checkpointing": true,
+            "log_every_n_steps": 20,
+            "grad_clip_norm": 1,
+            "warmup": 2000,
+            "beta2": 0.95,
+            "epochs": 64,
+            "wandb_project_name": "lm1",
+            "logs_directory": "/fsx/home-mitchellw/experimetns/lm",
+            "resume": "latest",
+            "fsdp": true,
+            "fsdp_limit_all_gathers": true,
+            "fsdp_amp": true,
+            "data_key": "json",
+            "lr_cooldown_end": 3e-05
+        }
+    }
+}

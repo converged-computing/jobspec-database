@@ -1,0 +1,51 @@
+{
+    "application": "SLURM",
+    "details": {
+        "resource_requirements": {
+            "nodes": 4,
+            "tasks_per_node": 4,
+            "cpus_per_task": 8,
+            "gpus_per_node": 4,
+            "gpu_type": "dcu"
+        },
+        "software": {
+            "mpirun": {
+                "options": {
+                    "np": "num_DCU",
+                    "hostfile": "${DIR}/hostfile-tmp",
+                    "mca pml": "ucx",
+                    "UCX_TLS": "sm,rc,rocm_cpy,rocm_gdr,rocm_ipc",
+                    "LD_LIBRARY_PATH": "",
+                    "mca coll_hcoll_enable": "0",
+                    "bind-to": "none"
+                }
+            },
+            "python": {
+                "script": "run_pretraining_hvd.py",
+                "arguments": {
+                    "input_file": "${input_files}",
+                    "bert_config_file": "/public/home/zzx6320/lh/Projects/bert/models/chinese_L-12_H-768_A-12/chinese_L-12_H-768_A-12/bert_config.json",
+                    "output_dir": "/work1/zzx6320/lh/Projects/bert/outputs/Pre7_cscd_all_128_64_from_scratch",
+                    "max_seq_length": "128",
+                    "do_train": "True",
+                    "do_eval": "True",
+                    "train_batch_size": "64",
+                    "learning_rate": "2e-5",
+                    "num_train_steps": "3000000",
+                    "save_checkpoints_steps": "1000"
+                }
+            },
+            "horovod": {
+                "environment_variables": {
+                    "HOROVOD_HIERARCHICAL_ALLREDUCE": "1"
+                }
+            },
+            "MIOPEN": {
+                "environment_variables": {
+                    "MIOPEN_USER_DB_PATH": "/tmp/tensorflow-miopen-${USER}-2.8",
+                    "MIOPEN_DEBUG_DISABLE_FIND_DB": "1"
+                }
+            }
+        }
+    }
+}

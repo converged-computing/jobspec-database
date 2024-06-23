@@ -1,0 +1,25 @@
+{
+    "application": "slurm",
+    "details": {
+        "job_name": "60000M_julia_gpu",
+        "account": "CSC383_crusher",
+        "output": "%x-%j.out",
+        "error": "%x-%j.err",
+        "time_limit": "0:02:00",
+        "partition": "batch",
+        "nodes": 1,
+        "modules": [
+            "rocm",
+            "cray-mpich"
+        ],
+        "environment_variables": {
+            "JULIA_MPIEXEC": "srun",
+            "JULIA_AMDGPU_DISABLE_ARTIFACTS": "1"
+        },
+        "julia_project": "../../simple-gemm/julia/GemmDenseAMDGPU",
+        "executable": "gemm-dense-amdgpu.jl",
+        "matrix_size": 60000,
+        "repetitions": 5,
+        "gpu_count": 1
+    }
+}

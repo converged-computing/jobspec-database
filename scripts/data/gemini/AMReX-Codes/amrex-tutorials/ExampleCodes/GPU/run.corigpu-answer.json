@@ -1,0 +1,24 @@
+{
+    "application": "AMREX",
+    "details": {
+        "resource_requirements": {
+            "nodes": 1,
+            "tasks": 8,
+            "cpus_per_task": 10,
+            "gpus_per_node": 8,
+            "tasks_per_node": 8
+        },
+        "software": {
+            "executable": "./main3d.gnu.TPROF.MPI.CUDA.ex",
+            "input_directory": "inputs"
+        },
+        "profiling_tools": {
+            "nsys": {
+                "simple_example": "srun nsys profile -o nsys_out.%q{SLURM_PROCID}.%q{SLURM_JOBID} ${EXE} ${INPUTS}",
+                "recommended_example": "srun nsys profile -c nvtx -p \"<TINY_PROFILER_NAME>@*\" -e NSYS_NVTX_PROFILER_REGISTER_ONLY=0 -o nsys_out.%q{SLURM_PROCID}.%q{SLURM_JOBID} ${EXE} ${INPUTS}",
+                "multi_rank_example": "srun ./profile_1rank.sh ${EXE} ${INPUTS}"
+            },
+            "nsight_compute": "srun nv-nsight-cu-cli -o cucli_out.%q{SLURM_PROCID}.%q{SLURM_JOBID} ${EXE} ${INPUTS}"
+        }
+    }
+}

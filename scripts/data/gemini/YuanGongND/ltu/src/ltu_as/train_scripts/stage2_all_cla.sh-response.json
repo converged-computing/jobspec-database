@@ -1,0 +1,56 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"slurm\",\n  \"details\": {\n    \"job_name\": \"alm\",\n    \"output_file\": \"./log/%j_alm.txt\",\n    \"qos\": \"regular\",\n    \"gpu_count\": 4,\n    \"nodes\": 1,\n    \"partition\": \"a6\",\n    \"tasks_per_node\": 32,\n    \"memory\": \"470000\",\n    \"exclusive\": true,\n    \"environment_variables\": {\n      \"TRANSFORMERS_CACHE\": \"./hf_cache/\",\n      \"HF_DATASETS_CACHE\": \"./hf_cache/\"\n    },\n    \"command\": \"torchrun --nproc_per_node=4 --master_port=1234 ../finetune.py \\\n    --base_model '/data/sls/scratch/yuangong/ltu/src/ltu_as/exp/stage1_proj_cla/checkpoint-16000/pytorch_model.bin' \\\n    --data_path '/data/sls/scratch/yuangong/ltu/openasqa/data/openasqa_classification.json' \\\n    --output_dir $output_dir \\\n    --batch_size 256 \\\n    --micro_batch_size 8 \\\n    --num_epochs 2 \\\n    --learning_rate 1e-4 \\\n    --cutoff_len 108 \\\n    --val_set_size 0 \\\n    --lora_r 8 \\\n    --lora_alpha 16 \\\n    --lora_dropout 0.05 \\\n    --lora_target_modules '[q_proj,v_proj]' \\\n    --group_by_length \\\n    --wandb_run_name ${output_dir} \\\n    --save_steps 1000 \\\n    --trainable_params all\",\n    \"other_software\": [\n      \"torchrun\",\n      \"finetune.py\",\n      \"wandb\"\n    ],\n    \"resource_requirements\": [\n      \"gpu\",\n      \"memory\",\n      \"nodes\",\n      \"tasks_per_node\",\n      \"partition\"\n    ]\n  }\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 2,
+                    "blocked": false
+                }
+            ],
+            "citation_metadata": {
+                "citation_sources": [
+                    {
+                        "start_index": 405,
+                        "end_index": 1073,
+                        "uri": "https://github.com/ishine/ltu",
+                        "license_": ""
+                    }
+                ]
+            },
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 502,
+        "candidates_token_count": 521,
+        "total_token_count": 1023,
+        "cached_content_token_count": 0
+    }
+}

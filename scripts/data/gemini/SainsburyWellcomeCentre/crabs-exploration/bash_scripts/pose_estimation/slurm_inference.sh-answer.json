@@ -1,0 +1,32 @@
+{
+    "application": "SLEAP",
+    "details": {
+        "software": "SLEAP",
+        "resources": {
+            "partition": "gpu",
+            "nodes": 1,
+            "memory": "32G",
+            "cores": 2,
+            "time": "3-04:00",
+            "gpu": 1,
+            "storage": {
+                "data": "/ceph/zoo/users/sminano/crabs_pose_4k_TD4",
+                "inference_video": "/ceph/zoo/raw/CrabField/swc-courtyard_2023/Camera2/NINJAV_S001_S001_T010.MOV"
+            }
+        },
+        "inference_parameters": {
+            "models": [
+                "$JOB_DIR/models/230725_174219.centroid/training_config.json",
+                "$JOB_DIR/models/230725_174219.centered_instance/training_config.json"
+            ],
+            "output": "$INFER_DIR_NAME-$INFER_VIDEO_NAME.predictions.slp",
+            "frames": "2000-6000",
+            "verbosity": "json",
+            "empty_frames": false,
+            "tracker": "none",
+            "gpu": "auto",
+            "max_instances": 1,
+            "batch_size": 4
+        }
+    }
+}

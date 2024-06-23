@@ -1,0 +1,26 @@
+{
+    "application": "LSF",
+    "details": {
+        "resources": {
+            "gpu": "4",
+            "cores": "2",
+            "docker": "registry.gsc.wustl.edu/sleong/osu-micro-benchmark:openmpi-cuda-ofed",
+            "mpi": "openmpi",
+            "ucx": "get_zcopy, mlx5_0:1, rc, shm",
+            "nccl": "ib0",
+            "binding": "none",
+            "debug": "INFO"
+        },
+        "libraries": {
+            "intel_oneapi": "/opt/intel/oneapi",
+            "lsfsuite": "/opt/ibm/lsfsuite/lsf/10.1/linux2.6-glibc2.3-x86_64/lib",
+            "osu_micro_benchmarks": "/usr/local/libexec/osu-micro-benchmarks/mpi"
+        },
+        "environment_variables": {
+            "LD_LIBRARY_PATH": "/usr/local/lib:$LD_LIBRARY_PATH"
+        },
+        "commands": {
+            "mpirun": "-np 2 -x LD_LIBRARY_PATH=$LD_LIBRARY_PATH --mca pml ucx --mca btl ^openib -x CUDA_VISIBLE_DEVICES=0 -x UCX_RNDV_SCHEME=get_zcopy -x UCX_NET_DEVICES=mlx5_0:1 -x UCX_TLS=rc,shm -x NCCL_SOCKET_IFNAME=ib0 -x LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH --bind-to none -x NCCL_DEBUG=INFO --mca plm_base_verbose 100 --map-by slot --mca orte_base_help_aggregate 0 $TEST -d managed"
+        }
+    }
+}

@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"PBS\",\n  \"details\": {\n    \"resource_requirements\": {\n      \"nodes\": 2,\n      \"cpus_per_node\": 16,\n      \"memory_per_node\": \"32gb\",\n      \"gpus_per_node\": 2,\n      \"gpu_model\": \"a100\",\n      \"walltime\": \"0:5:00\"\n    },\n    \"script_execution\": {\n      \"script_name\": \"multi_node_helper.sh\",\n      \"arguments\": \"$HOSTNAME $(pwd) 2 2\"\n    },\n    \"project_directory\": \"/home/dane2/Code/rcde_workshops/pytorch_advanced\"\n  }\n}\n```\n\nThis script is running on a PBS (Portable Batch System) cluster.\n\nHere's a breakdown of the details:\n\n* **PBS:**  The script utilizes the `pbsdsh` command and the `-l` flag within the PBS header.  These are features of PBS, a common batch system for managing resources and running jobs on a cluster of computers.\n\n* **Resource Requirements:** The script requests specific resources from the PBS system using the `-l` flag:\n    * `select=2`:  Requesting 2 nodes.\n    * `ncpus=16`:  16 CPUs per node.\n    * `mem=32gb`: 32 GB of memory per node.\n    * `ngpus=2`: 2 GPUs per node.\n    * `gpu_model=a100`: Specifically requesting A100 GPUs.\n    * `walltime=0:5:00`: A maximum execution time of 5 minutes.\n\n* **Script Execution:** The script uses the `pbsdsh` command to execute the \"multi_node_helper.sh\" script on the nodes allocated by PBS. It passes arguments to this helper script:\n    * `$HOSTNAME`: The hostname of the node where the script is running.\n    * `$(pwd)`: The current working directory (the project directory).\n    * `2`:  Likely the number of nodes or a related parameter.\n    * `2`:  Likely the number of GPUs or a related parameter.\n\n* **Project Directory:** The script defines a project directory (`PROJECT_DIR`) to organize its resources and execute from.\n\nThis combination of PBS, resource requests, and the helper script suggests that this is a distributed deep learning job, likely using PyTorch (as indicated by the directory name), which requires multiple nodes with GPUs to train large models. \n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 208,
+        "candidates_token_count": 573,
+        "total_token_count": 781,
+        "cached_content_token_count": 0
+    }
+}

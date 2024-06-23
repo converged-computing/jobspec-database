@@ -1,0 +1,30 @@
+{
+    "application": "SLURM",
+    "details": {
+        "job_name": "roi_est",
+        "array_size": 1,
+        "nodes": 1,
+        "tasks_per_node": 1,
+        "cpus_per_task": 6,
+        "memory_per_cpu": "8G",
+        "time_limit": "03:00:00",
+        "mail_type": "ALL",
+        "mail_user": "${USER}@umn.edu",
+        "partition": "msismall,amdsmall",
+        "output_file": "batch_logs/%x_%A_%a.out",
+        "error_file": "batch_logs/%x_%A_%a.err",
+        "account": "${PROFILE}",
+        "conda_environment": "fmri_env",
+        "fsl_module": "fsl",
+        "python_script": "betamap_roi.py",
+        "data_sources": [
+            "s3://ABCD_BIDS/derivatives/fmriprep_v23_1_0",
+            "/scratch.global/${USER}/analyses/firstlvl"
+        ],
+        "temporary_directories": [
+            "/tmp/processed",
+            "/tmp/roi"
+        ],
+        "output_directory": "/home/faird/${USER}/analyses/out_midinvar/roi"
+    }
+}

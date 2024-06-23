@@ -1,0 +1,50 @@
+{
+    "application": "LSF",
+    "details": {
+        "resource_requirements": {
+            "cores": 2,
+            "run_time": "3 minutes",
+            "memory": "8000 MB per core",
+            "gpus": 1,
+            "gpu_memory": "10000 MB"
+        },
+        "environment": {
+            "modules": [
+                "gcc/8.2.0",
+                "python_gpu/3.9.9",
+                "cuda/11.0.3",
+                "eth_proxy",
+                "zsh/5.8"
+            ],
+            "virtual_environment": "/nfs/iiscratch-zhang.inf.ethz.ch/export/zhang/export/fm/new/planetml_env"
+        },
+        "script_details": {
+            "python_script": "dist_batch_and_latency_inference_w_httpclient.py",
+            "arguments": [
+                "--pp-mode pipe_sync_sample_mask_token_pipe",
+                "--pipeline-group-size 11",
+                "--cuda-id 0",
+                "--model-type gptneox",
+                "--model-name /nfs/iiscratch-zhang.inf.ethz.ch/export/zhang/export/fm/pretrained_models/gpt-neox-20b-new",
+                "--num-iters 99999999999",
+                "--fp16",
+                "--budget 8000",
+                "--micro-batch-size 1",
+                "--num-layers 4",
+                "--max-layers 44",
+                "--coordinator-server-ip 10.6.7.244",
+                "--working-directory /nfs/iiscratch-zhang.inf.ethz.ch/export/zhang/export/fm/new/working_dir",
+                "--profiling no-profiling",
+                "--net-interface access"
+            ],
+            "working_directory": "/nfs/iiscratch-zhang.inf.ethz.ch/export/zhang/export/fm/GPT-home-private",
+            "environment_variables": [
+                "NCCL_SOCKET_IFNAME=access",
+                "GLOO_SOCKET_IFNAME=access",
+                "NCCL_DEBUG=INFO",
+                "NCCL_IB_DISABLE=1",
+                "NCCL_P2P_DISABLE=1"
+            ]
+        }
+    }
+}

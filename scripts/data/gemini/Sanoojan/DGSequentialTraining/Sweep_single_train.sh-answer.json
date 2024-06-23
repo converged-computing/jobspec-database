@@ -1,0 +1,40 @@
+{
+    "application": "SLURM",
+    "details": {
+        "job_name": "dino_feat",
+        "gres": "gpu:12",
+        "nodes": 1,
+        "cpus_per_task": 60,
+        "partition": "multigpu",
+        "software": [
+            "python",
+            "domainbed.scripts.sweep"
+        ],
+        "data_dir": "/nfs/users/ext_maryam.sultana/DG_new_idea/domainbed/data",
+        "output_dirs": [
+            "./domainbed/outputs_distill/PACS/Vit_untrained_teacher_distill_features-dinoTodeit-notemp/${Wd}",
+            "./domainbed/outputs_distill/PACS/Vit_untrained_teacher_distill_attn-dino-deit-notemp-2/${Wd}/${temp}",
+            "./domainbed/new_outputs/LP-FT/ERM/Resnet50/"
+        ],
+        "algorithms": [
+            "Vit_untrained_teacher_distill_features",
+            "Vit_untrained_teacher_distill_attn",
+            "ERM"
+        ],
+        "backbone": [
+            "DeitSmall",
+            "Resnet50"
+        ],
+        "datasets": "PACS",
+        "n_hparams": 1,
+        "n_trials": 3,
+        "commands": [
+            "delete_incomplete",
+            "launch"
+        ],
+        "hparams": [
+            "{\"Wd\":${Wd},\"attn_sep_mask\":0}",
+            "{\"Wd\":${Wd},\"temp\":${temp},\"attn_sep_mask\":0}"
+        ]
+    }
+}

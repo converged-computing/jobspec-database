@@ -1,0 +1,47 @@
+{
+    "application": "SLURM",
+    "details": {
+        "cluster": "panda",
+        "nodes": 1,
+        "tasks": 1,
+        "cpus_per_task": 4,
+        "memory": "32G",
+        "time": "24:00:00",
+        "job_name": "CT_pckA_KO",
+        "environment": {
+            "conda": "wgs",
+            "spack": [
+                "samtools",
+                "bwa@0.7.17%gcc@8.2.0 arch=linux-centos7-sandybridge",
+                "blast-plus@2.9.0%gcc@8.2.0 arch=linux-centos7-sandybridge"
+            ],
+            "python": "python_path=$(dirname $(which python))",
+            "bash_scripts": [
+                "align_and_clean_specific.sh",
+                "call_snv.sh",
+                "parse_vcf.sh",
+                "pdim_check.sh"
+            ],
+            "python_scripts": [
+                "snp_csv_annotation.py"
+            ]
+        },
+        "tools": [
+            "bedtools"
+        ],
+        "input": {
+            "reference_genome": {
+                "fasta": "/athena/schnappingerlab/scratch/kar4019/wgs/23447Ehr/correct_23447Ehr/23447Ehr_N23242/caro/pckA_KO/pckA_KO_erdman_ref.fa",
+                "genbank": "/athena/schnappingerlab/scratch/kar4019/Reference/Erdman/Erdman.gbk"
+            },
+            "reads": "/athena/schnappingerlab/scratch/kar4019/wgs/23447Ehr/correct_23447Ehr/23447Ehr_N23242/caro/trimmed_fastq/"
+        },
+        "output": {
+            "log_file": "slurm_output.log",
+            "vcf": "vcf_parse",
+            "snp_xlsx": "snp_xlsx",
+            "blast": "blast",
+            "bedgraph": "bedgraph"
+        }
+    }
+}

@@ -1,0 +1,32 @@
+{
+    "application": "python",
+    "software": [
+        "cuda/10.1",
+        "conda",
+        "nvcc",
+        "nvidia-smi",
+        "train.py"
+    ],
+    "resources": {
+        "slurm": [
+            "partition: usatlas",
+            "time: 1-00:00:00",
+            "qos: usatlas",
+            "account: tier3",
+            "nodes: 1",
+            "cpus-per-task: 4",
+            "gres: gpu:1",
+            "mem: 32GB",
+            "job-name: t-mfl-c",
+            "output: log_train_mf_long_celeba_%a.log"
+        ],
+        "environment": [
+            "OMP_NUM_THREADS=1",
+            "configs/train_mf_celeba_april.config",
+            "modelname: long_april",
+            "epochs: 200",
+            "resume: 100",
+            "i: ${SLURM_ARRAY_TASK_ID}"
+        ]
+    }
+}

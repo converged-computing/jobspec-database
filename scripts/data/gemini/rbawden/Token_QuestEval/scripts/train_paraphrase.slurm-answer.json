@@ -1,0 +1,31 @@
+{
+    "application": "Python",
+    "details": {
+        "slurm_script": true,
+        "environment": {
+            "modules": [
+                "cmake/3.14.4",
+                "cuda/11.2",
+                "nccl/2.6.4-1-cuda",
+                "cudnn/8.1.1.33-cuda",
+                "intel-mkl/2020.1",
+                "magma/2.5.4-cuda",
+                "gcc/10.1.0",
+                "openmpi/4.1.1-cuda",
+                "boost/1.74.0"
+            ],
+            "conda_env": "py38",
+            "python_script": "scripts/finetune_t5_mt.py"
+        },
+        "resources": {
+            "gpu": "v100-32g",
+            "gpu_count": 1,
+            "memory": "42G",
+            "cpus": 2,
+            "time": "20:00:00"
+        },
+        "data": "data/paraphrase/parabank.threshold0.7.detok.masked-examples.jsonl.part-${SLURM_ARRAY_TASK_ID}",
+        "output_dir": "models/train_t5_paraphrase/",
+        "log_file": "models/train_t5_paraphrase/train.log"
+    }
+}

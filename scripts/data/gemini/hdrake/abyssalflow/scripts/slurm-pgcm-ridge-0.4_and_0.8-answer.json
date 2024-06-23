@@ -1,0 +1,29 @@
+{
+    "application": "Slurm",
+    "details": {
+        "resource_requirements": {
+            "nodes": 1,
+            "tasks_per_node": 8,
+            "partition": "sched_mit_raffaele",
+            "time": "36:00:00",
+            "exclusive": true,
+            "output_file": "out/job_%j.out",
+            "error_file": "err/job_%j.err"
+        },
+        "software_dependencies": [
+            "julia",
+            "execute-PGCM-repeat-thread"
+        ],
+        "job_name": "p-high",
+        "run_mode": "parallel",
+        "command": "execute-PGCM-repeat-thread",
+        "execution_environment": "Slurm",
+        "additional_notes": [
+            "The script runs 8 instances of the 'execute-PGCM-repeat-thread' command in parallel, each in a different directory: '../pgcm/ridge-0.4_del-0.2', '../pgcm/ridge-0.4_del-0.4', '../pgcm/ridge-0.4_del-0.8', '../pgcm/ridge-0.4_del-inf', '../pgcm/ridge-0.8_del-0.2', '../pgcm/ridge-0.8_del-0.4', '../pgcm/ridge-0.8_del-0.8', '../pgcm/ridge-0.8_del-inf'.",
+            "The script uses the 'srun' command to run the 'execute-PGCM-repeat-thread' command on a single node with exclusive access.",
+            "The script also uses the 'wait' command to ensure that all instances of 'execute-PGCM-repeat-thread' have finished before the script ends.",
+            "The script takes three arguments: EXPNAME, ITER0, and ITERN. These arguments are passed to the 'execute-PGCM-repeat-thread' command.",
+            "The script checks the value of the 'MAXITER' variable, which is not defined in the script. It appears that this variable is defined elsewhere and is used to determine whether the script should resubmit itself or not."
+        ]
+    }
+}

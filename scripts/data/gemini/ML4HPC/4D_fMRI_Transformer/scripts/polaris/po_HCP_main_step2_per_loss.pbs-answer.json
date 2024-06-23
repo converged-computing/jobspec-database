@@ -1,0 +1,30 @@
+{
+    "application": "SLURM",
+    "details": {
+        "scheduler": "SLURM",
+        "resource_requirements": {
+            "nodes": 1,
+            "system": "polaris",
+            "placement": "scatter",
+            "walltime": "0:30:00",
+            "filesystems": "home:grand",
+            "queue": "debug",
+            "account": "STlearn"
+        },
+        "software_requirements": {
+            "conda": "3DCNN",
+            "python": "main.py",
+            "gpu_devices": "NVIDIA",
+            "script": "export_DDP_vars.sh"
+        },
+        "environment_variables": {
+            "MASTER_ADDR": "hostname",
+            "NNODES": "number of nodes",
+            "NRANKS_PER_NODE": "number of ranks per node",
+            "NDEPTH": 8,
+            "NTHREADS": 1,
+            "NTOTRANKS": "total number of ranks"
+        },
+        "command": "srun bash -c \"source export_DDP_vars.sh  python main.py --step 2 --batch_size_phase2 2 --exp_name per_loss_Stella_1024 --which_perceptual densenet3d --image_path /lus/grand/projects/STlearn/HCP_MNI_to_TRs --workers_phase2 4 \""
+    }
+}

@@ -1,0 +1,28 @@
+{
+    "application": "SLURM",
+    "details": {
+        "partition": "instruction",
+        "job_name": "task2",
+        "output_file": "%x.out",
+        "error_file": "%x.err",
+        "nodes": 2,
+        "cpus_per_task": 20,
+        "tasks_per_node": 1,
+        "time_limit": "0-00:30:00",
+        "modules": [
+            "mpi/openmpi",
+            "nvidia/cuda/11.8"
+        ],
+        "environment_variables": {
+            "OMP_PROC_BIND": "spread",
+            "OMP_PLACES": "threads"
+        },
+        "compiler": "g++",
+        "compiler_flags": "-Wall -O3 -o task2_pure_omp -fopenmp -fno-tree-vectorize -march=native -fopt-info-vec",
+        "executable": "task2_pure_omp",
+        "arguments": [
+            "7",
+            "1"
+        ]
+    }
+}

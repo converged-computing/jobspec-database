@@ -1,0 +1,54 @@
+{
+    "application": "slurm",
+    "details": {
+        "software": [
+            "bash",
+            "python",
+            "nvidia-smi",
+            "ibv_devinfo",
+            "all_reduce_perf_mpi",
+            "mlperf_logging",
+            "maskrcnn_benchmark"
+        ],
+        "resources": {
+            "nodes": "${SLURM_JOB_NUM_NODES}",
+            "tasks_per_node": "${DGXNGPU}",
+            "cpus_per_task": 8,
+            "partition": "mlperf",
+            "time": "06:00:00",
+            "exclusive": true,
+            "container_image": "${CONT}",
+            "container_name": "object_detection",
+            "container_mounts": [
+                "${DATADIR}:/data",
+                "${PKLPATH}:/pkl_coco",
+                "${LOGDIR}:/results",
+                "${PWD}:${WORK_DIR}",
+                "${NVMLPERF_NSIGHT_LOCATION}:/nsight"
+            ],
+            "environment_variables": [
+                "WORLD_SIZE",
+                "RANK",
+                "MASTER_ADDR",
+                "MASTER_PORT",
+                "MLPERF_RULESET",
+                "NEXP",
+                "DATESTAMP",
+                "CLEAR_CACHES",
+                "WORK_DIR",
+                "LOGDIR",
+                "API_LOG_DIR",
+                "LOGBASE",
+                "TIME_TAGS",
+                "NVTX_FLAG",
+                "NCCL_TEST",
+                "SYNTH_DATA",
+                "EPOCH_PROF",
+                "DISABLE_CG",
+                "SPREFIX",
+                "EXTRA_CONFIG",
+                "MELLANOX_VISIBLE_DEVICES"
+            ]
+        }
+    }
+}

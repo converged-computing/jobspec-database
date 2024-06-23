@@ -1,0 +1,40 @@
+{
+    "application": "SLURM",
+    "details": {
+        "scheduler": "SLURM",
+        "time": "23:59:59",
+        "nodes": 1,
+        "tasks": 1,
+        "partition": "gpu",
+        "gpu": 4,
+        "memory": "230G",
+        "cpus_per_task": 64,
+        "output": "slurm/new_neurips/fgsm_vanilla_%A.out",
+        "software": [
+            "python",
+            "pytorch-py37-cuda11.2-gcc8/1.9.1",
+            "typing-extensions"
+        ],
+        "libraries": [
+            "typing-extensions"
+        ],
+        "script": "main_fgsm.py",
+        "arguments": [
+            "--epochs 15",
+            "--batch_size 1",
+            "--checkpoint icml_fgsm",
+            "--pre_train",
+            "--num_workers 64",
+            "--dataset sceneflow",
+            "--dataset_directory /work/ws-tmp/sa058646-segment2/stereo-transformer/data/SCENE_FLOW",
+            "--kernel_size 3",
+            "--resume /work/ws-tmp/sa058646-segment2/stereo-transformer/run/sceneflow/vanilla/experiment_3/epoch_14_model.pth.tar",
+            "--eval",
+            "--fgsm",
+            "--epsilon $1",
+            "-it 1",
+            "-at fgsm",
+            "--alpha $1"
+        ]
+    }
+}

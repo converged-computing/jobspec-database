@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "Slurm\n```json\n{\n  \"application\": \"AROME_E700\",\n  \"software_requirements\": [\n    \"mpiauto\",\n    \"grib_api\",\n    \"intel_mpi_fabric\",\n    \"rttov\",\n    \"perl\"\n  ],\n  \"resource_requirements\": {\n    \"nodes\": 40,\n    \"mpi_tasks\": 1280,\n    \"omp_threads\": 4,\n    \"walltime\": \"00:40:00\",\n    \"memory\": \"247000MB\"\n  },\n  \"environment_variables\": {\n    \"MYLIB\": \"Environment variable, not defined in the script\",\n    \"HOMEPACK\": \"Environment variable, not defined in the script\",\n    \"TESTDIR\": \"Environment variable, not defined in the script\",\n    \"BIG3DDATADIR\": \"Environment variable, not defined in the script\",\n    \"JOB_INITDIR\": \"SLURM_SUBMIT_DIR\",\n    \"JOB_NAME\": \"arome_e700\",\n    \"JOB_ID\": \"SLURM_JOB_ID\",\n    \"NNODES\": \"SLURM_JOB_NUM_NODES\",\n    \"MPITASKS_PER_NODE\": \"SLURM_NTASKS/SLURM_JOB_NUM_NODES\",\n    \"OMP_NUM_THREADS\": \"SLURM_CPUS_PER_TASK\",\n    \"MPI_TASKS\": \"SLURM_NTASKS\",\n    \"NTASKS_IO\": \"0\",\n    \"LOCAL_MPI_WRAPPER\": \"/opt/softs/mpiauto/mpiauto\",\n    \"LOCAL_STACK_LIMIT\": \"unlimited\",\n    \"OMP_STACKSIZE\": \"4G\",\n    \"KMP_STACKSIZE\": \"4G\",\n    \"KMP_MONITOR_STACKSIZE\": \"4G\",\n    \"I_MPI_HARD_FINALIZE\": \"1\",\n    \"I_MPI_SCALABLE_OPTIMIZATION\": \"0\",\n    \"I_MPI_DAPL_UD_RNDV_EP_NUM\": \"4\",\n    \"I_MPI_SHM_SPIN_COUNT\": \"10\",\n    \"I_MPI_SPIN_COUNT\": \"10\",\n    \"TMPGFS\": \"TMPDIR\",\n    \"WORKGFS\": \"$WORKDIR/benchmarks\",\n    \"TMPLOC\": \"TMPGFS\",\n    \"ISYNC\": \"1 if either MTOOL_IS is ON or NNODES > 1 and TMPLOC != TMPGFS\",\n    \"NAMELDIR\": \"$TESTDIR/Namelists\",\n    \"HOMEPACK\": \"$HOME/pack\",\n    \"BINDIR\": \"$HOMEPACK/$MYLIB/bin\",\n    \"OUTPUTDIR\": \"$PWD\",\n    \"DATADIR\": \"${BIG3DDATADIR:=/scratch/work/khatib/data/cy49.forecast_arome_e700}\",\n    \"TOOLSDIR\": \"/home/gmap/mrpm/khatib/benchmarks/tools\",\n    \"PATH\": \"$TOOLSDIR:$PATH\",\n    \"DR_HOOK\": \"0\",\n    \"DR_HOOK_IGNORE_SIGNALS\": \"-1\",\n    \"DR_HOOK_SILENT\": \"1\",\n    \"DR_HOOK_SHOW_PROCESS_OPTIONS\": \"0\",\n    \"MPL_MBX_SIZE\": \"2048000000\",\n    \"EC_PROFILE_HEAP\": \"0\",\n    \"EC_PROFILE_MEM\": \"0\",\n    \"EC_MPI_ATEXIT\": \"0\",\n    \"EC_MEMINFO\": \"0\",\n    \"OPENBLAS_NUM_THREADS\": \"1\",\n    \"MKL_CBWR\": \"AUTO,STRICT\",\n    \"MKL_NUM_THREADS\": \"1\",\n    \"MKL_DEBUG_CPU_TYPE\": \"5\",\n    \"FTRACE_JOB\": \"1\",\n    \"FTRACE_DIR\": \"JOB_INITDIR if exists, otherwise FTRACEDIR\",\n    \"SCRATCH_FTRACE_DIR\": \"TMPGFS\",\n    \"PROFDIR\": \"SCRATCH_FTRACE_DIR/${JOB_NAME}.d${JOB_ID}\",\n    \"PROFMRG\": \"FTRACE_DIR/${JOB_NAME}.h${JOB_ID}\",\n    \"ECHO_MPSH\": \"OFF\",\n    \"OUTPUT_LISTING\": \"YES\",\n    \"LOGDIR\": \"$JOB_INITDIR/${JOB_NAME}.l${JOB_ID}\",\n    \"ARCHIVE_AND_ZIP_ODB\": \"0\",\n    \"OUTDIR\": \"TMPGFS\",\n    \"TMPNFS\": \"mktemp -d --tmpdir=/tmp/$LOGNAME\",\n    \"NAMELIST\": \"namel_previ.49\",\n    \"CTRLLIST\": \"extra_namelists48.list\",\n    \"LINKS\": \"links_inline48.scpt\",\n    \"EXECUTABLE\": \"MASTERODB\",\n    \"NPROC_IO\": \"NTASKS_IO\",\n    \"NPROC\": \"MPI_TASKS-NPROC_IO\",\n    \"NPROMA\": \"-16\",\n    \"NFPROMA\": \"-24\",\n    \"LOPT_SCALAR\": \".TRUE.\",\n    \"NSTROUT\": \"NPROC\",\n    \"NSTRIN\": \"NPROC\",\n    \"NPRGPEW\": \"16\",\n    \"NPRGPNS\": \"(NPROC/NPRGPEW)\",\n    \"NPRTRV\": \"16\",\n    \"NPRTRW\": \"(NPROC/NPRTRV)\"\n  }\n}\n```\nThis script runs an AROME_E700 application that relies on Slurm for job management and utilizes multiple software components like:\n\n- **MPIAUTO:** A parallel execution environment \n- **Grib-API:** A library for handling GRIB data\n- **Intel MPI Fabric:** Used for communication between MPI processes \n- **RTTOV:** Radiative transfer model\n- **Perl:** For manipulating text files\n- **DrHook:** A profiling tool\n\nThe script sets up the environment for the application, allocates resources using Slurm, configures the required environment variables, and defines various preferences for the run. The execution part is particularly interesting.  It:\n\n1. **Fetches initial data files:** Using `$TOOLSDIR/getdata.sh`\n2. **Copies required files:** From the specified NAMELDIR to the working directory\n3. **Prepares the parallel execution environment:** Using MPIAUTO\n4. **Unarchives datasets and synchronizes local disks:** Through `$TOOLSDIR/input_sync.sh`\n5. **Executes the application:** Using the `$EXECUTABLE` file\n6. **Post-processes the results:** Using `$TOOLSDIR/outsync.sh` and `$TOOLSDIR/profsync.sh`\n7. **Cleans up temporary files:** Using `$TOOLSDIR/cleansync.sh` \n8. **Logs the execution:** Using `$TOOLSDIR/epilog.sh`\n\n\nThe script also incorporates features for:\n\n- **Profiling:** Using DrHook or other profilers\n- **Output listings:** Control over whether to generate listing files\n- **ODB archiving:** Enabling/disabling archiving of output data \n- **Output directory management:** Controlling where the output files are saved\n\nThe script is well-structured and uses environment variables extensively to make it more flexible and reusable. It also provides detailed logging, error handling, and user-configurable settings.\n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 5241,
+        "candidates_token_count": 1702,
+        "total_token_count": 6943,
+        "cached_content_token_count": 0
+    }
+}

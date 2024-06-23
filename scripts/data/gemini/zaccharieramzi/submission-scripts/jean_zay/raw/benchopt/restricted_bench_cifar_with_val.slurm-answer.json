@@ -1,0 +1,42 @@
+{
+    "application": "SLURM",
+    "details": {
+        "job_name": "restricted_benchopt_run",
+        "tasks": 1,
+        "tasks_per_node": 1,
+        "gpu": 1,
+        "cpus_per_task": 10,
+        "time": "02:00:00",
+        "output": "%x_%A_%a.out",
+        "error": "%x_%A_%a.out",
+        "qos": "qos_gpu-t3",
+        "distribution": "block:block",
+        "hint": "nomultithread",
+        "array": "0-9",
+        "environment": {
+            "PYTHONUSERBASE": "$WORK/.local_torch",
+            "pytorch-gpu": "pytorch-gpu/py3/1.10.1",
+            "PATH": "$WORK/.local_torch/bin:$PATH"
+        },
+        "working_directory": "$WORK/benchmark_resnet_classif",
+        "command": "benchopt run .",
+        "arguments": {
+            "output": "*18",
+            "dataset": "cifar[*,random_state=${random_state},with_validation=True]",
+            "repetitions": 1,
+            "n_epochs": 200,
+            "timeout": 10800,
+            "plot": false,
+            "save": true,
+            "model": "sgd-torch[batch_size=128",
+            "data_aug": true,
+            "lr_schedule": [
+                "cosine",
+                "step"
+            ],
+            "momentum": 0.9,
+            "nesterov": false,
+            "weight_decay": 0.0005
+        }
+    }
+}

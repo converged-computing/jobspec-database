@@ -1,0 +1,68 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"SLURM\",\n  \"details\": {\n    \"runtime\": \"24 hours\",\n    \"cores\": 5,\n    \"nodes\": 1,\n    \"job_name\": \"rs3\",\n    \"output\": \"rs3-slurm.%N.%j.out\",\n    \"error\": \"rs3-slurm.%N.%j.err\",\n    \"python_modules\": [\"PyHipp\", \"DataProcessingTools\"],\n    \"commands\": [\n      \"import PyHipp as pyh\",\n      \"import DataProcessingTools as DPT\",\n      \"DPT.objects.processDirs(dirs=None, objtype=pyh.RPLSplit, channel=[*range(65,97)])\",\n      \"DPT.objects.processDirs(dirs=['sessioneye/array03','session01/array03'], cmd='import PyHipp as pyh; import DataProcessingTools as DPT; DPT.objects.processDirs(None, pyh.RPLLFP, saveLevel=1); DPT.objects.processDirs(None, pyh.RPLHighPass, saveLevel=1);')\",\n      \"DPT.objects.processDirs(level='channel', cmd='import PyHipp as pyh; from PyHipp import mountain_batch; mountain_batch.mountain_batch(); from PyHipp import export_mountain_cells; export_mountain_cells.export_mountain_cells();')\",\n      \"aws sns publish --topic-arn arn:aws:sns:ap-southeast-1:600320627072:awsnotify --message \\\"RPLS3JobDone\\\"\"\n    ]\n  }\n}\n```\n\n**Explanation:**\n\n* **SLURM:** This script is designed to be run on a SLURM cluster, a common high-performance computing resource manager. The `sbatch` command is used to submit the script to SLURM.\n* **Resource Requirements:**\n    * **Time:** The script requests 24 hours of wall time (`--time=24:00:00`).\n    * **Cores:** It needs 5 processor cores (`--cpus-per-task=5`).\n    * **Nodes:** It runs on a single node (`--nodes=1`).\n* **Job Name:** The job is named \"rs3\" (`-J \"rs3\"`).\n* **Output and Error Files:** The script specifies output and error files (`-o`, `-e`).\n* **Python Modules:**  The script uses two Python modules:\n    * **PyHipp:** This appears to be a custom module for processing neural data.\n    * **DataProcessingTools:** Another custom module likely for data manipulation.\n* **Commands:** The script runs a series of Python commands using the `-c` flag with `python`. These commands seem to involve:\n    * Processing data with different `objtype`s (likely data types) in PyHipp.\n    * Performing specific operations like `mountain_batch` and `export_mountain_cells`, potentially for spike sorting or other neural data analysis tasks.\n* **AWS SNS Notification:**  After running the processing, the script sends an SNS notification to confirm job completion. \n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "citation_metadata": {
+                "citation_sources": [
+                    {
+                        "start_index": 525,
+                        "end_index": 685,
+                        "uri": "https://github.com/RJ3801/PyHipp",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 715,
+                        "end_index": 904,
+                        "uri": "https://github.com/RJ3801/PyHipp",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 783,
+                        "end_index": 936,
+                        "uri": "https://github.com/RJ3801/PyHipp",
+                        "license_": ""
+                    }
+                ]
+            },
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 537,
+        "candidates_token_count": 720,
+        "total_token_count": 1257,
+        "cached_content_token_count": 0
+    }
+}

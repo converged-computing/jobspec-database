@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"Dask\",\n  \"details\": {\n    \"scheduler\": \"dask-scheduler\",\n    \"worker\": \"dask-worker\",\n    \"resources\": {\n      \"nodes\": 8,\n      \"tasks\": 8,\n      \"memory\": \"107GB per node\",\n      \"wallclock\": \"23:59:59\",\n      \"project\": \"SKA-SDP\",\n      \"partition\": \"compute\",\n      \"environment\": {\n        \"python\": \"/path/to/python\",\n        \"dask-scheduler\": \"/path/to/dask-scheduler\",\n        \"PYTHONPATH\": \"/path/to/python/modules\",\n        \"ARL_DASK_SCHEDULER\": \"scheduler:8786\",\n        \"local_directory\": \"/mnt/storage-ssd/tim/dask-workspace/${host}\"\n      }\n    },\n    \"launch_method\": \"SSH\",\n    \"script\": \"clean_ms_noniso.py\"\n  }\n}\n```\n\n**Explanation:**\n\n* **Application:** The script is running a Dask distributed computing framework. \n* **Details:**\n    * **Scheduler:** The `dask-scheduler` is running on a designated node.\n    * **Worker:** Multiple `dask-worker` processes are launched on different nodes to perform the actual computations.\n    * **Resources:** The script requests specific resources from the SLURM cluster:\n        * **Nodes:** 8 nodes are requested.\n        * **Tasks:** 8 tasks are requested, meaning 8 parallel processes will be running.\n        * **Memory:** Each node is allocated 107GB of memory.\n        * **Wallclock:** The job can run for up to 23 hours, 59 minutes, and 59 seconds.\n        * **Project:** The job is charged to the \"SKA-SDP\" project.\n        * **Partition:** The job runs on the \"compute\" partition of the cluster.\n    * **Environment:**\n        * **Python:** The script sets up a specific Python environment.\n        * **dask-scheduler:** The script specifies the location of the `dask-scheduler` executable.\n        * **PYTHONPATH:**  The `PYTHONPATH` environment variable is modified to include necessary Python modules.\n        * **ARL_DASK_SCHEDULER:** This environment variable informs the Dask Client where to find the scheduler.\n        * **local_directory:** Each worker is given a local directory for temporary data storage.\n    * **Launch Method:** The script uses SSH to remotely launch the scheduler and workers on each node.\n    * **Script:** The `clean_ms_noniso.py` script is the actual Python application being executed by Dask.\n\n**Note:** The script uses environment variables like `$SLURM_SUBMIT_DIR`, `$SLURM_JOB_ID`, and `$SLURM_JOB_NODELIST` which are provided by SLURM to obtain information about the job and the assigned nodes. \n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 1053,
+        "candidates_token_count": 675,
+        "total_token_count": 1728,
+        "cached_content_token_count": 0
+    }
+}

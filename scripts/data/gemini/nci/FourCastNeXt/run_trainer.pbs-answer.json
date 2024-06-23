@@ -1,0 +1,38 @@
+{
+    "application": "Ray",
+    "details": {
+        "framework": "Ray",
+        "resources": {
+            "cpus": 48,
+            "gpus": 4,
+            "memory": "382GB",
+            "storage": "200GB",
+            "walltime": "15:00:00",
+            "jobfs": "200GB",
+            "ray_workers": {
+                "cpus": 24,
+                "memory": "96GB",
+                "walltime": "15:00:00",
+                "jobfs": "200GB",
+                "storage": "200GB"
+            }
+        },
+        "software": {
+            "cuda": "11.7.0",
+            "python": "trainer.py",
+            "ray": "latest"
+        },
+        "environment_variables": {
+            "WORLD_SIZE": "${PBS_NGPUS:-1}",
+            "OMP_NUM_THREADS": "1",
+            "RAY_num_heartbeats_timeout": "120"
+        },
+        "configuration": {
+            "max_pretrain_steps": "40000",
+            "max_finetune_steps": "2000",
+            "num_ray_worker_nodes": "3",
+            "ray_port": "26378",
+            "ray_tmp_root": "/tmp/XXX"
+        }
+    }
+}

@@ -1,0 +1,29 @@
+{
+    "application": "LSF",
+    "details": {
+        "scheduler": "LSF",
+        "queue": "pbatch",
+        "job_name": "nsnaps",
+        "wall_time": "12:00",
+        "nodes": 1,
+        "output_file": "nsnaps_fine_ports.txt",
+        "environment_variables": [
+            "IBV_FORK_SAFE=1",
+            "OMP_NUM_THREADS=1"
+        ],
+        "software": [
+            "python",
+            "pytorch",
+            "horovod",
+            "jsrun"
+        ],
+        "commands": [
+            "python driver_train_port_autoencoder.py --nx 480 --ny 24 --act_type Sigmoid --nsnaps 1600",
+            "python driver_train_port_autoencoder.py --nx 480 --ny 24 --act_type Sigmoid --nsnaps 3200",
+            "python driver_train_port_autoencoder.py --nx 480 --ny 24 --act_type Sigmoid --nsnaps 4800",
+            "python driver_train_rom.py --nsnaps 1600 --intr_ld 8 --intr_only --nx 480 --ny 24 --act_type Swish",
+            "python driver_train_rom.py --nsnaps 3200 --intr_ld 8 --intr_only --nx 480 --ny 24 --act_type Swish",
+            "python driver_train_rom.py --nsnaps 4800 --intr_ld 8 --intr_only --nx 480 --ny 24 --act_type Swish"
+        ]
+    }
+}

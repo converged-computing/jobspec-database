@@ -1,0 +1,45 @@
+{
+    "application": "LAMMPS",
+    "details": {
+        "software": [
+            "LAMMPS",
+            "DeepMD-kit",
+            "PLUMED"
+        ],
+        "resources": {
+            "compute": {
+                "nodes": 1,
+                "tasks_per_node": 1,
+                "cpus_per_task": 10,
+                "gpus": 1
+            },
+            "storage": {
+                "scratch": true,
+                "temporary_directory": "${SCRATCH}/JOB-${SLURM_JOBID}"
+            },
+            "modules": {
+                "DeepMD-kit": {
+                    "versions": [
+                        "2.1",
+                        "2.2"
+                    ]
+                }
+            },
+            "submission_system": "SLURM"
+        },
+        "dependencies": {
+            "files": [
+                "job-array-params_lammps-deepmd_explore_ARCHTYPE_myHPCkeyword.lst",
+                "LAMMPS_IN_FILE",
+                "DeepMD_MODEL_FILES",
+                "EXTRA_FILES",
+                "PLUMED_FILES"
+            ],
+            "environment_variables": [
+                "SLURM_SUBMIT_DIR",
+                "SLURM_JOBID",
+                "SLURM_ARRAY_TASK_ID"
+            ]
+        }
+    }
+}

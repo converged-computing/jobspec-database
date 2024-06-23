@@ -1,0 +1,36 @@
+{
+    "application": "SLURM",
+    "details": {
+        "job_name": "H64-S24",
+        "queue": "qos_gpu-t4",
+        "tasks": 1,
+        "gpus": 1,
+        "array_tasks": 100,
+        "cpus_per_task": 8,
+        "memory_per_cpu": "8g",
+        "output_file": "slurm_out_2/h64-S24-%j.out",
+        "error_file": "slurm_out_2/h64-S24-%j.err",
+        "runtime": "50:00:00",
+        "environment": {
+            "TMPDIR": "$JOBSCRATCH",
+            "modules": [
+                "pytorch-gpu/py3/1.7.1"
+            ],
+            "conda_environment": "back-is",
+            "PYTHONPATH": "src:${PYTHONPATH}"
+        },
+        "script": "src/estimate.py",
+        "arguments": {
+            "data_path": "output/RNN_weather/RNN_h64_ep15_bs64_maxsamples20000/20210416-225828/observations_samples1_seqlen25_sigmainit0.1_sigmah0.1_sigmay0.1",
+            "model_path": "output/RNN_weather/RNN_h64_ep15_bs64_maxsamples20000/20210416-225828/model.pt",
+            "out_path": "100_runs/${SLURM_ARRAY_TASK_ID}",
+            "num_particles": 1000,
+            "backward_samples": 32,
+            "sigma_init": 0.1,
+            "sigma_y": 0.1,
+            "sigma_h": 0.1,
+            "pms": 1,
+            "particles_pms": 10000
+        }
+    }
+}

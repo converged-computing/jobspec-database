@@ -1,0 +1,42 @@
+{
+    "application": "SLURM",
+    "details": {
+        "job_name": "uvvis_chemprop_v0",
+        "output_file": "uvvis_chemprop_v0-%j.out",
+        "time_limit": "5-00:00:00",
+        "nodes": 1,
+        "tasks_per_node": 20,
+        "memory": "30gb",
+        "gpu": "volta:1",
+        "software": [
+            "anaconda/2022a",
+            "chemprop",
+            "python",
+            "tar"
+        ],
+        "dependencies": [
+            "/etc/profile",
+            "/home/gridsan/kgreenman/chemprop",
+            "/home/gridsan/kgreenman/amd_property_models/datasets",
+            "/home/gridsan/kgreenman/amd_property_models/models/uvvis"
+        ],
+        "data_files": [
+            "splits_v0/split_$i/trainval.csv",
+            "splits_v0/split_$i/eval.csv",
+            "$DATASETS_DIR/uvvis/v0/smiles_target_train.csv",
+            "$DATASETS_DIR/uvvis/v0/smiles_target_val.csv",
+            "$DATASETS_DIR/uvvis/v0/smiles_target_test.csv",
+            "$DATASETS_DIR/uvvis/v1/v1.csv",
+            "$DATASETS_DIR/uvvis/v2a/v2a.csv",
+            "$DATASETS_DIR/uvvis/v2b/v2b.csv",
+            "$DATASETS_DIR/uvvis/v2c/v2c.csv",
+            "$DATASETS_DIR/uvvis/v2c/v2abc.csv",
+            "$DATASETS_DIR/uvvis/v3/v3.csv"
+        ],
+        "config_files": [
+            "splits_v0/split_$i/trainval.csv",
+            "splits_v0/split_$i/eval.csv",
+            "$CONFIG_FILE_DIR/sigopt_chemprop_lambda_max_best_hyperparams_small.json"
+        ]
+    }
+}

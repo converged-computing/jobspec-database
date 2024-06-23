@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"readex-dyn-detect\",\n  \"details\": {\n    \"software\": [\n      \"kripke\",\n      \"readex-dyn-detect\"\n    ],\n    \"resources\": {\n      \"PBS\": {\n        \"account\": \"OPEN-12-63\",\n        \"queue\": \"qprod\",\n        \"job_name\": \"KRIPKE_RDD\",\n        \"nodes\": 1,\n        \"cpus_per_node\": 24,\n        \"mpi_procs\": 24,\n        \"accelerator\": false,\n        \"x86_adapt\": true,\n        \"walltime\": \"01:00:00\",\n        \"mail_options\": \"be\"\n      },\n      \"environment_variables\": {\n        \"FM_DIR\": \"working directory\",\n        \"SCOREP_PROFILING_FORMAT\": \"cube_tuple\",\n        \"SCOREP_METRIC_PAPI\": \"PAPI_TOT_INS,PAPI_L3_TCM\",\n        \"KRIPKE_COMMAND\": \"command line arguments for kripke\"\n      }\n    }\n  }\n}\n```\n\n**Explanation of the script:**\n\n1. **PBS directives:** The script begins with several PBS directives that specify job resources and settings for running on a PBS cluster. These include:\n    - `#PBS -A OPEN-12-63`: Specifies the account to charge for the job.\n    - `#PBS -q qprod`: Specifies the queue to submit the job to.\n    - `#PBS -N KRIPKE_RDD`: Sets the job name.\n    - `#PBS -l select=1:ncpus=24:mpiprocs=24:accelerator=false`: Requests 1 node with 24 CPUs and 24 MPI processes. \n    - `#PBS -l x86_adapt=true`: Enables x86 optimization.\n    - `#PBS -l walltime=01:00:00`: Specifies a walltime limit of 1 hour.\n    - `#PBS -m be`: Specifies the mail notification options (begin and end).\n\n2. **Environment setup:** The script sets up the environment variables `FM_DIR` (working directory) and sources environment files for `readex-dyn-detect` and `kripke`.\n\n3. **Running KRIPKE:** The script runs the `kripke` executable with `mpirun` to distribute the workload across the requested MPI processes.\n\n4. **Running readex-dyn-detect:**  \n    - The script then runs `readex-dyn-detect` with specific parameters. The `-p \"Loop\"` argument indicates the region of interest is a loop.\n    - `-t 0.01`:  The script sets a threshold of 0.01 for the profiling data.\n    - `scorep-*/profile.cubex`: This seems to be a glob pattern to get the profiling files from a directory named `scorep-*`.\n\n5. **File copying:** The script includes commented lines that would copy the profiling data and configuration file into a directory named `RESULTS`.\n\n**Overall, the script is designed to run a performance analysis workflow using `kripke` to generate profiling data that is then analyzed by `readex-dyn-detect`.** \n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 419,
+        "candidates_token_count": 747,
+        "total_token_count": 1166,
+        "cached_content_token_count": 0
+    }
+}

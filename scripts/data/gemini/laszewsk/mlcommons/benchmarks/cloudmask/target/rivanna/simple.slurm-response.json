@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"Slurm\",\n  \"details\": {\n    \"resource_requirements\": {\n      \"nodes\": 1,\n      \"gres\": \"gpu:v100:1\",\n      \"time\": \"06:00:00\",\n      \"mem\": \"64G\",\n      \"partition\": \"bii-gpu\",\n      \"account\": \"bii_dsc_community\"\n    },\n    \"software_requirements\": {\n      \"singularity\": true,\n      \"python\": \"3.8.8\",\n      \"tensorflow\": \"2.8.0\",\n      \"cuda\": \"11.0.228\",\n      \"gcc\": \"9.2.0\",\n      \"openmpi\": \"3.1.6\"\n    },\n    \"environment_variables\": {\n      \"USER_SCRATCH\": \"/scratch/$USER\",\n      \"PROJECT_DIR\": \"$USER_SCRATCH/mlcommons/benchmarks/cloudmask\",\n      \"PYTHON_DIR\": \"$USER_SCRATCH/ENV3\",\n      \"PROJECT_DATA\": \"/project/bii_dsc_community/thf2bn/data/cloudmask\",\n      \"CONTAINERDIR\": \".\",\n      \"CODE_DIR\": \"$PROJECT_DIR/target/rivanna\"\n    },\n    \"commands\": [\n      \"module load singularity\",\n      \"source $PYTHON_DIR/bin/activate\",\n      \"which python\",\n      \"nvidia-smi\",\n      \"singularity exec --nv ./cloudmask.sif bash -c \\\"cd ${CODE_DIR} ; python -c \\\"import os; os.system('ls')\\\"\\\"\",\n      \"cms gpu watch --gpu=0 --delay=0.5 --dense > outputs/simple-$USER-$SLURM_JOB_ID-gpu0.log &\",\n      \"singularity exec --nv ./cloudmask.sif bash -c \\\"cd ${CODE_DIR} ; python cloudmask_v2.py --config=config-new.yaml\\\"\",\n      \"seff $SLURM_JOB_ID\"\n    ]\n  }\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 2,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 1064,
+        "candidates_token_count": 477,
+        "total_token_count": 1541,
+        "cached_content_token_count": 0
+    }
+}

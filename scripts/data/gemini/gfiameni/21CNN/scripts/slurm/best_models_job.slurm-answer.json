@@ -1,0 +1,31 @@
+{
+    "application": "SLURM",
+    "details": {
+        "job_name": "best_models220_RNN.Hybrid3D",
+        "output": "slurms/%x.out",
+        "error": "slurms/%x.err",
+        "time": "00:30:00",
+        "nodes": 1,
+        "tasks_per_core": 1,
+        "tasks_per_node": 1,
+        "memory": "64000",
+        "cpus_per_task": 12,
+        "partition": "debug",
+        "constraint": "gpu",
+        "hint": "nomultithread",
+        "environment_variables": [
+            "OMP_NUM_THREADS=12",
+            "CRAY_CUDA_MPS=1",
+            "NCCL_DEBUG=INFO",
+            "NCCL_IB_HCA=ipogif0",
+            "NCCL_IB_CUDA_SUPPORT=1"
+        ],
+        "modules": [
+            "daint-gpu",
+            "cray-python/3.6.5.7",
+            "Horovod/0.18.1-CrayGNU-19.10-tf-2.0.0",
+            "TensorFlow/2.0.0-CrayGNU-19.10-cuda-10.1.168"
+        ],
+        "command": "python3 best_models.py --removed_average 1 --dimensionality 3 --data_location /scratch/snx3000/dprelogo/data/ --saving_location /scratch/snx3000/dprelogo/models/ --model RNN.Hybrid3D"
+    }
+}

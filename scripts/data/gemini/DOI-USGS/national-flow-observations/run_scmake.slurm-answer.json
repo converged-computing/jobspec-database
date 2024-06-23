@@ -1,0 +1,31 @@
+{
+    "application": "R",
+    "details": {
+        "environment": {
+            "singularity": "national-data-pulls_v0.1.sif",
+            "modules": [
+                "singularity"
+            ],
+            "libraries": [
+                "scipiper"
+            ]
+        },
+        "resources": {
+            "slurm": {
+                "partition": "cpu",
+                "account": "iidd",
+                "output": "shellLog/slurm-%A_%a.out",
+                "time": "48:00:00",
+                "mail_type": "ALL",
+                "export": "ALL",
+                "nodes": 1,
+                "memory": "60GB"
+            },
+            "script": {
+                "name": "national_flow_pull",
+                "command": "Rscript",
+                "arguments": "-e 'library(scipiper);options(scipiper.getters_file = \"remake.yml\");scmake(\"30_data_summarize\")'"
+            }
+        }
+    }
+}

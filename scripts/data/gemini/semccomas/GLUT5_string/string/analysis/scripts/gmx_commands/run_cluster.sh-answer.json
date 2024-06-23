@@ -1,0 +1,43 @@
+{
+    "application": "GROMACS",
+    "details": {
+        "software": {
+            "GROMACS": "2020.2"
+        },
+        "resources": {
+            "partition": "tcb",
+            "job_name": "conf",
+            "time": "23:00:00",
+            "nodes": 1,
+            "tasks_per_node": 4,
+            "error_file": "error.err",
+            "output_file": "output.out"
+        },
+        "input": {
+            "input_directory": "../confout_files/FES_grids_confouts/influx_BFRU_gate_CV/histogram_$i",
+            "output_directory": "../textfiles_out/gmx_cluster_files/histogram_$i",
+            "index_file": "../confout_files/tpr_files/index_BFRU.ndx",
+            "trajectory_file": "FES_grid_all.protonly.cluster.fit.xtc",
+            "structure_file": "FES_grid_all.start.protonly.pdb"
+        },
+        "command": "gmx cluster",
+        "options": {
+            "-f": "$indir/FES_grid_all.protonly.cluster.fit.xtc",
+            "-s": "$indir/FES_grid_all.start.protonly.pdb",
+            "-nofit": "",
+            "-cl": "$outdir/clusters.pdb",
+            "-n": "$ndxfile",
+            "-clid": "$outdir/clust-id.xvg",
+            "-g": "$outdir/cluster.log",
+            "-xvg": "none",
+            "-method": "jarvis-patrick",
+            "-cutoff": "0.08",
+            "-dist": "$outdir/rmsd-dist.xvg",
+            "-o": "$outdir/rmsd-clust.xpm"
+        },
+        "cluster_parameters": [
+            13,
+            18
+        ]
+    }
+}

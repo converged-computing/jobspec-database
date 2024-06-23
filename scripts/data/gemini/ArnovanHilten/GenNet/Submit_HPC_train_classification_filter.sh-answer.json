@@ -1,0 +1,43 @@
+{
+    "application": "Slurm",
+    "details": {
+        "resources": {
+            "memory": "40G",
+            "tasks": 15,
+            "partition": "long",
+            "gpus": 1,
+            "time": "30-00:00:00"
+        },
+        "environment": {
+            "python": "Python/3.7.4-GCCcore-8.3.0",
+            "cuda": "libs/cuda/10.1.243",
+            "cudnn": "libs/cudnn/7.6.5.32-CUDA-10.1.243",
+            "tensorflow": "TensorFlow/2.2.0-fosscuda-2019b-Python-3.7.4"
+        },
+        "script": "GenNet.py",
+        "arguments": [
+            "train",
+            "-path",
+            "/trinity/home/avanhilten/repositories/UK_biobank/15_gennet_genotyped/height_regressed_out_QC/",
+            "-ID",
+            "$1",
+            "-genotype_path",
+            "/data/scratch/avanhilten/UK_biobank_genotype_not_imputed/genotype/",
+            "-problem_type",
+            "regression",
+            "-lr",
+            "$2",
+            "-bs",
+            "$3",
+            "-L1",
+            "$4",
+            "-epoch_size",
+            "50000",
+            "-resume",
+            "-network_name",
+            "$5",
+            "-filters",
+            "$6"
+        ]
+    }
+}

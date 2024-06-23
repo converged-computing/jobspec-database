@@ -1,0 +1,44 @@
+{
+    "application": "Slurm",
+    "details": {
+        "resource_requirements": {
+            "time": "48:00:00",
+            "partition": "standard",
+            "nodes": "${NNODE}",
+            "tasks_per_node": "${TASKS_PER_NODE}",
+            "cpus_per_task": "${OMP_NUM_THREADS}",
+            "threads_per_core": 1
+        },
+        "software_requirements": {
+            "solver": "${PSOLVER}",
+            "factory": "${FFACTORY}",
+            "execution_binary": "${EXEC}",
+            "cubism_include": "../Cubism/include/Cubism"
+        },
+        "environment_variables": {
+            "OMP_PLACES": "cores",
+            "OMP_PROC_BIND": "close",
+            "TASKS_PER_NODE": "${TASKS_PER_NODE}",
+            "CRAY_CUDA_MPS": 1,
+            "OMP_NUM_THREADS": "${OMP_NUM_THREADS}",
+            "FI_CXI_RX_MATCH_MODE": "hybrid"
+        },
+        "script_execution": {
+            "command": "sbatch lumi_sbatch",
+            "script_contents": [
+                "#!/bin/bash -l",
+                "#SBATCH --account=${ACCOUNT}",
+                "#SBATCH --job-name=\"${BASENAME}\"",
+                "#SBATCH --time=${WCLOCK}",
+                "#SBATCH --partition=${PARTITION}",
+                "#SBATCH --nodes=${NNODE}",
+                "#SBATCH --ntasks-per-node=${TASKS_PER_NODE}",
+                "#SBATCH --cpus-per-task=${OMP_NUM_THREADS}",
+                "#SBATCH --threads-per-core=1",
+                "#SBATCH --hint=nomultithread",
+                "export FI_CXI_RX_MATCH_MODE=hybrid",
+                "srun ./simulation ${OPTIONS} -factory-content $(printf \"%q\" \"${FACTORY}\")"
+            ]
+        }
+    }
+}

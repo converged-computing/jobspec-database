@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"MPI\",\n  \"details\": {\n    \"resource_requirements\": {\n      \"nodes\": \"{{ nodes }}\",\n      \"filesystems\": \"{{ filesystems }}\",\n      \"walltime\": \"{{ time }}\",\n      \"queue\": \"{{ queue }}\",\n      \"allocation\": \"{{ allocation }}\"\n    },\n    \"software_requirements\": {\n      \"conda\": \"2022-09-08\",\n      \"conda_environment\": \"genslm\",\n      \"mpi\": \"mpich\",\n      \"module\": \"{{ module }}\",\n      \"genslm_path\": \"{{ genslm_path }}\"\n    },\n    \"environment_variables\": {\n      \"HTTP_PROXY\": \"http://proxy.alcf.anl.gov:3128\",\n      \"HTTPS_PROXY\": \"http://proxy.alcf.anl.gov:3130\",\n      \"http_proxy\": \"http://proxy.alcf.anl.gov:3128\",\n      \"https_proxy\": \"http://proxy.alcf.anl.gov:3128\",\n      \"MASTER_ADDR\": \"host $master_node | head -1 | awk '{print $4}'\",\n      \"MASTER_PORT\": \"2345\",\n      \"MPICH_GPU_SUPPORT_ENABLED\": \"1\",\n      \"NCCL_DEBUG\": \"info\",\n      \"NCCL_NET_GDR_LEVEL\": \"PHB\",\n      \"NNODES\": \"`wc -l < $PBS_NODEFILE`\",\n      \"NRANKS_PER_NODE\": \"4\",\n      \"NTOTRANKS\": \"(( NNODES * NRANKS_PER_NODE ))\"\n    },\n    \"execution_command\": \"mpiexec -n ${NTOTRANKS} -ppn ${NRANKS_PER_NODE} --hostfile $PBS_NODEFILE \\\\ {{ genslm_path / \\\"hpc\\\" / \\\"templates\\\" / \\\"run-polaris-generation.sh\\\" }} \\\\ python -m {{ module }} {{ module_args }}\"\n  }\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 2,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 709,
+        "candidates_token_count": 475,
+        "total_token_count": 1184,
+        "cached_content_token_count": 0
+    }
+}

@@ -1,0 +1,42 @@
+{
+    "application": "PBS",
+    "details": {
+        "resource_requirements": {
+            "walltime": "12:00:00",
+            "nodes": "1",
+            "ppn": "24",
+            "queue": "small"
+        },
+        "modules": [
+            "singularity",
+            "python3"
+        ],
+        "container": "docker://will5448/camera-trap-classifier:latest-cpu",
+        "script": "ctc.create_dataset",
+        "arguments": {
+            "-inventory": "/home/packerc/shared/machine_learning/data/images/panthera_blank_species_balanced_inventory.json",
+            "-output_dir": "/home/packerc/shared/machine_learning/data/training_data/blank_species_balanced/panthera_southern_africa_v2/",
+            "-image_save_side_smallest": "600",
+            "-image_save_quality": "75",
+            "-split_by_meta": "split_name",
+            "-remove_multi_label_records": "",
+            "-image_root_path": "/home/packerc/shared/machine_learning/data/images/panthera_blank_species_balanced/",
+            "-process_images_in_parallel": "",
+            "-process_images_in_parallel_size": "320",
+            "-processes_images_in_parallel_n_processes": "24",
+            "-max_records_per_file": "5000"
+        },
+        "file_operations": [
+            {
+                "operation": "chmod",
+                "target": "${TRAINING_DATA_PATH}*",
+                "permissions": "g+rw"
+            },
+            {
+                "operation": "mv",
+                "source": "${TRAINING_DATA_PATH}label_mapping.json",
+                "destination": "${TRAINING_DATA_PATH}part2_label_mapping.json"
+            }
+        ]
+    }
+}

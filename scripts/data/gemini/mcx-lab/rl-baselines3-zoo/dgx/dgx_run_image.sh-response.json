@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n\"application\": \"Docker\",\n\"details\": {\n\"software\": [\n\"pytorch\",\n\"nvidia-docker\",\n\"python\",\n\"git\",\n\"bash\",\n\"nvidia-smi\"\n],\n\"resources\": {\n\"cpu\": 6,\n\"gpu\": 2,\n\"walltime\": \"12:00:00\",\n\"host\": \"dgx02\",\n\"container_name\": \"sbl3-${GIT_COMMIT_SHA}\",\n\"container_image\": \"dgx-sbl3:latest\",\n\"env_vars\": [\n\"DISPLAY=$DISPLAY\",\n\"QT_X11_NO_MITSHM=1\"\n]\n},\n\"script_details\": {\n\"rl_baselines_dir\": \"/home/i2r/$USER/DATA/rl-baselines3-zoo\",\n\"training_script\": \"train.py\",\n\"training_algorithm\": \"ppo\",\n\"environment\": \"A1GymEnv-v0\",\n\"save_frequency\": 100000\n}\n}\n}\n```\n\nThis script is running in a Docker container. Here's a breakdown of the software and resource requirements:\n\n**Software:**\n\n* **PyTorch:**  Used for the machine learning training.\n* **nvidia-docker:**  Manages the Docker container, allowing it to utilize the GPU resources.\n* **Python:**  The primary scripting language used for the training script and container management.\n* **Git:**  Used to retrieve the specific commit of the RL baselines zoo repository.\n* **Bash:**  Provides a command-line environment within the Docker container.\n* **nvidia-smi:** A utility to monitor and manage NVIDIA GPUs.\n\n**Resource Requirements:**\n\n* **CPU:** 6 cores\n* **GPU:** 2 GPUs\n* **Walltime:** 12 hours\n* **Host:**  dgx02 (A high-performance computing system)\n* **Container Name:** sbl3-${GIT_COMMIT_SHA} \n* **Container Image:** dgx-sbl3:latest (A custom image containing the necessary software)\n* **Environment Variables:**\n    * `DISPLAY`: Used to connect the container to the X server for displaying visuals.\n    * `QT_X11_NO_MITSHM`: Prevents the use of shared memory for X11, which may cause issues with certain applications.\n\n**Script Details:**\n\n* **RL Baselines Directory:** `/home/i2r/$USER/DATA/rl-baselines3-zoo`\n* **Training Script:** `train.py`\n* **Training Algorithm:** `ppo` (Proximal Policy Optimization)\n* **Environment:** `A1GymEnv-v0` (A gym environment)\n* **Save Frequency:** 100000 (Model weights will be saved every 100,000 training steps) \n\nThe script uses the `PBS` system to submit the job to a cluster for execution, which is why you see the PBS directives like `#PBS -l select=1:ncpus=6:ngpus=2:host=dgx02`.\n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 584,
+        "candidates_token_count": 693,
+        "total_token_count": 1277,
+        "cached_content_token_count": 0
+    }
+}

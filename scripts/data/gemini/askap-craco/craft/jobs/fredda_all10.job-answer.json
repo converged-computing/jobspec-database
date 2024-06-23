@@ -1,0 +1,27 @@
+{
+    "application": "SLURM",
+    "details": {
+        "resource_requirements": {
+            "nodes": 1,
+            "time": "02:00:00",
+            "partition": "gpuq",
+            "cpus_per_task": 8
+        },
+        "modules": [
+            "PrgEnv-gnu",
+            "cudatoolkit",
+            "python/2.7.10",
+            "matplotlib"
+        ],
+        "environment_variables": {
+            "CRAFT": "/home/ban115/craft/craft/",
+            "PATH": "/home/ban115/craft/craft/cuda-fdmt/cudafdmt/src:/home/ban115/craft/craft/python:$PATH",
+            "PYTHONPATH": "/home/ban115/craft/craft/python:$PYTHONPATH",
+            "OMP_NUM_THREADS": 8
+        },
+        "commands": [
+            "aprun -B cudafdmt -t 512 -d 2048 -S 2 -r 1 -o $outfname -K 1 -M 8 -T 8 -G 3 -m 10 -n 1 -z 6 -x 9.0 *.fil 2>&1 > $logfname",
+            "plot_fredda_cand.py ak*/ -f $outfname --detail"
+        ]
+    }
+}

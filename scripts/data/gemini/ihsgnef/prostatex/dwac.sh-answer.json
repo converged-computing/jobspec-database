@@ -1,0 +1,47 @@
+{
+    "application": "SLURM",
+    "details": {
+        "scheduler": "SLURM",
+        "job_name": "train",
+        "partition": "general",
+        "tasks": 1,
+        "cpus_per_task": 8,
+        "gpus": 1,
+        "memory": "20000 MB",
+        "working_directory": "/net/scratch/hanliu/radiology/prostatex",
+        "output_file": "/home/hanliu/slurm_out/%j.%N.stdout",
+        "error_file": "/home/hanliu/slurm_out/%j.%N.stderr",
+        "environment_variables": {
+            "CUDA_VISIBLE_DEVICES": "set by the scheduler",
+            "FOLD": 4,
+            "msin": "ABDEFKT",
+            "pzn": "BEFK",
+            "tzn": "ABFT"
+        },
+        "python_script": "dwac_args.py",
+        "python_arguments": [
+            "--mri_sequences=ABDEFKT",
+            "--data_sequences=TBAKDEF",
+            "--embed_dim=10",
+            "--merge_dim=80",
+            "--merge_seq",
+            "--pooling",
+            "--wandb_mode=online",
+            "--wandb_group=dwac-emb10-merge80",
+            "--output_dir=results/dwac-emb10-merge80",
+            "--train_dir=tbakd3_npy/5folds/4/train",
+            "--valid_dir=tbakd3_npy/5folds/4/valid",
+            "--dataloader_num_workers=8",
+            "--gpus=1",
+            "--seed=42",
+            "--max_epochs=200",
+            "--learning_rate=1e-4",
+            "--vertical_flip=0.5",
+            "--rotate=30",
+            "--scale=0.2",
+            "--train_batch_size=16",
+            "--do_train"
+        ],
+        "python_environment": "/home/hanliu/anaconda3/bin/python"
+    }
+}

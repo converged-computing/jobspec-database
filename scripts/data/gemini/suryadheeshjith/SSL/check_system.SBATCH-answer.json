@@ -1,0 +1,29 @@
+{
+    "application": "Singularity",
+    "details": {
+        "container_image": "/share/apps/images/cuda11.7.99-cudnn8.5-devel-ubuntu22.04.2.sif",
+        "command": "/bin/bash -c 'source /ext3/env.sh; python check_system.py'",
+        "resources": {
+            "partition": "n1s8-v100-1",
+            "gpus": 1,
+            "cpus": 8,
+            "time": "12:00:00",
+            "output_file": "logs/data_checks.out",
+            "exclusive": true,
+            "requeue": true
+        },
+        "data_volumes": [
+            {
+                "source": "data/dataset_v2.sqsh",
+                "destination": "/dataset",
+                "type": "image-src"
+            },
+            {
+                "source": "/scratch",
+                "destination": "/scratch",
+                "type": "bind"
+            }
+        ],
+        "overlay": "overlay-15GB-500K.ext3:ro"
+    }
+}

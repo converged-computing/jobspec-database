@@ -1,0 +1,22 @@
+{
+    "application": "PBS",
+    "details": {
+        "dependencies": [
+            "samtools",
+            "picard",
+            "java"
+        ],
+        "resource requirements": {
+            "queue": "viper",
+            "walltime": "20:01:00",
+            "nodes": 1
+        },
+        "input": {
+            "bamFiles": "${bamDir}*.bam"
+        },
+        "output": {
+            "unmappedReads": "${unmappedDir}${bamFiles[i]}_2.fastq"
+        },
+        "script_description": "This script uses PBS to run a series of jobs that extract unmapped reads from BAM files using samtools and Picard. It creates a separate PBS script for each BAM file, and each script uses samtools to view the BAM file, filtering for unmapped reads, and then uses Picard's SamToFastq.jar to convert the unmapped reads to FASTQ format."
+    }
+}

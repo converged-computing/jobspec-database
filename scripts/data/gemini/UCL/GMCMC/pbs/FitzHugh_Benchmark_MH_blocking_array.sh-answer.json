@@ -1,0 +1,27 @@
+{
+    "application": "mpiexec",
+    "details": {
+        "software": [
+            "MPI",
+            "Intel MKL",
+            "HDF5"
+        ],
+        "resource_requirements": {
+            "walltime": "2:00:00",
+            "nodes": 1,
+            "cores_per_node": 16,
+            "memory_per_node": "4gb"
+        },
+        "program": "${HOME}/GMCMC/FitzHugh_Benchmark_MH",
+        "parameters": [
+            "--infer_ics",
+            "--num_temperatures=3",
+            "--num_burn_in_samples=500",
+            "--num_posterior_samples=500",
+            "--blocking=\"fixed:${blocking[PBS_ARRAY_INDEX]}]\"",
+            "--dataset=${HOME}/GMCMC/data/FitzHugh_Benchmark_Data_1000.h5",
+            "${HOME}/GMCMC/results/FitzHugh_MH_BurnIn_${PBS_ARRAY_INDEX}.h5",
+            "${HOME}/GMCMC/results/FitzHugh_MH_Posterior_${PBS_ARRAY_INDEX}.h5"
+        ]
+    }
+}

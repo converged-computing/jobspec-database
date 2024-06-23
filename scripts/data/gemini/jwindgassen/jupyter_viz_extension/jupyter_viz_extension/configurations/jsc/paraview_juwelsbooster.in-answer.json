@@ -1,0 +1,34 @@
+{
+    "application": "ParaView",
+    "details": {
+        "resource_requirements": {
+            "nodes": "{{ nodes }}",
+            "time_limit": "{{ timeLimit }}",
+            "partition": "{{ partition }}",
+            "tasks_per_node": 4,
+            "cpus_per_task": 12,
+            "gpus": 4
+        },
+        "software_requirements": {
+            "modules": [
+                "Stages/2023",
+                "GCC/11.3.0",
+                "ParaStationMPI/5.7.1-1",
+                "ParaView/5.11.0-EGL",
+                "ParaViewPlugin-Nek5000/20230208-EGL"
+            ],
+            "libraries": [
+                "pvNek5000Reader"
+            ],
+            "environment_variables": {
+                "OMP_NUM_THREADS": 12,
+                "KNOB_MAX_WORKER_THREADS": 12,
+                "PV_PLUGIN_PATH": "$PV_PLUGIN_PATH/lib64/paraview-5.10/plugins/pvNek5000Reader"
+            }
+        },
+        "gpu_configuration": {
+            "use_nvidia": true,
+            "egl_vendor_library_filenames": "$EBROOTOPENGL/share/glvnd/egl_vendor.d/10_nvidia.json"
+        }
+    }
+}

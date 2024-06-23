@@ -1,0 +1,34 @@
+{
+    "application": "Slurm",
+    "details": {
+        "job_name": "runPhyML",
+        "output_file": "/scratch/midway2/bend/projects/Doran_etal_2022/_research/logs/runPhyML/runPhyML_%A_%a.out",
+        "error_file": "/scratch/midway2/bend/projects/Doran_etal_2022/_research/logs/runPhyML/runPhyML_%A_%a.err",
+        "partition": "broadwl",
+        "array_tasks": [
+            10,
+            58,
+            154,
+            202
+        ],
+        "cpus_per_task": 1,
+        "time_limit": "0-04:00:00",
+        "memory_per_cpu": "32G",
+        "mail_type": "START,END",
+        "mail_user": "bend@uchicago.edu",
+        "modules": [
+            "julia/1.7.2",
+            "mpich/3.2"
+        ],
+        "project_directory": "/scratch/midway2/bend/projects/Doran_etal_2022",
+        "source_files": "ls $projdir/data/sims/MSAs/*",
+        "input_file": "${sourcefiles[$SLURM_ARRAY_TASK_ID]}",
+        "name": "$(basename $inputfile .phy)",
+        "output_directory": "${projdir}/_research/runPhyML/${name}",
+        "model": "-m WAG"
+    },
+    "script_execution": {
+        "command": "julia $projdir/scripts/slurm/runners/runPhyML.jl --inputfile $inputfile --outputdir $outputdir $model",
+        "output_file": "$outputdir/runPhyML.out"
+    }
+}

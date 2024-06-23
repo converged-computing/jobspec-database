@@ -1,0 +1,36 @@
+{
+    "application": "Slurm",
+    "details": {
+        "resource_requirements": {
+            "nodes": 1,
+            "tasks_per_node": 2,
+            "gpus": 4,
+            "time": "04:00:00",
+            "partition": "sdil"
+        },
+        "software": {
+            "ml": "pmi2 cray_shasta",
+            "singularity": "singularity exec --nv",
+            "python": "python -u ${SCRIPT_DIR}madonna/scripts/train.py"
+        },
+        "environment_variables": {
+            "BASE_DIR": "/hkfs/work/workspace/scratch/CHANGE/ME-madonna/",
+            "TOMOUNT": "/etc/slurm/task_prolog.hk:/etc/slurm/task_prolog.hk,/hkfs/work/workspace/scratch/CHANGE/ME-madonna/,/scratch,/tmp,/home/kit/scc/CHANGE/ME/",
+            "SRUN_PARAMS": [
+                "--mpi=pmi2",
+                "--gpus-per-task=1",
+                "--label",
+                "--pty"
+            ],
+            "SCRIPT_DIR": "/pfs/work7/workspace/scratch/CHANGE/ME-madonna/CHANGE/ME-madonna/madonna",
+            "UCX_MEMTYPE_CACHE": 0,
+            "NCCL_IB_TIMEOUT": 100,
+            "SHARP_COLL_LOG_LEVEL": 3,
+            "OMPI_MCA_coll_hcoll_enable": 0,
+            "NCCL_SOCKET_IFNAME": "ib0",
+            "NCCL_COLLNET_ENABLE": 0,
+            "CONFIG_NAME": "ortho_train.yaml",
+            "PATH": "$PATH:/home/kit/scc/CHANGE/ME/.local/bin"
+        }
+    }
+}

@@ -1,0 +1,69 @@
+{
+    "application": "Slurm",
+    "details": {
+        "job_name": "psana_legion",
+        "dependency": "singleton",
+        "nodes": 129,
+        "time": "01:00:00",
+        "qos": "regular",
+        "constraint": "knl,quad,cache",
+        "core_spec": 4,
+        "image": "docker:stanfordlegion/psana-mpi:latest",
+        "exclusive": true,
+        "mail_type": "ALL",
+        "account": "m2859",
+        "environment_variables": {
+            "HOST_PSANA_DIR": "$HOME/psana_legion/psana-legion",
+            "HOST_DATA_DIR": "$SCRATCH/noepics_c24_s1_data/reg",
+            "SIT_PSDM_DATA": "$HOST_DATA_DIR/d/psdm",
+            "EAGER": 1,
+            "KERNEL_KIND": "memory_bound"
+        },
+        "script": {
+            "language": "bash",
+            "commands": [
+                "echo \"HOST_DATA_DIR=$HOST_DATA_DIR\"",
+                "for rounds in 20 40 80 160; do",
+                "  export KERNEL_ROUNDS=$rounds",
+                "  for n in 128; do",
+                "    export LIMIT=$(( n * 2048 ))",
+                "    for c in 256 128 64 32 16; do",
+                "      ./make_nodelist.py $c > nodelist.txt",
+                "      export SLURM_HOSTFILE=$PWD/nodelist.txt",
+                "      if [[ ! -e rax_rounds\"$rounds\"_n\"$n\"_c\"$c\".log ]]; then",
+                "        srun -n $(( n * c + 1 )) -N $(( n + 1 )) --cpus-per-task $(( 256 / c )) --cpu_bind threads --distribution=arbitrary --output rax_rounds\"$rounds\"_n\"$n\"_c\"$c\".log \\",
+                "          shifter \\",
+                "            python $HOST_PSANA_DIR/psana_legion/mpi_rax.py",
+                "      fi",
+                "    done",
+                "  done",
+                "done"
+            ]
+        },
+        "software": {
+            "psana": {
+                "location": "$HOME/psana_legion/psana-legion"
+            },
+            "mpi_rax": {
+                "location": "$HOST_PSANA_DIR/psana_legion/mpi_rax.py"
+            },
+            "make_nodelist": {
+                "location": "./make_nodelist.py"
+            },
+            "shifter": {
+                "location": "shifter"
+            }
+        },
+        "resource_requirements": {
+            "data": {
+                "location": "$SCRATCH/noepics_c24_s1_data/reg/d/psdm"
+            },
+            "output": {
+                "files": "rax_rounds{rounds}_n{n}_c{c}.log"
+            },
+            "nodelist": {
+                "file": "nodelist.txt"
+            }
+        }
+    }
+}

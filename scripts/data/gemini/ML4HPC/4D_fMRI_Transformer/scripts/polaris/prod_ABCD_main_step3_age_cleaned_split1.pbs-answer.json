@@ -1,0 +1,55 @@
+{
+    "application": "mpiexec",
+    "software": [
+        "conda",
+        "python",
+        "nvidia-smi",
+        "wc",
+        "hostname"
+    ],
+    "resources": [
+        "PBS",
+        "polaris",
+        "grand",
+        "MPI",
+        "CUDA",
+        "OpenMP"
+    ],
+    "libraries": [
+        "mpich",
+        "nccl",
+        "torch"
+    ],
+    "environment_variables": [
+        "MPICH_GPU_SUPPORT_ENABLED",
+        "NCCL_COLLNET_ENABLE",
+        "NCCL_NET_GDR_LEVEL",
+        "MASTER_ADDR",
+        "NNODES",
+        "NRANKS_PER_NODE",
+        "NTOTRANKS",
+        "NDEPTH",
+        "NTHREADS",
+        "OMP_NUM_THREADS",
+        "OMP_PLACES"
+    ],
+    "files": [
+        "main.py",
+        "set_affinity_gpu_polaris.sh",
+        "ABCD_cleaned_image_regression_split1",
+        "/lus/grand/projects/STlearn/4D_fMRI_Transformer",
+        "/lus/grand/projects/STlearn/7.cleaned_image_MNI_to_TRs"
+    ],
+    "commands": [
+        "module load conda",
+        "conda activate 3DCNN",
+        "cd $PBS_O_WORKDIR",
+        "cd /lus/grand/projects/STlearn/4D_fMRI_Transformer",
+        "export MASTER_ADDR=`/bin/hostname -s`",
+        "NNODES=`wc -l < $PBS_NODEFILE`",
+        "NRANKS_PER_NODE=$(nvidia-smi -L | wc -l)",
+        "NTOTRANKS=$(( NNODES * NRANKS_PER_NODE ))",
+        "echo \"NUM_OF_NODES= ${NNODES} TOTAL_NUM_RANKS= ${NTOTRANKS} RANKS_PER_NODE= ${NRANKS_PER_NODE}\"",
+        "mpiexec -n ${NTOTRANKS} --ppn ${NRANKS_PER_NODE} --depth=${NDEPTH} --cpu-bind depth  $set_affinity_cmd $Command"
+    ]
+}

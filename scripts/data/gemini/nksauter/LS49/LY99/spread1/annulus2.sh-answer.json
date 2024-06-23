@@ -1,0 +1,48 @@
+{
+    "application": "cctbx.xfel.merge",
+    "software": [
+        "SLURM",
+        "cctbx",
+        "XFEL",
+        "CUDA",
+        "NUMEXPR",
+        "OpenMP"
+    ],
+    "resources": {
+        "nodes": 1,
+        "cores": 40,
+        "walltime": "00:10:00",
+        "scratch": true,
+        "queue": "regular",
+        "allocation": "m3562"
+    },
+    "environment_variables": {
+        "CCTBX_NO_UUID": 1,
+        "DIFFBRAGG_USE_CUDA": 1,
+        "CUDA_LAUNCH_BLOCKING": 1,
+        "NUMEXPR_MAX_THREADS": 128,
+        "SLURM_CPU_BIND": "cores",
+        "OMP_PROC_BIND": "spread",
+        "OMP_PLACES": "threads",
+        "SIT_PSDM_DATA": "/global/cfs/cdirs/lcls/psdm-sauter",
+        "CCTBX_GPUS_PER_NODE": 1,
+        "XFEL_CUSTOM_WORKER_PATH": "$MODULES/psii_spread/merging/application"
+    },
+    "input_data": {
+        "experiments": [
+            "/global/cfs/cdirs/m3562/users/vidyagan/p20231/common/results/r0080/000_rg002/out_refined.expt",
+            "/global/cfs/cdirs/m3562/users/vidyagan/p20231/common/results/r0081/000_rg002/out_refined.expt"
+        ],
+        "reflections": [
+            "/global/cfs/cdirs/m3562/users/vidyagan/p20231/common/results/r0080/000_rg002/out_indexed.refl",
+            "/global/cfs/cdirs/m3562/users/vidyagan/p20231/common/results/r0081/000_rg002/out_indexed.refl"
+        ],
+        "scaling_model": "/global/cfs/cdirs/m3562/references/5tis.pdb",
+        "covariance_file": "$CFS/lcls/sauter/LY99/p20231/uc_filter/covariance_run080_cells.pickle",
+        "trusted_mask": "/sf/bernina/data/p20231/work/common/mask/69plus.mask"
+    },
+    "output": {
+        "output_dir": "out",
+        "save_experiments_and_reflections": true
+    }
+}

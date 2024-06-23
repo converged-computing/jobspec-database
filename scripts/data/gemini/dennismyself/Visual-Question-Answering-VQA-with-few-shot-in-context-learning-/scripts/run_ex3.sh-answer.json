@@ -1,0 +1,32 @@
+{
+    "application": "SLURM",
+    "details": {
+        "job_name": "MLMI8_fewshot",
+        "account": "MLMI-jq271-SL2-GPU",
+        "nodes": 1,
+        "tasks": 1,
+        "gpus": 1,
+        "time": "10:00:00",
+        "mail_type": "FAIL",
+        "partition": "ampere",
+        "array_task_ids": [
+            1,
+            2,
+            4
+        ],
+        "environment": {
+            "modules": [
+                "rhel8/default-amp",
+                "cuda/11.1",
+                "intel/mkl/2017.4"
+            ],
+            "source": "scripts/activate_shared_env.sh",
+            "OMP_NUM_THREADS": 1
+        },
+        "script": "python src/main.py configs/vqa2/few_shot_vqa_hotpotqa.jsonnet --num_shots ${SLURM_ARRAY_TASK_ID} --in_context_examples_fpath ../data/vqa2/pre-extracted_features/in_context_examples/random.pkl --mode test --experiment_name ${EXP_NAME}_${SLURM_ARRAY_TASK_ID}.$JOBID --accelerator auto --devices 1 --log_prediction_tables --opts test.batch_size=32 test.load_model_path=/rds/project/rds-xyBFuSj0hm0/MLMI.2022-23/shared/MLMI8/model_checkpoint/mapping_network_on_cc.ckpt",
+        "output": {
+            "log": "logs/${SLURM_ARRAY_TASK_ID}_$EXP_NAME-log.$JOBID",
+            "error": "logs/${SLURM_ARRAY_TASK_ID}_$EXP_NAME-err.$JOBID"
+        }
+    }
+}

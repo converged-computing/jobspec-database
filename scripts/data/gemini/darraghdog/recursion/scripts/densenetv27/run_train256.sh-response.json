@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"LSF\",\n  \"details\": {\n    \"queue\": \"lowpriority\",\n    \"gpu_request\": \"num=1:mode=exclusive_process\",\n    \"container_image\": \"docker.optum.com/dhanley2/bert:cgan_build\",\n    \"resources\": {\n      \"nodes\": 1,\n      \"processors\": 1,\n      \"memory\": \"span[ptile=4]\",\n      \"output_file\": \"log_train_%J\"\n    },\n    \"command\": \"cd /share/dhanley2/recursion/scripts/$WDIR  && python3 train.py  --logmsg Recursion-pytorch-densenet169 --nbags 20  --epochs 70 --fold $FOLD  --lr 0.00004 --lrmult 4  --batchsize 48 --workpath scripts/$WDIR  --cutmix_prob 1.0 --beta 1.0  --imgpath data/mount/256X256X6/ --weightsname weights/pytorch_model_densenet$FOLD.bin\"\n  }\n}\n```\n\nThe script is running a job submission to LSF (Load Sharing Facility). \n\nHere's a breakdown of the key elements:\n\n* **LSF:** A batch system for managing and scheduling jobs on a cluster.\n* **bsub:** The LSF command for submitting a job.\n* **-q lowpriority:** Specifies the queue to submit the job to, in this case, the \"lowpriority\" queue.\n* **-gpu \"num=1:mode=exclusive_process\":** Requests one GPU with exclusive access.\n* **-app gpu:**  Indicates the job type is a GPU-based task.\n* **-n 1:**  Requests one processor.\n* **-env LSB_CONTAINER_IMAGE=docker.optum.com/dhanley2/bert:cgan_build:** Sets the environment variable for the Docker image to be used for the job. \n* **-R \"span[ptile=4]\":**  Requests a specific amount of memory, likely for the process to be able to run.\n* **-o log_train_%J:**  Specifies the output file for the job's log.\n* **sh -c \"cd /share/dhanley2/recursion/scripts/$WDIR && python3 train.py ...\":**  Executes the command within a shell script.  This command changes directory to the script directory, then runs a Python script named \"train.py\" with the specified arguments.\n\n**Additional Information:**\n\n* The script uses a Docker container image from Docker Hub to run the job.\n* The Python script \"train.py\" likely performs deep learning training, based on the arguments.\n* The \"weightsname\" parameter suggests the script is saving a trained model. \n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 508,
+        "candidates_token_count": 643,
+        "total_token_count": 1151,
+        "cached_content_token_count": 0
+    }
+}

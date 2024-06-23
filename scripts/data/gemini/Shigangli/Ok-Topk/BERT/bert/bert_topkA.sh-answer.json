@@ -1,0 +1,49 @@
+{
+    "application": "SLURM",
+    "details": {
+        "resource_manager": "SLURM",
+        "nodes": 32,
+        "tasks": 32,
+        "tasks_per_node": 1,
+        "cpus_per_task": 12,
+        "gpu_constraint": "true",
+        "partition": "normal",
+        "time": "01:10:00",
+        "output_file": "32nodes_bert_topkA_density1.txt",
+        "modules": [
+            "daint-gpu",
+            "cudatoolkit/10.2.89_3.28-2.1__g52c0314"
+        ],
+        "conda_env": "py38_oktopk",
+        "python_version": "unknown",
+        "mpi_library": "mpi4py",
+        "script": "main_bert.py",
+        "arguments": [
+            "--module",
+            "models.bert12.depth=4",
+            "--max_seq_length",
+            "128",
+            "--train_batch_size",
+            "8",
+            "--train_path",
+            "./bert_data/wikipedia.segmented.nltk.txt",
+            "--bert_config_path",
+            "configs/bert_config_bert-base-uncased.json",
+            "--vocab_path",
+            "./bert_data/bert-large-uncased-vocab.txt",
+            "--do_train",
+            "--do_lower_case",
+            "--num_minibatches",
+            "512",
+            "--density",
+            "0.01",
+            "--compressor",
+            "'topkA'",
+            "--gradient_accumulation_steps",
+            "1",
+            "--dataparallel",
+            "--config_path",
+            "tests/depth=4/conf_32nodes.json"
+        ]
+    }
+}

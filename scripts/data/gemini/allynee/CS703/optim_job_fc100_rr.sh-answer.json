@@ -1,0 +1,35 @@
+{
+    "application": "SLURM",
+    "details": {
+        "resource_requirements": {
+            "nodes": 1,
+            "cpus_per_task": 4,
+            "memory": "16GB",
+            "gpu": 1,
+            "time": "24:00:00",
+            "partition": "project",
+            "account": "cs704",
+            "qos": "cs704qos",
+            "requeue": true
+        },
+        "software_requirements": {
+            "modules": [
+                "Anaconda3/2022.05"
+            ],
+            "virtual_environment": "metalearning",
+            "python_version": "3.6",
+            "packages": [
+                "pytorch",
+                "torchvision",
+                "torchaudio",
+                "cudatoolkit=11.1",
+                "requirements.txt"
+            ]
+        },
+        "commands": [
+            "srun whichgpu",
+            "srun python train.py --save-path \"./experiments/FC100_MetaOptNet_RR\" --train-shot 15 --head Ridge --network ResNet --dataset FC100",
+            "srun python test.py --load ./experiments/FC100_MetaOptNet_RR/best_model.pth --episode 1000 --way 5 --shot 1 --query 15 --head Ridge --network ResNet --dataset FC100"
+        ]
+    }
+}

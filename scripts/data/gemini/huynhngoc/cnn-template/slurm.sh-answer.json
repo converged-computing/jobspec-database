@@ -1,0 +1,37 @@
+{
+    "application": "Singularity",
+    "details": {
+        "slurm": {
+            "cores": 1,
+            "nodes": 1,
+            "job_name": "msc_unet",
+            "memory": "8G",
+            "partition": "gpu",
+            "gpu": 1,
+            "mail_user": "user.name@nmbu.no",
+            "mail_type": "ALL",
+            "output": "outputs/unet-%A.out",
+            "error": "outputs/unet-%A.out"
+        },
+        "modules": [
+            "singularity"
+        ],
+        "script": {
+            "name": "experiment.py",
+            "arguments": [
+                "$1",
+                "$HOME/hnperf/$2",
+                "--epochs",
+                "$3",
+                "${@:4}"
+            ]
+        },
+        "data": {
+            "source": "$HOME/datasets/headneck",
+            "destination": "$TMPDIR/$USER/hn_delin"
+        },
+        "gpu_driver": {
+            "command": "nvidia-modprobe -u -c=0"
+        }
+    }
+}

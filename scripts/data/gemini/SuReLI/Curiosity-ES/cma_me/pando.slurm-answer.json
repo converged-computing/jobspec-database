@@ -1,0 +1,41 @@
+{
+    "application": "Ray",
+    "details": {
+        "resource_requirements": {
+            "nodes": 2,
+            "tasks": 2,
+            "tasks_per_node": 1,
+            "cpus_per_task": 24,
+            "partition": "long",
+            "time": "4-00:00:00",
+            "object_store_memory": "30000 MB",
+            "redis_password": "uuid generated",
+            "modules": [
+                "gcc",
+                "conda"
+            ],
+            "conda_environment": "ray"
+        },
+        "script_behavior": {
+            "starts_a_ray_cluster": true,
+            "assigns_a_head_node": true,
+            "assigns_worker_nodes": true,
+            "runs_python_script": true,
+            "python_script": "main_dm_control.py",
+            "arguments_to_python_script": [
+                "$SLURM_CPUS_PER_TASK"
+            ],
+            "sets_environment_variables": [
+                "WANDB_MODE",
+                "XPSLURM",
+                "redis_password",
+                "ip_head"
+            ],
+            "uses_slurm_variables": [
+                "SLURM_JOB_NODELIST",
+                "SLURM_JOB_NUM_NODES",
+                "SLURM_CPUS_PER_TASK"
+            ]
+        }
+    }
+}

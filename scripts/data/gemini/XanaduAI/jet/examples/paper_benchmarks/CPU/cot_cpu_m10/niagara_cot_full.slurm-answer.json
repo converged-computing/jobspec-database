@@ -1,0 +1,40 @@
+{
+    "application": "SLURM",
+    "details": {
+        "resource_requirements": {
+            "nodes": 1,
+            "time": "0:20:00",
+            "job_name": "cot_m10",
+            "ntasks": 80
+        },
+        "software_requirements": {
+            "modules": [
+                "cmake",
+                "python",
+                "intel"
+            ],
+            "virtual_environment": "py_benchenv"
+        },
+        "script_details": {
+            "script_language": "bash",
+            "script_purpose": "Runs a Python script 'cotengra_m10.py' with varying thread counts and number of runs, collecting output in separate files",
+            "script_variables": {
+                "num_runs": 10,
+                "OMP_PROC_BIND": "false",
+                "OMP_PLACES": "cores",
+                "OMP_DYNAMIC": "false",
+                "OMP_SCHEDULE": "static"
+            },
+            "script_execution_flow": [
+                "Change directory to the submission directory",
+                "Load required modules",
+                "Activate virtual environment",
+                "Set number of runs",
+                "Set OpenMP environment variables",
+                "Iterate over thread counts (1, 2, 4, 8, 16, 32, 64)",
+                "For each thread count, run the Python script 'cotengra_m10.py' with specified parameters 'p' and 'sl' for 'num_runs' times",
+                "Append output of each run to a separate file named 'cotengra_omp{thread_count}.out'"
+            ]
+        }
+    }
+}

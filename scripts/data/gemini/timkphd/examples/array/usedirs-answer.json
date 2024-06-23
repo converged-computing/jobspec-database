@@ -1,0 +1,43 @@
+{
+    "application": "Slurm",
+    "details": {
+        "job_name": "array_job",
+        "nodes": 1,
+        "tasks_per_node": 4,
+        "cpus_per_task": 2,
+        "time": "00:05:00",
+        "memory": "50000",
+        "modules": [
+            "gcc/7.3.0",
+            "comp-intel/2018.0.3",
+            "intel-mpi/2018.0.3",
+            "mkl/2018.3.222"
+        ],
+        "environment_variables": {
+            "OMP_NUM_THREADS": 2,
+            "EXE": "invertp.py"
+        },
+        "input_files": [
+            "myinput"
+        ],
+        "output_files": [
+            "output",
+            "envs",
+            "node",
+            "directory"
+        ],
+        "commands": [
+            "mkdir -p $JOB_ID",
+            "cd $JOB_ID",
+            "mkdir -p $SUB_ID",
+            "cd $SUB_ID",
+            "cat $0 > myscript",
+            "cp -r $SLURM_SUBMIT_DIR/inputs/$dir/*",
+            "$SLURM_SUBMIT_DIR/tymer timer start_time",
+            "$SLURM_SUBMIT_DIR/$EXE `cat myinput` > output",
+            "hostname > node",
+            "echo $SLURM_SUBMIT_DIR/inputs/$dir > directory",
+            "$SLURM_SUBMIT_DIR/tymer timer end_time"
+        ]
+    }
+}

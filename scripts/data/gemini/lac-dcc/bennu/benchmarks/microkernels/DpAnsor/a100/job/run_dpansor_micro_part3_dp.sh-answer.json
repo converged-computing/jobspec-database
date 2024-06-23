@@ -1,0 +1,36 @@
+{
+    "application": "Slurm",
+    "details": {
+        "job_name": "dp_part3_dpansor_micro_cuda_a100",
+        "output_file": "./log/cuda_a100_micro_dp_part3.log",
+        "mail_user": "gaurav.verma@stonybrook.edu",
+        "partition": "gpu",
+        "gpus": 1,
+        "gpu_type": "a100-80gb",
+        "interconnect": "ib",
+        "time_limit": "150:00:00",
+        "nodes": 1,
+        "cores_per_node": 32,
+        "gpus_per_task": 1,
+        "modules": [
+            "modules/2.1.1-20230405",
+            "cmake/3.25.1",
+            "python/3.8.15",
+            "cuda/11.8.0",
+            "llvm/11.1.0",
+            "cudnn/8.4.0.27-11.6",
+            "gcc/10.4.0"
+        ],
+        "environment_variables": {
+            "TVM_HOME": "/mnt/home/gverma/ceph/tvm",
+            "PYTHONPATH": "/mnt/sw/nix/store/i613v246n7m0f6k22a8bwxsj51d1z6gb-llvm-11.1.0/lib/python3/site-packages:/mnt/home/gverma/ceph/tvm/python"
+        },
+        "script_description": "This script runs a series of benchmarks for different operators using the dpansor framework. It iterates through various top values and executes different benchmarks for each value. The results are saved in CSV files.",
+        "python_script": "src/dpansor.py",
+        "benchmarks": [
+            "depthwise",
+            "pooling"
+        ],
+        "result_directory": "results"
+    }
+}

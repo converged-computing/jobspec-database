@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"GATK\",\n  \"details\": {\n    \"modules\": [\n      \"java\",\n      \"gatk\",\n      \"picard\"\n    ],\n    \"resources\": {\n      \"nodes\": \"1\",\n      \"ppn\": \"1\",\n      \"memory\": \"40gb\",\n      \"walltime\": \"25:00:00\"\n    },\n    \"software\": [\n      \"picard\",\n      \"gatk\"\n    ],\n    \"input_files\": [\n      \"$BAMDIR/$ROW.DD.bam\",\n      \"$GENOMEIDX\",\n      \"$SAMPLEFILE\"\n    ],\n    \"output_files\": [\n      \"$BAMDIR/$ROW.intervals\",\n      \"$BAMDIR/$ROW.realign.bam\",\n      \"$BAMDIR/$ROW.DD.bai\"\n    ],\n    \"commands\": [\n      \"java -jar $PICARD BuildBamIndex I=$BAMDIR/$ROW.DD.bam\",\n      \"java -Xmx$MEM -jar $GATK -T RealignerTargetCreator -R $GENOMEIDX -I $BAMDIR/$ROW.DD.bam -o $BAMDIR/$ROW.intervals\",\n      \"java -Xmx$MEM -jar $GATK -T IndelRealigner -R $GENOMEIDX -I $BAMDIR/$ROW.DD.bam -targetIntervals $BAMDIR/$ROW.intervals -o $BAMDIR/$ROW.realign.bam\"\n    ]\n  }\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 513,
+        "candidates_token_count": 348,
+        "total_token_count": 861,
+        "cached_content_token_count": 0
+    }
+}

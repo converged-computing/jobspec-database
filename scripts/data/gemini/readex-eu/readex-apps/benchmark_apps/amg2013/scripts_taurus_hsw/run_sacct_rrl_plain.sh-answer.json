@@ -1,0 +1,49 @@
+{
+    "application": "Slurm",
+    "details": {
+        "resource_requirements": {
+            "time": "2:00:00",
+            "nodes": 4,
+            "tasks_per_node": 2,
+            "cpus_per_task": 12,
+            "partition": "haswell",
+            "memory_per_cpu": "2500M",
+            "account": "p_readex",
+            "reservation": "READEX"
+        },
+        "software_requirements": {
+            "modules": [
+                "readex_env/set_env_plain.source",
+                "readex_env/set_env_rrl.source"
+            ],
+            "environment_variables": {
+                "OMP_NUM_THREADS": "12",
+                "SCOREP_ENABLE_PROFILING": "false",
+                "SCOREP_ENABLE_TRACING": "false",
+                "SCOREP_SUBSTRATE_PLUGINS": [
+                    "",
+                    "rrl"
+                ],
+                "SCOREP_RRL_PLUGINS": [
+                    "",
+                    "cpu_freq_plugin,uncore_freq_plugin,OpenMPTP"
+                ],
+                "SCOREP_RRL_TMM_PATH": "tuning_model.json",
+                "SCOREP_MPI_ENABLE_GROUPS": "ENV",
+                "SCOREP_RRL_CHECK_IF_RESET": "reset",
+                "MEASURE_RAPL_TARGET": [
+                    "PLAIN_$i",
+                    "TUNED_$i"
+                ]
+            },
+            "executables": [
+                "measure-rapl",
+                "test/amg2013_plain",
+                "test/amg2013_ptf"
+            ],
+            "other": [
+                "sacct"
+            ]
+        }
+    }
+}

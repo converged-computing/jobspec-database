@@ -1,0 +1,31 @@
+{
+    "application": "SLURM",
+    "details": {
+        "resource_manager": "SLURM",
+        "partition": "gpu_p2",
+        "job_name": "siren",
+        "tasks": 1,
+        "tasks_per_node": 1,
+        "qos": "qos_gpu-t4",
+        "gpus": 1,
+        "cpus_per_task": 10,
+        "time": "100:00:00",
+        "output_file": "slurm_run/burgers/siren-%j.out",
+        "error_file": "slurm_run/burgers/siren-%j.err",
+        "modules": [
+            "pytorch-gpu/py3/1.10.1"
+        ],
+        "python_version": "3",
+        "script": "training.inr",
+        "arguments": [
+            "data.data_dir=${data_dir}",
+            "data.dataset_name=${dataset_name}",
+            "data.sub_tr=1",
+            "optim.batch_size=128",
+            "inr.latent_dim=256",
+            "inr.hidden_dim=256",
+            "optim.epochs=10000",
+            "data.data_to_encode=${data_to_encode}"
+        ]
+    }
+}

@@ -1,0 +1,56 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "SURFGAN\n```json\n{\n  \"application\": \"SURFGAN\",\n  \"software\": [\n    \"Bash\",\n    \"Slurm\",\n    \"TensorFlow\",\n    \"Horovod\",\n    \"OpenMPI\",\n    \"Python\",\n    \"NCCL\",\n    \"cuDNN\",\n    \"Anaconda3\",\n    \"CUDA\"\n  ],\n  \"resources\": {\n    \"nodes\": 2,\n    \"tasks_per_node\": 1,\n    \"cores_per_task\": 32,\n    \"partition\": \"short\",\n    \"time\": \"10:00\",\n    \"constraints\": \"haswell\",\n    \"environment_modules\": [\n      \"2019\",\n      \"Horovod/0.19.4-fosscuda-2018b-TensorFlow-1.15.3-Python-3.6.6\",\n      \"2020\",\n      \"TensorFlow/1.15.0-foss-2019b-Python-3.7.4-10.1.243\"\n    ],\n    \"libraries\": [\n      \"CUDA/10.0.130\",\n      \"cuDNN/7.6.5.32-CUDA-10.1.243\",\n      \"NCCL/2.5.6-CUDA-10.1.243\",\n      \"OpenMPI/3.1.4-GCC-7.3.0-2.30\",\n      \"Anaconda3\"\n    ],\n    \"scratch_path\": \"/scratch-shared/$USER\",\n    \"data_path\": \"/projects/2/managed_datasets/LIDC-IDRI/npy/average/\"\n  },\n  \"other\": {\n    \"environment_variables\": [\n      \"OMP_NUM_THREADS=23\",\n      \"KMP_SETTINGS=True\",\n      \"KMP_AFFINITY=\\\"granularity=fine,compact,1,0\\\"\",\n      \"TF_USE_CUDNN=0\",\n      \"NCCL_DEBUG=INFO\",\n      \"HOROVOD_MPI_THREADS_DISABLE=1\",\n      \"LD_LIBRARY_PATH\",\n      \"PATH\"\n    ],\n    \"commands\": [\n      \"mkdir -p ${LOGDIR}\",\n      \"echo \\\"Output of this job can be found in: ${BATCH_OUT}\\\"\",\n      \"echo \\\"Logging batch script to ${BATCH_BACKUP}\\\" > ${BATCH_OUT}\",\n      \"cat \\\"$0\\\" > ${BATCH_BACKUP}\",\n      \"date\",\n      \"module list\",\n      \"cd ${SURFGAN_ROOT}\",\n      \"mpirun --bind-to none --report-bindings --mca btl ^openib --mca btl_tcp_if_include 10.200.0.0/16 -x NCCL_DEBUG=INFO -x HOROVOD_MPI_THREADS_DISABLE=1 -x LD_LIBRARY_PATH -x PATH -x TF_USE_CUDNN -x OMP_NUM_THREADS \\\\n        python -u main.py pgan /projects/2/managed_datasets/LIDC-IDRI/npy/average/ '(1, 128, 512, 512)' --starting_phase 7 --ending_phase 8 --latent_dim 512 --horovod  --scratch_path /scratch-shared/$USER --base_batch_size 32 --network_size m --starting_alpha 1 --loss_fn wgan --gp_weight 10 --d_lr 5e-5 --g_lr 5e-5 --continue_path $CONTINUE_PATH --num_inter_ops 1 --logdir $LOGDIR\",\n      \"date\"\n    ],\n    \"python_script\": \"main.py\",\n    \"python_arguments\": [\n      \"pgan\",\n      \"/projects/2/managed_datasets/LIDC-IDRI/npy/average/\",\n      \"'(1, 128, 512, 512)'\",\n      \"--starting_phase\",\n      \"7\",\n      \"--ending_phase\",\n      \"8\",\n      \"--latent_dim\",\n      \"512\",\n      \"--horovod\",\n      \"--scratch_path\",\n      \"/scratch-shared/$USER\",\n      \"--base_batch_size\",\n      \"32\",\n      \"--network_size\",\n      \"m\",\n      \"--starting_alpha\",\n      \"1\",\n      \"--loss_fn\",\n      \"wgan\",\n      \"--gp_weight\",\n      \"10\",\n      \"--d_lr\",\n      \"5e-5\",\n      \"--g_lr\",\n      \"5e-5\",\n      \"--continue_path\",\n      \"$CONTINUE_PATH\",\n      \"--num_inter_ops\",\n      \"1\",\n      \"--logdir\",\n      \"$LOGDIR\"\n    ]\n  }\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "citation_metadata": {
+                "citation_sources": [
+                    {
+                        "start_index": 1171,
+                        "end_index": 1366,
+                        "uri": "https://github.com/sara-nl/saraGAN",
+                        "license_": ""
+                    }
+                ]
+            },
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 2119,
+        "candidates_token_count": 1145,
+        "total_token_count": 3264,
+        "cached_content_token_count": 0
+    }
+}

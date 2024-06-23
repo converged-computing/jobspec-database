@@ -1,0 +1,57 @@
+{
+    "application": "SLURM",
+    "details": {
+        "software": [
+            "gcc@11",
+            "intel/2019u4",
+            "openmpi/4.0.1"
+        ],
+        "resources": [
+            "nodes=8",
+            "ntasks=8",
+            "ntasks-per-node=1",
+            "time=00:20:00",
+            "partition=compute"
+        ],
+        "environment_variables": [
+            "PROJECT_ROOT=/home/l/lcl_uotiscscc/lcl_uotiscsccs1034/scratch/code-challenge/collective_profiler/examples",
+            "SUPPRESS_BASHRC=1",
+            "THIS_SCRIPT",
+            "THIS_SCRIPT_FILENAME",
+            "THIS_SCRIPT_DIR",
+            "HNAME",
+            "JOB_NOW",
+            "RESULTS_ROOT=${PROJECT_ROOT}/alltoall_profiling/examples/results/run-at-${JOB_NOW}",
+            "EXECUTABLE1=/home/l/lcl_uotiscscc/lcl_uotiscsccs1034/scratch/code-challenge/collective_profiler/examples/alltoall_c",
+            "EXECUTABLE1_PARAMS=",
+            "ALLTOALL_LIB_ROOT=/home/l/lcl_uotiscscc/lcl_uotiscsccs1034/scratch/code-challenge/collective_profiler/src/alltoall",
+            "MPIFLAGS=\"--mca pml ucx -x UCX_NET_DEVICES=mlx5_0:1  -x A2A_PROFILING_OUTPUT_DIR  -x LD_LIBRARY_PATH  -np 8 -map-by ppr:1:node -bind-to core  --mca pml_base_verbose 100 --mca btl_base_verbose 100 \""
+        ],
+        "libraries": [
+            "liballtoall_counts.so",
+            "liballtoall_counts_unequal.so",
+            "liballtoall_counts_compact.so",
+            "liballtoall_counts_unequal_compact.so"
+        ],
+        "commands": [
+            "module purge",
+            "spack load gcc@11",
+            "module load intel/2019u4  openmpi/4.0.1",
+            "mkdir -p \"${RESULTS_ROOT}/analysis\"",
+            "mkdir -p \"${RESULTS_ROOT}/ranks\"",
+            "sstat -j \"$SLURM_JOB_ID\"",
+            "env",
+            "ompi_info",
+            "env | grep SLURM",
+            "cp \"$THIS_SCRIPT\" \"${RESULTS_ROOT}/${THIS_SCRIPT_FILENAME}.copy\"",
+            "ldd \"$(which $EXECUTABLE1)\"",
+            "mpirun $MPIFLAGS --output-filename $RESULTS_ROOT/${RESULTS_SUB[0]} -x LD_PRELOAD=${COUNTSFLAGS[0]} $EXECUTABLE1 $EXECUTABLE1_PARAMS",
+            "mpirun $MPIFLAGS --output-filename $RESULTS_ROOT/${RESULTS_SUB[1]} -x LD_PRELOAD=${COUNTSFLAGS[1]} $EXECUTABLE1 $EXECUTABLE1_PARAMS",
+            "mpirun $MPIFLAGS --output-filename $RESULTS_ROOT/${RESULTS_SUB[2]} -x LD_PRELOAD=${COUNTSFLAGS[2]} $EXECUTABLE1 $EXECUTABLE1_PARAMS",
+            "mpirun $MPIFLAGS --output-filename $RESULTS_ROOT/${RESULTS_SUB[3]} -x LD_PRELOAD=${COUNTSFLAGS[3]} $EXECUTABLE1 $EXECUTABLE1_PARAMS",
+            "mpirun --version",
+            "module list",
+            "spack env status"
+        ]
+    }
+}

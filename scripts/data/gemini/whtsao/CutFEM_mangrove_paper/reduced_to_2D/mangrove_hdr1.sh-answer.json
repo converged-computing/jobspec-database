@@ -1,0 +1,35 @@
+{
+    "application": "Proteus",
+    "details": {
+        "version": "1.8.1",
+        "language": "Python",
+        "runtime": "SLURM",
+        "nodes": 16,
+        "processes": 768,
+        "threads_per_process": 1,
+        "wall_time": "72:00:00",
+        "partition": "workq",
+        "account": "loni_ceds3d",
+        "environment": {
+            "PROTEUS_ARCH": "linux",
+            "PYTHONPATH": "/project/cekees/cekees/proteus/1.7.5/lib/python3.7/site-packages:$PYTHONPATH"
+        },
+        "dependencies": {
+            "petsc": "superlu_dist"
+        },
+        "libraries": [
+            "petsc",
+            "superlu_dist"
+        ],
+        "input_files": [
+            "*.py",
+            "*.csv",
+            "*.sh"
+        ],
+        "output_files": [
+            "o.out",
+            "e.err"
+        ],
+        "command": "srun parun -l5 -v -p --TwoPhaseFlow cox_flume2DV.py -C \"he=0.06 mangrove_porous=True filename='inp_HD_TR1.csv'\" "
+    }
+}

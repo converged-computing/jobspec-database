@@ -1,0 +1,19 @@
+{
+    "application": "Slurm",
+    "details": {
+        "partition": "small",
+        "nodes": 1,
+        "gpus": 1,
+        "time": "3-00:00:00",
+        "cpus_per_task": 24,
+        "container": "./container/${repo}_ws.sif",
+        "container_command": "./hpc_run_script.sh",
+        "run_command": "singularity exec\n  --nv\n  --bind $scratch_root:/scratch_mount\n  --pwd /scratch_mount\n  --env CUDA_VISIBLE_DEVICES=0\n  --env DATASET=${dataset}\n  $container\n  $container_command",
+        "scratch_host": "/raid/local_scratch",
+        "scratch_root": "$scratch_host/${USER}/${job_id}",
+        "inputs": ".",
+        "outputs": "outputs",
+        "dataset": "EmailEUCore",
+        "repo": "sagess"
+    }
+}

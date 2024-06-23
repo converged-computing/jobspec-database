@@ -1,0 +1,68 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"Dask\",\n  \"details\": {\n    \"environment\": {\n      \"module purge\": \"Removes all modules still loaded\",\n      \"python\": \"Set up python\",\n      \"PYTHONPATH\": \"Set to the location of the ARL (Astronomical Ring Library) environment\",\n      \"ARL_DASK_SCHEDULER\": \"Set to the scheduler host and port\"\n    },\n    \"resources\": {\n      \"nodes\": 12,\n      \"tasks\": 29,\n      \"memory\": \"50GB per worker\",\n      \"wallclock time\": \"23:59:59\",\n      \"scheduler port\": 8786,\n      \"worker interface\": \"ib0\",\n      \"worker processes\": 2,\n      \"worker threads\": 4,\n      \"local directory\": \"/mnt/storage-ssd/tim/dask-workspace/${host}\",\n      \"shared directory\": \"/mnt/storage-ssd/tim/Code/sim-mid-surface/shared\",\n      \"vp directory\": \"/mnt/storage-ssd/tim/Code/sim-mid-surface/beams/interpolated/\"\n    },\n    \"launch method\": {\n      \"hostfile\": \"Created from the list of allocated nodes\",\n      \"scheduler\": \"Launched on the first node in the hostfile\",\n      \"workers\": \"Launched on each node in the hostfile, using SSH\"\n    },\n    \"command\": \"python ../../surface_simulation_elevation.py --context singlesource --rmax 1e5 --flux_limit 0.003 --show True --elevation_sampling 1.0 --offset_dir 1.0 0.0 --seed 18051955  --band B2 --pbtype MID_FEKO_B2 --memory 32  --integration_time 30 --use_agg True --time_chunk 30 --time_range -6 6 --shared_directory /mnt/storage-ssd/tim/Code/sim-mid-surface/shared --vp_directory /mnt/storage-ssd/tim/Code/sim-mid-surface/beams/interpolated/ | tee surface_simulation.log\"\n  }\n}\n```\n\n**Explanation:**\n\n* **Application:** The script is primarily designed to run a Dask distributed computing job.\n* **Details:** \n    * **Environment:**  This section defines how the environment is set up for the job. It includes purging existing modules, setting up the Python environment, and specifying the PYTHONPATH variable to point to the ARL library. Additionally, it defines the `ARL_DASK_SCHEDULER` variable to point to the Dask scheduler.\n    * **Resources:**  This part outlines the resource requirements for the Dask job, including the number of nodes, tasks, memory per worker, wallclock time, scheduler port, worker interface, and other details about the workers and their configuration.  It also includes the shared and VP directories for the application.\n    * **Launch method:**  This section describes how the Dask job is launched. It involves creating a hostfile from the allocated nodes, launching the scheduler on the first node, and using SSH to launch workers on each node.\n    * **Command:** This shows the actual Python command being executed by Dask. The command is for a surface simulation using the `surface_simulation_elevation.py` script, with various parameters specifying the simulation context, flux limit, elevation sampling, offset, seed, band, memory, integration time, time range, and data directories.\n\n**Key Points:**\n\n* This script uses a combination of SLURM (for resource allocation) and Dask (for parallel computing).\n* It configures a Dask cluster with a scheduler and multiple workers distributed across several nodes.\n* The script runs a specific Python application (surface_simulation_elevation.py) within the Dask framework.\n* The script sets up environment variables and resource settings for both SLURM and Dask. \n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "citation_metadata": {
+                "citation_sources": [
+                    {
+                        "start_index": 654,
+                        "end_index": 808,
+                        "uri": "https://github.com/ska-telescope/sim-mid-surface",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 1059,
+                        "end_index": 1238,
+                        "uri": "https://github.com/ska-telescope/sim-mid-surface",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 1213,
+                        "end_index": 1518,
+                        "uri": "https://github.com/ska-telescope/sim-mid-surface",
+                        "license_": ""
+                    }
+                ]
+            },
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 1011,
+        "candidates_token_count": 878,
+        "total_token_count": 1889,
+        "cached_content_token_count": 0
+    }
+}

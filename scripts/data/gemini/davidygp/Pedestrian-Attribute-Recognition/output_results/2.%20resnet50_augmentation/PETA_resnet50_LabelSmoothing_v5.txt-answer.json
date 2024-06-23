@@ -1,0 +1,41 @@
+{
+    "application": "Singularity",
+    "details": {
+        "image": "/app1/common/singularity-img/3.0.0/pytorch_1.3_libsndfile_cuda10.0-cudnn7-devel-ubuntu18.04-py36.simg",
+        "environment": "PBS",
+        "queue": "volta_gpu",
+        "resources": {
+            "cpus": 10,
+            "memory": "80gb",
+            "gpus": 1,
+            "walltime": "24:00:00"
+        },
+        "script": "train.py",
+        "framework": "PyTorch",
+        "model": "resnet50",
+        "transformations": [
+            "Resize",
+            "Pad",
+            "RandomCrop",
+            "RandomHorizontalFlip",
+            "ToTensor",
+            "Normalize",
+            "LabelSmoothing"
+        ],
+        "label_smoothing": {
+            "pos_val": 0.95
+        },
+        "normalization": {
+            "mean": [
+                0.485,
+                0.456,
+                0.406
+            ],
+            "std": [
+                0.229,
+                0.224,
+                0.225
+            ]
+        }
+    }
+}

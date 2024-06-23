@@ -1,0 +1,20 @@
+{
+    "application": "mmdetection",
+    "software_requirements": [
+        "cuda@11.0.2%gcc@9.3.0/lrd2rcw",
+        "nvidia-smi"
+    ],
+    "resource_requirements": [
+        "gpu:a100:4",
+        "memory:200G",
+        "time:120 hours"
+    ],
+    "other_details": [
+        "SBATCH -J res2net-tissuenet-w-1C",
+        "SBATCH -A sada-cnmi",
+        "SBATCH -p tier3",
+        "SBATCH --error=%x_%j.err",
+        "SBATCH --output=%x_%j.out",
+        "mmdetection/tools/dist_train.sh mmdetection/configs/res2net/cascade_mask_rcnn_r2_101_fpn_20e_coco_livecell.py 4 --work-dir /shared/rc/spl/mmdet_output/All_to_all/wholecell_oc/cascade_mask_rcnn_r2_101_fpn_20e_coco_tissuenet_w"
+    ]
+}

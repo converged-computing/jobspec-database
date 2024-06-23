@@ -1,0 +1,37 @@
+{
+    "application": "PBS",
+    "details": {
+        "resource_requirements": {
+            "nodes": "1",
+            "ppn": "16",
+            "gpus": "4",
+            "gpu_type": "cascadelake",
+            "partition": "gpu",
+            "walltime": "168:00:00",
+            "pmem": "5gb"
+        },
+        "email_notification": "abe",
+        "job_dependency": "oe",
+        "email_address": "nathan.cornille@kuleuven.be",
+        "job_name": "dependent_prior",
+        "environment": {
+            "conda_environment": "devlbert",
+            "output_root_dir": "/scratch/leuven/336/vsc33642",
+            "experiment_name": "dependent_prior_devlbert_checkpunten"
+        },
+        "python_script": "train_concap.py",
+        "script_arguments": {
+            "config_file": "config/pretrain_concap_devlbert.yml",
+            "region_mask_prob": "0.3",
+            "trainer_arguments": {
+                "auto_select_gpus": "false",
+                "gpus": "4",
+                "train_batch_size": "128",
+                "checkpoint_every_n_train_steps": "0"
+            },
+            "output_dir": "$OUTPUT_ROOT_DIR/$EXP_NAME",
+            "dependent_prior": "true",
+            "pt2_run": "true"
+        }
+    }
+}

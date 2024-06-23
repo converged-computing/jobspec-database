@@ -1,0 +1,28 @@
+{
+    "application": "Slurm",
+    "details": {
+        "scheduler": "Slurm",
+        "nodes": 2,
+        "walltime": "3 hours",
+        "account": "atom",
+        "partition": "regular",
+        "output": "log.slurm.stdOut",
+        "environment": {
+            "IPS_PATH": "/project/projectdirs/atom/users/tyounkin/ips-examples/ftridyn_ea_task_pool",
+            "OMPI_ROOT": "/project/projectdirs/atom/users/elwasif/ompi/install_4.0",
+            "PATH": "/project/projectdirs/atom/users/elwasif/ompi/install_4.0/bin:/bin:/usr/bin:/usr/local/bin",
+            "LD_LIBRARY_PATH": "/project/projectdirs/atom/users/elwasif/ompi/install_4.0/lib64:/lib:/usr/lib",
+            "MANPATH": "/project/projectdirs/atom/users/elwasif/ompi/install_4.0/share/man:/usr/local/man:/usr/share/man"
+        },
+        "mpi": {
+            "mpirun_command": "mpirun -np 5 hostname",
+            "dvm_daemon": "orte-dvm --debug-daemons --report-uri ./dvm_uri.$$",
+            "processes": 5
+        },
+        "script": {
+            "ips_command": "$IPS_PATH/bin/ips.py --config=ips.config --platform=edison_ompi.conf --log=log.framework",
+            "error_logging": "egrep -i 'error' log.* > log.errors",
+            "post_processing": "./setPermissions.sh"
+        }
+    }
+}

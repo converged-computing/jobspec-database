@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"SLURM\",\n  \"details\": {\n    \"queue\": \"megatron\",\n    \"job_name\": \"Megatron-LM\",\n    \"nodes\": 4,\n    \"cpus_per_task\": 200,\n    \"memory\": \"1024G\",\n    \"docker_image\": \"registry-intl.cn-hongkong.aliyuncs.com/sixpublic/pytorch:23.10-py3\",\n    \"docker_command\": \"bash hkgai/launcher/scripts/pretrain/exp3/pretrain.sh\",\n    \"docker_options\": [\n      \"--net=host\",\n      \"--ipc=host\",\n      \"--rm\",\n      \"--user $(id -u):$(id -g)\",\n      \"--gpus all\",\n      \"--shm-size=1024g\",\n      \"--ulimit memlock=-1\",\n      \"--privileged\",\n      \"-e NVIDIA_VISIBLE_DEVICES=all\",\n      \"-e NCCL_SOCKET_IFNAME=ibp\",\n      \"-e NCCL_IB_HCA=mlx5\",\n      \"-e NCCL_DEBUG_SUBSYS=ALL\",\n      \"-e GPUS_PER_NODE=8\",\n      \"-e MASTER_ADDR=$(echo $head_node_ip)\",\n      \"-e MASTER_PORT=6000\",\n      \"-e NODE_RANK=\\$SLURM_PROCID\",\n      \"-e NNODES=4\",\n      \"-e GRAD_ACC_STEPS=2\",\n      \"-e TASK_ID=exp3.2\",\n      \"-e CUDA_DEVICE_MAX_CONNECTIONS=10\",\n      \"-e OMP_NUM_THREADS=10\",\n      \"-e WANDB_API_KEY=${WANDB_API_KEY}\",\n      \"-e DATA_PATH=/workspace/megatron/slimpajama-icp-chunk1_pre_sorted-8node_text_document\",\n      \"-e DATA_CACHE_PATH=/workspace/megatron/slimpajama-icp-chunk1_pre_sorted-8node_text_document\",\n      \"-e TOKENIZER_MODEL_PATH=/workspace/megatron/baichuan.tokenizer.model\",\n      \"-e ENABLE_SHUFFLE=true\",\n      \"-v $(echo $PROJECT_ROOT)/Megatron-LM:/workspace/megatron\",\n      \"-v $(echo $PROJECT_ROOT)/dataset:/workspace/dataset\",\n      \"-v /run/mellanox/drivers:/run/mellanox/drivers:shared\",\n      \"-v /etc/network:/etc/network\",\n      \"-v /etc:/host/etc\",\n      \"-v /lib/udev:/host/lib/udev\",\n      \"-v $(echo $PROJECT_ROOT)/checkpoints:/workspace/checkpoints\",\n      \"-w /workspace/megatron\"\n    ],\n    \"environment_variables\": {\n      \"LOGLEVEL\": \"INFO\",\n      \"WANDB_API_KEY\": \"YourOwnWandbAPIKey\",\n      \"PROJECT_ROOT\": \"/aifs4su/code/\"\n    },\n    \"resource_requirements\": {\n      \"nodes\": 4,\n      \"cpus_per_task\": 200,\n      \"memory\": \"1024G\",\n      \"gpus\": \"all\",\n      \"shm_size\": \"1024g\",\n      \"ulimit_memlock\": \"-1\",\n      \"nvidia_visible_devices\": \"all\",\n      \"nccl_socket_ifname\": \"ibp\",\n      \"nccl_ib_hca\": \"mlx5\",\n      \"nccl_debug_subsys\": \"ALL\",\n      \"gpus_per_node\": 8,\n      \"cuda_device_max_connections\": 10,\n      \"omp_num_threads\": 10\n    },\n    \"data_paths\": {\n      \"data_path\": \"/workspace/megatron/slimpajama-icp-chunk1_pre_sorted-8node_text_document\",\n      \"data_cache_path\": \"/workspace/megatron/slimpajama-icp-chunk1_pre_sorted-8node_text_document\",\n      \"tokenizer_model_path\": \"/workspace/megatron/baichuan.tokenizer.model\",\n      \"checkpoints_path\": \"/workspace/checkpoints\"\n    }\n  }\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 889,
+        "candidates_token_count": 1008,
+        "total_token_count": 1897,
+        "cached_content_token_count": 0
+    }
+}

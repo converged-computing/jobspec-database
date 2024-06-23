@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"R\",\n  \"details\": {\n    \"modules\": [\n      \"r\",\n      \"gcc/4.8.5\",\n      \"java\",\n      \"lapack\",\n      \"cuda\",\n      \"cudnn\",\n      \"spark\"\n    ],\n    \"resources\": [\n      \"SLURM_NODELIST\",\n      \"SLURM_JOB_ID\"\n    ],\n    \"libraries\": [\n      \"knitr\",\n      \"markdown\",\n      \"Rscript\",\n      \"R CMD BATCH\"\n    ],\n    \"tools\": [\n      \"pandoc\"\n    ],\n    \"files\": [\n      \"slurm.out\",\n      \"$file.Rmd\",\n      \"$file.md\",\n      \"$file.html\",\n      \"${dir_output}/${file}-${SLURM_JOB_ID}.out\",\n      \"/global/home/groups/allhands/bin/spark_helper.sh\",\n      \"/global/scratch/$USER/spark/bash.<number>/log/\"\n    ]\n  }\n}\n```\n\nThis script primarily uses **R** as the application, with supporting libraries like **knitr**, **markdown**, and **Rscript**. It also makes use of **SLURM**, a job scheduler often found on HPC systems.\n\nHere's a breakdown of the script's functionality:\n\n1. **SBATCH configuration:**\n   - Sets up the SLURM job with parameters like output files, error files, and wall clock time.\n   - Uses environment variables like `SLURM_JOB_ID` to identify and manage the job.\n\n2. **Command line argument parsing:**\n   -  Takes arguments like `--file` (specifying the R file), `--dir` (specifying the output directory), and `--spark` (enabling Spark integration).\n\n3. **Module loading:**\n   -  Loads modules like `r`, `gcc`, `java`, `lapack`, `cuda`, `cudnn`, and `spark` to provide necessary environments and dependencies.\n\n4. **Spark integration (optional):**\n   - If `--spark` is specified, it starts a Spark cluster using `spark-start` and `spark_helper.sh`.\n   - This assumes Spark is already set up on the system, and its specific configuration may vary depending on the environment.\n\n5. **R code execution:**\n   - If `--file` points to an Rmd file (`.Rmd` extension), it uses `knitr::knit` to generate a markdown file (`.md`) and then `markdown::markdownToHTML` to convert it to HTML (`.html`).\n   - If the file is a regular R script, it runs the R script using `R CMD BATCH` and saves the output to a file with the job ID appended to the name.\n\n6. **Spark shutdown (optional):**\n   - If Spark was used, the script shuts down the cluster using `spark-stop`.\n\nThe script heavily relies on the availability of modules and specific tools on the target system, particularly those related to SLURM, Spark, and R. The use of `module load` indicates a system that uses a module-based environment for software management.\n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 1098,
+        "candidates_token_count": 709,
+        "total_token_count": 1807,
+        "cached_content_token_count": 0
+    }
+}

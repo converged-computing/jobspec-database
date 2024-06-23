@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"python\",\n  \"details\": {\n    \"framework\": \"MPI\",\n    \"environment\": \"PBS (Portable Batch System)\",\n    \"libraries\": [\"numpy\", \"tensorflow\", \"mpi4py\"],\n    \"resources\": {\n      \"walltime\": \"4 hours\",\n      \"nodes\": \"determined by PBS_NODEFILE\",\n      \"cores_per_node\": 4,\n      \"memory\": \"not specified\",\n      \"storage\": \"/dev/shm\"\n    },\n    \"configuration\": \"test_128x4x1_tfr\",\n    \"logs\": {\n      \"timestamp_format\": \"ms_{nodes}\",\n      \"experiment_id\": \"${PBS_JOBID}\"\n    }\n  }\n}\n```\n\n**Explanation:**\n\n* **Application:** The script explicitly runs a Python script (`./main.py`).\n* **Framework:**  The `aprun` command indicates that the script utilizes MPI (Message Passing Interface) for parallel processing.\n* **Environment:** The PBS directives (e.g., `#PBS -S /bin/bash`, `#PBS -l walltime=4:00:00`) suggest the script is running within a PBS environment for job scheduling.\n* **Libraries:** Based on the script's usage and common practices, it's likely using libraries like NumPy for numerical operations, TensorFlow for machine learning, and mpi4py for MPI communication.\n* **Resources:** \n    * **Walltime:** The script requests a maximum runtime of 4 hours (`#PBS -l walltime=4:00:00`).\n    * **Nodes:** The script dynamically determines the number of nodes allocated by PBS using `PBS_NODEFILE`.\n    * **Cores per Node:** The script sets the number of processes per node to 4 (`-N 4`).\n    * **Memory:** Memory requirements are not explicitly specified in the script.\n    * **Storage:** The script uses `/dev/shm` for data staging (`++data.stage=/dev/shm`).\n* **Configuration:** The script uses a configuration named `test_128x4x1_tfr`.\n* **Logs:** The script specifies a timestamp format (`ms_{nodes}`) and uses the PBS job ID as the experiment ID. \n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 219,
+        "candidates_token_count": 504,
+        "total_token_count": 723,
+        "cached_content_token_count": 0
+    }
+}

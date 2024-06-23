@@ -1,0 +1,32 @@
+{
+    "application": "SLURM",
+    "details": {
+        "job_name": "cnn-extr_onep-wind",
+        "nodes": 1,
+        "tasks_per_node": 1,
+        "cpus_per_task": 10,
+        "memory_per_cpu": "5GB",
+        "time": "01:00:00",
+        "account": "process2",
+        "partition": "plgrid-testing",
+        "array": "0-4",
+        "modules": [
+            "plgrid/tools/python/2.7.14",
+            "plgrid/libs/openslide/3.4.1"
+        ],
+        "environment": {
+            "HOME": "$PLG_USER_STORAGE",
+            "SCRATCH": "$PLG_USER_SCRATCH",
+            "PLG_USER_SCRATCH_SHARED": "$PLG_USER_SCRATCH_SHARED",
+            "PLG_GROUPS_STORAGE": "$PLG_GROUPS_STORAGE",
+            "PLG_GROUPS_SHARED": "$PLG_GROUPS_SHARED",
+            "PYTHONPATH": "${HOME}/projects/EnhanceR/${PROJECT}/code/${PROJECT}/lib/python2.7",
+            "PROCESS_UC1__HAS_SKIMAGE_VIEW": "",
+            "PROCESS_UC1__HAS_TENSORFLOW": ""
+        },
+        "script_purpose": "CNN runner for SLURM with one patient/process (or patient/CPU) plus mask window sweep (linear sampling) per patient.",
+        "data_dir": "${DATA_DIR}/lesion_annotations/",
+        "results_dir": "${RESULTS_DIR}",
+        "command": "cnn --config-file=${CONF_DIR}/config.${SLURM_JOB_NAME}.ini --results-dir=${results_dir} --log-level=debug --patients=${patient} --seed=0 --method=linear --window ${win_start} ${win_end} extract"
+    }
+}

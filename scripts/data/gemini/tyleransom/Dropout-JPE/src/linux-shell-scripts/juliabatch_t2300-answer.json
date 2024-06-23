@@ -1,0 +1,39 @@
+{
+    "application": "SLURM",
+    "details": {
+        "script_language": "Bash",
+        "purpose": "Submit Julia batch jobs to the DCC cluster using SLURM",
+        "dependencies": [
+            "Julia",
+            "SLURM"
+        ],
+        "resource_requirements": {
+            "memory": "14G",
+            "partitions": [
+                "econ",
+                "scavenger",
+                "common"
+            ],
+            "mail_notifications": {
+                "type": "END",
+                "email": "email@address.com"
+            },
+            "job_name": "juliabatch",
+            "output_file": "master_%A_%a.jlog",
+            "error_file": "master_%A_%a.jerr"
+        },
+        "environment_variables": {
+            "TMPDIR": "Used if defined, otherwise defaults to /work/tmr17",
+            "LD_ASSUME_KERNEL": "Set to 2.4.1 if the kernel version is 2.4"
+        },
+        "file_requirements": {
+            "input_file": "<input_file.jl>",
+            "output_file": "<output_file.jlog> (optional)"
+        },
+        "parallelism": {
+            "type": "array",
+            "range": "1-2300",
+            "concurrency_limit": "174"
+        }
+    }
+}

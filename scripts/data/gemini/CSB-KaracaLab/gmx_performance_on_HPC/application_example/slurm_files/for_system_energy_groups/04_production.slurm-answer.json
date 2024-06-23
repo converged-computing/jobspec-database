@@ -1,0 +1,30 @@
+{
+    "application": "GROMACS",
+    "details": {
+        "cluster": "barbun-cuda",
+        "account": "bsavas",
+        "job name": "barbun_2020_sys",
+        "node": "barbun137",
+        "node number": 1,
+        "cpu cores": 40,
+        "time limit": "1-00:00:00",
+        "gpu number": 1,
+        "mail type": "ALL",
+        "mail address": "buusrasavas@gmail.com",
+        "output file": "complex-%j.out",
+        "error file": "complex-%j.err",
+        "modules": [
+            "centos7.3/app/gromacs/2020-impi-mkl-PS2018-GOLD-CUDA",
+            "centos7.3/lib/cuda/10.0",
+            "centos7.3/lib/openmpi/1.8.8-gcc-4.8.5",
+            "centos7.3/lib/acml/6.1.0-gfortan64"
+        ],
+        "environment variables": {
+            "OMP_NUM_THREADS": 20
+        },
+        "commands": [
+            "gmx_mpi grompp -v -f 06_md_PME.mdp -c complex-NPT-noPR.gro -p complex.top -o complex_md.tpr  -r complex-NPT-noPR.tpr",
+            "gmx_mpi mdrun -v -deffnm complex_md -pin on"
+        ]
+    }
+}

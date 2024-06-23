@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"PBS\",\n  \"details\": {\n    \"job_name\": \"hs-d-r-N80\",\n    \"nodes\": 1,\n    \"ppn\": 3,\n    \"walltime\": \"48:00:00\",\n    \"queue\": \"qfermi\",\n    \"email\": \"adc@geo.au.dk\",\n    \"email_options\": \"abe\",\n    \"software\": {\n      \"gcc\": \"4.6.4\",\n      \"cuda\": \"5.5.22\",\n      \"python\": \"2.7.6\",\n      \"cmake\": \"unknown version\",\n      \"nvidia-smi\": \"unknown version\"\n    },\n    \"python_modules\": [\n      \"halfshear-darcy-starter.py\"\n    ],\n    \"script_arguments\": [\n      \"0\", \"1\", \"1.0\", \"3.5e-15\", \"80000.0\", \"6.110e-7\", \"1.0\",\n      \"1\", \"1\", \"1.0\", \"3.5e-15\", \"80000.0\", \"1.797e-7\", \"1.0\",\n      \"2\", \"1\", \"1.0\", \"3.5e-15\", \"80000.0\", \"1.797e-8\", \"1.0\"\n    ]\n  }\n}\n```\n\n**Explanation:**\n\n* **PBS (Portable Batch System):** The script is designed to run as a job on a PBS cluster. This is indicated by the `#!/bin/sh` shebang line and the lines starting with `#PBS`. These lines define parameters like the job name, resource requirements (nodes, processors, walltime), queue, email options, and the location of the job script.\n* **Software:** The script relies on various software packages:\n    * **GCC (GNU Compiler Collection):** Version 4.6.4 is loaded using a specific module.\n    * **CUDA (Compute Unified Device Architecture):** Version 5.5.22 is used for GPU computations, with its paths added to the environment variables.\n    * **Python:** Version 2.7.6 is used, and its path is added to the environment.\n    * **CMake:** It's used for building the project, but its version is not specified in the script.\n    * **nvidia-smi:** It's used to gather information about the GPU.\n* **Python Modules:** The script uses the `halfshear-darcy-starter.py` module for running specific simulations. This module likely handles the simulation logic and interaction with the CUDA library.\n* **Resource Requirements:**\n    * The script requires one node with 3 processors.\n    * The maximum runtime allowed for the job is 48 hours.\n    * The job is submitted to the `qfermi` queue. \n* **Script Functionality:**\n    * The script sets up the environment by loading required software modules and configuring the paths for various libraries and Python modules.\n    * It then defines the working directory and copies the project files to that directory.\n    * It uses `cmake` to build the project and runs the `halfshear-darcy-starter.py` module with specific parameters.\n    * The script starts the python scripts in the background using the `&` operator.\n    * The `wait` command ensures that the script waits for all the background processes to finish before proceeding.\n    * The script finally prints the start and end times of the job.\n\nThis script is likely for running GPU-accelerated simulations, potentially related to fluid dynamics or a similar field, based on the module names and script arguments. \n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 655,
+        "candidates_token_count": 840,
+        "total_token_count": 1495,
+        "cached_content_token_count": 0
+    }
+}

@@ -1,0 +1,37 @@
+{
+    "application": "SLURM",
+    "details": {
+        "partition": "gpu",
+        "time": "1:00:00",
+        "reservation": "root_34",
+        "nodes": 4,
+        "tasks_per_node": 4,
+        "sockets_per_node": 2,
+        "cores_per_socket": 20,
+        "threads_per_core": 4,
+        "memory_per_cpu": "1200M",
+        "gres": "gpu:v100:4",
+        "environment_variables": [
+            "PROJREPO",
+            "DATASET",
+            "NEURON",
+            "BIAS",
+            "INPUT",
+            "LAYER",
+            "BATCH",
+            "BLOCKSIZE",
+            "BUFFER",
+            "OMP_NUM_THREADS"
+        ],
+        "commands": [
+            "make clean",
+            "make -j",
+            "./inference",
+            "cuda-memcheck ./inference"
+        ],
+        "other_software": [
+            "make",
+            "cuda-memcheck"
+        ]
+    }
+}

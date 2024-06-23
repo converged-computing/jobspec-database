@@ -1,0 +1,37 @@
+{
+    "application": "SLURM",
+    "details": {
+        "resource_requirements": {
+            "nodes": 2,
+            "tasks_per_node": 8,
+            "cpus_per_task": 16,
+            "constraints": "rome,ib",
+            "partition": "ccb",
+            "time": "00:10:00"
+        },
+        "software": {
+            "openmpi": "loaded via module"
+        },
+        "environment_setup": {
+            "modules": {
+                "purge": "used to remove existing modules",
+                "openmpi": "loaded to provide the MPI library"
+            }
+        },
+        "system_information": {
+            "lscpu": "used to list the CPU information",
+            "nvidia-smi": "used to query the NVIDIA GPU information",
+            "numactl -H": "used to list the NUMA topology information"
+        },
+        "program_execution": {
+            "program": "mpi_omp_mockup_race",
+            "mpirun": "used to execute the program in parallel with MPI",
+            "OMP_NUM_THREADS": "set to ${SLURM_CPUS_PER_TASK} to enable OpenMP with the specified number of threads"
+        },
+        "timing": {
+            "start_time": "captures the time at the start of the execution",
+            "end_time": "captures the time at the end of the execution",
+            "elapsed_time": "calculates the difference between start and end times"
+        }
+    }
+}

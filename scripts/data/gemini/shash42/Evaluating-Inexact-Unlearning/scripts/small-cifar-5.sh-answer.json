@@ -1,0 +1,59 @@
+{
+    "application": "SLURM",
+    "details": {
+        "resource_requirements": {
+            "nodes": 1,
+            "time": "4-00:00:00",
+            "excluded_nodes": "gnode58,gnode17",
+            "gpu": 1,
+            "memory": "10G",
+            "mail_user": "shashwat.goel@research.iiit.ac.in",
+            "mail_type": "ALL"
+        },
+        "software_requirements": {
+            "python": "3",
+            "scripts": [
+                "src/train.py",
+                "src/unlearn.py",
+                "src/evaluation.py"
+            ],
+            "libraries": [
+                "nvidia-smi"
+            ],
+            "other": [
+                "sed",
+                "nl",
+                "sort",
+                "cut",
+                "head",
+                "xargs",
+                "chmod"
+            ]
+        },
+        "data": {
+            "dataset": "small_cifar5",
+            "pretrained_model": "logs/cifar100-resnet20-pretrain62.pt",
+            "log_directory": "logs/smallcifar5-resnet20-debug"
+        },
+        "model": "resnet20",
+        "hyperparameters": {
+            "num_classes": 5,
+            "minlr_og": "5e-4",
+            "maxlr_og": "0.01",
+            "scheduler": "CosineAnnealingWarmRestarts",
+            "reg_tr": "none",
+            "reg_un": "none",
+            "rf_L": 1,
+            "rf_R": 11,
+            "rf_S": 3,
+            "ftF_L": 1,
+            "ftF_R": 11,
+            "ftF_S": 3,
+            "epochs_rf": 62,
+            "epochs_ft": 30,
+            "epochs_ftF": 30,
+            "minlr_ft": "5e-4",
+            "maxlr_ft": "0.01"
+        }
+    }
+}

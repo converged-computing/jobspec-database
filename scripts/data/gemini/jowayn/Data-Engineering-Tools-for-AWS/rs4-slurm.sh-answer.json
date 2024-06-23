@@ -1,0 +1,20 @@
+{
+    "application": "Slurm",
+    "details": {
+        "resource_requirements": {
+            "walltime": "24:00:00",
+            "processor_cores": 1,
+            "nodes": 1,
+            "processors_per_task": 5
+        },
+        "job_name": "rs4",
+        "output_file": "rs4-slurm.%N.%j.out",
+        "error_file": "rs4-slurm.%N.%j.err",
+        "modules": [],
+        "code": "python -u -c \"import PyHipp as pyh; \\nimport DataProcessingTools as DPT; \\nimport os; \\nimport time; \\nt0 = time.time(); \\nprint(time.localtime()); \\nDPT.objects.processDirs(dirs=None, objtype=pyh.RPLSplit, channel=[*range(97,125)]); \\nDPT.objects.processDirs(dirs=['sessioneye/array04','session01/array04'], cmd='import PyHipp as pyh; import DataProcessingTools as DPT; DPT.objects.processDirs(None, pyh.RPLLFP, saveLevel=1); DPT.objects.processDirs(None, pyh.RPLHighPass, saveLevel=1);'); \\nos.chdir('session01/array04'); \\nDPT.objects.processDirs(level='channel', cmd='import PyHipp as pyh; from PyHipp import mountain_batch; mountain_batch.mountain_batch(); from PyHipp import export_mountain_cells; export_mountain_cells.export_mountain_cells();'); \\nprint(time.localtime()); \\nprint(time.time()-t0);\"",
+        "aws_sns": {
+            "topic_arn": "arn:aws:sns:ap-southeast-1:880115577500:awsnotify",
+            "message": "RPLS4JobDone"
+        }
+    }
+}

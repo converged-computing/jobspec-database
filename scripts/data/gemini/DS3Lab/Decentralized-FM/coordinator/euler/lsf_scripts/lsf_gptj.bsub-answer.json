@@ -1,0 +1,38 @@
+{
+    "application": "inference",
+    "details": {
+        "software": [
+            "gcc/6.3.0",
+            "cuda/11.0.3",
+            "pipeline"
+        ],
+        "resources": {
+            "cores": 2,
+            "runtime": "23:59",
+            "memory": "8000",
+            "gpus": 1,
+            "gpu_memory": "10000"
+        },
+        "environment_variables": [
+            "NCCL_SOCKET_IFNAME=access",
+            "GLOO_SOCKET_IFNAME=access",
+            "NCCL_DEBUG=INFO",
+            "NCCL_IB_DISABLE=1",
+            "NCCL_P2P_DISABLE=1"
+        ],
+        "python_script": "dist_inference_server_w_euler_coordinator.py",
+        "model": "gpt-j-6B",
+        "model_type": "gptj",
+        "inference_parameters": {
+            "fp16": true,
+            "batch_size": 1,
+            "token_micro_batch_size": 1,
+            "input_seq_length": 1024,
+            "generate_seq_length": 64,
+            "top_p": 1,
+            "temperature": 0,
+            "num_layers": 14
+        },
+        "coordinator_server_ip": "129.132.93.120"
+    }
+}

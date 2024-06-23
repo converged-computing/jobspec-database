@@ -1,0 +1,41 @@
+{
+    "application": "Horovod",
+    "details": {
+        "environment": {
+            "conda": {
+                "environment_name": "wmlce-1.7.0",
+                "root": "/nobackup/users/$(whoami)/anaconda3"
+            },
+            "horovod": {
+                "gpu_allreduce": "MPI",
+                "gpu_allgather": "MPI",
+                "gpu_broadcast": "MPI",
+                "nccl_debug": "DEBUG"
+            }
+        },
+        "resources": {
+            "slurm": {
+                "job_name": "tf_4GPUs",
+                "nodes": {
+                    "count": 1,
+                    "tasks_per_node": 4,
+                    "gpus_per_node": 4
+                },
+                "memory": 0,
+                "time": "10:00:00",
+                "exclusive": true,
+                "gres": "gpu:4",
+                "mail": {
+                    "user": "florin@mit.edu",
+                    "type": "ALL"
+                },
+                "output": "tf_4GPUs_%j.out",
+                "error": "tf_4GPUs_%j.err"
+            }
+        },
+        "script": {
+            "python_file": "/data/ImageNet/tensorflow2_mnist.py",
+            "mpi_communication": true
+        }
+    }
+}

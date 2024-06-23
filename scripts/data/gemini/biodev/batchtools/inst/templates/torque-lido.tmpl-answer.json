@@ -1,0 +1,33 @@
+{
+    "application": "PBS",
+    "details": {
+        "software": [
+            "PBS",
+            "R",
+            "batchtools",
+            "binutils",
+            "gcc",
+            "openblas",
+            "openmpi"
+        ],
+        "resources": {
+            "walltime": "60 to 3600 * 672 seconds",
+            "memory": "100 to 64 * 1024 MB",
+            "ncpus": "1 or more",
+            "modules": "binutils/2.25, gcc/4.8.5, openblas/0.2.17, R/3.3.1-gcc48-base, openmpi/gcc4.8.x",
+            "omp.threads": "1 or more",
+            "blas.threads": "1 or more",
+            "type": "quad if memory > 15000 MB",
+            "pm.backend": "mpi for MPI jobs",
+            "queue": "short, med, long, ultralong based on walltime",
+            "log.file": "log file specified in the script"
+        },
+        "environment_variables": {
+            "TMPDIR": "/scratch/${USER}-${PBS_JOBID}",
+            "OMP_NUM_THREADS": "resources$omp.threads",
+            "NUMEXPR_NUM_THREADS": "resources$blas.threads",
+            "OPENBLAS_NUM_THREADS": "resources$tblas.hreads",
+            "DEBUGME": "Sys.getenv(\"DEBUGME\")"
+        }
+    }
+}

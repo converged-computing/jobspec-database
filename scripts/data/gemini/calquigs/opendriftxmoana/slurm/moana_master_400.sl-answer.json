@@ -1,0 +1,40 @@
+{
+    "application": "Slurm",
+    "details": {
+        "scheduler": "Slurm",
+        "environment": {
+            "modules": [
+                "Miniconda3",
+                "opendrift_simon"
+            ],
+            "conda_environment": "opendrift_simon",
+            "variables": {
+                "SLURM_EXPORT_ENV": "ALL",
+                "HDF5_USE_FILE_LOCKING": "FALSE"
+            }
+        },
+        "resources": {
+            "memory": "10G",
+            "time": "04:00:00",
+            "cpus": 2,
+            "output_file": "/nesi/nobackup/vuw03073/slurmOut/bigmomma_test_%a.%j.txt",
+            "email": "calquigs@gmail.com",
+            "email_type": "ALL",
+            "profile": "task"
+        },
+        "script": {
+            "language": "Bash",
+            "command": "python /nesi/project/vuw03073/opendriftxmoana/scripts/moana_master_400.py",
+            "arguments": [
+                "-i",
+                "/nesi/nobackup/mocean02574/NZB_31/",
+                "-o",
+                "/nesi/nobackup/vuw03073/bigmomma/",
+                "-r",
+                "${region}",
+                "-ym",
+                "${ym[$(($SLURM_ARRAY_TASK_ID%$num_runs_per_site))]}"
+            ]
+        }
+    }
+}

@@ -1,0 +1,46 @@
+{
+    "application": "SLURM",
+    "details": {
+        "partition": "g80n140",
+        "job_name": "testlongcontext",
+        "nodes": 2,
+        "ntasks_per_node": 8,
+        "cpus_per_task": 12,
+        "output": "gpt_neox_20.out",
+        "comment": "laion",
+        "open_mode": "append",
+        "exclusive": true,
+        "modules": [
+            "openmpi",
+            "cuda/11.7"
+        ],
+        "environment_variables": {
+            "PYTHONFAULTHANDLER": "1",
+            "CUDA_LAUNCH_BLOCKING": "0",
+            "HOSTNAMES": "List of hostnames",
+            "MASTER_ADDR": "First hostname in the list",
+            "MASTER_PORT": "12802",
+            "COUNT_NODE": "Number of hostnames",
+            "HF_MODULES_CACHE": "./cache/",
+            "HF_DATASETS_CACHE": "./cache/",
+            "TRANSFORMERS_CACHE": "./cache/"
+        },
+        "deepspeed_arguments": {
+            "master_addr": "$MASTER_ADDR",
+            "hostfile": "/fsx/home-kaizhaol/long-context-transformers/hostfile.txt",
+            "launcher": "OpenMPI",
+            "finetune.py": {
+                "model_name_or_path": "EleutherAI/gpt-neox-20b",
+                "per_device_train_batch_size": 1,
+                "per_device_eval_batch_size": 1,
+                "output_dir": "gpt-neox-20b",
+                "gradient_accumulation_steps": 8,
+                "fp16": true,
+                "evaluation_strategy": "epoch",
+                "max_steps": 100000,
+                "deepspeed": "ds_config.json",
+                "gradient_checkpointing": true
+            }
+        }
+    }
+}

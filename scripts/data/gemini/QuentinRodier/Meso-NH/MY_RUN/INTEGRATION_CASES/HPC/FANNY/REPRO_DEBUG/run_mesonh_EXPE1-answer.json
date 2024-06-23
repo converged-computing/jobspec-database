@@ -1,0 +1,39 @@
+{
+    "application": "MESONH",
+    "details": {
+        "nodes": 20,
+        "cpus": 200,
+        "time_limit": "00:20:00",
+        "libraries": [
+            "ICE3",
+            "PGD_2.5km_AR",
+            "A_2008090*",
+            "EXSEG1.nam"
+        ],
+        "environment_variables": [
+            "MPIRUN",
+            "XYZ"
+        ],
+        "mpi_implementation": "Mpirun",
+        "mpi_processes": 200,
+        "other_resources": [
+            "file_for_xtransfer",
+            "pipe_name",
+            "PRESSURE",
+            "REMAP*"
+        ],
+        "commands": [
+            "ulimit -c 0",
+            "ulimit -s unlimited",
+            "hostname",
+            "ln -sf ../ICE3/PGD_2.5km_AR.* .",
+            "ln -sf ../ICE3/A_2008090* .",
+            "ls -lrt",
+            "cp -f EXSEG1.nam_EXPE1 EXSEG1.nam",
+            "time ${MPIRUN} MESONH${XYZ}",
+            "mv OUTPUT_LISTING1 OUTPUT_LISTING1_EXPE1",
+            "rm -f file_for_xtransfer pipe_name PRESSURE REMAP*",
+            "ja"
+        ]
+    }
+}

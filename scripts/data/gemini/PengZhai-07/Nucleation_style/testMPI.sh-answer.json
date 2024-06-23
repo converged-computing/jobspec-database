@@ -1,0 +1,30 @@
+{
+    "application": "Slurm",
+    "details": {
+        "software": [
+            "OpenMPI",
+            "Julia",
+            "gcc"
+        ],
+        "resources": {
+            "nodes": 1,
+            "cores": 8,
+            "memory": "5gb",
+            "time": "2-00:00:00",
+            "partition": "standard",
+            "account": "yiheh1",
+            "output_file": "log/%x-%a.log",
+            "error_file": "log/error-%x-%a.log"
+        },
+        "environment_variables": {
+            "MPI_MODULE": "openmpi/4.1.6",
+            "EXECUTABLE": "julia",
+            "FILE": "run.jl",
+            "TEST": "quartz_test.txt",
+            "TURBO": "/nfs/turbo/lsa-yiheh/yiheh-mistorage/pengz/data/damage_test",
+            "MPIRUN_OPTIONS": "--bind-to core --map-by node:PE=${SLURM_CPUS_PER_TASK} -report-bindings",
+            "OMP_NUM_THREADS": "${SLURM_CPUS_PER_TASK}",
+            "NUM_CORES": "${SLURM_NTASKS}*${SLURM_CPUS_PER_TASK}"
+        }
+    }
+}

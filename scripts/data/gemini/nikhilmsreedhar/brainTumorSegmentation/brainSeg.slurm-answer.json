@@ -1,0 +1,27 @@
+{
+    "application": "SLURM",
+    "details": {
+        "resource_requirements": {
+            "nodes": 1,
+            "cpus_per_task": 8,
+            "mem_per_cpu": 8192,
+            "ntasks": 1,
+            "gres": "gpu:2",
+            "time": "96:00:00"
+        },
+        "software_requirements": {
+            "modules": [
+                "anaconda/anaconda3",
+                "cuda/cuda-11.4",
+                "gcc/gcc-9.1.0",
+                "openmpi/openmpi-4.0.0-gcc-9.1.0"
+            ],
+            "python_path": "/home/cap5516.student10/my-envs/cenv/bin/python",
+            "program_arguments": "-m torch.distributed.launch --nproc_per_node=2 --master_port 20003 train.py --experiment $SLURM_JOB_ID --batch_size 3 --end_epoch 400"
+        },
+        "job_name": "tumor_seg",
+        "log_dir": "/home/cap5516.student10/job_logs/tumor_seg-$SLURM_JOB_ID",
+        "debug_logs": "$log_dir/job_$SLURM_JOB_ID.log",
+        "benchmark_logs": "$log_dir/job_$SLURM_JOB_ID.log"
+    }
+}

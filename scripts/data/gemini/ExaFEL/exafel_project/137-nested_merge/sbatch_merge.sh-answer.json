@@ -1,0 +1,71 @@
+{
+    "application": "Slurm",
+    "details": {
+        "resource_manager": "Slurm",
+        "partition": "debug",
+        "job_name": "merge_phase1_<tag_template>",
+        "time": "00:20:00",
+        "nodes": 1,
+        "constraint": "haswell",
+        "docker_image": "docker:mlxd/xfel:latest",
+        "account": "lcls",
+        "output_file": "1node_<tag_template>.log",
+        "error_file": "1node_<tag_template>.err",
+        "email": "loriordan@lbl.gov",
+        "email_type": "ALL",
+        "burst_buffer": {
+            "type": "scratch",
+            "capacity": "60GB",
+            "access_mode": "striped"
+        },
+        "stage_in": {
+            "source": "/global/cscratch1/sd/mlxd/sept_sprint/merge_multi/TAR_95-114",
+            "destination": "$DW_JOB_STRIPED/TAR_95-114",
+            "type": "directory"
+        },
+        "stage_out": {
+            "source": "$DW_JOB_STRIPED/merge_multi",
+            "destination": "/global/cscratch1/sd/mlxd/sept_sprint/merge_multi/bb",
+            "type": "directory"
+        },
+        "environment_variables": {
+            "TARDATA": "$DW_JOB_STRIPED/subsel/*.tar",
+            "MERGE_ROOT": "$DW_JOB_STRIPED/merge_multi",
+            "TAG": "1n_merge_<tag_template>",
+            "MULTINODE": "True"
+        },
+        "software": {
+            "python": "glob",
+            "shifter": "shifter",
+            "phenix": "setup_env.sh"
+        },
+        "commands": {
+            "mkdir": {
+                "directories": [
+                    "$DW_JOB_STRIPED/subsel",
+                    "$DW_JOB_STRIPED/merge_multi",
+                    "${MERGE_ROOT}/${TAG}"
+                ]
+            },
+            "ln": {
+                "source": "${ii}",
+                "destination": "$DW_JOB_STRIPED/subsel/"
+            },
+            "cp": {
+                "source": "/global/cscratch1/sd/mlxd/sept_sprint/merge_multi/4ngz*",
+                "destination": "$DW_JOB_STRIPED/merge_multi"
+            },
+            "srun": {
+                "nodes": 32,
+                "cores": 2,
+                "cpu_bind": "cores",
+                "command": "${1}/merge_cori.sh"
+            },
+            "source": "/global/project/projectdirs/lcls/mlxd/cctbx_merge/setup_env.sh"
+        },
+        "execution": {
+            "cd": "$1",
+            "srun": "srun -n 32 -c 2 --cpu_bind=cores shifter ${1}/merge_cori.sh"
+        }
+    }
+}

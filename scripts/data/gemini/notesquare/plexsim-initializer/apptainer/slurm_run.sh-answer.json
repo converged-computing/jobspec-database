@@ -1,0 +1,28 @@
+{
+    "application": "PLEXSIM",
+    "software": [
+        "SLURM",
+        "OpenMPI",
+        "Apptainer",
+        "Python",
+        "MPI4PY"
+    ],
+    "resource_requirements": {
+        "nodes": 2,
+        "cores_per_node": 5,
+        "time_limit": "00:05:00",
+        "partition": "debug1",
+        "container": "apptainer/plexsim_initializer.sif",
+        "mpi_args": "--bind-to core --map-by slot:PE=3",
+        "python_args": "config_random.yaml test.h5",
+        "plexsim_subsets_per_node": 2,
+        "environment_variables": {
+            "SLURM_HOME": "/shared/lib/slurm-21.08.8",
+            "MPI_HOME": "/shared/lib/ompi-4.1.1",
+            "OMPI_MCA_PARAM_FILES_PATH": "/etc/openmpi",
+            "UCX_POSIX_USE_PROC_LINK": "n",
+            "APPTAINER_BIND": "$MPI_HOME:/opt/ompi,$OMPI_MCA_PARAM_FILES_PATH,$SLURM_HOME/lib:/host_slurm_lib,/usr/lib/:/host_usr_lib",
+            "MPI4PY_RC_THREAD_LEVEL": "serialized"
+        }
+    }
+}

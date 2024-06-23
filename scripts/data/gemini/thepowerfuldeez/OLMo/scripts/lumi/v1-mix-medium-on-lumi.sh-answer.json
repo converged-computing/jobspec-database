@@ -1,0 +1,52 @@
+{
+    "application": "SLURM",
+    "details": {
+        "resource_manager": "SLURM",
+        "job_name": "v1-mix-medium",
+        "account": "project_462000229",
+        "output_file": "/pfs/lustref1/flash/project_462000229/logs/%j.log",
+        "nodes": 32,
+        "tasks_per_node": 8,
+        "gpus_per_node": 8,
+        "cpus_per_task": 6,
+        "walltime": "48:00:00",
+        "minimum_time": "8:00:00",
+        "memory": "0",
+        "partition": "standard-g",
+        "modules": [
+            "LUMI/22.08",
+            "partition/G"
+        ],
+        "container": "llm-lumi_latest.sif",
+        "environment_variables": {
+            "OLMO_CONTAINER": "llm-lumi_latest.sif",
+            "OMP_NUM_THREADS": "$SLURM_CPUS_PER_TASK",
+            "MPICH_GPU_SUPPORT_ENABLED": "1",
+            "NCCL_SOCKET_IFNAME": "hsn",
+            "NCCL_NET_GDR_LEVEL": "3",
+            "MIOPEN_USER_DB_PATH": "/tmp/${USER}-miopen-cache-${SLURM_JOB_ID}",
+            "MIOPEN_CUSTOM_CACHE_DIR": "${MIOPEN_USER_DB_PATH}",
+            "CXI_FORK_SAFE": "1",
+            "CXI_FORK_SAFE_HP": "1",
+            "FI_CXI_DISABLE_CQ_HUGETLB": "1",
+            "FI_CXI_DEFAULT_CQ_SIZE": "131072",
+            "NCCL_DEBUG": "INFO",
+            "PYTHONPATH": ".:${PYTHONPATH}",
+            "ROCM_PATH": "/opt/rocm",
+            "SINGULARITYENV_LD_LIBRARY_PATH": "/usr/local/lib:/opt/cray/libfabric/1.15.2.0/lib64",
+            "PYTORCH_HIP_ALLOC_CONF": "max_split_size_mb:128",
+            "DATA_PATH": "$FLASH_DIR/preprocessed/olmo-mix",
+            "CHECKPOINTS_PATH": "$FLASH_DIR/checkpoints",
+            "EVAL_DATA_PATH": "$SCRATCH_DIR/eval-data"
+        },
+        "command": "scripts/run_with_environment.sh singularity exec -B\"$PROJECT_DIR:$PROJECT_DIR\" -B\"$FLASH_DIR:$FLASH_DIR\" -B\"$SCRATCH_DIR:$SCRATCH_DIR\" -B /opt/cray:/opt/cray -B /usr/lib64/libcxi.so.1:/usr/lib64/libcxi.so.1 -B /usr/lib64/libjson-c.so.3:/usr/lib64/libjson-c.so.3 $PROJECT_DIR/containers/$OLMO_CONTAINER python scripts/train.py configs/v1-mix-medium.yaml --run_name=${SLURM_JOB_ID} ${@}",
+        "srun_options": {
+            "cpus_per_task": "$SLURM_CPUS_PER_TASK",
+            "distribution": "block:block",
+            "kill_on_bad_exit": true
+        },
+        "python_script": "scripts/train.py",
+        "config_file": "configs/v1-mix-medium.yaml",
+        "run_name": "${SLURM_JOB_ID}"
+    }
+}

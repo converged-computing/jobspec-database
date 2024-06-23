@@ -1,0 +1,41 @@
+{
+    "application": "Slurm",
+    "details": {
+        "job_name": "eval",
+        "output_file": "slurm_logs/eval_%A_%a.out",
+        "error_file": "slurm_logs/eval_%A_%a.err",
+        "cpus_per_task": 1,
+        "gres": "gpu:1",
+        "partition": "cook,free_gpu,cahnrs_gpu,kamiak",
+        "time": "0-01:00:00",
+        "mem": "20G",
+        "array": "0-299",
+        "environment_variables": [
+            "KAMIAK_CONFIG",
+            "KAMIAK_TENSORFLOW_GPU",
+            "OMP_NUM_THREADS"
+        ],
+        "signals": [
+            "SIGTERM",
+            "SIGINT"
+        ],
+        "python_script": "main_eval.py",
+        "arguments": [
+            "--logdir",
+            "$logFolder-$suffix",
+            "--modeldir",
+            "$modelFolder-$suffix",
+            "--jobs=1",
+            "--gpus=1",
+            "--gpumem=0",
+            "--match",
+            "${dataset_name}-${uid}-${method}-[0-9]*",
+            "--selection",
+            "$variant",
+            "--output_file",
+            "$out",
+            "${additional_args[@]}",
+            "$@"
+        ]
+    }
+}

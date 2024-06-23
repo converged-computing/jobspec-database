@@ -1,0 +1,28 @@
+{
+    "application": "Slurm",
+    "details": {
+        "job_name": "m2ofa",
+        "output": "m2ofa.out",
+        "partition": "gpuA40x4",
+        "memory": "220G",
+        "nodes": 1,
+        "tasks_per_node": 1,
+        "cpus_per_task": 16,
+        "constraint": "scratch",
+        "gpus_per_node": 4,
+        "gpu_bind": "closest",
+        "account": "bbod-delta-gpu",
+        "exclusive": true,
+        "requeue": false,
+        "time": "20:00:00",
+        "environment": {
+            "conda_environment": "boenv",
+            "OMP_NUM_THREADS": 16
+        },
+        "software": {
+            "python": "3",
+            "conda": "anaconda3"
+        },
+        "command": "python3 -W ignore -u main_oneshot.py /scratch/bbng/boc2/datasets/imagenet -loss ps --warmup -b 1024 --lbd 2.5e-5 --t 1 --lr-strategy cos --lr 0.4 --epochs 256 --wd 0.00004 --no-bn-wd --arch mobilenetv2 --workers 16 --world-size 1 --dist-url tcp://localhost:23456 --dist-backend gloo --rank 0 --save ./ofa/mobilenetv2/ --resume ../../BackupPolarizationPruning/imagenet/ofa/mobilenetv2/checkpoint.pth.tar --OFA"
+    }
+}

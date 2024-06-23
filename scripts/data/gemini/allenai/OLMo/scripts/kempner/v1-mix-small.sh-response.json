@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"SLURM\",\n  \"details\": {\n    \"job_name\": \"v1-mix-small\",\n    \"account\": \"kempner_lab\",\n    \"output_path\": \"/n/holyscratch01/kempner_lab/Lab/logs/%j.log\",\n    \"nodes\": 16,\n    \"tasks_per_node\": 4,\n    \"gpus_per_node\": 4,\n    \"cpus_per_task\": 16,\n    \"time_limit\": \"167:00:00\",\n    \"memory\": \"all\",\n    \"partition\": \"kempner_project\",\n    \"environment_variables\": [\n      \"OMP_NUM_THREADS=$SLURM_CPUS_PER_TASK\",\n      \"MPICH_GPU_SUPPORT_ENABLED=1\",\n      \"MIOPEN_USER_DB_PATH=/tmp/${USER}-miopen-cache-${SLURM_JOB_ID}\",\n      \"MIOPEN_CUSTOM_CACHE_DIR=${MIOPEN_USER_DB_PATH}\",\n      \"PYTHONPATH=.:${PYTHONPATH}\",\n      \"DATA_PATH=/n/home06/dgroeneveld/data/preprocessed/olmo-mix\",\n      \"EVAL_DATA_PATH=/n/home06/dgroeneveld/data/eval-data\",\n      \"CHECKPOINTS_PATH=/n/home06/dgroeneveld/checkpoints\",\n      \"PYTORCH_KERNEL_CACHE_PATH=/tmp/pytorch_kernel_cache/\"\n    ],\n    \"command\": \"srun --cpus-per-task=$SLURM_CPUS_PER_TASK --distribution=block:block --kill-on-bad-exit scripts/run_with_environment.sh $HOME/miniconda3/envs/LLM/bin/python -u scripts/train.py configs/v1-mix-small.yaml --run_name=kempner_${SLURM_JOB_ID} --time_limit=$((167 * 60 * 60)) --device_train_microbatch_size=2 --fsdp.sharding_strategy=NO_SHARD --save_folder=/n/holyscratch01/kempner_lab/Lab/checkpoints/${SLURM_JOB_ID}/ --model.flash_attention=true ${@}\",\n    \"software\": [\n      \"SLURM\",\n      \"python\",\n      \"miniconda3\",\n      \"pytorch\",\n      \"flash attention\",\n      \"MIOPEN\",\n      \"MPICH\",\n      \"scripts/run_with_environment.sh\",\n      \"scripts/train.py\",\n      \"configs/v1-mix-small.yaml\"\n    ]\n  }\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 658,
+        "candidates_token_count": 644,
+        "total_token_count": 1302,
+        "cached_content_token_count": 0
+    }
+}

@@ -1,0 +1,69 @@
+{
+    "application": "SLURM",
+    "details": {
+        "software": "Python3",
+        "resources": {
+            "nodes": 1,
+            "tasks_per_node": 1,
+            "gpus_per_node": 1,
+            "cpus_per_task": 10,
+            "account": "all",
+            "partition": "learnai4rl"
+        },
+        "environment_variables": {
+            "NCCL_SOCKET_IFNAME": "ens32",
+            "NCCL_NSOCKS_PERTHREAD": 4,
+            "NCCL_SOCKET_NTHREADS": 2
+        }
+    },
+    "script_arguments": {
+        "dset_type": "mr",
+        "dset_name": "qvhighlights",
+        "clip_length": 2,
+        "exp_id": "qvhl",
+        "model_id": "univtg",
+        "gpu_id": 0,
+        "num_workers": 16,
+        "bsz": 32,
+        "eval_bsz": 4,
+        "n_epoch": 200,
+        "lr": 0.0001,
+        "lr_drop": 80,
+        "lr_warmup": 10,
+        "wd": 0.0001,
+        "input_dropout": 0.5,
+        "dropout": 0,
+        "droppath": 0.1,
+        "eval_epoch": 5,
+        "enc_layers": 4,
+        "eval_mode": "add",
+        "round_multiple": -1,
+        "hidden_dim": 1024,
+        "b_loss_coef": 10,
+        "g_loss_coef": 0,
+        "eos_coef": 0.1,
+        "f_loss_coef": 10,
+        "s_loss_intra_coef": 0,
+        "s_loss_inter_coef": 0,
+        "main_metric": "MR-full-mAP-key",
+        "nms_thd": 0.7,
+        "max_before_nms": 1000,
+        "ctx_mode": "video_tef",
+        "v_feat_types": "slowfast_clip",
+        "t_feat_type": "clip",
+        "use_cache": 1,
+        "easy_negative_only": 1,
+        "resume": {},
+        "train_path": "data/qvhighlights/qvhighlights_train.jsonl",
+        "eval_path": "data/qvhighlights/qvhighlights_val.jsonl",
+        "eval_split_name": "val",
+        "feat_root": "data/qvhighlights",
+        "v_feat_dirs": [
+            "data/qvhighlights/vid_slowfast",
+            "data/qvhighlights/vid_clip"
+        ],
+        "v_feat_dim": 768,
+        "t_feat_dir": "data/qvhighlights/txt_clip",
+        "t_feat_dim": 512
+    }
+}

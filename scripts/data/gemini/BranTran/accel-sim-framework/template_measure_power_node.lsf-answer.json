@@ -1,0 +1,31 @@
+{
+    "application": "LSF",
+    "details": {
+        "scheduler": "LSF",
+        "resources": {
+            "nodes": 1,
+            "walltime": "2:00",
+            "project": "gen150",
+            "job_name": "AccelWattch_validation"
+        },
+        "modules": [
+            "gcc/7.5.0",
+            "cuda/11.0.2",
+            "makedepend",
+            "python/2.7.15",
+            "cmake"
+        ],
+        "environment_variables": {
+            "CUDA_INSTALL_PATH": "Path to CUDA installation directory",
+            "ACCELSIM_ROOT": "Path to AccelSim framework directory",
+            "CUDA_VISIBLE_DEVICES": "GPU device ID to use"
+        },
+        "commands": [
+            "nvidia-smi -L | awk '{print NR-1, $NF}' | tr -d '[)]'",
+            "jsrun -n1 -c1 -g1 $ACCELSIM_ROOT/../accelwattch_hw_profiler/profile_temp_power.sh volta 0 REPLACE_TEXT"
+        ],
+        "dependencies": [
+            "accel-sim-framework/gpu-simulator/setup_environment.sh"
+        ]
+    }
+}

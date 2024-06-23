@@ -1,0 +1,129 @@
+{
+    "application": "Slurm",
+    "details": {
+        "job_name": "stencil-bench-weak",
+        "nodes": 1,
+        "tasks_per_node": 8,
+        "cores_per_task": 16,
+        "account": "proj16",
+        "partition": "palamut-cuda",
+        "gpus_per_node": 8,
+        "walltime": "24:00:00",
+        "output": "stencil_bench_weak_output_%j.log",
+        "environment_script": "./scripts/modules_truba.sh",
+        "binaries": {
+            "jacobi": "./jacobi -s 1",
+            "jacobi_nvshmem": "./jacobi_nvshmem -s 1"
+        },
+        "parameters": {
+            "NUM_ITER": 10000,
+            "NUM_RUNS": 5
+        },
+        "versions": {
+            "jacobi": {
+                "Baseline Copy": 0,
+                "Baseline Copy Overlap": 1,
+                "Baseline P2P": 2,
+                "Single Stream 1TB": 4,
+                "Single Stream 2TB": 5,
+                "Double Stream": 6,
+                "Baseline Copy (No compute)": 7,
+                "Baseline Copy Overlap (No Compute)": 8,
+                "Baseline P2P (No Compute)": 9,
+                "Single Stream 1TB (No Compute)": 10,
+                "Single Stream 2TB (No Compute)": 11,
+                "Double Stream (No Compute)": 12
+            },
+            "jacobi_nvshmem": {
+                "NVSHMEM Baseline": 0,
+                "NVSHMEM Baseline Optimized": 1,
+                "NVSHMEM Single Stream 1TB": 2,
+                "NVSHMEM Single Stream 2TB": 3,
+                "NVSHMEM Double Stream": 4,
+                "NVSHMEM Baseline (No Compute)": 5,
+                "NVSHMEM Baseline Optimized (No Compute)": 6,
+                "NVSHMEM Single Stream 1TB (No Compute)": 7,
+                "NVSHMEM Single Stream 2TB (No Compute)": 8,
+                "NVSHMEM Double Stream (No Compute)": 9
+            }
+        },
+        "resources": {
+            "CUDA_VISIBLE_DEVICES": [
+                "0",
+                "0",
+                "0,1",
+                "0,1,2",
+                "0,1,2,3",
+                "0,1,2,3,4",
+                "0,1,2,3,4,5",
+                "0,1,2,3,4,5,6",
+                "0,1,2,3,4,5,6,7"
+            ],
+            "MAX_NUM_GPUS": 8,
+            "STARTING_NX": 16384
+        },
+        "execution_flow": {
+            "loop1": {
+                "variable": "STARTING_NX",
+                "start": 16384,
+                "increment": "*=2",
+                "loop2": {
+                    "variable": "version_name",
+                    "values": [
+                        "Baseline Copy",
+                        "Baseline Copy Overlap",
+                        "Baseline P2P",
+                        "Single Stream 1TB",
+                        "Single Stream 2TB",
+                        "Double Stream",
+                        "Baseline Copy (No compute)",
+                        "Baseline Copy Overlap (No Compute)",
+                        "Baseline P2P (No Compute)",
+                        "Single Stream 1TB (No Compute)",
+                        "Single Stream 2TB (No Compute)",
+                        "Double Stream (No Compute)"
+                    ],
+                    "loop3": {
+                        "variable": "NUM_GPUS",
+                        "start": 1,
+                        "increment": " *=2",
+                        "loop4": {
+                            "variable": "i",
+                            "start": 1,
+                            "end": "${NUM_RUNS}",
+                            "increment": "++",
+                            "command": "${BIN} -v ${version_idx} -nx ${NX} -ny ${NY} -niter ${NUM_ITER}"
+                        }
+                    }
+                }
+            },
+            "loop5": {
+                "variable": "version_name",
+                "values": [
+                    "NVSHMEM Baseline",
+                    "NVSHMEM Baseline Optimized",
+                    "NVSHMEM Single Stream 1TB",
+                    "NVSHMEM Single Stream 2TB",
+                    "NVSHMEM Double Stream",
+                    "NVSHMEM Baseline (No Compute)",
+                    "NVSHMEM Baseline Optimized (No Compute)",
+                    "NVSHMEM Single Stream 1TB (No Compute)",
+                    "NVSHMEM Single Stream 2TB (No Compute)",
+                    "NVSHMEM Double Stream (No Compute)"
+                ],
+                "loop6": {
+                    "variable": "NP",
+                    "start": 1,
+                    "increment": " *=2",
+                    "loop7": {
+                        "variable": "i",
+                        "start": 1,
+                        "end": "${NUM_RUNS}",
+                        "increment": "++",
+                        "command": "mpirun -np ${NP} ${NV_BIN} -v ${version_idx} -nx ${NX} -ny ${NY} -niter ${NUM_ITER}"
+                    }
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,35 @@
+{
+    "application": "Slurm",
+    "details": {
+        "scheduler": "Slurm",
+        "account": "efd-np",
+        "partition": "efd-shared-np",
+        "qos": "efd-np",
+        "job_name": "QES-plume-ContRelease_PowerLawBLFlow",
+        "nodes": 1,
+        "tasks": 1,
+        "memory": "5G",
+        "time": "05:00:00",
+        "output_file": "slurm_%x-%j-%N.log",
+        "software": [
+            "cuda/11.4",
+            "cmake/3.21.4",
+            "gcc/8.5.0",
+            "boost/1.77.0",
+            "intel-oneapi-mpi/2021.4.0",
+            "gdal/3.3.3",
+            "netcdf-c/4.8.1",
+            "netcdf-cxx/4.2",
+            "matlab",
+            "qesPlume"
+        ],
+        "commands": [
+            "matlab -nodisplay -nosplash -nodesktop -r \"run('PowerLawBLFlow_xDir_inputFiles.m'); run('PowerLawBLFlow_yDir_inputFiles.m'); exit;\"",
+            "./qesPlume/qesPlume -q ../testCases/PowerLawBLFlow_ContRelease/QES-files/PowerLawBLFlow_xDir_ContRelease.xml -w ../testCases/PowerLawBLFlow_ContRelease/QES-data/PowerLawBLFlow_xDir_windsWk.nc -t ../testCases/PowerLawBLFlow_ContRelease/QES-data/PowerLawBLFlow_xDir_turbOut.nc -o ../testCases/PowerLawBLFlow_ContRelease/QES-data/PowerLawBLFlow_xDir_ContRelease",
+            "./qesPlume/qesPlume -q ../testCases/PowerLawBLFlow_ContRelease/QES-files/PowerLawBLFlow_yDir_ContRelease.xml -w ../testCases/PowerLawBLFlow_ContRelease/QES-data/PowerLawBLFlow_yDir_windsWk.nc -t ../testCases/PowerLawBLFlow_ContRelease/QES-data/PowerLawBLFlow_yDir_turbOut.nc -o ../testCases/PowerLawBLFlow_ContRelease/QES-data/PowerLawBLFlow_yDir_ContRelease",
+            "matlab -nodisplay -nosplash -nodesktop -r \"run('PowerLawBLFlow_xDir_mainPlumeResults.m'); clear; run('PowerLawBLFlow_yDir_mainPlumeResults.m'); exit;\"",
+            "sacct -j $SLURM_JOBID",
+            "sacct -j $SLURM_JOBID --format=Elapsed,NodeList"
+        ]
+    }
+}

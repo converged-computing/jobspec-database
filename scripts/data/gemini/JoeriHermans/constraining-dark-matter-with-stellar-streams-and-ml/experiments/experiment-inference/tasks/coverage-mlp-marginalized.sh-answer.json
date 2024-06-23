@@ -1,0 +1,39 @@
+{
+    "application": "Slurm",
+    "details": {
+        "resources": {
+            "cpus_per_task": 2,
+            "gres": "gpu:1",
+            "mem_per_cpu": "5000",
+            "ntasks": 1,
+            "time": "7-00:00:00"
+        },
+        "environment": {
+            "export": "ALL"
+        },
+        "output": "logging/coverage_mlp_marginalized_%a.log",
+        "job_name": "STREAM_INFERENCE_COVERAGE_MLP_MARGINALIZED",
+        "requeue": true,
+        "parsable": true
+    },
+    "script_details": {
+        "language": "bash",
+        "dependencies": {
+            "python": true,
+            "coverage.py": true
+        },
+        "data": {
+            "model": "$BASE/out/coverage/$EXPERIMENT_BATCH_SIZE/marginalized/$EXPERIMENT_ACTIVATION/ratio-estimator-mlp-$EXPERIMENT_TASK_EPOCHS-dropout-$EXPERIMENT_DROPOUT-wd-$EXPERIMENT_WEIGHT_DECAY-batchnorm-0-*/best-model.th",
+            "data": "$DATADIR_TEST"
+        },
+        "output": {
+            "coverage": "$BASE/out/coverage/$EXPERIMENT_BATCH_SIZE/marginalized/$EXPERIMENT_ACTIVATION/coverage-$EXPERIMENT_TASK_COVERAGE-mlp-marginalized-$suffix.npy"
+        },
+        "arguments": {
+            "level": "$EXPERIMENT_TASK_COVERAGE",
+            "data": "$DATADIR_TEST",
+            "model": "$model_query",
+            "out": "$out"
+        }
+    }
+}

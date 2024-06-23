@@ -1,0 +1,49 @@
+{
+    "application": "GCHP",
+    "details": {
+        "software": [
+            "GCHP",
+            "setCommonRunSettings.sh",
+            "setRestartLink.sh",
+            "gchp.env",
+            "checkRunSettings.sh",
+            "srun",
+            "pmix",
+            "sed",
+            "awk",
+            "grep",
+            "cut",
+            "xargs",
+            "mv"
+        ],
+        "resources": {
+            "SLURM": {
+                "nodes": 2,
+                "cores_per_node": 48,
+                "memory_per_node": "180000M",
+                "partition": "huce_cascade",
+                "time_limit": "0-8:00",
+                "exclusive": true
+            },
+            "MPI": {
+                "implementation": "OpenMPI",
+                "btl": "openib"
+            },
+            "files": {
+                "input": [
+                    "GCHP.rc",
+                    "setCommonRunSettings.sh",
+                    "setRestartLink.sh",
+                    "gchp.env",
+                    "checkRunSettings.sh",
+                    "gchp",
+                    "gcchem_internal_checkpoint"
+                ],
+                "output": [
+                    "gchp.${start_str:0:13}z.log",
+                    "Restarts/GEOSChem.Restart.${new_start_str:0:13}z.c${N}.nc4"
+                ]
+            }
+        }
+    }
+}

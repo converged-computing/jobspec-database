@@ -1,0 +1,37 @@
+{
+    "application": "SLURM",
+    "details": {
+        "job_manager": "SLURM",
+        "resources": {
+            "time": "12:00:00",
+            "memory": "8G per CPU",
+            "GPUs": "1 per node",
+            "GPU_memory": "16G per GPU"
+        },
+        "environment": {
+            "modules": [
+                "StdEnv/2020",
+                "gcc/9.3.0",
+                "cuda/11.4",
+                "arrow/8.0.0",
+                "python/3.10"
+            ],
+            "virtualenv": {
+                "path": "$ENV_PATH",
+                "download": "no"
+            },
+            "packages": [
+                "pip",
+                "numpy==1.23.5",
+                "requirements.txt",
+                "/home/amirresm/files/research/summarization/adapters-0.1.2-py3-none-any.whl"
+            ]
+        },
+        "scripts": [
+            "./bash_utils/env_setup.sh",
+            "./bash_utils/capability_check.sh",
+            "${prog_root}/checkmem.sh"
+        ],
+        "python_script": "${prog_root}/run_summarization_pure.py"
+    }
+}

@@ -1,0 +1,52 @@
+{
+    "application": "SLURM",
+    "details": {
+        "resource_requirements": {
+            "partition": "gpu",
+            "nodes": 1,
+            "gpus": 1,
+            "job_name": "Eval_Bert",
+            "time": "01:00:00",
+            "mem": "32G",
+            "output": "slurm/outputs/eval_%A.out"
+        },
+        "modules": [
+            "2022",
+            "Anaconda3/2022.05",
+            "PyTorch/1.12.0-foss-2022a-CUDA-11.7.0"
+        ],
+        "environment": "pex",
+        "python_script": "run/main.py",
+        "arguments": [
+            "eval",
+            "bert",
+            "classify",
+            "--basedir",
+            "msc/msc_personasummary/",
+            "--sessions",
+            "1",
+            "2",
+            "3",
+            "4",
+            "--speaker_prefixes",
+            "<other>",
+            "<self>",
+            "--batch_size",
+            "64",
+            "--device",
+            "cuda",
+            "--loglevel",
+            "VERBOSE",
+            "--logdir",
+            "$TMPDIR/logs/",
+            "--datadir",
+            "$TMPDIR/data/",
+            "--checkpoint_dir",
+            "./checkpoints/",
+            "--output_dir",
+            "./output/",
+            "--load",
+            "trained_len3_bert"
+        ]
+    }
+}

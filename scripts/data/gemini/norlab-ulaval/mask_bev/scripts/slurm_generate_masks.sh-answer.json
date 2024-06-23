@@ -1,0 +1,37 @@
+{
+    "application": "Slurm",
+    "details": {
+        "resource_requirements": {
+            "gpu": 1,
+            "cpus": 48,
+            "time": "4 hours",
+            "job_name": "generate_masks",
+            "output": "%x-%j.out"
+        },
+        "docker_image": "mask_bev",
+        "python_version": "3.10",
+        "script": "scripts/generate_semantic_kitti_mask_cache.py",
+        "data_mounts": [
+            {
+                "source": "$(pwd)",
+                "target": "/app/"
+            },
+            {
+                "source": "$(pwd)/data/SemanticKITTI",
+                "target": "/app/data/SemanticKITTI"
+            },
+            {
+                "source": "$(pwd)/data/KITTI",
+                "target": "/app/data/KITTI"
+            },
+            {
+                "source": "$(pwd)/data/Waymo",
+                "target": "/app/data/Waymo"
+            },
+            {
+                "source": "/dev/shm",
+                "target": "/dev/shm"
+            }
+        ]
+    }
+}

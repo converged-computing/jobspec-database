@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"SLURM\",\n  \"details\": {\n    \"resource_requirements\": {\n      \"nodes\": 10,\n      \"tasks_per_node\": 1,\n      \"gpus_per_node\": 8,\n      \"partition\": \"defq\",\n      \"job_name\": \"llm-cpt\",\n      \"output_file\": \"/mnt/home/f08944064/logs/%x-%j.out\",\n      \"error_file\": \"/mnt/home/f08944064/logs/%x-%j.err\"\n    },\n    \"software_requirements\": {\n      \"accelerate\": {\n        \"config_file\": \"config.yaml\",\n        \"container_image\": \"/mnt/home/f08944064/axolotl/axolotl_latest.sqsh\",\n        \"container_mounts\": [\n          \"/mnt/home/f08944064//axolotl:/workspace/axolotl\",\n          \"/mnt/home/f08944064/.cache/huggingface:/root/.cache/huggingface\",\n          \"/mnt/:/mnt/\",\n          \"/tmp/:/tmp/\"\n        ]\n      },\n      \"conda_environment\": {\n        \"environment_name\": \"stas-xxx\",\n        \"path\": \"/path/to/start-xxx-user\"\n      },\n      \"python_script\": {\n        \"path\": \"/path/to/python_script\",\n        \"args\": [\n          \"$1\",\n          \"${2:-\"-m axolotl.cli.train\"}\"\n        ]\n      }\n    },\n    \"environment_variables\": {\n      \"HF_HUB_ENABLE_HF_TRANSFER\": \"1\",\n      \"ACCELERATE_LOG_LEVEL\": \"info\",\n      \"TRANSFORMERS_VERBOSITY\": \"info\",\n      \"NCCL_ASYNC_ERROR_HANDLING\": \"1\",\n      \"NCCL_TIMEOUT\": \"7200000\",\n      \"WANDB_PROJECT\": \"LLM-CPT\",\n      \"GPUS_PER_NODE\": \"8\",\n      \"NNODES\": \"$SLURM_NNODES\",\n      \"NUM_PROCESSES\": \"$(expr $NNODES \\* $GPUS_PER_NODE)\",\n      \"MASTER_ADDR\": \"$(scontrol show hostnames $SLURM_JOB_NODELIST | head -n 1)\",\n      \"MASTER_PORT\": \"6000\",\n      \"PROGRAM\": \"\\\n    ${2:-\"-m axolotl.cli.train\"} \\\n    $1 \\\n\",\n      \"CMD\": \"$LAUNCHER $PROGRAM\",\n      \"TMPDIR\": \"/scratch\",\n      \"NCCL_DEBUG\": \"INFO\",\n      \"CUDA_LAUNCH_BLOCKING\": \"1\"\n    }\n  }\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 2,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 1238,
+        "candidates_token_count": 668,
+        "total_token_count": 1906,
+        "cached_content_token_count": 0
+    }
+}

@@ -1,0 +1,48 @@
+{
+    "application": "COBALT",
+    "details": {
+        "resource_requirements": {
+            "queue": "default",
+            "account": "PSFMat",
+            "nodes": 128,
+            "time": "60 minutes",
+            "output": "validation"
+        },
+        "software": {
+            "git_repository": "https://github.com/QMCPACK/qmcpack.git",
+            "branch": "develop",
+            "compiler": {
+                "options": [
+                    "XL",
+                    "Clang"
+                ],
+                "toolchain_file": "config/BGQ_${compiler}_ToolChain.cmake"
+            },
+            "build_systems": [
+                "CMake",
+                "ctest"
+            ],
+            "testing_framework": "ctest",
+            "test_suite": "short",
+            "test_categories": [
+                "dmc",
+                "opt",
+                "csvmc",
+                "heg"
+            ]
+        },
+        "environment_variables": {
+            "TEST_SITE_NAME": "cetus.alcf.anl.gov",
+            "N_PROCS_BUILD": 24,
+            "N_CONCURRENT_TESTS": 1,
+            "QMCPACK_TEST_SUBMIT_NAME": "${compiler}-${sys}-Release"
+        },
+        "build_configurations": [
+            "Real-SoA",
+            "Real-Mixed-SoA",
+            "Complex-SoA",
+            "Complex-Mixed-SoA"
+        ],
+        "build_directory": "build_BGQ_$sys"
+    }
+}

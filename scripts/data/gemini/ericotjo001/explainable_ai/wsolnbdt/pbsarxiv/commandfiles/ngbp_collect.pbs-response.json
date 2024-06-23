@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"PBS\",\n  \"details\": {\n    \"resource_requirements\": {\n      \"nodes\": 1,\n      \"cpus\": 5,\n      \"gpus\": 1,\n      \"memory\": \"16gb\",\n      \"walltime\": \"24:00:00\",\n      \"queue\": \"dgx\",\n      \"project\": \"12001577\"\n    },\n    \"software_requirements\": {\n      \"modules\": [\n        \"cuda/10.1\",\n        \"singularity\"\n      ],\n      \"container_image\": \"USandbox\",\n      \"python_script\": \"/mnt/xquickruns_resnet50.py\",\n      \"script_arguments\": [\n        \"--scoremap_root=xresearchlog/resnet50_gbp_NBDT\",\n        \"--NBDT 1\",\n        \"--scoremap_mode gbp\",\n        \"--scoremap_submode input|layer1|layer2|layer3\",\n        \"--ROOT_DIR wsolevaluation-master\",\n        \"--debug_toggles 100000\"\n      ]\n    }\n  }\n}\n```\n\nThis script is running a PBS job, which is a batch processing system commonly used for high-performance computing. \n\nHere's a breakdown of the script:\n\n* **PBS Directives:** The script starts with PBS directives that specify the resources needed for the job:\n    * `select=1:ncpus=5:ngpus=1:mem=16gb`:  Requests one node with 5 CPUs, 1 GPU, and 16 GB of memory.\n    * `walltime=24:00:00`:  Specifies the maximum runtime for the job as 24 hours.\n    * `q dgx`:  Specifies the queue to submit the job to, likely a queue for GPUs on a DGX system.\n    * `-P 12001577`:  Specifies the project the job belongs to.\n    * `-joe`:  Specifies the standard error and standard output files.\n\n* **Software and Resources:**\n    * **CUDA:** The script loads the CUDA toolkit (version 10.1), which is necessary for running applications that utilize NVIDIA GPUs.\n    * **Singularity:** The script loads Singularity, a containerization platform used to package and run software in isolated environments.\n    * **Singularity Image:** The `singularity exec` commands run the specified Python script within a Singularity container named \"USandbox\".\n    * **Python Script:** The script executes `/mnt/xquickruns_resnet50.py`, likely a script for running a ResNet-50 model.\n    * **Script Arguments:**  The Python script is provided with several arguments, including:\n        * `--scoremap_root`:  Specifies the root directory for scoremaps (likely used for model evaluation).\n        * `--NBDT`:  Indicates a specific model configuration (NBDT).\n        * `--scoremap_mode`:  Specifies the scoremap mode.\n        * `--scoremap_submode`:  Specifies the layer to evaluate (input, layer1, layer2, layer3).\n        * `--ROOT_DIR`:  Specifies the root directory for the project.\n        * `--debug_toggles`:  Indicates debug settings.\n\n* **Functionality:** The script likely performs ResNet-50 model evaluation on different layers using scoremaps stored in the specified directory. The GPU resources are used to accelerate the model inference process. \n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 535,
+        "candidates_token_count": 792,
+        "total_token_count": 1327,
+        "cached_content_token_count": 0
+    }
+}

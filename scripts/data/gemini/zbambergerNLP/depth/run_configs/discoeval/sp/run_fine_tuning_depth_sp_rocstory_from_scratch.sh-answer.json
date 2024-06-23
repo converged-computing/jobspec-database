@@ -1,0 +1,58 @@
+{
+    "application": "SLURM",
+    "details": {
+        "job_name": "principled-pre-training",
+        "nodes": 1,
+        "gpus": 2,
+        "cpus_per_task": 32,
+        "account": "nlp",
+        "partition": "nlp",
+        "nodes_list": "nlp-ada-2,nlp-a40-1",
+        "output": "fine_tuning_runs/slurm_%N_%j_out.txt",
+        "error": "fine_tuning_runs/slurm_%N_%j_err.txt",
+        "mail_type": "fail",
+        "mail_user": "zachary@campus.technion.ac.il",
+        "software": [
+            "nvidia-smi",
+            "deepspeed",
+            "train_encoder_decoder.py"
+        ],
+        "environment": {
+            "virtual_environment": ".depth/bin/activate",
+            "DS_SKIP_CUDA_CHECK": "1",
+            "OMP_NUM_THREADS": "$SLURM_CPUS_PER_TASK"
+        },
+        "model": "DEPTH",
+        "data": {
+            "input_length": 512,
+            "target_length": 32,
+            "num_workers": 32,
+            "data_collator": "depth",
+            "benchmark_constants": "OfekGlick/DiscoEval",
+            "benchmark_dataset": "SProcstory",
+            "streaming": false
+        },
+        "optimizer": {
+            "name": "adamw_torch",
+            "base_lr": "1e-5",
+            "batch_size": 64,
+            "total_steps": "1_500",
+            "warmup_steps": 100,
+            "grad_acc": 1,
+            "lr_scheduler": "linear"
+        },
+        "checkpoint": {
+            "checkpoint_path": "checkpoints/pre_train/from_scratch/depth/c4_en/lr_0_0001_linear_bsz_200_shuffle_p_0_5/2024-03-11_18-50/checkpoint-1000000",
+            "resume": false,
+            "every_steps": "4_000",
+            "save_total_limit": 3
+        },
+        "logging": {
+            "every_steps": 10,
+            "wandb": true
+        },
+        "evaluation": {
+            "every_steps": 100
+        }
+    }
+}

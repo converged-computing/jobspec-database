@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"SLURM\",\n  \"details\": {\n    \"scheduler\": \"SLURM\",\n    \"job_name\": \"hypre@2.23.0\",\n    \"account\": \"use300\",\n    \"reservation\": \"rocky8u7_testing\",\n    \"partition\": \"ind-shared\",\n    \"nodes\": 1,\n    \"tasks_per_node\": 1,\n    \"cpus_per_task\": 16,\n    \"memory\": \"32G\",\n    \"time\": \"00:30:00\",\n    \"output_file\": \"%x.o%j.%N\",\n    \"local_scratch_dir\": \"/scratch/${USER}/job_${SLURM_JOB_ID}\",\n    \"tmpdir\": \"${LOCAL_SCRATCH_DIR}\",\n    \"system_name\": \"expanse\",\n    \"spack_version\": \"0.17.3\",\n    \"spack_instance_name\": \"cpu\",\n    \"spack_instance_version\": \"b\",\n    \"spack_instance_dir\": \"/cm/shared/apps/spack/${SPACK_VERSION}/${SPACK_INSTANCE_NAME}/${SPACK_INSTANCE_VERSION}\",\n    \"spack_package\": \"hypre@2.23.0\",\n    \"spack_compiler\": \"gcc@10.2.0\",\n    \"spack_variants\": \"~complex ~cuda ~debug +fortran ~int64 ~internal-superlu ~mixedint +mpi ~openmp +shared +superlu-dist ~unified-memory\",\n    \"spack_dependencies\": \"^openblas@0.3.18/$(spack find --format '{hash:7}' openblas@0.3.18 % ${SPACK_COMPILER} ~ilp64 threads=none) ^superlu-dist@7.1.1/$(spack find --format '{hash:7}' superlu-dist@7.1.1 % ${SPACK_COMPILER} ^mvapich2@2.3.7\",\n    \"spack_spec\": \"${SPACK_PACKAGE} % ${SPACK_COMPILER} ${SPACK_VARIANTS} ${SPACK_DEPENDENCIES}\"\n  }\n}\n```\n\nThis script uses the SLURM workload manager to run a Spack installation of the Hypre library with specific compiler and variant options.\n\n**Here is a breakdown of the script's components:**\n\n* **SLURM:** The script begins with SLURM directives that specify the job name, account, partition, resources (nodes, tasks, CPUs, memory, time), and output file.\n* **Environment Variables:** The script defines environment variables for time, scratch directory, system name, Spack version and instance, the SLURM job script and its MD5 sum, and the scheduler module.\n* **Module Loading:** It loads the SLURM and Spack modules, ensuring the necessary software is available.\n* **Spack Configuration:** It defines the Spack package, compiler, variants, and dependencies.\n* **Spack Installation:** The script uses Spack to install the specified Hypre package with the configured options, including the `spack spec` command for concretization and `spack install` for actual installation.\n* **Dependency Management:** It uses `sbatch` to submit a dependent job (`valgrind@3.17.0.sh`) after the Hypre installation completes.\n\n**Overall, the script leverages SLURM to manage resources and Spack to install a specific version of the Hypre library with customized settings. It also demonstrates how to manage dependencies between jobs within a workflow.** \n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 958,
+        "candidates_token_count": 817,
+        "total_token_count": 1775,
+        "cached_content_token_count": 0
+    }
+}

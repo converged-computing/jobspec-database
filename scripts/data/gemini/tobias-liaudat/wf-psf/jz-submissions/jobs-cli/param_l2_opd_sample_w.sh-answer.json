@@ -1,0 +1,42 @@
+{
+    "application": "Slurm",
+    "details": {
+        "job_name": "param_l2_sample_w",
+        "partition": "gpu_p2",
+        "tasks": 1,
+        "tasks_per_node": 1,
+        "gpus_per_node": 1,
+        "cpus_per_task": 10,
+        "compute_nodes": "v100-32g",
+        "hyperthreading": "disabled",
+        "max_runtime": "20:00:00",
+        "output_file": "param_l2_sample_w%j.out",
+        "error_file": "param_l2_sample_w%j.err",
+        "project": "xdy@gpu",
+        "queue": "qos_gpu-dev",
+        "array_tasks": "0-3",
+        "modules": [
+            "tensorflow-gpu/py3/2.4.1"
+        ],
+        "python_script": "./../../long-runs/train_eval_plot_script_click.py",
+        "script_arguments": [
+            "--model param",
+            "--n_zernikes 45",
+            "--saved_model_type checkpoint",
+            "--saved_cycle cycle2",
+            "--total_cycles 2",
+            "--use_sample_weights True",
+            "--l2_param 5e-12",
+            "--base_id_name _l2_opd_sample_w_",
+            "--suffix_id_name 2c",
+            "--suffix_id_name 5c",
+            "--suffix_id_name 1k",
+            "--suffix_id_name 2k",
+            "--star_numbers 200",
+            "--star_numbers 500",
+            "--star_numbers 1000",
+            "--star_numbers 2000",
+            "--plots_folder plots/param_l2_opd_sample_w/"
+        ]
+    }
+}

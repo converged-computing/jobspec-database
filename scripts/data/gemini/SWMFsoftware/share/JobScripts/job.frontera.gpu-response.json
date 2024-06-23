@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"SBATCH\",\n  \"details\": {\n    \"language\": \"Bash\",\n    \"purpose\": \"Run SWMF model on Frontera supercomputer\",\n    \"resource requirements\": {\n      \"nodes\": 64,\n      \"tasks_per_node\": 56,\n      \"walltime\": \"24:00:00\",\n      \"queue\": \"normal\",\n      \"project\": \"BCS21001\",\n      \"compiler\": \"nvhpc 20.7\",\n      \"mpi\": \"nvhpc's built-in mpi\",\n      \"post-processing\": \"PostProc.pl\"\n    },\n    \"environment variables\": [\n      \"I_MPI_ADJUST_REDUCE=1\",\n      \"UCX_LOG_LEVEL=ERROR\",\n      \"OPAL_PREFIX=/scratch1/projects/compilers/nvhpc20v7/Linux_x86_64/20.7/comm_libs/mpi\"\n    ],\n    \"commands\": [\n      \"mpirun -n 1 ./SWMF.exe  > runlog_`date +%y%m%d%H%M`\",\n      \"ibrun -n 1 ./PostProc.pl -r=300 -n=10 >& PostProc.log &\",\n      \"mpirun -n 3528 -o 56 ./SWMF.exe > runlog_`date +%y%m%d%H%M`\"\n    ]\n  }\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 2,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 1135,
+        "candidates_token_count": 356,
+        "total_token_count": 1491,
+        "cached_content_token_count": 0
+    }
+}

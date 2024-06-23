@@ -1,0 +1,40 @@
+{
+    "application": "PBS",
+    "details": {
+        "software": [
+            "MATLAB",
+            "Perl",
+            "Bash",
+            "Qstat"
+        ],
+        "resources": {
+            "walltime": "48:00:00",
+            "nodes": "1",
+            "ppn": "16",
+            "memory": "22gb",
+            "vmem": "22gb"
+        },
+        "environment": {
+            "MATLAB_PREFDIR": "/tmp/emptydir",
+            "MCR_CACHE_ROOT": "/tmp/mcr_cache_$PBS_JOBID"
+        },
+        "dependencies": {
+            "afterany": "<TMPL_VAR NAME=afterany>"
+        },
+        "permissions": {
+            "owner": "<TMPL_VAR NAME=linuxUser>",
+            "group": "<TMPL_VAR NAME=linuxUser>",
+            "mode": "775"
+        },
+        "logging": {
+            "stdout": "<TMPL_VAR NAME=outDir>/<TMPL_VAR NAME=conditionSetTimeStamp>/out.analysis-<TMPL_VAR NAME=iJob>.log",
+            "stderr": "<TMPL_VAR NAME=outDir>/<TMPL_VAR NAME=conditionSetTimeStamp>/err.analysis-<TMPL_VAR NAME=iJob>.log"
+        },
+        "email": {
+            "address": "<TMPL_VAR NAME=emailAddress>",
+            "mode": "a"
+        },
+        "jobname": "runAnalysis-<TMPL_VAR NAME=conditionSetTimeStamp>-<TMPL_VAR NAME=iJob>",
+        "queue": "<TMPL_VAR NAME=linuxUser>:<TMPL_VAR NAME=linuxUser>"
+    }
+}

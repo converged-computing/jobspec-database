@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"SLURM\",\n  \"details\": {\n    \"job_name\": \"wavprompt\",\n    \"output_file\": \"logs/wavprompt_%j.out\",\n    \"error_file\": \"logs/wavprompt_%j.err\",\n    \"email\": \"heting@mit.edu\",\n    \"email_type\": \"ALL\",\n    \"gpu_count\": 4,\n    \"gpus_per_node\": 4,\n    \"nodes\": 1,\n    \"tasks_per_node\": 4,\n    \"time\": \"24:00:00\",\n    \"qos\": \"sched_level_2\",\n    \"cpus_per_task\": 16,\n    \"memory\": 0,\n    \"conda_env\": \"wavprompt\",\n    \"conda_root\": \"/nobackup/users/$(whoami)/espnet/tools/conda\",\n    \"horovod_gpu_allreduce\": \"MPI\",\n    \"horovod_gpu_allgather\": \"MPI\",\n    \"horovod_gpu_broadcast\": \"MPI\",\n    \"nccl_debug\": \"DEBUG\",\n    \"fairseq_root\": \"/home/heting/workplace/wavprompt/fairseq\",\n    \"run_script\": \"run.sh\",\n    \"manifest_path\": \"$(pwd)/manifest/librispeech100\",\n    \"config_name\": \"asr_pretraining\",\n    \"save_dir\": \"$(pwd)/outputs/wavpromptlsp100rf${rf}ntok${n_token}\",\n    \"reduction_factors\": [2, 4, 8, 16]\n  }\n}\n```\n\n**Explanation of Script:**\n\nThis script is designed to run a deep learning model using the Fairseq library on a cluster managed by SLURM (Simple Linux Utility for Resource Management). The script utilizes the following tools and technologies:\n\n* **SLURM:**  The script utilizes SLURM directives (e.g., `#SBATCH`) to specify resource requirements for the job. This includes requesting GPUs, CPU cores, memory, and runtime.\n* **Conda:**  It sets up a virtual environment for the project using conda, ensuring that the correct Python packages and their dependencies are available.\n* **Horovod:** The script uses Horovod, a distributed training framework, to efficiently utilize multiple GPUs for training. It sets environment variables related to Horovod, using MPI for communication between nodes.\n* **Fairseq:** The actual deep learning model training is executed using the Fairseq library, with specific options for training an ASR (Automatic Speech Recognition) model on the LibriSpeech dataset.\n\n**Script Breakdown:**\n\n* **Header:** The script starts with SLURM directives, specifying job parameters, such as name, output/error logs, email notification settings, resource requirements (GPUs, nodes, time, memory), and quality of service (QoS).\n* **Environment Setup:** It sets up the user's Python environment using conda and activates the required virtual environment (\"wavprompt\").\n* **SLURM Node Information:** The script obtains information about the SLURM nodes involved in the job, creating a \"nodelist\" file.\n* **Horovod Configuration:** It configures Horovod to use MPI for communication between GPUs.\n* **Training Loop:** The script launches a set of training runs with different hyperparameter values (reduction factor, number of tokens, etc.). Each run is executed on a single GPU with dedicated resources using `srun`.\n* **Job Completion:** The script waits for all training jobs to finish and prints the completion time.\n\n**Output Format:**\n\nThe output is in raw JSON format, containing the application (SLURM) and a detailed breakdown of the software and resource requirements used in the script.\n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 837,
+        "candidates_token_count": 838,
+        "total_token_count": 1675,
+        "cached_content_token_count": 0
+    }
+}

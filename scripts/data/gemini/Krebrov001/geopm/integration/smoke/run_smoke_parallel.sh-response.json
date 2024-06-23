@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "## Smoke Test Runner\n\n```json\n{\n  \"application\": \"Smoke Test Runner\",\n  \"description\": \"This script is designed to run a suite of tests for GEOPM, a performance optimization tool. It tests various applications with different experiment types, like power sweeps, frequency sweeps, and barrier frequency sweeps.  The script utilizes Slurm for job submission and manages the test results.\",\n  \"software_requirements\": [\n    \"GEOPM (source code)\",\n    \"Slurm\",\n    \"Python\",\n    \"Bash\"\n  ],\n  \"resource_requirements\": [\n    \"Access to a cluster with Slurm job scheduler\",\n    \"Sufficient CPU cores and memory for each application\",\n    \"Access to the GEOPM source code\"\n  ]\n}\n```\n\n**Explanation of the script:**\n\n1. **Setup and Environment:** The script initializes variables that define the applications to be tested, experiment types, and output file name. It also sources an environment file (`smoke_env.sh`) which is likely responsible for setting up GEOPM-related environment variables.\n2. **Result Logging Functions:** The script defines three functions (`pass_result`, `fail_result`, `skip_result`) for logging the results of each test case. These functions append a line to the log file (`smoke_test_run_results.log`) indicating the application, experiment type, Slurm job ID, and result (PASS/FAIL/SKIP).\n3. **Run Script Name Generation:** The `run_script_name` function generates the name of the Python script used to run a specific experiment type for a given application. This script is located in the `integration/experiment` directory within the GEOPM source code.\n4. **Slurm Batch Script Generation:** The `gen_sbatch` function creates a Slurm batch script (`sbatch`) to launch the experiment. The script specifies the number of nodes, job name, runtime, queue, and additional parameters based on the chosen experiment type. It also calls the relevant run script, passing necessary arguments like node count and output directory.\n5. **Test Case Execution:** The `try_test_case` function checks for the existence of the corresponding run script. If found, it generates the Slurm batch script and submits it to the cluster. If not, it skips the test case and logs it as \"SKIP\" in the log file.\n6. **Main Loop:** The script iterates through all defined experiment types and applications, calling `try_test_case` for each combination. This executes each test case in a separate Slurm job, allowing for parallel execution.\n\n**Key components and their roles:**\n\n* **`smoke_env.sh`:**  This script is responsible for setting up environment variables necessary for GEOPM, like the location of the source code (`GEOPM_SOURCE`).\n* **`run_script_name` function:** This function is responsible for dynamically determining the location of the python script used to run the experiment for the given application.\n* **`gen_sbatch` function:**  Generates the Slurm script for each test case, setting up the environment, job name, runtime, and other Slurm parameters.\n* **`try_test_case` function:**  Handles the actual execution of each test case. It determines the correct run script, creates the Slurm batch script, submits it to the cluster, and logs the result.\n\nThis script serves as a framework for running various performance tests within GEOPM. The functionality can be expanded to include more experiment types, applications, and reporting features. \n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 1924,
+        "candidates_token_count": 760,
+        "total_token_count": 2684,
+        "cached_content_token_count": 0
+    }
+}

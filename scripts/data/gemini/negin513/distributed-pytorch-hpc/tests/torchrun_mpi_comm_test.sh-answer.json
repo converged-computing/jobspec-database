@@ -1,0 +1,51 @@
+{
+    "application": "Torchrun",
+    "details": {
+        "environment": {
+            "modules": [
+                "nvhpc",
+                "cray-mpich",
+                "conda",
+                "cuda/11.7.0",
+                "evidential"
+            ],
+            "conda_envs": [
+                "/glade/work/schreck/conda-envs/holodec",
+                "torch_cuda"
+            ],
+            "path": "/glade/u/home/negins/bin",
+            "scratch": "/glade/derecho/scratch/$USER/",
+            "log_level": "INFO",
+            "nccl_debug": "INFO",
+            "mpich_gpu_managed_memory_support_enabled": 1,
+            "mpich_ofi_nic_policy": "GPU",
+            "cuda_visible_devices": "0,1,2,3,4,5,6,7"
+        },
+        "resource_requirements": {
+            "pbs_account": "SCSG0001",
+            "pbs_job_name": "htorchrun_comm",
+            "pbs_walltime": "01:00:00",
+            "pbs_nodes": "2",
+            "pbs_mpi_processes_per_node": 1,
+            "pbs_cpus_per_node": 64,
+            "pbs_gpus_per_node": 4,
+            "pbs_memory_per_node": "480GB",
+            "pbs_queue": "main",
+            "pbs_output_options": {
+                "join_stderr_stdout": true,
+                "keep_on_error": true
+            },
+            "mpiexec_options": {
+                "num_processes": 2,
+                "processes_per_node": 1,
+                "cpu_binding": "none"
+            },
+            "torchrun_options": {
+                "num_nodes": 2,
+                "processes_per_node": 4,
+                "rendezvous_backend": "c10d",
+                "rendezvous_endpoint": "$head_node_ip"
+            }
+        }
+    }
+}

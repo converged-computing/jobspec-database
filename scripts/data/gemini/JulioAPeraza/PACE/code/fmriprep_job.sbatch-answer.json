@@ -1,0 +1,42 @@
+{
+    "application": "fmriprep",
+    "software": [
+        "singularity",
+        "freesurfer",
+        "fmriprep"
+    ],
+    "resources": {
+        "nodes": 1,
+        "tasks": 1,
+        "cpus": 8,
+        "memory": "16gb",
+        "partition": "bluemoon",
+        "runtime": "30:00:00"
+    },
+    "environment_variables": [
+        "DATA",
+        "HOST_DIR",
+        "PROJECT",
+        "DSETS_DIR",
+        "BIDS_DIR",
+        "IMG_DIR",
+        "SCRATCH_DIR",
+        "DERIVS_DIR",
+        "TEMPLATEFLOW_HOST_HOME",
+        "FMRIPREP_HOST_CACHE",
+        "FS_LICENSE",
+        "SINGULARITYENV_TEMPLATEFLOW_HOME"
+    ],
+    "bind_mounts": [
+        "/data",
+        "/out",
+        "/work",
+        "/freesurfer"
+    ],
+    "input_data": "participants.tsv",
+    "output_data": [
+        "log/%x/ALC134/%x-ALC134_%A-%a.out",
+        "log/%x/ALC134/%x-ALC134_%A-%a.err",
+        "${BIDS_DIR}/code/log/${SLURM_JOB_NAME}.${SLURM_ARRAY_JOB_ID}.tsv"
+    ]
+}

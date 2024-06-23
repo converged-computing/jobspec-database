@@ -1,0 +1,33 @@
+{
+    "application": "PBS",
+    "details": {
+        "job_name": "hs-per-ss",
+        "nodes": "1",
+        "cores_per_node": "3",
+        "walltime": "48:00:00",
+        "queue": "qfermi",
+        "email": "adc@geo.au.dk",
+        "email_options": "abe",
+        "software": {
+            "gcc": "4.6.4",
+            "cuda": "5.5.22",
+            "python": "2.7.6",
+            "python_modules": [
+                "Manually installed Python modules"
+            ]
+        },
+        "resources": {
+            "workdir": "/home/adc/code/sphere",
+            "scratch_dir": "/scratch/$PBS_JOBID"
+        },
+        "commands": [
+            "nvidia-smi",
+            "cmake . && make",
+            "python continue_sim.py halfshear-darcy-sigma0=20000.0-k_c=3.5e-13-mu=1.797e-06-ss=10000.0-shear 1 0 &",
+            "python continue_sim.py halfshear-darcy-sigma0=20000.0-k_c=3.5e-13-mu=1.797e-06-ss=12500.0-shear 1 1 &",
+            "python continue_sim.py halfshear-darcy-sigma0=20000.0-k_c=3.5e-13-mu=1.797e-06-ss=15000.0-shear 1 2 &",
+            "wait",
+            "cp $WORKDIR/output/* $ORIGDIR/output/"
+        ]
+    }
+}

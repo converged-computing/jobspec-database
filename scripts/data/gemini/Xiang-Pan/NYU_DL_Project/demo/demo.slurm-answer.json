@@ -1,0 +1,44 @@
+{
+    "application": "Slurm",
+    "details": {
+        "resource_manager": "Slurm",
+        "account": "csci_ga_2572_2022sp_00",
+        "partition_options": [
+            "n1s8-v100-1",
+            "n1s16-v100-2",
+            "n1c24m128-v100-4"
+        ],
+        "gpu_options": [
+            {
+                "partition": "n1s8-v100-1",
+                "gpu_count": 1,
+                "cpu_count": 8
+            },
+            {
+                "partition": "n1s16-v100-2",
+                "gpu_count": 2,
+                "cpu_count": 16
+            },
+            {
+                "partition": "n1c24m128-v100-4",
+                "gpu_count": 4,
+                "cpu_count": 24
+            }
+        ],
+        "time_limit": "12:00:00",
+        "output_file": "demo_%j.out",
+        "error_file": "demo_%j.err",
+        "exclusive": true,
+        "requeue": true,
+        "container_runtime": "Singularity",
+        "container_image": "/share/apps/images/cuda11.3.0-cudnn8-devel-ubuntu20.04.sif",
+        "container_bind_mounts": [
+            "/scratch",
+            "/scratch/DL22SP/conda.ext3:ro",
+            "/tmp/unlabeled_224.sqsh",
+            "/tmp/labeled.sqsh"
+        ],
+        "container_environment_setup": "source /ext3/env.sh\nconda activate",
+        "executable": "python demo.py"
+    }
+}

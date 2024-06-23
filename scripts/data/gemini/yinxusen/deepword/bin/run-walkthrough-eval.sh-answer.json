@@ -1,0 +1,43 @@
+{
+    "application": "SLURM",
+    "details": {
+        "resource_requirements": {
+            "gpu": "2 k80",
+            "tasks": 4,
+            "time": "100:00:00",
+            "partition": "isi"
+        },
+        "environment_setup": {
+            "pyenv_root": "$HOME/local/lib/pyenv",
+            "virtualenv": "deepdnd-drrn",
+            "tensorflow_init": "$HOME/local/etc/init_tensorflow.sh"
+        },
+        "script_execution": {
+            "command": "./sbin/run.sh python/deepword/main.py",
+            "arguments": [
+                "--model-dir",
+                "$MODEL_DIR",
+                "--eval-episode",
+                "1",
+                "--policy-to-action",
+                "eps",
+                "--policy-eps",
+                "0",
+                "--walkthrough-guided-exploration",
+                "--prob-complete-walkthrough",
+                "1",
+                "--always-compute-policy",
+                "--agent-clazz",
+                "BaseAgent",
+                "--append-objective-to-tj",
+                "eval-dqn",
+                "--eval-mode",
+                "eval",
+                "--game-path",
+                "~/git-store/textworld-competition-games/tw_games-train/",
+                "--f-games",
+                "~/git-store/textworld-competition-games/train-th-single-game.txt"
+            ]
+        }
+    }
+}

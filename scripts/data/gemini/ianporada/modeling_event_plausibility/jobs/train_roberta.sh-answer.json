@@ -1,0 +1,48 @@
+{
+    "application": "pytorch-lightning",
+    "details": {
+        "environment": {
+            "modules": [
+                "StdEnv/2020",
+                "gcc/9.3.0",
+                "cuda/11.7",
+                "arrow",
+                "python/3.9",
+                "scipy-stack"
+            ],
+            "virtualenv": {
+                "location": "$SLURM_TMPDIR/env"
+            },
+            "packages": [
+                "torch",
+                "scikit_learn",
+                "datasets",
+                "transformers",
+                "pytorch-lightning",
+                "click"
+            ]
+        },
+        "resources": {
+            "cpu": 10,
+            "gpu": 1,
+            "memory": "45000MB",
+            "time": "24:00:00"
+        },
+        "directories": {
+            "scratch": {
+                "logging": "$SCRATCH/logging/requirements/$SLURM_JOB_ID",
+                "modeling": "$SCRATCH/modeling_event_plausibility/data",
+                "output": "$SCRATCH/output/",
+                "cache": "$SCRATCH/cache/data/"
+            },
+            "working": "~/modeling_event_plausibility/"
+        },
+        "script_arguments": {
+            "model_path": "$MODEL_PATH",
+            "data_dir": "$DATA_DIR",
+            "output_dir": "$OUTPUT_DIR",
+            "cache_dir": "$CACHE_DIR",
+            "model_type": "roberta"
+        }
+    }
+}

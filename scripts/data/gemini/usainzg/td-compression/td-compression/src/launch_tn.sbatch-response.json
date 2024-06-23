@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"SLURM\",\n  \"details\": {\n    \"job_name\": \"tdcomp\",\n    \"output_file\": \"out/M_%A_%a.out\",\n    \"error_file\": \"out/M_%A_%a.err\",\n    \"tasks\": 1,\n    \"cpus_per_task\": 4,\n    \"memory_per_cpu\": \"4G\",\n    \"partition\": \"KAT\",\n    \"gpus\": 1,\n    \"array_tasks\": 81,\n    \"wandb_api_key\": \"b36e9889bae82cb5e6c3d8cb86e29df222fac76d\",\n    \"wandb_silent\": true,\n    \"wandb_service_wait\": 300,\n    \"python_script\": \"run.py\",\n    \"model_options\": [\n      \"resnet18\",\n      \"resnet34\",\n      \"resnet50\"\n    ],\n    \"decomp_options\": [\n      \"cp\",\n      \"tucker\",\n      \"tt\"\n    ],\n    \"ratio_options\": [\n      \"0.1\",\n      \"0.2\",\n      \"0.3\",\n      \"0.4\",\n      \"0.5\",\n      \"0.6\",\n      \"0.7\",\n      \"0.8\",\n      \"0.9\"\n    ]\n  }\n}\n```\n\n**Explanation:**\n\n* **SLURM:** The script uses the `#!/bin/bash` shebang, `sbatch` commands, and `SLURM_ARRAY_TASK_ID` environment variable, indicating that it's a SLURM script. SLURM (Simple Linux Utility for Resource Management) is a workload manager used for scheduling and managing jobs on high-performance computing clusters.\n\n* **Details:**\n    * **Job Name:** `tdcomp`\n    * **Output and Error Files:** `out/M_%A_%a.out` and `out/M_%A_%a.err` respectively. \n    * **Resources:** The script requests 1 task, 4 CPUs per task, 4GB memory per CPU, a GPU, and runs on the `KAT` partition.\n    * **Array Job:**  The `--array=1-81` directive creates an array job, submitting 81 instances of the script.\n    * **Weights & Biases:** The script configures Weights & Biases (W&B) logging with an API key and silent mode.\n    * **Python Script:** The script executes `run.py` with various options based on the loop and the array task ID.\n    * **Options:** The script defines a set of options for the `run.py` script, including model architecture (`resnet18`, `resnet34`, `resnet50`), decomposition method (`cp`, `tucker`, `tt`), and the rank ratio (`0.1` to `0.9`).\n\nIn essence, this script submits an array of 81 jobs to a SLURM cluster, each job running the Python script `run.py` with specific model, decomposition, and rank settings. W&B is used for tracking and logging the experiments. \n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 422,
+        "candidates_token_count": 737,
+        "total_token_count": 1159,
+        "cached_content_token_count": 0
+    }
+}

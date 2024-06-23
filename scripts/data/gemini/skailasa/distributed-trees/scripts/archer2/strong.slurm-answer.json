@@ -1,0 +1,32 @@
+{
+    "application": "SLURM",
+    "details": {
+        "resource_requirements": {
+            "partition": "standard",
+            "qos": "standard",
+            "account": "e681",
+            "hint": "nomultithread",
+            "distribution": "block:block",
+            "time": "00:30:00",
+            "nodes": 1
+        },
+        "software_dependencies": {
+            "compiler": "AMD aocc",
+            "MPI": "MPICH 8.0.16 OFI GNU 9.1",
+            "pkg_config": "/opt/cray/pe/mpich/8.0.16/ofi/gnu/9.1/lib/pkgconfig"
+        },
+        "environment_variables": {
+            "WORK": "/work/e681/e681/skailasa",
+            "TEST": "/work/e681/e681/skailasa/distributed-trees/strong",
+            "SCRATCH": "/work/e681/e681/skailasa/distributed-trees/strong/strong_${SLURM_JOBID}",
+            "NCRIT": 150,
+            "DEPTH": 10,
+            "OUTPUT": "/work/e681/e681/skailasa/distributed-trees/strong/strong_${SLURM_JOBID}/strong_scaling_${SLURM_JOBID}.csv"
+        },
+        "execution_flow": {
+            "create_scratch_directory": "mkdir -p ${SCRATCH}",
+            "change_directory": "cd ${SCRATCH}",
+            "run_jobs": "for i in ${!n_tasks[@]}; do srun --ntasks=${n_tasks[$i]} --ntasks-per-core=1 --nodes=1 ${TEST}/strong >> ${OUTPUT}; done"
+        }
+    }
+}

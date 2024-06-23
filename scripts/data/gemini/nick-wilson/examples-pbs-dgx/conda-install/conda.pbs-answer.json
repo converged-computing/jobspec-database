@@ -1,0 +1,33 @@
+{
+    "application": "PBS",
+    "details": {
+        "resource_requirements": {
+            "nodes": 1,
+            "cpus": 5,
+            "gpus": 1,
+            "walltime": "2:00:00"
+        },
+        "queue": "dgx",
+        "project_code": "99999999",
+        "job_name": "conda-install",
+        "output_files": [
+            "conda-install.o$PBS_JOBID",
+            "conda-install.e$PBS_JOBID"
+        ],
+        "docker_image": "nvcr.io/nvidia/pytorch:latest",
+        "docker_options": [
+            "--ipc=host",
+            "--rm",
+            "-i",
+            "--shm-size=1g",
+            "--ulimit memlock=-1",
+            "--ulimit stack=67108864"
+        ],
+        "conda_environment": {
+            "location": "/workspace/conda-env",
+            "packages": [
+                "opencv"
+            ]
+        }
+    }
+}

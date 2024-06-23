@@ -1,0 +1,100 @@
+{
+    "application": "MicrobeDB",
+    "details": {
+        "description": "Script for rebuilding/updating MicrobeDB from scratch",
+        "functionality": [
+            "Fetches complete bacterial and archaeal genomes from NCBI Entrez",
+            "Includes all available metadata",
+            "Uses SLURM sbatch for work submission (can be run locally by setting the LOCAL environment variable)",
+            "Allows for optional environment variable configuration"
+        ],
+        "environment_variables": [
+            {
+                "name": "QUERY",
+                "description": "Override the Entrez query for fetching the list of assemblies"
+            },
+            {
+                "name": "OUTDIR",
+                "description": "Override the staging folder where the data will be generated"
+            },
+            {
+                "name": "DBPATH",
+                "description": "Override the path to where the SQLite database will be generated"
+            },
+            {
+                "name": "REPOPATH",
+                "description": "Override the path to where the current CVMFS MicrobeDB repo is mounted"
+            },
+            {
+                "name": "NCBI_API_KEY",
+                "description": "Override the API key used to access NCBI Entrez"
+            },
+            {
+                "name": "STEP",
+                "description": "Override the number of assemblies processed per job"
+            },
+            {
+                "name": "COUNT",
+                "description": "Limit the script to the first COUNT number of entries returned by Entrez"
+            },
+            {
+                "name": "KEYPATH",
+                "description": "Path to stratum0 ssh key on Cedar"
+            },
+            {
+                "name": "STRATUM0",
+                "description": "ssh target including user name to access stratum0"
+            },
+            {
+                "name": "EDIRECT",
+                "description": "Path to Entrez edirect folder"
+            },
+            {
+                "name": "NOCOMMIT",
+                "description": "Skip copying to stratum0 and committing"
+            },
+            {
+                "name": "SKIP_RSYNC",
+                "description": "Skip syncing data"
+            },
+            {
+                "name": "KEEP_OUTDIR",
+                "description": "Do not delete OUTDIR upon completion"
+            },
+            {
+                "name": "CLEAN",
+                "description": "If non-empty, resync entire database without copying forward from REPOPATH"
+            },
+            {
+                "name": "LOCAL",
+                "description": "Run entire update locally rather than submitting to SLURM"
+            },
+            {
+                "name": "LOCAL_FETCH",
+                "description": "Run rsync locally rather than including it in SLURM tasks"
+            }
+        ],
+        "software_requirements": [
+            "bash",
+            "sbatch",
+            "python 3.9.6",
+            "sqlite 3.36",
+            "biopython",
+            "xq",
+            "gawk",
+            "jq",
+            "rsync",
+            "parallel",
+            "sqlite3",
+            "find",
+            "ssh",
+            "gopass"
+        ],
+        "resource_requirements": [
+            "cvmfs",
+            "NCBI Entrez",
+            "stratum-0",
+            "SLURM (if not running locally)"
+        ]
+    }
+}

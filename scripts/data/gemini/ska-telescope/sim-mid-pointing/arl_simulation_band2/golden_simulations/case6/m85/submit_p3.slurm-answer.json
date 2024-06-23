@@ -1,0 +1,24 @@
+{
+    "application": "dask",
+    "details": {
+        "software": [
+            "dask",
+            "python",
+            "ssh"
+        ],
+        "resource_requirements": {
+            "nodes": 8,
+            "tasks": 129,
+            "memory": "16GB per worker",
+            "time": "12 hours",
+            "scheduler_port": 8786,
+            "local_directory": "/mnt/storage-ssd/tim/dask-workspace/<host>"
+        },
+        "environment": {
+            "module_purging": true,
+            "python_path": "$PYTHONPATH:$ARL",
+            "dask_scheduler": "${scheduler}:8786"
+        },
+        "execution_command": "python  ../../../../pointing_simulation_distributed.py --context s3sky --rmax 1e5 --flux_limit 0.3\n--show True \n--seed 18051955  --pbtype MID_GRASP --memory 32  --integration_time 10 --use_agg True --time_series wind --time_chunk \n1800 --reference_pointing True --shared_directory ../../../../shared  --declination -85 | tee pointing_simulation\n.log"
+    }
+}

@@ -1,0 +1,41 @@
+{
+    "application": "Gpipe",
+    "details": {
+        "software": [
+            "Python",
+            "Gpipe",
+            "ResNet50"
+        ],
+        "resources": {
+            "compute": {
+                "nodes": 1,
+                "cores": 6,
+                "gpu": {
+                    "type": "GTX1080ti",
+                    "count": 2
+                }
+            },
+            "storage": {
+                "data": {
+                    "source": "${TEACHER_DIR}/JHL_data/MNIST.tar.gz",
+                    "destination": "$TMPDIR"
+                },
+                "output": {
+                    "prefix": "gpipe-answer-",
+                    "extension": ".out"
+                }
+            },
+            "environment": {
+                "source": "${TEACHER_DIR}/JHL_hooks/env"
+            },
+            "reservation": "prace_ml_course"
+        },
+        "parameters": {
+            "batchsize": 512,
+            "num_microbatches": 6,
+            "balance_by": "time",
+            "datadir": "$TMPDIR",
+            "arch": "resnet50"
+        }
+    }
+}

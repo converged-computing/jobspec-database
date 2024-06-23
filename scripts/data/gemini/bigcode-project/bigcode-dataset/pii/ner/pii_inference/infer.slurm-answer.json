@@ -1,0 +1,37 @@
+{
+    "application": "SLURM",
+    "details": {
+        "environment": {
+            "conda_env": "trl",
+            "cuda_home": "/usr/local/cuda-11.6",
+            "ld_preload": "/usr/local/cuda-11.6/lib/libnccl.so",
+            "ld_library_path": "/usr/local/cuda-11.6/efa/lib:/usr/local/cuda-11.6/lib:/usr/local/cuda-11.6/lib64:$LD_LIBRARY_PATH",
+            "hf_datasets_cache": "/fsx/leandro/.cache",
+            "path_to_log": "/fsx/leandro/logs/bigcode",
+            "log_path": "/fsx/leandro/logs/bigcode/main_log.txt",
+            "master_addr": "SLURM_JOB_NODELIST head -n 1",
+            "master_port": "6000",
+            "gpus_per_node": "8",
+            "n_nodes": "SLURM_NNODES",
+            "node_rank": "SLURM_PROCID",
+            "world_size": "GPUS_PER_NODE*NNODES"
+        },
+        "resource_requirements": {
+            "nodes": "1",
+            "tasks_per_node": "1",
+            "cpus_per_task": "96",
+            "gpus": "8",
+            "partition": "production-cluster",
+            "launcher": "accelerate launch",
+            "num_processes": "8",
+            "srun_args": {
+                "wait": "60",
+                "kill_on_bad_exit": "1"
+            }
+        },
+        "software_requirements": {
+            "python": "ner_inference.py",
+            "model": "bigcode/bigcode-encoder-pii-ner-v2"
+        }
+    }
+}

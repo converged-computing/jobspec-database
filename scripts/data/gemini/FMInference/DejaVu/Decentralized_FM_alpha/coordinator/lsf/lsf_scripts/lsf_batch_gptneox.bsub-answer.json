@@ -1,0 +1,41 @@
+{
+    "application": "LSF",
+    "details": {
+        "scheduler": "LSF",
+        "cores": 2,
+        "runtime": "3 minutes",
+        "memory": "32 GB per core",
+        "gpu": {
+            "type": "NVIDIA",
+            "count": 1,
+            "memory": "10000 MB"
+        },
+        "modules": [
+            "gcc/6.3.0",
+            "cuda/11.0.3"
+        ],
+        "conda_environment": "pipeline",
+        "python_script": "dist_inference_runner_w_euler_coordinator.py",
+        "script_arguments": [
+            "--pp-mode pipe_sync_sample_mask_token_pipe",
+            "--pipeline-group-size 8",
+            "--cuda-id 0",
+            "--model-type gptneox",
+            "--model-name /nfs/iiscratch-zhang.inf.ethz.ch/export/zhang/export/fm/pretrained_models/gpt-neox-20b-new",
+            "--num-iters 99999999999",
+            "--fp16",
+            "--budget 6097",
+            "--micro-batch-size 1",
+            "--num-layers 6",
+            "--max-layers 44",
+            "--coordinator-server-ip 129.132.93.116"
+        ],
+        "environment_variables": {
+            "NCCL_SOCKET_IFNAME": "access",
+            "GLOO_SOCKET_IFNAME": "access",
+            "NCCL_DEBUG": "INFO",
+            "NCCL_IB_DISABLE": "1",
+            "NCCL_P2P_DISABLE": "1"
+        }
+    }
+}

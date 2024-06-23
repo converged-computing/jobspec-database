@@ -1,0 +1,36 @@
+{
+    "application": "LSF",
+    "details": {
+        "resource_manager": "LSF",
+        "queue": "debug",
+        "walltime": "2:00",
+        "project": "LRN044",
+        "job_name": "client_ipc",
+        "nodes": 10,
+        "proxy": "http://proxy.ccs.ornl.gov:3128/",
+        "OMP_NUM_THREADS": 1,
+        "NCCL_DEBUG": "INFO",
+        "TORCH_NCCL_BLOCKING_WAIT": 1,
+        "jsrun_server": {
+            "nrs": 10,
+            "tasks_per_rs": 1,
+            "cpu_per_rs": 6,
+            "gpu_per_rs": 0,
+            "rs_per_host": 1,
+            "latency_priority": "cpu-cpu",
+            "launch_distribution": "packed",
+            "script": "server.ipc.py",
+            "num_workers": 2
+        },
+        "jsrun_client": {
+            "rs_per_host": 6,
+            "tasks_per_rs": 1,
+            "cpu_per_rs": 4,
+            "gpu_per_rs": 1,
+            "latency_priority": "gpu-gpu",
+            "launch_distribution": "packed",
+            "script": "client.ipc.py",
+            "config_file": "experiments/yaml/client_ipc.yaml"
+        }
+    }
+}

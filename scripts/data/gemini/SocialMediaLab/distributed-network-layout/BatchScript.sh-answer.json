@@ -1,0 +1,60 @@
+{
+    "application": "Spark",
+    "details": {
+        "framework": "Apache Spark",
+        "version": "2.4.4",
+        "cluster_manager": "SLURM",
+        "nodes": 20,
+        "tasks_per_node": 8,
+        "cpus_per_task": 5,
+        "runtime": "23:59:59",
+        "account": "[ComputeCanada acccount name]",
+        "job_name": "DistributedLayoutAlgorithm",
+        "output": "jobOutput/DistributedLayoutAlgorithm_output_%j.txt",
+        "email": "[email address to receive job status]",
+        "modules": [
+            "CCEnv",
+            "nixpkgs/16.09",
+            "spark/2.4.4",
+            "scipy-stack",
+            "python/3.6.3",
+            "networkx/1.1"
+        ],
+        "libraries": [
+            "graphframes:graphframes:0.8.0-spark2.4-s_2.11"
+        ],
+        "repositories": [
+            "https://repos.spark-packages.org"
+        ],
+        "environment_variables": {
+            "MKL_NUM_THREADS": "1",
+            "SPARK_IDENT_STRING": "$SLURM_JOBID",
+            "SPARK_WORKER_DIR": "$SLURM_TMPDIR",
+            "PYTHONPATH": "$PYTHONPATH:/cvmfs/soft.computecanada.ca/easybuild/software/2017/Core/spark/2.4.4/python/lib/py4j-0.10.7-src.zip"
+        },
+        "configuration": {
+            "driver_memory": "100g",
+            "driver_memory_overhead": "50g",
+            "executor_memory": "16g",
+            "executor_memory_overhead": "4g",
+            "memory_fraction": "0.6",
+            "driver_max_result_size": "0",
+            "memory_storage_fraction": "0.5",
+            "default_parallelism": "500",
+            "sql_shuffle_partitions": "500",
+            "shuffle_io_max_retries": "10",
+            "blacklist_enabled": "False",
+            "shuffle_io_retry_wait": "60s",
+            "reducer_max_reqs_in_flight": "1",
+            "shuffle_io_backLog": "4096",
+            "network_timeout": "1200",
+            "executor_extra_java_options": "-XX:+PrintGCDetails -XX:+PrintGCTimeStamps -Xloggc:$SCRATCH/log/ -XX:+UseCompressedOops",
+            "serializer": "org.apache.spark.serializer.KryoSerializer",
+            "scheduler_listenerbus_eventqueue_capacity": "20000"
+        },
+        "script": "/full_path/distributedLayoutAlgorithm.py",
+        "input_data": "/full_path/graph_edgelist.tsv",
+        "output_path": "[output_path]",
+        "number_of_iterations": "[number_of_iterations]"
+    }
+}

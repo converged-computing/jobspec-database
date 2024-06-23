@@ -1,0 +1,58 @@
+{
+    "application": "SLURM",
+    "details": {
+        "resource_manager": "SLURM",
+        "partition": "bdw18",
+        "job_name": "mldock-evo",
+        "time_limit": "12:00:00",
+        "tasks": 1,
+        "nodes": 1,
+        "modules": [
+            "anaconda3",
+            "rdkit",
+            "biopython",
+            "scipy",
+            "dask",
+            "tensorflow-gpu=1.13",
+            "matplotlib",
+            "graph_nets"
+        ],
+        "environment_variables": {
+            "PATH": "/home/users/${USER}/.local/bin:${PATH}",
+            "PYTHONUSERBASE": "/home/users/${USER}/.local",
+            "PY3PATH": "/home/users/${USER}/.local/lib/python3.6/site-packages",
+            "PYTHONIOENCODING": "utf8",
+            "PYTHONPATH": "$PY3PATH:$PYTHONPATH",
+            "MLD_RDK_ENV_INSTALL_DIR": "~/rdk_env",
+            "CUDA_VISIBLE_DEVICES": "0",
+            "SCRATCH": "/lus/scratch/${USER}",
+            "SLURM_WORKING_DIR": "${TEMP_DIR}"
+        },
+        "conda_environment": {
+            "prefix": "$MLD_RDK_ENV_INSTALL_DIR",
+            "python_version": "3.6"
+        },
+        "script_arguments": {
+            "initpop": "CCCCCCCCCCCCCCCCCC",
+            "model": "/lus/scratch/jbalma/mldock_10pct_train_90pct_test_runs/model_files_87acc_90pct_test/checkpoints/model.ckpt",
+            "protein": "/lus/scratch/avose/data/nhg/3RRF.nhg",
+            "mlp_latent": "32,32",
+            "mlp_layers": "2,2",
+            "gnn_layers": "8,8",
+            "popsz": "250",
+            "sigma": "0.05",
+            "mu": "0.05",
+            "features": "16,16"
+        },
+        "script_files": [
+            "run_osprey.pbs",
+            "ligand.py",
+            "mldock_evo.py",
+            "mldock_gnn.py",
+            "gnn_models.py",
+            "dataset_utils.py",
+            "chemio.py"
+        ],
+        "output_file": "run_osprey.log"
+    }
+}

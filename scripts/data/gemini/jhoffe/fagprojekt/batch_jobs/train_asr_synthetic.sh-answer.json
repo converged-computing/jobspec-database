@@ -1,0 +1,47 @@
+{
+    "application": "LSF",
+    "details": {
+        "job_name": "train_asr_synthetic",
+        "output_file": "batch_jobs/logs/train_asr_synthetic_%J.out",
+        "error_file": "batch_jobs/logs/train_asr_synthetic_%J.err",
+        "queue": "gpua100",
+        "gpu_config": {
+            "num": 1,
+            "mode": "exclusive_process"
+        },
+        "num_cores": 16,
+        "memory_limit": "4G",
+        "host_count": 1,
+        "wall_time": "28:00",
+        "user": "s204071@student.dtu.dk",
+        "environment_variables": {
+            "TRAIN_DATASET": "asr_model/data/librispeech/synthetic-train.txt",
+            "TEST_DATASET": "asr_model/data/librispeech/authentic-test-clean.txt",
+            "MODELS_PATH": "asr_model/models",
+            "TRAIN_UPDATES": 150000,
+            "BATCH_SIZE": 64,
+            "RESULTS_PATH": "asr_model/results",
+            "NAME": "synthetic_lr_scheduler",
+            "CPU_CORES": 16,
+            "LOAD_SPECTROGRAMS": 1,
+            "WANDB_API_KEY": "5403fe6e39e261a91fd0a604a0ea7e22c75927cf",
+            "WANDB_RUN_GROUP": "synthetic"
+        },
+        "modules": [
+            {
+                "name": "scipy",
+                "version": "1.6.3-python-3.9.6"
+            },
+            {
+                "name": "cuda",
+                "version": "11.3"
+            }
+        ],
+        "virtual_environment": {
+            "name": "fagprojekt-env",
+            "activation_script": "fagprojekt-env/bin/activate"
+        },
+        "python_version": "3",
+        "script": "asr_model/experiment_uniform_batching.py"
+    }
+}

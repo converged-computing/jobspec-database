@@ -1,0 +1,42 @@
+{
+    "application": "Deep Learning",
+    "details": {
+        "framework": "PyTorch",
+        "model": "Mixtral-8x7B-v0.1",
+        "training data": "/data/niklas/gritlm/e5ds",
+        "resources": {
+            "nodes": 32,
+            "GPUs": 256,
+            "memory": "256GB per node",
+            "scheduler": "SLURM",
+            "partition": "a3",
+            "queue": "a3",
+            "time limit": "999:00:00",
+            "output file": "/data/niklas/jobs/%x-%j.out"
+        },
+        "libraries": [
+            "accelerate",
+            "wandb",
+            "torch",
+            "nccl"
+        ],
+        "other": {
+            "training setup": {
+                "GPUs per node": 8,
+                "master address": "obtained from SLURM",
+                "master port": 6000,
+                "number of nodes": "obtained from SLURM",
+                "node rank": "obtained from SLURM",
+                "world size": "calculated from GPUs per node and number of nodes"
+            },
+            "training parameters": {
+                "learning rate": 2e-05,
+                "batch size": 256,
+                "gradient accumulation steps": 1,
+                "training steps": 1253,
+                "output directory": "/data/niklas/gritlm/gritlm_m8x7_bs256_1253_token03",
+                "model configuration file": "/home/niklas/gritlm/scripts/configs/confnew/config_256gpusfsdp_m8x7.yml"
+            }
+        }
+    }
+}

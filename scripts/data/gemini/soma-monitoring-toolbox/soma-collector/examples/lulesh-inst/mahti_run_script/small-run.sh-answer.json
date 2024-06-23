@@ -1,0 +1,31 @@
+{
+    "application": "SLURM",
+    "details": {
+        "job_name": "soma-lulesh",
+        "account": "project_2006549",
+        "partition": "medium",
+        "time": "00:20:00",
+        "nodes": 2,
+        "cpus_per_task": 1,
+        "output": "slurm-lulesh-%j.out",
+        "error": "slurm-lulesh-%j.err",
+        "modules": [
+            "gcc/9.4.0",
+            "openmpi/4.1.2-cuda",
+            "cmake"
+        ],
+        "environment_variables": [
+            "SOMA_SERVER_ADDR_FILE",
+            "SOMA_NODE_ADDR_FILE",
+            "SOMA_NUM_SERVER_INSTANCES",
+            "SOMA_NUM_SERVERS_PER_INSTANCE",
+            "SOMA_SERVER_INSTANCE_ID",
+            "LD_LIBRARY_PATH"
+        ],
+        "commands": [
+            "srun -n 1 -N 1 /users/dewiy/soma-collector/build/examples/example-server -a ofi+verbs:// &",
+            "sleep 10",
+            "srun -n 8 -N 1 /users/dewiy/soma-collector/build/examples/lulesh-inst/lulesh2.0 -i 500 -p"
+        ]
+    }
+}

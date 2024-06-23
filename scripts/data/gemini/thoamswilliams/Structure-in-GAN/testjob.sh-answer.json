@@ -1,0 +1,19 @@
+{
+    "application": "Slurm",
+    "details": {
+        "job_name": "2varGAN",
+        "account": "fc_bsclab",
+        "partition": "savio2_1080ti",
+        "nodes": 1,
+        "tasks": 1,
+        "cpus_per_task": 2,
+        "gpus": 1,
+        "wall_clock_limit": "16:00:00",
+        "modules": "ml/tensorflow/1.12.0-py36",
+        "commands": [
+            "cd Structure-in-GAN",
+            "nohup python3 backup.py '/global/scratch/users/thomaslu/train_dir2' 60 &",
+            "python3 ./train_ciwgan.py train '/global/scratch/users/thomaslu/train_dir2/' --data_dir './2_word_concat/generated_data/' --data_slice_len 32768 --num_categ 6 --data_first_slice --data_pad_end --data_fast_wav"
+        ]
+    }
+}

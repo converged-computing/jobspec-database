@@ -1,0 +1,54 @@
+{
+    "application": "Horovod",
+    "details": {
+        "framework": "TensorFlow",
+        "model": "Tiramisu",
+        "resources": {
+            "compute": {
+                "nodes": 1,
+                "cores": 80,
+                "gpus": 8,
+                "gpu_binding": "enforce-binding"
+            },
+            "modules": {
+                "cuda": true,
+                "nccl": true,
+                "python3": {
+                    "version": "3.6",
+                    "distribution": "anaconda",
+                    "version_number": "4.4"
+                }
+            },
+            "environment": "thorstendl-gori-py3-tf",
+            "openmp": {
+                "threads": 40,
+                "places": "threads",
+                "proc_bind": "spread"
+            },
+            "storage": {
+                "data_dir": "/project/projectdirs/mpccc/tkurth/DataScience/gb2018/data/segm_h5_v3_new_split_maeve",
+                "scratch_dir": "/dev/shm/tkurth/deepcam/data",
+                "run_dir": "/project/projectdirs/mpccc/tkurth/DataScience/gb2018/runs/tiramisu/run1_ngpus1_lite"
+            },
+            "files": {
+                "stage_in_parallel.sh": true,
+                "parallel_stagein.py": true,
+                "graph_flops.py": true,
+                "common_helpers.py": true,
+                "data_helpers.py": true,
+                "tiramisu-tf-train.py": true,
+                "tiramisu-tf-inference.py": true,
+                "tiramisu_model.py": true
+            }
+        },
+        "parameters": {
+            "downsampling": 1,
+            "blocks": "2 2 2 4 5",
+            "lag": 0,
+            "precision": 16,
+            "batch_size": 2,
+            "scale_factor": 0.1,
+            "learning_rate": 1e-05
+        }
+    }
+}

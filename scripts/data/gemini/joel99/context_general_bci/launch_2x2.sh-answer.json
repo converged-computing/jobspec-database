@@ -1,0 +1,30 @@
+{
+    "application": "SLURM",
+    "details": {
+        "job_name": "ndt2_2x2",
+        "nodes": 2,
+        "gpus_per_node": 2,
+        "ntasks_per_node": 2,
+        "cpus_per_task": 6,
+        "partition": "gpu",
+        "time": "36:00:00",
+        "memory": "40G",
+        "exclude_nodes": "mind-1-30",
+        "output_file": "slurm_logs/%j.out",
+        "environment_variables": {
+            "NCCL_DEBUG": "INFO",
+            "PYTHONFAULTHANDLER": "1",
+            "NCCL_IB_DISABLE": "1",
+            "SLURM_NTASKS_PER_NODE": "2"
+        },
+        "python_scripts": [
+            "artifacts/artifact_estimator.py",
+            "run.py"
+        ],
+        "additional_requirements": {
+            "CUDA": "latest",
+            "NCCL": "2.4.7-1-cuda.10.0",
+            "network_interface": "IB"
+        }
+    }
+}

@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"OpenFold\",\n  \"software\": [\n    \"SLURM\",\n    \"gcc 11.2.0\",\n    \"cuda 12.0\",\n    \"nccl\",\n    \"cudnn\",\n    \"python\",\n    \"torch\",\n    \"mpi4py\",\n    \"OpenFold\"\n  ],\n  \"resources\": {\n    \"nodes\": 32,\n    \"tasks_per_node\": 3,\n    \"cpus_per_task\": 32,\n    \"partition\": \"gpu-a100\",\n    \"time\": \"6:00:00\",\n    \"reservation\": \"mlcommons\"\n  }\n}\n```\n\nThis script runs the **OpenFold** protein structure prediction model, leveraging the following:\n\n* **SLURM** (Simple Linux Utility for Resource Management) for job scheduling and resource allocation.\n* **GCC 11.2.0**, **CUDA 12.0**, **NCCL**, and **cuDNN** for optimized performance.\n* **Python** with the **torch** deep learning library and **mpi4py** for distributed parallel processing.\n* **OpenFold** itself for the actual protein structure prediction.\n\nThe script sets up the environment and runs the `train.py` script using **mpiexec** with a specific hostfile to distribute the work across multiple nodes. It uses OpenFold's pre-trained model (`initialize_parameters_from`) and specifies various training parameters, like batch size, learning rate, and number of iterations. \n\nThe script also includes several environment variables, including `SLURM_JOB_ID`, `SLURM_JOB_NUM_NODES`, `MASTER_ADDR`, `MASTER_PORT`, etc. These are used for managing the MPI communication and cluster setup.\n\nThe script also includes several debugging and monitoring options, such as `mpiexec -print-rank-map`, `-env I_MPI_DEBUG=4`, and `TACC_IBRUN_DEBUG=1`.\n\nThe script outputs a lot of information to the console, including the start and end times, environment variables, and performance metrics (like the execution time). This is useful for tracking progress and troubleshooting issues.\n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 1463,
+        "candidates_token_count": 493,
+        "total_token_count": 1956,
+        "cached_content_token_count": 0
+    }
+}

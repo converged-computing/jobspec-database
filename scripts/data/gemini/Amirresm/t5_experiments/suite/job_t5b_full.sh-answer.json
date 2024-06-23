@@ -1,0 +1,79 @@
+{
+    "application": "SLURM",
+    "details": {
+        "resource_requirements": {
+            "time": "20:00:00",
+            "memory_per_cpu": "8G",
+            "gpus_per_node": 1,
+            "memory_per_gpu": "16G"
+        },
+        "software": {
+            "modules": [
+                "StdEnv/2020",
+                "gcc/9.3.0",
+                "cuda/11.4",
+                "arrow/8.0.0",
+                "python/3.10"
+            ],
+            "python_packages": [
+                "numpy==1.23.5",
+                "pip",
+                "adapters==0.1.2"
+            ]
+        },
+        "python_script": {
+            "path": "/home/amirresm/files/research/summarization/run_summarization_pure.py",
+            "arguments": {
+                "config_title": "t5_base_full_python_b16",
+                "model_name_or_path": "/home/amirresm/projects/def-fard/amirresm/models/t5-base",
+                "tokenizer_name_or_path": "/home/amirresm/projects/def-fard/amirresm/outputs/rr_experiments/t5_base_full_python_b16/t5_base_full_python_b16_tokenizer",
+                "do_train": 1,
+                "do_eval": 1,
+                "do_predict": 1,
+                "train_file": "/home/amirresm/projects/def-fard/amirresm/data/CodeSearchNet/python/train.jsonl",
+                "validation_file": "/home/amirresm/projects/def-fard/amirresm/data/CodeSearchNet/python/valid.jsonl",
+                "test_file": "/home/amirresm/projects/def-fard/amirresm/data/CodeSearchNet/python/test.jsonl",
+                "text_column": "code_tokens",
+                "summary_column": "docstring_tokens",
+                "text_tokenized": 1,
+                "summary_tokenized": 1,
+                "source_prefix": "summarize: ",
+                "output_dir": "/home/amirresm/projects/def-fard/amirresm/outputs/rr_experiments/t5_base_full_python_b16",
+                "overwrite_output_dir": 0,
+                "use_fast_tokenizer": 1,
+                "train_tokenizer": 0,
+                "per_device_train_batch_size": 16,
+                "per_device_eval_batch_size": 16,
+                "learning_rate": "5e-5",
+                "weight_decay": "0.01",
+                "num_train_epochs": "3.0",
+                "warmup_steps": 500,
+                "predict_with_generate": true,
+                "evaluation_strategy": "steps",
+                "eval_steps": "0.1",
+                "logging_strategy": "steps",
+                "logging_steps": "0.1",
+                "logging_dir": "/home/amirresm/projects/def-fard/amirresm/outputs/rr_experiments/t5_base_full_python_b16/logs",
+                "save_total_limit": 10,
+                "metric_path": "/home/amirresm/files/research/summarization/bleu/bleu.py",
+                "train_adapter": 0,
+                "adapter_config": "none",
+                "adapter_path": "/home/amirresm/projects/def-fard/amirresm/outputs/rr_experiments/t5_base_full_python_b16/t5_base_full_python_b16_adapter",
+                "preload_adapter": 1,
+                "generation_output_path": "/home/amirresm/projects/def-fard/amirresm/outputs/rr_experiments/t5_base_full_python_b16/gen_output",
+                "max_source_length": 512,
+                "max_target_length": 256,
+                "generation_max_length": 256,
+                "pad_to_max_length": 1,
+                "ignore_pad_token_for_loss": 1,
+                "max_train_samples": 9999999999,
+                "max_eval_samples": 9999999999,
+                "max_predict_samples": 9999999999
+            }
+        },
+        "environment_variables": {
+            "HF_EVALUATE_OFFLINE": 1,
+            "HF_DATASETS_OFFLINE": 1
+        }
+    }
+}

@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"TOAST\",\n  \"details\": {\n    \"slurm\": {\n      \"partition\": \"@QUEUE@\",\n      \"constraint\": \"@CONSTRAINT@\",\n      \"account\": \"@ACCOUNT@\",\n      \"nodes\": \"@NODES@\",\n      \"time\": \"@TIME@\",\n      \"job_name\": \"@SIZE@-satellite\",\n      \"output\": \"out_vtune_@SIZE@_satellite_@MACHINE@_%j.log\",\n      \"perf\": \"@VTUNE@\"\n    },\n    \"software\": {\n      \"python\": \"toast_satellite_sim.py\",\n      \"focalplane_generator\": \"toast_fake_focalplane.py\"\n    },\n    \"resources\": {\n      \"nodes\": \"@NODES@\",\n      \"processes_per_node\": \"@NODEPROCS@\",\n      \"detectors\": \"@DETPIX@\",\n      \"observations\": \"@NOBS@\",\n      \"group_nodes\": \"@GROUPNODES@\",\n      \"hyperthreads_per_core\": \"@HYPERTHREAD@\",\n      \"cores_per_node\": \"@NODECORES@\"\n    },\n    \"environment_variables\": {\n      \"OMP_NUM_THREADS\": \"${node_thread}\",\n      \"OMP_PLACES\": \"threads\",\n      \"OMP_PROC_BIND\": \"spread\",\n      \"TOAST_NODE_COUNT\": \"${nodes}\",\n      \"TOAST_NUM_THREADS\": \"${OMP_NUM_THREADS}\",\n      \"TMPDIR\": \"/dev/shm\",\n      \"vrun\": \"amplxe-cl -collect hotspots -knob sampling-interval=50 \\\n    -run-pass-thru=--no-altstack -r ${outdir}/vtune \\\n    -finalization-mode=deferred -trace-mpi\",\n      \"vtune_collect\": \"pyhotspots\"\n    }\n  }\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 1314,
+        "candidates_token_count": 415,
+        "total_token_count": 1729,
+        "cached_content_token_count": 0
+    }
+}

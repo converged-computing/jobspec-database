@@ -1,0 +1,43 @@
+{
+    "application": "Slurm",
+    "details": {
+        "job_name": "Demultiplex",
+        "partition": "highmem_p",
+        "tasks": 1,
+        "cpus_per_task": 10,
+        "memory": "400gb",
+        "time_limit": "1:00:00",
+        "output_log": "log.demulti.%j.out",
+        "error_log": "log.demulti.%j.err",
+        "mail_events": "END,FAIL",
+        "mail_user": "john.mendieta@uga.edu",
+        "environment_variables": "NONE",
+        "modules": [
+            "SAMtools/1.10-GCC-8.3.0",
+            "Anaconda3",
+            "popscle"
+        ],
+        "software": [
+            "SAMtools",
+            "Anaconda3",
+            "popscle",
+            "awk",
+            "cut",
+            "uniq",
+            "sed",
+            "mkdir"
+        ],
+        "input_files": [
+            "Zm_Mo17B73_P2_G031_10x.rep1.mq10.BC.rmdup.mm.renamed_BC_CB.bam",
+            "B73.Mo17.maize.biallelic.maf05.dp_filt.PHASED.vcf",
+            "genotypes.txt",
+            "Zm_Mo17B73_P2_G031_10x.rep1_bc_counts.txt"
+        ],
+        "output_files": [
+            "B73_Mo16_doublet/B73_Mo16_doublet.demuxlet",
+            "B73_Mo16_doublet/B73_Mo16_doublet.INPUT.genotypes.txt",
+            "B73_Mo16_doublet/B73_Mo16_doublet.BARCODES.txt"
+        ],
+        "command": "popscle demuxlet --sam $bam --vcf $vcf --out $out/$id.demuxlet --sm-list $out/$id.INPUT.genotypes.txt --group-list $out/$id.BARCODES.txt --field GT --min-MQ 10 --min-callrate 1"
+    }
+}

@@ -1,0 +1,60 @@
+{
+    "application": "GCHP",
+    "details": {
+        "scheduler": [
+            "PBS",
+            "LSF",
+            "SLURM"
+        ],
+        "resources": [
+            {
+                "scheduler": "PBS",
+                "nodes": "2",
+                "processes_per_node": "24",
+                "walltime": "02:00:00"
+            },
+            {
+                "scheduler": "LSF",
+                "nodes": "2",
+                "processes_per_node": "36",
+                "walltime": "2:00"
+            },
+            {
+                "scheduler": "SLURM",
+                "nodes": "2",
+                "processes_per_node": "30",
+                "walltime": "2:00:00"
+            }
+        ],
+        "libraries": [
+            {
+                "type": "environment_file",
+                "name": "gchp.env"
+            },
+            {
+                "type": "module_loading",
+                "scheduler": "PBS",
+                "modules": [
+                    "gchp-env/2021.06-gnu"
+                ]
+            },
+            {
+                "type": "module_loading",
+                "scheduler": "LSF",
+                "modules": [
+                    "openmpi-4.0.1-gcc-9-sdj47y5"
+                ]
+            }
+        ],
+        "commands": [
+            "mpiexec",
+            "srun"
+        ],
+        "config_files": [
+            "cap_restart",
+            "setCommonRunSettings.sh",
+            "setRestartLink.sh",
+            "checkRunSettings.sh"
+        ]
+    }
+}

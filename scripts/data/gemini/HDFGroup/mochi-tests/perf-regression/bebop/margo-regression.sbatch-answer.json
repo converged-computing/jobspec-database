@@ -1,0 +1,35 @@
+{
+    "application": "margo",
+    "details": {
+        "requirements": [
+            "MPI",
+            "libfabric",
+            "PSM2",
+            "numactl",
+            "spack"
+        ],
+        "environment_variables": [
+            "HOME",
+            "SANDBOX",
+            "PSM2_MULTI_EP"
+        ],
+        "commands": [
+            "spack env activate mochi-regression",
+            "spack find -vN",
+            "mpirun numactl -N 0 -m 0 ./margo-p2p-latency -i 100000 -n psm2://",
+            "mpirun numactl -N 0 -m 0 ./margo-p2p-bw -x 1048576 -n psm2:// -c 1 -D 20",
+            "mpirun numactl -N 0 -m 0 ./margo-p2p-bw -x 1048576 -n psm2:// -c 8 -D 20",
+            "mpirun numactl -N 0 -m 0 ./margo-p2p-bw -x 8388608 -n psm2:// -c 1 -D 20",
+            "mpirun numactl -N 0 -m 0 ./margo-p2p-bw -x 8388608 -n psm2:// -c 8 -D 20",
+            "mpirun numactl -N 0 -m 0 ./margo-p2p-bw -x 1000000 -n psm2:// -c 1 -D 20",
+            "mpirun numactl -N 0 -m 0 ./margo-p2p-bw -x 1000000 -n psm2:// -c 8 -D 20",
+            "mpirun numactl -N 0 -m 0 ./margo-p2p-latency -i 100000 -n psm2:// -t 0,0",
+            "mpirun numactl -N 0 -m 0 ./margo-p2p-bw -x 1048576 -n psm2:// -c 1 -D 20 -t 0,0",
+            "mpirun numactl -N 0 -m 0 ./margo-p2p-bw -x 1048576 -n psm2:// -c 8 -D 20 -t 0,0",
+            "mpirun numactl -N 0 -m 0 ./margo-p2p-bw -x 8388608 -n psm2:// -c 1 -D 20 -t 0,0",
+            "mpirun numactl -N 0 -m 0 ./margo-p2p-bw -x 8388608 -n psm2:// -c 8 -D 20 -t 0,0",
+            "mpirun numactl -N 0 -m 0 ./margo-p2p-bw -x 1000000 -n psm2:// -c 1 -D 20 -t 0,0",
+            "mpirun numactl -N 0 -m 0 ./margo-p2p-bw -x 1000000 -n psm2:// -c 8 -D 20 -t 0,0"
+        ]
+    }
+}

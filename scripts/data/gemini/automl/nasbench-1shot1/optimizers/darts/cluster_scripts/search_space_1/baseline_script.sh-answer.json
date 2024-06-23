@@ -1,0 +1,24 @@
+{
+    "application": "SLURM",
+    "details": {
+        "resource_requirements": {
+            "partition": "gpu_tesla-P100",
+            "memory": "10000MB",
+            "time": "11-00:00",
+            "cores": 2,
+            "array_size": 12,
+            "gpus": 1
+        },
+        "environment": {
+            "conda_environment": "pytorch1.3",
+            "python_path": "$PWD"
+        },
+        "script": "optimizers/darts/train_search.py",
+        "arguments": "--seed=${seed} --save=baseline --search_space=1 --epochs=25",
+        "logging": {
+            "stdout": "log/log_$USER_%Y-%m-%d.out",
+            "stderr": "log/err_$USER_%Y-%m-%d.err"
+        },
+        "job_name": "DARTS_NASBENCH"
+    }
+}

@@ -1,0 +1,104 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n\"application\": \"SLURM\",\n\"details\": {\n\"slurm_script\": \"#!/bin/bash\\n#SBATCH -J debug-test\\n#SBATCH -o ${SCRATCH}/testdir/debug-test/%x.%j.out\\n#SBATCH -e ${SCRATCH}/testdir/debug-test/%x.%j.err\\n#SBATCH -D ./\\n#Notification and type\\n#SBATCH --mail-type=end,fail,timeout\\n#SBATCH --mail-user=yakup.paradox@gmail.com\\n# Wall clock limit:\\n#SBATCH --time=00:30:00\\n#SBATCH --no-requeue\\n#Setup of execution environment\\n#SBATCH --export=NONE\\n#SBATCH --get-user-env\\n#SBATCH --clusters=cm2_tiny\\n#SBATCH --partition=cm2_tiny\\n#SBATCH --nodes=2\\n#SBATCH --ntasks-per-node=28\\n\\nmodule load slurm_setup\\n\\nmodule load netcdf-hdf5-all/4.7_hdf5-1.10-intel19-serial\\nmodule load metis/5.1.0-intel19-i64-r64\\nmodule load ddt\\nmodule load valgrind\\n\\nexport UPCXX_INSTALL=~/upcxx-intel-mpp2\\nexport PATH=$PATH:~/upcxx-intel-mpp2/bin\\nexport GASNET_PHYSMEM_MAX='40 GB'\\nexport GASNET_BACKTRACE=1\\n\\nexport GASNET_MAX_SEGSIZE=\\\"1000MB/P\\\"\\nexport UPCXX_INSTALL=/dss/dsshome1/lxc05/ge69xij2/upcxx-intel-mpp2\\nexport UPCXX_SHARED_HEAP_SIZE=\\\"1000 MB\\\"\\n\\nexport GASNET_PSHM_NODES=28\\nexport REPARTITIONING_INTERVAL=50.0\\n\\n /dss/dsshome1/lrz/sys/spack/release/21.1.1/opt/x86_64/intel-mpi/2019.10.317-gcc-6ool5so/compilers_and_libraries_2020.4.317/linux/mpi/intel64/bin/mpirun \\n -np 28 -ppn 28 \\n /dss/dsshome1/lrz/sys/tools/ddt/21.0.2/bin/forge-client --ddtsessionfile /dss/dsshome1/lxc05/ge69xij2/.allinea/session/cm2login3-1 \\n /dss/dsshome1/lxc05/ge69xij2/ActorHPC/./pond-static-debug-1 \\n -x 5000 -y 5000 -p 250 -c 10 --scenario 3 -o /gpfs/scratch/pr63so/ge69xij2/work/out/f -e 0.1\\n\\n/dss/dsshome1/lrz/sys/tools/ddt/21.0.2/bin/forge-client upcxx-run -n 28 -shared-heap 2048MB ./pond-debug-static-1 -x 8000 -y 8000 -p 250 -c 10 --scenario 3 -o /gpfs/scratch/pr63so/ge69xij2/work/out/f -e 5\\n\\n/dss/dsshome1/lxc05/ge69xij2/.allinea/session/cm2login3-1\\n/dss/dsshome1/lrz/sys/tools/ddt/21.0.2/bin/forge-client\\n\\n -np 28 -ppn 28 /dss/dsshome1/lrz/sys/tools/ddt/21.0.2/bin/forge-client /dss/dsshome1/lxc05/ge69xij2/ActorHPC/./pond-debug-static-1 -x 8000 -y 8000 -p 250 -c 10 --scenario 3 -o /gpfs/scratch/pr63so/ge69xij2/work/out/f -e 0.5\\n\\nupcxx-run -show -N 1 -n 28 ./pond-static-debug-1 -x 8000 -y 8000 -p 250 -c 10 --scenario 3 -o /gpfs/scratch/pr63so/ge69xij2/work/out/f -e 0.5\\n\\nexport GASNET_PSHM_NODES=28\\nexport REPARTITIONING_INTERVAL=60.0\\n\\n/dss/dsshome1/lrz/sys/spack/release/21.1.1/opt/x86_64/intel-mpi/2019.10.317-gcc-6ool5so/compilers_and_libraries_2020.4.317/linux/mpi/intel64/bin/mpirun -np 28 -ppn 28 \\nvalgrind --leak-check=full \\n         --show-leak-kinds=all \\n         --track-origins=yes \\n         --show-reachable=yes --num-callers=50 --track-fds=yes \\n            /dss/dsshome1/lxc05/ge69xij2/ActorHPC/./pond-static-debug-1 -x 4000 -y 4000 -p 250 -c 10 --scenario 2 -o /tmp/o -e 0.001\\n\\n\\n/dss/dsshome1/lrz/sys/tools/ddt/21.0.2/bin/forge-client --ddtsessionfile /dss/dsshome1/lxc05/ge69xij2/.allinea/session/cm2login3-1 \\n./pond-static-debug-1 -x 8000 -y 8000 -p 250 -c 10 --scenario 3 \\n-o /gpfs/scratch/pr63so/ge69xij2/work/out/f -e 0.1\\n\\n\\nexport UPCXX_INSTALL=~/upcxx-intel-mpp2\\nexport PATH=$PATH:~/upcxx-intel-mpp2/bin\\nexport GASNET_PHYSMEM_MAX='40 GB'\\nexport GASNET_BACKTRACE=1\\n\\nexport GASNET_MAX_SEGSIZE=\\\"256MB/P\\\"\\nexport UPCXX_INSTALL=/dss/dsshome1/lxc05/ge69xij2/upcxx-intel-mpp2\\nexport UPCXX_SHARED_HEAP_SIZE=\\\"256 MB\\\"\\n\\nmodule unload intel-mpi intel intel-mkl\\nmodule load intel-parallel-studio\\n\\n/dss/dsshome1/lrz/sys/spack/release/21.1.1/opt/x86_64/intel-mpi/2019.10.317-gcc-6ool5so/compilers_and_libraries_2020.4.317/linux/mpi/intel64/bin/mpirun -np 28 -ppn 28 /dss/dsshome1/lxc05/ge69xij2/ActorHPC/./pond-static-debug-1 -x 8000 -y 8000 -p 250 -c 10 --scenario 3 -o /gpfs/scratch/pr63so/ge69xij2/work/out/f -e 0.5\\n\\ninspxe-cl -collect=mi3 \\n/dss/dsshome1/lrz/sys/spack/release/21.1.1/opt/x86_64/intel-mpi/2019.10.317-gcc-6ool5so/compilers_and_libraries_2020.4.317/linux/mpi/intel64/bin/mpirun -np 28 -ppn 28 /dss/dsshome1/lxc05/ge69xij2/ActorHPC/./pond-static-debug-1 -x 8000 -y 8000 -p 250 -c 10 --scenario 3 -o /gpfs/scratch/pr63so/ge69xij2/work/out/f -e 0.1\",\n\"software_requirements\": {\n\"modules\": [\n\"slurm_setup\",\n\"netcdf-hdf5-all/4.7_hdf5-1.10-intel19-serial\",\n\"metis/5.1.0-intel19-i64-r64\",\n\"ddt\",\n\"valgrind\",\n\"intel-parallel-studio\"\n],\n\"environment_variables\": {\n\"UPCXX_INSTALL\": \"~/upcxx-intel-mpp2\",\n\"PATH\": \"$PATH:~/upcxx-intel-mpp2/bin\",\n\"GASNET_PHYSMEM_MAX\": \"40 GB\",\n\"GASNET_BACKTRACE\": 1,\n\"GASNET_MAX_SEGSIZE\": \"1000MB/P\",\n\"UPCXX_SHARED_HEAP_SIZE\": \"1000 MB\",\n\"GASNET_PSHM_NODES\": 28,\n\"REPARTITIONING_INTERVAL\": 50.0,\n\"GASNET_MAX_SEGSIZE\": \"256MB/P\",\n\"UPCXX_SHARED_HEAP_SIZE\": \"256 MB\"\n},\n\"other_software\": [\n\"mpirun\",\n\"forge-client\",\n\"upcxx-run\",\n\"inspxe-cl\",\n\"valgrind\"\n]\n},\n\"resources\": {\n\"nodes\": 2,\n\"tasks_per_node\": 28,\n\"time\": \"00:30:00\",\n\"partition\": \"cm2_tiny\",\n\"clusters\": \"cm2_tiny\"\n}\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "citation_metadata": {
+                "citation_sources": [
+                    {
+                        "start_index": 1121,
+                        "end_index": 1268,
+                        "uri": "https://github.com/ThrudPrimrose/aux",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 1294,
+                        "end_index": 1422,
+                        "uri": "https://github.com/ThrudPrimrose/aux",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 1587,
+                        "end_index": 1790,
+                        "uri": "https://github.com/ThrudPrimrose/aux",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 1914,
+                        "end_index": 2135,
+                        "uri": "https://github.com/ThrudPrimrose/aux",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 2146,
+                        "end_index": 2280,
+                        "uri": "https://github.com/ThrudPrimrose/aux",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 2354,
+                        "end_index": 2518,
+                        "uri": "https://github.com/ThrudPrimrose/aux",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 2819,
+                        "end_index": 2947,
+                        "uri": "https://github.com/ThrudPrimrose/aux",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 3450,
+                        "end_index": 3767,
+                        "uri": "https://github.com/ThrudPrimrose/aux",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 3798,
+                        "end_index": 4115,
+                        "uri": "https://github.com/ThrudPrimrose/aux",
+                        "license_": ""
+                    }
+                ]
+            },
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 2030,
+        "candidates_token_count": 2458,
+        "total_token_count": 4488,
+        "cached_content_token_count": 0
+    }
+}

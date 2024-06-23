@@ -1,0 +1,56 @@
+{
+    "application": "GROMACS",
+    "details": {
+        "job_script": {
+            "purpose": "Run a GROMACS example job",
+            "slurm_parameters": {
+                "account": "Project_ID",
+                "job_name": "Gromacs",
+                "time_limit": "00:30:00",
+                "nodes": 1,
+                "cores_per_node": 12,
+                "partition": "amd_gpu",
+                "gpu_type": "a100",
+                "gpu_count": 1
+            },
+            "environment": {
+                "compiler": "GCC/11.3.0",
+                "mpi": "OpenMPI/4.1.4",
+                "gromacs_version": "GROMACS/2023.1-CUDA-11.7.0",
+                "openmp_threads": "$SLURM_CPUS_PER_TASK"
+            },
+            "commands": {
+                "gromacs_parameters": {
+                    "gmx_grompp": {
+                        "input": "step4.1_equilibration-amd.mdp",
+                        "output": "step4.1_equilibration-amd.tpr",
+                        "structure": "step4.0_minimization.gro",
+                        "reference": "step3_charmm2gmx.pdb",
+                        "index": "index.ndx",
+                        "topology": "topol.top"
+                    },
+                    "gmx_mdrun": {
+                        "nonbonded_method": "gpu",
+                        "pme": "gpu",
+                        "bonded": "gpu",
+                        "update": "gpu",
+                        "openmp_threads": 12,
+                        "mpi_processes": 1,
+                        "dynamic_load_balancing": "yes",
+                        "output_prefix": "step4.1_equilibration-amd"
+                    }
+                }
+            }
+        },
+        "resource_requirements": {
+            "gpu": "AMD A100",
+            "software": {
+                "slurm": "job scheduler",
+                "gcc": "11.3.0",
+                "openmpi": "4.1.4",
+                "gromacs": "2023.1-CUDA-11.7.0",
+                "nvidia-smi": "GPU monitoring tool"
+            }
+        }
+    }
+}

@@ -1,0 +1,56 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"fioss_do2\",\n  \"details\": {\n    \"scheduler\": \"PBS\",\n    \"queue\": \"atlasq\",\n    \"job_name\": \"nessy1\",\n    \"email\": \"cernetic@mps.mpg.de\",\n    \"nodes\": 1,\n    \"cores_per_node\": 48,\n    \"walltime\": \"1:00:00\",\n    \"modules\": [\n      \"mvapich2_pgi\",\n      \"intel\"\n    ],\n    \"environment_variables\": {\n      \"PSM_SHAREDCONTEXTS_MAX\": \"((($PPN+3))/4)\",\n      \"TERM\": \"xterm\",\n      \"COSI_BIN\": \"/scratch/cernetic/nessyH1/scripts/\",\n      \"MAX_PROC\": \"48\"\n    },\n    \"commands\": [\n      \"sed -i \\\"${index}s/.*/${subBinsFile}/\\\" ../COSI_new/cosi/inibl0.for\",\n      \"make 64 -C ../COSI_new/cosi/\",\n      \"cp ../COSI_new/out-intel-x86_64/fioss8.exe ./\",\n      \"fioss_do2 1010 10 8980 > nohup\"\n    ],\n    \"post_processing\": [\n      \"python /home/cernetic/Documents/sorting/lopa-sorting/mergeMdisp.py mdisp/ /home/cernetic/Desktop/$spectraFilename\",\n      \"rm -rf ctrl-* JOB-* freq*log mdisp* lopa*\",\n      \"python /home/cernetic/Documents/sorting/lopa-sorting/mdispCompare.py /home/cernetic/Documents/sorting/lopa-sorting/bins /home/cernetic/Desktop/$spectraFilename /home/cernetic/Desktop/spectra\"\n    ]\n  }\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "citation_metadata": {
+                "citation_sources": [
+                    {
+                        "start_index": 749,
+                        "end_index": 1113,
+                        "uri": "https://github.com/Migelo/lopa-sorting",
+                        "license_": ""
+                    }
+                ]
+            },
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 597,
+        "candidates_token_count": 448,
+        "total_token_count": 1045,
+        "cached_content_token_count": 0
+    }
+}

@@ -1,0 +1,37 @@
+{
+    "application": "gatk",
+    "software": [
+        "picard",
+        "gatk/4.4.0.0",
+        "bcftools"
+    ],
+    "resources": [
+        "SLURM",
+        "MEM=32g",
+        "SAMPFILE=samples.csv",
+        "REFGENOME",
+        "GENOMEIDX",
+        "GVCFFOLDER",
+        "ALNFOLDER",
+        "HTCEXT"
+    ],
+    "commands": [
+        "picard CreateSequenceDictionary",
+        "gatk HaplotypeCaller",
+        "bgzip",
+        "tabix"
+    ],
+    "parameters": [
+        "--java-options -Xmx${MEM}",
+        "--emit-ref-confidence GVCF",
+        "--sample-ploidy 1",
+        "--input $ALNFILE",
+        "--reference $REFGENOME",
+        "--output $GVCF",
+        "--native-pair-hmm-threads $CPU",
+        "-G StandardAnnotation",
+        "-G AS_StandardAnnotation",
+        "-G StandardHCAnnotation",
+        "--threads $CPU -f"
+    ]
+}

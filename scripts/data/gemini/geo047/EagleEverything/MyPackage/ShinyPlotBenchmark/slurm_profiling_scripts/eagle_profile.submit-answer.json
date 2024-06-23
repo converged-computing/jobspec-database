@@ -1,0 +1,34 @@
+{
+    "application": "SLURM",
+    "details": {
+        "language": "bash",
+        "libraries": [
+            "R",
+            "singularity"
+        ],
+        "resources": {
+            "nodes": 1,
+            "cpus": 1,
+            "memory": 4000,
+            "time": "00:02:00",
+            "gres": "gpu",
+            "singularity_image": "/flush1/bow355/AMplus_new_code/Mid_docker_tests/mro_cuda8_eagle_acc2_hdf-latest.img"
+        },
+        "file_dependencies": [
+            "eagle_profile.submit",
+            "eagle_profile.slurm.template",
+            "am_big.R.template",
+            "eagle_REPEAT_cs_ROWMAJOR_MASTER_${SLURM_JOBID}_${NTHREADS}_${NGPU}.slurm"
+        ],
+        "input": "Number of GPUs to use",
+        "output": {
+            "files": [
+                "eagle_REPEAT_cs_ROWMAJOR_MASTER_${SLURM_JOBID}_${NTHREADS}_${NGPU}.slurm",
+                "am_big_${SLURM_JOBID}_${NTHREADS}_${NGPU}.R",
+                "submit_eagle_%A_%a.out",
+                "submit_eagle_%A_%a.err"
+            ],
+            "results": "Performance profiling information for different GPU configurations"
+        }
+    }
+}

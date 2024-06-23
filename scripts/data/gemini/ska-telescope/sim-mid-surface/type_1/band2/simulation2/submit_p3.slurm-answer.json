@@ -1,0 +1,30 @@
+{
+    "application": "Dask",
+    "details": {
+        "environment": {
+            "module purge": "Removes all modules still loaded",
+            "python": "Set up python",
+            "PYTHONPATH": "Set to the location of the ARL (Astronomical Ring Library) environment",
+            "ARL_DASK_SCHEDULER": "Set to the scheduler host and port"
+        },
+        "resources": {
+            "nodes": 12,
+            "tasks": 29,
+            "memory": "50GB per worker",
+            "wallclock time": "23:59:59",
+            "scheduler port": 8786,
+            "worker interface": "ib0",
+            "worker processes": 2,
+            "worker threads": 4,
+            "local directory": "/mnt/storage-ssd/tim/dask-workspace/${host}",
+            "shared directory": "/mnt/storage-ssd/tim/Code/sim-mid-surface/shared",
+            "vp directory": "/mnt/storage-ssd/tim/Code/sim-mid-surface/beams/interpolated/"
+        },
+        "launch method": {
+            "hostfile": "Created from the list of allocated nodes",
+            "scheduler": "Launched on the first node in the hostfile",
+            "workers": "Launched on each node in the hostfile, using SSH"
+        },
+        "command": "python ../../surface_simulation_elevation.py --context singlesource --rmax 1e5 --flux_limit 0.003 --show True --elevation_sampling 1.0 --offset_dir 1.0 0.0 --seed 18051955  --band B2 --pbtype MID_FEKO_B2 --memory 32  --integration_time 30 --use_agg True --time_chunk 30 --time_range -6 6 --shared_directory /mnt/storage-ssd/tim/Code/sim-mid-surface/shared --vp_directory /mnt/storage-ssd/tim/Code/sim-mid-surface/beams/interpolated/ | tee surface_simulation.log"
+    }
+}

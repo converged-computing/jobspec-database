@@ -1,0 +1,41 @@
+{
+    "application": "PyTorch",
+    "details": {
+        "framework": "PyTorch",
+        "model": "EfficientNet-B0",
+        "training_mode": "train_and_eval",
+        "optimizer": "cosine lr decay",
+        "amp": "enabled",
+        "xla": "enabled",
+        "max_epochs": 500,
+        "batch_size": {
+            "train": 1024,
+            "eval": 1024
+        },
+        "learning_rate": {
+            "init": 0.005
+        },
+        "batch_norm": "syncbn",
+        "checkpoint_resume": "enabled",
+        "augmentation": "autoaugment",
+        "mixup_alpha": 0.0,
+        "weight_decay": 5e-06,
+        "epsilon": 0.001,
+        "resources": {
+            "compute": {
+                "nodes": "multiple",
+                "tasks_per_node": 8,
+                "partition": "${PARTITION}"
+            },
+            "memory": "all available",
+            "storage": {
+                "data_dir": "/datasets/imagenet/train-val-tfrecord",
+                "checkpoint_dir": "${PWD}/B0_mulitnode_AMP/"
+            },
+            "container": {
+                "image": "nvcr.io/nvidia/efficientnet-tf2:21.02-tf2-py3",
+                "mounts": "/data:/data,/model:/model"
+            }
+        }
+    }
+}

@@ -1,0 +1,37 @@
+{
+    "application": "Slurm",
+    "details": {
+        "job_name": "finetune",
+        "partition": "gpu_p2",
+        "nodes": 1,
+        "ntasks_per_node": 1,
+        "gres": "gpu:1",
+        "cpus_per_task": 3,
+        "qos": "qos_gpu-t4",
+        "time": "03:50:00",
+        "output": "ft.out",
+        "error": "ft.err",
+        "modules": [
+            "anaconda-py3/2021.05",
+            "pytorch-gpu/py3/1.11.0"
+        ],
+        "conda_environment": "/gpfswork/rech/mdb/urz96ze/miniconda3/envs/Barth",
+        "python_script": "finetuning.py",
+        "arguments": [
+            "--train_dir",
+            "/yourtrain.csv",
+            "--test_dir",
+            "/yourtest.csv",
+            "--modelconfig",
+            "configs/shallow.config.json",
+            "--load",
+            "mymodelpath",
+            "--skipMiss",
+            "--freeze",
+            "--weight_decay",
+            "0.1",
+            "--lr",
+            "0.00005"
+        ]
+    }
+}

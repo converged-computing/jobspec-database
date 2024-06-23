@@ -1,0 +1,38 @@
+{
+    "application": "Docker",
+    "details": {
+        "slurm": {
+            "job_name": "cfq_train_docker",
+            "output_file": "/home/eecs/paras/slurm/%j",
+            "tasks": 1,
+            "cpus_per_task": 40,
+            "memory": "400000 MB",
+            "gpus": 1,
+            "time": "125:00:00",
+            "exclude_nodes": "atlas,blaze,r16,freddie"
+        },
+        "environment": {
+            "CFQ_DIR": "data/cfq",
+            "DATA_CACHE": "/data/$USER/data_cache/cfq",
+            "RUN_CACHE": "/data/$USER/data_cache/cfq_runs",
+            "PYTHONPATH": "/app"
+        },
+        "docker": {
+            "image": "cfq",
+            "command": "python cfq/train.py --run_dir_root=/run_cache --data_root_path=/data_cache --flagfile $FLAGFILE",
+            "volumes": [
+                "/dev/hugepages:/dev/hugepages",
+                "$DATA_CACHE:/data_cache",
+                "$RUN_CACHE:/run_cache",
+                "$HOME/.netrc:/home/user/.netrc"
+            ],
+            "env": [
+                "PYTHONPATH=/app"
+            ],
+            "gpu": "device=$CUDA_VISIBLE_DEVICES",
+            "ipc": "host",
+            "user": "$(id -u):$(id -g)"
+        },
+        "script": "scripts/download_cfq.py"
+    }
+}

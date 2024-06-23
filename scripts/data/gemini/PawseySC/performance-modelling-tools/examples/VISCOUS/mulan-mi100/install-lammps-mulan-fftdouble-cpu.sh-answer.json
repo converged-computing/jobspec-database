@@ -1,0 +1,38 @@
+{
+    "application": "LAMMPS",
+    "details": {
+        "software": [
+            "LAMMPS",
+            "Kokkos",
+            "OpenMP",
+            "KISS FFT",
+            "MPICH",
+            "Cray MPICH"
+        ],
+        "resources": {
+            "compute_nodes": 1,
+            "cores_per_node": 8,
+            "threads_per_core": 1,
+            "walltime": "01:00:00",
+            "output_file": "out-install-lammps-mulan-fftdouble-cpu"
+        },
+        "build_options": {
+            "KOKKOS_DEVICES": "OpenMP,Serial",
+            "KOKKOS_ARCH": "ZEN2",
+            "compiler": "CC",
+            "linker": "CC",
+            "FFT_INC": "",
+            "MPI_INC": "${MPICH_DIR}/include",
+            "MPI_LIB": "-L${MPICH_DIR}/lib -lmpi -L${CRAY_MPICH_ROOTDIR}/gtl/lib -lmpi_gtl_hsa"
+        },
+        "modules": [
+            "gcc/9.3.0"
+        ],
+        "build_steps": [
+            "clone LAMMPS repository",
+            "checkout sprint-develop branch",
+            "modify Makefile to enable Kokkos, OpenMP, and KISS FFT",
+            "build LAMMPS with selected options"
+        ]
+    }
+}

@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"SLURM\",\n  \"details\": {\n    \"resource_requirements\": {\n      \"memory\": \"5G per CPU\",\n      \"nodes\": \"c0\",\n      \"error_logging\": \"results/stability_experiment_bgnmf/errorlog-%j.err\"\n    },\n    \"software_requirements\": {\n      \"docker_image\": \"dncb-fac-image\",\n      \"container_name\": \"dncb-fac-container\",\n      \"mlflow_experiment_name\": \"stability_experiment_bgnmf\",\n      \"modules\": [\n        \"jq\"\n      ],\n      \"python_script\": \"src/dncbfac/stability_experiment_bgnmf.py\"\n    },\n    \"data_paths\": [\n      \"/data/projects/dncbtd\",\n      \"results/stability_experiment_bgnmf\"\n    ]\n  }\n}\n```\n\n**Explanation:**\n\n* **SLURM**: The script is designed to be run using the **SLURM** (Simple Linux Utility for Resource Management) workload manager. This is evident from the `#SBATCH` directives at the beginning of the script. \n* **Docker**: The script utilizes a Docker image (`dncb-fac-image`) and container (`dncb-fac-container`) to run the Python script. \n* **Python**: The script runs a Python script (`src/dncbfac/stability_experiment_bgnmf.py`) within the Docker container.\n* **MLflow**: The script sets up an MLflow experiment named `stability_experiment_bgnmf`.\n* **Data**: The script mounts two data directories: \n    * `/data/projects/dncbtd` as `/work/data` inside the container.\n    * `./results/stability_experiment_bgnmf` as `/work/data/tmp` inside the container.\n* **JSON Configuration**: The script reads configuration parameters from a JSON file (`{{ experiment_config_json }}`).\n* **jq**: The script uses the `jq` command-line tool to process the JSON configuration file.\n* **Resource Requirements**: The script requests 5GB of memory per CPU, specifies a specific node (c0), and sets up error logging. \n\n**Note**: The script uses the `{{ }}` syntax for placeholder values that would be filled in during the actual execution. \n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 451,
+        "candidates_token_count": 532,
+        "total_token_count": 983,
+        "cached_content_token_count": 0
+    }
+}

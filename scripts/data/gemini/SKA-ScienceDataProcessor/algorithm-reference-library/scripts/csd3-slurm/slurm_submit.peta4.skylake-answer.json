@@ -1,0 +1,32 @@
+{
+    "application": "mpi",
+    "details": {
+        "scheduler": "SLURM",
+        "system": "Peta4-Skylake",
+        "nodes": {
+            "type": "Skylake",
+            "cores_per_node": 32,
+            "memory_per_core": {
+                "skylake": "5990MB",
+                "skylake-himem": "12040MB"
+            }
+        },
+        "environment": {
+            "modules": [
+                "rhel7/default-peta4",
+                "intel/bundles/psxe/2017.4"
+            ],
+            "variables": {
+                "ARLROOT": "/home/mf582/scratch/ARL/algorithm-reference-library",
+                "OMP_NUM_THREADS": 1,
+                "I_MPI_PIN_DOMAIN": "omp:compact",
+                "I_MPI_PIN_ORDER": "scatter"
+            },
+            "script": "activate-env-csd3.sh"
+        },
+        "application_executable": "/home/mf582/scratch/ARL/workflows/mpi/imaging-pipelines-mpi.py",
+        "mpi_implementation": "Intel MPI",
+        "pinning_strategy": "compact domains, scattered order",
+        "command_template": "mpiexec -np $np python $application $options"
+    }
+}

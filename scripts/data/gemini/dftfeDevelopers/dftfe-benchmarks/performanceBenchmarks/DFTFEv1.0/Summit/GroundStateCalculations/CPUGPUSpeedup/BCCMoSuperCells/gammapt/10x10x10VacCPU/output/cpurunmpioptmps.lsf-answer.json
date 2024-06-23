@@ -1,0 +1,45 @@
+{
+    "application": "LSF",
+    "details": {
+        "resource_manager": "LSF (Load Sharing Facility)",
+        "directives": [
+            {
+                "name": "-P",
+                "value": "MAT230",
+                "description": "Project name"
+            },
+            {
+                "name": "-W",
+                "value": "2:00",
+                "description": "Wall clock time limit (2 hours)"
+            },
+            {
+                "name": "-nnodes",
+                "value": "20",
+                "description": "Number of nodes requested (20)"
+            },
+            {
+                "name": "-J",
+                "value": "mo10x",
+                "description": "Job name"
+            },
+            {
+                "name": "-o",
+                "value": "mo10x.%J",
+                "description": "Output file name (mo10x.job_id)"
+            },
+            {
+                "name": "-e",
+                "value": "mo10x.%J",
+                "description": "Error file name (mo10x.job_id)"
+            }
+        ],
+        "environment_variables": {
+            "OMP_NUM_THREADS": 1
+        },
+        "execution_command": "jsrun --smpiargs \"-gpu\" -n 120 -a 7 -c 7 -g 1 -r 6 -d packed -b packed:1  ./dftfe parameterFileCPU.prm > outputCPUHamDenOpt",
+        "executable": "./dftfe",
+        "input_file": "parameterFileCPU.prm",
+        "output_file": "outputCPUHamDenOpt"
+    }
+}

@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"bsub\",\n  \"details\": {\n    \"queue\": \"lowpriority\",\n    \"gpu_num\": \"2\",\n    \"gpu_mode\": \"exclusive_process\",\n    \"container_image\": \"darraghdog/kaggle:apex_build\",\n    \"processors\": \"1\",\n    \"processor_tiles\": \"4\",\n    \"command\": \"python3 phalanx.py\",\n    \"arguments\": [\n      \"--logmsg Recursion-concat-$SIZE-fp16\",\n      \"--nbags 30\",\n      \"--epochs 100\",\n      \"--fold $FOLD\",\n      \"--lr 0.000025\",\n      \"--lrmult 20\",\n      \"--batchsize 16\",\n      \"--workpath scripts/$WDIR\",\n      \"--site 1\",\n      \"--emb 0\",\n      \"--probsname probs_$SIZE\",\n      \"--cutmix_prob 1.0\",\n      \"--precision half\",\n      \"--beta 1.0\",\n      \"--imgpath data/mount/512X512X6/\",\n      \"--weightsname weights/pytorch_cut_model_512_densenet$FOLD.bin\"\n    ],\n    \"working_directory\": \"/share/dhanley2/recursion/scripts/$WDIR\",\n    \"output_file\": \"log_train_%J\"\n  }\n}\n```\n\nThis script uses the `bsub` command to submit jobs to a LSF (Load Sharing Facility) cluster. Here's a breakdown of the script and the resources it requests:\n\n- **bsub:** This is the command used to submit jobs to the LSF cluster.\n- **-q lowpriority:** Specifies the job queue, in this case, \"lowpriority\".\n- **-gpu \"num=$N_GPU:mode=exclusive_process\":** Requests a specific number of GPUs ($N_GPU is set to 2) with \"exclusive_process\" mode.\n- **-app gpu:**  Specifies the application type as \"gpu\". \n- **-n =$N_GPU:**  Specifies the number of processors to use for the job (set to 2, matching the number of GPUs).\n- **-env LSB_CONTAINER_IMAGE=darraghdog/kaggle:apex_build:** Sets an environment variable for the job to use a specific Docker image (\"darraghdog/kaggle:apex_build\"). This image likely contains the necessary Python libraries and dependencies for the code.\n- **-n 1:** Specifies that only one task is to be launched for this job.\n- **-R \"span[ptile=4]\":**  Specifies a resource request for a processor tile spanning 4 processors. This is relevant for how tasks are assigned to processors within the cluster.\n- **-o log_train_%J:**  Specifies the output file name for the job's standard output. \n- **sh -c \"...\":** Executes the specified shell command (the Python code) within the given environment.\n- **cd /share/dhanley2/recursion/scripts/$WDIR:**  Changes the working directory to the specified location.\n- **python3 phalanx.py ...:**  Executes the Python script \"phalanx.py\" with specific arguments. These arguments control various aspects of the program's behavior, including:\n    - **--logmsg:** A message for logging purposes.\n    - **--nbags:** The number of bags for training.\n    - **--epochs:** The number of epochs for training.\n    - **--fold:**  The fold number for cross-validation.\n    - **--lr:** The learning rate.\n    - **--lrmult:** A learning rate multiplier.\n    - **--batchsize:** The batch size for training.\n    - **--workpath:** The path to the working directory.\n    - **--site:** The site number.\n    - **--emb:**  Embedding configuration.\n    - **--probsname:** The name of the probabilities output file.\n    - **--cutmix_prob:**  The probability of using cutmix data augmentation.\n    - **--precision:** The precision of the computations (half precision).\n    - **--beta:**  A parameter for training.\n    - **--imgpath:** The path to the image data.\n    - **--weightsname:** The name of the model weights file.\n\nThe script uses `bsub` to submit two jobs: the first job runs for 100 epochs, and the second job runs for 150 epochs. Both jobs use the same resources, Docker image, and python script but differ in the number of epochs and the site number. \n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 594,
+        "candidates_token_count": 1040,
+        "total_token_count": 1634,
+        "cached_content_token_count": 0
+    }
+}

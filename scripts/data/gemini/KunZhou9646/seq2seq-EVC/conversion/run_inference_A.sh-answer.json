@@ -1,0 +1,37 @@
+{
+    "application": "SLURM",
+    "details": {
+        "resource_requirements": {
+            "gpu": "1",
+            "job_name": "inference",
+            "output_file": "res_2.out"
+        },
+        "environment": {
+            "conda_environment": "new"
+        },
+        "scripts": [
+            {
+                "name": "inference_A.py",
+                "arguments": [
+                    "-c",
+                    "/home/zhoukun/nonparaSeq2seqVC_code-master/pre-train-ser-smi-acc_update_ser/outdir_emotion_update_final/checkpoint_1800",
+                    "--num",
+                    "20",
+                    "--hparams",
+                    "validation_list='/home/zhoukun/nonparaSeq2seqVC_code-master/pre-train/reader/emotion_list/evaluation_mel_list.txt',SC_kernel_size=1"
+                ]
+            },
+            {
+                "name": "inference.py",
+                "arguments": [
+                    "-c",
+                    "/home/zhoukun/nonparaSeq2seqVC_code-master/pre-train/outdir_emotion_03_22/checkpoint_4500",
+                    "--num",
+                    "20",
+                    "--hparams",
+                    "validation_list='/home/zhoukun/nonparaSeq2seqVC_code-master/fine-tune/reader/emotion_list/evaluation_mel_list.txt',SC_kernel_size=1"
+                ]
+            }
+        ]
+    }
+}

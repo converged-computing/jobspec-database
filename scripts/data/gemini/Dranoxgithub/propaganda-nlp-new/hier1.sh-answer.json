@@ -1,0 +1,38 @@
+{
+    "application": "Slurm",
+    "details": {
+        "resource_requirements": {
+            "partition": "bhuwan",
+            "gpu": 1,
+            "job_name": "chunk",
+            "output": "./slurm_logs/%j.out"
+        },
+        "environment": {
+            "conda_env": "base",
+            "wandb_project": "debug",
+            "wandb_watch": "all"
+        },
+        "script": {
+            "name": "run_chunk.py",
+            "arguments": {
+                "output_folder": "${OUTPUT_DIR}",
+                "model_name": "${MODEL_NAME}",
+                "model_num": "$2",
+                "train_set": "./split_data/processed_data/${curr_split}/train_${context_length}_chunk_CE.pkl",
+                "valid_set": "./split_data/processed_data/${curr_split}/dev_${context_length}_chunk_CE.pkl",
+                "learning_rate": "1e-5",
+                "random_seed": "75",
+                "dropout": "0.1",
+                "max_len": "256",
+                "num_epochs": "20",
+                "weight_decay": "0.1",
+                "batch_size": "8",
+                "num_labels": "14",
+                "context_length": "${context_length}",
+                "aux_weight_train": "0.5",
+                "aux_weight_eval": "0.5",
+                "gold_file": "split_data/datasets/${curr_split}/dev-task-flc-tc.labels.txt"
+            }
+        }
+    }
+}

@@ -1,0 +1,30 @@
+{
+    "application": "McStas",
+    "details": {
+        "queue": "gpuv100",
+        "job_name": "McStas_test_job",
+        "cores": 1,
+        "gpu": "1 in exclusive process mode",
+        "walltime": "20:00",
+        "memory": "5GB",
+        "email": "pkwi@fysik.dtu.dk",
+        "output_file": "gpu-%J.out",
+        "error_file": "gpu_%J.err",
+        "modules": [
+            "cmake/3.18.2",
+            "nvhpc/22.7-nompi",
+            "cuda/11.7.1",
+            "mpi/4.1.1-gcc-10.3.0-binutils-2.36.1",
+            "hdf5/1.12.1-gcc-10.3.0"
+        ],
+        "commands": [
+            "mkdir -p $HOME/TESTS/",
+            "mkdir -p $HOME/TESTS/${DATE}",
+            "cd $HOME/TESTS/${DATE}",
+            "$HOME/McCode/tools/Python/mctest/mctest.py --ncount=5e7 --configs --mccoderoot $HOME/McStas/mcstas --verbose --testdir $HOME/TESTS/${DATE} --openacc --config=McStas_GPU_PGCC_TESLA_KISS",
+            "cd $HOME",
+            "echo done on GPU with split",
+            "bsub < $HOME/McCode/test-batches/plots_gpu.scpt"
+        ]
+    }
+}

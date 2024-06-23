@@ -1,0 +1,35 @@
+{
+    "application": "SLURM",
+    "details": {
+        "partition": "a40",
+        "qos": "llm",
+        "time": "3-00:00",
+        "memory": "0",
+        "nodes": "2",
+        "tasks_per_node": "1",
+        "gpus": "4",
+        "cpus_per_task": "16",
+        "output": "llama2-70b_service.%j.out",
+        "error": "llama2-70b_service.%j.err",
+        "software": [
+            "singularity-ce/3.8.2",
+            "torchrun",
+            "curl",
+            "srun"
+        ],
+        "resources": [
+            "/checkpoint",
+            "/scratch",
+            "/fs01",
+            "/model-weights",
+            "/ssd005/projects/llm/llama2-latest.sif",
+            "${model_service_dir}/model_service.py"
+        ],
+        "environment_variables": [
+            "LOGLEVEL",
+            "MASTER_ADDR",
+            "NCCL_IB_DISABLE",
+            "NCCL_DEBUG"
+        ]
+    }
+}

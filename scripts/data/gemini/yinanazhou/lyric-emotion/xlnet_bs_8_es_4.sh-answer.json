@@ -1,0 +1,31 @@
+{
+    "application": "SLURM",
+    "details": {
+        "job_account": "def-ichiro",
+        "run_time": "3-00:00:00",
+        "output_file": "run_output/xlnet_cv_output_%A_%a.out",
+        "gpu_resource": "v100:1",
+        "cpus_per_task": 4,
+        "array_task_range": "1-6",
+        "memory": "200G",
+        "python_version": "3.8",
+        "software_modules": [
+            "scipy-stack",
+            "cuda",
+            "torch/1.4.0"
+        ],
+        "virtual_environment": "$SLURM_TMPDIR/env",
+        "python_packages": [
+            "numpy==1.20.0",
+            "requirements.txt"
+        ],
+        "python_script": "xlnet_cv.py",
+        "script_arguments": {
+            "ml": 512,
+            "bs": 8,
+            "epochs": 50,
+            "lr": "$SLURM_ARRAY_TASK_ID",
+            "es": 4
+        }
+    }
+}

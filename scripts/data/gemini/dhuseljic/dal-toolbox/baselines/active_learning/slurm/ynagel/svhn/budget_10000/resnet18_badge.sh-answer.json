@@ -1,0 +1,40 @@
+{
+    "application": "SLURM",
+    "details": {
+        "resource_requirements": {
+            "memory": "32GB",
+            "tasks": 1,
+            "cpus_per_task": 8,
+            "gpus": 1,
+            "partition": "main",
+            "array_range": "1-3%3",
+            "job_name": "al_baselines",
+            "output_file": "/mnt/stud/home/ynagel/logs/al_baselines/%A_%a__%x.log"
+        },
+        "environment": {
+            "virtual_env": "/mnt/stud/home/ynagel/dal-toolbox/venv",
+            "working_directory": "~/dal-toolbox/experiments/active_learning/",
+            "python_script": "active_learning.py"
+        },
+        "model": {
+            "name": "resnet18",
+            "optimizer": {
+                "learning_rate": "1e-3",
+                "weight_decay": "5e-2"
+            }
+        },
+        "dataset": {
+            "name": "SVHN",
+            "path": "/mnt/stud/home/ynagel/data"
+        },
+        "active_learning": {
+            "strategy": "badge",
+            "initial_samples": 1000,
+            "acquisition_size": 1000,
+            "acquisition_cycles": 9,
+            "budget": 10000,
+            "random_seed": "$SLURM_ARRAY_TASK_ID",
+            "output_directory": "/mnt/stud/home/ynagel/dal-toolbox/results/al_baselines/SVHN/resnet18/badge/budget_10000/seed${random_seed}/"
+        }
+    }
+}

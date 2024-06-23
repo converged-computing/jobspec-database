@@ -1,0 +1,27 @@
+{
+    "application": "slurm",
+    "details": {
+        "resources": {
+            "nodes": 2,
+            "tasks_per_node": 2,
+            "cpus_per_task": 1,
+            "memory_per_node": "30G",
+            "gpus_per_node": 2,
+            "time_limit": "03:00:00",
+            "partition": "gpu",
+            "nodelist": "gpu[020-027]"
+        },
+        "software": {
+            "singularity": "3.1.0",
+            "python": "top_tagging.py"
+        },
+        "environment_variables": {
+            "WORLD_SIZE": "calculated based on SLURM variables",
+            "MASTER_PORT": "calculated based on SLURM_JOBID",
+            "MASTER_ADDR": "obtained from scontrol show hostnames"
+        },
+        "other": {
+            "extra_opt": "--optimizer-option lr_mult (\"fc.*\",50)"
+        }
+    }
+}

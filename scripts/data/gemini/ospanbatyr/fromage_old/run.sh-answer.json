@@ -1,0 +1,24 @@
+{
+    "application": "Jupyter Notebook",
+    "details": {
+        "software": [
+            "Anaconda",
+            "CUDA 10.2",
+            "cuDNN 8.1.1"
+        ],
+        "resources": {
+            "nodes": 1,
+            "tasks_per_node": 2,
+            "partition": "ai",
+            "account": "ai",
+            "qos": "ai",
+            "memory": "60G",
+            "gpu": "tesla_t4:1",
+            "time_limit": "1-12:00:00"
+        },
+        "commands": [
+            "python -u main.py --dist-backend 'nccl' --world-size 1 --rank 0 --dataset=CheXpert  --val-dataset=CheXpert --opt-version='microsoft/biogpt' --visual-model='microsoft/swin-tiny-patch4-window7-224' --exp_name='fromage_exp' --image-dir='data/'  --log-base-dir='runs/' --batch-size=64  --val-batch-size=64  --learning-rate=0.0003 --precision='fp32' --print-freq=100 --workers=2 --image-dir='/userfiles/oince22/CheXpert/chexpertchestxrays-u20210408/CheXpert-v1.0/CheXpert-v1.0' --max-len=36",
+            "python -u main.py --dist-backend 'nccl' --world-size 1 --rank 0 --dataset=MIMIC  --val-dataset=MIMIC --opt-version='microsoft/biogpt' --visual-model='microsoft/swin-tiny-patch4-window7-224' --exp_name='fromage_exp' --log-base-dir='runs/' --batch-size=16  --val-batch-size=16  --learning-rate=0.0003 --precision='fp32' --print-freq=100 --workers=2 --image-dir='/datasets/mimic/physionet.org/files/mimic-cxr/2.0.0/files' --max-len=100 --epochs 30"
+        ]
+    }
+}

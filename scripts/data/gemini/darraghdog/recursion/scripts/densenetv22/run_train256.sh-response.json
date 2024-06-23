@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"LSF\",\n  \"details\": {\n    \"queue\": \"lowpriority\",\n    \"gpu_mode\": \"exclusive_process\",\n    \"gpu_count\": 1,\n    \"container_image\": \"docker.optum.com/dhanley2/bert:cgan_build\",\n    \"cores\": 1,\n    \"memory\": \"span[ptile=4]\",\n    \"output_file\": \"log_train_%J\",\n    \"command\": \"cd /share/dhanley2/recursion/scripts/$WDIR  && python3 train.py  \\\n            --nbags 20  --epochs 70 --fold $FOLD  --lr 0.0001 --batchsize 64 --workpath scripts/$WDIR  \\\n            --cutmix_prob 1.0 --beta 1.0  --imgpath data/mount/256X256X6/ --weightsname weights/pytorch_model_densenet$FOLD.bin\"\n  }\n}\n```\n\n**Explanation:**\n\n* **LSF (Load Sharing Facility):** The script uses `bsub` command, which is a part of the LSF (Load Sharing Facility) batch system. LSF is used for managing and scheduling jobs on a cluster of computers.\n* **Details:**\n    * **queue:** `lowpriority` indicates the job is submitted to a low priority queue.\n    * **gpu_mode:** `exclusive_process` signifies that the job requires exclusive access to the specified number of GPUs.\n    * **gpu_count:** `$N_GPU=1` means the job requires one GPU.\n    * **container_image:** `docker.optum.com/dhanley2/bert:cgan_build`  specifies the Docker image to be used for running the job.\n    * **cores:** `-n 1` allocates one CPU core for the job.\n    * **memory:**  `-R \"span[ptile=4]\"` requests a memory allocation based on the LSF resource configuration (likely requiring a certain proportion of available memory).\n    * **output_file:** `-o log_train_%J` specifies the output log file name, where `%J` will be replaced with the job ID.\n    * **command:** The actual command to be executed is specified within `sh -c \"...\"`. This includes:\n        * Changing the working directory to `/share/dhanley2/recursion/scripts/$WDIR` \n        * Running the Python script `train.py` with provided parameters.\n        * The parameters include things like the number of training bags, epochs, learning rate, batch size, workpath, and more.\n\nThis script is likely designed to train a machine learning model using a `train.py` script within a Docker container environment managed by LSF.  \n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 486,
+        "candidates_token_count": 633,
+        "total_token_count": 1119,
+        "cached_content_token_count": 0
+    }
+}

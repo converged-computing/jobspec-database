@@ -1,0 +1,30 @@
+{
+    "application": "SLURM",
+    "details": {
+        "job_name": "move_hf_cache",
+        "project": "MLMI-tw581-SL2-CPU",
+        "nodes": 1,
+        "wallclock_time": "04:00:00",
+        "email_type": "NONE",
+        "partition": "skylake,cclake",
+        "commands": [
+            "mkdir -p logs/$SLURM_JOB_NAME/",
+            "echo -e \"JobID: $SLURM_JOB_ID\\n=====\" > logs/$SLURM_JOB_NAME/$SLURM_JOB_ID.log",
+            "echo \"Time: `date`\" >> logs/$SLURM_JOB_NAME/$SLURM_JOB_ID.log",
+            "echo \"Running on master node: `hostname`\" >> logs/$SLURM_JOB_NAME/$SLURM_JOB_ID.log",
+            "echo \"python `which python`\": >> logs/$SLURM_JOB_NAME/$SLURM_JOB_ID.log",
+            "rsync -a --update /home/tw581/rds/hpc-work/cache/huggingface/datasets /home/tw581/rds/rds-altaslp-8YSp2LXTlkY/data/cache/huggingface/datasets",
+            "echo \"Time: `date`\" >> logs/$SLURM_JOB_NAME/$SLURM_JOB_ID.log"
+        ],
+        "libraries": [
+            "rsync"
+        ],
+        "resources": {
+            "storage": {
+                "home": "/home/tw581",
+                "rds_hpc_work": "/home/tw581/rds/hpc-work",
+                "rds_altaslp": "/home/tw581/rds/rds-altaslp-8YSp2LXTlkY"
+            }
+        }
+    }
+}

@@ -1,0 +1,47 @@
+{
+    "application": "GROMACS",
+    "details": {
+        "environment": "SLURM",
+        "resources": {
+            "nodes": 1,
+            "tasks_per_node": 48,
+            "partition": "genoa",
+            "time": "12:00:00",
+            "exclusive": true,
+            "array_tasks": [
+                1,
+                2,
+                3,
+                4,
+                5
+            ]
+        },
+        "modules": {
+            "base": "2022",
+            "gromacs": "GROMACS/2021.6-foss-2022a"
+        },
+        "libraries": {
+            "mpi": true
+        },
+        "parameters": {
+            "gmx_maxconstrwarn": -1,
+            "omp_num_threads": 1
+        },
+        "input_files": [
+            "step7_production.mdp",
+            "step6.6_equilibration.gro",
+            "system.top",
+            "index.ndx",
+            "step7_production_rep${rep}.cpt"
+        ],
+        "output_files": [
+            "rep${rep}/step7_production_rep${rep}.tpr",
+            "rep${rep}/mdout.mdp",
+            "rep${rep}/step7_production_rep${rep}.cpt",
+            "rep${rep}/step7_production_rep${rep}.trr",
+            "rep${rep}/step7_production_rep${rep}.xtc",
+            "rep${rep}/step7_production_rep${rep}.edr",
+            "rep${rep}/rep${rep}_md.log"
+        ]
+    }
+}

@@ -1,0 +1,56 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"SLURM\",\n  \"details\": {\n    \"partition\": \"gpu\",\n    \"excluded_nodes\": \"sls-titan-[0-2]\",\n    \"gpu_resources\": \"gpu:1\",\n    \"cores\": 4,\n    \"nodes\": 1,\n    \"memory\": \"30000\",\n    \"job_name\": \"s3p-sid\",\n    \"output_file\": \"./log_%j.txt\",\n    \"environment_setup\": [\n      \". /data/sls/scratch/share-201907/slstoolchainrc\",\n      \"source /data/sls/scratch/yuangong/ssast/venvssast/bin/activate\",\n      \"export TORCH_HOME=.\"\n    ],\n    \"python_script\": \"run_downstream.py\",\n    \"script_arguments\": [\n      \"--expdir\",\n      \"$expdir\",\n      \"-m\",\n      \"train\",\n      \"-u\",\n      \"$mdl\",\n      \"-d\",\n      \"voxceleb1\",\n      \"-c\",\n      \"config_sid.yaml\",\n      \"-s\",\n      \"hidden_states\",\n      \"-o\",\n      \"config.optimizer.lr=${lr}\",\n      \"-f\"\n    ]\n  }\n}\n```\n\n**Explanation:**\n\n* **SLURM:** The script utilizes SLURM (Simple Linux Utility for Resource Management) for job scheduling and resource allocation on a high-performance computing cluster. The script includes directives like `#SBATCH` that specify the desired resources for the job, such as the partition (`-p`), excluded nodes (`-x`), GPU resources (`--gres`), number of cores (`-c`), number of nodes (`-n`), memory (`--mem`), job name (`--job-name`), and output file (`--output`).\n* **Python script:** The core of the script involves running a Python script `run_downstream.py`. \n* **Environment Setup:** The script sets up the environment using commands like `. /data/sls/scratch/share-201907/slstoolchainrc` and `source /data/sls/scratch/yuangong/ssast/venvssast/bin/activate` to load necessary software and libraries.\n* **Python script arguments:** The script provides various arguments to the `run_downstream.py` script, including:\n    * `--expdir`: Directory for experiment results.\n    * `-m`:  Mode of execution (e.g., training).\n    * `-u`: Model name.\n    * `-d`: Dataset name.\n    * `-c`: Configuration file.\n    * `-s`: Hidden states.\n    * `-o`: Optimizer learning rate.\n    * `-f`: Additional flags or settings. \n\nThe script seems to be running a machine learning experiment for Speaker Identification (SID) using a model named \"ssast\" (likely referring to a Self-Supervised Acoustic Speech Transformer) with different configurations for frame-based and patch-based training. \n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "citation_metadata": {
+                "citation_sources": [
+                    {
+                        "start_index": 300,
+                        "end_index": 459,
+                        "uri": "https://github.com/harrygcoppock/ssast_ciab",
+                        "license_": ""
+                    }
+                ]
+            },
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 387,
+        "candidates_token_count": 690,
+        "total_token_count": 1077,
+        "cached_content_token_count": 0
+    }
+}

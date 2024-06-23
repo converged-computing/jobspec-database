@@ -1,0 +1,39 @@
+{
+    "application": "SOLO",
+    "other_software": [
+        "MPI",
+        "OpenMP",
+        "Singularity",
+        "SLURM"
+    ],
+    "resource_requirements": {
+        "cpu": {
+            "cores": 24,
+            "threads": 4
+        },
+        "memory": "256m",
+        "storage": {
+            "scratch": {
+                "path": "${SCRATCHDIR:-${BUILDDIR}}/CI/BATCH-CI/${GRID}.${MEMO}/",
+                "usage": "Temporary work directory"
+            },
+            "build": {
+                "path": "${BUILDDIR}",
+                "usage": "Base path for SHiELD build system"
+            }
+        },
+        "environment": {
+            "variables": [
+                "BUILDDIR",
+                "COMPILER",
+                "CONTAINER",
+                "LAUNCHER",
+                "SCRATCHDIR"
+            ],
+            "files": [
+                "environment.${COMPILER}.sh",
+                "grid_spec.nc"
+            ]
+        }
+    }
+}

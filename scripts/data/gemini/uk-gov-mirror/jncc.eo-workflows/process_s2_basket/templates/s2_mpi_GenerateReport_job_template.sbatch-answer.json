@@ -1,0 +1,61 @@
+{
+    "application": "Singularity",
+    "details": {
+        "container": "s2ArdContainer",
+        "executable": "/app/exec.sh GenerateReport",
+        "arguments": [
+            "--dbFileName=s2ArdProcessing.db",
+            "--reportFileName=$reportFileName",
+            "--dem=$dem",
+            "$arcsiReprojection",
+            "--metadataConfigFile=$metadataConfigFile",
+            "$metadataTemplate",
+            "$arcsiCmdTemplate",
+            "--maxCogProcesses=$maxCogProcesses",
+            "--removeInputFiles",
+            "--local-scheduler"
+        ],
+        "resources": {
+            "slurm": {
+                "dependency": "afterok:$upstreamJobId",
+                "partition": "short-serial",
+                "time_min": "03:00",
+                "time_max": "0-06:00:00",
+                "working_dir": "$jobWorkingDir",
+                "output": "$jobWorkingDir/%J_GenerateReport.out",
+                "error": "$jobWorkingDir/%J_GenerateReport.err",
+                "account": "defra_eo_jncc_s2_ard"
+            },
+            "mounts": [
+                {
+                    "source": "$reportMount",
+                    "destination": "/report"
+                },
+                {
+                    "source": "$databaseMount",
+                    "destination": "/database"
+                },
+                {
+                    "source": "$workingMount",
+                    "destination": "/working"
+                },
+                {
+                    "source": "$stateMount",
+                    "destination": "/state"
+                },
+                {
+                    "source": "$inputMount",
+                    "destination": "/input"
+                },
+                {
+                    "source": "$staticMount",
+                    "destination": "/static"
+                },
+                {
+                    "source": "$outputMount",
+                    "destination": "/output"
+                }
+            ]
+        }
+    }
+}

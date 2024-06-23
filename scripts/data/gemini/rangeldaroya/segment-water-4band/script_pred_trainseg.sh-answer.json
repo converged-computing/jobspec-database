@@ -1,0 +1,28 @@
+{
+    "application": "SLURM",
+    "details": {
+        "cores": 6,
+        "memory": "48G",
+        "partition": "gypsum-2080ti",
+        "gpus": 1,
+        "output_file": "slurm_trainseg_pred/%j-%a.out",
+        "job_name": "predseg",
+        "time_limit": "01:00:00",
+        "mail_type": "ALL",
+        "array_size": 32,
+        "array_step": 10,
+        "python_script": "04_predict_trainseg.py",
+        "arguments": [
+            "--i",
+            "${variations[$casenumidx]}",
+            "--with_transforms",
+            "1",
+            "--ckpt_path",
+            "\"ckpts/deeplab_mobilenet/20240121-224805_e72.pth\"",
+            "--thresh",
+            "0.4",
+            "--crop_size",
+            "768"
+        ]
+    }
+}

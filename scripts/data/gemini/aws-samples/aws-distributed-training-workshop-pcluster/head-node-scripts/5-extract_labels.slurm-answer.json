@@ -1,0 +1,54 @@
+{
+    "application": "SLURM",
+    "details": {
+        "resource_requirements": {
+            "nodes": 2,
+            "cpus_per_task": 16,
+            "ntasks_per_node": 1,
+            "gres": "gpu:4",
+            "exclusive": true,
+            "wait_all_nodes": true
+        },
+        "environment_variables": {
+            "WORLD_SIZE": "8",
+            "LD_LIBRARY_PATH": "/usr/local/lib/:$LD_LIBRARY_PATH",
+            "LOGLEVEL": "INFO",
+            "NCCL_DEBUG": "INFO",
+            "NCCL_DEBUG_SUBSYS": "ALL",
+            "PYTHONFAULTHANDLER": "1"
+        },
+        "conda_environment": "pytorch-py38",
+        "script_path": "/apps/aws-distributed-training-workshop-pcluster/head-node-scripts/pyscripts/extract_image_labels.py",
+        "parameters": {
+            "selected_channels": "$selected_channel_indices",
+            "channel_dict": "$channel_dict",
+            "norm_per_channel_file": "$norm_per_channel_file",
+            "name_of_run": "$name_of_run",
+            "output_dir": "$(yq '.meta.output_dir' scDINO_full_pipeline.yaml)",
+            "batch_size_per_gpu": "$(yq '.downstream_analyses.compute_cls_features.batch_size_per_gpu' scDINO_full_pipeline.yaml)",
+            "pretrained_weights": "$path_to_model",
+            "arch": "$(yq '.train_scDINO.hyperparameters.arch' scDINO_full_pipeline.yaml)",
+            "patch_size": "$(yq '.train_scDINO.hyperparameters.patch_size' scDINO_full_pipeline.yaml)",
+            "checkpoint_key": "$(yq '.downstream_analyses.compute_cls_features.checkpoint_key' scDINO_full_pipeline.yaml)",
+            "num_workers": "$(yq '.downstream_analyses.compute_cls_features.num_workers' scDINO_full_pipeline.yaml)",
+            "dist_url": "$(yq '.train_scDINO.dist_url' scDINO_full_pipeline.yaml)",
+            "dataset_dir": "$(yq '.meta.dataset_dir' scDINO_full_pipeline.yaml)",
+            "resize": "True",
+            "resize_length": "$(yq '.downstream_analyses.compute_cls_features.resize_length' scDINO_full_pipeline.yaml)",
+            "center_crop": "$(yq '.meta.center_crop' scDINO_full_pipeline.yaml)",
+            "normalize": "True",
+            "full_ViT_name": "$full_ViT_name",
+            "train_datasetsplit_fraction": "$(yq '.meta.train_datasetsplit_fraction' scDINO_full_pipeline.yaml)",
+            "seed": "$(yq '.meta.seed' scDINO_full_pipeline.yaml)",
+            "folder_depth_for_labels": "$(yq '.meta.folder_depth_for_labels' scDINO_full_pipeline.yaml)"
+        },
+        "configuration_file": "scDINO_full_pipeline.yaml",
+        "software_dependencies": {
+            "yq": "for parsing YAML files",
+            "conda": "for managing python environments",
+            "pytorch": "for deep learning",
+            "torch.distributed": "for distributed training",
+            "NCCL": "for efficient GPU communication"
+        }
+    }
+}

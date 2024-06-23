@@ -1,0 +1,56 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"SLURM\",\n  \"details\": {\n    \"job_name\": \"restormer-universal-rician-25\",\n    \"account\": \"delia-mp\",\n    \"nodes\": 1,\n    \"tasks_per_node\": 1,\n    \"cpus_per_task\": 64,\n    \"error_file\": \"/p/scratch/delia-mp/lin4/experiment_result/restormer/0803-universal-rician-25/error-%j.err\",\n    \"output_file\": \"/p/scratch/delia-mp/lin4/experiment_result/restormer/0803-universal-rician-25/output-%j.out\",\n    \"time_limit\": \"24:00:00\",\n    \"partition\": \"dc-gpu\",\n    \"gres\": \"gpu:4\",\n    \"environment\": {\n      \"SRUN_CPUS_PER_TASK\": \"$SLURM_CPUS_PER_TASK\",\n      \"MASTER_ADDR\": \"obtained dynamically from scontrol\",\n      \"NCCL_DEBUG\": \"INFO\",\n      \"CUDA_VISIBLE_DEVICES\": \"0,1,2,3\",\n      \"NUM_GPU_PER_NODE\": 4,\n      \"CONFIG\": \"Denoising/Options/GaussianGrayDenoising_Restormer_universal_rician_25.yml\"\n    },\n    \"script_execution\": [\n      \"source /p/project/delia-mp/lin4/Julich_experiment/Restormer/restormer_env/activate.sh\",\n      \"srun python3 -m torch.distributed.launch --nproc_per_node=4 basicsr/train.py -opt $CONFIG --launcher pytorch\"\n    ]\n  }\n}\n```\n\nThis script runs within the **SLURM** workload manager, which is used to manage resources on high-performance computing systems. The script utilizes SLURM directives to request resources such as nodes, CPUs, GPUs, and time. It then launches a Python script using the `srun` command, leveraging the `torch.distributed.launch` module for distributed training with PyTorch.  \n\nHere's a breakdown of the details:\n\n* **SLURM directives:** The script uses `#SBATCH` directives to define the job's characteristics, such as the job name, account, number of nodes, tasks per node, CPUs per task, runtime, and resource allocation (e.g., GPUs).\n* **Environment variables:**  The script sets several environment variables for the running environment, including `SRUN_CPUS_PER_TASK`, `MASTER_ADDR`, `NCCL_DEBUG`, `CUDA_VISIBLE_DEVICES`, and `NUM_GPU_PER_NODE`.\n* **Script execution:** The core functionality of the script lies in the execution of a Python script `basicsr/train.py` using `srun python3 -m torch.distributed.launch`. This command launches the training process with a specified number of processes per node, using distributed training features from PyTorch.\n* **Configuration:** The `CONFIG` variable points to a YAML file (`Denoising/Options/GaussianGrayDenoising_Restormer_universal_rician_25.yml`) that likely contains the training parameters for the PyTorch model. \n\nThe script utilizes SLURM's capabilities to request resources, set up the environment, and execute the distributed PyTorch training script on a cluster. \n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "citation_metadata": {
+                "citation_sources": [
+                    {
+                        "start_index": 859,
+                        "end_index": 1055,
+                        "uri": "https://github.com/shengyenlin/Julich",
+                        "license_": ""
+                    }
+                ]
+            },
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 693,
+        "candidates_token_count": 780,
+        "total_token_count": 1473,
+        "cached_content_token_count": 0
+    }
+}

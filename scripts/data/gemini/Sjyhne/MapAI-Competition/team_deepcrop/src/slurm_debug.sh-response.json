@@ -1,0 +1,68 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"SLURM\",\n  \"details\": {\n    \"resources\": {\n      \"cpus\": 4,\n      \"memory\": \"32G\",\n      \"gpus\": 1,\n      \"partition\": \"ml4good\"\n    },\n    \"job_name\": \"seg\",\n    \"time\": \"4-15:00:00\",\n    \"mail_type\": \"END,FAIL\",\n    \"mail_user\": \"lilei@di.ku.dk\",\n    \"excluded_nodes\": [\"hendrixgpu09fl\", \"hendrixgpu10fl\", \"hendrixgpu11fl\", \"hendrixgpu12fl\", \"hendrixgpu13fl\"]\n  },\n  \"script\": {\n    \"commands\": [\n      \"hostname\",\n      \"echo $CUDA_VISIBLE_DEVICES\",\n      \"python train_ConvNet_aug.py --task 1 --name conv_croloss_aug --data_ratio 1.0 --config config/data_conv.yaml\",\n      \"echo \\\"try for using the tverskyloss\\\"\"\n    ],\n    \"comments\": [\n      \"# normal cpu stuff: allocate cpus, memory\",\n      \"#SBATCH --ntasks=1\",\n      \"#SBATCH --cpus-per-task=4 --mem=32G\",\n      \"#SBATCH --job-name=\\\"seg\\\"\",\n      \"#SBATCH -p ml4good --gres=gpu:1 -x hendrixgpu09fl,hendrixgpu10fl,hendrixgpu11fl,hendrixgpu12fl,hendrixgpu13fl\",\n      \"#SBATCH --time=4-15:00:00\",\n      \"#SBATCH --mail-type=END,FAIL\",\n      \"#SBATCH --mail-user=lilei@di.ku.dk\",\n      \"#your script, in this case: write the hostname and the ids of the chosen gpus.\",\n      \"#sh seg_sh/sb_train_Min_denmark_pl_2205_sampling1.sh\",\n      \"#python train.py --task 2 --name combine_lidar\",\n      \"#python train.py --task 1 --name image_resnet101_withweight\",\n      \"#python train.py --task 1 --name  deeplabv3_mobilenet_v3_large\",\n      \"#python train.py --task 2 --name  deeplabv3_mobilenet_v3_large_withpreweight_combine_lidar --config config/data_deeplab3.yaml --data_ratio 1.0\",\n      \"#python train.py --task 2 --name  simple_resNetUnet_task2\",\n      \"#python train_UNetFormer.py --task 1 --name  FTUNetFormer --data_ratio 1.0 --lr 1e-4\",\n      \"#python train_UNetFormer.py --task 1 --name  UNetFormer --data_ratio 1.0\",\n      \"#python train_FTUNetFormer.py --task 1 --name  FTUNetFormer_default --data_ratio 1.0 --lr 1e-2 --wandb run\",\n      \"#python train.py --task 2 --name  deeplabv3_resnet50_combine_lidar --config config/data_deeplab3.yaml --data_ratio 1.0\",\n      \"#python train_FTUNetFormer.py --task 1 --name  FTUNetFormer_defaultTUNetFormer_default_pretrain_lr6e-2 --data_ratio 1.0 --lr 6e-2 --wandb run\",\n      \"#python train_withSOTA.py --task 1 --name deeplabv3_resnet50_with_pretrain_tverskyloss --data_ratio 1.0\",\n      \"#python train_withSOTA.py --task 1 --name UnetPlusPlus_resnet34 --data_ratio 1.0\",\n      \"#python train_segformer.py --task 1 --name segformer_croloss --data_ratio 1.0 --config config/data_segformer.yaml\"\n    ]\n  }\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "citation_metadata": {
+                "citation_sources": [
+                    {
+                        "start_index": 679,
+                        "end_index": 1150,
+                        "uri": "https://github.com/llei66/BuildSeg",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 1162,
+                        "end_index": 2198,
+                        "uri": "https://github.com/llei66/BuildSeg",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 2211,
+                        "end_index": 2518,
+                        "uri": "https://github.com/llei66/BuildSeg",
+                        "license_": ""
+                    }
+                ]
+            },
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 763,
+        "candidates_token_count": 964,
+        "total_token_count": 1727,
+        "cached_content_token_count": 0
+    }
+}

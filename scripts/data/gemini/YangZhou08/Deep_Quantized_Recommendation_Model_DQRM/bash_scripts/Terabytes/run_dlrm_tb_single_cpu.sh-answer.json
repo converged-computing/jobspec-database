@@ -1,0 +1,43 @@
+{
+    "application": "DLRM",
+    "details": {
+        "framework": "PyTorch",
+        "resources": {
+            "nodes": 1,
+            "cpus": 112,
+            "placement": "exclusive",
+            "libraries": [
+                "anaconda3"
+            ]
+        },
+        "data": {
+            "generation": "dataset",
+            "set": "terabyte",
+            "raw_file": "/tier2/utexas/yzhou/day",
+            "processed_file": "/tier2/utexas/yzhou/terabyte_processed.npz"
+        },
+        "model": {
+            "architecture": {
+                "sparse_feature_size": 64,
+                "mlp_bot": "13-512-256-64",
+                "mlp_top": "512-512-256-1"
+            },
+            "loss_function": "bce",
+            "round_targets": true,
+            "learning_rate": 0.1,
+            "mini_batch_size": 2048,
+            "test_mini_batch_size": 16384,
+            "test_num_workers": 16
+        },
+        "training": {
+            "epochs": 5,
+            "data_sub_sample_rate": 0.875
+        },
+        "logging": {
+            "print_frequency": 1024,
+            "print_time": true,
+            "test_frequency": 10240
+        },
+        "memory_mapping": true
+    }
+}

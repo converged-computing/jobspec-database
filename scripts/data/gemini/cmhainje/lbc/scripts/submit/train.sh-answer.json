@@ -1,0 +1,40 @@
+{
+    "application": "SLURM",
+    "details": {
+        "job_name": "train",
+        "time_limit": "01:00:00",
+        "memory": "10GB",
+        "nodes": 1,
+        "tasks_per_node": 1,
+        "cpus_per_task": 1,
+        "gpu": true,
+        "mail_type": "all",
+        "mail_user": "ch4407@nyu.edu",
+        "output_file": "slurm-%x-%A_%a.out",
+        "error_file": "slurm-%x-%A_%a.out",
+        "array_tasks": [
+            1,
+            2,
+            4,
+            8,
+            16,
+            32,
+            64
+        ],
+        "singularity_image": "/scratch/work/public/singularity/cuda11.8.86-cudnn8.7-devel-ubuntu22.04.2.sif",
+        "overlay": "/home/ch4407/py/overlay-15GB-500K.ext3",
+        "environment_file": "/ext3/env.sh",
+        "venv": "lbc",
+        "script_directory": "/home/ch4407/lbc/scripts",
+        "python_script": "train.py",
+        "arguments": {
+            "data_size": "100_000",
+            "cores": 4,
+            "layer": "$SLURM_ARRAY_TASK_ID",
+            "camera": [
+                "r",
+                "b"
+            ]
+        }
+    }
+}

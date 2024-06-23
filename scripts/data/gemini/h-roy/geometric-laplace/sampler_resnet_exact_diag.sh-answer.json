@@ -1,0 +1,43 @@
+{
+    "application": "LSF",
+    "details": {
+        "job_name": "resnet_backup_sample",
+        "queue": "p1",
+        "resources": {
+            "gpu": {
+                "type": "gpu80gb",
+                "number": 1,
+                "mode": "exclusive_process"
+            },
+            "cpu": {
+                "number": 4
+            },
+            "memory": "8GB",
+            "walltime": "18:00"
+        },
+        "modules": [
+            "python3/3.11.4",
+            "cuda/12.2",
+            "cudnn/v8.9.1.23-prod-cuda-12.X"
+        ],
+        "virtual_env": "geom",
+        "python_script": "src/sampling/sample_lapalce_baselines.py",
+        "arguments": [
+            "--method Exact_Diag",
+            "--checkpoint_path ./checkpoints/CIFAR-10/ResNet/good_params_seed0.pickle",
+            "--sample_seed 0",
+            "--run_name baseline_0",
+            "--posthoc_precision 50.0",
+            "--method Exact_Diag",
+            "--checkpoint_path ./checkpoints/CIFAR-10/ResNet/good_params_seed1.pickle",
+            "--sample_seed 1",
+            "--run_name baseline_1",
+            "--posthoc_precision 50.0",
+            "--method Exact_Diag",
+            "--checkpoint_path ./checkpoints/CIFAR-10/ResNet/good_params_seed2.pickle",
+            "--sample_seed 2",
+            "--run_name baseline_2",
+            "--posthoc_precision 50.0"
+        ]
+    }
+}

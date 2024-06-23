@@ -1,0 +1,32 @@
+{
+    "application": "PBS",
+    "details": {
+        "scheduler": "PBS",
+        "job_name": "gtea_sf",
+        "queue": "volta_gpu",
+        "nodes": 1,
+        "cores_per_node": 10,
+        "memory_per_node": "40gb",
+        "gpus_per_node": 1,
+        "mpi_processes": 1,
+        "walltime": "24:00:00",
+        "container": "Singularity",
+        "container_image": "/app1/common/singularity-img/3.0.0/pytorch_1.4_cuda10.0-cudnn7-devel-ubuntu18.04-py36.simg",
+        "python_version": "3.6",
+        "python_packages": [
+            "pytorch",
+            "wandb"
+        ],
+        "script": "runcodes/run_em_single_frame.py",
+        "arguments": [
+            "--split 1 --select_f data/gtea_single_frame_stfr.pkl --init_epoch 50 --sample_rate 1 --use_mse --use_conf --cudad 0 --base_dir /hpctmp/e0367435/video_segmentation/gtea/ --lr 0.0005 --epochs 250 --batch_size 8 --train_batch_size 20 --postprocess",
+            "--split 2 --select_f data/gtea_single_frame_stfr.pkl --init_epoch 50 --sample_rate 1 --use_mse --use_conf --cudad 0 --base_dir /hpctmp/e0367435/video_segmentation/gtea/ --lr 0.0005 --epochs 250 --batch_size 8 --train_batch_size 20 --postprocess",
+            "--split 3 --select_f data/gtea_single_frame_stfr.pkl --init_epoch 50 --sample_rate 1 --use_mse --use_conf --cudad 0 --base_dir /hpctmp/e0367435/video_segmentation/gtea/ --lr 0.0005 --epochs 250 --batch_size 8 --train_batch_size 20 --postprocess",
+            "--split 4 --select_f data/gtea_single_frame_stfr.pkl --init_epoch 50 --sample_rate 1 --use_mse --use_conf --cudad 0 --base_dir /hpctmp/e0367435/video_segmentation/gtea/ --lr 0.0005 --epochs 250 --batch_size 8 --train_batch_size 20 --postprocess"
+        ],
+        "output_files": [
+            "logs/stdout.$PBS_JOBID",
+            "logs/stderr.$PBS_JOBID"
+        ]
+    }
+}

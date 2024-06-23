@@ -1,0 +1,74 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"SLURM\",\n  \"details\": {\n    \"software\": [\n      \"GCC/6.4.0-2.28\",\n      \"OpenMPI/2.1.2\",\n      \"CUDA/10.0.130\",\n      \"cuDNN/7.5.0.56-CUDA-10.0.130\",\n      \"Python/3.8.5\",\n      \"anaconda3\"\n    ],\n    \"resources\": {\n      \"time\": \"2:50:00\",\n      \"nodes\": 1,\n      \"tasks\": 1,\n      \"cpus_per_task\": 4,\n      \"mem_per_cpu\": \"2G\",\n      \"gpu\": \"v100:1\"\n    },\n    \"commands\": [\n      \"module purge\",\n      \"module load GCC/6.4.0-2.28  OpenMPI/2.1.2\",\n      \"module load CUDA/10.0.130 cuDNN/7.5.0.56-CUDA-10.0.130\",\n      \"module load Python/3.8.5\",\n      \"export PATH=$PATH:$HOME/anaconda3/bin\",\n      \"source activate biprune\",\n      \"cd ~/hydra-structured\",\n      \"python3 train.py --arch resnet20s --dataset CIFAR10 --k ${k} --exp-mode prune --exp-name resnet20s_ratio${k}_adv_auto --trainer adv --val-method adv --source-net results/pretrained/resnet20s_adv_pretrain.pth.tar --scaled-score-init --result-dir results --use_trainable_router --router_checkpoint_path results/pretrained/resnet20s_adv_pretrain.pth.tar --router_arch resnet20s\",\n      \"scontrol show job $SLURM_JOB_ID\"\n    ]\n  }\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 2,
+                    "blocked": false
+                }
+            ],
+            "citation_metadata": {
+                "citation_sources": [
+                    {
+                        "start_index": 433,
+                        "end_index": 744,
+                        "uri": "https://github.com/NormalUhr/hydra-structured",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 606,
+                        "end_index": 840,
+                        "uri": "https://github.com/NormalUhr/hydra-structured",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 813,
+                        "end_index": 941,
+                        "uri": "https://github.com/NormalUhr/hydra-structured",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 897,
+                        "end_index": 1103,
+                        "uri": "https://github.com/NormalUhr/hydra-structured",
+                        "license_": ""
+                    }
+                ]
+            },
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 664,
+        "candidates_token_count": 468,
+        "total_token_count": 1132,
+        "cached_content_token_count": 0
+    }
+}

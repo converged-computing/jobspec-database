@@ -1,0 +1,22 @@
+{
+    "application": "Proteus",
+    "details": {
+        "resource_requirements": {
+            "nodes": 128,
+            "cpus_per_node": 32,
+            "mpi_procs": 8,
+            "walltime": "24:00:00",
+            "queue": "standard_sm"
+        },
+        "modules": [
+            "PrgEnv-gnu",
+            "acml"
+        ],
+        "environment_variables": {
+            "PARUN": "/u/aron/proteus/garnet.gnu/bin/parun",
+            "PROTEUS_PYTHON": "python",
+            "MPICH_RANK_REORDER_METHOD": "2"
+        },
+        "script_logic": "The script runs a series of Proteus simulations with different numbers of processes (1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024) for a dambreak problem. For each simulation, the script:\n1. Creates a working directory named 'dambreak_scale_2D_$i' where 'i' represents the number of processes.\n2. Copies the dambreak2D directory from the source location to the working directory.\n3. Runs the dambreak_so.py script using aprun with the specified number of processes, and passes the necessary command-line arguments (like the simulation duration, verbosity, and the PETSc options)."
+    }
+}

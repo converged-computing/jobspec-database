@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"Slurm\",\n  \"details\": {\n    \"partition\": \"long\",\n    \"cpus_per_task\": 4,\n    \"gpu\": \"rtx8000\",\n    \"gpu_count\": 1,\n    \"memory\": \"48G\",\n    \"time\": \"7-00:00:00\",\n    \"output\": \"train-models-%j.out\",\n    \"error\": \"train-models-%j.err\",\n    \"parallel_jobs\": 3,\n    \"python_script\": \"open_lth.py\",\n    \"script_arguments\": [\n      \"lottery\",\n      \"--default_hparams={2}\",\n      \"--dataset_name={3}\",\n      \"--replicate={1}\",\n      \"--levels=0\",\n      \"--training_steps=160ep\",\n      \"--save_every_n_epochs=10\",\n      \"--batchnorm_replace=\\\"layernorm\\\"\",\n      \"--pretrain\",\n      \"--pretrain_dataset_name={3}\",\n      \"--pretrain_warmup_steps=\\\"1ep\\\"\",\n      \"--pretrain_training_steps=10ep\",\n      \"--pretrain_save_every_n_epochs=1\"\n    ],\n    \"model_names\": [\n      \"cifar_vgg_16_64\",\n      \"cifar_resnet_20_64\"\n    ],\n    \"datasets\": [\n      \"svhn\",\n      \"cifar100\"\n    ],\n    \"replicates\": [\n      1,\n      2,\n      3,\n      4,\n      5,\n      6,\n      7,\n      8,\n      9,\n      10\n    ],\n    \"source_script\": \"./open_lth/slurm-setup.sh\"\n  }\n}\n```\n\n**Explanation:**\n\nThe script is using **Slurm** for job scheduling and resource allocation. It defines various parameters for the job, such as:\n\n* **Partition:** `long` - Specifies the partition where the job should run.\n* **CPUs per task:** `4` - Each task (process) will use 4 CPUs.\n* **GRES (GPU Resource):** `gpu:rtx8000:1` - Requests one RTX 8000 GPU.\n* **Memory:** `48G` - Sets the memory requirement for the job.\n* **Time:** `7-00:00:00` - Sets the time limit for the job (7 days).\n* **Output and Error files:** `train-models-%j.out` and `train-models-%j.err` - Defines file names for output and error logs.\n\nThe script further defines various variables:\n\n* **MODEL:** Contains a list of model names to be trained.\n* **DATASET:** Contains a list of datasets to use for training.\n* **REPLICATE:** Contains a list of replicate numbers for experiments.\n\nThe script uses `parallel` to run the Python script `open_lth.py` multiple times in parallel with different combinations of model, dataset, and replicate. It uses the `slurm-setup.sh` script to configure the environment before running the main script.\n\nThe script uses various command-line arguments to customize the training process, such as:\n\n* **`--default_hparams={2}`:** Specifies default hyperparameters for the model.\n* **`--dataset_name={3}`:** Sets the dataset name.\n* **`--replicate={1}`:** Sets the replicate number.\n* **`--levels=0`:** Specifies the number of levels in the training process.\n* **`--training_steps=160ep`:** Sets the number of training epochs.\n* **`--save_every_n_epochs=10`:** Defines the frequency of saving checkpoints during training.\n* **`--batchnorm_replace=\"layernorm\"`:** Replaces batch normalization with layer normalization.\n* **`--pretrain`:** Enables pretraining of the model.\n* **`--pretrain_dataset_name={3}`:** Sets the dataset name for pretraining.\n* **`--pretrain_warmup_steps=\"1ep\"`:** Specifies the number of warm-up epochs for pretraining.\n* **`--pretrain_training_steps=10ep`:** Sets the number of training epochs for pretraining.\n* **`--pretrain_save_every_n_epochs=1`:** Defines the frequency of saving checkpoints during pretraining.\n\nThe script runs multiple experiments with different combinations of models, datasets, and replicates, using parallel execution to speed up the process. \n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 489,
+        "candidates_token_count": 1040,
+        "total_token_count": 1529,
+        "cached_content_token_count": 0
+    }
+}

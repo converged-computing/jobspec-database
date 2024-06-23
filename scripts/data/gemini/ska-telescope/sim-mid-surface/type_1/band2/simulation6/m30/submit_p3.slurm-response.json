@@ -1,0 +1,68 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"Dask\",\n  \"details\": {\n    \"environment\": {\n      \"module purge\": \"Removes all modules still loaded\",\n      \"python setup\": \". $HOME/alaska-venv/bin/activate\",\n      \"PYTHONPATH\": \"export PYTHONPATH=$PYTHONPATH:$ARL\",\n      \"scheduler location\": \"export ARL_DASK_SCHEDULER=${scheduler}:8786\"\n    },\n    \"resources\": {\n      \"nodes\": 12,\n      \"tasks\": 29,\n      \"memory\": \"50GB per worker\",\n      \"wallclock time\": \"23:59:59\",\n      \"email\": {\n        \"type\": \"FAIL,END\",\n        \"address\": \"realtimcornwell@gmail.com\"\n      },\n      \"partition\": \"compute\",\n      \"local directory\": \"/mnt/storage-ssd/tim/dask-workspace/${host}\"\n    },\n    \"commands\": {\n      \"dask-scheduler\": \"dask-scheduler --port=8786\",\n      \"dask-worker\": \"dask-worker --interface ib0 --nprocs 2 --nthreads 4 --memory-limit 50GB --local-directory /mnt/storage-ssd/tim/dask-workspace/${host} $scheduler:8786\",\n      \"python script\": \"python ../../../surface_simulation_elevation.py --context s3sky --rmax 1e5 --flux_limit 0.003 --show True --elevation_sampling 1.0 --declination -30 --seed 18051955 --band B2 --pbtype MID_FEKO_B2 --memory 32 --integration_time 30 --use_agg True --time_chunk 30 --time_range -6 6 --shared_directory /mnt/storage-ssd/tim/Code/sim-mid-surface/shared --vp_directory /mnt/storage-ssd/tim/Code/sim-mid-surface/beams/interpolated/ | tee surface_simulation.log\"\n    }\n  }\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "citation_metadata": {
+                "citation_sources": [
+                    {
+                        "start_index": 757,
+                        "end_index": 904,
+                        "uri": "https://github.com/ska-telescope/sim-mid-surface",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 933,
+                        "end_index": 1074,
+                        "uri": "https://github.com/ska-telescope/sim-mid-surface",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 1084,
+                        "end_index": 1383,
+                        "uri": "https://github.com/ska-telescope/sim-mid-surface",
+                        "license_": ""
+                    }
+                ]
+            },
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 1007,
+        "candidates_token_count": 489,
+        "total_token_count": 1496,
+        "cached_content_token_count": 0
+    }
+}

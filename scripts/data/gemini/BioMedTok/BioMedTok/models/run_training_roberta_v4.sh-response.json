@@ -1,0 +1,56 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"Slurm\",\n  \"details\": {\n    \"job_name\": \"BertTok\",\n    \"constraint\": \"v100-32g\",\n    \"total_tasks\": 32,\n    \"tasks_per_node\": 4,\n    \"gpus_per_node\": 4,\n    \"cpus_per_task\": 10,\n    \"hyperthreading\": \"disabled\",\n    \"max_runtime\": \"20:00:00\",\n    \"output_file\": \"./logs_slurm/mlm_test%j.out\",\n    \"error_file\": \"./logs_slurm/mlm_test%j.err\",\n    \"mail_type\": \"begin,fail,abort,end\",\n    \"modules\": [\n      \"pytorch-gpu/py3/1.12.1\"\n    ],\n    \"environment_variables\": [\n      \"OMP_NUM_THREADS=10\",\n      \"CUDA_LAUNCH_BLOCKING=1\",\n      \"NCCL_ASYNC_ERROR_HANDLING=1\"\n    ],\n    \"script\": \"run_training_roberta_v1.py\",\n    \"framework\": \"PyTorch\",\n    \"model_type\": \"camembert\",\n    \"config_overrides\": \"max_position_embeddings=514,type_vocab_size=1,vocab_size=32000,bos_token_id=0,pad_token_id=1,eos_token_id=2\",\n    \"training_parameters\": {\n      \"per_device_train_batch_size\": 32,\n      \"warmup_steps\": 10000,\n      \"max_seq_length\": 512,\n      \"logging_steps\": 500,\n      \"report_to\": \"tensorboard\",\n      \"save_strategy\": \"epoch\",\n      \"skip_memory_metrics\": \"False\",\n      \"log_level\": \"info\",\n      \"logging_first_step\": \"True\",\n      \"num_train_epochs\": 400,\n      \"fp16\": true,\n      \"save_total_limit\": 400,\n      \"ddp_timeout\": 600,\n      \"ddp_find_unused_parameters\": \"False\"\n    }\n  }\n}\n```\n\nThis script is running a **Slurm** job.  The script uses a `camembert` model from the Hugging Face library with specific config overrides for the vocabulary size, special token IDs, and maximum position embeddings. It trains the model using PyTorch and utilizes distributed data parallel (DDP) for multi-GPU training.\n\nThe script also includes various configuration options for Slurm, including resource allocation, time limits, email notifications, and environment variables for the GPU and CPU.  \n\nIt appears the script is designed to train a model for tokenization, based on the `run_training_roberta_v1.py` script and the configuration options related to tokenization.\n\nThe script requires a tokenizer, a tokenized dataset, a directory for the output model, and a directory for logging. It also relies on specific modules such as PyTorch and its GPU components, as well as the Slurm workload manager. \n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "citation_metadata": {
+                "citation_sources": [
+                    {
+                        "start_index": 943,
+                        "end_index": 1200,
+                        "uri": "https://github.com/qanastek/DrBERT",
+                        "license_": ""
+                    }
+                ]
+            },
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 1488,
+        "candidates_token_count": 740,
+        "total_token_count": 2228,
+        "cached_content_token_count": 0
+    }
+}

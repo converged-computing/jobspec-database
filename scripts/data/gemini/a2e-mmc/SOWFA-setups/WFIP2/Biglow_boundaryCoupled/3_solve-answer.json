@@ -1,0 +1,35 @@
+{
+    "application": "OpenFOAM",
+    "details": {
+        "version": "OpenFOAM-6-gcc-dev",
+        "solver": "superDeliciousVanilla",
+        "interpolation": "linearupwind",
+        "resource_requirements": {
+            "cores": 128,
+            "time": "10-00",
+            "account": "mmc"
+        },
+        "files": [
+            "system/controlDict.$solver",
+            "system/fvSolution.flow",
+            "system/fvSchemes.flow.$interp",
+            "foam1preprocess.log",
+            "system/controlDict",
+            "system/fvSolution",
+            "system/fvSchemes",
+            "constant/boundaryData/*"
+        ],
+        "commands": [
+            "renumberMesh",
+            "foamDictionary",
+            "foamListTimes",
+            "$solver"
+        ],
+        "output_files": [
+            "log.3.renumberMesh",
+            "log.3.$solver.startAt$latestTime",
+            "log.3.$solver.startAt$continueTime",
+            "foam3run_startAt$continueTime"
+        ]
+    }
+}

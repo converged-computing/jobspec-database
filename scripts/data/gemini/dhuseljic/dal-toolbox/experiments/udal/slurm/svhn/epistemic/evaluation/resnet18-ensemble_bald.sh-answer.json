@@ -1,0 +1,35 @@
+{
+    "application": "Slurm",
+    "details": {
+        "resources": {
+            "memory": "32GB",
+            "tasks": 1,
+            "cpus_per_task": 8,
+            "gpu": 1,
+            "partition": "main"
+        },
+        "array_jobs": {
+            "start": 1,
+            "end": 10,
+            "step": 10
+        },
+        "job_name": "udal",
+        "output_file": "/mnt/work/dhuseljic/logs/udal/evaluation/%A_%a__%x.log"
+    },
+    "environment": {
+        "conda_environment": "~/envs/dal-toolbox",
+        "working_directory": "/mnt/home/dhuseljic/projects/dal-toolbox/experiments/udal/"
+    },
+    "script": {
+        "python_script": "evaluate.py",
+        "arguments": {
+            "model": "resnet18_sngp",
+            "dataset": "SVHN",
+            "ood_datasets": "[CIFAR10, CIFAR100]",
+            "dataset_path": "/mnt/work/dhuseljic/datasets",
+            "queried_indices_json": "/mnt/work/dhuseljic/results/udal/active_learning/${dataset}/${model}/${al_strat}/N_INIT${n_init}__ACQ_SIZE${acq_size}__N_ACQ${n_acq}/seed${random_seed}/queried_indices.json",
+            "output_dir": "/mnt/work/dhuseljic/results/udal/evaluation/${dataset}/${model}_sngp/${al_strat}/N_INIT${n_init}__ACQ_SIZE${acq_size}__N_ACQ${n_acq}/seed${random_seed}/",
+            "random_seed": "$SLURM_ARRAY_TASK_ID"
+        }
+    }
+}

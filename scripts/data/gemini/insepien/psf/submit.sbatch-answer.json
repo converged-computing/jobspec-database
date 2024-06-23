@@ -1,0 +1,19 @@
+{
+    "application": "SLURM",
+    "details": {
+        "partition": "kipac",
+        "time": "2:00:00",
+        "mail_type": "ALL",
+        "mail_user": "mydo@stanford.edu",
+        "ntasks": 1,
+        "cpus_per_task": 10,
+        "mem_per_cpu": "6G",
+        "output": "submit.h%a.out",
+        "array": "91-130",
+        "environment": "conda activate wfsim",
+        "scripts": [
+            "simtest.py --atmSeed $SLURM_ARRAY_TASK_ID --outdir heightPsfws --outfile outh_psfws_$SLURM_ARRAY_TASK_ID.pkl --usePsfws",
+            "simtest.py --atmSeed $SLURM_ARRAY_TASK_ID --outdir heightRand --outfile outh_rand_$SLURM_ARRAY_TASK_ID.pkl --useRand"
+        ]
+    }
+}

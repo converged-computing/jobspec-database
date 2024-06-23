@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "SLURM\n\n```json\n{\n  \"application\": \"SLURM\",\n  \"details\": {\n    \"resources\": {\n      \"gpu\": \"1\",\n      \"constraint\": \"a6000\",\n      \"memory\": \"32G\",\n      \"time\": \"2-00:00:00\",\n      \"partition\": \"shortrun\"\n    },\n    \"environment\": {\n      \"conda_environment\": \"torch_env\",\n      \"output_file\": \"siamdl%j.out\"\n    },\n    \"script_arguments\": {\n      \"input_type\": \"s2\",\n      \"input_dir\": \"/share/projects/siamdl/data/small/\",\n      \"batch_size\": 16,\n      \"process_level\": \"l1c\",\n      \"patience\": 80,\n      \"num_classes\": 11,\n      \"lr\": 0.0005,\n      \"gamma\": 0.9,\n      \"weight_decay\": 1e-7,\n      \"epochs\": 60,\n      \"ssl_type\": \"dual\",\n      \"omega\": 0.5,\n      \"gamma_ssl\": 0.9,\n      \"loss_ssl_1\": \"DiceLoss\",\n      \"loss_ssl_2\": \"L1Loss\",\n      \"out_path\": \"/share/projects/siamdl/outputs/${SLURM_JOBID}_$(date +%Y%m%d)_$SSL_TYPE/quickview/\"\n    },\n    \"python_script\": \"main.py\"\n  }\n}\n```\n\nThis script is designed to run on a SLURM cluster, using the \"sbatch\" command to submit it for execution.  The script utilizes a conda environment named \"torch_env\" and is expected to run a Python script named \"main.py\". \n\nHere's a breakdown of the script's components:\n\n* **SLURM directives**: The script starts with SLURM directives that define resource requirements. These include GPU allocation, constraints, memory, time limit, partition, and output and email settings.\n* **Environment setup**: The script sets up the conda environment \"torch_env\" if the script is being run on a SLURM node.\n* **Script arguments**: The script defines a set of variables representing arguments for the \"main.py\" script.  This includes input type, input directory, batch size, process level, patience, number of classes, learning rate, gamma, weight decay, epochs, SSL type, omega, gamma SSL, and loss functions.\n* **Output directory creation**: The script creates an output directory based on the SLURM job ID, date, and SSL type.\n* **Argument logging**: The script saves all arguments to a text file within the output directory.\n* **GPU monitoring (commented out)**: The script includes a commented out section that demonstrates GPU monitoring during the execution.\n* **Python script execution**: The script executes the \"main.py\" script with all the defined arguments.\n* **Output file copying**: The script copies the SLURM output file to the output directory. \n\nThe \"main.py\" script is expected to be a machine learning training script using a PyTorch environment based on the script's arguments and resource requirements.\n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 1283,
+        "candidates_token_count": 735,
+        "total_token_count": 2018,
+        "cached_content_token_count": 0
+    }
+}

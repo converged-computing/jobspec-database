@@ -1,0 +1,50 @@
+{
+    "application": "SLURM",
+    "details": {
+        "resource_requirements": {
+            "project": "xwh@v100",
+            "qos": "qos_gpu-t3",
+            "nodes": 1,
+            "tasks_per_node": 2,
+            "gpus_per_node": 2,
+            "cpus_per_task": 10,
+            "time": "20:00:00"
+        },
+        "software_requirements": {
+            "modules": [
+                "cuda/11.2",
+                "pytorch-gpu/py3/1.10.0"
+            ],
+            "python_script": "src/main.py",
+            "python_arguments": [
+                "--computer=jeanzay",
+                "--hardware=multi-gpu",
+                "--precision=mixed",
+                "--nb_workers=10",
+                "--expe_name=simclr_cifar10",
+                "--dataset_name=cifar10",
+                "--resnet_type=resnet18",
+                "--nb_epochs=800",
+                "--nb_epochs_warmup=10",
+                "--batch_size=512",
+                "--lr_init=4.0",
+                "--momentum=0.9",
+                "--weight_decay=1e-6",
+                "--eta=1e-3",
+                "--z_dim=128",
+                "--temperature_z=0.5",
+                "--clsf_every=100",
+                "--save_every=100",
+                "--nb_epochs_clsf=90",
+                "--batch_size_clsf=256",
+                "--lr_init_clsf=0.2",
+                "--momentum_clsf=0.9",
+                "--weight_decay_clsf=0.0"
+            ]
+        },
+        "other_requirements": {
+            "output_file": "./logs/expe_%j.out",
+            "error_file": "./logs/expe_%j.err"
+        }
+    }
+}

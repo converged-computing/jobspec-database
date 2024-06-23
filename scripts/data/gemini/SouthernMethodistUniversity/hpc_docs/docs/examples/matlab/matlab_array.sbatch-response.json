@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n\"application\": \"MATLAB\",\n\"details\": {\n\"scheduler\": \"SLURM\",\n\"job_name\": \"matlab\",\n\"output_file\": \"matlab_%a-%A.out\",\n\"array_tasks\": \"1-46\",\n\"partition\": \"htc\",\n\"modules\": [\"matlab\"],\n\"input_file\": \"numbers.txt\",\n\"matlab_options\": \"-nojvm -nodisplay -nosplash -r\"\n}\n}\n```\n\n**Explanation:**\n\n* **application:** The script clearly indicates that it's running a MATLAB command, making \"MATLAB\" the primary application. \n* **details:**\n    * **scheduler:**  The script uses `#SBATCH` directives, signifying the SLURM workload manager. \n    * **job_name:**  `#SBATCH -J matlab` sets the job name to \"matlab\".\n    * **output_file:**  `#SBATCH -o matlab_%a-%A.out` specifies the output file format.\n    * **array_tasks:** `#SBATCH --array=1-46` defines an array of tasks running from 1 to 46.\n    * **partition:**  `#SBATCH -p htc` indicates that the job is running on the \"htc\" partition.\n    * **modules:** `module load matlab` loads the necessary MATLAB module. \n    * **input_file:**  `head -${SLURM_ARRAY_TASK_ID} numbers.txt | tail -1` reads arguments from a file named \"numbers.txt\".\n    * **matlab_options:**  The script uses a set of MATLAB command-line options:\n        * `-nojvm`: disables Java support.\n        * `-nodisplay`: prevents a graphical user interface from being opened.\n        * `-nosplash`:  suppresses the MATLAB splash screen.\n        * `-r`: runs a specific MATLAB command (in this case, \"example(${args}),quit\"). \n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 149,
+        "candidates_token_count": 440,
+        "total_token_count": 589,
+        "cached_content_token_count": 0
+    }
+}

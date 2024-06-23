@@ -1,0 +1,35 @@
+{
+    "application": "LSF",
+    "details": {
+        "resource_requirements": {
+            "cores": 2,
+            "run_time": "3 minutes",
+            "memory": "8000 MB per core",
+            "gpu": {
+                "type": "excl_p",
+                "count": 1,
+                "memory": "10000 MB"
+            }
+        },
+        "modules": [
+            "gcc/6.3.0",
+            "cuda/11.0.3"
+        ],
+        "environment": "pipeline",
+        "working_directory": "/cluster/home/juewang/workspace/GPT-home-private",
+        "command": "python -u dist_inference_runner_w_euler_coordinator.py $DIST_CONF $MODEL_CONF $INFERENCE_CONF $COOR_CONF",
+        "model_type": "gptneox",
+        "model_name": "/nfs/iiscratch-zhang.inf.ethz.ch/export/zhang/export/fm/pretrained_models/gpt-neox-20b-new",
+        "world_size": 11,
+        "distributed_configuration": "--pp-mode pipe_sync_sample_mask_token_pipe --pipeline-group-size $world_size --cuda-id 0",
+        "inference_configuration": "--fp16 --budget 12000 --num-layers 4",
+        "coordinator_configuration": "--coordinator-server-ip 129.132.93.105",
+        "environment_variables": {
+            "NCCL_SOCKET_IFNAME": "access",
+            "GLOO_SOCKET_IFNAME": "access",
+            "NCCL_DEBUG": "INFO",
+            "NCCL_IB_DISABLE": 1,
+            "NCCL_P2P_DISABLE": 1
+        }
+    }
+}

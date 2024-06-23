@@ -1,0 +1,56 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n\"application\": \"PyTorch\",\n\"software\": [\n\"SLURM\",\n\"conda\",\n\"Muse\",\n\"PyTorch\",\n\"WandB\",\n\"NCCL\",\n\"EFA\",\n\"py-spy\"\n],\n\"resources\": {\n\"nodes\": 1,\n\"tasks_per_node\": 1,\n\"cpus_per_task\": 96,\n\"gpus_per_node\": 8,\n\"partition\": \"production-cluster\",\n\"output_dir\": \"/fsx/suraj/imagenet-test-run\",\n\"log_path\": \"/fsx/suraj/imagenet-test-run/main_log.txt\",\n\"muse_repo\": \"/admin/home/suraj/code/muse\",\n\"conda_env\": \"muse\",\n\"config_file\": \"configs/imagenet.yaml\"\n},\n\"environment_variables\": [\n\"MUSE_REPO\",\n\"OUTPUT_DIR\",\n\"LOG_PATH\",\n\"GPUS_PER_NODE\",\n\"NNODES\",\n\"MASTER_ADDR\",\n\"MASTER_PORT\",\n\"LAUNCHER\",\n\"TORCHELASTIC_ERROR_FILE\",\n\"NCCL_ASYNC_ERROR_HANDLING\",\n\"NCCL_DEBUG\",\n\"NCCL_DEBUG_SUBSYS\",\n\"NCCL_SOCKET_NTHREADS\",\n\"NCCL_NSOCKS_PERTHREAD\",\n\"CUDA_LAUNCH_BLOCKING\",\n\"NCCL_PROTO\",\n\"RDMAV_FORK_SAFE\",\n\"FI_EFA_FORK_SAFE\",\n\"FI_EFA_USE_DEVICE_RDMA\",\n\"FI_PROVIDER\",\n\"FI_LOG_LEVEL\",\n\"NCCL_IB_DISABLE\",\n\"NCCL_SOCKET_IFNAME\",\n\"SRUN_ARGS\"\n],\n\"commands\": [\n\"source /admin/home/suraj/.bashrc\",\n\"source /fsx/suraj/miniconda3/etc/profile.d/conda.sh\",\n\"conda activate muse\",\n\"mkdir -p $OUTPUT_DIR\",\n\"touch $LOG_PATH\",\n\"pushd $MUSE_REPO\",\n\"echo $CMD\",\n\"clear\",\n\"srun $SRUN_ARGS --jobid $SLURM_JOB_ID bash -c \\\"$LAUNCHER --node_rank \\$SLURM_PROCID --role \\$SLURMD_NODENAME: $CMD\\\" 2>&1 | tee $LOG_PATH\"\n],\n\"script_purpose\": \"Train a MaskGIT model for ImageNet classification on a cluster using PyTorch and SLURM\"\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "citation_metadata": {
+                "citation_sources": [
+                    {
+                        "start_index": 1120,
+                        "end_index": 1274,
+                        "uri": "https://github.com/loubnabnl/megatron-smol-cluster",
+                        "license_": ""
+                    }
+                ]
+            },
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 926,
+        "candidates_token_count": 598,
+        "total_token_count": 1524,
+        "cached_content_token_count": 0
+    }
+}

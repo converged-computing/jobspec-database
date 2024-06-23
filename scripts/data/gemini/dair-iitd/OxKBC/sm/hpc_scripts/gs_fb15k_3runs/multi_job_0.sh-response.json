@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "PBS\n\n```json\n{\n  \"application\": \"PBS\",\n  \"details\": {\n    \"job_name\": \"gsin_mn_0_c-configs\",\n    \"walltime\": \"10:00:00\",\n    \"project\": \"cse\",\n    \"job_type\": \"oe\",\n    \"email\": \"$USER@iitd.ac.in\",\n    \"nodes\": \"3:ngpus=2:ncpus=12:centos=skylake\",\n    \"modules\": [\n      \"apps/anaconda3/4.6.9\",\n      \"apps/pythonpackages/3.6.0/pytorch/0.4.1/gpu\"\n    ],\n    \"scripts\": [\n      \"/home/cse/phd/csz178057/hpcscratch/Aman_BTP/Interpretable-KBC-tlp/sm/hpc_scripts/gs_fb15k_3runs/exp_${count}.sh\"\n    ],\n    \"log_files\": [\n      \"/home/cse/phd/csz178057/hpcscratch/Aman_BTP/Interpretable-KBC-tlp/sm/hpc_scripts/gs_fb15k_3runs/LOG_${count}\"\n    ],\n    \"output_files\": [\n      \"/home/cse/phd/csz178057/hpcscratch/Aman_BTP/Interpretable-KBC-tlp/sm/hpc_scripts/gs_fb15k_3runs/JACK_$count\"\n    ],\n    \"commands\": [\n      \"ssh\",\n      \"nohup\"\n    ]\n  }\n}\n```\n\nThis script utilizes PBS (Portable Batch System) for job scheduling and resource allocation. It defines the job name, walltime, project, email address, and node requirements. It loads the necessary modules for the environment. The script then uses SSH to submit a series of tasks, each running on two GPUs (CUDA_VISIBLE_DEVICES=0 and CUDA_VISIBLE_DEVICES=1), to nodes specified in the PBS_NODEFILE variable.  The tasks execute scripts in the \"gs_fb15k_3runs\" directory. The script then checks for the output files of these tasks and waits until they are available.\n\n**Explanation of Key Elements:**\n\n* **#PBS -N:** Sets the job name to \"gsin_mn_0_c-configs\".\n* **#PBS -l walltime:** Specifies the maximum runtime for the job as 10 hours.\n* **#PBS -P:**  Assigns the job to the project \"cse\".\n* **#PBS -j oe:** Sets the job to merge standard output and standard error into one file.\n* **#PBS -m bea:** Sends email notifications for begin, end, and abort events.\n* **#PBS -M:** Sets the email address for notification.\n* **#PBS -l select:** Defines the node requirements: 3 nodes, each with 2 GPUs, 12 CPUs, and the \"centos\" operating system with \"skylake\" architecture.\n* **module load:** Loads the necessary modules for the job, including \"apps/anaconda3/4.6.9\" and potentially \"apps/pythonpackages/3.6.0/pytorch/0.4.1/gpu\".\n* **ssh:**  The script uses SSH to execute commands on the remote nodes.\n* **nohup:** The script uses \"nohup\" to ensure commands continue running even if the user logs out.\n* **CUDA_VISIBLE_DEVICES:** Specifies which GPUs each task should use.\n* **PBS_NODEFILE:** Contains a list of nodes allocated to the job.\n\nThis script is likely part of a larger project, potentially involving machine learning or deep learning, as it utilizes GPUs and a PyTorch module. The tasks it launches are likely related to training models or performing other computational tasks. \n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 833,
+        "candidates_token_count": 872,
+        "total_token_count": 1705,
+        "cached_content_token_count": 0
+    }
+}

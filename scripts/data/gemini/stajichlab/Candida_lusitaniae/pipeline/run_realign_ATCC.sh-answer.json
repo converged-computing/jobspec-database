@@ -1,0 +1,35 @@
+{
+    "application": "GATK",
+    "details": {
+        "modules": [
+            "java",
+            "gatk",
+            "picard"
+        ],
+        "resources": {
+            "nodes": "1",
+            "ppn": "1",
+            "memory": "40gb",
+            "walltime": "25:00:00"
+        },
+        "software": [
+            "picard",
+            "gatk"
+        ],
+        "input_files": [
+            "$BAMDIR/$ROW.DD.bam",
+            "$GENOMEIDX",
+            "$SAMPLEFILE"
+        ],
+        "output_files": [
+            "$BAMDIR/$ROW.intervals",
+            "$BAMDIR/$ROW.realign.bam",
+            "$BAMDIR/$ROW.DD.bai"
+        ],
+        "commands": [
+            "java -jar $PICARD BuildBamIndex I=$BAMDIR/$ROW.DD.bam",
+            "java -Xmx$MEM -jar $GATK -T RealignerTargetCreator -R $GENOMEIDX -I $BAMDIR/$ROW.DD.bam -o $BAMDIR/$ROW.intervals",
+            "java -Xmx$MEM -jar $GATK -T IndelRealigner -R $GENOMEIDX -I $BAMDIR/$ROW.DD.bam -targetIntervals $BAMDIR/$ROW.intervals -o $BAMDIR/$ROW.realign.bam"
+        ]
+    }
+}

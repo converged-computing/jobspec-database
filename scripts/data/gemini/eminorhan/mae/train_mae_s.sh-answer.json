@@ -1,0 +1,40 @@
+{
+    "application": "SLURM",
+    "details": {
+        "software": [
+            "Python",
+            "SLURM",
+            "hostname",
+            "shuf"
+        ],
+        "resources": {
+            "nodes": 1,
+            "tasks_per_node": 1,
+            "GPUs": "a100:1",
+            "CPUs": 16,
+            "memory": "240GB",
+            "time": "48:00:00"
+        },
+        "libraries": [
+            "train_mae.py"
+        ],
+        "data": {
+            "datasets": [
+                "S_5fps_300s_{000000..000003}"
+            ],
+            "data_path": "/scratch/eo41/data/saycam/${DATA}.tar",
+            "checkpoint": "/scratch/eo41/mae/models_vith14/s_vith14_checkpoint.pth",
+            "output_dir": "/scratch/eo41/mae/models_vith14"
+        },
+        "model": "mae_vit_huge_patch14",
+        "parameters": {
+            "mask_ratio": 0.8,
+            "batch_size_per_gpu": 256,
+            "num_workers": 16,
+            "lr": 0.0001,
+            "min_lr": 0.0001,
+            "weight_decay": 0.0,
+            "save_prefix": "${SAVE}_vith14"
+        }
+    }
+}

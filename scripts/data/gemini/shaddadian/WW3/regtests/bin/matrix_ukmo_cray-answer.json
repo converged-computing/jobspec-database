@@ -1,0 +1,54 @@
+{
+    "application": "Bash",
+    "details": {
+        "compiler": {
+            "CCE": {
+                "modules": [
+                    "cdt/18.12",
+                    "cray-netcdf/4.6.1.3",
+                    "cray-hdf5/1.10.2.0"
+                ],
+                "environment_variables": {
+                    "METIS_PATH": "/home/d02/frey/WW3/ParMETIS"
+                }
+            },
+            "GNU": {
+                "modules": [
+                    "PrgEnv-gnu/5.2.82",
+                    "cray-netcdf"
+                ],
+                "environment_variables": {
+                    "METIS_PATH": "/home/d02/frey/WW3/ParMETIS_GNU"
+                }
+            }
+        },
+        "other_modules": [
+            "cray-snplauncher/7.7.4"
+        ],
+        "environment_variables": {
+            "WWATCH3_NETCDF": "NC4",
+            "NETCDF_CONFIG": "$(which nc-config)",
+            "mpi": "mpiexec",
+            "np": "16",
+            "nr": "4",
+            "nth": "4",
+            "rtst": {
+                "value": "./bin/run_test -c $cmplr -S",
+                "condition": "cmplOption = 'y'"
+            },
+            "ww3": "../model"
+        },
+        "PBS_parameters": {
+            "ncpus": "16",
+            "mem": "16GB",
+            "queue": "shared",
+            "walltime": "04:00:00",
+            "name": "ww3_regtest",
+            "job_dependency": "oe",
+            "output_file": "matrix.out"
+        },
+        "script_executables": [
+            "$main_dir/../regtests/bin/matrix.base"
+        ]
+    }
+}

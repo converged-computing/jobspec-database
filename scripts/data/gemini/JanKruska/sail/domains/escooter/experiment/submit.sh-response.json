@@ -1,0 +1,56 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"matlab\",\n  \"software\": [\n    \"OpenFOAM\",\n    \"cuda\",\n    \"java\",\n    \"matlab\",\n    \"openmpi\"\n  ],\n  \"resources\": {\n    \"partition\": \"hpc\",\n    \"nodes\": 1,\n    \"memory\": \"160G\",\n    \"time\": \"72:00:00\",\n    \"output\": \"slurm.%j.out\",\n    \"error\": \"slurm.%j.err\",\n    \"environment\": \"ALL\",\n    \"exclusive\": true,\n    \"malloc_arena_max\": 4\n  },\n  \"script_details\": {\n    \"description\": \"This script appears to be running a set of CFD simulations using OpenFOAM and MATLAB. It copies a base folder containing simulation settings to multiple cases, launches each case with a submit script, and then uses MATLAB to run a function called 'escooter_runSail' which likely manages the simulations. Finally, it sends a stop signal to each case. \",\n    \"commands\": [\n      \"module load java/default\",\n      \"module load cuda/default\",\n      \"module load matlab/R2019b\",\n      \"module load openmpi/gnu\",\n      \"source ~/OpenFOAM-plus/etc/bashrc\",\n      \"cp -TR $baseFolderName $caseName\",\n      \"sbatch -D \\\"$caseName\\\" $caseName/submit.sh\",\n      \"matlab -batch \\\"escooter_runSail('nCases',$nCases,'caseStart',$startCase)\\\"\",\n      \"touch \\\"$caseName/stop.signal\\\"\"\n    ]\n  }\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "citation_metadata": {
+                "citation_sources": [
+                    {
+                        "start_index": 788,
+                        "end_index": 967,
+                        "uri": "https://github.com/JanKruska/sail",
+                        "license_": ""
+                    }
+                ]
+            },
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 488,
+        "candidates_token_count": 385,
+        "total_token_count": 873,
+        "cached_content_token_count": 0
+    }
+}

@@ -1,0 +1,25 @@
+{
+    "application": "LAMMPS",
+    "details": {
+        "software": [
+            "gcc",
+            "openmpi",
+            "conda",
+            "python"
+        ],
+        "resources": {
+            "nodes": "1",
+            "cores_per_node": "128",
+            "memory": "96GB",
+            "time": "48:30:00",
+            "OMP_NUM_THREADS": "1"
+        },
+        "libraries": [
+            "ost"
+        ],
+        "commands": [
+            "srun --mpi=pmi2 -n 384 --cpus-per-task=1 ~/Github/lammps/src/lmp_mpi -in cycle.in > cycle.out",
+            "python demo_mt.py -d dataset/mech.db -c ${CODE} -n ${NODE} -p ${PER} -l ${LMPCMD} > log_${CODE}"
+        ]
+    }
+}

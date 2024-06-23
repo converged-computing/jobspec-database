@@ -1,0 +1,32 @@
+{
+    "application": "SLURM",
+    "details": {
+        "resources": {
+            "nodes": 1,
+            "partition": "gpgpu",
+            "gpus": 4,
+            "account": "punim0784",
+            "tasks": 1,
+            "cpus_per_task": 24,
+            "memory": "120G",
+            "time": "168:00:00"
+        },
+        "software": {
+            "modules": "Python/3.6.4-intel-2017.u2-GCC-6.2.0-CUDA10",
+            "python_version": "3.6.4",
+            "python_interpreter": "python3"
+        },
+        "data": {
+            "source": "/data/cephfs/punim0784/datasets",
+            "destination": "/var/local/tmp/datasets"
+        },
+        "script": {
+            "arguments": [
+                "exp_name",
+                "seed",
+                "loss"
+            ],
+            "command": "python3 -u main.py --data_parallel --exp_name ${exp_name}/webvision_mini/ --seed $seed --config_path configs/webvision_mini --version ${loss}"
+        }
+    }
+}

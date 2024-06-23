@@ -1,0 +1,30 @@
+{
+    "application": "quantum-espresso",
+    "details": {
+        "software": {
+            "quantum-espresso": "6.4.1",
+            "spack": "0.17.3",
+            "gcc": "10.2.0",
+            "openblas": "0.3.18",
+            "fftw": "3.3.10",
+            "netlib-scalapack": "2.1.0",
+            "openmpi": "4.1.3"
+        },
+        "resources": {
+            "scheduler": "slurm",
+            "partition": "ind-shared",
+            "nodes": 1,
+            "tasks_per_node": 1,
+            "cpus_per_task": 16,
+            "memory": "32G",
+            "time": "00:30:00",
+            "scratch_dir": "/scratch/${USER}/job_${SLURM_JOB_ID}",
+            "system_name": "expanse"
+        },
+        "environment": {
+            "SPACK_INSTANCE_DIR": "/cm/shared/apps/spack/${SPACK_VERSION}/${SPACK_INSTANCE_NAME}/${SPACK_INSTANCE_VERSION}",
+            "SPACK_VARIANTS": "~cmake ~elpa +environ ~epw ~ipo +mpi ~openmp +patch ~qmcpack +scalapack",
+            "SPACK_DEPENDENCIES": "^openblas@0.3.18/$(spack find --format '{hash:7}' openblas@0.3.18 % ${SPACK_COMPILER} ~ilp64 threads=none) ^fftw@3.3.10/$(spack find --format '{hash:7}' fftw@3.3.10 % ${SPACK_COMPILER} ~mpi ~openmp) ^netlib-scalapack@2.1.0/$(spack find --format '{hash:7}' netlib-scalapack@2.1.0 % ${SPACK_COMPILER} ^openmpi@4.1.3)"
+        }
+    }
+}

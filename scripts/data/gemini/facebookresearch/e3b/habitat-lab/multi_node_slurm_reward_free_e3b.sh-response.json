@@ -1,0 +1,56 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"SLURM\",\n  \"details\": {\n    \"job_name\": \"ddppo\",\n    \"output_log\": \"slurm/logs/%j.log\",\n    \"error_log\": \"slurm/logs/%j.err\",\n    \"cpus_per_task\": 10,\n    \"gpus_per_task\": 1,\n    \"ntasks_per_node\": 8,\n    \"nodes\": 4,\n    \"mem_per_cpu\": \"5GB\",\n    \"constraint\": \"volta32gb\",\n    \"partition\": \"devlab\",\n    \"time\": \"72:00:00\",\n    \"requeue\": true,\n    \"comment\": \"NeurIPS deadline 5/19/2022\",\n    \"environment_variables\": {\n      \"MAGNUM_LOG\": \"quiet\",\n      \"MAGNUM_GPU_VALIDATION\": \"ON\",\n      \"LD_LIBRARY_PATH\": \"/usr/lib/x86_64-linux-gnu/nvidia-opengl:${LD_LIBRARY_PATH}\",\n      \"MAIN_ADDR\": \"output of `srun --ntasks=1 hostname 2>&1 | tail -n1`\"\n    },\n    \"modules\": [\n      \"cuda/11.0\",\n      \"cudnn/v8.0.3.33-cuda.11.0\",\n      \"NCCL/2.7.8-1-cuda.11.0\"\n    ],\n    \"python_script\": \"habitat_baselines.run\",\n    \"python_script_arguments\": [\n      \"--exp-config habitat_baselines/config/pointnav/ddppo_pointnav_hm3d.yaml\",\n      \"--run-type train\",\n      \"TENSORBOARD_DIR data/hm3d/tb/${tag}\",\n      \"CHECKPOINT_FOLDER data/hm3d/ckpt/${tag}\",\n      \"TASK_CONFIG.SEED ${seed}\",\n      \"TRAINER_NAME ddppo-e2b\",\n      \"RL.PPO.entropy_coef $entropy\",\n      \"RL.E2B.bonus_coef $bonus_coef\",\n      \"RL.E2B.ridge $ridge\",\n      \"RL.E2B.inv_dynamics_epochs 0\",\n      \"RL.E2B.embedding idm\",\n      \"TOTAL_NUM_STEPS 5e8\",\n      \"NUM_UPDATES -1\",\n      \"NUM_CHECKPOINTS 100\"\n    ]\n  }\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "citation_metadata": {
+                "citation_sources": [
+                    {
+                        "start_index": 880,
+                        "end_index": 1130,
+                        "uri": "https://github.com/roger-creus/SOFE",
+                        "license_": ""
+                    }
+                ]
+            },
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 634,
+        "candidates_token_count": 590,
+        "total_token_count": 1224,
+        "cached_content_token_count": 0
+    }
+}

@@ -1,0 +1,30 @@
+{
+    "application": "ollama",
+    "details": {
+        "resource_requirements": {
+            "partition": "gpu",
+            "gpu_count": 3,
+            "requeue": true,
+            "job_name": "darwin",
+            "nodes": 1,
+            "tasks": 1,
+            "cpus_per_task": 12,
+            "memory": "100G",
+            "time": "2:00:00",
+            "output_file": "/scratch/%u/JOB-%j/slurm-out.out",
+            "error_file": "/scratch/%u/JOB-%j/slurm-error.err"
+        },
+        "software_requirements": {
+            "cuda_version": "12.1.0",
+            "ollama_debug": true,
+            "ollama_num_parallel": 4,
+            "ollama_max_loaded": 4,
+            "ollama_host": "0.0.0.0",
+            "base_log_path": "/scratch/$USER/JOB-$SLURM_JOB_ID/"
+        },
+        "script_execution": {
+            "ollama_serve": "srun --overlap -n1 ollama serve &",
+            "python_script": "srun --overlap -n1 python3 run.py &"
+        }
+    }
+}

@@ -1,0 +1,27 @@
+{
+    "application": "SLURM",
+    "details": {
+        "partition": "gpu",
+        "gres": "gpu:v100:1",
+        "qos": "gpushort",
+        "nodes": 1,
+        "ntasks": 4,
+        "time": "0:10:00",
+        "mem": "40000",
+        "job-name": "gpu",
+        "output": "hadcrut_eval.out",
+        "error": "hadcrut_eval.err",
+        "modules": [
+            "anaconda/2021.11",
+            "cuda/10.2"
+        ],
+        "environment": {
+            "TORCH_HOME": "/p/tmp/bochow/LAMA/lama/",
+            "PYTHONPATH": "/p/tmp/bochow/LAMA/lama/",
+            "HDF5_USE_FILE_LOCKING": "FALSE"
+        },
+        "commands": [
+            "python bin/predict.py model.path=$(pwd)/experiments/bochow_2023-02-10_09-23-51_train_lama-fourier-sic_ indir=/p/tmp/bochow/sic_era5/Niklas_1440/fixed_1440.yaml/ outdir=/p/tmp/bochow/sic_era5/Niklas_1440/inpainted/ model.checkpoint=last.ckpt"
+        ]
+    }
+}

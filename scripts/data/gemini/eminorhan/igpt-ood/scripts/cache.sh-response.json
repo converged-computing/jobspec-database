@@ -1,0 +1,56 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"Slurm\",\n  \"details\": {\n    \"account\": \"cds\",\n    \"gpu\": \"rtx8000\",\n    \"gpu_count\": 1,\n    \"cpus\": 4,\n    \"memory\": \"200GB\",\n    \"time\": \"48:00:00\",\n    \"job_name\": \"cache_igpt\",\n    \"output_file\": \"cache_igpt_%A_%a.out\",\n    \"array_tasks\": 6,\n    \"modules\": [\n      \"cuda/11.1.74\"\n    ],\n    \"python_script\": \"/scratch/eo41/image-gpt/cache.py\",\n    \"python_script_args\": {\n      \"print_freq\": 10,\n      \"batch_size\": 16,\n      \"model_size\": \"l\",\n      \"prly\": \"${PARRAY[`expr $SLURM_ARRAY_TASK_ID % ${#PARRAY[@]}`]}\",\n      \"partition\": \"${v=`expr $SLURM_ARRAY_TASK_ID / ${#PARRAY[@]}`}\",\n      \"fragment\": \"val\",\n      \"model_path\": \"/scratch/eo41/image-gpt/models/l/model.ckpt-1000000.index\",\n      \"cluster_path\": \"/scratch/eo41/image-gpt/models/l/kmeans_centers.npy\",\n      \"val_path\": \"/scratch/eo41/imagenet_st/\"\n    }\n  }\n}\n```\n\nThe script is running under the **Slurm** workload manager. It uses the **cuda/11.1.74** module for GPU acceleration and executes a **Python** script named **cache.py**.  The script takes several arguments related to the training process, including model size, batch size, and data paths. It also leverages **Slurm's array job functionality** to run the script across multiple tasks, each with a specific set of parameters. \n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "citation_metadata": {
+                "citation_sources": [
+                    {
+                        "start_index": 625,
+                        "end_index": 843,
+                        "uri": "https://github.com/eminorhan/igpt-ood",
+                        "license_": ""
+                    }
+                ]
+            },
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 368,
+        "candidates_token_count": 468,
+        "total_token_count": 836,
+        "cached_content_token_count": 0
+    }
+}

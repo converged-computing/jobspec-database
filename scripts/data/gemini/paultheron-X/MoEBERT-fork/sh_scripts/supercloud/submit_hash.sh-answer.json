@@ -1,0 +1,36 @@
+{
+    "application": "SLURM",
+    "details": {
+        "scheduler": "SLURM",
+        "job name": "moebert_hash_$1_$2",
+        "nodes": 1,
+        "tasks per node": 1,
+        "cpus per task": 20,
+        "time": "21-00:00",
+        "mail type": "FAIL",
+        "mail user": "paulth@mit.edu",
+        "output": "/home/gridsan/ptheron/MoEBERT-fork/logs/experiments_hash_$1_out%j.txt",
+        "error": "/home/gridsan/ptheron/MoEBERT-fork/logs/experiments_hash_$1_err%j.txt",
+        "environment": {
+            "modules": [
+                "anaconda/2021b",
+                "MoEBERT"
+            ],
+            "variables": {
+                "TOTAL_GPUS": "${SLURM_NTASKS}",
+                "GPUS_PER_NODE": 2,
+                "HF_USER_DIR": "/home/gridsan/$(whoami)/.cache/huggingface",
+                "HF_LOCAL_DIR": "/state/partition1/user/$(whoami)/cache/huggingface",
+                "HF_HOME": "${HF_LOCAL_DIR}",
+                "TRANSFORMERS_OFFLINE": 1,
+                "HF_DATASETS_OFFLINE": 1,
+                "WANDB_DISABLED": "true",
+                "BACKEND": "pytorch",
+                "HDF5_USE_FILE_LOCKING": "FALSE",
+                "output_dir": "OUTPUT_TOFILL"
+            }
+        },
+        "script": "sh_scripts/experiments/launch_hash.sh",
+        "arguments": "$1 $output_dir $2"
+    }
+}

@@ -1,0 +1,29 @@
+{
+    "application": "LSF",
+    "details": {
+        "batch_system": "LSF",
+        "nodes": 307,
+        "cores_per_node": 42,
+        "gpus_per_node": 1,
+        "mpi_ranks_per_node": 42,
+        "mpi_ranks_total": 1842,
+        "python_script": "step5_batch.py",
+        "python_package": "LS49/adse13_196",
+        "burst_buffer_path": "/mnt/bb/$USER/",
+        "environment_variables": {
+            "BBPATH": "/mnt/bb/$USER/",
+            "USE_EXASCALE_API": "True",
+            "LOG_BY_RANK": 1,
+            "RANK_PROFILE": 0,
+            "N_SIM": 99468,
+            "ADD_SPOTS_ALGORITHM": "cuda",
+            "ADD_BACKGROUND_ALGORITHM": "cuda",
+            "CACHE_FHKL_ON_GPU": "True",
+            "DEVICES_PER_NODE": 1
+        },
+        "commands": [
+            "jsrun -n 1842 -a 6 -c 6 -r 6 -g 1 libtbx.python $(libtbx.find_in_repositories LS49)/adse13_196/step5_batch.py logger.outdir=${BBPATH}",
+            "jsrun -n 307 -r 1 find ${BBPATH} -type f -exec cp {} . \\;"
+        ]
+    }
+}

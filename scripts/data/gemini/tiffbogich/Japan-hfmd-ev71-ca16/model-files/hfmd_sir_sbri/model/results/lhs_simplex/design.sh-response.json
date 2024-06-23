@@ -1,0 +1,62 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"PBS\",\n  \"details\": {\n    \"software\": [\n      \"plom\",\n      \"simul\",\n      \"simplex\"\n    ],\n    \"resource_requirements\": {\n      \"nodes\": 1,\n      \"ppn\": 1,\n      \"walltime\": \"23:30:00\",\n      \"array_jobs\": 500\n    },\n    \"file_paths\": {\n      \"root_path\": \"/scratch/network/sballest/plom-data/hfmd/hfmd_sir_sbri/model\",\n      \"theta_file\": \"results/lhs_simplex/theta.json\",\n      \"results_path\": \"results/lhs_simplex/\",\n      \"design_file\": \"results/lhs_simplex/design.csv\"\n    },\n    \"pipeline_steps\": [\n      {\n        \"description\": \"Get initial conditions\",\n        \"commands\": [\n          \"plom pipe $path_theta -D $path_design -t $h -I -S e:all:guess:0.0 | ./simul ode -T 100000 -D 1000 --traj --freq W --quiet -p $path_saved -i $h\"\n        ]\n      },\n      {\n        \"description\": \"First simplex + rescale reporting rate\",\n        \"commands\": [\n          \"plom pipe $path_theta -D $path_design -t $h -X ${path_read}hat_${h}.csv -r rep | ./simplex -M 10000 --no_trace --prior --quiet -p $path_saved -i $h\"\n        ]\n      },\n      {\n        \"description\": \"Chain simplex\",\n        \"commands\": [\n          \"for (( i=0; i < 19; i++ )); do\\n    path_saved=${path_results}\\n    if [ $i -eq 18 ]; then\\n        ##last results of the pipeline are written in in path_results\\n        path_saved=$path_results\\n    fi\\n    \\n    \\n    if [ $i -gt 0 ]; then\\n        let im1=$i-1\\n##overwrite path_read within the repeatition loop\\n        path_read=${path_results}\\n    fi\\n\\nplom pipe $path_theta -T ${path_read}trace_${h}.csv -u 0.01 | ./simplex -M 10000 --no_trace --prior --quiet -p $path_saved -i $h\\n\\ndone\"\n        ]\n      }\n    ]\n  }\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "citation_metadata": {
+                "citation_sources": [
+                    {
+                        "start_index": 623,
+                        "end_index": 803,
+                        "uri": "https://github.com/tiffbogich/Japan-hfmd-ev71-ca16",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 892,
+                        "end_index": 1039,
+                        "uri": "https://github.com/tiffbogich/Japan-hfmd-ev71-ca16",
+                        "license_": ""
+                    }
+                ]
+            },
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 650,
+        "candidates_token_count": 616,
+        "total_token_count": 1266,
+        "cached_content_token_count": 0
+    }
+}

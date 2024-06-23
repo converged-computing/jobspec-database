@@ -1,0 +1,51 @@
+{
+    "application": "Slurm",
+    "details": {
+        "software": [
+            "deepspeed",
+            "nvidia-smi",
+            "train_encoder_decoder.py",
+            "wandb"
+        ],
+        "resources": {
+            "nodes": 1,
+            "gpus": 2,
+            "cpus": 32,
+            "virtual_environment": ".depth/bin/activate",
+            "environment_variables": [
+                "DS_SKIP_CUDA_CHECK=1",
+                "OMP_NUM_THREADS=$SLURM_CPUS_PER_TASK"
+            ]
+        },
+        "script_purpose": "Fine-tuning a T5 model on the MNLI Matched dataset using Deepspeed",
+        "data": {
+            "training_examples": 400000,
+            "validation_examples": 10000,
+            "max_sequence_length": 512,
+            "input_length": 512,
+            "target_length": 8,
+            "data_collator": "custom_t5"
+        },
+        "optimization": {
+            "optimizer": "adamw_torch",
+            "learning_rate": 0.0001,
+            "batch_size": 200,
+            "gradient_accumulation_steps": 2,
+            "warmup_steps": 1000,
+            "total_steps": 12000,
+            "scheduler": "linear"
+        },
+        "checkpointing": {
+            "every_steps": 12000,
+            "output_dir": "./checkpoints",
+            "checkpoint_path": "checkpoints/pre_train/from_pretrained/hf_t5/allenai/c4_en/lr_0_0001_inverse_sqrt_bsz_200_shuffle_p_0_5/2024-04-03_20-31/checkpoint-256000"
+        },
+        "logging": {
+            "every_steps": 100,
+            "wandb": true
+        },
+        "evaluation": {
+            "every_steps": 500
+        }
+    }
+}

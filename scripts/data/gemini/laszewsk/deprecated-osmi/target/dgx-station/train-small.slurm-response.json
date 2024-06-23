@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"Singularity\",\n  \"details\": {\n    \"resource_requirements\": {\n      \"nodes\": 1,\n      \"tasks\": 1,\n      \"time\": \"02:00:00\",\n      \"partition\": \"bii-gpu\",\n      \"account\": \"bii_dsc_community\",\n      \"gres\": \"gpu:a100:1\",\n      \"job_name\": \"small-train-osmi\",\n      \"output\": \"train-osmi-%u-%j.out\",\n      \"error\": \"train-osmi-%u-%j.err\",\n      \"reservation\": \"bi_fox_dgx\",\n      \"constraint\": \"a100_80gb\"\n    },\n    \"software\": {\n      \"modules\": [\n        \"singularity\",\n        \"tensorflow/2.10.0\",\n        \"gcc\",\n        \"openmpi\",\n        \"python\"\n      ],\n      \"container\": {\n        \"name\": \"cloudmesh-rivanna\",\n        \"image\": \"$RUN_DIR/$NAME.sif\"\n      },\n      \"environment\": {\n        \"name\": \"ENV3\",\n        \"source\": \"$PROJECT_DIR/ENV3/bin/activate\"\n      }\n    },\n    \"script_commands\": [\n      \"nvidia-smi\",\n      \"cd $MODEL_DIR\",\n      \"MODEL=small_lstm\",\n      \"time singularity exec --nv $RUN_DIR/$NAME.sif python train.py $MODEL\"\n    ]\n  }\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 395,
+        "candidates_token_count": 363,
+        "total_token_count": 758,
+        "cached_content_token_count": 0
+    }
+}

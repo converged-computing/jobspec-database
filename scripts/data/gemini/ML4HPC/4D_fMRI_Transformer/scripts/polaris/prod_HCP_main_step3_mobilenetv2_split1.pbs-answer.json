@@ -1,0 +1,45 @@
+{
+    "application": "mpiexec",
+    "details": {
+        "software": [
+            "conda",
+            "python",
+            "mpiexec",
+            "nvidia-smi",
+            "set_affinity_gpu_polaris.sh",
+            "main.py"
+        ],
+        "resource_requirements": {
+            "pbs_parameters": {
+                "nodes": "10",
+                "system": "polaris",
+                "place": "scatter",
+                "walltime": "0:40:00",
+                "filesystems": "home:grand",
+                "queue": "prod",
+                "account": "STlearn"
+            },
+            "environment_variables": {
+                "MPICH_GPU_SUPPORT_ENABLED": "1",
+                "NCCL_COLLNET_ENABLE": "1",
+                "NCCL_NET_GDR_LEVEL": "PHB",
+                "MASTER_ADDR": "hostname of the node",
+                "NNODES": "number of nodes",
+                "NRANKS_PER_NODE": "number of ranks per node",
+                "NTOTRANKS": "total number of ranks",
+                "NDEPTH": "16",
+                "OMP_NUM_THREADS": "8",
+                "OMP_PLACES": "threads"
+            },
+            "conda_environment": "3DCNN"
+        },
+        "script_arguments": {
+            "dataset_split_num": "1",
+            "step": "3",
+            "batch_size_phase3": "4",
+            "exp_name": "mobilenetv2_from_scratch_split_1",
+            "image_path": "/lus/grand/projects/STlearn/HCP_MNI_to_TRs/",
+            "block_type": "MobileNet_v2"
+        }
+    }
+}

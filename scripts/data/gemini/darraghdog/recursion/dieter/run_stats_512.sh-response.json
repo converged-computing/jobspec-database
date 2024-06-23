@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"bsub\",\n  \"details\": {\n    \"queue\": \"lowpriority\",\n    \"gpu_request\": \"num=$N_GPU:mode=exclusive_process\",\n    \"gpu_app\": \"gpu\",\n    \"num_nodes\": \"$N_GPU\",\n    \"container_image\": \"docker.optum.com/dhanley2/bert:pytorch_build\",\n    \"num_processors\": 1,\n    \"resource_request\": \"span[ptile=4]\",\n    \"output_file\": \"log_train_%J\",\n    \"script\": \"cd /share/dhanley2/recursion/$WDIR && python3 stats_6channel.py --dimsize 512 --datapath mount/512X512X6\",\n    \"working_directory\": \"/share/dhanley2/recursion/$WDIR\"\n  }\n}\n```\n\n**Explanation:**\n\n* **bsub**: This is the application being used. It's a job submission command typically found in LSF (Load Sharing Facility) systems. \n* **Details**: \n    * **queue**: `lowpriority` indicates the job is submitted to a low priority queue.\n    * **gpu_request**:  `num=$N_GPU:mode=exclusive_process` requests a specific number of GPUs ($N_GPU) with exclusive access to each GPU.\n    * **gpu_app**:  `gpu` specifies that the job requires a GPU-enabled environment.\n    * **num_nodes**:  `=$N_GPU` requests the job to run on the specified number of nodes.\n    * **container_image**: `docker.optum.com/dhanley2/bert:pytorch_build` defines the Docker container image to be used for running the job.\n    * **num_processors**: `1` indicates the job requires one processor.\n    * **resource_request**: `span[ptile=4]` requests a specific amount of resources (likely related to memory or CPU allocation).\n    * **output_file**:  `log_train_%J` specifies the name of the output log file for the job.\n    * **script**:  `cd /share/dhanley2/recursion/$WDIR && python3 stats_6channel.py --dimsize 512 --datapath mount/512X512X6` outlines the commands to be executed after the job starts. It includes navigating to the working directory, running a Python script (`stats_6channel.py`), and specifying certain parameters.\n    * **working_directory**: `/share/dhanley2/recursion/$WDIR` indicates the directory where the job will run. \n\n**In summary**: This script uses the `bsub` command to submit a job that runs a Python script (`stats_6channel.py`) within a Docker container environment on a GPU-enabled cluster, utilizing specific resource allocations and outputting logs to a designated file. \n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 313,
+        "candidates_token_count": 652,
+        "total_token_count": 965,
+        "cached_content_token_count": 0
+    }
+}

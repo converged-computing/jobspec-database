@@ -1,0 +1,27 @@
+{
+    "application": "PBS",
+    "details": {
+        "software": [
+            "julia"
+        ],
+        "resources": {
+            "nodes": "1 node_type=nv-a100-40gb",
+            "walltime": "00:15:00",
+            "output": "hawk_job.output",
+            "error": "hawk_job.output"
+        },
+        "script": {
+            "commands": [
+                "cd \"$PBS_O_WORKDIR\"",
+                "ml r",
+                "ml julia",
+                "julia --project -t 1 run_cpu.jl",
+                "julia --project -t 2 run_cpu.jl",
+                "julia --project -t 4 run_cpu.jl",
+                "julia --project -t 8 run_cpu.jl",
+                "julia --project -t 128 run_cpu.jl",
+                "julia --project -t 1 run_gpu.jl"
+            ]
+        }
+    }
+}

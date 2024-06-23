@@ -1,0 +1,22 @@
+{
+    "application": "Snakemake",
+    "details": {
+        "software": {
+            "snakemake": "snakemake-7.25.0",
+            "slurm": "installed"
+        },
+        "resource_requirements": {
+            "compute_nodes": 1,
+            "memory": "8G",
+            "wall_time": "120:00:00",
+            "partition": "long",
+            "parallelism": "100 jobs",
+            "cluster_submission_command": "mkdir -p logs/{rule}; sbatch -p ${SLURM_JOB_PARTITION} --export=ALL --nodes 1 --ntasks {threads} --mem={resources.mem_gb}G -t 48:00:00 -o logs/{rule}/{resources.log_prefix}.o -e logs/{rule}/{resources.log_prefix}.e"
+        },
+        "logging": {
+            "output": "rnaseq_workflow.o",
+            "error": "rnaseq_workflow.e",
+            "logs_directory": "logs/"
+        }
+    }
+}

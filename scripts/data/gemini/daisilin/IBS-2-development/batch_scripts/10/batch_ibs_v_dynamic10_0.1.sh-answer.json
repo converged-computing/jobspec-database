@@ -1,0 +1,43 @@
+{
+    "application": "Slurm",
+    "software": [
+        "MATLAB",
+        "recover_theta.m"
+    ],
+    "resource_requirements": {
+        "nodes": 1,
+        "cpus_per_task": 1,
+        "memory": "10GB",
+        "time": "48:00:00",
+        "job_name": "ibs_dynamic_vstm",
+        "output": "ibs2_d_vstm_%j.out",
+        "mail_type": "END",
+        "mail_user": "xl1005@nyu.edu"
+    },
+    "libraries": [
+        "MATLAB/2020b"
+    ],
+    "environment_variables": [
+        "MATLABPATH"
+    ],
+    "files": [
+        "$SCRATCH/${PROJECT_FOLDER}/matlab/recover_theta.m"
+    ],
+    "folders": [
+        "$SCRATCH/${PROJECT_FOLDER}/results",
+        "$SCRATCH/${PROJECT_FOLDER}/results/${model}",
+        "$workdir"
+    ],
+    "commands": [
+        "module purge.",
+        "module load matlab/2020b",
+        "export MATLABPATH=$HOME/${PROJECT_FOLDER}/matlab",
+        "mkdir $SCRATCH/${PROJECT_FOLDER}/results",
+        "mkdir $SCRATCH/${PROJECT_FOLDER}/results/${model}",
+        "mkdir $workdir",
+        "cd $workdir",
+        "echo $model $method $Nsamples $proc_id $alpha",
+        "echo 'addpath('$SCRATCH/${PROJECT_FOLDER}/matlab/'); recover_theta('${model}','${method}',${alpha},${proc_id},${Nsamples}); exit;'",
+        "cat<<EOF | matlab -nodisplay"
+    ]
+}

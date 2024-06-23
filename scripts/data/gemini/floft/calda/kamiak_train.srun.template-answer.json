@@ -1,0 +1,30 @@
+{
+    "application": "Slurm",
+    "details": {
+        "resource_requirements": {
+            "cpus": "{{cpus}}",
+            "gpus": "{{gpus}}",
+            "memory": "10G",
+            "time": "0-06:00:00",
+            "partition": "{{partitions}}"
+        },
+        "software_requirements": {
+            "python": "3",
+            "libraries": [
+                "main.py"
+            ],
+            "scripts": [
+                "kamiak_config.sh",
+                "kamiak_tensorflow_{{cpu_or_gpu}}.sh"
+            ]
+        },
+        "array_configuration": {
+            "array_size": "{{max_array}}",
+            "array_task_id": "$SLURM_ARRAY_TASK_ID"
+        },
+        "environment_variables": {
+            "OMP_NUM_THREADS": "$SLURM_CPUS_PER_TASK"
+        },
+        "command": "python3 -B main.py --logdir=\"$logFolder-$suffix\" --modeldir=\"$modelFolder-$suffix\" --method=\"$method\" --dataset=\"$dataset\" --sources=\"$source\" --target=\"$target\" --uid=\"$uid\" --debugnum=\"$debugnum\" --gpumem=0 $option $@ || handle_error"
+    }
+}

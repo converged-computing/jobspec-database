@@ -1,0 +1,35 @@
+{
+    "application": "LSF",
+    "details": {
+        "resource_requirements": {
+            "nodes": 8,
+            "walltime": "00:15",
+            "allocation_flags": "nvme smt4"
+        },
+        "software_environment": {
+            "modules": [
+                "cuda/10.2.89",
+                "nsight-systems"
+            ],
+            "conda_environment": "open-ce-0.1-0",
+            "python_path": [
+                "/ccs/home/mrowan/code/mlperf-logging"
+            ]
+        },
+        "job_parameters": {
+            "batch_size": 1,
+            "do_profiling": "false",
+            "do_nccl_debug": "true",
+            "data_dir": "/ccs/home/mrowan/scratch/cosmoUniverse_2019_05_4parE_tf",
+            "config": "src/configs/cosmo_runs_gpu_$NODES.yaml",
+            "xla_flags": "--xla_gpu_cuda_data_dir=$CUDA_DIR"
+        },
+        "execution": {
+            "jsrun_flags": "-r1 -a6 -c7 -g6 --bind=proportional-packed:7 -x LD_LIBRARY_PATH",
+            "command": {
+                "profiling": "./utils/run_with_profiling.sh",
+                "no_profiling": "./utils/run.sh"
+            }
+        }
+    }
+}

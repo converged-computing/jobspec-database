@@ -1,0 +1,30 @@
+{
+    "application": "SLURM",
+    "details": {
+        "job_name": "TweetAI",
+        "nodes": 1,
+        "tasks_per_node": 4,
+        "gpus_per_node": 1,
+        "output_file": "%j.%N.%a.train.out.log",
+        "error_file": "%j.%N.%a.train.err.log",
+        "partition": "gpu05,gpu",
+        "time_limit": "5-00:00:00",
+        "memory": "25600",
+        "modules": [
+            "utilities/multi",
+            "readline/7.0",
+            "gcc/10.2.0",
+            "cuda/11.5.0",
+            "python/anaconda/4.6/miniconda/3.7"
+        ],
+        "environment_variables": {
+            "CONFIG": "path/to/config.toml",
+            "POSTFIX": "<string>",
+            "ARGS": "<string>"
+        },
+        "python_environment": "py38",
+        "requirements": "requirements.txt",
+        "script": "src/text_classifier.py",
+        "arguments": "--only-gpu --config \"${CONFIG}\" --output \"${dir_output}\" ${ARGS}"
+    }
+}

@@ -1,0 +1,39 @@
+{
+    "application": "Slurm",
+    "details": {
+        "resource_requirements": {
+            "nodes": 2,
+            "tasks_per_node": 76,
+            "time": "8:00:00",
+            "partition": "cpuonly",
+            "account": "haicore-project-scc",
+            "job_name": "optuna-griewank",
+            "output": "/hkfs/work/workspace/scratch/qv2382-propulate/exps/function_benchmark/logs/paper/griewank/optuna-%j.out"
+        },
+        "software": {
+            "framework": "optuna",
+            "mpi": "pmi2",
+            "singularity_file": "/hkfs/work/workspace/scratch/qv2382-propulate/containers/scratch-tf-sql.sif",
+            "data_dir": "/hkfs/work/workspace/scratch/qv2382-bigearthnet/",
+            "base_dir": "/hkfs/work/workspace/scratch/qv2382-propulate/",
+            "sql_data_dir": "/hkfs/work/workspace/scratch/qv2382-propulate/sqldata/griewank",
+            "sql_config": "/hkfs/work/workspace/scratch/qv2382-propulate/exps/function_benchmark/mysqlconfs/griewank.cnf",
+            "sql_socket": "/hkfs/work/workspace/scratch/qv2382-propulate/bigearthnet_kit/mysql/griewank/var/run/mysqld/mysqld.sock",
+            "sql_dir": "/hkfs/work/workspace/scratch/qv2382-propulate/bigearthnet_kit/mysql/griewank/"
+        },
+        "environment_variables": {
+            "FNAME": "griewank",
+            "EVALS_PER_WORKER": 256,
+            "UCX_MEMTYPE_CACHE": 0,
+            "NCCL_IB_TIMEOUT": 100,
+            "SHARP_COLL_LOG_LEVEL": 3,
+            "OMPI_MCA_coll_hcoll_enable": 0,
+            "NCCL_SOCKET_IFNAME": "ib0",
+            "NCCL_COLLNET_ENABLE": 0
+        },
+        "commands": [
+            "ml purge",
+            "srun --mpi=\"pmi2\" --label singularity exec --bind /hkfs/work/workspace/scratch/qv2382-propulate/ --bind /hkfs/work/workspace/scratch/qv2382-propulate/bigearthnet_kit/mysql/griewank/var/lib/mysql/:/var/lib/mysql --bind /hkfs/work/workspace/scratch/qv2382-propulate/bigearthnet_kit/mysql/griewank/run/mysqld:/run/mysqld --bind /hkfs/work/workspace/scratch/qv2382-propulate/bigearthnet_kit/mysql/griewank/var/log/mysql/:/var/log/mysql --bind ${DATA_DIR},/scratch,$TMP --bind /hkfs/work/workspace/scratch/qv2382-propulate/propulate/propulate/wrapper.py:/usr/local/lib/python3.8/dist-packages/propulate/wrapper.py --bind /hkfs/work/workspace/scratch/qv2382-propulate/propulate/propulate/propulator.py:/usr/local/lib/python3.8/dist-packages/propulate/propulator.py ${SINGULARITY_FILE} bash optuna.sh"
+        ]
+    }
+}

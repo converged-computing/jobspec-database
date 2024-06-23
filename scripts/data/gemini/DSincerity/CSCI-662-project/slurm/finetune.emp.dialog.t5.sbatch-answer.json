@@ -1,0 +1,54 @@
+{
+    "application": "SLURM",
+    "details": {
+        "scheduler": "SLURM",
+        "job_name": "FT-Blenderbot-Small-ESCOV",
+        "nodes": 1,
+        "account": "glucas_540",
+        "partition": "gpu",
+        "tasks_per_node": 1,
+        "gpus": "1 v100",
+        "cpus_per_task": 10,
+        "time": "30:00:00",
+        "memory": "20G",
+        "output_file": "slogs/%j.%x.info.log",
+        "error_file": "slogs/%j.%x.error.log",
+        "environment": {
+            "OMP_NUM_THREADS": 1,
+            "OPENBLAS_NUM_THREADS": 2,
+            "conda_environment": "/project/glucas_540/briank/kemi-env",
+            "MASTER_PORT": "random port between 49152 and 65535",
+            "LD_LIBRARY_PATH": "/spack/conda/miniconda3/23.3.1/lib/:$LD_LIBRARY_PATH",
+            "MASTER_ADDR": "first node in $SLURM_JOB_NODELIST",
+            "CUDA_VISIBLE_DEVICES": "environment variable"
+        },
+        "software": {
+            "conda": "installed",
+            "python": "installed",
+            "torch": "installed",
+            "wandb": "installed",
+            "nvidia-smi": "installed"
+        },
+        "script_language": "bash",
+        "script_purpose": "train a language model using PyTorch",
+        "script_arguments": {
+            "config_name": "emp_dialog_t5",
+            "inputter_name": "emp_dialog_t5",
+            "data_name": "esconv",
+            "knowledge_name": "sbert",
+            "eval_input_file": "./_reformat/",
+            "seed": 13,
+            "max_input_length": 256,
+            "max_decoder_input_length": 40,
+            "train_batch_size": 16,
+            "gradient_accumulation_steps": 1,
+            "eval_batch_size": 16,
+            "learning_rate": 3e-05,
+            "num_epochs": 6,
+            "warmup_steps": 100,
+            "fp16": false,
+            "loss_scale": 0.0,
+            "pbar": true
+        }
+    }
+}

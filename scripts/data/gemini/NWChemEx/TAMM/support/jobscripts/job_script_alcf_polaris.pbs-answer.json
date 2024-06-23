@@ -1,0 +1,40 @@
+{
+    "application": "MPI",
+    "details": {
+        "environment": {
+            "modules": [
+                "PrgEnv-gnu",
+                "cpe-cuda",
+                "cudatoolkit-standalone/11.8.0",
+                "cmake"
+            ],
+            "variables": {
+                "GA_NUM_PROGRESS_RANKS_PER_NODE": "1",
+                "CRAYPE_LINK_TYPE": "dynamic",
+                "MPICH_GPU_SUPPORT_ENABLED": "0",
+                "OMP_NUM_THREADS": "1"
+            }
+        },
+        "resources": {
+            "system": "polaris",
+            "queue": "debug",
+            "account": "gpu_hack",
+            "walltime": "00:30:00",
+            "nodes": {
+                "count": "1",
+                "placement": "scatter"
+            },
+            "filesystems": [
+                "home:eagle"
+            ],
+            "ranks_per_node": "5",
+            "threads_per_rank": "1",
+            "depth": "1"
+        },
+        "executable": "set_affinity_gpu_polaris.sh",
+        "arguments": [
+            "${TAMM_EXE}",
+            "${INPUT}"
+        ]
+    }
+}

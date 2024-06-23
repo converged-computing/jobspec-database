@@ -1,0 +1,41 @@
+{
+    "application": "ctest",
+    "details": {
+        "resource_requirements": {
+            "nodes": 2,
+            "partition": "nvgpu",
+            "hint": "multithread",
+            "environment": {
+                "SPACK_SYSTEM_CONFIG_PATH": "/user-environment/config",
+                "MPICH_MAX_THREAD_SAFETY": "multiple",
+                "MIMALLOC_EAGER_COMMIT_DELAY": 0,
+                "MIMALLOC_LARGE_OS_PAGES": 1,
+                "CUDA_VISIBLE_DEVICES": "$SLURM_LOCALID"
+            },
+            "software": {
+                "mpich": "unknown version",
+                "dlaf": "compiled with -DDLAF_CI_RUNNER_USES_MPIRUN=on"
+            },
+            "squashfs_image": "/scratch/e1000/rmeli/squashfs/dlaf-mkl-cuda.squashfs",
+            "spack_environment": "/scratch/e1000/rmeli/git/my-spack/envs/dlaf-mkl-cuda"
+        },
+        "testing_configurations": [
+            {
+                "ranks": 1,
+                "cpu_bind": "mask_cpu:ffff000000000000ffff000000000000,ffff000000000000ffff00000000,ffff000000000000ffff0000,ffff000000000000ffff"
+            },
+            {
+                "ranks": 2,
+                "cpu_bind": "mask_cpu:ffff000000000000ffff000000000000,ffff000000000000ffff00000000,ffff000000000000ffff0000,ffff000000000000ffff"
+            },
+            {
+                "ranks": 4,
+                "cpu_bind": "mask_cpu:ffff000000000000ffff000000000000,ffff000000000000ffff00000000,ffff000000000000ffff0000,ffff000000000000ffff"
+            },
+            {
+                "ranks": 6,
+                "cpu_bind": "mask_cpu:ffff000000000000ffff000000000000,ffff000000000000ffff00000000,ffff000000000000ffff0000,ffff000000000000ffff"
+            }
+        ]
+    }
+}

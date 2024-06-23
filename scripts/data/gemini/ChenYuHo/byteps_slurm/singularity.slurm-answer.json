@@ -1,0 +1,34 @@
+{
+    "application": "Slurm",
+    "details": {
+        "scheduler": "Slurm",
+        "partition": "batch",
+        "job_name": "byteps_singularity",
+        "output_file": "logs/%J.out",
+        "error_file": "logs/%J.err",
+        "time_limit": "0:4:59",
+        "memory": "64g",
+        "gpus": "4",
+        "gpus_per_node": "1",
+        "constraints": "v100,gpu_ai",
+        "tasks": "4",
+        "working_directory": "/ibex/scratch/hoc0a/e2e-exps/byteps",
+        "image": "/ibex/scratch/hoc0a/byteps_horovod.sif",
+        "modules": [
+            "singularity/3.6",
+            "openmpi/4.0.3-cuda10.1"
+        ],
+        "communication_interface": "ib0",
+        "mpi_implementation": "openmpi",
+        "byteps_configuration": {
+            "enable_rdma": "ibverbs",
+            "interface": "ib0",
+            "num_worker": "$NW",
+            "num_server": "$NS",
+            "ps_root_uri": "${interface_addr}",
+            "ps_root_port": "$PORT",
+            "enable_ipc": "0",
+            "role": "scheduler"
+        }
+    }
+}

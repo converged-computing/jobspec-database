@@ -1,0 +1,34 @@
+{
+    "application": "LSF",
+    "details": {
+        "queue": "gpuv100",
+        "gpu": "1",
+        "job_name": "SAC+AE",
+        "nodes": 1,
+        "walltime": "24:00",
+        "memory": "32GB",
+        "email": "s174505@student.dtu.dk",
+        "output": "outputs/output_%J.out",
+        "error": "errors/error_%J.err",
+        "modules": [
+            "cuda/8.0",
+            "cudnn/v7.0-prod-cuda8"
+        ],
+        "environment_variables": {
+            "PYTHONHOME": "unset",
+            "PYTHONPATH": "unset",
+            "MUJOCO_GL": "egl",
+            "PATH": "$HOME/.local/bin:$PATH",
+            "LD_LIBRARY_PATH": "$LD_LIBRARY_PATH:~/.mujoco/mujoco200/bin",
+            "IS_BSUB_EGL": 1
+        },
+        "working_directory": "/work1/s174505/share_DeepLearning/Poster_networks/pytorch_sac_ae_before_keynet",
+        "python_script": "train.py",
+        "arguments": [
+            "--domain_name cartpole",
+            "--task_name swingup",
+            "--seed 10",
+            "--work_dir $LSB_JOBID"
+        ]
+    }
+}

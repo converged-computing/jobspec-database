@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"Gromacs\",\n  \"details\": {\n    \"version\": \"2020.5\",\n    \"partition\": \"tcb\",\n    \"nodes\": 1,\n    \"mpi_processes_per_node\": 8,\n    \"gpus\": 2,\n    \"gpu_nodes\": \"gpu04\",\n    \"wall_clock_time\": \"23:30:00\",\n    \"input_files\": [\n      \"../../../../models/mdp/NPTres${var}.mdp\",\n      \"step${var0}.gro\",\n      \"../topol.top\",\n      \"../index.ndx\",\n      \"topol_pp.top\",\n      \"step${var0}.gro\",\n      \"step${var}.cpt\"\n    ],\n    \"output_files\": [\n      \"job-%j.err\",\n      \"job-%j.out\",\n      \"topol${var}.tpr\",\n      \"step${var}.gro\",\n      \"step${var}.cpt\"\n    ],\n    \"commands\": [\n      \"gmx grompp -maxwarn 1 -f ../../../../models/mdp/NPTres${var}.mdp  -c step${var0}.gro  -p ../topol.top  -o topol${var}.tpr -n ../index.ndx -pp topol_pp.top -r step${var0}.gro\",\n      \"gmx mdrun -v -maxh $time -s topol${var}.tpr  -pin on -deffnm step$var\",\n      \"gmx mdrun -v -maxh $time -s topol${var}.tpr  -pin on -deffnm step$var -cpi step${var}.cpt\"\n    ]\n  }\n}\n```\n\nThis script appears to be running a simulation using the Gromacs molecular dynamics software.  It submits the job to the tcb partition of a cluster, requesting one node with eight MPI processes per node. It also requests two GPUs on the gpu04 node. The script runs a series of simulations using Gromacs, each with a duration of 23 hours. It checks for the existence of a checkpoint file (\"step${var}.cpt\") and uses it if present to restart the simulation. The script uses variables to increment the simulation step number and submit further simulation runs until a specific number of steps have been completed. \n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 601,
+        "candidates_token_count": 536,
+        "total_token_count": 1137,
+        "cached_content_token_count": 0
+    }
+}

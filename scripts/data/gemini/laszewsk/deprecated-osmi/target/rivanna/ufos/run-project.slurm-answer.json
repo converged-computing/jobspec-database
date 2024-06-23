@@ -1,0 +1,34 @@
+{
+    "application": "Slurm",
+    "details": {
+        "scheduler": "Slurm",
+        "partition": "bii-gpu",
+        "account": "bii_dsc_community",
+        "gpu": "a100",
+        "reservation": "bi_fox_dgx",
+        "constraint": "a100_80gb",
+        "memory": "1G",
+        "job_name": "train-osmi",
+        "output_file": "%u-%j.out",
+        "error_file": "%u-%j.err",
+        "runtime": "12:00:00",
+        "nodes": 1,
+        "tasks": 1,
+        "environment": {
+            "RUN_DIR": "$PROJECT/osmi",
+            "output_dir": "$RUN_DIR/osmi-output",
+            "benchmark": "$RUN_DIR/benchmark",
+            "rivanna": "$RUN_DIR/machine/rivanna"
+        },
+        "software": {
+            "conda_environment": "OSMI",
+            "requirements": "$rivanna/requirements-rivanna.txt",
+            "singularity_image": "$RUN_DIR/serving_latest-gpu.sif",
+            "tensorflow_model_server": "tensorflow_model_server",
+            "python_script": "metabench.py"
+        },
+        "other": {
+            "energy_monitoring": "cms gpu watch --gpu=0 --delay=0.5 --dense > outputs/gpu0.log"
+        }
+    }
+}

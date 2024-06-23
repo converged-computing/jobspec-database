@@ -1,0 +1,81 @@
+{
+    "application": "SLURM",
+    "details": {
+        "job_name": "omni",
+        "output_file": "/fsx/qinghonglin/univtg/log/omni.log",
+        "partition": "learnai4rl",
+        "nodes": 1,
+        "tasks_per_node": 1,
+        "gpus_per_node": 4,
+        "cpus_per_task": 96,
+        "account": "all",
+        "environment_variables": {
+            "NCCL_SOCKET_IFNAME": "ens32",
+            "NCCL_NSOCKS_PERTHREAD": 4,
+            "NCCL_SOCKET_NTHREADS": 2
+        },
+        "python_script": "main/train_vlp_ddp.py",
+        "distributed_launch_parameters": {
+            "nproc_per_node": 4,
+            "max_restarts": 0,
+            "rdzv_backend": "c10d",
+            "rdzv_endpoint": "localhost:0"
+        },
+        "training_parameters": {
+            "dset_type": "vlp",
+            "dset_name": "vlp",
+            "clip_length": 2,
+            "exp_id": "omni_aio_unified__epo6_f10_b10g1_s0.1_0.1",
+            "model_id": "univtg",
+            "gpu_id": 0,
+            "num_workers": 8,
+            "bsz": 64,
+            "eval_bsz": 32,
+            "n_epoch": 100,
+            "lr": 0.0001,
+            "lr_warmup": 10,
+            "lr_drop": 200,
+            "wd": 0.0001,
+            "input_dropout": 0.5,
+            "dropout": 0,
+            "droppath": 0.1,
+            "eval_epoch": 5,
+            "enc_layers": 4,
+            "save_interval": 5,
+            "b_loss_coef": 10,
+            "g_loss_coef": 1,
+            "eos_coef": 0.1,
+            "f_loss_coef": 10,
+            "s_loss_intra_coef": 0.1,
+            "s_loss_inter_coef": 0.1,
+            "hidden_dim": 1024,
+            "main_metric": "MR-full-R1@0.3-key",
+            "nms_thd": 0.7,
+            "max_before_nms": 1000,
+            "ctx_mode": "video_tef",
+            "v_feat_types": "slowfast_clip",
+            "t_feat_type": "clip",
+            "use_cache": -1,
+            "easy_negative_only": 1,
+            "add_easy_negative": 1,
+            "resume": "/data/home/qinghonglin/univtg/results/vlp-vlp/aio_unified-slowfast_clip-clip-2023_05_26_07/model_e0006.ckpt",
+            "train_path": [
+                "data/qvhighlights/metadata/qvhighlights_train.jsonl",
+                "data/charades/metadata/charades_train.jsonl",
+                "data/ego4d/metadata/nlq_train.jsonl",
+                "data/tacos/metadata/train.jsonl",
+                "data/anet/metadata/train.jsonl",
+                "data/didemo/metadata/train.jsonl"
+            ],
+            "eval_path": "data/qvhighlights/metadata/qvhighlights_val.jsonl",
+            "eval_split_name": "val",
+            "v_feat_dirs": [
+                "vid_slowfast",
+                "vid_clip"
+            ],
+            "v_feat_dim": 2816,
+            "t_feat_dir": "txt_clip",
+            "t_feat_dim": 512
+        }
+    }
+}

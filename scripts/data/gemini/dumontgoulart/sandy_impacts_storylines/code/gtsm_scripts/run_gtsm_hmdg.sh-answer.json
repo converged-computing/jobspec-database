@@ -1,0 +1,30 @@
+{
+    "application": "Dflow-FM",
+    "software": [
+        "Singularity",
+        "Intel compiler 2021a",
+        "SLURM workload manager"
+    ],
+    "resource_requirements": {
+        "nodes": 1,
+        "tasks_per_node": 32,
+        "memory": "40G",
+        "time": "03:30:00",
+        "partition": "thin"
+    },
+    "input_files": [
+        "gtsm_fine_hmdg.mdu",
+        "run_dflowfm.sh"
+    ],
+    "output_files": [
+        "newsingularity.done"
+    ],
+    "commands": [
+        "module purge",
+        "module load 2021",
+        "module load intel/2021a",
+        "$singularityFolder/execute_singularity_snellius.sh $modelFolder run_dflowfm.sh --partition:ndomains=$SLURM_NTASKS:icgsolver=6 $mduFile",
+        "$singularityFolder/execute_singularity_snellius.sh $modelFolder run_dflowfm.sh -m $mduFile"
+    ],
+    "description": "This script runs a Dflow-FM model using Singularity on the Snellius supercomputer. It utilizes a specified MDU file (gtsm_fine_hmdg.mdu) and runs the model using the provided execute_singularity_snellius.sh script. The script takes advantage of SLURM for resource allocation and job management."
+}

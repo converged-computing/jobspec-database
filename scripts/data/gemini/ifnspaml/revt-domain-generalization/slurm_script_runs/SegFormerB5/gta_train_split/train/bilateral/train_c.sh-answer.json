@@ -1,0 +1,44 @@
+{
+    "application": "slurm",
+    "details": {
+        "resources": {
+            "cpus": 2,
+            "gpu": true,
+            "memory": "32000M",
+            "tasks": 1,
+            "tasks_per_node": 1,
+            "partition": "gpu",
+            "time": "7-00:00:00",
+            "excluded_gpus": [
+                "gpu[04,01,02,05,06]"
+            ]
+        },
+        "software": {
+            "modules": [
+                "comp/gcc/11.2.0",
+                "transformer-domain-generalization"
+            ],
+            "python_package": "transformer-domain-generalization",
+            "scripts": [
+                "./tools/train.py",
+                "./tools/test.py"
+            ]
+        },
+        "configuration": {
+            "main_config": "./local_configs/segformer/B5/cs/segformer.b5.512x512.gta2cs.40k.batch2_bilateral_filter.py",
+            "work_dir_prefix": "./work_dirs/gta_train_split/segformer.b5.512x512.gta2cs.40k.batch2_bilateral_filter",
+            "num_models": 1,
+            "start_seed": 2,
+            "train_dataset": "gta_train",
+            "test_models": true,
+            "test_cityscapes": true,
+            "test_bdd": true,
+            "test_mapillary": true,
+            "test_acdc": true,
+            "test_kitti": true,
+            "test_synthia": true,
+            "test_gta_val": true,
+            "max_iters": 40000
+        }
+    }
+}

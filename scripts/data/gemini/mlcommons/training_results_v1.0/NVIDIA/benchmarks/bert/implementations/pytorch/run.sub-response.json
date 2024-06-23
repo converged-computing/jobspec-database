@@ -1,0 +1,56 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "Language-Model-Training\n\n```json\n{\n  \"application\": \"Language Model Training\",\n  \"framework\": \"PyTorch\",\n  \"model\": \"BERT\",\n  \"dataset\": \"Unknown, but is expected to be provided at runtime\",\n  \"resource_requirements\": {\n    \"compute\": {\n      \"nodes\": \"${SLURM_JOB_NUM_NODES}\",\n      \"gpus_per_node\": \"${DGXNGPU}\"\n    },\n    \"memory\": {\n      \"per_node\": \"0\"\n    },\n    \"storage\": {\n      \"data_dir\": \"${DATADIR}\",\n      \"checkpoint_dir\": \"${CHECKPOINTDIR}\",\n      \"results_dir\": \"${LOGDIR}\"\n    },\n    \"container\": {\n      \"image\": \"${CONT}\",\n      \"mounts\": [\n        \"${DATADIR}:/workspace/data\",\n        \"${DATADIR_PHASE2}:/workspace/data_phase2\",\n        \"${CHECKPOINTDIR}:/results\",\n        \"${CHECKPOINTDIR_PHASE1}:/workspace/phase1\",\n        \"${EVALDIR}:/workspace/evaldata\",\n        \"${API_LOG_DIR}:/logs\"\n      ]\n    }\n  },\n  \"environment_variables\": {\n    \"DGXSYSTEM\": \"DGXSYSTEM not set\",\n    \"CONT\": \"CONT not set\",\n    \"NEXP\": \"5\",\n    \"DATESTAMP\": \"date +'%y%m%d%H%M%S%N'\",\n    \"LOGDIR\": \"./results\",\n    \"API_LOG_DIR\": \"./api_logs\",\n    \"CLEAR_CACHES\": \"1\",\n    \"MAX_STEPS\": \"1536000\",\n    \"BATCHSIZE\": \"10\",\n    \"LR\": \"6e-3\",\n    \"WARMUP_PROPORTION\": \"0.0\",\n    \"MAX_SAMPLES_TERMINATION\": \"14000000\",\n    \"EVAL_ITER_START_SAMPLES\": \"100000\",\n    \"EVAL_ITER_SAMPLES\": \"100000\",\n    \"GRADIENT_STEPS\": \"2\",\n    \"USE_DDP\": \"0\",\n    \"TARGET_MLM_ACCURACY\": \"0.720\",\n    \"WEIGHT_DECAY_RATE\": \"0.01\",\n    \"EXTRA_PARAMS\": \"None\",\n    \"SEED\": \"RANDOM\",\n    \"UNITTEST\": \"0\",\n    \"CONTAINER_PRELOAD_LUSTRE\": \"0\",\n    \"NCCL_DEBUG\": \"INFO\",\n    \"NCCL_TOPO_FILE\": \"/workspace/bert/dgxa100_nic_affinity.xml\"\n  }\n}\n```\n\n**Explanation:**\n\n* **Application:** Language Model Training, specifically using BERT.\n* **Framework:** PyTorch.\n* **Model:** BERT.\n* **Dataset:** Not explicitly specified but is expected to be provided at runtime.\n* **Resource Requirements:**\n    * **Compute:** Uses SLURM for job management and specifies the number of nodes and GPUs per node.\n    * **Memory:** Specifies a memory limit of 0 per node, which suggests that the script relies on the default memory allocation or that memory requirements are handled dynamically.\n    * **Storage:** Defines locations for data, checkpoints, and results.\n    * **Container:** Defines the container image and mounts required for the training process.\n* **Environment Variables:**\n    * Several environment variables are defined, including those related to the training process, SLURM settings, and resource requirements.\n\n**Key Points:**\n\n* The script utilizes the `srun` command from SLURM for running tasks on the cluster.\n* It sets up a Docker container and mounts necessary directories for the training process.\n* The `BERT_CMD` variable defines the command to run the BERT training script.\n* The script includes a loop for running multiple training experiments.\n* It includes options for clearing caches, running unit tests, and preloading the container image to LUSTRE.\n* The script utilizes the `run_and_time.sh` script for timing the training process.\n\nThis JSON output provides a comprehensive summary of the application, its dependencies, and the environment it runs in."
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "citation_metadata": {
+                "citation_sources": [
+                    {
+                        "start_index": 536,
+                        "end_index": 778,
+                        "uri": "https://github.com/mlcommons/training_results_v0.7",
+                        "license_": ""
+                    }
+                ]
+            },
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 2349,
+        "candidates_token_count": 953,
+        "total_token_count": 3302,
+        "cached_content_token_count": 0
+    }
+}

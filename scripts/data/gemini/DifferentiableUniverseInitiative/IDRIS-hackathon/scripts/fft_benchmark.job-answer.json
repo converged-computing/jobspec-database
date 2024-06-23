@@ -1,0 +1,27 @@
+{
+    "application": "Slurm",
+    "details": {
+        "job_name": "fft_benchmark",
+        "partition": "gpu_p2",
+        "tasks": 8,
+        "tasks_per_node": 4,
+        "gpus_per_node": 4,
+        "cpus_per_task": 10,
+        "hyperthreading": "disabled",
+        "max_time": "00:10:00",
+        "output_file": "fft_benchmark%j.out",
+        "error_file": "fft_benchmark%j.out",
+        "project": "ftb@gpu",
+        "queue": "qos_gpu-dev",
+        "modules": [
+            "tensorflow-gpu/py3/2.4.1+nccl-2.8.3-1",
+            "nvidia-nsight-systems/2021.1.1"
+        ],
+        "environment_variables": {
+            "TMPDIR": "$JOBSCRATCH"
+        },
+        "command": "nsys profile --stats=true -t nvtx,cuda,mpi -o result-%q{SLURM_TASK_PID} python -u fft_benchmark.py --mesh_shape=\"b1:2,b2:4\" --layout=\"nx:b1,tny:b1,ny:b2,tnz:b2\"",
+        "execution_tool": "srun",
+        "mpi_implementation": "pmi2"
+    }
+}

@@ -1,0 +1,34 @@
+{
+    "application": "SLURM",
+    "details": {
+        "resource_requirements": {
+            "nodes": 1,
+            "tasks_per_node": 1,
+            "cpus_per_task": 1,
+            "time": "00:10:00",
+            "partition": "workq",
+            "account": "mwaeor",
+            "export": "MWA_DIR",
+            "array": "0-1",
+            "job_name": "edit_fixfile"
+        },
+        "software_requirements": {
+            "python": {
+                "module": "python-singularity",
+                "script": "../correct_rtsuvfits.py"
+            },
+            "casa": {
+                "module": "casa/5.6.1-8",
+                "script": "../rts_uv2ms.py"
+            },
+            "cotter": {
+                "module": "cotter",
+                "script": "../fixMS.py"
+            }
+        },
+        "data_paths": {
+            "calibrated_data": "/astro/mwaeor/MWA/data/${OBSID}/${CURRENTDATE}/uvdump*uvfits",
+            "metafits": "/astro/mwaeor/MWA/data/${OBSID}/${CURRENTDATE}/${OBSID}.metafits"
+        }
+    }
+}

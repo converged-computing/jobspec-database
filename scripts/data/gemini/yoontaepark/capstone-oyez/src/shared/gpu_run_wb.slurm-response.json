@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"Slurm\",\n  \"details\": {\n    \"resource_requirements\": {\n      \"nodes\": 1,\n      \"tasks_per_node\": 1,\n      \"cpus_per_task\": 1,\n      \"time\": \"24:00:00\",\n      \"memory\": \"128GB\",\n      \"gpu\": \"a100:1\"\n    },\n    \"job_name\": \"myTest\",\n    \"email_notifications\": {\n      \"type\": \"END\",\n      \"address\": \"yp2201@nyu.edu\"\n    },\n    \"output_file\": \"slurm_%j.out\",\n    \"singularity_image\": \"/scratch/work/public/singularity/cuda11.4.2-cudnn8.2.4-devel-ubuntu20.04.3.sif\",\n    \"environment_variables\": {\n      \"SCRATCH\": \"/scratch/work/public/singularity/cuda11.4.2-cudnn8.2.4-devel-ubuntu20.04.3.sif\",\n      \"CUDA_LAUNCH_BLOCKING\": \"1\"\n    },\n    \"python_packages\": {\n      \"rouge\": \"pip install rouge\"\n    },\n    \"python_script\": \"$SCRATCH/capstone_wb/wb_code_v2.py\",\n    \"python_arguments\": \"conclusion --finetune\"\n  }\n}\n```\n\n**Explanation:**\n\n* **Slurm:** The script uses `sbatch` commands, indicating it's a Slurm script. Slurm is a workload manager used for scheduling and managing jobs on compute clusters.\n* **Resource Requirements:** The `#SBATCH` directives define the resources needed for the job, including:\n    * 1 node\n    * 1 task per node\n    * 1 CPU per task\n    * 24 hours of runtime\n    * 128 GB of memory\n    * 1 a100 GPU\n* **Job Name:** The job is named \"myTest\".\n* **Email Notifications:**  The script sends an email notification to the specified address when the job completes.\n* **Output File:**  The output of the job is redirected to a file named `slurm_%j.out`.\n* **Singularity:** The script uses Singularity to run the Python script in a containerized environment, isolating dependencies and ensuring reproducibility. The image path is `/scratch/work/public/singularity/cuda11.4.2-cudnn8.2.4-devel-ubuntu20.04.3.sif`.\n* **Environment Setup:** The script sources an environment file (`/ext3/env.sh`) and activates a conda environment before running the Python script.\n* **Python Script and Arguments:** The script executes a Python script (`$SCRATCH/capstone_wb/wb_code_v2.py`) with the arguments \"conclusion\" and \"--finetune\".\n* **Python Packages:** The script installs the `rouge` package using `pip`.\n* **GPU Configuration:** The `CUDA_LAUNCH_BLOCKING=1` environment variable ensures blocking mode for GPU launches. \n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 418,
+        "candidates_token_count": 717,
+        "total_token_count": 1135,
+        "cached_content_token_count": 0
+    }
+}

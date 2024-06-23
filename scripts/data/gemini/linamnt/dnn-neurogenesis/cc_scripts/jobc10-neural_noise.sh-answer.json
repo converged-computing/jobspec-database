@@ -1,0 +1,28 @@
+{
+    "application": "Slurm",
+    "details": {
+        "job_name": "c10-noise",
+        "time_limit": "0-09:30",
+        "cores_per_task": 16,
+        "gpu_type": "t4",
+        "gpu_count": 1,
+        "memory": "128000M",
+        "output_file_pattern": "./output/%x-%j.out",
+        "environment": {
+            "source_directory": "~/ndl/cc_scripts",
+            "virtual_environment": "~/pytorch_gpu",
+            "python_version": "3.6"
+        },
+        "data_preparation": {
+            "data_source": "~/data/cifar10.tar",
+            "data_destination": "$SLURM_TMPDIR/data"
+        },
+        "script": {
+            "name": "c10-neural_noise.py",
+            "arguments": {
+                "data_path": "$SLURM_TMPDIR/data",
+                "source_directory": "$SOURCEDIR"
+            }
+        }
+    }
+}

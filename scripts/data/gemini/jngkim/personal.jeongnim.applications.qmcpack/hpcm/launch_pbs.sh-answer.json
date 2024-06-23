@@ -1,0 +1,57 @@
+{
+    "application": "QMCPack",
+    "details": {
+        "software": [
+            "QMCPack",
+            "MPI",
+            "OpenMP",
+            "Intel C++ Compiler",
+            "SYCL",
+            "Level Zero",
+            "numactl",
+            "qsub"
+        ],
+        "resources": {
+            "cpu": {
+                "cores": 16,
+                "nodes": 16,
+                "ppn": 12,
+                "omp": 8,
+                "binding": {
+                    "type": "cpu-bind",
+                    "options": [
+                        "--cpu-bind list:2-9,106-113:10-17,114-121:18-25,122-129:26-33,130-137:34-41,138-145:42-49,146-153",
+                        "--cpu-bind list:54-61,158-165:62-69,166-173:70-77,174-181:78-85,182-189:86-93,190-197:94-101,198-205",
+                        "--cpu-bind list:2-9,106-113:10-17,114-121:18-25,122-129:26-33,130-137:34-41,138-145:42-49,146-153:54-61,158-165:62-69,166-173:70-77,174-181:78-85,182-189:86-93,190-197:94-101,198-205"
+                    ]
+                },
+                "environment_variables": {
+                    "KMP_BLOCKTIME": "0",
+                    "OMP_PLACES": "cores",
+                    "OMP_PROC_BIND": "spread",
+                    "LIBOMPTARGET_PLUGIN": "LEVEL0",
+                    "ONEAPI_DEVICE_SELECTOR": "level_zero:gpu",
+                    "ZE_ENABLE_PCI_ID_DEVICE_ORDER": "1",
+                    "LIBOMP_USE_HIDDEN_HELPER_TASK": "0",
+                    "LIBOMP_NUM_HIDDEN_HELPER_THREADS": "0",
+                    "ZEX_NUMBER_OF_CCS": "0:1,1:1,2:1,3:1,4:1,5:1",
+                    "LIBOMPTARGET_LEVEL0_COMPILATION_OPTIONS": "-ze-opt-large-register-file",
+                    "SYCL_PROGRAM_COMPILE_OPTIONS": "-ze-opt-large-register-file",
+                    "LIBOMPTARGET_LEVEL_ZERO_USE_IMMEDIATE_COMMAND_LIST": "all",
+                    "LIBOMPTARGET_LEVEL_ZERO_INTEROP_USE_IMMEDIATE_COMMAND_LIST": "1",
+                    "LIBOMPTARGET_LEVEL0_USE_COPY_ENGINE": "main",
+                    "SYCL_PI_LEVEL_ZERO_USE_IMMEDIATE_COMMANDLISTS": "1",
+                    "SYCL_PI_LEVEL_ZERO_DEVICE_SCOPE_EVENTS": "0",
+                    "SYCL_PI_LEVEL_ZERO_USE_COPY_ENGINE": "0:0"
+                }
+            },
+            "gpu": {
+                "affinity": "/home/jeongnim/qmcpack.workspace/hpcm/gpu_mapper.sh"
+            },
+            "queue": {
+                "name": "R9376",
+                "walltime": "00:12:00"
+            }
+        }
+    }
+}

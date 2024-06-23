@@ -1,0 +1,39 @@
+{
+    "application": "Slurm",
+    "details": {
+        "job_name": "r2_train_nextvit",
+        "output_file": "/mnt/sandbox1/%u/logs/%A_%x",
+        "partition": "gpu",
+        "gpus": 4,
+        "tasks_per_node": 4,
+        "cpus_per_gpu": 8,
+        "time": "150:00:00",
+        "excluded_nodes": "stc01sppamxnl004",
+        "memory_per_gpu": "60G",
+        "environment": {
+            "conda_environment": "cvml",
+            "NCCL_NSOCKS_PERTHREAD": 4,
+            "NCCL_SOCKET_NTHREADS": 2,
+            "NCCL_MIN_CHANNELS": 32,
+            "OMP_NUM_THREADS": 1,
+            "OPENBLAS_NUM_THREADS": 1,
+            "MKL_NUM_THREADS": 1,
+            "NUMEXPR_NUM_THREADS": 1,
+            "CILK_NWORKERS": 1,
+            "TBB_MAX_NUM_THREADS": 1,
+            "PL_GLOBAL_SEED": 304,
+            "COLUMNS": 100
+        },
+        "python_script": "/home/$USER/git/JupiterCVML/kore/scripts/train_seg.py",
+        "config_files": [
+            "$CVML_DIR/kore/configs/defaults/halo_seg_training_params.yml",
+            "$CVML_DIR/kore/configs/options/highres_experiments_training_params.yml",
+            "/home/alex.li/git/scripts/training/nextvit.yml"
+        ],
+        "additional_arguments": [
+            "--batch_size 28",
+            "--run-id ${EXP}_nextvit_rev2_subset_norm",
+            "--loss.weight_norm_coef .01"
+        ]
+    }
+}

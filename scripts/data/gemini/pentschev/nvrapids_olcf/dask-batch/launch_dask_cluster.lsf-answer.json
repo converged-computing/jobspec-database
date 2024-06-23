@@ -1,0 +1,42 @@
+{
+    "application": "Dask",
+    "details": {
+        "scheduler": "Dask scheduler",
+        "workers": "Dask workers",
+        "resource_manager": "LSF (Load Sharing Facility)",
+        "gpu_accelerator": "Nvidia CUDA",
+        "networking": "Infiniband (ib0)",
+        "modules": {
+            "gcc": "6.4.0",
+            "cuda": "10.1.168"
+        },
+        "environment_variables": {
+            "PROJ_ID": "stf011",
+            "PATH": "$WORLDWORK/stf011/nvrapids_0.11_gcc_6.4.0/bin:$PATH"
+        },
+        "job_submission_parameters": {
+            "project": "ABC123",
+            "walltime": "1 hour",
+            "allocation_flags": "gpumps",
+            "nodes": 2,
+            "job_name": "dask_cluster",
+            "output_file": "dask_cluster.o%J",
+            "error_file": "dask_cluster.e%J"
+        },
+        "jsrun_parameters": {
+            "nodes": 84,
+            "cores_per_node": 1,
+            "processes_per_node": 1,
+            "rank_per_node": 42,
+            "binding": "rs",
+            "worker_parameters": {
+                "nthreads": 1,
+                "memory_limit": "12GB",
+                "nanny": true,
+                "death_timeout": 60,
+                "interface": "ib0",
+                "local_directory": "$MEMBERWORK/$PROJ_ID/worker"
+            }
+        }
+    }
+}

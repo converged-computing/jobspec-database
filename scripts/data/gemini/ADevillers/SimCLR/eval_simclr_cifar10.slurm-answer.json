@@ -1,0 +1,39 @@
+{
+    "application": "SLURM",
+    "details": {
+        "resource_requirements": {
+            "project": "xwh@v100",
+            "qos": "qos_gpu-t3",
+            "gpu_type": "v100-32g",
+            "job_name": "expe",
+            "time": "20:00:00",
+            "nodes": 1,
+            "tasks_per_node": 2,
+            "gpus_per_node": 2,
+            "cpus_per_task": 10,
+            "hint": "nomultithread",
+            "output": "./logs/expe_%j.out",
+            "error": "./logs/expe_%j.err"
+        },
+        "software_requirements": {
+            "cuda": "11.2",
+            "pytorch-gpu": "py3/1.10.0"
+        },
+        "python_script": "src/eval.py",
+        "script_arguments": [
+            "--computer=jeanzay",
+            "--hardware=multi-gpu",
+            "--precision=mixed",
+            "--nb_workers=10",
+            "--dataset_name=cifar10",
+            "--resnet_type=resnet18",
+            "--z_dim=128",
+            "--nb_epochs_clsf=90",
+            "--batch_size_clsf=256",
+            "--lr_init_clsf=0.2",
+            "--momentum_clsf=0.9",
+            "--weight_decay_clsf=0.0",
+            "--checkpoint=./checkpoints/weights_simclr_cifar10.pt"
+        ]
+    }
+}

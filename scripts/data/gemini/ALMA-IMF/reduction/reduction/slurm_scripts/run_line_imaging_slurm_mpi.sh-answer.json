@@ -1,0 +1,67 @@
+{
+    "application": "SLURM",
+    "details": {
+        "software": [
+            "git",
+            "gcc",
+            "openmpi",
+            "python",
+            "CASA"
+        ],
+        "resource_requirements": {
+            "nodes": 1,
+            "time": "96:00:00",
+            "memory": "SLURM_MEM_PER_NODE",
+            "temp_drive": "/local",
+            "casa_memory": "SLURM_MEM_PER_NODE/NTASKS",
+            "mpi_processes": "SLURM_NTASKS/2+1"
+        },
+        "files": [
+            "getversion.py",
+            "line_imaging.py",
+            "to_image.json",
+            "metadata.json",
+            "config.py",
+            "rc",
+            ".casarc"
+        ],
+        "environment_variables": [
+            "PATH",
+            "WORK_DIRECTORY",
+            "PRODUCT_DIRECTORY",
+            "ALMAIMF_ROOTDIR",
+            "SCRIPT_DIR",
+            "PYTHONPATH",
+            "USE_TEMPORARY_WORKING_DIRECTORY",
+            "TEMP_WORKDIR",
+            "PROJECT_DIRECTORY",
+            "LOGFILENAME",
+            "CASAPATH",
+            "LD_LIBRARY_PATH"
+        ],
+        "commands": [
+            "module load git gcc/9.3.0 openmpi/4.1.1",
+            "which python",
+            "which git",
+            "git --version",
+            "df -h /local",
+            "mkdir -v ${TEMP_WORKDIR}",
+            "cp -v ${PROJECT_DIRECTORY}/to_image.json ${TEMP_WORKDIR}/to_image.json",
+            "cp -v ${PROJECT_DIRECTORY}/metadata.json ${TEMP_WORKDIR}/metadata.json",
+            "ls -lhrt *.json",
+            "ls",
+            "python -c \"print(${SLURM_MEM_PER_NODE}/${NTASKS})\"",
+            "cat ${TMPDIR}/config.py",
+            "cat ${TMPDIR}/.casarc",
+            "cat ${TMPDIR}/rc",
+            "ldd /blue/adamginsburg/adamginsburg/casa/${CASAVERSION}/lib/libcasatools.so.4011.25.171",
+            "${CASA} --nogui --nologger --ipython-dir=${TMPDIR} --rcdir=${TMPDIR}  --logfile=${LOGFILENAME} -c \"import sys; print(sys.path)\"",
+            "python -c \"print(int(${SLURM_NTASKS}/2+1))\"",
+            "${MPICASA} -n ${mpi_ntasks} ${CASA} --nogui --nologger --ipython-dir=${TMPDIR} --rcdir=${TMPDIR}  --logfile=${LOGFILENAME} -c \"import os; print(f'mpi inside casa CASAPATH=', os.getenv('CASAPATH'))\"",
+            "${MPICASA} -n ${mpi_ntasks} ${CASA} --nogui --nologger --ipython-dir=${TMPDIR} --rcdir=${TMPDIR}  --logfile=${LOGFILENAME} -c \"execfile('$SCRIPT_DIR/line_imaging.py')\"",
+            "ps -C ${CASA} -o ppid=,pid=",
+            "/orange/adamginsburg/miniconda3/bin/python ${ALMAIMF_ROOTDIR}/slurm_scripts/monitor_memory.py ${childPID}",
+            "rmdir -v ${TEMP_WORKDIR}"
+        ]
+    }
+}

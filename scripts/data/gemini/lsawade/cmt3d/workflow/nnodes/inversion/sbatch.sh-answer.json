@@ -1,0 +1,42 @@
+{
+    "application": "SLURM",
+    "details": {
+        "resource_requirements": {
+            "nodes": 40,
+            "time": "02:00:00",
+            "memory": "0",
+            "queue": "debug",
+            "mail_type": "end",
+            "mail_user": "lsawade@princeton.com"
+        },
+        "software_requirements": {
+            "modules": {
+                "loaded": [
+                    "PrgEnv-cray",
+                    "amd-mixed",
+                    "cray-mpich",
+                    "craype-accel-amd-gfx90a",
+                    "core-personal",
+                    "hdf5-personal"
+                ],
+                "unloaded": [
+                    "darshan-runtime"
+                ]
+            },
+            "environment_variables": {
+                "MPLCONFIGDIR": "${LUSTRE}/.matplotlib",
+                "OMP_NUM_THREADS": "1",
+                "MPICH_GPU_SUPPORT_ENABLED": "0"
+            },
+            "python_environment": "gf"
+        },
+        "script_functionality": {
+            "python_commands": [
+                "from nnodes import root",
+                "root.init()",
+                "root.save(async_save=False)",
+                "root.run()"
+            ]
+        }
+    }
+}

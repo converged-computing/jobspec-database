@@ -1,0 +1,46 @@
+{
+    "application": "SLURM",
+    "details": {
+        "job_name": "mpi4py",
+        "nodes": 4,
+        "tasks_per_node": 8,
+        "exclusive": true,
+        "export": "ALL",
+        "time": "00:30:00",
+        "partition": "debug",
+        "account": "hpcapps",
+        "software": [
+            "conda",
+            "dompi",
+            "intel-mpi/2020.1.217",
+            "mpt/2.22",
+            "gcc/8.4.0",
+            "hdf5/1.12.0/intel-impi"
+        ],
+        "libraries": [
+            "/projects/hpcapps/tkaiser/hdf5_12_03/lib"
+        ],
+        "commands": [
+            "lfs setstripe -S 64M -c 1 /lustre/eaglefs/scratch/tkaiser2/examples/mpi/mpi4py",
+            "srun ./h5b -size=64M -count=1 -mb=256 SUB=0 SLURM_JOBID=$SLURM_JOBID",
+            "srun ./h5b -size=64M -count=-1 -mb=256 SUB=1 SLURM_JOBID=$SLURM_JOBID",
+            "srun ./h5b -size=128M -count=1 -mb=256 SUB=2 SLURM_JOBID=$SLURM_JOBID",
+            "srun ./h5b -size=128M -count=-1 -mb=256 SUB=3 SLURM_JOBID=$SLURM_JOBID",
+            "srun ./h5b -size=64M -count=4 -mb=256 SUB=4 SLURM_JOBID=$SLURM_JOBID",
+            "srun ./h5b -size=128M -count=4 -mb=256 SUB=5 SLURM_JOBID=$SLURM_JOBID",
+            "srun ./dompt -size=64M -count=1 -mb=256 SUB=0 SLURM_JOBID=$SLURM_JOBID",
+            "srun ./dompt -size=64M -count=-1 -mb=256 SUB=1 SLURM_JOBID=$SLURM_JOBID",
+            "srun ./dompt -size=128M -count=1 -mb=256 SUB=2 SLURM_JOBID=$SLURM_JOBID",
+            "srun ./dompt -size=128M -count=-1 -mb=256 SUB=3 SLURM_JOBID=$SLURM_JOBID",
+            "srun ./dompt -size=64M -count=4 -mb=256 SUB=4 SLURM_JOBID=$SLURM_JOBID",
+            "srun ./dompt -size=128M -count=4 -mb=256 SUB=5 SLURM_JOBID=$SLURM_JOBID",
+            "srun ./dointel -size=64M -count=1 -mb=256 SUB=0 SLURM_JOBID=$SLURM_JOBID",
+            "srun ./dointel -size=64M -count=-1 -mb=256 SUB=1 SLURM_JOBID=$SLURM_JOBID",
+            "srun ./dointel -size=128M -count=1 -mb=256 SUB=2 SLURM_JOBID=$SLURM_JOBID",
+            "srun ./dointel -size=128M -count=-1 -mb=256 SUB=3 SLURM_JOBID=$SLURM_JOBID",
+            "srun ./dointel -size=64M -count=4 -mb=256 SUB=4 SLURM_JOBID=$SLURM_JOBID",
+            "srun ./dointel -size=128M -count=4 -mb=256 SUB=5 SLURM_JOBID=$SLURM_JOBID",
+            "~/bin/dorun.py $SLURM_JOB_ID"
+        ]
+    }
+}

@@ -1,0 +1,62 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"slurm\",\n  \"details\": {\n    \"job_name\": \"contrastive_pretrain\",\n    \"output_file\": \"/home/eecs/paras/slurm/coderep/%j_supervised_baseline.log\",\n    \"tasks\": 1,\n    \"memory\": \"256000 MB\",\n    \"time\": \"125:00:00\",\n    \"excluded_nodes\": \"atlas,blaze,r16\",\n    \"environment_variables\": {\n      \"PATH\": \"/data/paras/miniconda3/bin:$PATH\",\n      \"DATA_CACHE\": \"/data/paras/data_cache\",\n      \"FREE_PORT\": \"dynamically assigned\",\n      \"BATCHSIZE\": \"default 16, can be overridden\",\n      \"LR\": \"default '1e-4', can be overridden\",\n      \"PROGRAM_MODE\": \"default 'identity', can be overridden\",\n      \"LABEL_MODE\": \"default 'identifier', can be overridden\",\n      \"N_DECODER_LAYERS\": \"default 4, can be overridden\",\n      \"SUBWORD_REGULARIZATION\": \"default 0, can be overridden\",\n      \"DATASET_LIMIT\": \"default '-1', can be overridden\",\n      \"RUNNAME\": \"required\",\n      \"CUDA_VISIBLE_DEVICES\": \"environment variable\",\n      \"CUDA_DEVICE_ORDER\": \"environment variable\",\n      \"SLURM_JOB_ID\": \"environment variable\"\n    },\n    \"required_software\": [\n      \"python\",\n      \"torch\",\n      \"representjs (installed from source)\",\n      \"npm\"\n    ],\n    \"data_requirements\": {\n      \"data_cache\": \"/data/paras/data_cache\",\n      \"codesearchnet_javascript\": \"/work/paras/representjs/data/codesearchnet_javascript\"\n    },\n    \"script_execution\": {\n      \"commands\": [\n        \"rsync -avhW --no-compress --progress /work/paras/representjs/data/codesearchnet_javascript $DATA_CACHE\",\n        \"pip install torch\",\n        \"pip install -e .\",\n        \"npm install\",\n        \"python representjs/main.py train --run_name \\\"$RUNNAME-$SLURM_JOB_ID\\\" --program_mode $PROGRAM_MODE --label_mode $LABEL_MODE --n_decoder_layers=$N_DECODER_LAYERS --subword_regularization_alpha $SUBWORD_REGULARIZATION --num_epochs 150 --save_every 5 --batch_size $BATCHSIZE --num_workers 8 --lr $LR --train_filepath $DATA_CACHE/codesearchnet_javascript/javascript_train_supervised.jsonl.gz --eval_filepath $DATA_CACHE/codesearchnet_javascript/javascript_valid_0.jsonl.gz --spm_filepath $DATA_CACHE/codesearchnet_javascript/csnjs_8k_9995p_unigram_url.model --limit_dataset_size $DATASET_LIMIT\"\n      ]\n    }\n  }\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 2,
+                    "blocked": false
+                }
+            ],
+            "citation_metadata": {
+                "citation_sources": [
+                    {
+                        "start_index": 1504,
+                        "end_index": 2138,
+                        "uri": "https://github.com/parasj/contracode",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 2026,
+                        "end_index": 2171,
+                        "uri": "https://github.com/jinghanjia/CLAW-SAT",
+                        "license_": ""
+                    }
+                ]
+            },
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 1129,
+        "candidates_token_count": 715,
+        "total_token_count": 1844,
+        "cached_content_token_count": 0
+    }
+}

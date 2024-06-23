@@ -1,0 +1,52 @@
+{
+    "application": "SLURM",
+    "details": {
+        "scheduler": "SLURM",
+        "partition": "cpu",
+        "tasks": 1,
+        "cpus_per_task": 2,
+        "memory_per_cpu": "4G",
+        "job_name": "test_romina",
+        "output_file": "test_romina_%j.log",
+        "array_task_ids": "19-21",
+        "modules": [
+            "pytorch1.0-cuda9.0-python3.6"
+        ],
+        "environment": "/h/abachiro/mjpro200-py.env",
+        "ulimit": {
+            "process_limit": 1000
+        },
+        "python_script": "parser.py",
+        "python_arguments": [
+            "--algo",
+            "reinforce",
+            "--model_type",
+            "paml",
+            "--max_actions",
+            "200",
+            "--states_dim",
+            "10",
+            "--salient_states_dim",
+            "2",
+            "--extra_dims_stable",
+            "True",
+            "--model_size",
+            "small",
+            "--initial_model_lr",
+            "1e-7",
+            "--real_episodes",
+            "5",
+            "--num_iters",
+            "200",
+            "--virtual_episodes",
+            "1000",
+            "--rs",
+            "$SLURM_ARRAY_TASK_ID",
+            "--save_checkpoints_training",
+            "False",
+            "--file_id",
+            "'final_smallModel_'$SLURM_ARRAY_TASK_ID"
+        ],
+        "python_version": "3.6"
+    }
+}

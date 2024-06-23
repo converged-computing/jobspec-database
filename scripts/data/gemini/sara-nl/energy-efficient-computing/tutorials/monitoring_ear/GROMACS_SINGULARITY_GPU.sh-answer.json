@@ -1,0 +1,66 @@
+{
+    "application": "GROMACS",
+    "software": [
+        "GROMACS",
+        "SINGULARITY",
+        "EAR"
+    ],
+    "resources": [
+        "GPU",
+        "CPU",
+        "Memory",
+        "Storage"
+    ],
+    "details": {
+        "GPU": {
+            "type": "NVIDIA",
+            "count": 4,
+            "direct_communication": "enabled"
+        },
+        "CPU": {
+            "cores_per_task": 8,
+            "tasks_per_node": 8
+        },
+        "SLURM": {
+            "partition": "gpu",
+            "nodes": 1,
+            "time": "00:59:00",
+            "output": "GROMACS.GPU.SING.%j.out",
+            "error": "GROMACS.GPU.SING.%j.err",
+            "job_name": "GROMACS.GPU.SING"
+        },
+        "EAR": {
+            "install_path": "$EAR_INSTALL_PATH",
+            "tmp": "$EAR_TMP",
+            "etc": "$EAR_ETC",
+            "report_loops": 1
+        },
+        "SINGULARITY": {
+            "image": "docker://nvcr.io/hpc/gromacs:2022.3",
+            "binds": [
+                "${PWD}:/host_pwd",
+                "$EAR_INSTALL_PATH:$EAR_INSTALL_PATH:ro",
+                "$EAR_TMP:$EAR_TMP:rw"
+            ]
+        },
+        "GROMACS": {
+            "parameters": {
+                "ntmpi": 8,
+                "ntomp": 9,
+                "nb": "gpu",
+                "pme": "gpu",
+                "npme": 1,
+                "update": "gpu",
+                "bonded": "gpu",
+                "nsteps": 100000,
+                "resetstep": 90000,
+                "noconfout": true,
+                "dlb": "no",
+                "nstlist": 300,
+                "pin": "on",
+                "v": true,
+                "gpu_id": "0123"
+            }
+        }
+    }
+}

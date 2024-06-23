@@ -1,0 +1,50 @@
+{
+    "application": "Margo",
+    "details": {
+        "environment": {
+            "COBALT": {
+                "nodes": 2,
+                "time": 20,
+                "mode": "script",
+                "account": "CSC250STDM12",
+                "queue": "debug-cache-quad"
+            },
+            "HOME": "$SANDBOX",
+            "SPACK": {
+                "environment": "$SANDBOX/spack/share/spack/setup-env.sh",
+                "activated_environment": "mochi-regression"
+            },
+            "MPICH": {
+                "GNI_NDREG_ENTRIES": 1024
+            },
+            "NUMA": {
+                "socket": 0
+            }
+        },
+        "benchmarks": [
+            {
+                "name": "Margo OFI/GNI (vector benchmark with len 1, 512KiB xfers)",
+                "command": "aprun -cc none -n 2 -N 1 numactl -N 0 -m 0 ./margo-p2p-vector -x 524288 -n \"gni://\" -c 1 -D 20",
+                "options": {
+                    "processes": 2,
+                    "nodes": 1,
+                    "transfer_size": 524288,
+                    "transfer_count": 1,
+                    "duration": 20
+                }
+            },
+            {
+                "name": "Margo OFI/GNI (vector benchmark with len 256, 512KiB xfers)",
+                "command": "aprun -cc none -n 2 -N 1 numactl -N 0 -m 0 ./margo-p2p-vector -x 524288 -n \"gni://\" -c 1 -D 20 -v 256",
+                "options": {
+                    "processes": 2,
+                    "nodes": 1,
+                    "transfer_size": 524288,
+                    "transfer_count": 1,
+                    "duration": 20,
+                    "vector_length": 256
+                }
+            }
+        ]
+    }
+}

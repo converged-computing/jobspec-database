@@ -1,0 +1,50 @@
+{
+    "application": "Singularity",
+    "details": {
+        "script_language": "Bash",
+        "job_scheduler": "Slurm",
+        "resource_requirements": {
+            "nodes": 1,
+            "tasks": 1,
+            "cpus_per_task": 2,
+            "memory": "80GB",
+            "time": "48:00:00",
+            "gpu": "a100_1,a100_2,v100,rtx8000",
+            "overlay_filesystems": [
+                "/scratch/$USER/overlay-25GB-500K.ext3",
+                "/scratch/lg154/sseg/dataset/tiny-imagenet-200.sqf"
+            ],
+            "singularity_image": "/scratch/lg154/cuda11.4.2-cudnn8.2.4-devel-ubuntu20.04.3.sif",
+            "python_script": "main_nc.py",
+            "environment_file": "/ext3/env.sh"
+        },
+        "arguments": {
+            "LOSS": "A string representing the loss function",
+            "BS": "An integer representing the batch size",
+            "SEED": "An integer representing the random seed"
+        },
+        "python_arguments": [
+            "--dataset",
+            "cifar100",
+            "-a",
+            "resnet50",
+            "--epochs",
+            "600",
+            "--scheduler",
+            "ms",
+            "--norm",
+            "gn",
+            "--coarse",
+            "--loss",
+            "${LOSS}",
+            "--eps",
+            "0.05",
+            "--batch_size",
+            "${BS}",
+            "--seed",
+            "202${SEED}",
+            "--store_name",
+            "gn_coarse_${LOSS}_b${BS}_s${SEED}"
+        ]
+    }
+}

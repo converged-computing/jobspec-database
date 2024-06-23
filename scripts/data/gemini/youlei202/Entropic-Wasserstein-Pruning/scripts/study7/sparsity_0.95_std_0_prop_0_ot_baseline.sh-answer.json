@@ -1,0 +1,23 @@
+{
+    "application": "LSF",
+    "details": {
+        "queue": "gpuv100",
+        "jobName": "resnet50-ot-baseline",
+        "cores": 4,
+        "gpu": "1 (exclusive process mode)",
+        "walltime": "23:59",
+        "memory": "10GB",
+        "email": "leiyo@dtu.dk",
+        "notifications": {
+            "start": true,
+            "completion": true
+        },
+        "output_file": "logs/resnet50/many_seeds/sparsity_0.95_std=0_prop=0_ot_baseline.out",
+        "error_file": "logs/resnet50/many_seeds/sparsity_0.95_std=0_prop=0_ot_baseline.err",
+        "modules": [
+            "cuda/11.6"
+        ],
+        "software": "python3",
+        "command": "python3 ${ROOT_DIR}/main.py --exp_name=${SWEEP_NAME}  --dset=cifar10 --dset_path=${DATA_DIR} --arch=resnet50 --config_path=${ROOT_DIR}/configs/resnet50_optimal_transport.yaml --workers=1 --batch_size=64 --logging_level debug --gpus=0 --from_checkpoint_path=${CKP_PATH} --batched-test --not-oldfashioned --disable-log-soft --use-model-config --sweep-id ${ID} --fisher-damp ${FISHER_DAMP} --prune-modules ${MODULE} --fisher-subsample-size ${FISHER_SUBSAMPLE_SIZE} --fisher-mini-bsz ${FISHER_MINIBSZ} --update-config --prune-class ${PRUNER} --target-sparsity ${TARGET_SPARSITY} --result-file ${CSV_DIR}/prune_module-woodfisher-based_all_epoch_end-${EPOCH_END}.csv --seed ${SEED} --deterministic --full-subsample ${JOINT_FLAG} --epochs ${EPOCH_END} --fisher-optimized --fisher-parts 5 --offload-grads --offload-inv $extra_cmd"
+    }
+}

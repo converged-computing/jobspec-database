@@ -1,0 +1,41 @@
+{
+    "application": "SLURM",
+    "details": {
+        "partition": "jenkins-compute",
+        "time": "2:00:00",
+        "nodes": 1,
+        "tasks_per_node": 16,
+        "job_name": "hpx-init",
+        "output": "init/slurm_output.%x-o%j",
+        "error": "init/slurm_error.%x-o%j",
+        "software": [
+            "gcc",
+            "cmake",
+            "boost",
+            "hwloc",
+            "openmpi",
+            "papi",
+            "python",
+            "HPX",
+            "LCI"
+        ],
+        "build_system": "Ninja",
+        "build_type": "Debug",
+        "hpx_options": [
+            "HPX_WITH_PARALLEL_TESTS_BIND_NONE=ON",
+            "CMAKE_BUILD_TYPE=Debug",
+            "HPX_WITH_CHECK_MODULE_DEPENDENCIES=ON",
+            "HPX_WITH_CXX_STANDARD=17",
+            "HPX_WITH_MALLOC=system",
+            "HPX_WITH_FETCH_ASIO=ON",
+            "HPX_WITH_COMPILER_WARNINGS=ON",
+            "HPX_WITH_COMPILER_WARNINGS_AS_ERRORS=ON",
+            "HPX_WITH_PARCELPORT_MPI=ON",
+            "HPX_WITH_PARCELPORT_LCI=ON",
+            "HPX_WITH_FETCH_LCI=ON",
+            "HPX_WITH_PARCELPORT_LCI_BACKEND=ibv"
+        ],
+        "install_path": "${HPX_INSTALL_PATH}",
+        "test": "partitioned_vector_inclusive_scan_test"
+    }
+}

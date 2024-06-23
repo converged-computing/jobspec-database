@@ -1,0 +1,60 @@
+{
+    "application": "MPI",
+    "details": {
+        "framework": "PBS",
+        "resources": {
+            "walltime": "0:10:00",
+            "size": "12",
+            "nodes": {
+                "min": 1,
+                "max": 8,
+                "procs_per_node": 16
+            }
+        },
+        "architectures": [
+            "MAC_OSX",
+            "LINUX",
+            "BGQ",
+            "XC"
+        ],
+        "executable": "./coupling",
+        "arguments": {
+            "min_procs": 4,
+            "source_mesh_type": "t",
+            "source_mesh_size": {
+                "min": 32,
+                "max": 32
+            },
+            "target_mesh_type": "h",
+            "target_mesh_size": {
+                "min": 32
+            },
+            "projection_iterations": 10,
+            "slab": 0
+        },
+        "debugging": {
+            "tools": [
+                "dsymutil",
+                "gdb",
+                "valgrind"
+            ]
+        },
+        "job_submission": {
+            "BGQ": {
+                "command": "qsub",
+                "options": {
+                    "nodes": "$num_nodes",
+                    "mode": "c$ppn",
+                    "account": "SDAV",
+                    "time_limit": "30"
+                }
+            },
+            "XC": {
+                "command": "aprun",
+                "options": {
+                    "nodes": "$max_procs"
+                }
+            }
+        }
+    }
+}

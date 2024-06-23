@@ -1,0 +1,39 @@
+{
+    "application": "PBS",
+    "details": {
+        "script_purpose": "MPI run script for moab-test",
+        "architecture": "MAC_OSX, LINUX, BGQ, FUSION, XT, XE",
+        "resources": {
+            "walltime": "0:10:00",
+            "size": "12",
+            "num_procs": "1",
+            "ppn": "4",
+            "num_nodes": "1 (calculated based on num_procs and ppn)"
+        },
+        "executable": "./moab-test",
+        "input_file": "/Users/tpeterka/software/cian/data/64bricks_12ktet_1proc.h5m",
+        "output_file": "del.out",
+        "options": "--blocks 4 (or --kdtree --blocks 4)",
+        "MPI_implementation": {
+            "MAC_OSX": "mpiexec",
+            "LINUX": "mpiexec",
+            "BGQ": "qsub",
+            "FUSION": "mpiexec",
+            "XT": "aprun",
+            "XE": "aprun"
+        },
+        "debugging_tools": {
+            "MAC_OSX": {
+                "gdb": "dsymutil $exe ; mpiexec -l -n $num_procs xterm -e gdb -x gdb.run --args $exe $args",
+                "lldb": "dsymutil $exe ; mpiexec -l -n $num_procs xterm -e lldb -s lldb.run $exe -- $args",
+                "valgrind": "dsymutil $exe ; mpiexec -l -n $num_procs valgrind -q $exe $args",
+                "valgrind_leak_check": "dsymutil $exe ; mpiexec -l -n $num_procs valgrind -q --leak-check=yes $exe $args"
+            },
+            "LINUX": {
+                "gdb": "mpiexec -n $num_procs xterm -e gdb -x gdb.run --args $exe $args",
+                "valgrind": "mpiexec -n $num_procs valgrind -q $exe $args",
+                "valgrind_leak_check": "mpiexec -n $num_procs valgrind -q --leak-check=yes $exe $args"
+            }
+        }
+    }
+}

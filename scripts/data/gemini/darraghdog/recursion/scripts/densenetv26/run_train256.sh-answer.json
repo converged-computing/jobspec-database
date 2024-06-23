@@ -1,0 +1,43 @@
+{
+    "application": "LSF",
+    "details": {
+        "queue": "lowpriority",
+        "gpu": {
+            "num": 1,
+            "mode": "exclusive_process"
+        },
+        "container": "docker.optum.com/dhanley2/bert:cgan_build",
+        "resource_requirements": {
+            "nodes": 1,
+            "processors": 4
+        },
+        "script": {
+            "command": "python3 train.py",
+            "arguments": [
+                "--logmsg",
+                "recursion-pytorch-onecycle",
+                "--nbags",
+                "20",
+                "--epochs",
+                "70",
+                "--fold",
+                "0",
+                "--lr",
+                "0.0001",
+                "--batchsize",
+                "32",
+                "--workpath",
+                "scripts/densenetv26",
+                "--cutmix_prob",
+                "1.0",
+                "--beta",
+                "1.0",
+                "--imgpath",
+                "data/mount/256X256X6/",
+                "--weightsname",
+                "weights/pytorch_model_densenet0.bin"
+            ],
+            "working_directory": "/share/dhanley2/recursion/scripts/densenetv26"
+        }
+    }
+}

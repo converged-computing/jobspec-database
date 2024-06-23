@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"PBS\",\n  \"details\": {\n    \"resource_requirements\": {\n      \"nodes\": 1,\n      \"cpus\": 4,\n      \"memory\": \"40gb\",\n      \"gpus\": 1,\n      \"gpu_type\": \"RTX6000\",\n      \"walltime\": \"24:00:00\"\n    },\n    \"software_requirements\": {\n      \"anaconda3\": \"personal\",\n      \"python\": \"3.8\",\n      \"nvidia-smi\": \"installed\"\n    },\n    \"script_execution\": {\n      \"working_directory\": \"$PBS_O_WORKDIR\",\n      \"commands\": [\n        \"python /rds/general/user/xc2322/home/git_projects/RED-CNN-Baseline/main.py --mode='train' --exp_code='chest_fedavg_adapter_1' --yaml_path='adapter.yaml' --peft=1 --pretrained_ckpt='save/pretrain/REDCNN_100epoch_fed_avg.ckpt' --lr=1e-6\",\n        \"python /rds/general/user/xc2322/home/git_projects/RED-CNN-Baseline/main.py --mode='train' --exp_code='chest_fedavg_adapter_2' --yaml_path='adapter.yaml' --peft=2 --pretrained_ckpt='save/pretrain/REDCNN_100epoch_fed_avg.ckpt' --lr=1e-6\",\n        \"python /rds/general/user/xc2322/home/git_projects/RED-CNN-Baseline/main.py --mode='train' --exp_code='chest_fedavg_halfft' --yaml_path='adapter.yaml' --half_ft --pretrained_ckpt='save/pretrain/REDCNN_100epoch_fed_avg.ckpt' --lr=1e-6\",\n        \"python /rds/general/user/xc2322/home/git_projects/RED-CNN-Baseline/main.py --mode='test' --exp_code='chest_fedavg_adapter_1' --test_code='1' --yaml_path='adapter.yaml' --fig_suffix='chest_fedavg_adapter_1' --result_fig --peft=1\",\n        \"python /rds/general/user/xc2322/home/git_projects/RED-CNN-Baseline/main.py --mode='test' --exp_code='chest_fedavg_adapter_2' --test_code='1' --yaml_path='adapter.yaml' --fig_suffix='chest_fedavg_adapter_2' --result_fig --peft=2\",\n        \"python /rds/general/user/xc2322/home/git_projects/RED-CNN-Baseline/main.py --mode='test' --exp_code='chest_fedavg_halfft' --test_code='1' --yaml_path='adapter.yaml' --fig_suffix='chest_fedavg_halfft' --result_fig \"\n      ]\n    }\n  }\n}\n```\n\n**Explanation:**\n\n* **PBS (Portable Batch System):** The script is intended to be executed using the PBS job scheduler. The `#!/bin/bash` line specifies the shell interpreter, and the lines starting with `#PBS` provide instructions for the PBS system. These instructions define resource requirements (nodes, CPUs, memory, GPUs, walltime) and job settings (name, output/error log directories).\n* **Anaconda3 (personal):** The script loads a custom Anaconda3 environment named \"personal.\" This likely contains the required Python version and libraries for the main.py script.\n* **Python (3.8):** The script uses Python version 3.8, as indicated by the `export PATH` line and the `which python` command.\n* **nvidia-smi:** This command is used to check the status of the GPU, likely for debugging or monitoring purposes. \n* **main.py:** This script is the core of the application. It's responsible for training and testing a RED-CNN model, likely for a medical image analysis task. \n\nThe provided script performs several tasks:\n\n* **Training:** Runs the main.py script with different configurations to train a RED-CNN model using various techniques (e.g., adapter tuning, half-fine-tuning).\n* **Testing:**  Runs the main.py script with different configurations to test the trained models, potentially generating figures or saving results.\n* **Resource Management:**  Uses PBS to manage resources (nodes, CPUs, GPUs, memory, and wall time) and ensure the script runs efficiently on a high-performance computing cluster."
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 767,
+        "candidates_token_count": 1071,
+        "total_token_count": 1838,
+        "cached_content_token_count": 0
+    }
+}

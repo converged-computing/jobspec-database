@@ -1,0 +1,24 @@
+{
+    "application": "SLURM",
+    "details": {
+        "job_name": "msrcnn-livecell-1C",
+        "account": "sada-cnmi",
+        "partition": "tier3",
+        "time_limit": "120:0:0",
+        "error_output": "%x_%j.err",
+        "output": "%x_%j.out",
+        "memory": "200G",
+        "gpu_resources": "a100:4",
+        "software": [
+            "spack",
+            "cuda@11.0.2%gcc@9.3.0/lrd2rcw",
+            "nvidia-smi",
+            "mmdetection"
+        ],
+        "commands": [
+            "cd mmdetection",
+            "nvidia-smi",
+            "sh mmdetection/tools/dist_train.sh mmdetection/configs/ms_rcnn/ms_rcnn_r50_caffe_fpn_2x_coco_livecell.py 4 --work-dir /shared/rc/spl/mmdet_output/All_to_all/livecell/ms_rcnn_r50_caffe_fpn_1x_coco_livecell"
+        ]
+    }
+}

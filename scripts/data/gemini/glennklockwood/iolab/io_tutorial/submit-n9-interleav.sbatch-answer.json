@@ -1,0 +1,54 @@
+{
+    "application": "IOR",
+    "details": {
+        "resource_requirements": {
+            "nodes": 4,
+            "cores": 64,
+            "gpu": true,
+            "qos": "debug",
+            "time": "30:00",
+            "account": "nstaff_g"
+        },
+        "software": {
+            "ior_path": "$HOME/src/iopup/src/ior/bin.muller/ior",
+            "segments": 256
+        },
+        "tests": [
+            {
+                "description": "Basic IOR test",
+                "options": "-t 1m -b 1m -s $SEGMENTS",
+                "output": "tutorial.1"
+            },
+            {
+                "description": "IOR test with file striping",
+                "options": "-t 1m -b 1m -s $SEGMENTS -F",
+                "output": "tutorial.2"
+            },
+            {
+                "description": "IOR test with file striping and collective I/O",
+                "options": "-t 1m -b 1m -s $SEGMENTS -F -C",
+                "output": "tutorial.3"
+            },
+            {
+                "description": "IOR test with file striping, collective I/O and eager I/O",
+                "options": "-t 1m -b 1m -s $SEGMENTS -F -C -e",
+                "output": "tutorial.4"
+            },
+            {
+                "description": "IOR test with file striping, eager I/O and O_DIRECT",
+                "options": "-t 1m -b 1m -s $SEGMENTS -F -e --posix.odirect",
+                "output": "tutorial.5"
+            },
+            {
+                "description": "IOR test with collective I/O and eager I/O",
+                "options": "-t 1m -b 1m -s $SEGMENTS -C -e",
+                "output": "tutorial.6"
+            },
+            {
+                "description": "IOR test with collective I/O, eager I/O and LFS striping",
+                "options": "-t 1m -b 1m -s $SEGMENTS -C -e",
+                "output": "tutorial.7"
+            }
+        ]
+    }
+}

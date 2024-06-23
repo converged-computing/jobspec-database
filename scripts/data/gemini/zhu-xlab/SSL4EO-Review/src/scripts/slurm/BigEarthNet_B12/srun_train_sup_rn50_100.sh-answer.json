@@ -1,0 +1,41 @@
+{
+    "application": "SLURM",
+    "details": {
+        "resources": {
+            "nodes": 1,
+            "tasks": 4,
+            "tasks_per_node": 4,
+            "gpus": 4,
+            "cpus_per_task": 8,
+            "time": "04:00:00",
+            "partition": "booster"
+        },
+        "modules": [
+            "GCCcore/.9.3.0",
+            "Python",
+            "torchvision",
+            "OpenCV",
+            "scikit",
+            "TensorFlow"
+        ],
+        "environment": "env1",
+        "script": "bigearthnet_B12_resnet_train.py",
+        "arguments": {
+            "lmdb_dir": "/p/project/hai_dm4eo/wang_yi/data/BigEarthNet",
+            "bands": "all",
+            "checkpoints_dir": "/p/project/hai_dm4eo/wang_yi/ssl4eo-review/src/checkpoints/sup/B12_rn50_100",
+            "backbone": "resnet50",
+            "train_frac": 1.0,
+            "batchsize": 256,
+            "lr": 0.2,
+            "schedule": "60 80",
+            "epochs": 100,
+            "num_workers": 8,
+            "seed": 42,
+            "dist_url": "tcp://${master_node}:40000"
+        },
+        "output": "srun_outputs/B12_train_sup_rn50_100_%j.out",
+        "error": "srun_outputs/B12_train_sup_rn50_100_%j.err",
+        "job_name": "sup_train"
+    }
+}

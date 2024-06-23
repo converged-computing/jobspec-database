@@ -1,0 +1,28 @@
+{
+    "application": "SLURM",
+    "details": {
+        "scheduler": "SLURM",
+        "resources": {
+            "time": "1-12:00:00",
+            "partition": "dpart",
+            "qos": "high",
+            "gpu": 1,
+            "cpus-per-task": 4
+        },
+        "modules": {
+            "cuda": "unknown version",
+            "gcc": "6.3.0"
+        },
+        "environment_variables": {
+            "WORK_DIR": "/scratch0/slurm_${SLURM_JOBID}",
+            "PYTHONPATH": ".:$PYTHONPATH"
+        },
+        "commands": {
+            "mkdir": "mkdir ${WORK_DIR}",
+            "rsync": "rsync -a --exclude=\"*.out\" $WORK_DIR",
+            "cd": "cd ${WORK_DIR}",
+            "python": "python -u \"$\""
+        },
+        "cleanup": "rm -rf ${WORK_DIR}"
+    }
+}

@@ -1,0 +1,48 @@
+{
+    "application": "Spark",
+    "details": {
+        "resource_requirements": {
+            "nodes": 46,
+            "time": "00:08:00",
+            "memory": {
+                "driver": "100G",
+                "executor": "105G"
+            },
+            "cores": {
+                "driver": 32,
+                "executor": 32
+            },
+            "executors": 45
+        },
+        "modules": [
+            "spark",
+            "python/2.7-anaconda",
+            "collectl"
+        ],
+        "environment_variables": [
+            "SPARK_LOCAL_DIRS",
+            "PYTHONPATH"
+        ],
+        "configuration": {
+            "spark.eventLog.enabled": "true",
+            "spark.eventLog.dir": "$SCRATCH/spark/spark_event_logs"
+        },
+        "scripts": [
+            "start-collectl.sh",
+            "start-all.sh",
+            "spark-submit",
+            "stop-all.sh",
+            "stop-collectl.sh"
+        ],
+        "data_sources": {
+            "hdf5_files": [
+                "/global/cscratch1/sd/gittens/CFSROhdf5/oceanTemps.hdf5",
+                "/global/cscratch1/sd/jialin/climate/oceanTemps.hdf5",
+                "/global/cscratch1/sd/jialin/dayabay/ost1/dayabay-final.h5"
+            ],
+            "csv_files": [
+                "src/resources/hdf5/dayabay-slice.csv"
+            ]
+        }
+    }
+}

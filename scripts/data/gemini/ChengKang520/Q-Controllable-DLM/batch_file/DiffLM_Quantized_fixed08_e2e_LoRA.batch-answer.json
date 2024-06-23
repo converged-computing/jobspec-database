@@ -1,0 +1,39 @@
+{
+    "application": "Slurm",
+    "details": {
+        "resource_requests": {
+            "partition": "amdgpulong",
+            "time": "72:00:00",
+            "gres": "gpu:1",
+            "ntasks-per-node": "1",
+            "mem-per-gpu": "32000"
+        },
+        "job_name": "LoRA_Q_fixed08_E2E",
+        "error_file": "LoRA_Q_fixed08_E2E.err",
+        "output_file": "LoRA_Q_fixed08_E2E.out",
+        "mail_user": "kangchen@fel.cvut.cz",
+        "mail_type": "ALL",
+        "software": {
+            "python_version": "PyTorch/1.9.0-fosscuda-2020b",
+            "mpi_version": "OpenMPI",
+            "activation": "EnvDiff/bin/activate"
+        },
+        "environment_variables": {
+            "OMP_MCA_mpi_warn_on_fork": "0",
+            "quant_m": "fixed",
+            "weight_i_width": "0",
+            "weight_f_width": "8"
+        },
+        "scripts": [
+            "improved-diffusion/scripts/run_train.py",
+            "improved-diffusion/scripts/batch_decode.py",
+            "metrics_text.py",
+            "train_run.py",
+            "improved-diffusion/scripts/infill.py"
+        ],
+        "datasets": {
+            "e2e_train": "./datasets/e2e_data",
+            "wordlists": "./datasets/wordlists/"
+        }
+    }
+}

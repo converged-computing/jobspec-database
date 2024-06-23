@@ -1,0 +1,32 @@
+{
+    "application": "SLURM",
+    "details": {
+        "resource_requirements": {
+            "memory": "32GB",
+            "tasks": 1,
+            "cpus_per_task": 8,
+            "gpu": 1,
+            "partition": "main",
+            "array": "1-10%10"
+        },
+        "job_name": "udal",
+        "output_file": "/mnt/work/dhuseljic/logs/udal/active_learning/%A_%a__%x.log",
+        "environment": {
+            "conda_environment": "dal-toolbox",
+            "working_directory": "/mnt/home/dhuseljic/projects/dal-toolbox/experiments/udal/"
+        },
+        "python_script": "active_learning.py",
+        "python_script_arguments": {
+            "model": "resnet18_mixup",
+            "dataset": "CIFAR10",
+            "dataset_path": "/mnt/work/dhuseljic/datasets",
+            "al_strategy": "random",
+            "al_cycle.n_init": 128,
+            "al_cycle.init_pool_file": "/mnt/home/dhuseljic/projects/dal-toolbox/experiments/udal/initial_pools/CIFAR10/random_128_seed${random_seed}.json",
+            "al_cycle.acq_size": 128,
+            "al_cycle.n_acq": 38,
+            "output_dir": "/mnt/work/dhuseljic/results/udal/active_learning/CIFAR10/resnet18_mixup/random/N_INIT128__ACQ_SIZE128__N_ACQ38/seed${random_seed}/",
+            "random_seed": "$SLURM_ARRAY_TASK_ID"
+        }
+    }
+}

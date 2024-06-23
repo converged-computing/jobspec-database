@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"SLURM\",\n  \"details\": {\n    \"resource_requirements\": {\n      \"nodes\": 1,\n      \"tasks_per_node\": 8,\n      \"gpus\": 8,\n      \"time\": \"00:10:00\",\n      \"partition\": \"standard-g\"\n    },\n    \"software_requirements\": {\n      \"modules\": [\n        \"PrgEnv-gnu\",\n        \"craype-x86-trento\",\n        \"craype-accel-amd-gfx90a\",\n        \"rocm\"\n      ],\n      \"spack_environment\": \"2024\",\n      \"compiler\": \"hipcc\"\n    },\n    \"environment_variables\": {\n      \"MPICH_GPU_SUPPORT_ENABLED\": \"1\",\n      \"MPICH_OFI_NIC_POLICY\": \"NUMA\",\n      \"HIPCC_COMPILE_FLAGS_APPEND\": \"--offload-arch=gfx90a $(CC --cray-print-opts=cflags)\",\n      \"HIPCC_LINK_FLAGS_APPEND\": \"$(CC --cray-print-opts=libs)\",\n      \"CXX\": \"hipcc\"\n    },\n    \"commands\": {\n      \"build\": {\n        \"command\": \"cmake ..\",\n        \"arguments\": [],\n        \"options\": {\n          \"make_jobs\": 8\n        }\n      },\n      \"run\": {\n        \"command\": \"srun\",\n        \"arguments\": [\n          \"-N\",\n          \"${SLURM_NNODES}\",\n          \"-n\",\n          \"${SLURM_NTASKS}\",\n          \"${cpu_bind}\",\n          \"${gpu_bind}\",\n          \"./vector-update\"\n        ],\n        \"options\": {}\n      }\n    },\n    \"scripts\": {\n      \"cpu_binding\": \"../select_gpu.sh\"\n    }\n  }\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 506,
+        "candidates_token_count": 447,
+        "total_token_count": 953,
+        "cached_content_token_count": 0
+    }
+}

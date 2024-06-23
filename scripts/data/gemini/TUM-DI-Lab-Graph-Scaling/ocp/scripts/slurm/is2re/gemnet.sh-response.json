@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"SLURM\",\n  \"details\": {\n    \"resource_requirements\": {\n      \"cpus\": 128,\n      \"memory\": \"500gb\",\n      \"gpus\": 8,\n      \"time\": \"8:00:00\",\n      \"node\": \"lundquist\"\n    },\n    \"software\": {\n      \"conda_environment\": \"ocp-models\",\n      \"python\": \"3.x\",\n      \"torch\": \"1.x\",\n      \"deepspeed\": \"0.x\",\n      \"cuda\": \"11.1\",\n      \"nccl\": \"2.x\"\n    },\n    \"libraries\": {\n      \"cupti\": \"11.1\"\n    },\n    \"script\": \"main.py\",\n    \"configuration_files\": [\n      \"configs/is2re/100k/gemnet/gemnet-dT.yml\",\n      \"configs/is2re/100k/gemnet/ds_config.json\"\n    ]\n  }\n}\n```\n\n**Explanation:**\n\n* **Application:** The script utilizes **SLURM** (Simple Linux Utility for Resource Management) for job submission and resource allocation. This is evident from the `#SBATCH` directives at the beginning of the script.\n* **Resource Requirements:** The script requests 128 CPUs, 500GB of memory, 8 GPUs, a runtime of 8 hours, and a specific node named \"lundquist\".\n* **Software:** The script requires a Python environment with specific versions of **Torch**, **Deepspeed**, and **CUDA**. The environment is activated using `conda activate ocp-models`. The script also uses the `srun` command, which is part of SLURM, to launch the Python script.\n* **Libraries:** The script sets the `LD_LIBRARY_PATH` environment variable to include the path to the **CUPTI** library. This library is likely used for profiling and debugging the CUDA code.\n* **Script:** The script runs a Python file named `main.py` with the `torch.distributed.launch` module for distributed training. It specifies the number of processes per node and the mode (training in this case). \n* **Configuration Files:** The script uses two configuration files, `gemnet-dT.yml` and `ds_config.json`, for configuring the model and the deepspeed library, respectively. \n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 323,
+        "candidates_token_count": 546,
+        "total_token_count": 869,
+        "cached_content_token_count": 0
+    }
+}

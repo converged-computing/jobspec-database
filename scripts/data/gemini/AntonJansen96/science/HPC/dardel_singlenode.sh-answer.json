@@ -1,0 +1,45 @@
+{
+    "application": "GROMACS",
+    "details": {
+        "environment": {
+            "modules": [
+                "PDC/21.09",
+                "all-spack-modules/0.16.3",
+                "CMake/3.21.2"
+            ]
+        },
+        "resources": {
+            "slurm": {
+                "time": "0-0:15:00",
+                "nodes": 2,
+                "partition": "main",
+                "tasks_per_node": 32,
+                "job_name": "bench2",
+                "account": "snic2021-1-38",
+                "mail_user": "anton.jansen@scilifelab.se",
+                "mail_type": "ALL"
+            },
+            "compilation": {
+                "make_jobs": 12,
+                "cmake_options": [
+                    "-DGMX_MPI=ON",
+                    "-DGMX_USE_RDTSCP=ON",
+                    "-DCMAKE_INSTALL_PREFIX=${PWD}/..",
+                    "-DGMX_BUILD_OWN_FFTW=ON"
+                ]
+            },
+            "execution": {
+                "mdrun_options": [
+                    "-deffnm MD",
+                    "-npme 0",
+                    "-g GLIC_2n_64_4_DLBNO.log",
+                    "-resetstep 20000",
+                    "-ntomp 4",
+                    "-dlb yes",
+                    "-pin on",
+                    "-pinstride 2"
+                ]
+            }
+        }
+    }
+}

@@ -1,0 +1,23 @@
+{
+    "application": "SLURM",
+    "details": {
+        "resource_manager": "SLURM",
+        "partition": "dell",
+        "nodes": 1,
+        "tasks": 1,
+        "cpus_per_task": 4,
+        "gpu": "V100",
+        "gpu_count": 1,
+        "job_name": "ai",
+        "output_file": "log/job-%j.log",
+        "error_file": "log/job-%j.err",
+        "conda_environment": "gchmini",
+        "python_path": "./augment.py",
+        "python_arguments": "--name ai --dataset imagenet --batch_size 128 --epochs 2000 --genotype \"Genotype(normal=[[('sep_conv_3x3', 0), ('dil_conv_5x5', 1)], [('skip_connect', 0), ('dil_conv_3x3', 2)], [('sep_conv_3x3', 1), ('skip_connect', 0)], [('sep_conv_3x3', 1), ('skip_connect', 0)]], normal_concat=range(2, 6), reduce=[[('max_pool_3x3', 0), ('max_pool_3x3', 1)], [('max_pool_3x3', 0), ('skip_connect', 2)], [('skip_connect', 3), ('max_pool_3x3', 0)], [('skip_connect', 2), ('max_pool_3x3', 0)]], reduce_concat=range(2, 6))\"",
+        "environment_variables": {
+            "NCCL_IB_DISABLE": 1,
+            "MKL_THREADING_LAYER": "GNU",
+            "CUDA_HOME": "/usr/local/cuda-10.2"
+        }
+    }
+}

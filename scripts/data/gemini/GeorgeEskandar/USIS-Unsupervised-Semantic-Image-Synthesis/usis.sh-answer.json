@@ -1,0 +1,80 @@
+{
+    "application": "Slurm",
+    "details": {
+        "job_name": "usis",
+        "output_file": "usis%j.%N.out",
+        "tasks": 1,
+        "cpus_per_task": 2,
+        "time": "4-23:00:00",
+        "memory": "64G",
+        "gpus": 1,
+        "conda_environment": "/anaconda3/envs/myenv",
+        "python_script": "train.py",
+        "python_arguments": [
+            "--name",
+            "usis_wavelet",
+            "--dataset_mode",
+            "cityscapes",
+            "--gpu_ids",
+            "0",
+            "--dataroot",
+            "/data/public/cityscapes",
+            "--batch_size",
+            "1",
+            "--netDu",
+            "wavelet",
+            "--model_supervision",
+            "0",
+            "--netG",
+            "wavelet",
+            "--channels_G",
+            "16"
+        ],
+        "alternative_python_scripts": [
+            "train.py",
+            "test.py"
+        ],
+        "alternative_python_arguments": [
+            [
+                "--name",
+                "usis",
+                "--dataset_mode",
+                "cityscapes",
+                "--gpu_ids",
+                "0",
+                "--dataroot",
+                "/data/public/cityscapes",
+                "--batch_size",
+                "1",
+                "--netDu",
+                "wavelet_decoder",
+                "--model_supervision",
+                "0",
+                "--netG",
+                "0",
+                "--channels_G",
+                "16"
+            ],
+            [
+                "--name",
+                "oasis_cityscapes_wavelet_disc",
+                "--dataset_mode",
+                "cityscapes",
+                "--gpu_ids",
+                "0",
+                "--dataroot",
+                "/data/public/cityscapes",
+                "--batch_size",
+                "1",
+                "--channels_G",
+                "64",
+                "--netG",
+                "0",
+                "--model_supervision",
+                "0",
+                "--ckpt_iter",
+                "best"
+            ]
+        ]
+    }
+}

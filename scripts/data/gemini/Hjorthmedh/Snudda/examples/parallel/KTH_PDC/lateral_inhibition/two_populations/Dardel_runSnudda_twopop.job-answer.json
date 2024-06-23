@@ -1,0 +1,23 @@
+{
+    "application": "Slurm",
+    "details": {
+        "environment": "snic-env",
+        "resources": {
+            "partition": "main",
+            "nodes": 1,
+            "cores": 128,
+            "cpus_per_task": 2,
+            "memory_per_cpu": "930M",
+            "time": "0:59:00"
+        },
+        "libraries": {
+            "ipython": "/cfs/klemming/scratch/${USER:0:1}/$USER/.ipython",
+            "snudda_env": "$HOME/Snudda/snudda_env/bin/activate"
+        },
+        "commands": {
+            "ipcontroller": "./../../ipcontroller_new.sh",
+            "ipengine": "ipengine --location=${CONTROLLERIP} --profile=${IPYTHON_PROFILE} --mpi --ipython-dir=${IPYTHONDIR}  --timeout=30.0 c.EngineFactory.max_heartbeat_misses=10  c.MPI.use='mpi4py'",
+            "application_script": "./Dardel_runSnudda_twopop.sh"
+        }
+    }
+}

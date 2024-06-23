@@ -1,0 +1,33 @@
+{
+    "application": "Ray",
+    "details": {
+        "environment": {
+            "conda_env": "conda environment specified in $CONDA_ENV",
+            "scripts": "scripts/env.sh"
+        },
+        "cluster_management": {
+            "system": "SLURM",
+            "nodes": 4,
+            "tasks_per_node": 1,
+            "cpus_per_task": 28,
+            "walltime": "7-0:00:00",
+            "partition": "compute",
+            "reservation": "c2"
+        },
+        "ray_configuration": {
+            "head_node": {
+                "ip_address": "IP address of the head node"
+            },
+            "workers": {
+                "number": "$WORKER_NUM",
+                "cpus_per_worker": "$SLURM_CPUS_PER_TASK"
+            },
+            "redis_password": "$REDIS_PWD",
+            "port": "$PORT"
+        },
+        "training_script": "train_ppo.py",
+        "training_parameters": {
+            "num_workers": "$(( $WORKER_PER_NODE * ( $WORKER_NUM + 1 )))"
+        }
+    }
+}

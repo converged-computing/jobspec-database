@@ -1,0 +1,40 @@
+{
+    "application": "LSF",
+    "details": {
+        "resource_requirements": {
+            "project": "GEN138",
+            "walltime": "0:30",
+            "nodes": 1,
+            "alloc_flags": "gpumps",
+            "job_name": "sw4-system",
+            "output_file": "sw4-system.%J",
+            "error_file": "sw4-system.%J"
+        },
+        "software_requirements": [
+            "cmake",
+            "gcc",
+            "fftw",
+            "netlib-lapack",
+            "hdf5",
+            "cuda",
+            "nsight-compute",
+            "nsight-systems"
+        ],
+        "environment_variables": {
+            "CALI_SERVICES_ENABLE": "event:recorder:timestamp:trace:nvprof",
+            "KERNEL_NAME": "CudaKernelLauncherFixed"
+        },
+        "execution_command": {
+            "jsrun": {
+                "nodes": 1,
+                "cores": 1,
+                "groups": 1,
+                "tasks_per_node": 1,
+                "binding": "packed:1"
+            },
+            "run_command": "nsys profile -t nvtx,cuda -s none",
+            "sw4binary": "${HOME}/sw4/optimize/sw4",
+            "file": "/gpfs/wolf/gen138/proj-shared/eqsim/killian-test/berkeley-s-h25.in"
+        }
+    }
+}

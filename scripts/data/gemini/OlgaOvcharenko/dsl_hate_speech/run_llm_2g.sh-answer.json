@@ -1,0 +1,50 @@
+{
+    "application": "SLURM",
+    "details": {
+        "resource_requirements": {
+            "nodes": 1,
+            "gpus_per_node": 5,
+            "gpu_memory": "32G",
+            "cpus_per_task": 10,
+            "memory_per_cpu": "10G",
+            "time": "48:00:00",
+            "mail_type": "BEGIN,END,FAIL"
+        },
+        "environment_setup": {
+            "modules": [
+                "eth_proxy",
+                "gcc/11.4.0",
+                "python/3.11.6",
+                "cuda/12.1.1"
+            ],
+            "virtual_environment": ".venv_llama",
+            "environment_variables": {
+                "WANDB__SERVICE_WAIT": "300",
+                "TRANSFORMERS_CACHE": "/cluster/scratch/oovcharenko/dsl_hate_speech/cache/",
+                "CONSUL_HTTP_ADDR": ""
+            }
+        },
+        "command": "python '$1'",
+        "logging": {
+            "output_file": "logs/log-%j.out"
+        },
+        "directory_structure": {
+            "logs": "logs",
+            "outputs": "outputs",
+            "outputs_targets": "outputs_targets",
+            "outputs_targets_new": {
+                "tokenizer": "outputs_targets_new/tokenizer",
+                "model": "outputs_targets_new/model"
+            },
+            "data": {
+                "llm_target": "data/llm_target",
+                "llm_target_predict": "data/llm_target_predict"
+            },
+            "outputs_targets_mistral": "outputs_targets_mistral"
+        },
+        "other_tools": {
+            "nvidia-smi": "Used for checking GPU status",
+            "torchrun": "Used for running PyTorch jobs"
+        }
+    }
+}

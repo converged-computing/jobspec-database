@@ -1,0 +1,30 @@
+{
+    "application": "SLURM",
+    "details": {
+        "resource_requests": {
+            "nodes": 1,
+            "time": "1-00:00",
+            "partition": "dgx",
+            "node_name": "calculon",
+            "gpu": 1,
+            "memory": "65536 MB",
+            "job_name": "finetune_CostFourierVelModel_balanced",
+            "output_file": "/home/mguamanc/job_%j.out",
+            "error_file": "/home/mguamanc/job_%j.err",
+            "mail_type": "ALL",
+            "mail_user": "mguamanc@andrew.cmu.edu"
+        },
+        "executable": "/bin/bash",
+        "working_directory": "/data/datasets/mguamanc/learned_cost_map/cluster_scripts",
+        "script_to_execute": "/data/datasets/mguamanc/learned_cost_map/cluster_scripts/finetune_wanda_CostFourierVelModel.sh",
+        "docker_image": "mguamanc/sara",
+        "docker_options": [
+            "--rm",
+            "--ipc=host",
+            "-e CUDA_VISIBLE_DEVICES=`echo $CUDA_VISIBLE_DEVICES`",
+            "-v /data/datasets:/data/datasets",
+            "-v /home/$USER:/home/$USER",
+            "-v /project:/project"
+        ]
+    }
+}

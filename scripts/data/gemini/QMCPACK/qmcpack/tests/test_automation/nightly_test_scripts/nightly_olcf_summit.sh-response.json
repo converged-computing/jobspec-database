@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"LSF\",\n  \"details\": {\n    \"scheduler\": \"LSF\",\n    \"modules\": [\n      \"cmake\",\n      \"git\",\n      \"gcc/7.4.0\",\n      \"fftw\",\n      \"essl\",\n      \"netlib-lapack\",\n      \"hdf5\",\n      \"boost\",\n      \"cuda\"\n    ],\n    \"environment_variables\": [\n      \"TEST_SITE_NAME=summit.olcf.ornl.gov\",\n      \"N_PROCS_BUILD=32\",\n      \"N_CONCURRENT_TESTS=1\",\n      \"CC=mpicc\",\n      \"CXX=mpicxx\",\n      \"FFTW_HOME=${OLCF_FFTW_ROOT}\",\n      \"base_dir=/gpfs/alpine/proj-shared/mat151/periodic_qmc\",\n      \"qmc_data_dir=${base_dir}/h5data\",\n      \"compiler=gcc7.4\",\n      \"branch=develop\",\n      \"source_dir=${base_dir}/qmcpack-${branch}\",\n      \"QMCPACK_TEST_SUBMIT_NAME=${compiler}-${variant}-Release\"\n    ],\n    \"commands\": [\n      \"git clone --depth 1 https://github.com/QMCPACK/qmcpack.git ${source_dir}\",\n      \"ctest ${CTEST_FLAGS} \\\n      -S $(pwd)/../CMake/ctest_script.cmake,release \\\n      --stop-time $(date --date=now+57mins +%H:%M:%S) \\\n      -VV -R 'deterministic|short' -LE 'unstable' --timeout 800 &> \\\n      ${log_dir}/${QMCPACK_TEST_SUBMIT_NAME}.log\",\n      \"bsub -b ${hour}:${minute} ${source_dir}/tests/test_automation/nightly_olcf_summit.sh\"\n    ],\n    \"resources\": [\n      \"summit.olcf.ornl.gov\",\n      \"/gpfs/alpine/proj-shared/mat151/periodic_qmc\"\n    ]\n  }\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 1174,
+        "candidates_token_count": 498,
+        "total_token_count": 1672,
+        "cached_content_token_count": 0
+    }
+}

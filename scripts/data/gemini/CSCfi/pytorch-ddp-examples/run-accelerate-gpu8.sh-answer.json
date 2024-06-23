@@ -1,0 +1,32 @@
+{
+    "application": "slurm",
+    "details": {
+        "slurm_account": "project_2001659",
+        "slurm_partition": "gputest",
+        "slurm_nodes": 2,
+        "slurm_tasks_per_node": 1,
+        "slurm_cpus_per_task": 40,
+        "slurm_memory": 0,
+        "slurm_time": 15,
+        "slurm_gres": "gpu:v100:4",
+        "modules": [
+            "pytorch"
+        ],
+        "python_packages": [
+            "accelerate"
+        ],
+        "python_script": "mnist_accelerate.py",
+        "script_arguments": [
+            "--epochs=100"
+        ],
+        "accelerate_arguments": [
+            "--multi_gpu",
+            "--num_processes=8",
+            "--num_machines=2",
+            "--mixed_precision=no",
+            "--dynamo_backend=no",
+            "--main_process_ip=$MASTER_IP",
+            "--main_process_port=$MASTER_PORT"
+        ]
+    }
+}

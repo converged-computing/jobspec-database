@@ -1,0 +1,36 @@
+{
+    "application": "SLURM",
+    "details": {
+        "queue": "special",
+        "nodes": 1,
+        "wall_time": "01:10:00",
+        "job_name": "test_gpu_job",
+        "scratch_files": true,
+        "gpu_nodes": true,
+        "allocation": "m1759",
+        "devices_per_node": 8,
+        "threads_per_node": 80,
+        "output_file": "slurm%j.out",
+        "error_file": "slurm%j.err",
+        "mail_user": "nksauter@lbl.gov",
+        "mail_type": "ALL",
+        "exclusive": true,
+        "tasks": 40,
+        "cpus_per_task": 2,
+        "environment_variables": {
+            "USE_EXASCALE_API": "True",
+            "LOG_BY_RANK": 1,
+            "RANK_PROFILE": 0,
+            "N_SIM": 240,
+            "ADD_SPOTS_ALGORITHM": "cuda",
+            "ADD_BACKGROUND_ALGORITHM": "cuda",
+            "CACHE_FHKL_ON_GPU": "True",
+            "DEVICES_PER_NODE": 8
+        },
+        "python_script": "$(libtbx.find_in_repositories LS49)/adse13_196/step5_batch.py",
+        "additional_scripts": [
+            "$(libtbx.find_in_repositories LS49)/adse13_196/tst_gpu_channels.py",
+            "$(libtbx.find_in_repositories LS49)/adse13_161/step5_batch.py"
+        ]
+    }
+}

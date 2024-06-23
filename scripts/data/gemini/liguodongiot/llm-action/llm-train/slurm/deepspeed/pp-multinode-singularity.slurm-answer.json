@@ -1,0 +1,33 @@
+{
+    "application": "deepspeed",
+    "details": {
+        "framework": "PyTorch",
+        "library": "deepspeed",
+        "cluster_manager": "SLURM",
+        "container_runtime": "Singularity",
+        "gpu_type": "A800",
+        "gpu_count": 2,
+        "nodes": 2,
+        "tasks": 4,
+        "runtime": "20:00:00",
+        "network": {
+            "interface": "bond0",
+            "disable_infiniband": true
+        },
+        "environment_variables": {
+            "GPUS_PER_NODE": "2",
+            "MASTER_ADDR": "obtained from scontrol",
+            "MASTER_PORT": "9903",
+            "NCCL_IB_DISABLE": "1",
+            "NCCL_SOCKET_IFNAME": "bond0",
+            "CC": "/opt/hpcx/ompi/bin/mpicc",
+            "CUDA_LAUNCH_BLOCKING": "1"
+        },
+        "training_parameters": {
+            "script": "train.py",
+            "config_file": "ds_config.json",
+            "steps": "200",
+            "pipeline_parallelism": true
+        }
+    }
+}

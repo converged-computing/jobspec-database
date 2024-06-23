@@ -1,0 +1,35 @@
+{
+    "application": "SLURM",
+    "details": {
+        "resource_requirements": {
+            "nodes": 1,
+            "time": "1 hour",
+            "partition": "gpu",
+            "node_name": "bender",
+            "gpu": 1,
+            "memory": "32768 MB",
+            "job_name": "Network_trainer",
+            "output_file": "/home/mguamanc/job_%j.out",
+            "error_file": "/home/mguamanc/job_%j.err",
+            "mail_type": "ALL",
+            "mail_user": "mguamanc@andrew.cmu.edu"
+        },
+        "executable": {
+            "path": "/bin/bash",
+            "script": "/data/datasets/mguamanc/learned_cost_map/cluster_scripts/train_small.sh"
+        },
+        "docker_image": "mguamanc/sara",
+        "docker_options": {
+            "remove_container": true,
+            "ipc_mode": "host",
+            "environment_variables": {
+                "CUDA_VISIBLE_DEVICES": "$CUDA_VISIBLE_DEVICES"
+            },
+            "volumes": [
+                "/data/datasets:/data/datasets",
+                "/home/$USER:/home/$USER",
+                "/project:/project"
+            ]
+        }
+    }
+}

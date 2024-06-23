@@ -1,0 +1,39 @@
+{
+    "application": "MPI",
+    "details": {
+        "software": [
+            "mpiexec",
+            "conda",
+            "python",
+            "nvidia-smi"
+        ],
+        "resources": {
+            "nodes": "polaris",
+            "queue": "debug-scaling",
+            "walltime": "0:05:00",
+            "filesystems": [
+                "home",
+                "grand"
+            ],
+            "environment_variables": [
+                "MPICH_GPU_SUPPORT_ENABLED",
+                "NCCL_COLLNET_ENABLE",
+                "NCCL_NET_GDR_LEVEL",
+                "MASTER_ADDR",
+                "NNODES",
+                "NRANKS_PER_NODE",
+                "NTOTRANKS",
+                "NDEPTH",
+                "OMP_NUM_THREADS",
+                "OMP_PLACES"
+            ],
+            "libraries": [
+                "conda 3DCNN"
+            ],
+            "scripts": [
+                "set_affinity_gpu_polaris.sh"
+            ],
+            "command": "python main.py --step 1 --batch_size_phase1 8 --with_voxel_norm --use_intensity_loss --dataset_name ABCD --exp_name pretrain_withvoxelnorm_intloss_split1  --image_path /lus/grand/projects/STlearn/7.cleaned_image_MNI_to_TRs --dataset_split_num 1"
+        }
+    }
+}

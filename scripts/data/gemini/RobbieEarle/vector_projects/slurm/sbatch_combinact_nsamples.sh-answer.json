@@ -1,0 +1,53 @@
+{
+    "application": "SLURM",
+    "details": {
+        "resource_requirements": {
+            "partition": "t4v2",
+            "excluded_nodes": [
+                "gpu102",
+                "gpu115"
+            ],
+            "gpu_count": 1,
+            "qos": "normal",
+            "cpu_cores": 4,
+            "memory": "8G",
+            "walltime": "700:00:00",
+            "array_range": "0-20%10",
+            "output_file": "logs_new/wrn_50_nsamples/%a-%N-%j",
+            "job_name": "wrn_50_nsamples"
+        },
+        "environment_setup": {
+            "bash_profile": "~/.bashrc",
+            "conda_environment": "~/venvs/combinact"
+        },
+        "script_arguments": {
+            "ACTFUN": "First argument",
+            "RESNET_WIDTH": "Second argument",
+            "SEED": "SLURM_ARRAY_TASK_ID"
+        },
+        "python_dependencies": {
+            "torch": "Version checked in the script",
+            "scipy": "Version checked in the script",
+            "sklearn": "Version checked in the script",
+            "matplotlib": "Version checked in the script"
+        },
+        "script_execution": {
+            "python_script": "engine.py",
+            "arguments": {
+                "--seed": "SEED",
+                "--save_path": "SAVE_PATH",
+                "--check_path": "CHECK_PATH",
+                "--model": "resnet",
+                "--batch_size": 128,
+                "--actfun": "ACTFUN",
+                "--resnet_width": "RESNET_WIDTH",
+                "--optim": "onecycle",
+                "--num_epochs": 100,
+                "--dataset": "cifar100",
+                "--aug": "True",
+                "--mix_pre_apex": "True",
+                "--var_n_samples": "Not specified"
+            }
+        }
+    }
+}

@@ -1,0 +1,65 @@
+{
+    "application": "Slurm",
+    "details": {
+        "account": "soc-gpu-kp",
+        "partition": "soc-gpu-kp",
+        "gpu": "p100",
+        "gpu_count": 1,
+        "job_name": "comp_422_openmp",
+        "nodes": 2,
+        "tasks_per_node": 1,
+        "cpus_per_task": 14,
+        "memory": "10G",
+        "time": "00:10:00",
+        "environment": "ALL",
+        "ulimit": {
+            "core": "unlimited",
+            "stack": "unlimited"
+        },
+        "modules": [
+            "impi/2019.2.187"
+        ],
+        "source": "/uufs/chpc.utah.edu/common/home/u1074259/ytopt/experiments/exp-6/jobs/000_00030.job",
+        "python_script": "/uufs/chpc.utah.edu/common/home/u1074259/ytopt/problems/atax/executable.py",
+        "python_script_arguments": "--p0 a --p1 a --p2 c",
+        "mpiexec": {
+            "processes": 2,
+            "python_module": "ytopt.search.async_search",
+            "arguments": {
+                "prob_path": "problems/convolution-2d2/problem.py",
+                "exp_dir": "experiments/convolution_mk4",
+                "prob_attr": "problem",
+                "exp_id": "convolution_mk4",
+                "max_time": 60,
+                "base_estimator": "RF",
+                "patience_fac": 30
+            }
+        },
+        "mpirun": [
+            {
+                "processes": 2,
+                "python_module": "ytopt.search.async_search",
+                "arguments": {
+                    "prob_path": "problems/correlation/problem.py",
+                    "exp_dir": "experiments/exp-6",
+                    "prob_attr": "problem",
+                    "exp_id": "exp-6",
+                    "max_time": 60,
+                    "base_estimator": "RF"
+                }
+            },
+            {
+                "processes": 2,
+                "python_module": "ytopt.search.async_search",
+                "arguments": {
+                    "prob_path": "problems/atax2/problem.py",
+                    "exp_dir": "experiments/atax_mk3",
+                    "prob_attr": "problem",
+                    "exp_id": "atax_mk3",
+                    "max_time": 180,
+                    "base_estimator": "RF"
+                }
+            }
+        ]
+    }
+}

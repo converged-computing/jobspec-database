@@ -1,0 +1,53 @@
+{
+    "application": "Slurm",
+    "details": {
+        "resource_requirements": {
+            "partition": "EPYC",
+            "nodes": 1,
+            "exclusive": true,
+            "tasks_per_node": 128,
+            "memory": "490G",
+            "time": "02:00:00"
+        },
+        "software_requirements": {
+            "modules": [
+                "mkl/latest",
+                "openBLAS/0.3.23-omp"
+            ],
+            "environment_variables": {
+                "OMP_PLACES": "cores",
+                "OMP_PROC_BIND": "spread",
+                "LD_LIBRARY_PATH": "/u/dssc/slippo00/PROJECT_sl_and_gv/Foundations_of_HPC_2022/Assignment/exercise2/blis/lib:$LD_LIBRARY_PATH"
+            }
+        },
+        "execution_flow": {
+            "matrix_multiplication_executables": [
+                "sgemm_blis_opt.x",
+                "dgemm_blis_opt.x"
+            ],
+            "results_dir": "csv_results_scalability_deepening_${current_type}",
+            "output_files": {
+                "summary_csv": "${results_dir}/${matrix_multiply_executable}_${current_type}_${size}_${current_policy}_summary.csv",
+                "detailed_csv": "${results_dir}/${matrix_multiply_executable}_${current_type}_${size}_${current_policy}_detailed.csv"
+            },
+            "iterations": 5,
+            "core_counts": [
+                1,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9,
+                10,
+                11,
+                12,
+                13,
+                14,
+                15,
+                16
+            ],
+            "matrix_size": 10000
+        }
+    }
+}

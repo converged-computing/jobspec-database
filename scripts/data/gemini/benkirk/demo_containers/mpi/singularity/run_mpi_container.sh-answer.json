@@ -1,0 +1,37 @@
+{
+    "application": "Singularity",
+    "details": {
+        "job_scheduler": "PBS",
+        "resource_requirements": {
+            "walltime": "01:00:00",
+            "nodes": "2",
+            "cpus_per_node": "128",
+            "mpi_processes_per_node": "32",
+            "omp_threads_per_process": "4"
+        },
+        "environment_variables": {
+            "TMPDIR": "/glade/gust/scratch/${USER}/tmp",
+            "LD_LIBRARY_PATH": "${CRAY_MPICH_DIR}/lib-abi-mpich:/opt/cray/pe/lib64:${LD_LIBRARY_PATH}:/host/lib64",
+            "MPICH_SMP_SINGLE_COPY_MODE": "NONE"
+        },
+        "container_image": {
+            "path": "./opensuse15-openhpc-sandbox",
+            "bind_mounts": [
+                "/run",
+                "/usr/lib64:/host/lib64",
+                "/opt/cray"
+            ],
+            "executables": [
+                "/opt/local/imb-2021.3/IMB-MPI1",
+                "/opt/local/imb-2021.3/IMB-P2P",
+                "/opt/local/osu-micro-benchmarks-7.0.1/libexec/osu-micro-benchmarks/mpi/collective/osu_alltoall"
+            ]
+        },
+        "mpi_runtime": "mpich",
+        "benchmark_suites": [
+            "IMB-MPI1",
+            "IMB-P2P",
+            "osu-micro-benchmarks"
+        ]
+    }
+}

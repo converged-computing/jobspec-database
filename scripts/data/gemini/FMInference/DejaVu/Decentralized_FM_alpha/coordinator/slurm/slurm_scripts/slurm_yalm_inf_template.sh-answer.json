@@ -1,0 +1,46 @@
+{
+    "application": "Deep Learning Inference",
+    "details": {
+        "framework": "PyTorch",
+        "model": "yalm-100b-new",
+        "inference engine": "dist_inference_runner_w_slurm_coordinator.py",
+        "environment": "conda environment 'base'",
+        "compute resources": {
+            "partition": "sphinx",
+            "gpu": "1",
+            "time": "3:59:00",
+            "tasks": "1",
+            "cpus": "4",
+            "memory": "8G per CPU",
+            "output": "/afs/cs.stanford.edu/u/biyuan/exe_log/yalm_%j.log"
+        },
+        "network": {
+            "interface": "en*",
+            "protocol": "NCCL",
+            "debug": "INFO",
+            "disable": {
+                "IB": true,
+                "P2P": true
+            }
+        },
+        "inference configuration": {
+            "precision": "fp16",
+            "budget": "10400",
+            "batch_size": "24",
+            "input_seq_length": "512",
+            "generate_seq_length": "32",
+            "micro_batch_size": "1",
+            "num_layers": "10",
+            "max_layers": "80",
+            "infer_data": "{{infer_data}}"
+        },
+        "distributed configuration": {
+            "world_size": "8",
+            "machine_size": "8",
+            "n_gpu_per_machine": "1",
+            "pp_mode": "pipe_sync_sample_mask_token_pipe",
+            "pipeline_group_size": "8",
+            "coordinator_server_ip": "10.79.12.70"
+        }
+    }
+}

@@ -1,0 +1,43 @@
+{
+    "application": "Spack",
+    "details": {
+        "package": "arrayfire@3.7.3",
+        "compiler": "gcc@10.2.0",
+        "variants": "+cuda cuda_arch=70,80 ~forge ~ipo ~opencl",
+        "dependencies": [
+            "cuda@11.2.2",
+            "openblas@0.3.18",
+            "fftw@3.3.10",
+            "boost@1.77.0"
+        ],
+        "resource_requirements": {
+            "nodes": 1,
+            "tasks_per_node": 1,
+            "cpus_per_task": 10,
+            "memory": "93G",
+            "gpus": 1,
+            "time": "01:00:00"
+        },
+        "scheduler": "slurm",
+        "environment_variables": {
+            "LOCAL_TIME": "20231026T161953-0700",
+            "UNIX_TIME": "1730071193",
+            "LOCAL_SCRATCH_DIR": "/scratch/${USER}/job_${SLURM_JOB_ID}",
+            "TMPDIR": "${LOCAL_SCRATCH_DIR}",
+            "TMP": "${TMPDIR}",
+            "SPACK_INSTANCE_VERSION": "b",
+            "SYSTEM_NAME": "expanse",
+            "SPACK_VERSION": "0.17.3",
+            "SPACK_INSTANCE_NAME": "gpu",
+            "SPACK_INSTANCE_DIR": "/cm/shared/apps/spack/${SPACK_VERSION}/${SPACK_INSTANCE_NAME}/${SPACK_INSTANCE_VERSION}",
+            "SLURM_JOB_SCRIPT": "$(scontrol show job ${SLURM_JOB_ID} | awk -F= '/Command=/{print $2})",
+            "SLURM_JOB_MD5SUM": "$(md5sum ${SLURM_JOB_SCRIPT})",
+            "SCHEDULER_MODULE": "slurm",
+            "SPACK_PACKAGE": "arrayfire@3.7.3",
+            "SPACK_COMPILER": "gcc@10.2.0",
+            "SPACK_VARIANTS": "+cuda cuda_arch=70,80 ~forge ~ipo ~opencl",
+            "SPACK_DEPENDENCIES": "^cuda@11.2.2/$(spack find --format '{hash:7}' cuda@11.2.2 % gcc@10.2.0) ^openblas@0.3.18/$(spack find --format '{hash:7}' openblas@0.3.18 % ${SPACK_COMPILER} ~ilp64 threads=none) ^fftw@3.3.10/$(spack find --format '{hash:7}' fftw@3.3.10 % ${SPACK_COMPILER} ~mpi ~openmp) ^boost@1.77.0/$(spack find --format '{hash:7}' boost@1.77.0 % ${SPACK_COMPILER} ~mpi)",
+            "SPACK_SPEC": "${SPACK_PACKAGE} % ${SPACK_COMPILER} ${SPACK_VARIANTS} ${SPACK_DEPENDENCIES}"
+        }
+    }
+}

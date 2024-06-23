@@ -1,0 +1,63 @@
+{
+    "application": "Slurm",
+    "details": {
+        "software": [
+            "lulesh2.0_meric",
+            "amg2013_meric"
+        ],
+        "resources": {
+            "walltime": "10:00:00",
+            "nodes": 1,
+            "tasks_per_node": 1,
+            "cpus_per_task": 24,
+            "memory_per_cpu": "2500M",
+            "partition": "haswell",
+            "account": "p_readex",
+            "reservation": "READEX",
+            "job_name": "lulesh_meric"
+        },
+        "environment": {
+            "modules": "readex_env/set_env_meric.source",
+            "meric_settings": {
+                "counters": "perfevent",
+                "mode": 2,
+                "debug": 0,
+                "continual": 1,
+                "aggregate": 1,
+                "detailed": 0,
+                "num_threads": 24,
+                "frequency": 25,
+                "uncore_frequency": 30,
+                "output_dir": "lulesh_meric_dir"
+            }
+        },
+        "commands": [
+            "cd ..",
+            "srun ./lulesh2.0_meric -i 75 -s 150",
+            "rm -rf $MERIC_OUTPUT_DIR",
+            "rm -rf ${MERIC_OUTPUT_DIR}Counters"
+        ],
+        "loops": {
+            "thread_loop": {
+                "start": 24,
+                "end": 4,
+                "step": -4
+            },
+            "cpu_freq_loop": {
+                "start": 25,
+                "end": 14,
+                "step": -4
+            },
+            "uncore_freq_loop": {
+                "start": 30,
+                "end": 14,
+                "step": -4
+            },
+            "repeat_loop": {
+                "start": 1,
+                "end": 1,
+                "step": 1
+            }
+        }
+    }
+}

@@ -1,0 +1,41 @@
+{
+    "application": "SLURM",
+    "details": {
+        "resources": {
+            "account": "cds",
+            "gpus": "4xRTX8000",
+            "cpus": "16",
+            "memory": "320GB",
+            "time": "48 hours",
+            "job_name": "mt5_xl_scan",
+            "output": "mt5_xl_scan_%A_%a.out",
+            "array": "0-2"
+        },
+        "modules": {
+            "cuda": "11.1.74"
+        },
+        "python_script": "/scratch/eo41/parsing-transformers/run_translation.py",
+        "benchmark": "SCAN",
+        "model": "google/mt5-xl",
+        "output_dir": "out_mt5_xl_${SPLIT}_${EPOCHS}_$SLURM_ARRAY_TASK_ID",
+        "train_data": "data_scan/$SPLIT/train.json",
+        "test_data": "data_scan/$SPLIT/test.json",
+        "languages": {
+            "source": "en",
+            "target": "en"
+        },
+        "batch_sizes": {
+            "train": 16,
+            "eval": 8
+        },
+        "epochs": 12,
+        "seed": "$SLURM_ARRAY_TASK_ID",
+        "save_steps": 2500000000,
+        "max_length": {
+            "target": 512,
+            "source": 512
+        },
+        "prediction_method": "generate",
+        "parallelism": "model_parallel"
+    }
+}

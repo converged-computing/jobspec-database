@@ -1,0 +1,33 @@
+{
+    "application": "SLURM",
+    "details": {
+        "job_name": "IceCube_GNN",
+        "output": "slurm_out/GCNN_%A_%a.out",
+        "time": "2-00:00:00",
+        "gres": "gpu:1",
+        "nodes": 1,
+        "mem": "14000",
+        "mail_type": "FAIL",
+        "mail_user": "nc2201@courant.nyu.edu",
+        "dataset": {
+            "train": "/misc/vlgscratch4/BrunaGroup/choma/icecube/train.pickle",
+            "val": "/misc/vlgscratch4/BrunaGroup/choma/icecube/val.pickle",
+            "test": "/misc/vlgscratch4/BrunaGroup/choma/icecube/test.pickle",
+            "train_size": 500000,
+            "val_size": 500000,
+            "test_size": 500000
+        },
+        "experiment": {
+            "name": "aa_test_updates",
+            "run": "$SLURM_ARRAY_TASK_ID",
+            "epochs": 500,
+            "batch_size": 5
+        },
+        "network": {
+            "layers": 6,
+            "hidden_size": 64
+        },
+        "python_environment": "~/pyenv/torch4",
+        "python_script": "src/main.py"
+    }
+}

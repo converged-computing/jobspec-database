@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"SLURM\",\n  \"details\": {\n    \"job_name\": \"dask-workers\",\n    \"output\": \"dask-workers.%j.%N.out\",\n    \"partition\": \"compute\",\n    \"nodes\": 2,\n    \"ntasks_per_node\": 24,\n    \"time\": \"0:20:00\",\n    \"modules\": [\"singularity\"],\n    \"singularity_image\": \"/oasis/scratch/comet/zonca/temp_project/zonca-singularity-comet-master-2019-05.simg\",\n    \"command\": \"bash ./launch_worker.sh\",\n    \"singularity_bindpath\": \"/oasis\",\n    \"ibrun_npernode\": 1,\n    \"resources\": {\n      \"compute\": {\n        \"nodes\": 2,\n        \"tasks_per_node\": 24\n      },\n      \"time\": \"0:20:00\"\n    }\n  }\n}\n```\n\n**Explanation:**\n\n* **SLURM**: The script uses the SLURM workload manager to run the application.\n* **Singularity**: It leverages Singularity to run a containerized environment for the task.\n* **ibrun**: The script utilizes ibrun, a tool for running MPI applications, to distribute the workload across the nodes.\n* **launch_worker.sh**: This script is likely responsible for launching the actual Dask worker processes.\n\nThe script defines various SLURM directives:\n\n* `job-name`: Name for the job.\n* `output`: Location for output logs.\n* `partition`: Resource partition to use.\n* `nodes`: Number of compute nodes to request.\n* `ntasks-per-node`: Number of tasks to run on each node.\n* `export`: Exported environment variables.\n* `-t`: Maximum runtime for the job.\n\nThe script uses a Singularity image specified by `SINGULARITY_IMAGE` to run the `COMMAND` which, in this case, is a bash script named `launch_worker.sh`. The `export SINGULARITY_BINDPATH` directive tells Singularity to bind the `/oasis` directory to the container's filesystem. Finally, `ibrun` is used to execute the container with one process per node.\n\nThe provided JSON object describes the application, its configuration details, and the required resources for its execution.\n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 219,
+        "candidates_token_count": 543,
+        "total_token_count": 762,
+        "cached_content_token_count": 0
+    }
+}

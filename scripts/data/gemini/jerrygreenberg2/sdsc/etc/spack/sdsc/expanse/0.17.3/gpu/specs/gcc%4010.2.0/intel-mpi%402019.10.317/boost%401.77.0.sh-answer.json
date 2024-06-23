@@ -1,0 +1,37 @@
+{
+    "application": "Spack",
+    "details": {
+        "scheduler": "Slurm",
+        "slurm_config": {
+            "job_name": "boost@1.77.0",
+            "account": "use300",
+            "partition": "ind-gpu-shared",
+            "nodes": 1,
+            "tasks_per_node": 1,
+            "cpus_per_task": 10,
+            "memory": "93G",
+            "gpus": 1,
+            "time": "00:30:00"
+        },
+        "spack_config": {
+            "version": "0.17.3",
+            "instance_name": "gpu",
+            "instance_dir": "${HOME}/cm/shared/apps/spack/${SPACK_VERSION}/${SPACK_INSTANCE_NAME}",
+            "package": "boost@1.77.0",
+            "compiler": "gcc@10.2.0",
+            "variants": "+atomic +chrono ~clanglibcpp ~container ~context ~coroutine +date_time ~debug +exception ~fiber +filesystem +graph ~icu +iostreams +locale +log +math +mpi +multithreaded +numpy +pic +program_options +python +random +regex +serialization +shared +signals ~singlethreaded +system ~taggedlayout +test +thread +timer ~versionedlayout +wave",
+            "dependencies": "^intel-mpi@2019.10.317/$(spack find --format '{hash:7}' intel-mpi@2019.10.317 % ${SPACK_COMPILER}) ^py-numpy@1.20.3/$(spack find --format '{hash:7}' py-numpy@1.20.3 % ${SPACK_COMPILER}) ^openblas@0.3.18/$(spack find --format '{hash:7}' openblas@0.3.18 % ${SPACK_COMPILER} ~ilp64 threads=none)"
+        },
+        "resources": {
+            "modules": [
+                "slurm",
+                "spack"
+            ],
+            "dependencies": [
+                "intel-mpi@2019.10.317",
+                "py-numpy@1.20.3",
+                "openblas@0.3.18"
+            ]
+        }
+    }
+}

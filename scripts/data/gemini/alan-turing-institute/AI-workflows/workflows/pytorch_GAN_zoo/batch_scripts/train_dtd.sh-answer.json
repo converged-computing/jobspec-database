@@ -1,0 +1,19 @@
+{
+    "application": "Slurm",
+    "details": {
+        "resource_requirements": {
+            "qos": "%qos",
+            "partition": "%partition",
+            "nodes": 1,
+            "wallclock_time": "6-00:00:00",
+            "gpus": 1
+        },
+        "modules": "%modules",
+        "scratch_host": "%scratch_host",
+        "inputs": "dtd config_dtd.json",
+        "outputs": "output_networks/dtd_$job_id",
+        "container": "pytorch_GAN_zoo.sif",
+        "container_command": "train.py PGAN -c config_dtd.json --restart --no_vis -n dtd_$job_id",
+        "run_command": "singularity exec --nv --bind $scratch:/scratch_mount --pwd /scratch_mount $container $container_command"
+    }
+}

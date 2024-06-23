@@ -1,0 +1,44 @@
+{
+    "application": "Slurm",
+    "details": {
+        "job_name": "openbioml",
+        "nodes": 2,
+        "tasks_per_node": 1,
+        "output_dir": "/fsx/home-zanussbaum/bio-chem-lm/logs",
+        "partition": "g40n404",
+        "comment": "openbioml",
+        "requeue": true,
+        "exclusive": true,
+        "environment_variables": {
+            "FI_EFA_FORK_SAFE": 1,
+            "FI_LOG_LEVEL": 1,
+            "FI_EFA_USE_DEVICE_RDMA": 1,
+            "NCCL_DEBUG": "INFO",
+            "NCCL_PROTO": "simple",
+            "PYTHONFAULTHANDLER": 1,
+            "CUDA_LAUNCH_BLOCKING": 0,
+            "OMPI_MCA_mtl_base_verbose": 1,
+            "FI_EFA_ENABLE_SHM_TRANSFER": 0,
+            "FI_PROVIDER": "efa",
+            "FI_EFA_TX_MIN_CREDITS": 64,
+            "NCCL_TREE_THRESHOLD": 0,
+            "WANDB_DIR": "/fsx/home-zanussbaum/bio-chem-lm/outputs/",
+            "WANDB_CACHE_DIR": "/fsx/home-zanussbaum/.cache",
+            "WANDB_MODE": "online",
+            "TORCH_SHOW_CPP_STACKTRACES": 1,
+            "HOSTNAMES": "scontrol show hostnames \"$SLURM_JOB_NODELIST\"",
+            "MASTER_ADDR": "scontrol show hostnames \"$SLURM_JOB_NODELIST\" | head -n 1",
+            "MASTER_PORT": 12802,
+            "I_MPI_PORT_RANGE": "12800:12804",
+            "COUNT_NODE": "scontrol show hostnames \"$SLURM_JOB_NODELIST\" | wc -l",
+            "I_MPI_HYDRA_BOOTSTRAP": "ssh"
+        },
+        "sub_script": "/fsx/home-zanussbaum/bio-chem-lm/train.sh",
+        "resource_requirements": {
+            "nodes": 2,
+            "tasks_per_node": 1,
+            "partition": "g40n404",
+            "mpi_implementation": "OpenMPI"
+        }
+    }
+}

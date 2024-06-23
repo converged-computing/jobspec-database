@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"SLURM\",\n  \"details\": {\n    \"script_purpose\": \"This script uses SLURM to run a benchmark comparing the performance of different data transfer methods in a multi-node GPU cluster.\",\n    \"slurm_options\": [\n      \"SBATCH -J multi-node-test\",\n      \"SBATCH --nodes 2\",\n      \"SBATCH --gres=gpu:2\",\n      \"SBATCH --ntasks=4\",\n      \"SBATCH --ntasks-per-node=2\",\n      \"SBATCH --cpus-per-task 16\",\n      \"SBATCH -A proj16\",\n      \"SBATCH -p palamut-cuda\",\n      \"SBATCH --time=1:00:00\",\n      \"SBATCH -o %x_%j.log\"\n    ],\n    \"modules\": \". ./scripts/modules_truba.sh > /dev/null\",\n    \"executables\": {\n      \"jacobi\": \"./jacobi -s 1\",\n      \"jacobi_nvshmem\": \"./jacobi_nvshmem -s 1\"\n    },\n    \"parameters\": {\n      \"NUM_ITER\": \"Number of iterations (default: 10000)\",\n      \"NUM_RUNS\": \"Number of runs for each configuration (default: 5)\",\n      \"STARTING_NX\": \"Initial size of the grid (default: 512)\",\n      \"MAX_NUM_GPUS\": \"Maximum number of GPUs to use (default: 8)\",\n      \"CUDA_VISIBLE_DEVICES_SETTING\": \"Array of strings defining which GPUs to use for each configuration\"\n    },\n    \"data_transfer_methods\": {\n      \"version_name_to_idx_map\": {\n        \"Baseline Copy\": 0,\n        \"Baseline Copy Overlap\": 1,\n        \"Baseline P2P\": 2,\n        \"Baseline Single Copy\": 3,\n        \"Single Stream 1TB\": 4,\n        \"Single Stream 2TB\": 5,\n        \"Double Stream\": 6,\n        \"Baseline Copy (No compute)\": 7,\n        \"Baseline Copy Overlap (No Compute)\": 8,\n        \"Baseline P2P (No Compute)\": 9,\n        \"Single Stream 1TB (No Compute)\": 10,\n        \"Single Stream 2TB (No Compute)\": 11,\n        \"Double Stream (No Compute)\": 12\n      },\n      \"version_name_to_idx_map_nvshmem\": {\n        \"NVSHMEM Baseline\": 0,\n        \"NVSHMEM Baseline Optimized\": 1,\n        \"NVSHMEM Single Stream 1TB\": 2,\n        \"NVSHMEM Single Stream 2TB\": 3,\n        \"NVSHMEM Double Stream\": 4,\n        \"NVSHMEM Single Stream All TB Partitoned\": 5,\n        \"NVSHMEM Baseline (No Compute)\": 6,\n        \"NVSHMEM Baseline Optimized (No Compute)\": 7,\n        \"NVSHMEM Single Stream 1TB (No Compute)\": 8,\n        \"NVSHMEM Single Stream 2TB (No Compute)\": 9,\n        \"NVSHMEM Double Stream (No Compute)\": 10,\n        \"NVSHMEM Single Stream All TB Partitoned (No Compute)\": 11\n      }\n    },\n    \"benchmark\": \"Jacobi solver\",\n    \"resource_requirements\": [\n      \"Multi-node cluster with GPUs\",\n      \"SLURM environment\"\n    ]\n  }\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 1497,
+        "candidates_token_count": 812,
+        "total_token_count": 2309,
+        "cached_content_token_count": 0
+    }
+}

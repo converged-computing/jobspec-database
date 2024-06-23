@@ -1,0 +1,49 @@
+{
+    "application": "Ray Tune",
+    "software": [
+        "Ray",
+        "Python 3",
+        "TensorFlow 2",
+        "CUDA 11.4.4",
+        "cuDNN 8.2.4.15-11.4",
+        "OpenMPI 4.0.7",
+        "Slurm",
+        "gcc",
+        "cmake",
+        "nccl",
+        "miniconda3",
+        "comet-ml"
+    ],
+    "resource_requirements": {
+        "slurm": {
+            "time": "168:00:00",
+            "nodes": 8,
+            "tasks_per_node": 1,
+            "partition": "gpu",
+            "constraint": "a100-80gb,ib",
+            "gpus_per_task": 4,
+            "cpus_per_task": 32,
+            "job_name": "raytune"
+        },
+        "ray": {
+            "head_node": {
+                "cpus": 32,
+                "gpus": 4
+            },
+            "worker_nodes": {
+                "cpus": 32,
+                "gpus": 4
+            }
+        },
+        "python": {
+            "environment": "tf2"
+        },
+        "storage": {
+            "results_dir": "/mnt/ceph/users/ewulff/ray_results/tune_result_dir"
+        },
+        "other": {
+            "redis_password": "uuidgen",
+            "comet_experiment_name": "particleflow-raytune"
+        }
+    }
+}

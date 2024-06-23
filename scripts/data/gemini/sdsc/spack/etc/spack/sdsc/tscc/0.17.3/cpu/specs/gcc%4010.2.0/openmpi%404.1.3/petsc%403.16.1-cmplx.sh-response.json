@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n\"application\": \"spack\",\n\"software\": [\n\"petsc@3.16.1\",\n\"gcc@10.2.0\",\n\"python@3.8.12\",\n\"openblas@0.3.17\",\n\"hdf5@1.10.7\",\n\"openmpi@4.1.3\",\n\"parmetis@4.0.3\",\n\"slepc@3.16.0\"\n],\n\"resource_requirements\": [\n\"SLURM_JOB_NAME\",\n\"SLURM_ACCOUNT\",\n\"SLURM_PARTITION\",\n\"SLURM_NODES\",\n\"SLURM_TASKS_PER_NODE\",\n\"SLURM_CPUS_PER_TASK\",\n\"SLURM_TIME\",\n\"SLURM_OUTPUT\"\n]\n}\n```\n\nThis script is running the **spack** package manager to install and configure the PETSc scientific computing library along with its dependencies. \n\nThe script leverages the **SLURM** workload manager to request specific resources for the job, including:\n\n* **SLURM_JOB_NAME:** Sets the job name to \"petsc@3.16.1-cmplx\".\n* **SLURM_ACCOUNT:** Specifies the account used for billing, \"sys200\".\n* **SLURM_PARTITION:**  Requests a node from the \"hotel\" partition.\n* **SLURM_NODES:** Asks for 1 node.\n* **SLURM_TASKS_PER_NODE:**  Requests 1 task per node.\n* **SLURM_CPUS_PER_TASK:**  Assigns 8 CPUs to each task.\n* **SLURM_TIME:**  Sets a wall-clock time limit of 30 minutes (00:30:00).\n* **SLURM_OUTPUT:**  Specifies the output file format.\n\nThe script then uses `spack` to:\n\n1. **Concretize the specification:** It defines the PETSc package version, compiler, variants, and dependencies, and uses `spack spec` to generate a concrete build plan.\n2. **Install the packages:** It uses `spack install` to install the specified packages, leveraging the available CPUs for parallel builds.\n3. **Refresh Lmod modules:** It updates the Lmod module files to make the installed packages available for other applications.\n4. **Submit a dependent job:** It uses `sbatch` to submit another script (\"slepc@3.16.0.sh\") that depends on the successful completion of this PETSc installation.\n\nThe script also utilizes environment variables to store information about the system, time, and Spack configuration. \n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 18648,
+        "candidates_token_count": 601,
+        "total_token_count": 19249,
+        "cached_content_token_count": 0
+    }
+}

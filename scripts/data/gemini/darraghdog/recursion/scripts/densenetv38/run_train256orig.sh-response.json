@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"bsub\",\n  \"details\": {\n    \"queue\": \"lowpriority\",\n    \"gpu_request\": \"num=1:mode=exclusive_process\",\n    \"gpu_count\": 1,\n    \"container_image\": \"darraghdog/kaggle:apex_build\",\n    \"command\": \"python3 trainorig.py --accum 16 --logmsg Recursion-addexpt-cut1-$SIZE --nbags 20 --epochs 100 --fold $FOLD --lr 0.00025 --lrmult 20 --batchsize 64 --workpath scripts/$WDIR --probsname probs_$SIZE --cutmix_prob 1.0 --precision half --beta 1.0 --imgpath data/mount/256X256X6/ --weightsname weights/pytorch_cut_model_256_densenet$FOLD.bin\",\n    \"working_directory\": \"/share/dhanley2/recursion/scripts/$WDIR\",\n    \"output_file\": \"log_train_%J\",\n    \"resource_requirements\": {\n      \"processors\": 1,\n      \"memory\": \"span[ptile=4]\"\n    }\n  }\n}\n```\n\n**Explanation of the script:**\n\n* The script uses the `bsub` command to submit a job to a cluster using the LSF (Load Sharing Facility) system.\n* The job is submitted to the `lowpriority` queue.\n* It requests one GPU with exclusive access (`-gpu \"num=$N_GPU:mode=exclusive_process\"`).\n* The container image `darraghdog/kaggle:apex_build` is used to run the job.\n* The job uses a single processor (`-n 1`) and a specific memory allocation (`-R \"span[ptile=4]\"`).\n* The script then executes a `python3 trainorig.py` command. This command likely trains a deep learning model, as indicated by the parameters like `--epochs`, `--lr`, and `--batchsize`.\n\n**Key Components:**\n\n* **bsub**: A command used for job submission within the LSF system.\n* **-q**: Specifies the queue to which the job should be submitted.\n* **-gpu**: Specifies the GPU requirements for the job.\n* **-n**: Specifies the number of processors required.\n* **-R**: Specifies the resource requirements for the job.\n* **-env**: Sets environment variables.\n* **-o**: Specifies the output file for the job.\n* **sh -c**: Executes a shell command.\n\n**Overall:** This script launches a deep learning training job on a cluster using LSF, with a specific configuration for GPU resources, container image, and job parameters.\n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 573,
+        "candidates_token_count": 621,
+        "total_token_count": 1194,
+        "cached_content_token_count": 0
+    }
+}

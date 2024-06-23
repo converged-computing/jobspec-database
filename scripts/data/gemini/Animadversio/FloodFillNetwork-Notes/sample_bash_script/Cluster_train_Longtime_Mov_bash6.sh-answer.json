@@ -1,0 +1,51 @@
+{
+    "application": "PBS",
+    "details": {
+        "job_name": "ffn-train-Longtime-NF-Mov6",
+        "email_options": "be",
+        "nodes": 1,
+        "cores_per_node": 2,
+        "gpus": 1,
+        "gpu_type": "V100",
+        "walltime": "168:00:00",
+        "memory": "6gb",
+        "queue": "dque",
+        "singularity_version": "2.4.2",
+        "tensorflow_version": "1.7.0_gpu",
+        "python_script": "train.py",
+        "training_data": "/scratch/binxu.wang/ffn-Data/LGN_DATA/tf_record_file_LR",
+        "data_volumes": [
+            {
+                "name": "LGN_LR",
+                "path": "/scratch/binxu.wang/ffn-Data/LGN_DATA/grayscale_maps_LR.h5",
+                "type": "raw"
+            },
+            {
+                "name": "LGN_LR",
+                "path": "/scratch/binxu.wang/ffn-Data/LGN_DATA/groundtruth_LR.h5",
+                "type": "stack"
+            }
+        ],
+        "training_directory": "/scratch/binxu.wang/ffn-Data/models/LR_model_Longtime_Mov",
+        "model_name": "convstack_3d.ConvStack3DFFNModel",
+        "model_args": {
+            "depth": 9,
+            "fov_size": [
+                37,
+                25,
+                15
+            ],
+            "deltas": [
+                8,
+                6,
+                2
+            ]
+        },
+        "fov_policy": "max_pred_moves",
+        "max_steps": 60000000,
+        "summary_rate_secs": 300,
+        "image_mean": 136,
+        "image_stddev": 55,
+        "permutable_axes": 0
+    }
+}

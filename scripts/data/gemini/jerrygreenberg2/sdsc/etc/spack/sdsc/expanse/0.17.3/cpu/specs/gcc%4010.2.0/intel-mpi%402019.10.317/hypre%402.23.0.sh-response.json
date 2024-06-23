@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"spack\",\n  \"details\": {\n    \"scheduler\": \"slurm\",\n    \"spack_version\": \"0.17.2\",\n    \"spack_instance_name\": \"cpu\",\n    \"spack_instance_dir\": \"/cm/shared/apps/spack/0.17.2/cpu\",\n    \"package\": \"hypre@2.23.0\",\n    \"compiler\": \"gcc@10.2.0\",\n    \"variants\": \"~complex ~cuda ~debug +fortran ~int64 ~internal-superlu ~mixedint +mpi ~openmp +shared +superlu-dist ~unified-memory\",\n    \"dependencies\": \"openblas@0.3.18/$(spack find --format '{hash:7}' openblas@0.3.18 % ${SPACK_COMPILER} ~ilp64 threads=none) ^superlu-dist@7.1.1/$(spack find --format '{hash:7}' superlu-dist@7.1.1 % ${SPACK_COMPILER} ^intel-mpi@2019.10.317\",\n    \"resources\": {\n      \"nodes\": 1,\n      \"tasks_per_node\": 1,\n      \"cpus_per_task\": 16,\n      \"memory\": \"32G\",\n      \"time\": \"00:30:00\"\n    }\n  }\n}\n```\n\n**Explanation of the script and JSON output:**\n\n* **Application:** The primary application used is **spack**, a package manager for scientific software.\n* **Details:**\n    * **Scheduler:** The script uses **slurm** as the job scheduler.\n    * **Spack Version:** The specific version of spack used is **0.17.2**.\n    * **Spack Instance:** The instance of spack used is named **cpu**.\n    * **Spack Instance Directory:** The script specifies the path to the spack instance directory.\n    * **Package:** The script installs the **hypre** package version **2.23.0**.\n    * **Compiler:** The compiler used is **gcc@10.2.0**.\n    * **Variants:** The script specifies various compiler flags and options for hypre using the **variants** variable.\n    * **Dependencies:** The script lists the dependencies for hypre, including **openblas** and **superlu-dist**.\n    * **Resources:**  The script requests resources from slurm: \n        * **Nodes:** 1 node\n        * **Tasks per Node:** 1 task\n        * **CPUs per Task:** 16 cores\n        * **Memory:** 32 GB\n        * **Time:** 30 minutes \n\n**Script Breakdown:**\n\n1. **Setup:**  The script starts by defining variables related to the environment, system, and job.\n2. **Module Load:**  It loads necessary modules (like slurm and spack) and configures the spack environment.\n3. **Package Definition:**  It defines the spack package, compiler, variants, dependencies, and specification using variables.\n4. **Configuration:** It prints the spack configuration settings.\n5. **Concretization:** The script uses `spack spec` to concretize the package specification, ensuring the dependencies are met.\n6. **Installation:**  The script uses `spack install` to install the package with specified resources.\n7. **Module Refresh:**  It refreshes the Lmod environment for the newly installed package.\n8. **Dependency:** The script uses `sbatch` to submit another job, `valgrind@3.17.0.sh`, that depends on the successful completion of the current job.\n9. **Sleep:** The script waits for 60 seconds after the job submission. \n\nThis script demonstrates a typical workflow for installing scientific software packages using spack within a high-performance computing (HPC) environment managed by slurm. \n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 898,
+        "candidates_token_count": 890,
+        "total_token_count": 1788,
+        "cached_content_token_count": 0
+    }
+}

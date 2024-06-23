@@ -1,0 +1,50 @@
+{
+    "application": "Slurm",
+    "details": {
+        "partition": "amdgpu",
+        "time": "24:00:00",
+        "gres": "gpu:1",
+        "tasks_per_node": 1,
+        "memory_per_gpu": "32000",
+        "job_name": "Q_fixed40_ROCstory",
+        "error_file": "Q_fixed40_ROCstory.err",
+        "output_file": "Q_fixed40_ROCstory.out",
+        "mail_user": "kangchen@fel.cvut.cz",
+        "mail_type": "ALL",
+        "software": {
+            "PyTorch": "1.9.0-fosscuda-2020b",
+            "OpenMPI": "disable MPI warnings"
+        },
+        "environment": {
+            "activation": "EnvDiff/bin/activate",
+            "working_directory": "/home/kangchen/Diffusion-LM-main/",
+            "quantization_method": "fixed40",
+            "weight_input_width": 4,
+            "weight_fractional_width": 0,
+            "training_script": "improved-diffusion/scripts/run_train.py",
+            "training_arguments": {
+                "quantization_method": "fixed40",
+                "weight_input_width": 4,
+                "weight_fractional_width": 0,
+                "diffusion_steps": 2000,
+                "model_architecture": "transformer",
+                "learning_rate": 0.0001,
+                "learning_rate_annealing_steps": 400000,
+                "seed": 101,
+                "noise_schedule": "sqrt",
+                "input_channel": 128,
+                "modality": "roc",
+                "submit": "no",
+                "padding_mode": "pad",
+                "application": "--predict_xstart True --training_mode e2e --vocab_size 11043 --roc_train ./datasets/ROCstory ",
+                "notes": "xstart_e2e",
+                "batch_size": 64
+            },
+            "decoding_script": "improved-diffusion/scripts/batch_decode.py",
+            "decoding_arguments": {
+                "model_path": "/home/kangchen/Diffusion-LM-main/improved-diffusion/quantized_diffusion_models/diff_roc_${quant_m}_${weight_i_width}_${weight_f_width}*/",
+                "ema": -1.0
+            }
+        }
+    }
+}

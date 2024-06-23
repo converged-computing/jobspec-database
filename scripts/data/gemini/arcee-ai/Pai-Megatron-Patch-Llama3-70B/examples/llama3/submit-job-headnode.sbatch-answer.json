@@ -1,0 +1,52 @@
+{
+    "application": "Megatron-LM",
+    "other_software": [
+        "torchrun",
+        "python",
+        "wandb",
+        "tensorboard",
+        "SLURM"
+    ],
+    "resource_requirements": {
+        "nodes": 4,
+        "gpus_per_node": 8,
+        "data_path": "/fsx/llama3_data/SlimPajama_llamabpe_text_document",
+        "fsx_mount": "/path/to/script:/fsx",
+        "container_image": "path/to/megatron-pai-training.sqsh",
+        "checkpoint_path": "/fsx/hyperpod_checkpoints",
+        "tensorboard_path": "/fsx/hyperpod_checkpoints/tensorboard-cpt",
+        "wandb_project": "Hyperpod-Mixtral-Llama-70B",
+        "wandb_exp_name": "Llama-70B-Test-1"
+    },
+    "other_details": {
+        "parallelism": {
+            "tensor_parallelism": 8,
+            "pipeline_parallelism": 4,
+            "sequence_parallelism": true
+        },
+        "model_parameters": {
+            "num_layers": 80,
+            "hidden_size": 8192,
+            "num_attention_heads": 64,
+            "seq_length": 4096,
+            "max_position_embeddings": 8192,
+            "micro_batch_size": 1,
+            "global_batch_size": 128,
+            "extra_vocab_size": 256
+        },
+        "training_parameters": {
+            "train_tokens": 100000000,
+            "warmup_tokens": 10000,
+            "lr": 1e-05,
+            "lr_decay_style": "cosine",
+            "weight_decay": 0.1,
+            "adam_beta1": 0.9,
+            "adam_beta2": 0.95,
+            "clip_grad": 1.0,
+            "bf16": true,
+            "overlap_grad_reduce": true,
+            "overlap_param_gather": true,
+            "use_flash_attn": true
+        }
+    }
+}

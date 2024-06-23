@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"Nextflow\",\n  \"details\": {\n    \"software\": [\n      \"Nextflow\",\n      \"SLURM\"\n    ],\n    \"resource_requirements\": {\n      \"nodes\": 1,\n      \"tasks_per_node\": 1,\n      \"cpus_per_task\": 2,\n      \"memory\": \"4G\",\n      \"time\": \"estimatedRuntime-00:00:00\"\n    },\n    \"environment_variables\": [\n      \"NXF_ANSI_LOG\",\n      \"NXF_OPTS\",\n      \"moduleLoadCmd\",\n      \"pipelineStepOptions\",\n      \"additionalSlurmOptions\"\n    ],\n    \"command\": \"sbatch ${submissionScript}\"\n  }\n}\n```\n\nThe script you provided is a shell script designed to generate and submit SLURM batch submission scripts for Nextflow pipelines. Let's break down its purpose and key features:\n\n**Functionality:**\n\n* **Generates SLURM scripts:** The script takes various parameters as input (pipeline script, run ID, email, estimated runtime, modules, pipeline options, and additional SLURM options) and constructs a SLURM submission script (`slurmsub.<pipelineStep>.<runId>.sh`) based on these parameters.\n* **Configures SLURM options:**  It defines standard SLURM options within the generated script:\n    * `--mail-user`, `--mail-type`: For email notifications of job status.\n    * `--nodes`, `--ntasks-per-node`, `--cpus-per-task`, `--mem`: To specify resource requirements for the job.\n    * `--time`: To set the maximum runtime for the job.\n    * `--export=ALL`: To pass all environment variables to the job.\n    * `--job-name`, `--output`, `--error`: For naming and managing job output and error files.\n    * **Additional SLURM options:** The script allows for user-defined additional SLURM options to be specified.\n* **Loads modules:** It includes a placeholder for the `moduleLoadCmd`, which allows users to specify commands for loading necessary modules within the SLURM environment.\n* **Sets Nextflow environment variables:** The script sets two Nextflow-specific environment variables:\n    * `NXF_ANSI_LOG=false`: Disables ANSI escape sequences in Nextflow logs (for better compatibility with SLURM output).\n    * `NXF_OPTS=\"-Xms500M -Xmx2G -Dleveldb.mmap=false\"`: Adjusts JVM settings for Nextflow, which can impact performance and memory usage.\n* **Executes Nextflow command:** The generated SLURM script contains a `nextflow run` command that includes the provided pipeline script, run ID, email address, profile, and pipeline-specific options.\n\n**Key Components:**\n\n* **Input arguments:** The script expects a set of arguments to be passed, including the pipeline script, run ID, user email, estimated runtime, module load commands, pipeline options, and optional additional SLURM options.\n* **SLURM submission script:** The script constructs the `slurmsub.sh` script, which is then submitted to the SLURM scheduler.\n* **Nextflow command:** The generated script includes a `nextflow run` command that defines how the Nextflow pipeline should be executed.\n\n**Usage:**\n\nTo use the script, you would execute it with the appropriate arguments:\n\n```bash\n./nextflow_run_slurm_submitter.sh <pipelineScript> <runId> <userEmail> <estimatedRuntime> \"<moduleLoadCmd>\" \"<pipelineStepOptions>\" \"<additionalSlurmOptions>\" \n```\n\n**Note:** The script assumes you have Nextflow and SLURM installed and configured on your system. The `moduleLoadCmd` should be specific to your system's module loading system. \n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 1121,
+        "candidates_token_count": 856,
+        "total_token_count": 1977,
+        "cached_content_token_count": 0
+    }
+}

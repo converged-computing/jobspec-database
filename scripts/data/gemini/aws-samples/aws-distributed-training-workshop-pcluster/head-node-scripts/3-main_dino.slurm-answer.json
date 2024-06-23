@@ -1,0 +1,60 @@
+{
+    "application": "Slurm",
+    "details": {
+        "resource_requirements": {
+            "nodes": 2,
+            "cpus_per_task": 16,
+            "ntasks_per_node": 1,
+            "gres": "gpu:4"
+        },
+        "software_requirements": {
+            "python_version": "3.8",
+            "conda_environment": "pytorch-py38",
+            "packages": [
+                "torch",
+                "torch.distributed",
+                "yq",
+                "nccl"
+            ]
+        },
+        "script_execution": {
+            "command": "python -m torch.distributed.run --nnodes $nnodes --nproc_per_node $num_gpus --rdzv_id $RANDOM --rdzv_backend c10d --rdzv_endpoint $head_node_ip:29500 pyscripts/main_dino.py",
+            "arguments": {
+                "epochs": "epochs",
+                "selected_channels": "selected_channel_indices",
+                "channel_dict": "channel_dict",
+                "norm_per_channel": "norm_per_channel_file",
+                "name_of_run": "name_of_run",
+                "output_dir": "sk_save_dir",
+                "dataset_dir": "dataset_dir",
+                "full_ViT_name": "full_ViT_name",
+                "dino_vit_name": "dino_vit_name",
+                "saveckp_freq": "saveckp_freq",
+                "batch_size_per_gpu": "batch_size_per_gpu",
+                "num_workers": "num_workers",
+                "dist_url": "dist_url",
+                "arch": "arch",
+                "patch_size": "patch_size",
+                "norm_last_layer": "norm_last_layer",
+                "momentum_teacher": "momentum_teacher",
+                "use_bn_in_head": "use_bn_in_head",
+                "warmup_teacher_temp": "warmup_teacher_temp",
+                "warmup_teacher_temp_epochs": "warmup_teacher_temp_epochs",
+                "use_fp16": "use_fp16",
+                "weight_decay": "weight_decay",
+                "weight_decay_end": "weight_decay_end",
+                "clip_grad": "clip_grad",
+                "freeze_last_layer": "freeze_last_layer",
+                "lr": "lr",
+                "warmup_epochs": "warump_epochs",
+                "min_lr": "min_lr",
+                "optimizer": "optimizer",
+                "drop_path_rate": "drop_path_rate",
+                "local_crops_number": "local_crops_number",
+                "train_datasetsplit_fraction": "train_datasetsplit_fraction",
+                "seed": "seed",
+                "center_crop": "center_crop"
+            }
+        }
+    }
+}

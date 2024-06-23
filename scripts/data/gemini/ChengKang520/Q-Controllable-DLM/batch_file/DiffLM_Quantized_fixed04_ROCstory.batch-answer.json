@@ -1,0 +1,39 @@
+{
+    "application": "Slurm",
+    "details": {
+        "partition": "amdgpu",
+        "time": "24:00:00",
+        "gpu": "1",
+        "tasks_per_node": "1",
+        "memory_per_gpu": "32000",
+        "job_name": "Q_fixed04_ROCstorys",
+        "error_file": "Q_fixed04_ROCstory.err",
+        "output_file": "Q_fixed04_ROCstory.out",
+        "mail_user": "kangchen@fel.cvut.cz",
+        "mail_type": "ALL",
+        "software": [
+            "PyTorch",
+            "MPI",
+            "Python"
+        ],
+        "libraries": [
+            "PyTorch/1.9.0-fosscuda-2020b"
+        ],
+        "environment_variables": [
+            "OMP_MCA_mpi_warn_on_fork=0"
+        ],
+        "working_directory": "/home/kangchen/Diffusion-LM-main/",
+        "virtual_environment": "EnvDiff",
+        "scripts": [
+            "improved-diffusion/scripts/run_train.py",
+            "improved-diffusion/scripts/batch_decode.py",
+            "train_run.py",
+            "improved-diffusion/scripts/infill.py"
+        ],
+        "model_path": "/home/kangchen/Diffusion-LM-main/improved-diffusion/quantized_diffusion_models/diff_roc_${quant_m}_${weight_i_width}_${weight_f_width}*/",
+        "datasets": [
+            "./datasets/ROCstory "
+        ],
+        "pretrained_model": "bert-base-uncased"
+    }
+}

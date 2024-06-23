@@ -1,0 +1,50 @@
+{
+    "application": "MPI",
+    "details": {
+        "pbs_requirements": {
+            "nodes": "1",
+            "system": "polaris",
+            "placement": "scatter",
+            "walltime": "1 hour",
+            "filesystems": "home,eagle",
+            "queue": "R564516",
+            "account": "tpc",
+            "job_name": "minfsdp"
+        },
+        "modules": [
+            "conda/2023-01-10-unstable"
+        ],
+        "conda_environment": "/lus/eagle/projects/tpc/azton/fsdp_pt2.0",
+        "python_version": "python --version",
+        "pytorch_version": "import torch; print(torch.__version__)",
+        "proxy_settings": {
+            "http_proxy": "http://proxy.alcf.anl.gov:3128",
+            "https_proxy": "http://proxy.alcf.anl.gov:3130"
+        },
+        "communication_settings": {
+            "master_node": "cat $PBS_NODEFILE | head -1",
+            "master_addr": "host $master_node | head -1 | awk '{print $4}'",
+            "master_port": "23450"
+        },
+        "cuda_tuning": {
+            "nccl_net_gdr_level": "PHB",
+            "cuda_visible_devices": "0,1,2,3",
+            "mpich_gpu_support_enabled": "1"
+        },
+        "mpi_settings": {
+            "nnodes": "wc -l < $PBS_NODEFILE",
+            "nranks_per_node": "4",
+            "ntotranks": "NNODES * NRANKS_PER_NODE"
+        },
+        "ulimit": "ulimit -s unlimited",
+        "datetime": "`date +'date_%y-%m-%d_time_%H-%M-%S'`",
+        "mpiexec_arguments": {
+            "n": "NTOTRANKS",
+            "ppn": "NRANKS_PER_NODE",
+            "cpu_bind": "verbose,list:0,16,32,48",
+            "hostfile": "$PBS_NODEFILE",
+            "python_arguments": "-u basic_training.py --max_epochs 20 --environment pbs",
+            "output": "basic_training.out"
+        }
+    }
+}

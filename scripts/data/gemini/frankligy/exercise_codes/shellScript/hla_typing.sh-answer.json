@@ -1,0 +1,29 @@
+{
+    "application": "OptiType",
+    "software": "Singularity 3.1.0",
+    "resources": {
+        "memory": "250000 MB",
+        "cores": "1",
+        "walltime": "5:00",
+        "output_dir": "/data/salomonis2/LabFiles/Frank-Li/job_dump",
+        "container": "my_software.sif",
+        "data_path": "/data/salomonis2/FASTQs/TCGA-Breast-Cancer",
+        "optitype_path": "/data/salomonis2/LabFiles/Frank-Li/OptiType"
+    },
+    "input_files": [
+        "remain.txt",
+        "TCGA-A8-A08I-01A-11R-A00Z-07.qsort.read1.fastq",
+        "TCGA-A8-A08I-01A-11R-A00Z-07.qsort.read2.fastq"
+    ],
+    "commands": [
+        "module load singularity/3.1.0",
+        "mkdir TCGA-A8-A08I",
+        "singularity run -B /data/salomonis2/LabFiles/Frank-Li/OptiType/TCGA-A8-A08I:/mnt my_software.sif -i TCGA-A8-A08I-01A-11R-A00Z-07.qsort.read1.fastq TCGA-A8-A08I-01A-11R-A00Z-07.qsort.read2.fastq --rna -v -o /mnt",
+        "mkdir $(pwd)/${sample}",
+        "cp ${i} $(pwd)",
+        "gzip -d $(pwd)/${base1}",
+        "mv ${j} $(pwd)/${base2}.fastq",
+        "singularity run -B /data/salomonis2/LabFiles/Frank-Li/OptiType/${sample}:/mnt my_software.sif -i ${int_files[0]} ${int_files[1]} --rna -v -o /mnt",
+        "rm ${m}"
+    ]
+}

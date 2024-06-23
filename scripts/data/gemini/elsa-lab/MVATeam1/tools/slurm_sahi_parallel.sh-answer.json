@@ -1,0 +1,27 @@
+{
+    "application": "SLURM",
+    "details": {
+        "account": "MST109262",
+        "job_name": "MVA2023_object_detection",
+        "partition": "gtest",
+        "nodes": 2,
+        "cpus_per_task": 4,
+        "gpus_per_node": 2,
+        "tasks_per_node": 2,
+        "modules": [
+            "miniconda3",
+            "cuda/11.5",
+            "gcc10",
+            "cmake"
+        ],
+        "conda_environment": "mva_team1",
+        "python_script": "tools/sahi_evaluation_slurm.py",
+        "python_arguments": "${CONFIG} ${MODEL} ${DATADIR} ${ANNOTATION} ${PY_ARGS}",
+        "environment_variables": {
+            "MASTER_PORT": "9487",
+            "OMP_NUM_THREADS": "4",
+            "MKL_NUM_THREADS": "4"
+        },
+        "command": "srun --kill-on-bad-exit=1 python -u tools/sahi_evaluation_slurm.py ${CONFIG} ${MODEL} ${DATADIR} ${ANNOTATION} ${PY_ARGS}"
+    }
+}

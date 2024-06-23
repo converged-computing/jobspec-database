@@ -1,0 +1,54 @@
+{
+    "application": "wandb",
+    "details": {
+        "software": [
+            "bash",
+            "python",
+            "conda",
+            "pytorch",
+            "torchvision",
+            "cudatoolkit",
+            "pip",
+            "npm",
+            "rsync",
+            "wandb"
+        ],
+        "resources": {
+            "slurm": {
+                "job_name": "tune_agent",
+                "output": "/home/eecs/paras/slurm/coderep/%j_wandb_sweep.log",
+                "ntasks": 1,
+                "gres": "gpu:1",
+                "mem": "50000",
+                "time": "125:00:00",
+                "exclude": "atlas,blaze,r16"
+            },
+            "environment_variables": [
+                "PATH",
+                "DATA_CACHE",
+                "FREE_PORT",
+                "SWEEPID",
+                "CUDA_VISIBLE_DEVICES",
+                "CUDA_DEVICE_ORDER",
+                "SLURM_JOB_ID"
+            ],
+            "data": {
+                "data_cache": "/data/paras/data_cache",
+                "codesearchnet_javascript": "/work/paras/representjs/data/codesearchnet_javascript/csnjs_8k_9995p_unigram_url.model",
+                "target_wl": "/work/paras/coderep/DeepTyper/data/target_wl",
+                "valid_nounk.txt": "/work/paras/coderep/DeepTyper/data/valid_nounk.txt",
+                "train_nounk.txt": "/work/paras/coderep/DeepTyper/data/train_nounk.txt"
+            },
+            "conda_environment": {
+                "name": "contracode_$CUDA_VISIBLE_DEVICES",
+                "python": "3.8",
+                "packages": [
+                    "mkl",
+                    "pytorch",
+                    "torchvision",
+                    "cudatoolkit=10.1"
+                ]
+            }
+        }
+    }
+}

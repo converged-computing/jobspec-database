@@ -1,0 +1,29 @@
+{
+    "application": "oremda",
+    "details": {
+        "slurm_parameters": {
+            "account": "ncemhub",
+            "qos": "debug",
+            "cpu_type": "haswell",
+            "time": "00:10:00",
+            "nodes": 20
+        },
+        "environment_variables": {
+            "MPICH_MAX_THREAD_SAFETY": "multiple",
+            "PYTHONUNBUFFERED": 1,
+            "OREMDA_DATA_DIR": "$SCRATCH/data/oremda",
+            "OREMDA_CONTAINER_TYPE": "singularity",
+            "OREMDA_SIF_DIR": "images",
+            "OREMDA_PLASMA_MEMORY": 5000000000,
+            "OREMDA_OPERATOR_CONFIG_FILE": "operator_config.json"
+        },
+        "virtual_environment": {
+            "path": "$home/virtualenvs/oremda",
+            "activation_command": "source $oremda_path/bin/activate"
+        },
+        "execution": {
+            "command": "srun -n 20 oremda run pipeline.json",
+            "number_of_processes": 20
+        }
+    }
+}

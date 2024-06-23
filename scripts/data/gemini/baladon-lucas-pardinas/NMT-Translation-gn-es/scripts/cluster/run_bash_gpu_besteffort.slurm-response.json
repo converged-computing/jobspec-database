@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n\"application\": \"SLURM\",\n\"details\": {\n\"resource_requests\": {\n\"nodes\": \"node22\",\n\"tasks\": 4,\n\"cpus_per_task\": 9,\n\"memory\": \"60G\",\n\"time\": \"5-0\",\n\"partition\": \"besteffort\",\n\"qos\": \"besteffort\",\n\"gpu\": \"p100:1\" \n},\n\"environment_variables\": {\n\"SCRIPT_NAME\": \"script name passed as argument\",\n\"HOME\": \"/docker/home\",\n\"SCRIPT_PATH\": \"/docker/home/scripts/script name passed as argument\",\n\"SINGULARITY_TMPDIR\": \"/docker/home/cache\",\n\"TMPDIR\": \"/docker/home/cache\",\n\"PYTHONPATH\": \"/docker/home/libs\"\n},\n\"container\": \"marian-nmt_1.11.0_sentencepiece_cuda-11.3.0.sif\",\n\"container_runtime\": \"singularity\"\n}\n}\n```\n\n**Explanation:**\n\n* **SLURM:** This script is written to run under the SLURM workload manager. It uses `#SBATCH` directives to specify job parameters.\n* **Resource Requests:** The script requests a specific node (`node22`), a certain number of tasks (4), CPUs per task (9), memory (60GB), time limit (5 hours), partition (`besteffort`), QoS (`besteffort`) and a GPU (p100:1).\n* **Environment Variables:**  Several environment variables are set to define paths and other settings:\n    * `SCRIPT_NAME`: Stores the name of the script passed as an argument.\n    * `HOME`:  Specifies the user's home directory within the container.\n    * `SCRIPT_PATH`:  Defines the full path to the script.\n    * `SINGULARITY_TMPDIR` and `TMPDIR`:  Specify temporary directory locations for singularity.\n    * `PYTHONPATH`: Sets the search path for Python modules.\n* **Container:** The script uses singularity to execute a container image named `marian-nmt_1.11.0_sentencepiece_cuda-11.3.0.sif`.\n* **Container Execution:** The `singularity exec` command runs the script inside the container with the following options:\n    * `-H ${HOME}/marianmt`:  Mounts the host directory `/docker/home/marianmt` into the container at the same location.\n    * `--nv`: Enables NVIDIA GPU support.\n    * `--no-home`:  Disables the container's home directory.\n    * `--contain`:  Forces the container to run in a confined environment.\n    * `--bind $(pwd):$HOME`:  Binds the current working directory to the home directory inside the container.\n    *  `$SCRIPT_PATH`:  Specifies the path to the script to be executed within the container.\n\nThe script essentially uses SLURM to manage resource allocation and then leverages singularity to execute a MarianMT-related container image. \n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 409,
+        "candidates_token_count": 685,
+        "total_token_count": 1094,
+        "cached_content_token_count": 0
+    }
+}

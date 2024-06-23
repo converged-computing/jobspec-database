@@ -1,0 +1,74 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"BERT\",\n  \"details\": {\n    \"docker_image\": \"nvcr.io/nvidia/pytorch:20.06-py3\",\n    \"datadir\": \"/raid/datasets/bert/hdf5/shard_1472_test_split_10/seq_128_pred_20_dupe_5/training\",\n    \"datadir_phase2\": \"/raid/datasets/bert/hdf5/shard_1472_test_split_10/seq_512_pred_80_dupe_5/training\",\n    \"checkpointdir\": \"$PWD/checkpoints\",\n    \"mounts\": \".:/workspace/bert,${datadir}:/workspace/data,${datadir_phase2}:/workspace/data_phase2,${checkpointdir}:/results\",\n    \"BIND_CMD\": \"./bind.sh --cpu=exclusive --ib=single --\",\n    \"BERT_CMD\": \"${BIND_CMD} python -u /workspace/bert/run_pretraining.py \\\n    --seed=42 \\\n    ${PHASES[$((PHASE-1))]} \\\n    --do_train \\\n    --config_file=/workspace/bert/bert_config.json \\\n    --output_dir=/results \\\n    --fp16 \\\n    --allreduce_post_accumulation --allreduce_post_accumulation_fp16 \\\n    --gradient_accumulation_steps=${GRADIENT_STEPS:-2} \\\n    --log_freq=1 \\\n    --local_rank=\\${SLURM_LOCALID}\",\n    \"PHASE1\": \"--train_batch_size=${BATCHSIZE:-16} \\\n    --learning_rate=${LR:-6e-3} \\\n    --warmup_proportion=${WARMUP_UPDATES:-0.2843} \\\n    --input_dir=/workspace/data \\\n    --max_seq_length=128 \\\n    --max_predictions_per_seq=20 \\\n    --max_steps=7038 \\\n    --num_steps_per_checkpoint=2500 \\\n    \",\n    \"PHASE2\": \"--train_batch_size=${BATCHSIZE:-4096} \\\n    --learning_rate=${LR:-4e-3} \\\n    --warmup_proportion=${WARMUP_UPDATES:-0.128} \\\n    --input_dir=/workspace/data_phase2 \\\n    --phase2 \\\n    --max_seq_length=512 \\\n    --max_predictions_per_seq=80 \\\n    --max_steps=1563 \\\n    --num_steps_per_checkpoint=1000 \\\n    --resume_from_checkpoint --phase1_end_step=7038 \\\n    \",\n    \"PHASES\": \"($PHASE1 $PHASE2)\",\n    \"PHASE\": \"$PHASE\",\n    \"requirements\": {\n      \"SLURM\": \"srun\",\n      \"Docker\": \"nvcr.io/nvidia/pytorch:20.06-py3\",\n      \"Python\": \"python\",\n      \"BERT\": \"run_pretraining.py\",\n      \"Bind\": \"bind.sh\"\n    }\n  }\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "citation_metadata": {
+                "citation_sources": [
+                    {
+                        "start_index": 111,
+                        "end_index": 318,
+                        "uri": "https://github.com/NVIDIA/DeepLearningExamples",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 359,
+                        "end_index": 535,
+                        "uri": "https://github.com/NVIDIA/DeepLearningExamples",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 567,
+                        "end_index": 950,
+                        "uri": "https://github.com/NVIDIA/DeepLearningExamples",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 965,
+                        "end_index": 1697,
+                        "uri": "https://github.com/NVIDIA/DeepLearningExamples",
+                        "license_": ""
+                    }
+                ]
+            },
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 990,
+        "candidates_token_count": 755,
+        "total_token_count": 1745,
+        "cached_content_token_count": 0
+    }
+}

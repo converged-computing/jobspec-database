@@ -1,0 +1,80 @@
+{
+    "application": "valgrind",
+    "details": {
+        "tool": "lackey",
+        "options": "--basic-counts=yes --trace-mem=yes",
+        "mpi_implementation": "mpirun",
+        "mpi_processes": [
+            1,
+            2,
+            3,
+            4,
+            6,
+            8,
+            12,
+            16,
+            24,
+            48
+        ],
+        "omp_threads_per_process": [
+            48,
+            24,
+            16,
+            12,
+            8,
+            6,
+            4,
+            3,
+            2,
+            1
+        ],
+        "executable": "./nest",
+        "input_argument": "$x",
+        "output_file": "n2_{mpi_processes}.txt",
+        "time_command": "/usr/bin/time -v",
+        "slurm_options": {
+            "job_name": "lackey",
+            "output": "lackey2_%j.out",
+            "error": "lackey2_%j.err",
+            "nodes": 2,
+            "time": "17:05:00",
+            "ntasks": [
+                1,
+                2,
+                3,
+                4,
+                6,
+                8,
+                12,
+                16,
+                24,
+                48
+            ],
+            "cpus_per_task": [
+                48,
+                24,
+                16,
+                12,
+                8,
+                6,
+                4,
+                3,
+                2,
+                1
+            ]
+        },
+        "extrae_options": {
+            "instrumentation": "extrae",
+            "config_file": "extrae.xml",
+            "ld_preload": [
+                "${EXTRAE_HOME}/lib/libnanosmpitrace.so",
+                "${EXTRAE_HOME}/lib/libompitrace.so",
+                "$LD_PRELOAD:$OMPSSEE_LD_PRELOAD"
+            ]
+        },
+        "mpi2prv_options": {
+            "input_file": "TRACE.mpits",
+            "output_file": "lackey{mpi_processes}$i.prv"
+        }
+    }
+}

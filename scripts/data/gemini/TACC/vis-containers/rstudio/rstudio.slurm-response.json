@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"RStudio\",\n  \"details\": {\n    \"software\": [\n      \"Singularity\",\n      \"RServer\",\n      \"SSH\",\n      \"Perl\",\n      \"TAP_FUNCTIONS\"\n    ],\n    \"resources\": [\n      \"Slurm\",\n      \"TACC\",\n      \"v100 Queue\",\n      \"Node with 16 cores\",\n      \"/scratch/projects/rstudio\",\n      \"/scratch/projects/share/doc/slurm/tap_functions\",\n      \"$HOME/.rstudio\",\n      \"/usr/local/bin/pam-helper\"\n    ],\n    \"dependencies\": [\n      \"TACC account\"\n    ]\n  }\n}\n```\n\nThis script is designed to launch and access an RStudio server within a Singularity container on the TACC (Texas Advanced Computing Center) infrastructure using Slurm job submission. \n\n**Here's a breakdown of the script's functionality and the resources it leverages:**\n\n**1. Slurm Job Submission:**\n\n* **SBATCH directives:** The script uses `SBATCH` directives to specify job parameters to Slurm:\n    * **-J tap_rstudio:** Job name.\n    * **-o rstudio.out:** Output file for standard output.\n    * **-p v100:** Queue name (specifies the type of resources).\n    * **-N 1:** Number of nodes requested (1 node with 16 cores).\n    * **-n 1:** Number of MPI tasks requested (1).\n    * **-t 04:00:00:** Runtime limit (2 hours).\n\n**2. Environment Setup:**\n\n* **Module Loading:** `module load tacc-singularity` loads the Singularity module.\n* **RStudio Image:**  The script uses a Singularity image located at `/scratch/projects/rstudio/rstudio_1.4.1717.sif` to run RStudio.\n* **TAP Functions:**  The script checks for a file containing TAP (TACC Application Portal) functions at `/scratch/projects/share/doc/slurm/tap_functions`. These functions provide TACC-specific utilities.\n* **Username and Node Information:** It gathers the user's username and the hostname of the allocated node.\n\n**3. RStudio Server Launch:**\n\n* **Bind Mounting:** It creates temporary directories within the user's home directory (`$HOME/.rstudio`) and binds them to specific directories within the container to provide access to RStudio's files and settings.\n* **Singularity Execution:** The script executes the RStudio server (`rserver`) within the Singularity container, passing several arguments:\n    * **-B ...:**  Bind mount points to connect directories within the container to the host.\n    * **--www-address=0.0.0.0:**  Listen on all network interfaces for connections.\n    * **--www-port=${LOCAL_PORT}:**  Set the port for the server (8787 in this case).\n    * **--auth-none=0:**  Disable simple authentication (RStudio uses TACC credentials).\n    * **--auth-pam-helper-path=/usr/local/bin/pam-helper:**  Specify the path to the PAM helper for authentication.\n\n**4. Reverse Tunnel Setup:**\n\n* **TAP Functions:** It utilizes TAP functions to obtain a port on the TACC login nodes.\n* **Reverse SSH Tunnels:**  It creates reverse SSH tunnels from the login nodes to the allocated node, allowing the user to access the RStudio server from their local machine.\n\n**5. Access Instructions:**\n\n* **URL and Password:**  The script provides instructions on how to access the RStudio server, including the URL and a temporary password generated using `uuidgen`.\n\n**6. Job Monitoring and Cleanup:**\n\n* **Lockfile:** The script waits for a lockfile (`$RSTUDIO_SERVERDIR/.rstudio_lock`) to indicate the server is running.\n* **Cleanup:** Once the lockfile is removed, the script releases the port on the login nodes and cleans up temporary files.\n\n**Important Considerations:**\n\n* **TACC Environment:** This script relies on specific TACC resources and functions.\n* **Security:** The temporary password generated for authentication is stored in a file within the user's home directory. Users should be cautious about sharing this information.\n* **Resource Allocation:** The script requests one node with 16 cores and a 2-hour runtime. Users should adjust these parameters as needed.\n\nThis script demonstrates a common workflow for launching and accessing RStudio servers on the TACC infrastructure using Singularity containers and Slurm job submission. It leverages TACC-specific resources and functions to provide a convenient and secure way to run interactive RStudio sessions within a high-performance computing environment."
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 1609,
+        "candidates_token_count": 1052,
+        "total_token_count": 2661,
+        "cached_content_token_count": 0
+    }
+}

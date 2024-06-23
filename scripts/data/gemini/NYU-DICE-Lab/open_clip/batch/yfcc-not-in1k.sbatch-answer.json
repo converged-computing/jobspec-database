@@ -1,0 +1,37 @@
+{
+    "application": "SLURM",
+    "details": {
+        "scheduler": "SLURM",
+        "nodes": 1,
+        "tasks_per_node": 8,
+        "cpus_per_task": 8,
+        "time": "47:59:00",
+        "memory": "256GB",
+        "gpus": "mi50:8",
+        "job_name": "yfcc-not-in1k",
+        "dependency": "afterany:22179172",
+        "mail_type": "BEGIN,END",
+        "mail_user": "bf996@nyu.edu",
+        "modules": "purge",
+        "environment_variables": [
+            "OMP_NUM_THREADS=$SLURM_CPUS_PER_TASK",
+            "MASTER_PORT=$(shuf -i 10000-65500 -n 1)",
+            "MASTER_ADDR=\"$(hostname -s).hpc.nyu.edu\""
+        ],
+        "run_command": "srun --cpu_bind=v --accel-bind=v /bin/bash src/script/run-singularity-rocm.bash /bin/bash -c 'export PYTHONPATH=\"$PYTHONPATH:$PWD/src\"; python src/training/main.py --report-to wandb --train-data=\"/scratch/bf996/open_clip/yfcc-subsets/yfcc_not_in1k_10264405.csv\" --csv-separator \",\" --imagenet-a \"/imagenet-a\" --imagenet-r \"/imagenet-r\" --imagenet-val \"/imagenet/val/\" --imagenet-v2 \"/scratch/bf996/datasets\" --imagenet-s \"/imagenet-sketch\" --zeroshot-frequency=8 --save-frequency 4 --warmup 2000 --batch-size=256 --epochs=64 --workers=8 --model=RN50 --resume \"/scratch/bf996/open_clip/logs/yfcc-not-in1k-ep1-19/checkpoints/epoch_16.pt\" --local-loss --gather-with-grad'",
+        "software": [
+            "Singularity",
+            "Python",
+            "OpenCLIP"
+        ],
+        "data": [
+            "/scratch/bf996/open_clip/yfcc-subsets/yfcc_not_in1k_10264405.csv",
+            "/imagenet-a",
+            "/imagenet-r",
+            "/imagenet/val/",
+            "/scratch/bf996/datasets",
+            "/imagenet-sketch",
+            "/scratch/bf996/open_clip/logs/yfcc-not-in1k-ep1-19/checkpoints/epoch_16.pt"
+        ]
+    }
+}

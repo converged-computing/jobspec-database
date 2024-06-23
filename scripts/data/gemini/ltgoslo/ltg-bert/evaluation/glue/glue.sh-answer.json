@@ -1,0 +1,48 @@
+{
+    "application": "SLURM",
+    "details": {
+        "job_name": "BRT-EVL",
+        "output": "report/%j.out",
+        "account": "project_465000157",
+        "walltime": "3:00:00",
+        "nodes": 1,
+        "tasks": 1,
+        "cpus_per_task": 6,
+        "mem_per_cpu": "7G",
+        "partition": "pilot",
+        "gpus": 1,
+        "modules": [
+            "LUMI/22.08",
+            "cray-python/3.9.12.1",
+            "rocm/5.0.2"
+        ],
+        "environment_variables": [
+            "NCCL_SOCKET_IFNAME=hsn",
+            "OMP_NUM_THREADS=$SLURM_CPUS_PER_TASK",
+            "OPENBLAS_VERBOSE=2",
+            "PYTHONUSERBASE='/projappl/project_465000157/.local'",
+            "PATH=$PYTHONUSERBASE/bin:$PATH",
+            "PYTHONPATH=$PYTHONUSERBASE/lib/python3.9/site-packages:$PYTHONPATH",
+            "WANDB_MODE=offline"
+        ],
+        "script_arguments": [
+            "CHECKPOINT_PATH",
+            "TASK",
+            "BATCH_SIZE",
+            "EPOCHS"
+        ],
+        "python_script": "glue.py",
+        "python_script_arguments": [
+            "--task",
+            "${TASK}",
+            "--batch_size",
+            "${BATCH_SIZE}",
+            "--epochs",
+            "${EPOCHS}",
+            "--input_dir",
+            "${GLUE_PATH}",
+            "--checkpoint_path",
+            "${CHECKPOINT_PATH}"
+        ]
+    }
+}

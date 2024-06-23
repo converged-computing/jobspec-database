@@ -1,0 +1,35 @@
+{
+    "application": "PBS",
+    "details": {
+        "resource_requirements": {
+            "walltime": "23:59:00",
+            "select": "1:ncpus=1:ompthreads=1:mem=100gb",
+            "queue": "pqcovid19c"
+        },
+        "software_requirements": {
+            "modules": [
+                "anaconda3/personal"
+            ],
+            "conda_environment": "covid19AgeModel",
+            "scripts": [
+                "~/git/R0t/usa/code/postprocessing/save-posterior-samples-forecast.R",
+                "~/git/R0t/usa/code/postprocessing/post-processing-forecast-contributions.r",
+                "~/git/R0t/usa/code/postprocessing/post-processing-forecast-increase-deaths-cases.r",
+                "~/git/R0t/usa/code/postprocessing/post-processing-forecast-plot-deaths.r",
+                "~/git/R0t/usa/code/postprocessing/post-processing-forecast-increase-Rt.r"
+            ]
+        },
+        "other_details": {
+            "job_array_specification": "1-6",
+            "job_array_index": "$PBS_ARRAY_INDEX",
+            "job_tag": "37states_Sep2",
+            "stan_model_file": "base_age_fsq_mobility_200821b4_cmdstanv",
+            "forecast_period": "90",
+            "period_length": "7",
+            "output_dir": "/rds/general/project/ratmann_covid19/live/age_renewal_usa",
+            "code_dir": "~/git/R0t",
+            "school_multiplier": "(0.2 0.33 0.5 1.0)",
+            "num_chain": "8"
+        }
+    }
+}

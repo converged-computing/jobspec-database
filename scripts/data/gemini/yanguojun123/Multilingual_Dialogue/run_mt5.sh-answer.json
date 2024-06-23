@@ -1,0 +1,44 @@
+{
+    "application": "SLURM",
+    "details": {
+        "resource_requirements": {
+            "nodes": "$1",
+            "time": "10-00:00:00",
+            "gres": "gpu:1",
+            "partition": "si",
+            "job_name": "$4"
+        },
+        "software": {
+            "conda_environment": "mul",
+            "python_package": "torch.distributed.launch"
+        },
+        "script_execution": {
+            "script_path": "$3.py",
+            "arguments": [
+                "--source_language",
+                "'$5'",
+                "--target_language",
+                "'$6'",
+                "--train_file_name",
+                "'$7'",
+                "--val_file_name",
+                "'$8'",
+                "--test_file_name",
+                "'$9'",
+                "--save_file_name",
+                "'$4.json'",
+                "--writer_dir",
+                "'tensorboard_$4/'",
+                "--dialogue_model_output_path",
+                "'$4_model/'",
+                "--eval_all_checkpoints",
+                "--change_parameter",
+                "${10}"
+            ],
+            "environment_variables": [
+                "PYTHONPATH=./"
+            ],
+            "working_directory": "$2"
+        }
+    }
+}

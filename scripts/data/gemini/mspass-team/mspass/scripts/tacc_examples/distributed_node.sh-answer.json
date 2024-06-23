@@ -1,0 +1,46 @@
+{
+    "application": "Jupyter Notebook",
+    "software_environment": {
+        "module_manager": "ml",
+        "modules": [
+            "tacc-singularity"
+        ],
+        "container_runtime": "singularity",
+        "container_image": "$WORK2/mspass/mspass_latest.sif"
+    },
+    "resource_requirements": {
+        "scheduler": "slurm",
+        "nodes": 3,
+        "tasks": 3,
+        "runtime": "02:00:00",
+        "queue": "skx-dev",
+        "allocation": "MsPASS"
+    },
+    "communication": {
+        "method": "reverse tunnel",
+        "port_range": {
+            "login": 8888,
+            "status": 8787
+        }
+    },
+    "database": {
+        "type": "MongoDB",
+        "mode": "sharded",
+        "sharded_collections": [
+            "arrival:_id"
+        ],
+        "sharded_database": "usarraytest",
+        "sharded_nodes": "all worker nodes",
+        "single_node_database": "on primary node"
+    },
+    "distributed_computing": {
+        "framework": "MPI",
+        "implementation": "hydra"
+    },
+    "dependencies": [
+        "python",
+        "jupyter",
+        "mongodb",
+        "mpiexec"
+    ]
+}

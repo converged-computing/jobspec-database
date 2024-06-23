@@ -1,0 +1,30 @@
+{
+    "application": "PBS",
+    "details": {
+        "job_name": "hs-perm",
+        "nodes": "1",
+        "cores_per_node": "3",
+        "walltime": "48:00:00",
+        "queue": "qfermi",
+        "email": "adc@geo.au.dk",
+        "email_options": "abe",
+        "software": {
+            "gcc": "4.6.4",
+            "cuda": "5.5.22",
+            "python": "2.7.6"
+        },
+        "libraries": {
+            "cuda_libraries": "/com/cuda/5.5.22/lib64:/com/cuda/5.5.22/lib",
+            "python_libraries": "/home/adc/.local/lib/python:/home/adc/.local/lib64/python:/com/python/2.7.6/lib"
+        },
+        "commands": [
+            "nvidia-smi",
+            "cmake .",
+            "make",
+            "python halfshear-darcy-starter.py 0 1 1.0 3.5e-13 20000.0 1.797e-7 1.0",
+            "python halfshear-darcy-starter.py 1 1 1.0 3.5e-13 20000.0 1.797e-8 1.0",
+            "python halfshear-darcy-starter.py 2 1 1.0 3.5e-13 20000.0 1.797e-9 1.0"
+        ],
+        "working_directory": "/home/adc/code/sphere"
+    }
+}

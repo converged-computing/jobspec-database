@@ -1,0 +1,45 @@
+{
+    "application": "python",
+    "details": {
+        "environment": {
+            "OMP_NUM_THREADS": "1",
+            "OMP_PLACES": "threads",
+            "OMP_PROC_BIND": "spread"
+        },
+        "slurm_options": {
+            "nodes": 2,
+            "cpu_type": "haswell",
+            "queue": "debug",
+            "job_name": "prior_precision_testjaccosmo",
+            "mail_user": "jost@apc.in2p3.fr",
+            "mail_type": "ALL",
+            "time_limit": "00:30:00"
+        },
+        "srun_commands": [
+            {
+                "command": "srun",
+                "arguments": [
+                    "-n",
+                    "8",
+                    "-c",
+                    "16",
+                    "--cpu_bind=cores",
+                    "python",
+                    "/global/homes/j/jost/these/pixel_based_analysis/code/prior_precison_gridding.py"
+                ]
+            },
+            {
+                "command": "srun",
+                "arguments": [
+                    "-n",
+                    "1",
+                    "-c",
+                    "64",
+                    "--cpu_bind=cores",
+                    "python",
+                    "/global/homes/j/jost/these/pixel_based_analysis/code/graph_prior_precision.py"
+                ]
+            }
+        ]
+    }
+}

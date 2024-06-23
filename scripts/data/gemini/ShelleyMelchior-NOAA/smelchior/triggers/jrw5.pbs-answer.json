@@ -1,0 +1,46 @@
+{
+    "application": "PBS",
+    "details": {
+        "job_name": "rw5_%JTYP%_%PDY%_%CC%_%DESC%",
+        "job_output": "oe",
+        "shell": "/bin/bash",
+        "walltime": "00:30:00",
+        "account": "OBSPROC-DEV",
+        "queue": "dev_transfer",
+        "nodes": "1",
+        "cpus_per_node": "1",
+        "memory": "1GB",
+        "debug": "true",
+        "modules": [
+            "intel/${intel_ver}",
+            "libjpeg/${libjpeg_ver}",
+            "grib_util/${grib_util_ver}",
+            "bufr_dump/${bufr_dump_ver}",
+            "prod_envir/1.0.3",
+            "w3nco/${w3nco_ver:?}",
+            "bufr/${bufr_ver:?}",
+            "w3emc/${w3emc_ver:?}",
+            "bacio/${bacio_ver:?}"
+        ],
+        "environment_variables": [
+            "envir=prod",
+            "JTYP=%JTYP%",
+            "DESC='rw5'",
+            "PDY=%PDY%",
+            "cyc=%CC%",
+            "sfcship_ver_pckg=v1.1.0",
+            "sfcship_ver=v1.1",
+            "HOMEsfcship=$PACKAGEROOT/sfcship.${sfcship_ver_pckg}",
+            "VERSION_FILE=$HOMEsfcship/versions/run.ver",
+            "MAPHOUR=$cyc",
+            "job=${DESC}$cyc",
+            "jobid=$job.$PBS_JOBID",
+            "DATAROOT=/lfs/h2/emc/stmp/$USER/raws/sfcship",
+            "COMROOT=/lfs/h2/emc/stmp/$USER/CRON/sfcship",
+            "COMOUT=$COMROOT/com",
+            "CNVGRIB=/gpfs/dell1/nco/ops/nwprod/grib_util.v1.0.6/exec/cnvgrib",
+            "GRBINDEX=/u/Jiarui.Dong/bin/grbindex"
+        ],
+        "script_location": "${HOMEsfcship}/jobs/JRW5"
+    }
+}

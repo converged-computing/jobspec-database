@@ -1,0 +1,36 @@
+{
+    "application": "SLURM",
+    "details": {
+        "scheduler": "SLURM",
+        "partition": "debug",
+        "nodes": 5,
+        "time": "00:30:00",
+        "account": "desi",
+        "job_name": "obiwan",
+        "output": "./slurm_output/obiwan_%j.out",
+        "constraints": "haswell",
+        "email": "kong.291@osu.edu",
+        "email_type": "ALL",
+        "environment_variables": [
+            "KMP_AFFINITY=disabled",
+            "MPICH_GNI_FORK_MODE=FULLCOPY",
+            "MKL_NUM_THREADS=1",
+            "OMP_NUM_THREADS=1",
+            "XDG_CONFIG_HOME=/dev/shm",
+            "rowstart=50",
+            "name_for_run=cosmos_new_seed",
+            "dataset=cosmos",
+            "nobj=50",
+            "threads=16",
+            "cosmos_section=$1",
+            "rsdir=rs${rowstart}_cosmos${cosmos_section}",
+            "PYTHONPATH=./mpi:$PYTHONPATH",
+            "topdir=$CSCRATCH/Obiwan/dr9_LRG/obiwan_out/",
+            "outdir=$CSCRATCH/Obiwan/dr9_LRG/obiwan_out/$name_for_run/output/${rsdir}"
+        ],
+        "container_image": "legacysurvey/legacypipe:DR9.7.1",
+        "container_runtime": "shifter",
+        "module": "mpich-cle6",
+        "script": "mpi.py"
+    }
+}

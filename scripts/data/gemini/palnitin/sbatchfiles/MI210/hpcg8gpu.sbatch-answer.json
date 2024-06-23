@@ -1,0 +1,36 @@
+{
+    "application": "SLURM",
+    "details": {
+        "resource_requests": {
+            "nodes": 1,
+            "tasks_per_node": 8,
+            "cpus_per_task": 16,
+            "memory": 0,
+            "gpus": 8
+        },
+        "software": {
+            "module_path": "/shared/apps/modules",
+            "module_files": [
+                "rocm-5.4.2",
+                "ucx-1.13.1",
+                "ompi/4.1.4"
+            ],
+            "singularity_image": "/shared/apps/bin/rochpcg_3.1.amd1_28.sif",
+            "mpi_implementation": "OpenMPI",
+            "mpi_communication_method": "UCX"
+        },
+        "application_arguments": [
+            "mpirun",
+            "-n",
+            "8",
+            "--mca",
+            "pml",
+            "ucx",
+            "hpcg",
+            "336",
+            "168",
+            "672",
+            "1860"
+        ]
+    }
+}

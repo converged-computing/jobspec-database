@@ -1,0 +1,35 @@
+{
+    "application": "GROMACS",
+    "details": {
+        "resource_requirements": {
+            "nodes": "1",
+            "cores_per_node": "40",
+            "walltime": "48 hours",
+            "memory": "130 GB",
+            "group": "ku_10001",
+            "job_name": "htau40_contacts"
+        },
+        "software_requirements": {
+            "modules": [
+                "tools",
+                "cuda/toolkit/10.2.89",
+                "openmpi/gcc/64/1.10.2",
+                "gcc/9.3.0"
+            ],
+            "gmx_path": "/home/projects/ku_10001/apps/GMX20203/bin/gmx_mpi"
+        },
+        "script_functionality": {
+            "purpose": "Calculate the minimum distance and number of contacts between two groups of atoms (htau401 and htau402) in a molecular dynamics simulation.",
+            "steps": [
+                "Define the number of processors based on the allocated nodes.",
+                "Load required modules.",
+                "Iterate through 10 directories (two_htau40_1 to two_htau40_10).",
+                "Iterate through three lambda values (1.00, 1.10, 1.12) within each directory.",
+                "Create a 'data' directory within each lambda directory.",
+                "Use gmx make_ndx to define two groups of atoms (htau401 and htau402) based on residue numbers.",
+                "Use gmx mindist to calculate the minimum distance and number of contacts between the two groups of atoms using trajectory (prodrun_nopbc.xtc) and topology (prodrun.tpr) files.",
+                "Save the results to files named 'data/htau401_htau402_mindist_lambda${i}.xvg' and 'data/htau401_htau402_numcont_lambda${i}.xvg'."
+            ]
+        }
+    }
+}

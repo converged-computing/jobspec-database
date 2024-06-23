@@ -1,0 +1,47 @@
+{
+    "application": "MPI",
+    "details": {
+        "software": [
+            "PBS",
+            "conda",
+            "mpiexec",
+            "python",
+            "nvidia-smi"
+        ],
+        "resources": {
+            "nodes": 10,
+            "walltime": "3:00:00",
+            "filesystems": [
+                "home",
+                "grand"
+            ],
+            "queue": "prod",
+            "account": "STlearn",
+            "environment_variables": [
+                "MPICH_GPU_SUPPORT_ENABLED=1",
+                "NCCL_COLLNET_ENABLE=1",
+                "NCCL_NET_GDR_LEVEL=PHB",
+                "MASTER_ADDR",
+                "NNODES",
+                "NRANKS_PER_NODE",
+                "NTOTRANKS",
+                "NDEPTH",
+                "OMP_NUM_THREADS",
+                "OMP_PLACES"
+            ],
+            "affinity": "set_affinity_cmd: './scripts/polaris/set_affinity_gpu_polaris.sh'"
+        },
+        "script_arguments": {
+            "step": 3,
+            "batch_size_phase3": 4,
+            "gradient_clipping": true,
+            "num_workers": 16,
+            "target": "ADHD",
+            "dataset_name": "ABCD",
+            "exp_name": "gradclip_230106_split1",
+            "image_path": "/lus/grand/projects/STlearn/7.cleaned_image_MNI_to_TRs",
+            "dataset_split_num": 1,
+            "model_weights_path_phase2": "./experiments/ABCD_transformer_reconstruction_sex_mask_loss/ABCD_transformer_reconstruction_sex_mask_loss_epoch_11_batch_index_1334_BEST_val_loss.pth"
+        }
+    }
+}

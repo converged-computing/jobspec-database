@@ -1,0 +1,43 @@
+{
+    "application": "Slurm",
+    "details": {
+        "job_name": "setupbuii",
+        "partition": "gpu",
+        "nodes": 1,
+        "tasks_per_node": 128,
+        "memory": "30G",
+        "time": "00:30:00",
+        "mail_user": "clara.bayley@mpimet.mpg.de",
+        "mail_type": "FAIL",
+        "account": "mh1126",
+        "output": "./setupbuii_out.%j.out",
+        "error": "./setupbuii_err.%j.out",
+        "software_requirements": {
+            "gcc": "11.2.0-gcc-11.2.0",
+            "python": "2022.01-gcc-11.2.0",
+            "nvhpc": "23.7-gcc-11.2.0",
+            "cmake": "3.23.1%gcc",
+            "conda_env": "superdropsenv"
+        },
+        "environment_variables": {
+            "path2CLEO": "${HOME}/CLEO/",
+            "path2src": "${HOME}/breakup_partii/src/",
+            "path2build": "/work/mh1126/m300950/droplet_breakup_partii/build/",
+            "orig_configfile": "${HOME}/breakup_partii/src/src/buii_config.txt",
+            "tmp_configfile": "${path2build}/tmp/buii_config.txt",
+            "python": "/work/mh1126/m300950/condaenvs/superdropsenv/bin/python",
+            "gxx": "g++",
+            "gcc": "gcc",
+            "cuda": "nvc++",
+            "kokkosflags": "-DKokkos_ARCH_NATIVE=ON -DKokkos_ARCH_AMPERE80=ON -DKokkos_ENABLE_SERIAL=ON",
+            "kokkoshost": "-DKokkos_ENABLE_OPENMP=ON",
+            "kokkosdevice": "",
+            "OMP_PROC_BIND": "spread",
+            "OMP_PLACES": "threads"
+        },
+        "commands": [
+            "cmake -S ${path2src} -B ${path2build} ${kokkosflags} ${kokkoshost} ${kokkosdevice} -DCLEOLIBS_SOURCE_DIR:STRING=${path2CLEO}libs",
+            "python build_buii.py ${path2CLEO} ${path2build} ${orig_configfile} ${tmp_configfile}"
+        ]
+    }
+}

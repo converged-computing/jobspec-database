@@ -1,0 +1,35 @@
+{
+    "application": "pytorch",
+    "details": {
+        "environment": "conda",
+        "environment_name": "base",
+        "resource_manager": "slurm",
+        "resource_requirements": {
+            "cpu": 96,
+            "gpu": 8,
+            "nodes": "$SLURM_NNODES",
+            "tasks_per_node": 1
+        },
+        "training_script": "training_loop.py",
+        "framework_specific_parameters": {
+            "nproc_per_node": 8,
+            "master_addr": "$(scontrol show hostnames $SLURM_JOB_NODELIST | head -n 1)",
+            "master_port": 6000,
+            "max_restarts": 0,
+            "node_rank": "$SLURM_PROCID",
+            "role": "$SLURMD_NODENAME:",
+            "tee": 3
+        },
+        "networking": {
+            "NCCL_ASYNC_ERROR_HANDLING": 1,
+            "NCCL_PROTO": "simple",
+            "RDMAV_FORK_SAFE": 1,
+            "FI_EFA_FORK_SAFE": 1,
+            "FI_EFA_USE_DEVICE_RDMA": 1,
+            "FI_PROVIDER": "efa",
+            "FI_LOG_LEVEL": 1,
+            "NCCL_IB_DISABLE": 1,
+            "NCCL_SOCKET_IFNAME": "ens"
+        }
+    }
+}

@@ -1,0 +1,76 @@
+{
+    "application": "LSF",
+    "details": {
+        "queue": "gpuv100",
+        "jobName": "resnet20-ot",
+        "cores": 4,
+        "gpu": "1 gpu in exclusive process mode",
+        "walltime": "4:00",
+        "memory": "10GB",
+        "email": "leiyo@dtu.dk",
+        "notifications": {
+            "start": true,
+            "completion": true
+        },
+        "output": "logs/resnet20/many_seeds/many_seeds_std=4_prop=1/gpu_resnet20_ot.out",
+        "error": "logs/resnet20/many_seeds/many_seeds_std=4_prop=1/gpu_resnet20_ot.err",
+        "modules": {
+            "cuda": "11.6"
+        }
+    },
+    "script": {
+        "software": [
+            "python3",
+            "nvidia-smi"
+        ],
+        "resources": [
+            "gpu",
+            "cpu",
+            "memory"
+        ],
+        "parameters": {
+            "NOISE_STD": 4,
+            "NOISE_PROP": 1,
+            "TARGET_SPARSITYS": [
+                0.95
+            ],
+            "MODULES": [
+                "layer1.0.conv1_layer1.0.conv2_layer1.1.conv1_layer1.1.conv2_layer1.2.conv1_layer1.2.conv2_layer2.0.conv1_layer2.0.conv2_layer2.1.conv1_layer2.1.conv2_layer2.2.conv1_layer2.2.conv2_layer3.0.conv1_layer3.0.conv2_layer3.1.conv1_layer3.1.conv2_layer3.2.conv1_layer3.2.conv2"
+            ],
+            "SEEDS": [
+                0,
+                1,
+                2,
+                3,
+                4
+            ],
+            "FISHER_SUBSAMPLE_SIZES": [
+                100
+            ],
+            "PRUNERS": [
+                "optimal_transport"
+            ],
+            "JOINTS": [
+                1
+            ],
+            "FISHER_DAMP": "1e-10",
+            "EPOCH_END": "10",
+            "PROPER_FLAG": "1",
+            "ROOT_DIR": "/zhome/b2/8/197929/GitHub/CBS",
+            "DATA_DIR": "/zhome/b2/8/197929/GitHub/CBS/datasets",
+            "SWEEP_NAME": "exp_oct_21_resnet20_ot",
+            "NOWDATE": "",
+            "DQT": "\"",
+            "GPUS": [
+                0
+            ],
+            "LOG_DIR": "/zhome/b2/8/197929/GitHub/CBS/prob_regressor_results/exp_oct_21_resnet20_ot/log/",
+            "CSV_DIR": "/zhome/b2/8/197929/GitHub/CBS/prob_regressor_results/exp_oct_21_resnet20_ot/csv/",
+            "ONE_SHOT": "--one-shot",
+            "CKP_PATH": "/zhome/b2/8/197929/GitHub/CBS/checkpoints/resnet20.ckpt",
+            "OPTIMAL_TRANSPORTATION": "--ot",
+            "ADD_NOISE": "--add-noise 4 1",
+            "extra_cmd": " --one-shot --ot --add-noise 4 1 "
+        }
+    }
+}

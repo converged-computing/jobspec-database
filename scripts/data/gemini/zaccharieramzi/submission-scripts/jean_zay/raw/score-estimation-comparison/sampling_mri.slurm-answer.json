@@ -1,0 +1,26 @@
+{
+    "application": "SLURM",
+    "details": {
+        "job_name": "sampling_mri",
+        "MPI_tasks": 1,
+        "MPI_tasks_per_node": 1,
+        "GPUs_per_node": 1,
+        "cores_per_task": 10,
+        "hyperthreading": "disabled",
+        "task_distribution": "block:block",
+        "max_runtime": "20:00:00",
+        "quality_of_service": "qos_gpu-t3",
+        "output_file": "sampling_mri%A_%a.out",
+        "error_file": "sampling_mri%A_%a.out",
+        "software": [
+            "Python",
+            "Tensorflow-GPU (2.3.0)"
+        ],
+        "environment_variables": [
+            "FASTMRI_DATA_DIR=$SCRATCH/",
+            "CHECKPOINTS_DIR=$SCRATCH/nsec_no_sn",
+            "FIGURES_DIR=$SCRATCH/nsec_figures/sampling_no_sn_hd"
+        ],
+        "script": "./nsec/mri/sampling.py -ns 100000 -b 2 -c CORPD_FBK -sn 0. --nps-train 50.0"
+    }
+}

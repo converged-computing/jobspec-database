@@ -1,0 +1,22 @@
+{
+    "application": "Slurm",
+    "details": {
+        "resource_requirements": {
+            "qos": "%qos",
+            "partition": "%partition",
+            "nodes": 1,
+            "wallclock_time": "3-00:00:00",
+            "gpus": 1
+        },
+        "modules": "%modules",
+        "scratch_host": "%scratch_host",
+        "inputs": [
+            "celeba_cropped",
+            "config_celeba_cropped.json"
+        ],
+        "outputs": "output_networks/celeba_cropped_$job_id",
+        "container": "pytorch_GAN_zoo.sif",
+        "container_command": "train.py PGAN -c config_celeba_cropped.json --restart --no_vis -n celeba_cropped_$job_id",
+        "run_command": "singularity exec\n  --nv\n  --bind $scratch:/scratch_mount\n  --pwd /scratch_mount\n  $container\n  $container_command"
+    }
+}

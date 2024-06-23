@@ -1,0 +1,35 @@
+{
+    "application": "fmriprep",
+    "details": {
+        "software": [
+            "fmriprep",
+            "Singularity",
+            "FreeSurfer"
+        ],
+        "resources": {
+            "queue": "normal,mygroup",
+            "time": "48:00:00",
+            "cores": "16",
+            "memory": "4G per core",
+            "bind-mounts": [
+                "BIDS_DIR:/data",
+                "TEMPLATEFLOW_HOST_HOME:/templateflow",
+                "L_SCRATCH:/work",
+                "LOCAL_FREESURFER_DIR:/fsdir"
+            ],
+            "environment variables": [
+                "SINGULARITYENV_FS_LICENSE",
+                "SINGULARITYENV_TEMPLATEFLOW_HOME"
+            ]
+        },
+        "dependencies": [
+            "templateflow",
+            "freesurfer"
+        ],
+        "output": {
+            "logs": "log/%x-%A-%a.out",
+            "errors": "log/%x-%A-%a.err",
+            "results": "${SLURM_JOB_NAME}.${SLURM_ARRAY_JOB_ID}.tsv"
+        }
+    }
+}

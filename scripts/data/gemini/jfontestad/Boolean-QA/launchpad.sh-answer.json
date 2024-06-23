@@ -1,0 +1,38 @@
+{
+    "application": "Slurm",
+    "details": {
+        "resource_manager": "Slurm",
+        "partition": "a100",
+        "qos": "qos_gpu",
+        "gpu": "1",
+        "nodes": "1",
+        "tasks_per_node": "1",
+        "time": "12:00:00",
+        "job_name": "HW6 CS 601.471/671 homework",
+        "modules": [
+            "anaconda"
+        ],
+        "environment": "toy_classification_env",
+        "python_version": "3.8",
+        "packages": [
+            "torch",
+            "pytorch",
+            "torchvision",
+            "torchaudio",
+            "pytorch-cuda=11.7",
+            "faiss-gpu=1.7.3",
+            "cudatoolkit=11.3",
+            "faiss-gpu",
+            "petals",
+            "huggingface_hub[cli]"
+        ],
+        "code": [
+            "classification.py",
+            "rag_classification.py",
+            "bloomz.py",
+            "petals_bloomz.py"
+        ],
+        "cache": "/scratch4/danielk/schaud31",
+        "command": "srun python petals_bloomz.py --experiment \"petals_finetuned\" --model \"bigscience/bloomz-560m\" --small_subset True --batch_size \"1\" --lr 1e-4 --num_epochs 3"
+    }
+}

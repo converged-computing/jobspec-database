@@ -1,0 +1,47 @@
+{
+    "application": "DEMAGIS",
+    "details": {
+        "software": [
+            "Stages/2022",
+            "GCC",
+            "OpenMPI",
+            "imkl",
+            "CMake",
+            "Boost",
+            "git"
+        ],
+        "resource_requirements": {
+            "account": "slai",
+            "nodes": 4,
+            "tasks": 64,
+            "tasks_per_node": 16,
+            "cpus_per_task": 8,
+            "output_file": "job.out",
+            "error_file": "job.err",
+            "time_limit": "1:30:00",
+            "partition": "dc-cpu-devel"
+        },
+        "environment_variables": {
+            "SRUN_CPUS_PER_TASK": "${SLURM_CPUS_PER_TASK}",
+            "OMP_NUM_THREADS": "${SRUN_CPUS_PER_TASK}"
+        },
+        "executable": "../DEMAGIS/build/examples/driver_scalapack.exe",
+        "arguments": [
+            "--N",
+            "30000",
+            "--dim0",
+            "8",
+            "--dim1",
+            "8",
+            "--mbsize",
+            "250",
+            "--nbsize",
+            "250",
+            "--dmax",
+            "10",
+            "--epsilon=1e-4",
+            "--myDist",
+            "0"
+        ]
+    }
+}

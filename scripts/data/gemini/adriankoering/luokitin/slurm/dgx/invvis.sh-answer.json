@@ -1,0 +1,24 @@
+{
+    "application": "SLURM",
+    "details": {
+        "job_name": "extra_rgb_rn34",
+        "partition": "p2",
+        "time": "1:00:00",
+        "gres": "gpu:1",
+        "cpus_per_task": "10",
+        "mem_per_cpu": "6G",
+        "output_file": "logs/slogs/%A_%a.out",
+        "error_file": "logs/slogs/%A_%a.err",
+        "nice": "1000",
+        "array": "1-24%2",
+        "environment_variables": {
+            "WANDB_PROJECT": "invvis",
+            "WANDB_NAME": "${SLURM_JOB_NAME}",
+            "WANDB_JOB_TYPE": "devel",
+            "WANDB_JOB_NAME": "${WANDB_NAME}",
+            "WANDB_TAGS": "devel,rgb,extra,resnet34",
+            "HYDRA_FULL_ERROR": "1"
+        },
+        "command": "srun python train.py experiment=invvis/rgb dataset.data_dir=/home/koering/data/invvis/webds/extra model/encoder=resnet34"
+    }
+}

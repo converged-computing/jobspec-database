@@ -1,0 +1,33 @@
+{
+    "application": "COBALT",
+    "details": {
+        "resource_requirements": {
+            "nodes": "${nnds}",
+            "time": "60",
+            "queue": "debug-cache-quad",
+            "output_file": "runs${nnds}x${rpn}x${nomp}"
+        },
+        "modules": {
+            "loaded": [
+                "intel",
+                "geopm"
+            ],
+            "unloaded": [
+                "darshan"
+            ]
+        },
+        "environment_variables": {
+            "OMP_NUM_THREADS": "${nomp}"
+        },
+        "executable": "../amg2013",
+        "arguments": "-laplace -P 1 1 1 -n 100 100 100",
+        "parallel_environment": "aprun",
+        "parallel_environment_options": {
+            "tasks_per_node": "${rpn}",
+            "total_tasks": "((nnds*rpn))",
+            "processor_binding": "depth",
+            "distribution": "64",
+            "cpus_per_task": "1"
+        }
+    }
+}

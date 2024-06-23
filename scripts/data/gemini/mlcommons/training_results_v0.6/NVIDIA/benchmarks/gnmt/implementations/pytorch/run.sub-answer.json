@@ -1,0 +1,43 @@
+{
+    "application": "Slurm",
+    "details": {
+        "partition": "mlperf",
+        "nodes": 1,
+        "wall_time": "12:00:00",
+        "job_name": "rnn_translator",
+        "memory": "all available",
+        "tasks_per_node": 8,
+        "threads_per_core": 2,
+        "cores_per_socket": 20,
+        "benchmark": "rnn_translator",
+        "benchmark_name": "GNMT",
+        "container": "mlperf-nvidia:rnn_translator",
+        "data_dir": "/raid/data/wmt16_de_en",
+        "preprocessed_data_dir": "/raid/scratch/gnmt",
+        "log_dir": "/raid/results/rnn_translator",
+        "number_of_runs": 10,
+        "system_specific_parameters": "config_DGX1.sh",
+        "docker_volumes": "-v /raid/data/wmt16_de_en:/data -v /raid/results/rnn_translator:/results -v /raid/scratch/gnmt:/preproc_data",
+        "docker_execution": "nvidia-docker run --init --rm --net=host --uts=host --ipc=host --ulimit stack=67108864 --ulimit memlock=-1 --name=cont_${SLURM_JOB_ID} --security-opt seccomp=unconfined $IBDEVICES",
+        "preprocessed_dataset_generation_command": "python preprocess_data.py --preproc-data-dir /preproc_data --dataset-dir /data --max-length-train ${MAX_SEQ_LEN}",
+        "benchmark_run_command": "./run_and_time.sh",
+        "environment_variables": [
+            "DGXSYSTEM",
+            "MULTI_NODE",
+            "LR",
+            "TRAIN_BATCH_SIZE",
+            "TEST_BATCH_SIZE",
+            "WARMUP_STEPS",
+            "REMAIN_STEPS",
+            "DECAY_INTERVAL",
+            "TARGET",
+            "NUMEPOCHS",
+            "MAX_SEQ_LEN",
+            "EXTRA_OPTS",
+            "SLURM_JOB_ID",
+            "SLURM_NTASKS_PER_NODE",
+            "SLURM_NNODES"
+        ],
+        "cache_clearing_command": "sync && sudo /sbin/sysctl vm.drop_caches=3"
+    }
+}

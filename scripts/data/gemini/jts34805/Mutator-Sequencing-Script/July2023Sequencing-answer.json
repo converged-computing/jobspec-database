@@ -1,0 +1,41 @@
+{
+    "application": "NGS",
+    "software": [
+        "fastp",
+        "Bowtie2",
+        "SAMtools",
+        "UMI-tools"
+    ],
+    "resource_requirements": {
+        "partition": "batch",
+        "nodes": 4,
+        "cores": 8,
+        "memory": "200gb",
+        "time": "165:00:00",
+        "constraint": "AMD"
+    },
+    "data_files": [
+        "rawdata/*R1*",
+        "rawdata/*R2*",
+        "/scratch/jts34805/remapdir/adapter.fa",
+        "/scratch/jts34805/W22Build/W22chrscaff"
+    ],
+    "output_files": [
+        "processed/*R1A.fastq.gz",
+        "processed/*R2A.fastq.gz",
+        "processed/*R1B.fastq.gz",
+        "processed/*R2B.fastq.gz",
+        "filtered/*R1.fastq.gz",
+        "filtered/*R2.fastq.gz",
+        "mapped/*.bam",
+        "dedup/*.Dedup.bam",
+        "txtfiles/*.txt"
+    ],
+    "steps": [
+        "fastp - quality control and trimming",
+        "Bowtie2 - alignment",
+        "SAMtools - manipulation of alignment files",
+        "UMI-tools - UMI deduplication",
+        "awk - data processing and output"
+    ]
+}

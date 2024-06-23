@@ -1,0 +1,31 @@
+{
+    "application": "Slurm",
+    "details": {
+        "resource_requirements": {
+            "nodes": 1,
+            "tasks": 1,
+            "time": "02:00:00",
+            "partition": "bii-gpu",
+            "account": "bii_dsc_community",
+            "gres": "gpu:a100:1",
+            "job_name": "train-osmi",
+            "output": "train-osmi-%u-%j.out",
+            "error": "train-osmi-%u-%j.err",
+            "reservation": "bi_fox_dgx",
+            "constraint": "a100_80gb"
+        },
+        "software_requirements": {
+            "modules": [
+                "singularity",
+                "tensorflow/2.10.0",
+                "gcc",
+                "openmpi",
+                "python"
+            ],
+            "container": {
+                "image": "$RUN_DIR/$NAME.sif"
+            },
+            "python_script": "train.py"
+        }
+    }
+}

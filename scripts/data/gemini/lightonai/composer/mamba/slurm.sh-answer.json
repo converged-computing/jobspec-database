@@ -1,0 +1,31 @@
+{
+    "application": "SLURM",
+    "details": {
+        "job_name": "mamba",
+        "partition": "gpu",
+        "qos": "default",
+        "nodes": 1,
+        "tasks": 4,
+        "tasks_per_node": 4,
+        "account": "account",
+        "gpus_per_node": 4,
+        "gpus_per_task": 1,
+        "exclusive": true,
+        "wait_all_nodes": true,
+        "time": "00:20:00",
+        "output": "mamba_stdout_single%j.out",
+        "error": "mamba_stderr_single%j.out",
+        "modules": [
+            "env/release/2023.1",
+            "CUDA/12.2.0"
+        ],
+        "environment": "your-env",
+        "command": "composer --world_size ${WORLD_SIZE} --nproc ${NPROC} --node_rank ${NODE_RANK} --master_addr ${MASTER_ADDR} --master_port ${MASTER_PORT} --verbose mamba/train.py",
+        "dependencies": [
+            "conda",
+            "composer",
+            "nvidia-smi",
+            "python"
+        ]
+    }
+}

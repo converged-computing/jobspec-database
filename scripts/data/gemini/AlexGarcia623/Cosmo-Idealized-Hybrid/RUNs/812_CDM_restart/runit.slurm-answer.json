@@ -1,0 +1,40 @@
+{
+    "application": "Arepo",
+    "details": {
+        "environment": {
+            "modules": [
+                "intel/2018.1.163",
+                "openmpi/3.1.2",
+                "gsl/2.4",
+                "fftw/3.3.7"
+            ],
+            "environment_variables": {
+                "OMPI_MCA_pml": "ucx",
+                "OMPI_MCA_btl": "^vader,tcp,openib",
+                "OMPI_MCA_oob_tcp_listen_mode": "listen_thread"
+            }
+        },
+        "resources": {
+            "slurm_options": {
+                "job_name": "S12CDMRestart",
+                "memory_per_cpu": "6000mb",
+                "time": "4-00:00:00",
+                "mail_user": "j.rose@ufl.edu",
+                "mail_type": "FAIL",
+                "partition": "hpg2-compute",
+                "tasks": 512,
+                "tasks_per_socket": 12,
+                "cpus_per_task": 1,
+                "dependency": "singleton",
+                "account": "astronomy-dept",
+                "qos": "astronomy-dept-b",
+                "output_file": "./output-blue/output_%j.out",
+                "error_file": "./output-blue/error_%j.err"
+            },
+            "script_execution": {
+                "runit_script": "runit.slurm",
+                "execution_command": "srun --mpi=pmix_v2 ./Arepo param.txt 1"
+            }
+        }
+    }
+}

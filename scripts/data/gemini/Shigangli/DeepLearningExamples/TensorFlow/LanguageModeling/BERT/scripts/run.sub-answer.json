@@ -1,0 +1,43 @@
+{
+    "application": "MPI",
+    "details": {
+        "software": [
+            "Docker",
+            "Nvidia-docker",
+            "SLURM",
+            "MPI",
+            "Horovod",
+            "NCCL"
+        ],
+        "resources": {
+            "partition": "mlperf",
+            "nodes": 1,
+            "wall_time": "12:00:00",
+            "memory": "all available",
+            "tasks_per_node": 8,
+            "threads_per_core": 2,
+            "cores_per_socket": 20,
+            "overcommit": true
+        },
+        "docker_options": [
+            "--rm",
+            "--net=host",
+            "--uts=host",
+            "--ipc=host",
+            "--ulimit stack=67108864",
+            "--ulimit memlock=-1",
+            "--security-opt seccomp=unconfined"
+        ],
+        "mpi_options": [
+            "--allow-run-as-root",
+            "--tag-output",
+            "--bind-to none",
+            "-x EXTRA_PARAMS=\"${EXTRA_PARAMS}\"",
+            "-x HOROVOD_MPI_THREADS_DISABLE=1",
+            "-x NCCL_LL_THRESHOLD=0",
+            "-x NCCL_DEBUG=INFO",
+            "-x NCCL_NET_GDR_READ=1",
+            "-x NCCL_SOCKET_IFNAME=^docker0,bond0,lo"
+        ]
+    }
+}

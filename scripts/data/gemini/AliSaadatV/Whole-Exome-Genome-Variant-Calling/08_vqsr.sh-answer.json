@@ -1,0 +1,28 @@
+{
+    "application": "GATK",
+    "software": [
+        "GATK 4.2.2.0",
+        "gcc",
+        "openblas 0.3.6-openmp",
+        "R"
+    ],
+    "resources": {
+        "nodes": 1,
+        "tasks": 1,
+        "cpus_per_task": 2,
+        "memory": "6G",
+        "time": "10:00:00",
+        "scratch_space": "/scratch/saadat/pri/second_try",
+        "reference_genome": "/work/gr-fe/saadat/Reference_Genome/GRCH38_no_alt/GCA_000001405.15_GRCh38_no_alt_analysis_set.fa.gz",
+        "known_sites": "/work/gr-fe/saadat/pri/known_sites",
+        "input": "/scratch/saadat/pri/second_try/genotype_gvcf_output/merged.vcf.gz",
+        "output": "/scratch/saadat/pri/second_try/vqsr_output"
+    },
+    "commands": [
+        "VariantRecalibrator",
+        "ApplyVQSR"
+    ],
+    "other_requirements": [
+        "java-options: -Djava.io.tmpdir=${SCRATCH_PRI}/temp/${SLURM_JOBID}/io -Xms5G -Xmx5G -XX:ParallelGCThreads=2"
+    ]
+}

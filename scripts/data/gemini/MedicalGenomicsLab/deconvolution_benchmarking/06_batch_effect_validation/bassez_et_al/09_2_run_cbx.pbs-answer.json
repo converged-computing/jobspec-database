@@ -1,0 +1,27 @@
+{
+    "application": "CBX",
+    "details": {
+        "software": [
+            "Singularity (version 3.7.1)"
+        ],
+        "resources": {
+            "walltime": "72 hours",
+            "cpus": 2,
+            "memory": "50 GB",
+            "disk": "not specified",
+            "other": [
+                "PBS job scheduler",
+                "module system for software loading",
+                "Singularity container image (???/fractions_latest.sif)",
+                "CBX authentication (username and token)"
+            ]
+        },
+        "data": [
+            "scRNA_ref.tsv (reference single-cell RNA-seq data)",
+            "test_counts_${PUR_LVL}_pur_lvl.tsv (gene counts data)",
+            "???/deconvolution_benchmarking/06_batch_effect_validation/bassez_et_al/data/cbx (working directory)",
+            "results/${PUR_LVL} (output directory)"
+        ],
+        "command": "singularity run -B ./:/src/data -B $OUT_DIR:/src/outdir --pwd /src ???/fractions_latest.sif --username <EMAIL> --token <TOKEN> --single_cell TRUE --rmbatchSmode FALSE --perm 100 --refsample $SC_REF_PATH --mixture $GENE_COUNTS_FILE"
+    }
+}

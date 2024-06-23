@@ -1,0 +1,35 @@
+{
+    "application": "Slurm",
+    "details": {
+        "resource_allocation": {
+            "account": "ddp315",
+            "partition": "gpu",
+            "nodes": 3,
+            "tasks_per_node": 1,
+            "time": "00:10:00",
+            "gres": "gpu:k80:4"
+        },
+        "modules": [
+            "gnu",
+            "mvapich2_ib",
+            "cmake",
+            "singularity/2.5.2"
+        ],
+        "environment_variables": {
+            "LOCAL_SCRATCH": "/scratch/${USER}/${SLURM_JOB_ID}",
+            "LUSTRE_SCRATCH": "/home/dmu/SCRATCH/SINGULARITY/images",
+            "SINGULARITY_MODULE": "singularity/2.5.2"
+        },
+        "software": {
+            "singularity_image": "/home/dmu/SCRATCH/SINGULARITY/images/tensorflow-v1.11-gpu-20181116-mpich.simg",
+            "python_version": "3"
+        },
+        "mpi_implementation": "mvapich2_ib",
+        "script": "/home/dmu/SCRATCH/SINGULARITY/Distributed-TensorFlow-Using-MPI/cluster_dispatch.py",
+        "script_arguments": {
+            "ps_hosts": "${PS_HOSTS}",
+            "worker_hosts": "${WORKER_HOSTS}",
+            "script": "/home/dmu/SCRATCH/SINGULARITY/Distributed-TensorFlow-Using-MPI/example.py"
+        }
+    }
+}

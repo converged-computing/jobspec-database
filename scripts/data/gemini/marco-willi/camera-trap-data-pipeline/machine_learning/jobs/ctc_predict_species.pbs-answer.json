@@ -1,0 +1,30 @@
+{
+    "application": "PBS",
+    "details": {
+        "resource_requirements": {
+            "walltime": "12:00:00",
+            "nodes": "1:ppn=24",
+            "queue": "small"
+        },
+        "software_requirements": {
+            "modules": [
+                "singularity",
+                "python3"
+            ],
+            "container": "docker://will5448/camera-trap-classifier:latest-cpu",
+            "script": "ctc.predict"
+        },
+        "data_requirements": {
+            "input_data": [
+                "/home/packerc/shared/zooniverse/Manifests/${SITE}/${SEASON}${DELIMITER}${BATCH}${DELIMITER}machine_learning_input.csv",
+                "/home/packerc/shared/albums/${SITE}/"
+            ],
+            "output_data": "/home/packerc/shared/zooniverse/Manifests/${SITE}/${SEASON}${DELIMITER}${BATCH}${DELIMITER}predictions_species.json"
+        },
+        "model_requirements": {
+            "model_path": "/home/packerc/shared/machine_learning/data/models/PANTHERA_SNAPSHOT_SAFARI/species/Xception_v1/best_model.hdf5",
+            "class_mapping_json": "/home/packerc/shared/machine_learning/data/models/PANTHERA_SNAPSHOT_SAFARI/species/Xception_v1/label_mappings.json",
+            "pre_processing_json": "/home/packerc/shared/machine_learning/data/models/PANTHERA_SNAPSHOT_SAFARI/species/Xception_v1/image_processing.json"
+        }
+    }
+}

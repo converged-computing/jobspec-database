@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n\"application\": \"SPAdes\",\n\"other_software\": [\n\"QUAST\",\n\"filter_contigs.pl\"\n],\n\"resource_requirements\": {\n\"memory\": \"32gb\",\n\"time\": \"4:59:00\",\n\"cpus\": 4\n},\n\"modules\": [\n\"SPAdes/3.15.3-GCC-11.2.0\",\n\"QUAST\"\n],\n\"environment_variables\": [\n\"SLURM_MEM_PER_NODE\",\n\"SLURM_CPUS_PER_TASK\"\n],\n\"input_files\": [\n\"../SAMPLES/${SAMPLE_ID}/clean_reads/${SAMPLE_ID}_dedup_paired_1.fastq.gz\",\n\"../SAMPLES/${SAMPLE_ID}/clean_reads/${SAMPLE_ID}_dedup_paired_2.fastq.gz\",\n\"../SAMPLES/${SAMPLE_ID}/clean_reads/${SAMPLE_ID}_dedup_unmatched.fastq.gz\"\n],\n\"output_files\": [\n\"../SAMPLES/${SAMPLE_ID}/01_sc_assembly/${SAMPLE_ID}_spades.log\",\n\"../SAMPLES/${SAMPLE_ID}/01_sc_assembly/${SAMPLE_ID}_contigs.fasta\",\n\"../SAMPLES/${SAMPLE_ID}/01_sc_assembly/${SAMPLE_ID}_scaffolds.fasta\",\n\"../SAMPLES/${SAMPLE_ID}/01_sc_assembly/quast\",\n\"../SAMPLES/${SAMPLE_ID}/01_sc_assembly/${SAMPLE_ID}_contigs.min1kbp.fasta\",\n\"../SAMPLES/${SAMPLE_ID}/MD5.txt\"\n],\n\"commands\": [\n\"mkdir -p ../SAMPLES/${SAMPLE_ID}/01_sc_assembly\",\n\"mkdir -p ${TMPDIR}/${SAMPLE_ID}/clean_reads/\",\n\"cp ../SAMPLES/${SAMPLE_ID}/clean_reads/${SAMPLE_ID}_dedup_paired_1.fastq.gz ${TMPDIR}/${SAMPLE_ID}/clean_reads/\",\n\"cp ../SAMPLES/${SAMPLE_ID}/clean_reads/${SAMPLE_ID}_dedup_paired_2.fastq.gz ${TMPDIR}/${SAMPLE_ID}/clean_reads/\",\n\"cp ../SAMPLES/${SAMPLE_ID}/clean_reads/${SAMPLE_ID}_dedup_unmatched.fastq.gz ${TMPDIR}/${SAMPLE_ID}/clean_reads/\",\n\"module purge\",\n\"module load SPAdes/3.15.3-GCC-11.2.0\",\n\"spades.py --sc --only-assembler -k 21,33,55,77,99,127 -1 ${TMPDIR}/${SAMPLE_ID}/clean_reads/${SAMPLE_ID}_dedup_paired_1.fastq.gz -2 ${TMPDIR}/${SAMPLE_ID}/clean_reads/${SAMPLE_ID}_dedup_paired_2.fastq.gz -s ${TMPDIR}/${SAMPLE_ID}/clean_reads/${SAMPLE_ID}_dedup_unmatched.fastq.gz -o ${TMPDIR}/${SAMPLE_ID}/01_sc_assembly -m $((${SLURM_MEM_PER_NODE} / 1024)) --threads ${SLURM_CPUS_PER_TASK}\",\n\"cp ${TMPDIR}/${SAMPLE_ID}/01_sc_assembly/spades.log ../SAMPLES/${SAMPLE_ID}/01_sc_assembly/${SAMPLE_ID}_spades.log\",\n\"cp ${TMPDIR}/${SAMPLE_ID}/01_sc_assembly/contigs.fasta ../SAMPLES/${SAMPLE_ID}/01_sc_assembly/${SAMPLE_ID}_contigs.fasta\",\n\"cp ${TMPDIR}/${SAMPLE_ID}/01_sc_assembly/scaffolds.fasta ../SAMPLES/${SAMPLE_ID}/01_sc_assembly/${SAMPLE_ID}_scaffolds.fasta\",\n\"rm -r ${TMPDIR}/${SAMPLE_ID}/clean_reads\",\n\"rm -r ${TMPDIR}/${SAMPLE_ID}/01_sc_assembly\",\n\"module load QUAST\",\n\"quast.py ../SAMPLES/${SAMPLE_ID}/01_sc_assembly/${SAMPLE_ID}_contigs.fasta -o ../SAMPLES/${SAMPLE_ID}/01_sc_assembly/quast -m $((${SLURM_MEM_PER_NODE} / 1024)) --threads ${SLURM_CPUS_PER_TASK}\",\n\"perl filter_contigs.pl 1000 ../SAMPLES/${SAMPLE_ID}/01_sc_assembly/${SAMPLE_ID}_contigs.fasta > ../SAMPLES/${SAMPLE_ID}/01_sc_assembly/${SAMPLE_ID}_contigs.min1kbp.fasta\",\n\"sed -i 's/>NODE/>'${SAMPLE_ID}'_NODE/g' ../SAMPLES/${SAMPLE_ID}/01_sc_assembly/${SAMPLE_ID}_contigs.min1kbp.fasta\",\n\"md5sum ../SAMPLES/${SAMPLE_ID}/01_sc_assembly/${SAMPLE_ID}_contigs.fasta >> ../SAMPLES/${SAMPLE_ID}/MD5.txt\",\n\"md5sum ../SAMPLES/${SAMPLE_ID}/01_sc_assembly/${SAMPLE_ID}_scaffolds.fasta >> ../SAMPLES/${SAMPLE_ID}/MD5.txt\",\n\"module list\",\n\"module purge\"\n]\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 2,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 1195,
+        "candidates_token_count": 1210,
+        "total_token_count": 2405,
+        "cached_content_token_count": 0
+    }
+}

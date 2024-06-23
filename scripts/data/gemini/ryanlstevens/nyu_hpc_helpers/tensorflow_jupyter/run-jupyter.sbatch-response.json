@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n\"application\": \"Jupyter\",\n\"details\": {\n\"resource_requirements\": {\n\"nodes\": 1,\n\"cpus_per_task\": 2,\n\"memory\": \"2GB\",\n\"time\": \"04:00:00\",\n\"gpu\": \"enabled\"\n},\n\"software_dependencies\": [\n\"singularity\",\n\"tensorflow 2.3.0\",\n\"jupyter notebook\",\n\"ssh\",\n\"shuf\"\n],\n\"environment_variables\": {\n\"SLURM_JOBTMP\": \"used to set XDG_RUNTIME_DIR\",\n\"XDG_RUNTIME_DIR\": \"set to SLURM_JOBTMP if available\"\n},\n\"script_functions\": {\n\"module purge\": \"clears all loaded modules\",\n\"shuf -i 10000-65500 -n 1\": \"generates a random port number between 10000 and 65500\",\n\"ssh -N -f -R $port:localhost:$port log-1\": \"establishes an SSH tunnel for forwarding port $port from the local machine to port $port on the remote machine 'log-1'\",\n\"cat<<EOF ... EOF\": \"prints a multi-line string to the console, including instructions on how to connect to the Jupyter server\",\n\"unset XDG_RUNTIME_DIR\": \"unsets the XDG_RUNTIME_DIR environment variable\",\n\"singularity exec --nv ... /bin/bash -c \\\" ... \\\"\": \"runs a Jupyter notebook server within a singularity container\"\n}\n}\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 563,
+        "candidates_token_count": 363,
+        "total_token_count": 926,
+        "cached_content_token_count": 0
+    }
+}

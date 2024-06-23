@@ -1,0 +1,36 @@
+{
+    "application": "SLURM",
+    "details": {
+        "job_name": "PEARLIntelE2E",
+        "output_file": "e2e-inference-%j.out",
+        "time_limit": "24:00:00",
+        "partition": "gpu",
+        "cpus_per_task": 2,
+        "gres_flags": "enforce-binding",
+        "ntasks_per_socket": 4,
+        "modules": [
+            "OpenMPI/4.0.0-GCC-8.2.0-2.31.1"
+        ],
+        "singularity_image": "hvd-scarf.simg",
+        "working_directory": "~/data/scarf688/projects/intel-e2e-benchmark/case2",
+        "training_data": "/work/data/one-day",
+        "training_data_hdf": "/work/data/hdf/one-day",
+        "test_data": "/work/data/ssts",
+        "output_directory": "/work/results/run_$SLURM_JOB_ID",
+        "sst_file": "/work/data/ssts/sst_matchups.h5",
+        "model_file": "$OUTPUT_DIR/model.h5",
+        "pythonpath": "/work",
+        "mpirun_flags": [
+            "-bind-to none",
+            "-map-by slot",
+            "-x NCCL_DEBUG=INFO",
+            "-x LD_LIBRARY_PATH",
+            "-x PATH",
+            "-x HOROVOD_TIMELINE=$OUTPUT_DIR/timeline_train.json"
+        ],
+        "training_command": "python /work/e2e_benchmark/command.py train $TRAIN_DATA_HDF $OUTPUT_DIR --epochs 30 --no-cache",
+        "inference_command": "python /work/e2e_benchmark/command.py inference $TEST_DATA $OUTPUT_DIR",
+        "convert_hdf_command": "python /work/e2e_benchmark/command.py convert-hdf $TRAIN_DATA $TRAIN_DATA_HDF",
+        "sst_comp_command": "python /work/e2e_benchmark/command.py sst-comp $SST_FILE $OUTPUT_DIR"
+    }
+}

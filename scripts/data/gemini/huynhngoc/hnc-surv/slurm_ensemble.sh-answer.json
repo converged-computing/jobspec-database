@@ -1,0 +1,27 @@
+{
+    "application": "Singularity",
+    "details": {
+        "resource_requirements": {
+            "cores": 1,
+            "nodes": 1,
+            "memory": "64G",
+            "partition": "smallmem"
+        },
+        "software": {
+            "singularity": "deoxys-survival.sif",
+            "python": "ensemble_outcome.py",
+            "ray": "installed in $TMPDIR/ray"
+        },
+        "environment_variables": {
+            "NUM_CPUS": 4,
+            "RAY_ROOT": "$TMPDIR/ray"
+        },
+        "script_features": {
+            "job_submission": "SLURM",
+            "data_copying": "conditional, from $HOME/datasets/headneck to $TMPDIR/$USER/hn_delin",
+            "gpu_activation": "nvidia-modprobe -u -c=0",
+            "post_processing": "python -u post_processing.py",
+            "testing": "python -u run_test.py"
+        }
+    }
+}

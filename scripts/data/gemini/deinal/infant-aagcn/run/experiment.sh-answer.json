@@ -1,0 +1,26 @@
+{
+    "application": "Slurm",
+    "details": {
+        "resource_requirements": {
+            "nodes": 1,
+            "tasks": 6,
+            "partition": "gpu",
+            "time": "08:00:00",
+            "cpus_per_task": 16,
+            "memory_per_cpu": "2G",
+            "gpu": "v100:1"
+        },
+        "modules": [
+            "pytorch/1.13"
+        ],
+        "environment": "env.sh",
+        "commands": [
+            "train.py --data-dir data/streams/combined --output-dir results/stgcn-xy --age-file metadata/combined.csv --learning-rate 0.01 --batch-size 32 --num-workers 16 --streams j --k-folds 10 --epochs 20 --xy-data",
+            "train.py --data-dir data/streams/combined --output-dir results/stgcn-physical --age-file metadata/combined.csv --learning-rate 0.01 --batch-size 32 --num-workers 16 --streams j --k-folds 10 --epochs 20 --physical-edges",
+            "train.py --data-dir data/streams/combined --output-dir results/stgcn --age-file metadata/combined.csv --learning-rate 0.01 --batch-size 32 --num-workers 16 --streams j --k-folds 10 --epochs 20",
+            "train.py --data-dir data/streams/combined --output-dir results/aagcn --age-file metadata/combined.csv --learning-rate 0.01 --batch-size 32 --num-workers 16 --streams j --k-folds 10 --epochs 20 --adaptive --attention",
+            "train.py --data-dir data/streams/combined --output-dir results/ms-aagcn --age-file metadata/combined.csv --learning-rate 0.01 --batch-size 32 --num-workers 16 --streams j,b,v,a --k-folds 10 --epochs 20 --adaptive --attention",
+            "train.py --data-dir data/streams/combined --output-dir results/ms-aagcn-fts --age-file metadata/combined.csv --learning-rate 0.01 --batch-size 32 --num-workers 16 --streams j,b,v,a --k-folds 10 --epochs 20 --adaptive --attention --concat-features"
+        ]
+    }
+}

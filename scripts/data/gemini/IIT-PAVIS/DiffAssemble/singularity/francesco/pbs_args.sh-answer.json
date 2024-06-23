@@ -1,0 +1,36 @@
+{
+    "application": "Singularity",
+    "details": {
+        "resource_requirements": {
+            "cores": 20,
+            "gpus": 4,
+            "walltime": "24:00:00"
+        },
+        "software_requirements": [
+            "cuda/11.6",
+            "Singularity",
+            "Python"
+        ],
+        "script_arguments": [
+            "$pyfile",
+            "$args"
+        ],
+        "environment_variables": [
+            "pyfile",
+            "args"
+        ],
+        "script_structure": {
+            "pbs_directives": [
+                "walltime=24:00:00",
+                "j oe",
+                "q gpu"
+            ],
+            "script_commands": [
+                "cd /work/fgiuliari/PuzzleDiffusion-GNN",
+                "module load cuda/11.6",
+                "echo \"$pyfile\"",
+                "singularity run --nv -B ./:/app singularity/build/diffPYG.sif bash /app/singularity/francesco/run_Script_args.sh $pyfile \"$args\""
+            ]
+        }
+    }
+}

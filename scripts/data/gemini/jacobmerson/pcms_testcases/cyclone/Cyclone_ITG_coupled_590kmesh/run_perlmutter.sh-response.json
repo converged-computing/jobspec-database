@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"SLURM\",\n  \"details\": {\n    \"resource_requirements\": {\n      \"account\": \"m499\",\n      \"partition\": \"regular\",\n      \"nodes\": 21,\n      \"tasks_per_node\": 4,\n      \"cores_per_task\": 32,\n      \"gpus_per_task\": 1,\n      \"walltime\": \"04:00:00\",\n      \"job_name\": \"coupled\",\n      \"mail_type\": \"BEGIN,END,FAIL\",\n      \"mail_user\": \"perlmutter@jacobmerson.com\"\n    },\n    \"software_requirements\": {\n      \"modules\": [\n        \"cmake/3.24.3\",\n        \"cray-fftw\"\n      ],\n      \"environment_variables\": {\n        \"SLURM_CPU_BIND\": \"cores\",\n        \"OMP_PLACES\": \"cores\",\n        \"OMP_PROC_BIND\": \"spread\",\n        \"OMP_NUM_THREADS\": \"16\",\n        \"PETSC_OPTIONS\": \"-use_gpu_aware_mpi 0\",\n        \"MPICH_ABORT_ON_ERROR\": \"1\",\n        \"n_mpi_ranks_per_node\": \"4\",\n        \"n_mpi_ranks\": \"${SLURM_JOB_NUM_NODES} * 4\",\n        \"coupler_bin_path\": \"/pscratch/sd/j/jmerson/coupler-build/pcms/test/xgc_n0_server\",\n        \"xgc_bin_path_totalf\": \"/pscratch/sd/j/jmerson/coupler-build/xgc-total-f/bin/xgc-es-cpp-gpu\",\n        \"xgc_bin_path_deltaf\": \"/pscratch/sd/j/jmerson/coupler-build/xgc-delta-f/bin/xgc-es-cpp-gpu\"\n      }\n    },\n    \"workflow\": {\n      \"steps\": [\n        {\n          \"name\": \"run_xgc_totalf\",\n          \"directory\": \"$ROOT_DIR/edge\",\n          \"command\": \"srun -N 16 -n 64 -c 32 --cpu-bind=cores --ntasks-per-node=4 --gpus-per-task=1 --gpu-bind=single:1 $xgc_bin_path_totalf >> ${SLURM_JOB_ID}.out 2>&1 &\"\n        },\n        {\n          \"name\": \"run_xgc_deltaf\",\n          \"directory\": \"$ROOT_DIR/core\",\n          \"command\": \"srun -N 4 -n 16 -c 32 --cpu-bind=cores --ntasks-per-node=4 --gpus-per-task=1 --gpu-bind=single:1 $xgc_bin_path_deltaf >> ${SLURM_JOB_ID}.out 2>&1 &\"\n        },\n        {\n          \"name\": \"run_coupler\",\n          \"directory\": \"$ROOT_DIR\",\n          \"command\": \"srun -N 1 -c 1 -n 4 --cpu-bind=cores --ntasks-per-node=4 --gpus-per-task=1 --gpu-bind=single:1 $coupler_bin_path 590kmesh.osh 590kmesh_4.cpn 8 >> ${SLURM_JOB_ID}.out 2>&1 &\"\n        }\n      ]\n    }\n  }\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 1014,
+        "candidates_token_count": 842,
+        "total_token_count": 1856,
+        "cached_content_token_count": 0
+    }
+}

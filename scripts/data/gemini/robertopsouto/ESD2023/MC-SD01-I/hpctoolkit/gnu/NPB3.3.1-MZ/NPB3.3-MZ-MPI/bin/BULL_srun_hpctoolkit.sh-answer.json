@@ -1,0 +1,32 @@
+{
+    "application": "SLURM",
+    "details": {
+        "resource_requirements": {
+            "nodes": 1,
+            "tasks": 1,
+            "cores_per_task": 1,
+            "partition": "cpu_dev",
+            "threads_per_core": 1,
+            "time_limit": "00:10:00",
+            "exclusive": true
+        },
+        "software_dependencies": {
+            "openmpi": "2.0.4.2",
+            "hpctoolkit": "5.3.2_4712",
+            "papi": "5.5.1.0",
+            "papi-devel": "5.5.1.0"
+        },
+        "environment_variables": {
+            "OMP_NUM_THREADS": "SLURM_CPUS_PER_TASK"
+        },
+        "commands": {
+            "executable_path": "./${bench}.${class}.$SLURM_NTASKS",
+            "profiling_tools": [
+                "hpcrun",
+                "hpcstruct",
+                "hpcprof"
+            ],
+            "output_directory": "profiling/hpctoolkit/NUMNODES-$SLURM_JOB_NUM_NODES/${bench}_${class}_MPI-${SLURM_NTASKS}_OMP-${SLURM_CPUS_PER_TASK}_JOBID-${SLURM_JOBID}"
+        }
+    }
+}

@@ -1,0 +1,36 @@
+{
+    "application": "Slurm",
+    "details": {
+        "environment": {
+            "conda_environment": "memit",
+            "python_path": "/home/${USER}/git/memitpp:${PYTHONPATH}",
+            "model": "models--EleutherAI--gpt-j-6B",
+            "model_name": "EleutherAI/gpt-j-6B",
+            "scratch_disk": "/disk/scratch",
+            "scratch_home": "${SCRATCH_DISK}/${USER}",
+            "huggingface_datasets_cache": "${SCRATCH_HOME}/memitpp/data/huggingface/datasets",
+            "huggingface_hub_cache": "${SCRATCH_HOME}/memitpp/data/huggingface/hub"
+        },
+        "resources": {
+            "nodes": 1,
+            "gres": "gpu:a6000:1",
+            "memory": "60000MB",
+            "cpus": 2,
+            "time": "12:00:00"
+        },
+        "data_transfer": {
+            "source": {
+                "data": "/home/${USER}/git/memitpp/data",
+                "hparams": "/home/${USER}/git/memitpp/hparams",
+                "huggingface_hub_cache": "/home/${USER}/.cache/huggingface/hub/${MODEL}"
+            },
+            "destination": {
+                "data": "${SCRATCH_HOME}/memitpp/data",
+                "hparams": "${SCRATCH_HOME}/memitpp/hparams",
+                "huggingface_hub_cache": "${SCRATCH_HOME}/memitpp/data/huggingface/hub/${MODEL}"
+            },
+            "method": "rsync",
+            "options": "--archive --update --compress --progress --verbose --log-file=/dev/stdout"
+        }
+    }
+}

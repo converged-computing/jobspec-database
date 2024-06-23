@@ -1,0 +1,26 @@
+{
+    "application": "SLURM",
+    "details": {
+        "partition": "mlperf",
+        "nodes": 1,
+        "wall_time": "12:00:00",
+        "job_name": "single_stage_detector",
+        "memory": "all available",
+        "email_type": "FAIL",
+        "tasks_per_node": 8,
+        "threads_per_core": 2,
+        "cores_per_socket": 20,
+        "benchmark": "single_stage_detector",
+        "benchmark_name": "SSD",
+        "container": "mlperf-nvidia:single_stage_detector",
+        "data_directory": "/raid/data/coco-2017",
+        "log_directory": "/raid/results/single_stage_detector",
+        "number_of_experiments": 5,
+        "system": "DGX1",
+        "docker_volumes": "-v /raid/data/coco-2017:/data:Z -v /raid/results/single_stage_detector:/results:Z",
+        "docker_execution": "env NV_GPU=0,1,2,3,4,5,6,7 podman run --rm --net=host --uts=host --ipc=host --ulimit stack=67108864 --ulimit memlock=-1 -e NVIDIA_VISIBLE_DEVICES=ALL --cap-drop=ALL --security-opt label=type:nvidia_container_t --security-opt seccomp=unconfined --name=cont_${SLURM_JOB_ID}",
+        "operating_system": "/etc/redhat-release",
+        "ssh": "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no $hostn",
+        "srun": "srun --mem=0 -N 1 -n 1 -w $hostn"
+    }
+}

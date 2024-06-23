@@ -1,0 +1,34 @@
+{
+    "application": "SLURM",
+    "details": {
+        "resource_requirements": {
+            "partition": "GPUQ",
+            "account": "ie-idi",
+            "memory": "192GB",
+            "nodes": 1,
+            "tasks_per_node": 4,
+            "cpus_per_task": 4,
+            "job_name": "UTD-I",
+            "time": "50:00:00",
+            "gres": "gpu:1"
+        },
+        "software_requirements": {
+            "modules": [
+                "cuDNN/8.2.1.32-CUDA-11.3.1",
+                "Anaconda3/2020.07",
+                "fosscuda/2020b",
+                "TensorFlow/2.6.0-foss-2021a-CUDA-11.3.1"
+            ],
+            "conda_environment": "sleap"
+        },
+        "commands": [
+            "nvidia-smi",
+            "nvidia-smi nvlink -s",
+            "nvidia-smi topo -m",
+            "sleap-track \"channel1.mp4\" -m \"models/230209_221559.centroid\" -m \"models/230209_221559.centered_instance\" --batch_size 1 --tracking.tracker \"simple\" --tracking.target_instance_count 7",
+            "sleap-track \"channel2.mp4\" -m \"models/230209_221559.centroid\" -m \"models/230209_221559.centered_instance\" --batch_size 1 --tracking.tracker \"simple\" --tracking.target_instance_count 14",
+            "sleap-track \"channel3.mp4\" -m \"models/230209_221559.centroid\" -m \"models/230209_221559.centered_instance\" --batch_size 1 --tracking.tracker \"simple\" --tracking.target_instance_count 19",
+            "sleap-track \"channel4.mp4\" -m \"models/230209_221559.centroid\" -m \"models/230209_221559.centered_instance\" --batch_size 1 --tracking.tracker \"simple\" --tracking.target_instance_count 28"
+        ]
+    }
+}

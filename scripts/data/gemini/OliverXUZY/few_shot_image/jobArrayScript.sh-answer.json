@@ -1,0 +1,38 @@
+{
+    "application": "SLURM",
+    "details": {
+        "resource_requirements": {
+            "nodes": 1,
+            "cpus_per_node": 1,
+            "tasks": 1,
+            "gpus": 2,
+            "cpus_per_task": 12,
+            "walltime": "256:00:00",
+            "memory": "40GB",
+            "partition": "lianglab"
+        },
+        "software_requirements": {
+            "python": "3.x",
+            "torch": "1.x",
+            "nvidia-smi": "450.x"
+        },
+        "monitoring": {
+            "tool": "nvidia-smi",
+            "interval": 60,
+            "log_file": "./log/gpu/gpu_usage_${SLURM_JOB_ID}.log"
+        },
+        "script_execution": {
+            "input_files": [
+                "input_path_list.txt",
+                "input_files_jobarray/input_maml_ft_configs.txt",
+                "input_files_jobarray/input_maml_ft_outpath.txt",
+                "input_files_jobarray/input_maml_test_configs.txt",
+                "input_files_jobarray/input_maml_test_loadpath.txt"
+            ],
+            "output_files": [
+                "./log/python_array_job_slurm_%A_%a.err",
+                "./log/python_array_job_slurm_%A_%a.out"
+            ]
+        }
+    }
+}

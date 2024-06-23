@@ -1,0 +1,33 @@
+{
+    "application": "BeeGenN",
+    "details": {
+        "environment": "PBS",
+        "resource_requirements": {
+            "nodes": 1,
+            "cpus": 2,
+            "mpi_processes": 10,
+            "memory": "128GB",
+            "queue": "common_gpuQ"
+        },
+        "software": {
+            "cuda": "11.1",
+            "singularity": "3.4.0",
+            "squashfs-tools": "installed from source",
+            "beegenn": "docker://giacthephantom/beegenn:sleep"
+        },
+        "execution": {
+            "working_directory": "$PBS_O_WORKDIR",
+            "command": "python3 -m beegenn.simulation /t_30_hundreth_synapses t30noinputhundrethsynapsespoissonclusterl"
+        },
+        "data_binding": [
+            {
+                "source": "$PBS_O_WORKDIR/genn-network-model/t_30_hundreth_synapses",
+                "destination": "/t_30_hundreth_synapses"
+            },
+            {
+                "source": "$PBS_O_WORKDIR/outputs",
+                "destination": "/home/genn"
+            }
+        ]
+    }
+}

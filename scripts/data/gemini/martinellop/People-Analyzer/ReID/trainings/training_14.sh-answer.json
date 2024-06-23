@@ -1,0 +1,52 @@
+{
+    "application": "SLURM",
+    "details": {
+        "software": [
+            "Python",
+            "Torch",
+            "conda",
+            "deep_trainer.py"
+        ],
+        "resources": [
+            "GPU",
+            "CPU",
+            "network",
+            "storage"
+        ],
+        "requirements": {
+            "SLURM": {
+                "job_name": "train14",
+                "output": "/homes/pmartinello/output_tr_14.txt",
+                "error": "/homes/pmartinello/error_tr_14.txt",
+                "gres": "gpu:1",
+                "nodes": 1,
+                "partition": "students-prod"
+            },
+            "conda": {
+                "environment": "/homes/pmartinello/.conda/envs/cvcs22_06"
+            },
+            "python": {
+                "module": "torch.distributed.launch"
+            },
+            "deep_trainer.py": {
+                "arguments": [
+                    "--dataset_path /work/cvcs_2022_group02/datasets/market-1501",
+                    "--dataset_type market1501",
+                    "--checkpoints_folder /work/cvcs_2022_group02/training_14/checkpoints",
+                    "--results_folder /work/cvcs_2022_group02/training_14/results",
+                    "--model resnet50",
+                    "--num_classes 751",
+                    "--force_descr_dim 512",
+                    "--max_epoch 50",
+                    "--triplet_loss_multiplier 10.0",
+                    "--center_loss_multiplier 0.0025",
+                    "--batch_size 16",
+                    "--queries_batch 50",
+                    "--checkpoint_every 1",
+                    "--workers 4",
+                    "--test_interval 2"
+                ]
+            }
+        }
+    }
+}

@@ -1,0 +1,36 @@
+{
+    "application": "Slurm",
+    "details": {
+        "nodes": 1,
+        "tasks": 1,
+        "cores": 64,
+        "threads_per_core": 1,
+        "partition": "amd",
+        "memory": "200G",
+        "time": "3000",
+        "output_file": "%x-%j.out",
+        "modules": "PrgEnv/gcc13-openmpi-python",
+        "environment_variables": {
+            "PYTHONPATH": "$PYTHONPATH:~/pitts/build_gcc_amd/src/:~/pitts/examples/",
+            "PYTHONUNBUFFERED": "1",
+            "OMP_STACKSIZE": "100M",
+            "LD_PRELOAD": "/scratch/spack-23.2/opt/spack/linux-ubuntu20.04-x86_64_v3/gcc-9.4.0/intel-oneapi-mkl-2023.2.0-sjzhwtp2v6vh5nrppzeijqna3l6cn3ww/mkl/2023.2.0/lib/intel64/libmkl_rt.so:/scratch/spack-23.2/opt/spack/linux-ubuntu20.04-x86_64_v3/gcc-9.4.0/intel-oneapi-mkl-2023.2.0-sjzhwtp2v6vh5nrppzeijqna3l6cn3ww/lib/intel64/libmkl_intel_thread.so:/scratch/spack-23.2/opt/spack/linux-ubuntu20.04-x86_64_v3/gcc-9.4.0/intel-oneapi-mkl-2023.2.0-sjzhwtp2v6vh5nrppzeijqna3l6cn3ww/lib/intel64/libmkl_core.so:$LD_PRELOAD"
+        },
+        "commands": [
+            "srun taskset -c 0-127 likwid-pin -c 0-63 python ttpy_amen.py -n 50 -d 10 --rhs_random_rank  5 --preconditioner=TT-rank1",
+            "srun taskset -c 0-127 likwid-pin -c 0-63 python ttpy_amen.py -n 50 -d 10 --rhs_random_rank 10 --preconditioner=TT-rank1",
+            "srun taskset -c 0-127 likwid-pin -c 0-63 python ttpy_amen.py -n 50 -d 10 --rhs_random_rank 15 --preconditioner=TT-rank1",
+            "srun taskset -c 0-127 likwid-pin -c 0-63 python ttpy_amen.py -n 50 -d 10 --rhs_random_rank 20 --preconditioner=TT-rank1",
+            "srun taskset -c 0-127 likwid-pin -c 0-63 python ttpy_amen.py -n 50 -d 10 --rhs_random_rank 25 --preconditioner=TT-rank1",
+            "srun taskset -c 0-127 likwid-pin -c 0-63 python ttpy_amen.py -n 50 -d 10 --rhs_random_rank 30 --preconditioner=TT-rank1",
+            "srun taskset -c 0-127 likwid-pin -c 0-63 python ttpy_amen.py -n 50 -d 10 --rhs_random_rank 35 --preconditioner=TT-rank1",
+            "srun taskset -c 0-127 likwid-pin -c 0-63 python ttpy_amen.py -n 50 -d 10 --rhs_random_rank 40 --preconditioner=TT-rank1",
+            "srun taskset -c 0-127 likwid-pin -c 0-63 python ttpy_amen.py -n 50 -d 10 --rhs_random_rank 45 --preconditioner=TT-rank1",
+            "srun taskset -c 0-127 likwid-pin -c 0-63 python ttpy_amen.py -n 50 -d 10 --rhs_random_rank 50 --preconditioner=TT-rank1"
+        ],
+        "software": {
+            "python": "ttpy_amen.py",
+            "likwid": "likwid-pin"
+        }
+    }
+}

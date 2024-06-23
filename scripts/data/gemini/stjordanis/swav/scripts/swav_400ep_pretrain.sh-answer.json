@@ -1,0 +1,56 @@
+{
+    "application": "SLURM",
+    "details": {
+        "nodes": 8,
+        "gpus": 64,
+        "tasks_per_node": 8,
+        "cpus_per_task": 8,
+        "job_name": "swav_400ep_pretrain",
+        "time": "25:00:00",
+        "memory": "450G",
+        "python_script": "main_swav.py",
+        "data_path": "/path/to/imagenet",
+        "experiment_path": "./experiments/swav_400ep_pretrain",
+        "architecture": "resnet50",
+        "training_parameters": {
+            "number_of_crops": [
+                2,
+                6
+            ],
+            "crop_sizes": [
+                224,
+                96
+            ],
+            "minimum_crop_scales": [
+                0.14,
+                0.05
+            ],
+            "maximum_crop_scales": [
+                1.0,
+                0.14
+            ],
+            "crops_for_assignment": [
+                0,
+                1
+            ],
+            "temperature": 0.1,
+            "epsilon": 0.05,
+            "sinkhorn_iterations": 3,
+            "feature_dimension": 128,
+            "number_of_prototypes": 3000,
+            "queue_length": 0,
+            "epochs": 400,
+            "batch_size": 64,
+            "base_learning_rate": 4.8,
+            "final_learning_rate": 0.0048,
+            "freeze_prototypes_iterations": 313,
+            "weight_decay": 1e-06,
+            "warmup_epochs": 10,
+            "start_warmup": 0.3,
+            "distributed_url": "tcp://{master_node}:40000",
+            "use_fp16": true,
+            "sync_batch_normalization": "apex",
+            "dump_path": "./experiments/swav_400ep_pretrain"
+        }
+    }
+}

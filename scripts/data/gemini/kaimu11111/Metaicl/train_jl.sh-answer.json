@@ -1,0 +1,41 @@
+{
+    "application": "SLURM",
+    "details": {
+        "runtime": "12 hours",
+        "nodes": 1,
+        "memory": "64GB",
+        "output_file": "log/%j.out",
+        "error_file": "log/%j.out",
+        "job_name": "metaicl_train",
+        "requeue": true,
+        "gpu": "1x A100",
+        "partition": "a100-4",
+        "conda_environment": "metaicl",
+        "python_script": "train.py",
+        "task_names": [
+            "threeSimTask",
+            "threeDiffTask",
+            "oneSimTask",
+            "oneDiffTask"
+        ],
+        "parameters": {
+            "k": 16384,
+            "test_k": 16,
+            "seed": 100,
+            "train_seed": 1,
+            "use_demonstrations": true,
+            "method": "channel",
+            "n_gpu": 1,
+            "batch_size": 2,
+            "lr": 1e-05,
+            "optimization": "8bit-adam",
+            "out_dir": "checkpoints/channel-metaicl/$task",
+            "num_training_steps": 5000,
+            "num_samples": [
+                1038,
+                719
+            ],
+            "fp16": false
+        }
+    }
+}

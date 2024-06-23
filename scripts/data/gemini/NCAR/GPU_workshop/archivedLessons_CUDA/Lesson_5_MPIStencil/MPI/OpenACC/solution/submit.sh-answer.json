@@ -1,0 +1,32 @@
+{
+    "application": "MPI",
+    "software": [
+        "ncarenv/1.2",
+        "nvhpc/20.11",
+        "cuda/11.0.3",
+        "openmpi/4.0.5x"
+    ],
+    "resources": {
+        "nodes": 1,
+        "tasks_per_node": 8,
+        "gpus": "v100:4",
+        "account": "NTDD0002",
+        "partition": "dav",
+        "reservation": "GPU_workshop_2",
+        "time": "00:15:00"
+    },
+    "environment_variables": {
+        "LD_LIBRARY_PATH": "${NCAR_ROOT_CUDA}/lib64:${LD_LIBRARY_PATH}",
+        "NV_ACC_TIME": "1",
+        "UCX_TLS": "rc,sm,cuda_copy,cuda_ipc",
+        "OMPI_MCA_pml": "ucx",
+        "OMPI_MCA_btl": "self,vader,tcp,smcuda",
+        "UCX_MEMTYPE_CACHE": "n",
+        "UCX_RNDV_SCHEME": "get_zcopy"
+    },
+    "executable": "./mpi_acc_stencil.exe",
+    "arguments": [
+        "64",
+        "4"
+    ]
+}

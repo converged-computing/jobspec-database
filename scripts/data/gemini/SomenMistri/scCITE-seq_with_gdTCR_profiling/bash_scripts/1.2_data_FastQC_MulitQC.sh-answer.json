@@ -1,0 +1,34 @@
+{
+    "application": "SLURM",
+    "details": {
+        "resource_requirements": {
+            "partition": "bigmem",
+            "nodes": 1,
+            "tasks": 12,
+            "memory": "192G",
+            "time": "5:00:00"
+        },
+        "software": {
+            "conda": "miniconda3",
+            "environment": "scRNA-seq",
+            "tools": [
+                "fastqc",
+                "multiqc"
+            ]
+        },
+        "data": {
+            "input": "/path/to/original/data/*.fastq.gz",
+            "output": {
+                "fastqc_reports": "fastqc_reports_raw_data"
+            }
+        },
+        "workflow": {
+            "steps": [
+                "symlink raw data",
+                "run fastqc on raw data",
+                "move fastqc reports",
+                "run multiqc on fastqc reports"
+            ]
+        }
+    }
+}

@@ -1,0 +1,43 @@
+{
+    "application": "samtools",
+    "software": [
+        "samtools v1.9+"
+    ],
+    "resources": {
+        "nodes": 1,
+        "cores": 8,
+        "time": "05:30:00",
+        "memory": "36G"
+    },
+    "modules": [
+        "SAMtools/1.17-GCC-11.2.0"
+    ],
+    "dependencies": [
+        "samtools"
+    ],
+    "input": [
+        "bam file",
+        "reference genome (optional)",
+        "input file listing bam files (optional)"
+    ],
+    "output": [
+        "cram file",
+        "cram index file"
+    ],
+    "options": [
+        "-b <arg>: REQUIRED: Path to your bam file.",
+        "-g <arg>: OPTIONAL: Path to the original reference that your BAM file was mapped to.",
+        "-o <arg>: OPTIONAL: Path to the output default is the folder that contains your bam file.",
+        "--delete: OPTIONAL: Delete the original BAM if the CRAM file has been made successfully.",
+        "-h | --help: Prints the message you are reading.",
+        "-i <arg>: REQUIRED: A text file listing the bam files to convert.",
+        "-g <arg>: OPTIONAL: Path to the original reference that your BAM file was mapped to. The script will try to locate the right genome based on the @SQ lines in the bam header if you don't set this. If you set this on an array job then all BAM files MUST be mapped to the same reference.",
+        "-o <arg>: OPTIONAL: Path to the output default is the folder that contains your bam file.",
+        "--delete: OPTIONAL: Delete the original BAM if the CRAM file has been made successfully.",
+        "-h | --help: Prints the message you are reading."
+    ],
+    "notes": [
+        "This script converts BAM files to CRAM files using samtools. It allows for both single file and array job conversion.",
+        "The script automatically detects the genome build based on the @SQ lines in the bam header if the -g option is not specified."
+    ]
+}

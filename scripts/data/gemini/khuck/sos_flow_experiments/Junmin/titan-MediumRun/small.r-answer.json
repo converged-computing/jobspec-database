@@ -1,0 +1,42 @@
+{
+    "application": "xmain",
+    "software": [
+        "PrgEnv-gnu",
+        "cudatoolkit",
+        "papi",
+        "cmake",
+        "flexpath/1.12",
+        "adios/1.12.0",
+        "python/2.7.9",
+        "sosd",
+        "reader2"
+    ],
+    "resource_requirements": {
+        "nodes": 33,
+        "walltime": "00:30:00",
+        "queue": "batch",
+        "account": "CSC103",
+        "shared_filesystem": true
+    },
+    "other_details": {
+        "parallel_execution": true,
+        "mpi_ranks": [
+            {
+                "application": "reader2",
+                "ranks_per_node": 16,
+                "total_ranks": 64
+            },
+            {
+                "application": "xmain",
+                "ranks_per_node": 16,
+                "total_ranks": 256
+            }
+        ],
+        "sos_configuration": {
+            "listener_port": 22500,
+            "evpath_meetup_directory": "${cwd}",
+            "tau_sos_enabled": true,
+            "tau_verbose": false
+        }
+    }
+}

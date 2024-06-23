@@ -1,0 +1,30 @@
+{
+    "application": "Slurm",
+    "other_software": [
+        "pdsh",
+        "ior",
+        "mdtest",
+        "md-real-io",
+        "mpirun",
+        "pfind",
+        "lfs"
+    ],
+    "resource_requirements": {
+        "lustre": {
+            "mgs": "10.0.11.224@o2ib10",
+            "mds": "es400nv-vm[1-4],es400xmd-vm[1-4]",
+            "oss": "es400nv-vm[1-4],es400xmd-vm[1-4]",
+            "client": "ec[01-40]"
+        },
+        "filesystem": {
+            "name": "/ai400",
+            "mount_point": "/ai400_0"
+        },
+        "nodes": 10,
+        "tasks_per_node": 16,
+        "mpi": {
+            "version": "openmpi/4.0.3rc4",
+            "arguments": "--oversubscribe --bind-to core:overload-allowed --map-by core --allow-run-as-root -np 1280 -hostfile ./hostfile -npernode 32"
+        }
+    }
+}

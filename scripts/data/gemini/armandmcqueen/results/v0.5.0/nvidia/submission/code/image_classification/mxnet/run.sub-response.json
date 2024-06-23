@@ -1,0 +1,62 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"Slurm\",\n  \"details\": {\n    \"partition\": \"mlperf\",\n    \"nodes\": 1,\n    \"wall_time\": \"12:00:00\",\n    \"job_name\": \"image_classification\",\n    \"memory\": \"all available\",\n    \"email_type\": \"FAIL\",\n    \"tasks_per_node\": 8,\n    \"threads_per_core\": 2,\n    \"cores_per_socket\": 20,\n    \"overcommit\": true,\n    \"benchmark\": \"image_classification\",\n    \"benchmark_name\": \"resnet\",\n    \"container\": \"mlperf-nvidia:image_classification\",\n    \"data_directory\": \"/raid/data/imagenet/train-val-recordio-passthrough\",\n    \"log_directory\": \"/raid/results/image_classification\",\n    \"number_of_runs\": 1,\n    \"system\": \"DGX1\",\n    \"docker_volumes\": \"-v /raid/data/imagenet/train-val-recordio-passthrough:/data -v /raid/results/image_classification:/results\",\n    \"container_name\": \"mpi_${SLURM_JOB_ID}\",\n    \"docker_exec\": \"nvidia-docker run --rm --net=host --uts=host --ipc=host --ulimit stack=67108864 --ulimit memlock=-1 --security-opt seccomp=unconfined  $IBDEVICES\",\n    \"mpi_command\": \"mpirun --allow-run-as-root --tag-output --bind-to none -x SLURM_NTASKS_PER_NODE=$SLURM_NTASKS_PER_NODE -x GPUS=$GPUS -x BATCHSIZE=$BATCHSIZE -x KVSTORE=$KVSTORE -x LR=$LR -x WARMUP_EPOCHS=$WARMUP_EPOCHS -x EVAL_OFFSET=$EVAL_OFFSET -x DGXSYSTEM=$DGXSYSTEM ./run_and_time.sh\",\n    \"mpi_support_files\": {\n      \"keys\": {\n        \"directory\": \"/dev/shm/mpi/${SLURM_JOB_ID}\",\n        \"sshkey_rsa\": \"${HOME}/.ssh/sbatch/${SLURM_JOB_ID}/sshkey.rsa\"\n      },\n      \"mca_params.conf\": \"/dev/shm/mpi/${SLURM_JOB_ID}/mca_params.conf\",\n      \"sshentry.sh\": \"/dev/shm/mpi/${SLURM_JOB_ID}/sshentry.sh\",\n      \"mpi_hosts\": \"/dev/shm/mpi/${SLURM_JOB_ID}/mpi_hosts\",\n      \"ssh\": \"/dev/shm/mpi/${SLURM_JOB_ID}/ssh\"\n    },\n    \"docker_pull\": \"1\",\n    \"run_sleep_command\": \"\",\n    \"master_ip\": \"`getent hosts \\`hostname\\` | cut -d ' ' -f1`\",\n    \"ssh_command\": \"ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no $hostn\",\n    \"srun_command\": \"srun -N 1 -n 1 -w $hostn\",\n    \"master_host\": \"${hosts[0]}\",\n    \"docker_launch_command\": \"srun  -n $SLURM_JOB_NUM_NODES --ntasks-per-node=1 $DOCKEREXEC --name $CONTNAME $VOLS $VARS $CONT bash -c 'sleep infinity'\"\n  }\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 2,
+                    "blocked": false
+                }
+            ],
+            "citation_metadata": {
+                "citation_sources": [
+                    {
+                        "start_index": 831,
+                        "end_index": 975,
+                        "uri": "https://github.com/NVIDIA/DeepLearningExamples",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 999,
+                        "end_index": 1279,
+                        "uri": "https://github.com/mlcommons/training_results_v0.5",
+                        "license_": ""
+                    }
+                ]
+            },
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 3129,
+        "candidates_token_count": 826,
+        "total_token_count": 3955,
+        "cached_content_token_count": 0
+    }
+}

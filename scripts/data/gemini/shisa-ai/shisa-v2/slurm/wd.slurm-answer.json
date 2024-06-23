@@ -1,0 +1,52 @@
+{
+    "application": "Axolotl",
+    "details": {
+        "framework": "PyTorch",
+        "accelerator": "GPU",
+        "resource_requirements": {
+            "nodes": 2,
+            "tasks_per_node": 1,
+            "gpus_per_node": 8,
+            "slurm_partition": "dev"
+        },
+        "libraries": [
+            "accelerate",
+            "transformers",
+            "wandb"
+        ],
+        "configuration_file": "wd.yaml",
+        "logging": {
+            "output_file": "/fsx/user02/logs/%x-%j.out",
+            "error_file": "/fsx/user02/logs/%x-%j.err",
+            "main_log_file": "/fsx/user02/logs/main_log.txt"
+        },
+        "environment_variables": [
+            "AXOLOTL_CFG",
+            "HF_HUB_ENABLE_HF_TRANSFER",
+            "ACCELERATE_LOG_LEVEL",
+            "TRANSFORMERS_VERBOSITY",
+            "NCCL_ASYNC_ERROR_HANDLING",
+            "WANDB_ENTITY",
+            "WANDB_PROJECT",
+            "GPUS_PER_NODE",
+            "MASTER_ADDR",
+            "MASTER_PORT",
+            "NNODES",
+            "NODE_RANK",
+            "WORLD_SIZE",
+            "CMD",
+            "LAUNCHER",
+            "SRUN_ARGS"
+        ],
+        "command": "-m axolotl.cli.train wd.yaml",
+        "slurm_options": [
+            "--job-name=wd",
+            "--partition=dev",
+            "--nodes=2",
+            "--ntasks-per-node=1",
+            "--exclusive",
+            "--output=/fsx/user02/logs/%x-%j.out",
+            "--error=/fsx/user02/logs/%x-%j.err"
+        ]
+    }
+}

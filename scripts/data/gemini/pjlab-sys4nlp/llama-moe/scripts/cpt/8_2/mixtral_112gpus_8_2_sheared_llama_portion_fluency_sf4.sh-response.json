@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"PyTorch\",\n  \"details\": {\n    \"framework\": \"PyTorch\",\n    \"library\": \"Deepspeed\",\n    \"model\": \"Mixtral\",\n    \"distribution\": \"Distributed Data Parallel (DDP)\",\n    \"accelerator\": \"GPU\",\n    \"resources\": {\n      \"nodes\": 14,\n      \"gpus_per_node\": 8,\n      \"cpus_per_task\": 26,\n      \"memory\": \"0 GB\",\n      \"partition\": \"MoE_T\",\n      \"slurm\": \"sbatch\"\n    },\n    \"environment\": {\n      \"conda\": \"smoe\",\n      \"openmp\": \"OMP_NUM_THREADS=32\",\n      \"log_level\": \"INFO\",\n      \"data_cache\": \"/mnt/petrelfs/share_data/zhutong/runs/mixtral_random_split_112gpus_8_2/resources/cache\",\n      \"pretrained_model\": \"/mnt/hwfile/share_data/zhutong/models/Mixtral-8x7B-v0.1-Random-8Select2\",\n      \"tokenizer_path\": \"/mnt/hwfile/share_data/zhutong/models/Mixtral-8x7B-v0.1-Random-8Select2\",\n      \"dataset_dir\": \"/mnt/petrelfs/share_data/zhutong/data/slimpajama_fluency_mistral\",\n      \"validation_dir\": \"/mnt/petrelfs/share_data/zhutong/data/mixtral_val_set_tokenized\",\n      \"deepspeed_config_file\": \"conf/deepspeed/bf16_zero1_default.json\"\n    },\n    \"hyperparameters\": {\n      \"model_type\": \"mixtral\",\n      \"learning_rate\": \"2e-4\",\n      \"final_lr_portion\": 0.1,\n      \"per_device_train_batch_size\": 8,\n      \"per_device_eval_batch_size\": 8,\n      \"gradient_accumulation_steps\": 4,\n      \"block_size\": 4096,\n      \"num_tokens\": \"200*10^9\",\n      \"warmup_tokens\": \"15*10^8\",\n      \"eval_tokens\": \"2.5*10^9\",\n      \"seed\": 1227,\n      \"num_selects\": 2,\n      \"scale_factor\": 4.0,\n      \"max_steps\": \"max_steps=$(echo \\\"${num_tokens} / ($block_size * $per_device_train_batch_size * $gradient_accumulation_steps * $num_nodes * $num_gpu_per_node)\\\" | bc)\",\n      \"max_train_samples\": \"max_train_samples=$(echo \\\"${num_tokens} / ($block_size)\\\" | bc)\",\n      \"global_bs\": \"global_bs=$(echo \\\"$per_device_train_batch_size * $gradient_accumulation_steps * $num_nodes * $num_gpu_per_node\\\" | bc)\",\n      \"tokens_per_batch\": \"tokens_per_batch=$(echo \\\"$global_bs * $block_size\\\" | bc)\",\n      \"warmup_steps\": 100,\n      \"eval_steps\": 340,\n      \"output_dir\": \"$base_dir/outputs/$SLURM_JOB_NAME-$SLURM_JOB_ID\",\n      \"ddp_timeout\": 3600,\n      \"ddp_find_unused_parameters\": False,\n      \"torch_dtype\": \"bfloat16\",\n      \"gradient_checkpointing\": True,\n      \"logging_first_step\": True,\n      \"logging_strategy\": \"steps\",\n      \"logging_steps\": 5,\n      \"log_level\": \"info\",\n      \"log_level_replica\": \"warning\",\n      \"log_on_each_node\": False,\n      \"report_to\": \"none\",\n      \"gate_type\": \"TopKBalancedNoisyGate\",\n      \"calculator_type\": \"UniversalCalculator\"\n    }\n  }\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 2131,
+        "candidates_token_count": 991,
+        "total_token_count": 3122,
+        "cached_content_token_count": 0
+    }
+}

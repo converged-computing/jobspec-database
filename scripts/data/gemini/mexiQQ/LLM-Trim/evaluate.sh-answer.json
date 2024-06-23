@@ -1,0 +1,38 @@
+{
+    "application": "Slurm",
+    "details": {
+        "job_name": "llm_evaluation",
+        "output_file": "job_logs/eval_logs_%j.out",
+        "error_file": "job_logs/eval_logs_%j.err",
+        "partition": "a5000ada",
+        "nodelist": "c32",
+        "exclusive": true,
+        "environment": {
+            "conda_environment": "llm_pruner",
+            "python_path": "."
+        },
+        "software": {
+            "evaluation_harness": "lm-evaluation-harness/main.py",
+            "model": "hf-causal-experimental",
+            "model_args": {
+                "checkpoint": "/mnt/beegfs/jli265/output/llm_pruner/$ckpt",
+                "config_pretrained": "baffo32/decapoda-research-llama-7B-hf"
+            },
+            "tasks": [
+                "openbookqa",
+                "arc_easy",
+                "winogrande",
+                "hellaswag",
+                "arc_challenge",
+                "piqa",
+                "boolq"
+            ],
+            "device": "cuda:0",
+            "batch_size": 4
+        },
+        "resources": {
+            "gpu": "A100",
+            "memory": "40GB"
+        }
+    }
+}

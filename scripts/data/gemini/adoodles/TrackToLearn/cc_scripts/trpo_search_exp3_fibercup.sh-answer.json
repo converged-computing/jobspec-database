@@ -1,0 +1,55 @@
+{
+    "application": "TractoRL",
+    "details": {
+        "environment": {
+            "python_version": "3.8",
+            "libraries": [
+                "httpproxy"
+            ],
+            "environment_variables": [
+                "DISPLAY=:0",
+                "HOME=~",
+                "WORK=$SLURM_TMPDIR",
+                "DATASET_FOLDER=${HOME}/projects/$SALLOC_ACCOUNT/$USER/tracktolearn",
+                "WORK_DATASET_FOLDER=${WORK}/tracktolearn",
+                "VALIDATION_SUBJECT_ID=fibercup",
+                "SUBJECT_ID=fibercup",
+                "EXPERIMENTS_FOLDER=${DATASET_FOLDER}/experiments",
+                "WORK_EXPERIMENTS_FOLDER=${WORK_DATASET_FOLDER}/experiments",
+                "SCORING_DATA=${WORK_DATASET_FOLDER}/datasets/${VALIDATION_SUBJECT_ID}/scoring_data",
+                "dataset_file=$WORK_DATASET_FOLDER/datasets/${SUBJECT_ID}/${SUBJECT_ID}.hdf5",
+                "validation_dataset_file=$WORK_DATASET_FOLDER/datasets/${VALIDATION_SUBJECT_ID}/${VALIDATION_SUBJECT_ID}.hdf5",
+                "reference_file=$WORK_DATASET_FOLDER/datasets/${VALIDATION_SUBJECT_ID}/masks/${VALIDATION_SUBJECT_ID}_wm.nii.gz",
+                "max_ep=1000",
+                "log_interval=50",
+                "prob=0.0",
+                "npv=10",
+                "theta=30",
+                "EXPERIMENT=TRPO_FiberCupSearchExp3",
+                "ID=$(date +\"%F-%H_%M_%S\")",
+                "rng_seed=1111",
+                "DEST_FOLDER=\"$WORK_EXPERIMENTS_FOLDER\"/\"$EXPERIMENT\"/\"$ID\"/\"$rng_seed\""
+            ]
+        },
+        "resources": {
+            "compute": {
+                "cores": 12,
+                "gpu": 1
+            },
+            "memory": "10GB",
+            "time": "06-23:00",
+            "storage": {
+                "working_directory": "/home/$USER/projects/$SALLOC_ACCOUNT/$USER/TractoRL"
+            }
+        },
+        "dependencies": {
+            "software": [
+                "SLURM",
+                "python",
+                "TrackToLearn",
+                "Tractometer",
+                "Comet"
+            ]
+        }
+    }
+}

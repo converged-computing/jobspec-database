@@ -1,0 +1,46 @@
+{
+    "application": "megatron-lm",
+    "software": [
+        "python",
+        "torch",
+        "conda",
+        "gcc",
+        "deepspeed",
+        "mpiexec"
+    ],
+    "resource_requirements": {
+        "compute_nodes": 32,
+        "walltime": "6:00:00",
+        "file_systems": [
+            "home",
+            "eagle"
+        ],
+        "queue": "prod",
+        "account": "FoundEpidem",
+        "modules": [
+            "conda/2023-10-04",
+            "gcc/11.2.0"
+        ],
+        "conda_environment": "/lus/eagle/projects/candle_aesp/azton/conda-env/megatron-ds",
+        "cuda_toolkit": "11.8.0",
+        "environment_variables": {
+            "LD_LIBRARY_PATH": "/lus/eagle/projects/candle_aesp/azton/conda-env/megatron-ds/lib:$LD_LIBRARY_PATH",
+            "HTTP_PROXY": "http://proxy.alcf.anl.gov:3128",
+            "HTTPS_PROXY": "http://proxy.alcf.anl.gov:3130",
+            "http_proxy": "http://proxy.alcf.anl.gov:3128",
+            "https_proxy": "http://proxy.alcf.anl.gov:3128",
+            "MASTER_ADDR": "$(host $master_node | head -1 | awk '{print $4}')",
+            "MASTER_PORT": "23450",
+            "CUDA_VISIBLE_DEVICES": "0,1,2,3",
+            "CUDA_DEVICE_MAX_CONNECTIONS": "1",
+            "NNODES": "`wc -l < $PBS_NODEFILE`",
+            "NRANKS_PER_NODE": "4",
+            "NTOTRANKS": "`expr $NNODES \\* $NRANKS_PER_NODE`"
+        },
+        "data_paths": [
+            "/lus/eagle/projects/RL-fold/azton/genomes/NTT/megatron-bins/ncbi_fixed_6mer_splitds_",
+            "/lus/eagle/projects/candle_aesp/azton/GenomeLM/genomelm/tokenizer_files/6-mer-tokenizer.json"
+        ],
+        "deepspeed_config": "./ds_config_zero0.json"
+    }
+}

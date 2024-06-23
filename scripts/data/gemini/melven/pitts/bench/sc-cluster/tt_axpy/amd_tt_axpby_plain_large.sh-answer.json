@@ -1,0 +1,53 @@
+{
+    "application": "SLURM",
+    "details": {
+        "resource_requirements": {
+            "nodes": 1,
+            "tasks": 1,
+            "cores": 64,
+            "partition": "amd",
+            "threads_per_core": 1,
+            "memory": "200G",
+            "time": "3000",
+            "output_file_pattern": "%x-%j.out"
+        },
+        "software_requirements": {
+            "modules": "PrgEnv/gcc12-openmpi-python",
+            "ulimit_stack_size": "unlimited",
+            "OMP_STACKSIZE": "100M"
+        },
+        "executable": "axpby_bench",
+        "arguments": {
+            "iterations": 50,
+            "vector_size": 10,
+            "repeat_count": 50,
+            "repetition_ranges": [
+                {
+                    "start": 100,
+                    "end": 299,
+                    "increment": 10
+                },
+                {
+                    "start": 300,
+                    "end": 399,
+                    "increment": 5
+                },
+                {
+                    "start": 400,
+                    "end": 499,
+                    "increment": 2
+                },
+                {
+                    "start": 500,
+                    "end": 700,
+                    "increment": 1
+                }
+            ]
+        },
+        "tools": [
+            "srun",
+            "taskset",
+            "likwid-pin"
+        ]
+    }
+}

@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"MPI\",\n  \"details\": {\n    \"job_name\": \"mpi_job_test\",\n    \"cpus_per_task\": 1,\n    \"nodes\": 2,\n    \"ntasks_per_node\": 128,\n    \"output\": \"mpi_test_%j.log\",\n    \"environment\": {\n      \"SRUN_CPUS_PER_TASK\": \"${SLURM_CPUS_PER_TASK}\",\n      \"OSU_VERSION\": \"7.1-1\",\n      \"OSU_ARCHIVE\": \"osu-micro-benchmarks-7.1-1.tar.gz\",\n      \"OSU_URL\": \"https://mvapich.cse.ohio-state.edu/download/mvapich/osu-micro-benchmarks-7.1-1.tar.gz\"\n    },\n    \"dependencies\": {\n      \"openmpi\": \"spack load /xgcbqft\",\n      \"osu_micro_benchmarks\": \"https://mvapich.cse.ohio-state.edu/download/mvapich/osu-micro-benchmarks-7.1-1.tar.gz\"\n    },\n    \"commands\": [\n      \"wget https://mvapich.cse.ohio-state.edu/download/mvapich/osu-micro-benchmarks-7.1-1.tar.gz\",\n      \"tar -xvf ${OSU_ARCHIVE}\",\n      \"spack load /xgcbqft\",\n      \"cd ${OSU_ARCHIVE//.tar.gz/}\",\n      \"./configure CC=$(which mpicc) CXX=$(which mpicxx)\",\n      \"make\",\n      \"cd ..\",\n      \"srun  ${OSU_ARCHIVE//.tar.gz/}/c/mpi/collective/blocking/osu_alltoall\"\n    ],\n    \"resources\": {\n      \"slurm\": true,\n      \"srun\": true\n    }\n  }\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 2,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 428,
+        "candidates_token_count": 451,
+        "total_token_count": 879,
+        "cached_content_token_count": 0
+    }
+}

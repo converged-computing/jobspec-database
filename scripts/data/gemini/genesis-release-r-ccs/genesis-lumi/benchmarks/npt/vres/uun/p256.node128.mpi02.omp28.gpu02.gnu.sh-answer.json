@@ -1,0 +1,40 @@
+{
+    "application": "SLURM",
+    "details": {
+        "job_name": "p256_node128",
+        "account": "Project_462000123",
+        "time": "02:00:00",
+        "partition": "standard-g",
+        "memory": "0",
+        "nodes": 128,
+        "tasks_per_node": 2,
+        "cpus_per_task": 28,
+        "gpus_per_node": 2,
+        "exclusive": true,
+        "output": "%x-%j.out",
+        "modules": [
+            "PrgEnv-gnu",
+            "craype-x86-trento",
+            "craype-accel-amd-gfx90a",
+            "CrayEnv",
+            "rocm/5.6.1",
+            "cray-libsci"
+        ],
+        "environment_variables": {
+            "PMI_NO_PREINITIALIZE": "y",
+            "OMP_NUM_THREADS": "$SLURM_CPUS_PER_TASK",
+            "OMP_PROC_BIND": "true",
+            "OMP_PLACES": "cores",
+            "SLURM_CPU_BIND": "mask_cpu:0xfefe0000fefe0000,0x0000fefe0000fefe"
+        },
+        "executable": "$(pwd)/../../../../src/spdyn/spdyn",
+        "input_file": "p256.inp",
+        "output_files": [
+            "p256.node128.mpi02.omp28.gpu02.gnu.id000.out",
+            "p256.node128.mpi02.omp28.gpu02.gnu.id001.out",
+            "p256.node128.mpi02.omp28.gpu02.gnu.id002.out",
+            "p256.node128.mpi02.omp28.gpu02.gnu.id003.out",
+            "p256.node128.mpi02.omp28.gpu02.gnu.id004.out"
+        ]
+    }
+}

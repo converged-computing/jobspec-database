@@ -1,0 +1,57 @@
+{
+    "application": "SLURM",
+    "details": {
+        "resource_requirements": {
+            "gres": "gpu:p100:4",
+            "ntasks": 2,
+            "ntasks_per_node": 1,
+            "nodes": 2,
+            "partition": "gpu",
+            "time": "00:15:00",
+            "constraint": "exclusive",
+            "mail_user": "hochan@utexas.edu",
+            "mail_type": [
+                "fail",
+                "end"
+            ],
+            "exclude_nodes": [
+                "comet-33-15",
+                "comet-33-11"
+            ]
+        },
+        "software_requirements": {
+            "nvidia_smi": "installed",
+            "bash_profile": "sourced",
+            "modules": "loaded",
+            "mpirun": "installed",
+            "osu_latency": "installed",
+            "osu_latency_sdh_hds": "installed",
+            "mvapich2": "installed with GDR support"
+        },
+        "environment_variables": {
+            "HFILE": "generated using generate_pbs_nodefile",
+            "OMP_NUM_THREADS": 1,
+            "MV2_USE_CUDA": 1,
+            "MV2_USE_GDR": 1,
+            "MPI_THREAD_MULTIPLE": 1,
+            "MV2_CPU_MAPPING": 0,
+            "MV2_ENABLE_AFFINITY": 0,
+            "LD_PRELOAD": "/home/hlee89/bin/opt/mvapich2/gdr/2.3.4/mcast/no-openacc/cuda10.1/mofed4.7/mpirun/gnu4.8.5/lib64/libmpi.so",
+            "MV2_DEBUG_SHOW_BACKTRACE": 1,
+            "MV2_SHOW_ENV_INFO": 1
+        },
+        "commands": {
+            "nvidia-smi": "used to display information about the NVIDIA GPU",
+            "module list": "used to display loaded modules",
+            "mpirun --version": "used to display the version of the MPI implementation",
+            "cat $HFILE | sort -u > hosts.txt.$SLURM_JOBID": "used to create a host file for MPI",
+            "mpirun_rsh -export-all -hostfile hosts.txt.$SLURM_JOBID -np 2 ./osu_latency -m 0:40000000 -d cuda D D": "used to run the osu_latency benchmark for device to device latency",
+            "mpirun_rsh -export-all -hostfile hosts.txt.$SLURM_JOBID -np 2 ./osu_latency -m 0:40000000 -d cuda -g D D": "used to run the osu_latency benchmark for synchronized device to device latency",
+            "mpirun_rsh -export-all -hostfile hosts.txt.$SLURM_JOBID -np 2 ./osu_latency -m 0:40000000 H H": "used to run the osu_latency benchmark for host to host latency",
+            "mpirun_rsh -export-all -hostfile hosts.txt.$SLURM_JOBID -np 2 ./osu_latency -m 0:40000000 -c H H": "used to run the osu_latency benchmark for synchronized host to host latency",
+            "mpirun_rsh -export-all -hostfile hosts.txt.$SLURM_JOBID -np 2 ./osu_latency -m 0:40000000 -g H H": "used to run the osu_latency benchmark for synchronized host to host latency",
+            "mpirun_rsh -export-all -hostfile hosts.txt.$SLURM_JOBID -np 2 ./osu_latency_sdh_hds -m 0:40000000 -g H H": "used to run the osu_latency benchmark for synchronized host to host latency with a specific configuration",
+            "rm hosts.txt.$SLURM_JOBID": "used to remove the host file after the benchmark runs"
+        }
+    }
+}

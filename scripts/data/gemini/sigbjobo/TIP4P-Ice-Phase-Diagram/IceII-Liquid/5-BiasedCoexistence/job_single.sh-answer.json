@@ -1,0 +1,43 @@
+{
+    "application": "LAMMPS",
+    "software": [
+        "FFTW",
+        "OpenMPI",
+        "PLUMED"
+    ],
+    "resources": [
+        "SLURM",
+        "OMP",
+        "MPI"
+    ],
+    "details": {
+        "SLURM": [
+            "nodes: 1",
+            "ntasks-per-node: 128",
+            "cpus-per-task: 1",
+            "time: 25:00:00",
+            "partition: compute",
+            "job-name: COEX",
+            "account: SLC103"
+        ],
+        "OMP": {
+            "num_threads": "SLURM_CPUS_PER_TASK"
+        },
+        "PLUMED": {
+            "num_threads": "SLURM_CPUS_PER_TASK"
+        },
+        "LAMMPS": {
+            "executable": "/home/sbore/software/mbx_lammps_plumed/lammps/src/lmp_mpi_mbx",
+            "sf": "omp",
+            "partition": "4x32",
+            "input_files": [
+                "Restart.lmp",
+                "start.lmp"
+            ]
+        },
+        "other": {
+            "cycles": 2,
+            "threads_per_partition": 2
+        }
+    }
+}

@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"MATLAB\",\n  \"software\": [\n    \"MATLAB 2020b\"\n  ],\n  \"resources\": {\n    \"nodes\": 1,\n    \"cpus_per_task\": 1,\n    \"memory\": \"10GB\",\n    \"time\": \"48:00:00\",\n    \"job_name\": \"ibs_dynamic\",\n    \"output_file\": \"ibs2_d3_p_%j.out\",\n    \"scratch_directory\": \"$SCRATCH/${PROJECT_FOLDER}/results\"\n  },\n  \"environment_variables\": {\n    \"PROJECT_FOLDER\": \"IBS-2-development\",\n    \"MATLABPATH\": \"$HOME/${PROJECT_FOLDER}/matlab\"\n  },\n  \"scripts\": {\n    \"matlab_script\": \"recover_theta('psycho','ibs_dynamic_10', alpha,job_id)\"\n  }\n}\n```\n\n**Explanation:**\n\n* **Application:** The script uses `matlab` command, indicating that it runs a MATLAB script.\n* **Software:**  It specifies `module load matlab/2020b`, meaning it requires MATLAB version 2020b. \n* **Resources:** The `#SBATCH` directives in the script define the resource requirements for the job.\n  * `--nodes=1`: Uses one compute node.\n  * `--array=1-120`: Submits an array job with 120 tasks.\n  * `--cpus-per-task=1`: Each task requires one CPU.\n  * `--time=48:00:00`: The job can run for a maximum of 48 hours.\n  * `--mem=10GB`: Each task needs 10 GB of memory.\n  * `--job-name=ibs_dynamic`: Sets the job name to \"ibs_dynamic\".\n  * `--mail-type=END`: Sends an email notification when the job finishes.\n  * `--mail-user=xl1005@nyu.edu`: The email address to send notifications to.\n  * `--output=ibs2_d3_p_%j.out`: Defines the output file name (using job ID). \n* **Environment Variables:** The script defines two environment variables:\n    * `PROJECT_FOLDER`: Specifies the project directory.\n    * `MATLABPATH`: Sets the MATLAB path to a directory within the project folder.\n* **Scripts:** The script contains a MATLAB script that calls the `recover_theta` function with specified parameters:\n  * `'psycho'`: Model type.\n  * `'ibs_dynamic_10'`: Method used.\n  * `alpha`: Alpha value (dynamically set in the script).\n  * `job_id`: The current job ID. \n\nThe JSON format provides a structured way to organize the information from the script, making it easier to understand the application, software, and resource requirements. \n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 545,
+        "candidates_token_count": 659,
+        "total_token_count": 1204,
+        "cached_content_token_count": 0
+    }
+}

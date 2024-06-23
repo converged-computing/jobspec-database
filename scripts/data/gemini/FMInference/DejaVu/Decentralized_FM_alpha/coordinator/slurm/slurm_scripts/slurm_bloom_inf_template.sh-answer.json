@@ -1,0 +1,40 @@
+{
+    "application": "inference",
+    "details": {
+        "framework": "PyTorch",
+        "model": "Bloom",
+        "model_path": "/sailhome/biyuan/fm/models/bloom-new",
+        "resource_requirements": {
+            "partition": "sphinx",
+            "gpu": "1",
+            "time": "3:59:00",
+            "tasks": "1",
+            "cpus_per_task": "4",
+            "memory_per_cpu": "8G",
+            "output_file": "/afs/cs.stanford.edu/u/biyuan/exe_log/bloom_%j.log"
+        },
+        "environment": "conda",
+        "environment_name": "base",
+        "inference_parameters": {
+            "fp16": "true",
+            "budget": "20400",
+            "batch_size": "24",
+            "input_seq_length": "512",
+            "generate_seq_length": "32",
+            "micro_batch_size": "1",
+            "num_layers": "9",
+            "max_layers": "70",
+            "infer_data": "{{infer_data}}"
+        },
+        "distributed_training": {
+            "mode": "pipe_sync_sample_mask_token_pipe",
+            "pipeline_group_size": "8",
+            "world_size": "8",
+            "machine_size": "8",
+            "n_gpu_per_machine": "1",
+            "coordinator_server_ip": "10.79.12.70",
+            "unique_port": "$port"
+        },
+        "communication_library": "NCCL"
+    }
+}

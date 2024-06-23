@@ -1,0 +1,52 @@
+{
+    "application": "Singularity",
+    "details": {
+        "software": {
+            "singularity_image": "/app1/common/singularity-img/3.0.0/pytorch_1.4_cuda10.0-cudnn7-devel-ubuntu18.04-py36.simg",
+            "python": "3.6",
+            "pytorch": "1.4",
+            "cuda": "10.0",
+            "cudnn": "7",
+            "wandb": "offline"
+        },
+        "resources": {
+            "compute": {
+                "nodes": 1,
+                "cpus": 10,
+                "gpus": 1,
+                "mpi_processes": 1
+            },
+            "memory": "40GB",
+            "walltime": "24:00:00"
+        },
+        "job_management": {
+            "system": "PBS",
+            "queue": "volta_gpu",
+            "job_name": "bf_gen6_s3",
+            "project": "volta_pilot"
+        },
+        "script_execution": {
+            "working_directory": "$PBS_O_WORKDIR",
+            "output_logs": {
+                "stdout": "logs/stdout.$PBS_JOBID",
+                "stderr": "logs/stderr.$PBS_JOBID"
+            },
+            "python_script": "runcodes/run_em_generalized.py",
+            "script_arguments": {
+                "split": 3,
+                "select_f": "data/breakfast_random6frame_selection.pkl",
+                "init_epoch": 30,
+                "sample_rate": 1,
+                "use_mse": true,
+                "use_conf": true,
+                "cudad": 0,
+                "base_dir": "/hpctmp/e0367435/video_segmentation/breakfast/",
+                "lr": 0.0005,
+                "epochs": 90,
+                "batch_size": 8,
+                "train_batch_size": 20,
+                "postprocess": true
+            }
+        }
+    }
+}

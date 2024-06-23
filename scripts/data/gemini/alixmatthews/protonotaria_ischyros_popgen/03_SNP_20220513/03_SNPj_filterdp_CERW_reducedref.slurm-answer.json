@@ -1,0 +1,42 @@
+{
+    "application": "bcftools",
+    "details": {
+        "environment": {
+            "conda": "anaconda-3.9",
+            "environment_name": "BCFTools",
+            "bcftools_version": "1.15.1"
+        },
+        "modules": [
+            "python/anaconda-3.9",
+            "source /share/apps/bin/conda-3.9.sh"
+        ],
+        "slurm": {
+            "job_name": "03_SNPj_filterdp_CERW_reducedref",
+            "partition": "comp01",
+            "output": "03_SNPj_filterdp_CERW_reducedref_%j.txt",
+            "error": "03_SNPj_filterdp_CERW_reducedref_%j.err",
+            "mail_type": "ALL",
+            "mail_user": "alix.matthews@smail.astate.edu",
+            "nodes": 1,
+            "tasks_per_node": 32,
+            "time": "01:00:00"
+        },
+        "dependencies": {
+            "reference": {
+                "directory": "/scrfs/storage/amatthews/20210816_projects/20210816_snp/02_IndexRef/ref_full",
+                "file": "scaffolds_reduced_contigs_kept.fasta",
+                "type": "reduced"
+            },
+            "snp_directory": "/scrfs/storage/amatthews/20210816_projects/20210816_snp/03_SNP_20220513/RESULTS_ref_reduced_CERW/vcf",
+            "vcf_file": "${SPP}_ALL_renamed_q30_minac1_maf05.vcf.gz"
+        },
+        "filtering": {
+            "depth_thresholds": [
+                5,
+                10,
+                15,
+                20
+            ]
+        }
+    }
+}

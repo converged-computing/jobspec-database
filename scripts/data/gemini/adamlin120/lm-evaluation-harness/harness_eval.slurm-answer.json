@@ -1,0 +1,23 @@
+{
+    "application": "SLURM",
+    "details": {
+        "framework": "SLURM",
+        "launcher": "accelerate",
+        "conda_env": "stas-xxx",
+        "python_script": "lm_eval",
+        "python_script_args": "--model hf --model_args pretrained=$model,parallelize=True,trust_remote_code=True --tasks $tasks --num_fewshot 0 --batch_size 8 --output_path evals --write_out --log_samples --verbosity DEBUG --wandb_args project=lm-eval-harness-integration,job_type=eval,name=$model --hf_hub_log_args hub_results_org=yentinglin,hub_repo_name=lm-eval-results,push_results_to_hub=True,push_samples_to_hub=True,public_repo=False --seed 42 --trust_remote_code",
+        "resource_requirements": {
+            "nodes": 1,
+            "tasks_per_node": 1,
+            "gpus_per_node": 8,
+            "tmp_dir": "/scratch",
+            "nccl_debug": "INFO",
+            "cuda_launch_blocking": 1,
+            "nccl_async_error_handling": 1
+        },
+        "logging": {
+            "log_path": "harness_eval_main_log.txt",
+            "stdout_redirect": "tee -a $LOG_PATH"
+        }
+    }
+}

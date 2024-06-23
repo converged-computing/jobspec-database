@@ -1,0 +1,21 @@
+{
+    "application": "Singularity",
+    "details": {
+        "slurm": {
+            "nodes": 1,
+            "cpus_per_task": 8,
+            "ntasks_per_node": 4,
+            "mem": "64GB",
+            "gres": "gpu:4",
+            "output_file": "%x-%N-%j.out",
+            "error_file": "%x-%N-%j.err"
+        },
+        "module": "rocm/5.2.3",
+        "singularity_image": "/shared/apps/bin/grid.sif",
+        "mpirun": {
+            "processes": 4,
+            "command": "/benchmark/gpu_bind.sh Benchmark_ITT --accelerator-threads 8 --mpi 1.1.1.4"
+        },
+        "temporary_directory": "/tmp/$USER/tmp-$$"
+    }
+}

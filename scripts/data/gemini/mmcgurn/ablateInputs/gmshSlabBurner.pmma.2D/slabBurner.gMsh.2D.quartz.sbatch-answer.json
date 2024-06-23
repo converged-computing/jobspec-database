@@ -1,0 +1,42 @@
+{
+    "application": "Slurm",
+    "details": {
+        "scheduler": "Slurm",
+        "job_name": "6G-gMsh-2D",
+        "runtime": "24:00:00",
+        "partition": "pbatch",
+        "mail_type": "ALL",
+        "account": "sunyb",
+        "mail_user": "mtmcgurn@buffalo.edu",
+        "modules": [
+            "gcc",
+            "mkl/2019.0",
+            "valgrind/3.16.1",
+            "gcc/10.2.1",
+            "cmake/3.21.1"
+        ],
+        "environment_variables": [
+            "PETSC_DIR=/p/lustre2/mcgurn4/petsc",
+            "PETSC_ARCH=arch-ablate-opt-gcc",
+            "PKG_CONFIG_PATH=${PETSC_DIR}/${PETSC_ARCH}/lib/pkgconfig:$PKG_CONFIG_PATH",
+            "HDF5_ROOT=${PETSC_DIR}/${PETSC_ARCH}",
+            "PATH=${PETSC_DIR}/${PETSC_ARCH}/bin:$PATH",
+            "DM_REFINE=0",
+            "TITLE=lowG-gMsh-dm$DM_REFINE-pmma-$SLURM_JOBID",
+            "FILE=/p/lustre2/ubchrest/ablateInputs/gmshSlabBurner.pmma.2D/slabBurner2D.lowG.3_8_23.yaml"
+        ],
+        "executable": "/p/lustre2/mcgurn4/ablateOpt/ablate",
+        "arguments": [
+            "--input",
+            "$FILE",
+            "-yaml::environment::title",
+            "$TITLE",
+            "-yaml::timestepper::domain::options::dm_refine",
+            "$DM_REFINE"
+        ],
+        "parallelism": {
+            "nodes": 24,
+            "tasks_per_node": 36
+        }
+    }
+}

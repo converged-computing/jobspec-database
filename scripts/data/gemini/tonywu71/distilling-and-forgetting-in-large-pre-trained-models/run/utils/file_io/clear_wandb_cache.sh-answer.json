@@ -1,0 +1,26 @@
+{
+    "application": "SLURM",
+    "details": {
+        "job_name": "clear_wandb_cache",
+        "project": "MLMI-tw581-SL2-CPU",
+        "nodes": 1,
+        "wallclock_time": "01:00:00",
+        "mail_type": "NONE",
+        "partition": "skylake",
+        "environment": {
+            "LOGDIR": "logs/",
+            "DIRPATH_EXP": "logs/clear_wandb_cache/",
+            "LOG": "logs/clear_wandb_cache/$SLURM_JOB_ID.log",
+            "ERR": "logs/clear_wandb_cache/$SLURM_JOB_ID.err"
+        },
+        "commands": [
+            "mkdir -p logs/clear_wandb_cache/",
+            "echo -e \"JobID: $SLURM_JOB_ID\\n=====\" > logs/clear_wandb_cache/$SLURM_JOB_ID.log",
+            "echo \"Time: `date`\" >> logs/clear_wandb_cache/$SLURM_JOB_ID.log",
+            "echo \"Running on master node: `hostname`\" >> logs/clear_wandb_cache/$SLURM_JOB_ID.log",
+            "echo \"python `which python`\": >> logs/clear_wandb_cache/$SLURM_JOB_ID.log",
+            "rm -rf /home/tw581/.local/share/wandb/artifacts",
+            "echo \"Time: `date`\" >> logs/clear_wandb_cache/$SLURM_JOB_ID.log"
+        ]
+    }
+}

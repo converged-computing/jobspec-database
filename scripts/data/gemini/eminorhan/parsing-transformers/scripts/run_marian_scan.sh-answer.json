@@ -1,0 +1,31 @@
+{
+    "application": "SLURM",
+    "details": {
+        "account": "cds",
+        "gpu": "rtx8000",
+        "gpu_count": 1,
+        "cpus_per_task": 4,
+        "memory": "20GB",
+        "time": "48:00:00",
+        "job_name": "marian_scan",
+        "output_file": "marian_scan_%A_%a.out",
+        "array_size": 10,
+        "modules": [
+            "cuda/11.1.74"
+        ],
+        "script": "run_translation.py",
+        "script_path": "/scratch/eo41/parsing-transformers/run_translation.py",
+        "model": "Helsinki-NLP/opus-mt-$SRC_LANG-$TGT_LANG",
+        "benchmark": "SCAN",
+        "source_language": "$SRC_LANG",
+        "target_language": "$TGT_LANG",
+        "train_file": "data_scan/$SPLIT/train.json",
+        "test_file": "data_scan/$SPLIT/test.json",
+        "output_directory": "out_marian_${SRC_LANG}_${TGT_LANG}_${SPLIT}_${EPOCHS}_$SLURM_ARRAY_TASK_ID",
+        "batch_size": 32,
+        "max_target_length": 512,
+        "max_source_length": 512,
+        "epochs": 13,
+        "seed": "$SLURM_ARRAY_TASK_ID"
+    }
+}

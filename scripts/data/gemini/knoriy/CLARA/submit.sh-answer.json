@@ -1,0 +1,46 @@
+{
+    "application": "SLURM",
+    "details": {
+        "resource_requirements": {
+            "partition": "g40x",
+            "job_name": "clsp100M",
+            "nodes": 1,
+            "ntasks_per_node": 8,
+            "gpus_per_node": 8,
+            "cpus_per_task": 12,
+            "account": "laion",
+            "output_file": "logs/outs/%x_%j.out",
+            "signals": [
+                {
+                    "signal": "SIGUSR1",
+                    "time": 90
+                },
+                {
+                    "signal": "SIGTERM",
+                    "time": 90
+                }
+            ]
+        },
+        "software_requirements": {
+            "modules": [
+                "openmpi"
+            ],
+            "python_environment": "clara"
+        },
+        "script_execution": {
+            "commands": [
+                "srun --exclusive --ntasks=$SLURM_NNODES --nodes=$SLURM_NNODES echo $(hostname) >> ./logs/outs/hostnames.txt",
+                "/admin/home-knoriy/miniconda3/envs/clara/bin/python ./scripts/download_from_s3.py --data $DATA_CONF_PATH --backend awscli",
+                "/admin/home-knoriy/miniconda3/envs/clara/bin/python ./clara/train.py fit --config $BASE_CONF_PATH --trainer $TRAINER_BASE_CONF_PATH --trainer $TRAINER_CONF_PATH --model $MODEL_CONF_PATH --data $DATA_CONF_PATH --trainer.num_nodes $SLURM_JOB_NUM_NODES --data.num_workers 6 --data.batch_size 16 --trainer.logger.name $LOGGER_NAME --trainer.max_epochs 120"
+            ],
+            "cleanup_function": "srun --exclusive --ntasks=$SLURM_NNODES --nodes=$SLURM_NNODES echo \"function your_cleanup_function called at $(date)\" && srun --exclusive --ntasks=$SLURM_NNODES --nodes=$SLURM_NNODES sh ./scripts/clean_tmp_files.sh"
+        },
+        "configuration_files": {
+            "model": "./config/config/model/pl_clara_100M.yaml",
+            "base": "./config/config/base.yaml",
+            "trainer_base": "./config/config/trainer/base.yaml",
+            "trainer": "./config/config/trainer/slurm.yaml",
+            "data": "./config/config/data/base.yaml"
+        }
+    }
+}

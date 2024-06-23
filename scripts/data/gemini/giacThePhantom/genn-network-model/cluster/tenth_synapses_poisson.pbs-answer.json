@@ -1,0 +1,31 @@
+{
+    "application": "beegenn",
+    "details": {
+        "resource_requirements": {
+            "nodes": 1,
+            "cpus": 2,
+            "mpiprocs": 10,
+            "memory": "64GB",
+            "queue": "common_gpuQ"
+        },
+        "software_dependencies": {
+            "cuda": "11.1",
+            "singularity": "3.4.0",
+            "squashfs-tools": "installed from source",
+            "python": "3"
+        },
+        "image": "docker://giacthephantom/beegenn:sleep",
+        "command": "python3 -m beegenn.simulation /t_30_tenth_synapses t30noinputtenthsynapsespoissoncluster",
+        "bind_mounts": [
+            {
+                "source": "$PBS_O_WORKDIR/genn-network-model/t_30_tenth_synapses",
+                "destination": "/t_30_tenth_synapses"
+            },
+            {
+                "source": "$PBS_O_WORKDIR/outputs",
+                "destination": "/home/genn"
+            }
+        ],
+        "gpu_access": true
+    }
+}

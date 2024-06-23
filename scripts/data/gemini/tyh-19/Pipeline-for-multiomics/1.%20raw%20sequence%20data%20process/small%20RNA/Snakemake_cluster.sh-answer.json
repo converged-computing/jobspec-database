@@ -1,0 +1,31 @@
+{
+    "application": "Snakemake",
+    "details": {
+        "resource_requirements": {
+            "partition": "CN_BIOT",
+            "nodes": 1,
+            "tasks": 1,
+            "job_name": "snakemake_cluster",
+            "output": "%j.out",
+            "error": "%j.err"
+        },
+        "cluster_config": "Snakemake_cluster.json",
+        "cluster_command": "sbatch -p {cluster.partition} -N {cluster.nodes} -n {cluster.ntasks} --job-name {cluster.jobname} --partition {cluster.partition} --output {cluster.output} --error {cluster.error}",
+        "snakefiles": [
+            "small_pipeline",
+            "QIAseq_pipeline"
+        ],
+        "execution_parameters": {
+            "rerun_incomplete": true,
+            "nolock": true,
+            "jobs": 80,
+            "latency_wait": 60
+        },
+        "logging": {
+            "directory": "cluster_log",
+            "output_prefix": "0.",
+            "output_extension": ".log",
+            "error_extension": ".err"
+        }
+    }
+}

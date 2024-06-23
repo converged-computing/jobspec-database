@@ -1,0 +1,30 @@
+{
+    "application": "SLURM",
+    "details": {
+        "job_name": "exampleJob",
+        "account": "project_465000861",
+        "time": "3-00:00:00",
+        "nodes": 1,
+        "ntasks": 1,
+        "cpus_per_task": 8,
+        "gpus_per_node": 1,
+        "mem_per_gpu": "64G",
+        "partition": "small-g",
+        "modules": [
+            "LUMI/23.09",
+            "EasyBuild-user",
+            "git-lfs/3.3.0",
+            "partition/L"
+        ],
+        "environment_variables": {
+            "EBU_USER_PREFIX": "/project/project_465000861/EasyBuild",
+            "PYTORCH_HIP_ALLOC_CONF": "max_split_size_mb:500"
+        },
+        "singularity_image": "/scratch/project_465000861/pytorch_rocm5.4.1_ubuntu20.04_py3.7_pytorch_1.12.1.sif",
+        "command": "source ~/research_env/bin/activate; huggingface-cli login --token '<TOKEN>'; python mainDANSUM_lumi.py",
+        "bind_mounts": [
+            "/scratch/project_465000861:/scratch/project_465000861",
+            "/projappl/project_465000861/EasyBuild/SW/LUMI-23.09/L/git-lfs/3.3.0/bin/git-lfs:/users/schleder/research_env/bin/git-lfs"
+        ]
+    }
+}

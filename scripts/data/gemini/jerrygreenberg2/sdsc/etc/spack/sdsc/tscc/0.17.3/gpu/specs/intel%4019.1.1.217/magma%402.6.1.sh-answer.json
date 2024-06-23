@@ -1,0 +1,25 @@
+{
+    "application": "Spack",
+    "details": {
+        "resource_requirements": {
+            "nodes": 1,
+            "cpus_per_task": 10,
+            "memory": "93G",
+            "gpus": 1,
+            "time": "00:30:00"
+        },
+        "scheduler": "slurm",
+        "scheduler_module": "slurm",
+        "spack_version": "0.17.3",
+        "spack_instance_name": "gpu",
+        "spack_instance_dir": "${HOME}/cm/shared/apps/spack/${SPACK_VERSION}/${SPACK_INSTANCE_NAME}",
+        "spack_package": "magma@2.6.1",
+        "spack_compiler": "intel@19.1.1.217",
+        "spack_variants": "+cuda cuda_arch=70,80 +fortran ~ipo ~rocm +shared",
+        "spack_dependencies": "^cuda@11.2.2/$(spack find --format '{hash:7}' cuda@11.2.2 % ${SPACK_COMPILER}) ^intel-mkl@2020.4.304/$(spack find --format '{hash:7}' intel-mkl@2020.4.304 % ${SPACK_COMPILER} ~ilp64 threads=none)",
+        "spack_spec": "${SPACK_PACKAGE} % ${SPACK_COMPILER} ${SPACK_VARIANTS} ${SPACK_DEPENDENCIES}",
+        "intel_license_file": "40000@elprado.sdsc.edu:40200@elprado.sdsc.edu",
+        "system_name": "expanse"
+    },
+    "additional_details": "This script utilizes the Spack package manager to install the 'magma' package with specific version, compiler, variants, and dependencies. It runs on the 'expanse' system and utilizes SLURM for resource allocation. The script configures Spack environment and installs the 'magma' package using the specified parameters, finally launching another script 'gsl@2.7.sh' after a 60-second delay."
+}

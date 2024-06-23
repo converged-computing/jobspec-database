@@ -1,0 +1,23 @@
+{
+    "application": "ParaView",
+    "details": {
+        "software": "ParaView-servers 3.12.0",
+        "resource_requirements": {
+            "nodes": {
+                "width": 64,
+                "tasks_per_node": 32
+            },
+            "walltime": "00:05:00",
+            "account": "e277"
+        },
+        "environment_variables": {
+            "PBS_O_WORKDIR": "The working directory of the job",
+            "WORK": "The user's work directory, derived from their home directory",
+            "XDG_CONFIG_HOME": "The directory for ParaView configuration files",
+            "PARAVIEW_SERVER_DIR": "The directory containing the ParaView server binaries",
+            "MPPWIDTH": "The number of nodes allocated to the job",
+            "MPPNPPN": "The number of tasks per node"
+        },
+        "execution_command": "aprun -n ${MPPWIDTH} -N ${MPPNPPN} ${PARAVIEW_SERVER_DIR}/bin/pvbatch --use-offscreen-rendering pv.py"
+    }
+}

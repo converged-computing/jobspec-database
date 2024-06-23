@@ -1,0 +1,34 @@
+{
+    "application": "WRF",
+    "details": {
+        "container_image": "ncar-derecho-wrf-nvhpc.sif",
+        "container_exe": "/container/wrf-4.5.2/wrf.exe",
+        "modules": [
+            "ncarenv/23.09",
+            "apptainer",
+            "nvhpc",
+            "cray-mpich"
+        ],
+        "resource_requirements": {
+            "queue": "main",
+            "walltime": "02:00:00",
+            "nodes": 2,
+            "cpus_per_node": 128,
+            "mpi_procs": 4,
+            "environment_variables": {
+                "CRAY_MPICH_DIR": "path to Cray MPICH",
+                "LD_LIBRARY_PATH": "${CRAY_MPICH_DIR}/lib-abi-mpich:/opt/cray/pe/lib64:${LD_LIBRARY_PATH}:/container/nvidia/hpc_sdk/Linux_x86_64/23.9/compilers/lib:/host/usr/lib64",
+                "MPICH_SMP_SINGLE_COPY_MODE": "NONE"
+            }
+        },
+        "additional_scripts": {
+            "wrf_stats_summary.sh": "Script for summarizing WRF statistics"
+        },
+        "bindings": [
+            "/glade",
+            "/run",
+            "/opt/cray",
+            "/usr/lib64:/host/usr/lib64"
+        ]
+    }
+}

@@ -1,0 +1,29 @@
+{
+    "application": "SLURM",
+    "details": {
+        "resources": {
+            "gpu": 0,
+            "cpus": 1,
+            "memory": "6G",
+            "time": "14-00:00:00"
+        },
+        "script": "graph_level_generation.py",
+        "language": "python3.7",
+        "arguments": {
+            "in_path": "raw_data/scannet/scans",
+            "out_path": "data/scannet_qem_val_rooms/",
+            "level_params": "0.04 30 30 30",
+            "train": true,
+            "val": true,
+            "qem": true,
+            "dataset": "scannet",
+            "number": "$((SLURM_ARRAY_TASK_ID))"
+        },
+        "environment": {
+            "working_directory": "../../.."
+        },
+        "output": "output/qem_rooms_val_%A_%a.txt",
+        "job_name": "qem_rooms_val",
+        "array_size": 312
+    }
+}

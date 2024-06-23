@@ -1,0 +1,36 @@
+{
+    "application": "Slurm",
+    "details": {
+        "partition": "small-g",
+        "account": "project_462000139",
+        "job_name": "face_extract",
+        "output": "logs/slurm-%A_%a.out",
+        "gpus_per_node": 1,
+        "ntasks": 1,
+        "cpus_per_task": 4,
+        "mem_per_cpu": 8000,
+        "time": "03:00:00",
+        "array": "0-99",
+        "software": [
+            "tensorflow"
+        ],
+        "environment_variables": [
+            "OMP_NUM_THREADS",
+            "MPICH_GPU_SUPPORT_ENABLED",
+            "PYTHONUSERBASE"
+        ],
+        "python_script": "./facerec/extract.py",
+        "python_script_arguments": [
+            "--n-shards",
+            "$SLURM_ARRAY_TASK_COUNT",
+            "--shard-i",
+            "$SLURM_ARRAY_TASK_ID",
+            "--save-every",
+            "$SAVE_EVERY",
+            "--out-path",
+            "$OUT_PATH",
+            "$NO_IMAGES",
+            "$1"
+        ]
+    }
+}

@@ -1,0 +1,31 @@
+{
+    "application": "Singularity",
+    "details": {
+        "container_image": "docker://oggm/oggm:20181123",
+        "container_command": "bash -s",
+        "container_script": "set -e\n  # Setup a fake home dir inside of our workdir, so we don't clutter the actual shared homedir with potentially incompatible stuff.\n  export HOME=\"$WORKDIR/fake_home\"\n  mkdir \"\\$HOME\"\n  # Create a venv that _does_ use system-site-packages, since everything is already installed on the container.\n  # We cannot work on the container itself, as the base system is immutable.\n  python3 -m venv --system-site-packages \"$WORKDIR/oggm_env\"\n  source \"$WORKDIR/oggm_env/bin/activate\"\n  # Make sure latest pip is installed\n  pip install --upgrade pip setuptools\n  # Install a fixed OGGM version\n  pip install --upgrade \"git+https://github.com/OGGM/oggm.git@a74695fcaba0fc50580109bb578ff64df51b3f62\"\n  # pip install \"git+https://github.com/fmaussion/oggm.git@dev\"\n  # Finally, the run\n  python3 ./run.py",
+        "python_version": "3",
+        "python_requirements": [
+            "pip",
+            "setuptools",
+            "oggm==a74695fcaba0fc50580109bb578ff64df51b3f62"
+        ],
+        "resource_requirements": {
+            "slurm_job_name": "gmd_paper_dyn",
+            "slurm_ntasks": "1",
+            "slurm_exclusive": "true",
+            "slurm_time": "48:00:00",
+            "slurm_mail_user": "fabien.maussion@uibk.ac.at",
+            "slurm_mail_type": "ALL",
+            "workdir": "/work/$SLURM_JOB_USER/$SLURM_JOB_ID/rgi_reg_$RGI_REG",
+            "oggm_download_cache": "/home/data/download",
+            "oggm_download_cache_ro": "1",
+            "oggm_extract_dir": "/work/$SLURM_JOB_USER/$SLURM_JOB_ID/oggm_tmp"
+        },
+        "output_directory": "/home/users/fmaussion/gmd_run_output/rgi_reg_$RGI_REG/",
+        "output_files": [
+            "run_output*.nc",
+            "task_log*.csv"
+        ]
+    }
+}

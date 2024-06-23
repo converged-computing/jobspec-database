@@ -1,0 +1,44 @@
+{
+    "application": "SLURM",
+    "details": {
+        "partition": "alpha",
+        "walltime": "100:59:59",
+        "nodes": 1,
+        "ntasks": 1,
+        "cpus_per_task": 8,
+        "account": "p_ml_il",
+        "gres": "gpu:1",
+        "mail_user": "julius.gonsior@tu-dresden.de",
+        "mem": "120GB",
+        "output": "/beegfs/ws/1/s5968580-btw/logs/out-%A_%a.txt",
+        "error": "/beegfs/ws/1/s5968580-btw/logs/error-%A_%a.txt",
+        "array": "0-99",
+        "modules": [
+            "release/23.04",
+            "GCC/11.3.0",
+            "OpenMPI/4.1.4",
+            "PyTorch/1.12.1-CUDA-11.7.0"
+        ],
+        "environment": "btw-v3",
+        "python_packages": [
+            "dill",
+            "scikit-learn",
+            "tqdm",
+            "matplotlib",
+            "seaborn",
+            "torchtext",
+            "transformers",
+            "datasets"
+        ],
+        "script": "/beegfs/ws/1/s5968580-btw/active-learning-softmax-uncertainty-clipping/run_experiment.py",
+        "arguments": [
+            "--taurus",
+            "--workload",
+            "dev",
+            "--n_array_jobs",
+            "100",
+            "--array_job_id",
+            "$SLURM_ARRAY_TASK_ID"
+        ]
+    }
+}

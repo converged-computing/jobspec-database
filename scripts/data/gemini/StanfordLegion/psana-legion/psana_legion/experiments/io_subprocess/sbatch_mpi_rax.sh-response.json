@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"SLURM\",\n  \"details\": {\n    \"job_name\": \"psana_legion\",\n    \"dependency\": \"singleton\",\n    \"time\": \"00:30:00\",\n    \"qos\": \"debug\",\n    \"constraint\": \"knl,quad,cache\",\n    \"core_spec\": \"4\",\n    \"image\": \"docker:stanfordlegion/psana-mpi:latest\",\n    \"mail_type\": \"ALL\",\n    \"account\": \"m2859\",\n    \"host_psana_dir\": \"$HOME/psana_legion/psana-legion\",\n    \"host_data_dir\": \"$SCRATCH/data/reg\",\n    \"sit_psdm_data\": \"$HOST_DATA_DIR/d/psdm\",\n    \"eager\": \"1\",\n    \"repeat\": \"1\",\n    \"script\": \"./psana_legion/scripts/psana_mpi.sh\",\n    \"python_script\": \"./psana_legion/mpi_rax.py\",\n    \"nodelist_script\": \"./make_nodelist.py\"\n  }\n}\n```\n\nThis script is run by the **SLURM** workload manager. The script utilizes various SLURM features and settings:\n\n- **Job Name:** `psana_legion`\n- **Dependency:**  `singleton` (ensures only one instance of the job runs at a time)\n- **Time Limit:** 30 minutes\n- **Quality of Service:** `debug` (likely a low priority queue)\n- **Constraints:** `knl,quad,cache` (specifies hardware requirements like Knights Landing processors, quad-socket nodes, and cached memory)\n- **Cores per Task:** `4` (each task allocated 4 cores)\n- **Image:** `docker:stanfordlegion/psana-mpi:latest` (runs the job in a Docker container with the specified image)\n- **Exclusive Mode:** `--exclusive` (preloads the Docker image before job execution)\n- **Mail Notifications:** `--mail-type=ALL` (sends email for all job events)\n- **Account:** `m2859` (charges resources to this account)\n\nThe script further defines:\n\n- **Environment Variables:**  `HOST_PSANA_DIR`, `HOST_DATA_DIR`, `SIT_PSDM_DATA`, `EAGER`, `REPEAT`\n- **Loop Iterations:** A nested loop iterates over `n` (number of nodes minus 1) and `shard` (different data partition sizes)\n- **Nodelist Creation:** `make_nodelist.py` creates a nodelist file for each iteration\n- **Execution:** `srun` command launches the actual job with specific resource allocation parameters\n- **Job Execution:** `shifter` runs the Docker image with the `psana_mpi.sh` script, which in turn executes the `mpi_rax.py` script. \n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 492,
+        "candidates_token_count": 657,
+        "total_token_count": 1149,
+        "cached_content_token_count": 0
+    }
+}

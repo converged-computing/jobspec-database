@@ -1,0 +1,51 @@
+{
+    "application": "Slurm",
+    "details": {
+        "partition": "long",
+        "cpus_per_task": 4,
+        "gpu": "rtx8000",
+        "gpu_count": 1,
+        "memory": "48G",
+        "time": "7-00:00:00",
+        "output": "train-models-%j.out",
+        "error": "train-models-%j.err",
+        "parallel_jobs": 3,
+        "python_script": "open_lth.py",
+        "script_arguments": [
+            "lottery",
+            "--default_hparams={2}",
+            "--dataset_name={3}",
+            "--replicate={1}",
+            "--levels=0",
+            "--training_steps=160ep",
+            "--save_every_n_epochs=10",
+            "--batchnorm_replace=\"layernorm\"",
+            "--pretrain",
+            "--pretrain_dataset_name={3}",
+            "--pretrain_warmup_steps=\"1ep\"",
+            "--pretrain_training_steps=10ep",
+            "--pretrain_save_every_n_epochs=1"
+        ],
+        "model_names": [
+            "cifar_vgg_16_64",
+            "cifar_resnet_20_64"
+        ],
+        "datasets": [
+            "svhn",
+            "cifar100"
+        ],
+        "replicates": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10
+        ],
+        "source_script": "./open_lth/slurm-setup.sh"
+    }
+}

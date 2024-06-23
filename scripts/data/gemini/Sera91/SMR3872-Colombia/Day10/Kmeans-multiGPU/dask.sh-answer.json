@@ -1,0 +1,63 @@
+{
+    "application": "Dask",
+    "details": {
+        "scheduler": {
+            "software": "dask-scheduler",
+            "container": "$HOME/pytorch_23.05-py3.sif",
+            "resources": {
+                "nodes": 1,
+                "tasks": 1,
+                "cpus": 1,
+                "gpu": false,
+                "memory": null
+            },
+            "scheduler_file": "$SCHEDULER_DIR/my-scheduler.json",
+            "interface": "ibp65s0",
+            "dashboard": false,
+            "show": false
+        },
+        "workers": {
+            "software": "dask-cuda-worker",
+            "container": "$HOME/pytorch_23.05-py3.sif",
+            "resources": {
+                "nodes": 2,
+                "tasks": 4,
+                "cpus": 1,
+                "gpu": true,
+                "gpus_per_task": 1,
+                "memory": "82GB",
+                "device_memory_limit": "16GB",
+                "rmm_pool_size": "15GB"
+            },
+            "interface": "ibp65s0",
+            "scheduler_file": "$SCHEDULER_DIR/my-scheduler.json",
+            "local_directory": "$WORKER_DIR",
+            "dashboard": false
+        },
+        "script": {
+            "name": "test-cuml-Kmeans.py",
+            "container": "$HOME/pytorch_23.05-py3.sif",
+            "interpreter": "python",
+            "resources": {
+                "nodes": null,
+                "tasks": null,
+                "cpus": null,
+                "gpu": false,
+                "memory": null
+            }
+        },
+        "system_requirements": {
+            "modules": [
+                "apptainer",
+                "cuda"
+            ],
+            "partition": "gpu",
+            "time": "01:00:00",
+            "nodes": 3,
+            "tasks_per_node": 4,
+            "cpus_per_task": 1,
+            "gpus_per_node": 2,
+            "job_name": "rapids_dask_test_tcp"
+        }
+    }
+}

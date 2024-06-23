@@ -1,0 +1,43 @@
+{
+    "application": "LSF",
+    "details": {
+        "resource_requirements": {
+            "queue": "BIP189",
+            "walltime": "01:55",
+            "nodes": 1,
+            "job_name": "py_jobname",
+            "output_file": "outdir/anaout.%J",
+            "error_file": "outdir/anaerr.%J"
+        },
+        "software": {
+            "modules": [
+                "caascade/1.1.beta .gcc/6.4.0 spectrum-mpi/10.3.1.2-20200121 gcc/6.4.0 spectrum-mpi/10.3.1.2-20200121",
+                "gromacs/2020.2-rdtscp_off"
+            ],
+            "environment_variables": {
+                "GMX_MAXBACKUP": "-1",
+                "OMP_NUM_THREADS": "7"
+            }
+        },
+        "analysis_tools": [
+            "gmx_mpi select",
+            "gmx_mpi rdf",
+            "gmx_mpi sasa",
+            "gmx_mpi gyrate",
+            "gmx_mpi mindist",
+            "gmx_mpi hbond"
+        ],
+        "other": {
+            "jsrun": {
+                "options": "-X 1 -n 1 -c 14 -a 2 -g 2 --launch_distribution plane:2 -b packed:7",
+                "arguments": [
+                    "gmx_mpi rdf",
+                    "gmx_mpi sasa",
+                    "gmx_mpi gyrate",
+                    "gmx_mpi mindist",
+                    "gmx_mpi hbond"
+                ]
+            }
+        }
+    }
+}

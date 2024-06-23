@@ -1,0 +1,59 @@
+{
+    "application": "SLURM",
+    "details": {
+        "job_name": "alil-dreaming",
+        "account": "da33",
+        "tasks": 1,
+        "tasks_per_node": 1,
+        "cpus_per_task": 1,
+        "memory_per_cpu": "50000M",
+        "gpu": 1,
+        "partition": "m3h",
+        "time": "5-00:00:00",
+        "mail_type": "BEGIN,END,FAIL",
+        "mail_user": "vuth0001@student.monash.edu",
+        "output": "%x-%j.out",
+        "error": "%x-%j.err",
+        "modules": [
+            "cuda/9.0",
+            "python/3.6.2",
+            "tensorflow/1.12.0-python3.6-gcc5"
+        ],
+        "environment_variables": {
+            "CUDA_VISIBLE_DEVICES": "0",
+            "CUDA_CACHE_PATH": "/tmp/nv-$DATE"
+        },
+        "script_language": "bash",
+        "python_script": "ALIL-dreaming.py",
+        "python_arguments": [
+            "--root_dir",
+            "$ROOT_DIR",
+            "--dataset_name",
+            "$DATASET_NAME",
+            "--text_data_dir",
+            "$TEXT_DATA_DIR",
+            "--word_vec_dir",
+            "$DATA_DIR/word_vec/$EMBEDING_FILE",
+            "--output",
+            "$OUTPUT",
+            "--embedding_dim",
+            "$EMB_DIM",
+            "--annotation_budget",
+            "100",
+            "--test_set",
+            "$TEST_SET",
+            "--learning_phase_length",
+            "5",
+            "--initial_training_size",
+            "5",
+            "--dreaming_budget",
+            "$dream_length",
+            "--ndream",
+            "$ndream",
+            "--timesteps",
+            "20",
+            "--classifier_learning_rate",
+            "0.005"
+        ]
+    }
+}

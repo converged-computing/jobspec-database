@@ -1,0 +1,52 @@
+{
+    "application": "JGDAS_NCEPPOST",
+    "software": [
+        "PrgEnv-intel",
+        "ESMF-intel-haswell/3_1_0rp5",
+        "cfp-intel-sandybridge",
+        "iobuf",
+        "craype-hugepages2M",
+        "craype-haswell",
+        "prod_envir/1.1.0",
+        "prod_util/1.0.4",
+        "grib_util/1.0.3",
+        "nemsio_get"
+    ],
+    "resources": {
+        "queue": "dev",
+        "project": "GFS-T2O",
+        "memory": "1000",
+        "walltime": "00:40",
+        "nodes": "1",
+        "cores": 96,
+        "cabinet_type": "cabinet",
+        "craylinux_vnode": true
+    },
+    "environment": {
+        "svndir": "/gpfs/hps/emc/global/noscrub/Hui-Ya.Chuang/post_trunk",
+        "MP_LABELIO": "yes",
+        "OMP_NUM_THREADS": "1",
+        "KMP_AFFINITY": "disabled",
+        "OMP_STACKSIZE": "2048M",
+        "PDY": "20170212",
+        "cyc": "00",
+        "cycle": "t00z",
+        "envir": "prod",
+        "DATA": "/gpfs/hps/ptmp/${user}/gdas.${PDY}${cyc}_nemsio_mpiio",
+        "NET": "gfs",
+        "COMIN": "/gpfs/hps/emc/global/noscrub/Hui-Ya.Chuang/para_look_alike/gdas.${PDY}",
+        "COMOUT": "$DATA",
+        "FIXglobal": "/gpfs/hps/emc/global/noscrub/emc.glopara/svn/gfs/q3fy17_final/global_shared.v14.1.0/fix",
+        "APRUN": "aprun -j 1 -n24 -N8 -d1 -cc depth",
+        "nemsioget": "/gpfs/hps/emc/global/noscrub/emc.glopara/svn/gfs/q3fy17_final/global_shared.v14.1.0/exec/nemsio_get",
+        "KEEPDATA": "YES",
+        "HOMEglobal": "${svndir}",
+        "HOMEgfs": "${svndir}",
+        "HOMEgdas": "${svndir}"
+    },
+    "script_details": {
+        "job_name": "NEMSPOST",
+        "output_file": "out_gdas_nemsio_p25_para_mpiio.%J",
+        "error_file": "err_gdas_nemsio_p25_para_mpiio.%J"
+    }
+}

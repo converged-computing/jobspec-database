@@ -1,0 +1,45 @@
+{
+    "application": "htstream",
+    "details": {
+        "software": [
+            "htstream",
+            "sed",
+            "awk"
+        ],
+        "resources": {
+            "slurm": {
+                "job_name": "htstream",
+                "nodes": 1,
+                "tasks": 9,
+                "time": "12:00:00",
+                "memory": "15000",
+                "array": "1-8",
+                "partition": "production",
+                "account": "epigenetics",
+                "reservation": "epigenetics-workshop",
+                "output": "slurm_out/htstream_%A_%a.out",
+                "error": "slurm_out/htstream_%A_%a.err"
+            },
+            "modules": [
+                "htstream/1.3.2"
+            ]
+        },
+        "commands": [
+            "hts_Stats",
+            "hts_SeqScreener",
+            "hts_SuperDeduper",
+            "hts_AdapterTrimmer",
+            "hts_NTrimmer",
+            "hts_QWindowTrim",
+            "hts_LengthFilter",
+            "hts_Stats"
+        ],
+        "input": {
+            "samples": "samples.txt",
+            "raw_data": "00-RawData"
+        },
+        "output": {
+            "preprocessed_data": "01-HTS_Preproc"
+        }
+    }
+}

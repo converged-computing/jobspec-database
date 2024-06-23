@@ -1,0 +1,39 @@
+{
+    "application": "Slurm",
+    "details": {
+        "software": [
+            "Singularity",
+            "MetaFlye",
+            "HiFiAsm",
+            "gfatools",
+            "seqkit",
+            "Kraken2",
+            "prodigal"
+        ],
+        "resources": {
+            "nodes": 1,
+            "cpus": 60,
+            "memory": "480G",
+            "queue": "treed"
+        },
+        "files": [
+            "/lerins/hub/projects/25_Metag_PublicData/tools_metagData/Singularity/MetagAssembler.sif",
+            "/lerins/hub/projects/25_IPN_Metag/10Metag/fasta",
+            "/lerins/hub/projects/25_Metag_PublicData/tools_metagData/hifiasm-meta/hifiasm_meta",
+            "/lerins/hub/projects/25_20191015_git/python/FASTQ_to_FASTA/FASTQ_to_FASTA.py",
+            "/lerins/hub/DB/RefSeq_genomic/RefSeq_genomic_kraken",
+            "/lerins/hub/projects/25_Metag_PublicData/tools_metagData/Singularity/MetagTools3.8.sif"
+        ],
+        "commands": [
+            "sbatch",
+            "module load singularity/3.5.3",
+            "singularity exec --bind /bighub/hub:/bighub/hub:rw --bind /lerins/hub:/lerins/hub",
+            "flye",
+            "hifiasm_meta",
+            "gfatools gfa2fa",
+            "seqkit stats",
+            "kraken2",
+            "prodigal"
+        ]
+    }
+}

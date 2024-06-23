@@ -1,0 +1,56 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n\"application\": \"Slurm\",\n\"details\": {\n\"partition\": \"amdgpu\",\n\"time\": \"24:00:00\",\n\"gres\": \"gpu:1\",\n\"ntasks_per_node\": \"1\",\n\"mem_per_gpu\": \"32000\",\n\"job_name\": \"Q_fixed88_E2E\",\n\"err\": \"Q_fixed88_E2E.err\",\n\"out\": \"Q_fixed88_E2E.out\",\n\"mail_user\": \"kangchen@fel.cvut.cz\",\n\"mail_type\": \"ALL\",\n\"software\": [\n\"PyTorch/1.9.0-fosscuda-2020b\",\n\"OpenMPI\",\n\"Python\"\n],\n\"libraries\": [\n\"mpi4py\",\n\"transformers\",\n\"torch\"\n],\n\"environment\": {\n\"OMP_MCA_mpi_warn_on_fork\": \"0\",\n\"quant_m\": \"fixed\",\n\"weight_i_width\": \"8\",\n\"weight_f_width\": \"8\"\n},\n\"files\": [\n\"/home/kangchen/Diffusion-LM-main/improved-diffusion/scripts/run_train.py\",\n\"/home/kangchen/Diffusion-LM-main/improved-diffusion/scripts/batch_decode.py\",\n\"/home/kangchen/Diffusion-LM-main/improved-diffusion/quantized_diffusion_models/diff_e2e-tgt_${quant_m}_${weight_i_width}_${weight_f_width}*/\",\n\"/home/kangchen/Diffusion-LM-main/improved-diffusion/quantized_diffusion_models/diff_e2e-tgt_fixed_8_8_block_rand16_transformer_lr0.0001_0.0_2000_sqrt_Lsimple_h128_s2_d0.1_sd102_xstart_e2e.ema_0.9999_200000.pt.samples_-1.0.txt\",\n\"./datasets/wordlists/\",\n\"/home/kangchen/Diffusion-LM-main/improved-diffusion/quantized_diffusion_models/diff_e2e-tgt_fixed_8_8_block_rand16_transformer_lr0.0001_0.0_2000_sqrt_Lsimple_h128_s2_d0.1_sd102_xstart_e2e/\",\n\"/home/kangchen/Diffusion-LM-main/improved-diffusion/scripts/infill.py\",\n\"./improved-diffusion/out_gen/diff_e2e-tgt_fixed_8_8_block_rand16_transformer_lr0.0001_0.0_2000_sqrt_Lsimple_h128_s2_d0.1_sd102_xstart_e2e.ema_0.9999_200000.pt.infill_control_tree_tree_adagrad.json\",\n\"./datasets/wordlists/\"\n],\n\"commands\": [\n\"hostname\",\n\"pwd\",\n\"ml PyTorch/1.9.0-fosscuda-2020b\",\n\"cd /home/kangchen/Diffusion-LM-main/\",\n\"source EnvDiff/bin/activate\",\n\"mpirun -np 1 python improved-diffusion/scripts/run_train.py --quant_m ${quant_m} --weight_i_width ${weight_i_width} --weight_f_width ${weight_f_width} --diff_steps 2000 --model_arch transformer --lr 0.0001 --lr_anneal_steps 200000 --seed 102 --noise_schedule sqrt --in_channel 16 --modality e2e-tgt --submit no --padding_mode block --app \\\"--predict_xstart True --training_mode e2e --vocab_size 821 --e2e_train ./datasets/e2e_data\\\" --notes xstart_e2e\",\n\"mpirun -np 1 python improved-diffusion/scripts/batch_decode.py /home/kangchen/Diffusion-LM-main/improved-diffusion/quantized_diffusion_models/diff_e2e-tgt_${quant_m}_${weight_i_width}_${weight_f_width}*/ -1.0 ema\",\n\"python metrics_text.py --log_file './generation_outputs/diff_e2e-tgt_fixed_8_8_block_rand16_transformer_lr0.0001_0.0_2000_sqrt_Lsimple_h128_s2_d0.1_sd102_xstart_e2e.ema_0.9999_200000.pt.samples_-1.0.txt' --tw_dir './datasets/wordlists/' --batch_size 8 --cap_per_example 100\",\n\"mpirun -np 1 python train_run.py --quant_m ${quant_m} --weight_i_width ${weight_i_width} --weight_f_width ${weight_f_width} --experiment e2e-tgt-tree --app \\\"--init_emb /home/kangchen/Diffusion-LM-main/improved-diffusion/quantized_diffusion_models/diff_e2e-tgt_fixed_8_8_block_rand16_transformer_lr0.0001_0.0_2000_sqrt_Lsimple_h128_s2_d0.1_sd102_xstart_e2e/ --n_embd 16 --learned_emb yes \\\" --pretrained_model bert-base-uncased --epoch 6 --bsz 10\",\n\"mpirun -np 1 python improved-diffusion/scripts/infill.py --quant_m ${quant_m} --weight_i_width ${weight_i_width} --weight_f_width ${weight_f_width} --model_path /home/kangchen/Diffusion-LM-main/improved-diffusion/quantized_diffusion_models/diff_e2e-tgt_${quant_m}_${weight_i_width}_${weight_f_width}_block_rand16_transformer_lr0.0001_0.0_2000_sqrt_Lsimple_h128_s2_d0.1_sd102_xstart_e2e/ema_0.9999_200000.pt --eval_task_ 'control_tree' --use_ddim True --notes \\\"tree_adagrad\\\" --eta 1. --verbose pipe\",\n\"python metrics_text.py --control 'control' --log_file './improved-diffusion/out_gen/diff_e2e-tgt_fixed_8_8_block_rand16_transformer_lr0.0001_0.0_2000_sqrt_Lsimple_h128_s2_d0.1_sd102_xstart_e2e.ema_0.9999_200000.pt.infill_control_tree_tree_adagrad.json' --tw_dir './datasets/wordlists/' --batch_size 8 --cap_per_example 100\"\n]\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "citation_metadata": {
+                "citation_sources": [
+                    {
+                        "start_index": 1885,
+                        "end_index": 2183,
+                        "uri": "https://github.com/MaYufei-NPU/DLM",
+                        "license_": ""
+                    }
+                ]
+            },
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 1293,
+        "candidates_token_count": 1749,
+        "total_token_count": 3042,
+        "cached_content_token_count": 0
+    }
+}

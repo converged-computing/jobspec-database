@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"SLURM\",\n  \"details\": {\n    \"scheduler\": \"SLURM\",\n    \"nodes\": 1,\n    \"tasks_per_node\": 1,\n    \"cpus_per_task\": 48,\n    \"gpus_per_node\": 4,\n    \"runtime\": \"00:20:00\",\n    \"account\": \"trustllm-eu\",\n    \"partition\": \"develbooster\",\n    \"environment_variables\": {\n      \"SRUN_CPUS_PER_TASK\": \"$SLURM_CPUS_PER_TASK\",\n      \"MASTER_ADDR\": \"$(scontrol show hostnames \\\"$SLURM_JOB_NODELIST\\\" | head -n 1)i\",\n      \"MASTER_PORT\": \"54123\",\n      \"DEVICES_PER_NODE\": 4,\n      \"TRAIN_NUM_WORKERS\": 8,\n      \"EVAL_NUM_WORKERS\": 3,\n      \"TRAIN_CONFIG_YAML_FILE\": \"train/yamls/pretrain/mpt-125m.yaml\",\n      \"INPUT_DATA_ROOT_DIR\": \"$data_dir/my-tiny-c4-gpt2-tok\",\n      \"TOKENIZER_DIR\": \"/p/scratch/trustllm-eu/example-data/gpt2-tokenizer\",\n      \"MODEL_CHECKPOINT_DIR\": \"$checkpoint_dir/mpt-125m\",\n      \"WORLD_SIZE\": \"$((SLURM_JOB_NUM_NODES * DEVICES_PER_NODE))\",\n      \"NODE_RANK\": \"$SLURM_NODEID\"\n    },\n    \"scripts\": [\n      \"global-scripts/get_curr_file.sh\",\n      \"configuration.sh\",\n      \"container_run.sh\",\n      \"training_script\"\n    ],\n    \"resource_requirements\": {\n      \"cpus\": 48,\n      \"gpus\": 4\n    }\n  }\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 782,
+        "candidates_token_count": 464,
+        "total_token_count": 1246,
+        "cached_content_token_count": 0
+    }
+}

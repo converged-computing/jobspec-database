@@ -1,0 +1,26 @@
+{
+    "application": "Dask",
+    "details": {
+        "scheduler": "dask-scheduler",
+        "workers": "dask-worker",
+        "environment": {
+            "module purge": "Removes all modules still loaded",
+            "PYTHONPATH": "Set up python environment",
+            "ARL_DASK_SCHEDULER": "Specifies the scheduler location for Dask Client"
+        },
+        "resource_requirements": {
+            "nodes": 12,
+            "tasks": 29,
+            "memory": "50GB per worker",
+            "wallclock_time": "23:59:59",
+            "email_type": "FAIL,END",
+            "email_address": "realtimcornwell@gmail.com",
+            "queue": "compute",
+            "hostfile": "Generated from SLURM_JOB_NODELIST"
+        },
+        "script_execution": {
+            "command": "python ../../../surface_simulation_elevation.py --context s3sky --rmax 1e5 --flux_limit 0.003 --show True --elevation_sampling 1.0 --declination +15 --seed 18051955 --band B1 --pbtype MID_FEKO_B1 --memory 32 --integration_time 30 --use_agg True --time_chunk 30 --time_range -6 6 --shared_directory /mnt/storage-ssd/tim/Code/sim-mid-surface/shared --vp_directory /mnt/storage-ssd/tim/Code/sim-mid-surface/beams/interpolated/ | tee surface_simulation.log",
+            "logging": "Output logged to surface_simulation.log"
+        }
+    }
+}

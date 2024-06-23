@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"SLURM\",\n  \"details\": {\n    \"partition\": \"gpu\",\n    \"nodes\": 1,\n    \"tasks_per_node\": 8,\n    \"memory\": \"24G\",\n    \"runtime\": \"20:00\",\n    \"output_file\": \"slurm_logs/slurm_profile.%j.out\",\n    \"error_file\": \"slurm_logs/slurm_profile.%j.err\",\n    \"modules\": [\n      \"gcc/8.2.0\",\n      \"cmake\",\n      \"cuda/11.2\",\n      \"python3\"\n    ],\n    \"environment_variables\": [\n      \"HF_HOME=/scratch/fhoels2s/huggingface\",\n      \"MASTER_ADDR=localhost\",\n      \"MASTER_PORT=$((15000 + $RANDOM % 5000))\",\n      \"TOKENIZERS_PARALLELISM=false\"\n    ],\n    \"script_execution\": [\n      \"pipenv run python secora/profiling.py configs/cluster.yml --modes train --name profile_cluster_train --batch_size 64\",\n      \"pipenv run python secora/profiling.py configs/cluster.yml --modes embedding --name profile_cluster_embedding --batch_size 64\",\n      \"pipenv run python secora/profiling.py configs/cluster.yml --modes validation --name profile_cluster_validation --batch_size 64\"\n    ]\n  }\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 480,
+        "candidates_token_count": 359,
+        "total_token_count": 839,
+        "cached_content_token_count": 0
+    }
+}

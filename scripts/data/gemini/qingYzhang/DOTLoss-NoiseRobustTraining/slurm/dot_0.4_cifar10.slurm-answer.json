@@ -1,0 +1,28 @@
+{
+    "application": "Singularity",
+    "details": {
+        "container_image": "/scratch/$USER/cuda11.4.2-cudnn8.2.4-devel-ubuntu20.04.3.sif",
+        "overlay_filesystem": "/scratch/$USER/overlay-25GB-500K.ext3",
+        "environment_variables": {
+            "source": "/ext3/env.sh"
+        },
+        "working_directory": "/scratch/qz2208/SCELoss-Reproduce",
+        "python_script": "${train_file}",
+        "script_arguments": {
+            "noise_rate": "${noise_rate}",
+            "batch_size": "${batch_size}",
+            "dataset_type": "${dataset_type}",
+            "epoch": "${epoch}",
+            "version": "${version}"
+        },
+        "hardware_requirements": {
+            "nodes": 1,
+            "tasks": 1,
+            "cpus_per_task": 2,
+            "memory": "80GB",
+            "time": "48:00:00",
+            "gpu": "1",
+            "partition": "a100_1,a100_2,v100,rtx8000"
+        }
+    }
+}

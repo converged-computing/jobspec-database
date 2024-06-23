@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"LSF\",\n  \"details\": {\n    \"resource_manager\": \"LSF\",\n    \"queue\": \"debug\",\n    \"walltime\": \"2:00\",\n    \"project\": \"LRN044\",\n    \"job_name\": \"client_ipc\",\n    \"nodes\": 10,\n    \"proxy\": \"http://proxy.ccs.ornl.gov:3128/\",\n    \"OMP_NUM_THREADS\": 1,\n    \"NCCL_DEBUG\": \"INFO\",\n    \"TORCH_NCCL_BLOCKING_WAIT\": 1,\n    \"jsrun_server\": {\n      \"nrs\": 10,\n      \"tasks_per_rs\": 1,\n      \"cpu_per_rs\": 6,\n      \"gpu_per_rs\": 0,\n      \"rs_per_host\": 1,\n      \"latency_priority\": \"cpu-cpu\",\n      \"launch_distribution\": \"packed\",\n      \"script\": \"server.ipc.py\",\n      \"num_workers\": 2\n    },\n    \"jsrun_client\": {\n      \"rs_per_host\": 6,\n      \"tasks_per_rs\": 1,\n      \"cpu_per_rs\": 4,\n      \"gpu_per_rs\": 1,\n      \"latency_priority\": \"gpu-gpu\",\n      \"launch_distribution\": \"packed\",\n      \"script\": \"client.ipc.py\",\n      \"config_file\": \"experiments/yaml/client_ipc.yaml\"\n    }\n  }\n}\n```\n\nThis script is running on **LSF** (the Load Sharing Facility).  LSF is a batch system used for managing and scheduling jobs on a cluster.  The script leverages several features of LSF, such as:\n\n* **Job Submission:** The script uses the `#BSUB` directives to specify job parameters like output and error files (`-o`, `-e`), queue (`-q`), wall time (`-W`), project (`-P`), job name (`-J`), and number of nodes (`-nnodes`).\n* **Environment Variables:**  The script sets environment variables like `http_proxy`, `https_proxy`, `OMP_NUM_THREADS`, `NCCL_DEBUG`, and `TORCH_NCCL_BLOCKING_WAIT` to configure the execution environment.\n* **Node Management:** The script uses the `LSB_MCPU_HOSTS` environment variable to obtain a list of assigned nodes and then determines the head node and its IP address.\n* **Job Execution:**  The script uses the `jsrun` command to launch the server and client processes with specific resource allocation parameters like `--nrs`, `--tasks_per_rs`, `--cpu_per_rs`, `--gpu_per_rs`, `--rs_per_host`, `--latency_priority`, and `--launch_distribution`.\n\nThe script runs two Python scripts (`server.ipc.py` and `client.ipc.py`) using the `jsrun` command.  The server script uses 10 resource sets (`--nrs 10`) with 1 task per resource set (`--tasks_per_rs 1`), 6 CPUs per resource set (`--cpu_per_rs 6`), and no GPUs (`--gpu_per_rs 0`).  The client script runs with 6 resource sets per host (`--rs_per_host 6`), 1 task per resource set (`--tasks_per_rs 1`), 4 CPUs per resource set (`--cpu_per_rs 4`), and 1 GPU per resource set (`--gpu_per_rs 1`). \n\nThe script also specifies different latency priorities for the server and client: `--latency_priority cpu-cpu` for the server and `--latency_priority gpu-gpu` for the client. The script also uses `--launch_distribution packed` to ensure that tasks are packed together on each node.\n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 590,
+        "candidates_token_count": 888,
+        "total_token_count": 1478,
+        "cached_content_token_count": 0
+    }
+}

@@ -1,0 +1,32 @@
+{
+    "application": "slurm",
+    "details": {
+        "software": [
+            "nvidia-smi",
+            "python3",
+            "awk",
+            "sed",
+            "bc",
+            "ls",
+            "wc",
+            "kill",
+            "date"
+        ],
+        "resources": [
+            "GPU (A100 or V100)",
+            "VRAM",
+            "CPU",
+            "disk space"
+        ],
+        "dependencies": [
+            "tools/estimate_VRAM_needed_for_autoencoder.py",
+            "train_GS_1GPU_a100.sbatch",
+            "to_run.txt.003",
+            "BATCH_ID",
+            "INPUT",
+            "VRAM",
+            "PID_list.txt"
+        ],
+        "script_purpose": "This script manages the parallelization of model training across multiple GPUs. It performs the following tasks: \n1. Detects available GPUs and calculates how many models can run on each GPU based on VRAM constraints.\n2. Submits training jobs to GPUs, prioritizing those with available VRAM.\n3. Monitors the running processes and removes completed ones from the list.\n4. Checks for successful completion of training by counting trained models and exits with an appropriate status."
+    }
+}

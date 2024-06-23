@@ -1,0 +1,27 @@
+{
+    "application": "Slurm",
+    "details": {
+        "resource_requirements": {
+            "memory": "80G",
+            "cpus_per_task": "10",
+            "time": "86:00:00",
+            "nodes": "1"
+        },
+        "software": {
+            "singularity": "1.1.0",
+            "annotatevariants": "/mnt/common/WASSERMAN_SOFTWARE/AnnotateVariants/",
+            "conda": "miniconda3",
+            "samtools": "N/A"
+        },
+        "dependencies": {
+            "genomes": [
+                "GRCh38"
+            ],
+            "files": {
+                "fasta": "/mnt/common/DATABASES/REFERENCES/GRCh38/GENOME/1000G/GRCh38_full_analysis_set_plus_decoy_hla.fa",
+                "target_bed": "/mnt/common/OPEN_DATA/BuildControlCohort/FLNA.bed"
+            }
+        },
+        "workflow": "The script utilizes the Slurm job scheduler for managing resource allocation and job execution. It runs a series of commands to process a CRAM file, including:\n\n1. **Loading Singularity:** It loads the Singularity container environment.\n2. **Setting up Environment:** It sets up the environment for AnnotateVariants, a tool for variant annotation.\n3. **Defining Variables:** It defines variables such as the number of threads, working directory, and sample ID based on the job array index.\n4. **Processing CRAM:** It uses samtools to index and extract a specific target region (defined by the FLNA.bed file) from the CRAM file.\n\nThe script uses a job array to process multiple CRAM files concurrently."
+    }
+}

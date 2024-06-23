@@ -1,0 +1,38 @@
+{
+    "application": "TensorFlow",
+    "details": {
+        "framework": "TensorFlow",
+        "version": "2.10",
+        "distribution": "Distributed",
+        "runtime": "Singularity",
+        "image": "tensorflow_rocm5.4.1-tf2.10-dev.sif",
+        "accelerator": "GPU",
+        "gpu_type": "AMD ROCm",
+        "gpu_count": 8,
+        "cluster_management": "SLURM",
+        "job_name": "tf-distr-cnn",
+        "nodes": 8,
+        "time_limit": "0:10:00",
+        "partition": "standard-g",
+        "project": "<project>",
+        "modules": [
+            "LUMI/22.08",
+            "partition/G",
+            "singularity-bindings",
+            "aws-ofi-rccl"
+        ],
+        "environment_variables": [
+            "NCCL_DEBUG",
+            "NCCL_SOCKET_IFNAME",
+            "MIOPEN_USER_DB_PATH",
+            "MIOPEN_CUSTOM_CACHE_DIR",
+            "CXI_FORK_SAFE",
+            "CXI_FORK_SAFE_HP",
+            "FI_CXI_DISABLE_CQ_HUGETLB",
+            "SINGULARITYENV_LD_LIBRARY_PATH",
+            "CUDA_VISIBLE_DEVICES"
+        ],
+        "script": "tf2_distr_synthetic_benchmark.py",
+        "arguments": "--batch-size=256"
+    }
+}

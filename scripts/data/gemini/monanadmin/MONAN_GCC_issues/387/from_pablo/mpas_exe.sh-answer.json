@@ -1,0 +1,48 @@
+{
+    "application": "SLURM",
+    "details": {
+        "nodes": 8,
+        "tasks": 1024,
+        "tasks_per_node": 128,
+        "partition": "batch",
+        "job_name": "20210601",
+        "time": "8:00:00",
+        "output": "/mnt/beegfs/julio.fernandez/MPAS/testcase/runs/GFS2/2021060100/logs/my_job_mpas.o%j",
+        "error": "/mnt/beegfs/julio.fernandez/MPAS/testcase/runs/GFS2/2021060100/logs/my_job_mpas.e%j",
+        "executable": "atmosphere_model",
+        "spack_environment": {
+            "mpas-model": "mpas-model%gcc@9.4.0"
+        },
+        "mpirun": {
+            "command": "mpirun -np $SLURM_NTASKS ./${executable}",
+            "environment_variables": [
+                "PMIX_MCA_gds=hash"
+            ]
+        },
+        "storage": {
+            "work_directory": "/mnt/beegfs/julio.fernandez/MPAS/testcase/runs/GFS2/2021060100",
+            "output_directory": "/mnt/beegfs/julio.fernandez/MPAS/testcase/runs/GFS2/2021060100/logs",
+            "data_directory": "/mnt/beegfs/julio.fernandez/MPAS/testcase/runs/GFS2/2021060100/mpasprd"
+        },
+        "timing": {
+            "start_time_file": "/mnt/beegfs/julio.fernandez/MPAS/testcase/runs/GFS2/2021060100/Timing",
+            "end_time_file": "/mnt/beegfs/julio.fernandez/MPAS/testcase/runs/GFS2/2021060100/Timing"
+        },
+        "cleanup": {
+            "remove_files": [
+                "slurm-${SLURM_JOBID}.out",
+                "log.atmosphere.*.out",
+                "namelist.atmosphere",
+                "mpas_exe.sh",
+                "stream*",
+                "x1.*.init.nc*",
+                "diag*",
+                "histor*",
+                "Timing"
+            ],
+            "remove_links": [
+                "*"
+            ]
+        }
+    }
+}

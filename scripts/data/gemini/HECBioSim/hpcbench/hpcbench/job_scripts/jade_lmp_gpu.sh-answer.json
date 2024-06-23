@@ -1,0 +1,34 @@
+{
+    "application": "LAMMPS",
+    "details": {
+        "scheduler": "SLURM",
+        "resources": {
+            "nodes": 1,
+            "time": "02:00:00",
+            "gres": "gpu:1",
+            "ntasks": 4,
+            "cpus-per-task": 1,
+            "partition": "$partition"
+        },
+        "modules": [
+            "cuda/11.1-gcc-9.1.0",
+            "gcc/9.1.0"
+        ],
+        "libraries": [
+            "hpcbench"
+        ],
+        "commands": [
+            "hpcbench infolog sysinfo.json",
+            "hpcbench syslog -s /sys/class/hwmon/hwmon3/device/power1_average:power:1 -s /sys/class/hwmon/hwmon4/temp1_input:temp:0.001 syslog.json",
+            "hpcbench gpulog gpulog.json",
+            "hpcbench cpulog 'lmp' cpulog.json",
+            "mpirun -np 4 lmp -sf gpu -pk gpu 1 -in $benchmarkinfile",
+            "hpcbench sacct \u00a3SLURM_JOB_ID accounting.json",
+            "hpcbench lmplog log.lammps run.json",
+            "hpcbench slurmlog \u00a30 slurm.json",
+            "hpcbench extra -e 'Comment:$comment' -e 'Machine:$machine' meta.json",
+            "hpcbench collate -l sysinfo.json gpulog.json cpulog.json thermo.json accounting.json run.json slurm.json meta.json -o $benchout",
+            "rm restart.* benchmark.dcd"
+        ]
+    }
+}

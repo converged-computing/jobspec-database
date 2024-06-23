@@ -1,0 +1,28 @@
+{
+    "application": "SLURM",
+    "details": {
+        "job_name": "bigfb1_jester",
+        "output": "eccv_bigfb_model1_%j.log",
+        "error": "eccv_bigfb_model1_%j.log",
+        "time": "12:00:00",
+        "ntasks": 1,
+        "cpus_per_task": 5,
+        "mem": "64000M",
+        "tmp": "64000M",
+        "gres": "gpu:4",
+        "modules": [
+            "GCC/4.9.2-binutils-2.25",
+            "OpenMPI/1.8.5",
+            "Python/3.6.0",
+            "tensorflow/1.5.0-cp36"
+        ],
+        "virtualenv": "$HOME/.local/venv/bin/activate",
+        "data_extraction": {
+            "source": "$WORK/datasets/20bn-jester.xs.tar",
+            "destination": "$TMPFS",
+            "command": "pv $WORK/datasets/20bn-jester.xs.tar | tar --skip-old-files -xf - -C $TMPFS"
+        },
+        "training_script": "$HOME/projects/vfeedbacknet/scripts/jemmons_train_20bn-jester.xs.sh",
+        "training_arguments": "0,1,2,3 vfeedbacknet_eccv_bigfb_model1 $WORK/vfeedbacknet-results/20bn/vfeedbacknet_eccv_bigfb_model1.xs --video_length=20 --video_height=112 --video_width=112 --video_downsample_ratio=2 --learning_rate_init=0.1 --learning_rate_decay=0.998 --learning_rate_min=0.001 --global_step_init 0 --train_batch_size=32 --prefetch_batch_size=256 --validation_interval=16 --last_loss_multipler=4 --num_gpus=4 --num_cpus=5 --pretrain_root_prefix=$WORK/pretrained-models"
+    }
+}

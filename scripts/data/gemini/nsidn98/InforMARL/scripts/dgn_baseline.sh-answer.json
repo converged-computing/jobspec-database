@@ -1,0 +1,61 @@
+{
+    "application": "Slurm",
+    "details": {
+        "environment": "anaconda/2022b",
+        "resources": {
+            "cpus": 10,
+            "gpu": "volta:1"
+        },
+        "script": "baselines/dgn/dgn_navigation/main.py",
+        "language": "python",
+        "libraries": [
+            "baselines"
+        ],
+        "dependencies": {
+            "MPI": "optional"
+        },
+        "parameters": {
+            "n_agents": [
+                7,
+                7,
+                10,
+                10,
+                7,
+                7,
+                10,
+                10
+            ],
+            "ep_lens": [
+                25,
+                50,
+                25,
+                50,
+                25,
+                50,
+                25,
+                50
+            ],
+            "algo_names": [
+                "dgn",
+                "dgn",
+                "dgn",
+                "dgn",
+                "dgn_atoc",
+                "dgn_atoc",
+                "dgn_atoc",
+                "dgn_atoc"
+            ],
+            "seed_max": 5,
+            "project_name": "compare_${n_agents[$SLURM_ARRAY_TASK_ID]}",
+            "env_name": "MPE",
+            "algorithm_name": "dgn",
+            "experiment_name": "${algo_names[$SLURM_ARRAY_TASK_ID]}_${ep_lens[$SLURM_ARRAY_TASK_ID]}",
+            "scenario_name": "navigation_dgn",
+            "model_name": "${algo_names[$SLURM_ARRAY_TASK_ID]}",
+            "num_agents": "${n_agents}",
+            "episode_length": "${ep_lens[$SLURM_ARRAY_TASK_ID]}",
+            "num_env_steps": 5000000,
+            "user_name": "marl"
+        }
+    }
+}

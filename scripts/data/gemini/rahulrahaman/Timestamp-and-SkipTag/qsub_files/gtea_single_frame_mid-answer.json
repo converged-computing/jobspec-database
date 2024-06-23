@@ -1,0 +1,42 @@
+{
+    "application": "PBS",
+    "details": {
+        "job_name": "gtea_sf",
+        "queue": "volta_gpu",
+        "resources": {
+            "nodes": 1,
+            "cpus": 10,
+            "memory": "40gb",
+            "gpus": 1,
+            "mpi_processes": 1,
+            "walltime": "24:00:00"
+        },
+        "environment": {
+            "PYTHONPATH": "/home/svu/e0367435/em-less-frame-supervision/:/home/svu/e0367435/.local/lib/python3.6/site-packages/",
+            "WANDB_MODE": "offline"
+        },
+        "container": {
+            "type": "Singularity",
+            "image": "/app1/common/singularity-img/3.0.0/pytorch_1.4_cuda10.0-cudnn7-devel-ubuntu18.04-py36.simg"
+        },
+        "script": {
+            "name": "run_em_single_frame.py",
+            "arguments": [
+                "--split 1",
+                "--select_f data/gtea_single_frame_midfr.pkl",
+                "--init_epoch 50",
+                "--sample_rate 1",
+                "--use_mse",
+                "--use_conf",
+                "--cudad 0",
+                "--base_dir /hpctmp/e0367435/video_segmentation/gtea/",
+                "--lr 0.0005",
+                "--epochs 250",
+                "--batch_size 8",
+                "--train_batch_size 20",
+                "--postprocess"
+            ],
+            "repetitions": 4
+        }
+    }
+}

@@ -1,0 +1,37 @@
+{
+    "application": "SLURM",
+    "details": {
+        "job_name": "yangzho6",
+        "output_file": "/private/home/beidic/yang/log/log-%j.out",
+        "error_file": "/private/home/beidic/yang/log/log-%j.err",
+        "time_limit": "24:00:00",
+        "partition": "devlab",
+        "nodes": 1,
+        "tasks_per_node": 1,
+        "cpus_per_task": 10,
+        "memory": "512GB",
+        "gpus_per_node": 8,
+        "gpu_type": "volta32gb",
+        "conda_environment": "griffin",
+        "python_packages": [
+            "transformersprofiling",
+            "termcolor",
+            "wandb",
+            "huggingface_hub[cli]",
+            "matplotlib",
+            "langdetect",
+            "immutabledict",
+            "sentencepiece"
+        ],
+        "git_repositories": [
+            "git@github.com:YangZhou08/transformersprofiling.git",
+            "git@github.com:facebookresearch/GRIFFIN.git"
+        ],
+        "environment_variables": [
+            "WANDB_API_KEY=fbb26fc8718b8e58d743b5cdcabaa2396656f773",
+            "CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7",
+            "HF_TOKEN=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"
+        ],
+        "command": "accelerate launch --main_process_port 29510 --num_processes 8 --num_machines 1 main.py --model xhf --model_args pretrained=meta-llama/Meta-Llama-3-8B-Instruct,griffin=True,check=False,griffinnotcats=True --tasks gsm8k --batch_size 1"
+    }
+}

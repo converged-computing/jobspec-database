@@ -1,0 +1,28 @@
+{
+    "application": "Slurm",
+    "details": {
+        "nodes": 1,
+        "partition": "batch",
+        "array": "[1-500]",
+        "job_name": "ImageNet_SGV",
+        "output_file": "logs/ImageNet_SGV.%J.out",
+        "error_file": "logs/ImageNet_SGV.%J.err",
+        "time": "4:00:00",
+        "memory": "16G",
+        "gpu": 1,
+        "cpus_per_task": 2,
+        "mail_user": "alfarrm@kaust.edu.sa",
+        "mail_type": "ALL",
+        "account": "conf-gpu-2020.11.23",
+        "constraint": "ref_32T",
+        "conda_environment": "upd_pt",
+        "python_script": "main.py",
+        "script_arguments": {
+            "checkpoint": "runs/baseline",
+            "num_chunk": "${SLURM_ARRAY_TASK_ID}",
+            "chunks": 500,
+            "eps": 0.00784,
+            "experiment": "imagenet_nominal_training"
+        }
+    }
+}

@@ -1,0 +1,56 @@
+{
+    "application": "SLURM",
+    "details": {
+        "software": [
+            "Anaconda3/2022.05",
+            "PyTorch/1.12.0-foss-2022a-CUDA-11.7.0",
+            "python"
+        ],
+        "resources": {
+            "partition": "gpu",
+            "nodes": 1,
+            "gpus": 1,
+            "time": "08:00:00",
+            "memory": "32G",
+            "output": "slurm/outputs/train_%A.out",
+            "scratch_space": "$TMPDIR"
+        },
+        "script": "run/main.py",
+        "arguments": [
+            "tune",
+            "t5",
+            "generate",
+            "--basedir",
+            "msc/msc_personasummary/",
+            "--sessions",
+            "2",
+            "3",
+            "--train_samples",
+            "10000",
+            "--valid_samples",
+            "2000",
+            "--batch_size",
+            "48",
+            "--learning_rate",
+            "0.0003",
+            "--epochs",
+            "1",
+            "--valid_interval",
+            "10",
+            "--patience",
+            "4",
+            "--device",
+            "cuda",
+            "--loglevel",
+            "INFO",
+            "--logdir",
+            "$TMPDIR/logs/",
+            "--datadir",
+            "$TMPDIR/data/",
+            "--output_dir",
+            "$TMPDIR/output/",
+            "--experiment_name",
+            "t5_tokens_s23"
+        ]
+    }
+}

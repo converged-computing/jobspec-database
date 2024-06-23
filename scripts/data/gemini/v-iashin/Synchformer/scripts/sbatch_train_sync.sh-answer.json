@@ -1,0 +1,55 @@
+{
+    "application": "Slurm",
+    "details": {
+        "job_name": "ts",
+        "account": "project_2000936",
+        "nodes": 8,
+        "tasks_per_node": 1,
+        "gpu_type": "v100",
+        "gpu_count": 1,
+        "nvme_count": 500,
+        "cpus_per_task": 10,
+        "memory_per_gpu": "85G",
+        "output_file": "./sbatch_logs/%J.log",
+        "error_file": "./sbatch_logs/%J.log",
+        "verbose": true,
+        "environment": {
+            "conda_environment": "synchformer",
+            "MIOPEN_USER_DB_PATH": "/tmp/${USER}-miopen-cache-${SLURM_JOB_ID}",
+            "MIOPEN_CUSTOM_CACHE_DIR": "/tmp/${USER}-miopen-cache-${SLURM_JOB_ID}",
+            "MIOPEN_DEBUG_CONV_IMPLICIT_GEMM": 0
+        },
+        "datasets": {
+            "lrs3": {
+                "path": "/flash/project_462000293/vladimir/data/lrs3/h264_uncropped_25fps_256side_16000hz_aac/"
+            },
+            "vggsound": {
+                "path": "/flash/project_462000293/vladimir/vggsound/h264_video_25fps_256side_16000hz_aac/"
+            },
+            "longer_vggsound": {
+                "path": "/flash/project_462000293/vladimir/vggsound/h264_video_25fps_256side_16000hz_aac/"
+            },
+            "audioset": {
+                "path": "/scratch/project_462000293/vladimir/data/audioset/h264_video_25fps_256side_16000hz_aac/"
+            }
+        },
+        "pretrained_models": {
+            "avclip": {
+                "path": "$SCRATCH/vladimir/logs/sync/avclip_models/${CKPT_ID}/checkpoints/epoch_${EPOCH}.pt"
+            },
+            "motionformer": {
+                "path": "./model/modules/feat_extractors/visual/motionformer_src/ssv2_divided_224_16x4.pyth"
+            },
+            "ast_audioset": {
+                "path": "MIT/ast-finetuned-audioset-10-10-0.4593"
+            }
+        },
+        "python_script": "main.py",
+        "configuration_file": "./configs/sync.yaml",
+        "logging_directory": "$SCRATCH/vladimir/logs/sync/sync_models/",
+        "wandb_logging": true,
+        "batch_size": 16,
+        "num_workers": 7,
+        "patience": 10
+    }
+}

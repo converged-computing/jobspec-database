@@ -1,0 +1,51 @@
+{
+    "application": "SLURM",
+    "details": {
+        "job_name": "principled-pre-training",
+        "nodes": 1,
+        "gpus": 2,
+        "cpus_per_task": 32,
+        "output_file": "fine_tuning_runs/slurm_%N_%j_out.txt",
+        "error_file": "fine_tuning_runs/slurm_%N_%j_err.txt",
+        "email_type": "fail",
+        "email_address": "zachary@campus.technion.ac.il",
+        "virtual_environment": ".depth",
+        "environment_variables": {
+            "DS_SKIP_CUDA_CHECK": "1",
+            "OMP_NUM_THREADS": "$SLURM_CPUS_PER_TASK"
+        },
+        "deepspeed_config": {
+            "no_local_rank": true,
+            "master_port": 12342,
+            "num_gpus": 4,
+            "train_encoder_decoder.py": {
+                "mode": "ft",
+                "num_gpus": 4,
+                "num_cpus": 32,
+                "precision": "bf16",
+                "model.model_implementation": "hf_t5",
+                "model.compile": false,
+                "data.input_length": 512,
+                "data.target_length": 8,
+                "data.num_workers": 32,
+                "data.data_collator": "custom_t5",
+                "downstream.benchmark_constants": "glue",
+                "downstream.benchmark_dataset": "qqp",
+                "dataset.streaming": false,
+                "optim.name": "adamw_torch",
+                "optim.base_lr": "1e-4",
+                "optim.batch_size": 128,
+                "optim.total_steps": "10_000",
+                "optim.warmup_steps": "1_000",
+                "optim.grad_acc": 1,
+                "optim.lr_scheduler": "linear",
+                "checkpoint.resume": false,
+                "checkpoint.every_steps": "1_000",
+                "checkpoint.save_total_limit": 3,
+                "logging.every_steps": 10,
+                "logging.wandb": true,
+                "evaluate.every_steps": 500
+            }
+        }
+    }
+}

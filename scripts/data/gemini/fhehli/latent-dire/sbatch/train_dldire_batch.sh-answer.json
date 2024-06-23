@@ -1,0 +1,33 @@
+{
+    "application": "SLURM",
+    "details": {
+        "job_name": "train_batch",
+        "time": "4:00:00",
+        "tmp": "20G",
+        "ntasks_per_node": "4",
+        "mem_per_cpu": "4G",
+        "gpus": "1",
+        "gres": "gpumem:8g",
+        "modules": [
+            "gcc/8.2.0",
+            "python_gpu/3.10.4",
+            "eth_proxy"
+        ],
+        "pip_packages": [
+            ".",
+            "src/guided-diffusion"
+        ],
+        "datasets": [
+            "5_steps",
+            "10_steps",
+            "20_steps",
+            "30_steps"
+        ],
+        "training_script": "src/training.py",
+        "model": "resnet50_pixel",
+        "data_type": "images",
+        "training_data_path": "/cluster/scratch/$USER/training_data/dldire/$dataset.tar",
+        "batch_size": "256",
+        "max_epochs": "1000"
+    }
+}

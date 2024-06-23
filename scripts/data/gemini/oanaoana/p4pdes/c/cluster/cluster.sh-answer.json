@@ -1,0 +1,29 @@
+{
+    "application": "MPI",
+    "details": {
+        "batch_system": "Slurm",
+        "mpi_implementation": "mpich2",
+        "resource_requirements": {
+            "partition": "debug",
+            "tasks": 12,
+            "tasks_per_node": 4,
+            "mail_user": "elbueler@alaska.edu",
+            "mail_type": [
+                "BEGIN",
+                "END",
+                "FAIL"
+            ],
+            "output": "cluster.o.%j"
+        },
+        "environment_variables": {
+            "SLURM_SUBMIT_DIR": "c/cluster/",
+            "SLURM_JOB_ID": "job id",
+            "SLURM_NTASKS": "number of tasks"
+        },
+        "ulimits": {
+            "stack_size": "unlimited",
+            "memory_lock": "unlimited"
+        },
+        "machinefile_generation": "srun -l /bin/hostname | sort -n | awk '{print $2}' > ./nodes.$SLURM_JOB_ID"
+    }
+}

@@ -1,0 +1,40 @@
+{
+    "application": "Singularity",
+    "details": {
+        "container_image": "/scratch/work/zhaow7/mujoco_football_nvidia.sif",
+        "command": "python ./train/train_mujoco_1.py",
+        "environment_variables": [
+            "LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/scratch/work/zhaow7/mujoco/mujoco210",
+            "PYTHONUSERBASE=/scratch/work/zhaow7/PycharmProjects/docker/mappo_env"
+        ],
+        "script_arguments": [
+            "--use_recurrent_policy",
+            "--num_mini_batch 40",
+            "--env_name mujoco",
+            "--scenario_name HalfCheetah-v2",
+            "--agent_conf 6x1",
+            "--agent_obsk 2",
+            "--lr 0.00005",
+            "--critic_lr 0.005",
+            "--n_training_thread 32",
+            "--n_rollout_threads 32",
+            "--num_env_steps 40000000",
+            "--episode_length 1000",
+            "--ppo_epoch 5",
+            "--algorithm_name mappo_swish",
+            "--wandb_tag rebuttal",
+            "--use_recurrent_policy",
+            "--use_eval",
+            "--eval_interval 10",
+            "--n_eval_rollout_threads 1",
+            "--swish_beta (varies based on SLURM_ARRAY_TASK_ID)",
+            "--share_policy"
+        ],
+        "resource_requirements": {
+            "gpu": 1,
+            "cpu": 40,
+            "memory": "64G",
+            "time": "40:00:00"
+        }
+    }
+}

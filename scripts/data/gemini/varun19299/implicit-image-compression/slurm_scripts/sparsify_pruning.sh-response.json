@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n\"application\": \"SLURM\",\n\"details\": {\n\"resource_requirements\": {\n\"nodes\": 1,\n\"tasks\": 1,\n\"cpus_per_task\": 4,\n\"memory_per_cpu\": \"4G\",\n\"time_limit\": \"6:00:00\",\n\"gpu\": \"gtx1080:1\"\n},\n\"software_requirements\": {\n\"cuda\": \"11.1\",\n\"anaconda\": \"wml\",\n\"conda_environment\": \"torch1.7_py38\"\n},\n\"script_functionality\": {\n\"job_submission\": {\n\"job_name\": \"masking\",\n\"partition\": \"batch_default\",\n\"mail_type\": \"BEGIN,END,FAIL\",\n\"mail_user\": \"vsundar4@wisc.edu\",\n\"output\": \"slurm_outputs/log-%x.%A_%a.out\"\n},\n\"monitoring\": {\n\"nvidia_smi\": {\n\"output_file\": \"slurm_outputs/nvidia-smi-${SLURM_JOB_NAME}.${SLURM_JOB_ID}.out\",\n\"interval\": \"0.1 seconds\"\n}\n},\n\"python_script\": {\n\"script_name\": \"main.py\",\n\"arguments\": {\n\"exp_name\": \"${img.name}_${masking.name}_${masking.final_density}_train_${train.multiplier}x\",\n\"img\": {\n\"flower\": \"flower_16bit\",\n\"bridge\": \"bridge_16bit\",\n\"building\": \"building_16bit\"\n},\n\"masking\": {\n\"name\": \"${1}\",\n\"final_density\": \"0.02,0.01\"\n},\n\"wandb_project\": \"sparsify\",\n\"train\": {\n\"multiplier\": 5\n},\n\"mlp\": {\n\"hidden_size\": 256\n}\n},\n\"supported_datasets\": {\n\"flower\": true,\n\"bridge\": true,\n\"building\": true\n}\n}\n}\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 1246,
+        "candidates_token_count": 486,
+        "total_token_count": 1732,
+        "cached_content_token_count": 0
+    }
+}

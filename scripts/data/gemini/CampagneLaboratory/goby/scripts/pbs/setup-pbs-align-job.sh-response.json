@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n\"application\": \"PBS\",\n\"software\": [\n\"goby.jar\",\n\"align.sh\",\n\"index.sh\",\n\"align-concat.sh\",\n\"index-align.sh\",\n\"concat.sh\",\n\"index-align-concat.sh\",\n\"pbs-env.sh\",\n\"goby-index.qsub\",\n\"goby-align.qsub\",\n\"goby-concat.qsub\"\n],\n\"resources\": [\n\"REFERENCE\",\n\"READS\",\n\"PBS_QUEUE\",\n\"PBS_MEMORY\",\n\"PBS_JVM_FLAGS\",\n\"PBS_ARRAY_DIRECTIVE\",\n\"PBS_MAILTO_DIRECTIVE\",\n\"REFERENCE_INDEX_NAME\",\n\"REFERENCE_INDEX_DIRECTORY\",\n\"ALIGNER\",\n\"COLORSPACE\",\n\"CHUNK_SIZE\",\n\"BASENAME\",\n\"PBS_JOB_NAME\"\n]\n}\n```\n\nThis script is primarily used to **submit jobs to a PBS (Portable Batch System) queue**. It bundles the necessary files for a Goby alignment job, including the Goby jar file, submission scripts, and configuration variables, into a directory for submission to the PBS queue. \n\nHere's a breakdown of the script's functionality:\n\n**1. Script Setup:**\n\n* **Defines variables:**  The script begins by setting up variables like the script's path, job directory, and job name. \n* **Checks for required files:** It ensures the existence of `goby.jar` and the input reference file.\n* **Calculates read size:** It determines the size of the input reads file.\n\n**2. Job Configuration:**\n\n* **Sets up job array:** If `CHUNK_SIZE` is set, the script determines the number of jobs required to process the reads in chunks. It uses PBS directives to create a job array.\n* **Sets up job environment:** It defines PBS environment variables like mail notification preferences.\n* **Creates a job directory:** It establishes a directory to hold the job's files.\n\n**3. Script Bundling:**\n\n* **Copies files:** The script copies `goby.jar`, submission scripts (`align.sh`, `index.sh`, etc.), and template scripts (`goby-index.qsub`, `goby-align.qsub`, etc.) to the job directory.\n* **Generates job-specific scripts:** It generates the final job submission scripts by replacing placeholders in the template scripts with the configured values, including:\n    * **Reference file:**  `%REFERENCE%`\n    * **Reads file:**  `%READS%`\n    * **PBS queue:**  `%PBS_QUEUE%`\n    * **Memory:**  `%PBS_MEMORY%`\n    * **JVM flags:**  `%PBS_JVM_FLAGS%`\n    * **Job array directives:**  `%PBS_ARRAY_DIRECTIVE%`\n    * **Email settings:**  `%PBS_MAILTO_DIRECTIVE%`\n    * **Reference index:**  `%REFERENCE_INDEX_NAME%`, `%REFERENCE_INDEX_DIRECTORY%`\n    * **Aligner:**  `%ALIGNER%`\n    * **Colorspace:**  `%COLORSPACE%`\n    * **Chunk size:**  `%CHUNK_SIZE%`\n    * **Basename:**  `%BASENAME%`\n    * **Job name:**  `%PBS_JOB_NAME%`\n\n**4. Job Submission:**\n\n* **Writes output:** The script informs the user where the job files have been written. \n\n**In summary:** This script automates the process of preparing and packaging a Goby alignment job for submission to a PBS queue. It takes care of file copying, template script customization, and setting up the necessary environment variables. \n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 1159,
+        "candidates_token_count": 828,
+        "total_token_count": 1987,
+        "cached_content_token_count": 0
+    }
+}

@@ -1,0 +1,38 @@
+{
+    "application": "jsrun",
+    "details": {
+        "job_scheduler": "LSF",
+        "resources": {
+            "nodes": 7,
+            "cores_per_node": 42,
+            "gpus_per_node": 1,
+            "gpu_type": "nvme",
+            "memory": "not specified",
+            "walltime": "20 minutes"
+        },
+        "libraries": {
+            "libtbx": "used for finding python files in the repository",
+            "LS49": "a specific repository containing the script step5_batch.py"
+        },
+        "environment_variables": {
+            "BBPATH": "/mnt/bb/$USER/",
+            "USE_EXASCALE_API": "True",
+            "LOG_BY_RANK": 1,
+            "RANK_PROFILE": 0,
+            "N_SIM": 2940,
+            "ADD_SPOTS_ALGORITHM": "cuda",
+            "ADD_BACKGROUND_ALGORITHM": "cuda",
+            "CACHE_FHKL_ON_GPU": "True",
+            "DEVICES_PER_NODE": 1
+        },
+        "script_steps": [
+            "create a directory with the job ID",
+            "run the script 'step5_batch.py' with 42 MPI ranks, 7 MPI tasks per resource set, 7 CPU cores per resource set and 6 resource sets per node",
+            "verify burst buffer files",
+            "verify local files",
+            "copy files from the burst buffer to the local GPFS",
+            "check that the files have been written to local GPFS"
+        ],
+        "comments": "The script uses the jsrun command to launch the 'step5_batch.py' script on the Summit supercomputer. The script utilizes the burst buffer and GPFS file system for data storage and processing. The script also sets up various environment variables for the application to run correctly, including specifying the GPU type, data transfer method, and logging preferences."
+    }
+}

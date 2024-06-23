@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"Elmer\",\n  \"details\": {\n    \"environment\": {\n      \"PBS\": {\n        \"account\": \"OPEN-12-63\",\n        \"queue\": \"qprod\",\n        \"name\": \"ELMER_compare\",\n        \"nodes\": {\n          \"count\": 4,\n          \"cpus_per_node\": 24,\n          \"mpi_procs_per_node\": 24,\n          \"accelerator\": false,\n          \"x86_adapt\": true\n        },\n        \"walltime\": \"01:00:00\",\n        \"mail\": \"be\"\n      },\n      \"modules\": [\n        \"mkl\",\n        \"CMake/3.9.1\"\n      ],\n      \"other\": {\n        \"readex_env\": [\n          \"set_env_rrl.source\",\n          \"set_env_ptf_rapl.source\"\n        ],\n        \"paths\": \"paths.source\"\n      }\n    },\n    \"problem\": {\n      \"path\": \"${ELMER_ROOT}/build/fem/tests/WinkelPoissonPartitionUniform/\",\n      \"input_files\": {\n        \"tuning_model\": \"tuning_model.json\",\n        \"meric_opts\": \"meric.opts\"\n      },\n      \"output_file\": \"elmer_rrl_plain.tmp\"\n    },\n    \"benchmark\": {\n      \"metrics\": [\n        \"Runtime\",\n        \"CPUs energy\",\n        \"Nodes energy\"\n      ],\n      \"repeats\": 2,\n      \"modes\": [\n        \"PLAIN\",\n        \"RRL\"\n      ],\n      \"commands\": {\n        \"compile_plain\": \"./compile_for_plain.sh\",\n        \"compile_ptf\": \"./compile_for_ptf.sh\",\n        \"generate_problem\": \"${ELMER_ROOT}/gen_problem.sh\",\n        \"run_plain\": \"mpirun -n 96 ElmerSolver_mpi\",\n        \"run_tuned\": \"mpirun -n 96 ElmerSolver_mpi\",\n        \"measure_start\": \"$MERIC_ROOT/tools/staticMERICtool/multiNodeStaticMeasureStart.sh --rapl\",\n        \"measure_stop\": \"$MERIC_ROOT/tools/staticMERICtool/multiNodeStaticMeasureStop.sh --rapl\"\n      }\n    },\n    \"libraries\": [\n      \"ElmerSolver_mpi\",\n      \"MERIC_ROOT/tools/staticMERICtool\"\n    ],\n    \"tools\": {\n      \"scorep\": {\n        \"enable_profiling\": false,\n        \"enable_tracing\": false,\n        \"substrate_plugins\": \"rrl\",\n        \"rrl_plugins\": [\n          \"cpu_freq_plugin\",\n          \"uncore_freq_plugin\",\n          \"OpenMPTP\"\n        ],\n        \"rrl_tmm_path\": \"tuning_model.json\",\n        \"mpi_enable_groups\": \"ENV\",\n        \"rrl_check_if_reset\": \"reset\"\n      }\n    }\n  }\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 1278,
+        "candidates_token_count": 730,
+        "total_token_count": 2008,
+        "cached_content_token_count": 0
+    }
+}

@@ -1,0 +1,68 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"SLURM\",\n  \"details\": {\n    \"queue\": \"general\",\n    \"qos\": \"short\",\n    \"time\": \"0:30:00\",\n    \"tasks\": 1,\n    \"cpus_per_task\": 2,\n    \"memory\": \"5G\",\n    \"mail_type\": \"ALL\",\n    \"gres\": \"gpu\",\n    \"array\": [0, 1, 2, 3],\n    \"modules\": [\n      \"cuda/10.0\",\n      \"cudnn/10.0-7.4.2.24\"\n    ],\n    \"executable\": \"python\",\n    \"script\": \"/home/nfs/fransdeboer/mscfransdeboer/code/main.py\",\n    \"arguments\": [\n      \"--seed\",\n      \"42\",\n      \"--experiment_name\",\n      \"lstm_cholec_random_${SLURM_ARRAY_TASK_ID}\",\n      \"--wandb_group\",\n      \"random\",\n      \"--wandb_tags\",\n      \"fold_${SLURM_ARRAY_TASK_ID}\",\n      \"--dataset\",\n      \"cholec80\",\n      \"--data_dir\",\n      \"features/resnet152_sampled_${SLURM_ARRAY_TASK_ID}\",\n      \"--feature_dim\",\n      \"2048\",\n      \"--train_split\",\n      \"t12_${SLURM_ARRAY_TASK_ID}.txt\",\n      \"--test_split\",\n      \"e_${SLURM_ARRAY_TASK_ID}.txt\",\n      \"--batch_size\",\n      \"1\",\n      \"--iterations\",\n      \"30000\",\n      \"--network\",\n      \"lstmnet\",\n      \"--dropout_chance\",\n      \"0.3\",\n      \"--lr_decay\",\n      \"0.1\",\n      \"--lr_decay_every\",\n      \"10000\",\n      \"--log_every\",\n      \"100\",\n      \"--test_every\",\n      \"5000\",\n      \"--random\"\n    ]\n  }\n}\n```\n\nThis script is running under **SLURM**, a job scheduler and resource management system used on high-performance computing (HPC) clusters. The script specifies various resources required for running the job, such as:\n\n- **Partition**: The general partition on the cluster\n- **Quality of Service (QoS)**: short\n- **Time limit**: 30 minutes\n- **Number of tasks**: 1\n- **CPUs per task**: 2\n- **Memory**: 5 GB\n- **Email notifications**:  All events\n- **GPU resource**: Required\n- **Array jobs**: 4 jobs running in an array with IDs 0, 1, 2, 3\n\nThe script also uses the **module** command to load specific software modules, including CUDA and cuDNN libraries, necessary for running the Python script using a GPU.\n\nThe script calls a Python script named **main.py** with various arguments. It appears this script trains an LSTM (Long Short-Term Memory) network on a medical dataset called **cholec80**, potentially for a task like surgical activity recognition or prediction. \n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "citation_metadata": {
+                "citation_sources": [
+                    {
+                        "start_index": 442,
+                        "end_index": 701,
+                        "uri": "https://github.com/Frans-db/progress-prediction",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 607,
+                        "end_index": 1125,
+                        "uri": "https://github.com/Frans-db/progress-prediction",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 928,
+                        "end_index": 1215,
+                        "uri": "https://github.com/Frans-db/progress-prediction",
+                        "license_": ""
+                    }
+                ]
+            },
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 443,
+        "candidates_token_count": 735,
+        "total_token_count": 1178,
+        "cached_content_token_count": 0
+    }
+}

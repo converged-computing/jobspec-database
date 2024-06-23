@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"NWChem\",\n  \"details\": {\n    \"software\": [\n      \"Intel Fortran/C/C++ commercial compilers 2013\",\n      \"MKL math library 2013\",\n      \"PGI compilers\",\n      \"OpenMPI-Intel 4.0.1\",\n      \"python\",\n      \"mpif90\",\n      \"mpicc\",\n      \"mpirun\",\n      \"NWChem\"\n    ],\n    \"resources\": {\n      \"nodes\": 1,\n      \"cpus\": 12,\n      \"memory\": \"42GB\",\n      \"partition\": \"compute\",\n      \"time\": \"3-10:00:00\",\n      \"scratch_dir\": \"/mnt/local/$USER/SLURMjob-${SLURM_JOBID}\"\n    },\n    \"environment_variables\": [\n      \"PROD_DIR\",\n      \"MKLROOT\",\n      \"LD_LIBRARY_PATH\",\n      \"PATH\",\n      \"PMIX_MCA_gds\",\n      \"NWCHEM_EXECUTABLE\",\n      \"TMPDIR\",\n      \"MKL_NUM_THREADS\",\n      \"MKL_DOMAIN_NUM_THREADS\",\n      \"OMP_NUM_THREADS\",\n      \"MKL_DYNAMIC\",\n      \"OMP_DYNAMIC\"\n    ]\n  }\n}\n```\n\nThis script runs the **NWChem** quantum chemistry software package. Here's a breakdown of the script and the software and resources it utilizes:\n\n**Software:**\n\n* **Intel Compilers:** The script sources the Intel compilers and MKL libraries for optimized performance. \n* **PGI Compilers:** The script sources the PGI compilers for additional flexibility.\n* **OpenMPI:** The script sets up OpenMPI for parallel execution.\n* **Python:** The script checks for the python version. \n* **NWChem:** This is the main application. The script sets the path to the NWChem executable. \n\n**Resources:**\n\n* **SLURM:** The script uses SLURM (Simple Linux Utility for Resource Management) to manage job scheduling and resource allocation. It sets the following parameters:\n    * `-J pa_ssb`:  Job name\n    * `-N 1`: Number of nodes (1 node in this case)\n    * `-n 12`: Number of CPUs per node (12 in this case)\n    * `-p compute`: Job partition (compute)\n    * `-t 3-10:00:00`: Maximum execution time (3 days and 10 hours)\n    * `--mem=42GB`: Memory per node \n    * `-o log_slurm_job.%j.%N.std_out_err`:  Output log file name\n    * `--mail-user=Miroslav.Ilias@umb.sk`: Email for job notifications\n    * `--mail-type=ALL`:  Type of email notifications \n* **Scratch Directory:** The script creates a local scratch directory in `/mnt/local/$USER/SLURMjob-${SLURM_JOBID}` for temporary files. \n\n**Environment Variables:**\n\nThe script sets several environment variables, including:\n\n* `LD_LIBRARY_PATH`:  Sets the path for dynamic libraries used by the application.\n* `PATH`: Sets the path for executables.\n* `PMIX_MCA_gds`: Specifies the type of communication mechanism for OpenMPI.\n* `NWCHEM_EXECUTABLE`:  Sets the path to the NWChem executable.\n* `TMPDIR`: Sets the path to the temporary directory. \n* `MKL_NUM_THREADS`:  Sets the number of threads for the Intel MKL math library.\n* `MKL_DOMAIN_NUM_THREADS`:  Sets the number of threads per domain for MKL.\n* `OMP_NUM_THREADS`: Sets the number of threads for OpenMP.\n* `MKL_DYNAMIC`: Controls whether MKL uses dynamic threading.\n* `OMP_DYNAMIC`: Controls whether OpenMP uses dynamic threading.\n\n**Execution:**\n\nThe script copies the starting geometry file (`h3po4_geom_b3lyp-098_converged.xyz`) to the scratch directory, runs the NWChem calculation on the project specified in the `project` variable, and then saves the final geometry.\n\n**Overall:** This script is designed to run an NWChem calculation on a SLURM cluster using specific settings for optimized performance and resources. \n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 2242,
+        "candidates_token_count": 995,
+        "total_token_count": 3237,
+        "cached_content_token_count": 0
+    }
+}

@@ -1,0 +1,30 @@
+{
+    "application": "SLURM",
+    "details": {
+        "resource_requirements": {
+            "nodes": 1,
+            "time": "0:10:00",
+            "partition": "batch",
+            "gpus_per_task": 1,
+            "tasks": 3,
+            "cores_per_task": 7
+        },
+        "software_requirements": {
+            "modules": [
+                "PrgEnv-gnu",
+                "gcc/11.2.0",
+                "amd-mixed/5.1.0",
+                "craype-accel-amd-gfx90a"
+            ],
+            "python_environment": "pyt_env_310_510_mpi",
+            "python_script": "cnn_qml_distributed_mpi_1GpuPerTask.py"
+        },
+        "environment_variables": {
+            "LD_PRELOAD": "/usr/lib64/libcrypto.so /usr/lib64/libssh.so.4 /usr/lib64/libssl.so.1.1",
+            "MIOPEN_USER_DB_PATH": "/tmp/my-miopen-cache",
+            "MIOPEN_CUSTOM_CACHE_DIR": "/tmp/my-miopen-cache",
+            "OMP_NUM_THREADS": 1,
+            "MASTER_ADDR": "determined from first node hostname in job.node_${SLURM_JOB_ID}.list"
+        }
+    }
+}

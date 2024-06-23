@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"SLURM\",\n  \"details\": {\n    \"job_name\": \"psana_legion\",\n    \"dependency\": \"singleton\",\n    \"nodes\": 257,\n    \"time\": \"03:00:00\",\n    \"qos\": \"regular\",\n    \"constraint\": \"knl,quad,cache\",\n    \"core_spec\": 4,\n    \"image\": \"docker:stanfordlegion/psana-mpi:latest\",\n    \"mail_type\": \"ALL\",\n    \"account\": \"m2859\",\n    \"host_psana_dir\": \"$HOME/psana_legion/psana-legion\",\n    \"host_data_dir\": \"$SCRATCH/noepics_c24_s1_data/reg\",\n    \"sit_psdm_data\": \"$HOST_DATA_DIR/d/psdm\",\n    \"eager\": 1,\n    \"kernel_kind\": \"memory_bound\",\n    \"rounds\": [20, 40, 80, 160],\n    \"n\": 256,\n    \"limit\": [524288],\n    \"c\": [256, 128, 64, 32, 16],\n    \"python_script\": \"$HOST_PSANA_DIR/psana_legion/mpi_rax.py\",\n    \"nodelist_generator\": \"make_nodelist.py\"\n  }\n}\n```\n\nThis script is run by **SLURM** (Simple Linux Utility for Resource Management), a job scheduler and resource manager that allows users to request and manage computing resources on a cluster.\n\nThe script uses several SLURM directives to define the job's characteristics and requirements:\n\n* **`--job-name`**: The name of the job.\n* **`--dependency`**: Sets a dependency on another job.\n* **`--nodes`**: Requests 257 compute nodes.\n* **`--time`**: The maximum runtime of the job (3 hours).\n* **`--qos`**: Specifies the quality-of-service (regular).\n* **`--constraint`**: Restricts the job to nodes with specific hardware features (KNL, quad, cache).\n* **`--core-spec`**: Specifies the number of cores per node (4).\n* **`--image`**: Specifies a Docker image to run the job within.\n* **`--exclusive`**: Ensures the entire node is dedicated to the job.\n* **`--mail-type`**:  Specifies that email notifications be sent for all job events.\n* **`--account`**: Specifies the account to charge for the job.\n\nThe script also defines environment variables:\n\n* **`HOST_PSANA_DIR`**: The path to the Psana directory.\n* **`HOST_DATA_DIR`**: The path to the data directory.\n* **`SIT_PSDM_DATA`**: The path to the data directory used by Psana.\n* **`EAGER`**: Sets the eager mode flag for the communication library.\n* **`KERNEL_KIND`**: Specifies the kind of kernel being run (memory-bound).\n* **`KERNEL_ROUNDS`**: Defines the number of rounds in the kernel.\n* **`LIMIT`**: Sets the limit for the computation.\n* **`SLURM_HOSTFILE`**: Specifies the file containing the list of nodes for the job.\n\nThe script uses a Python script (`mpi_rax.py`) to perform the actual computation. The `srun` command is used to launch the computation across multiple nodes, and `shifter` is used to run the job within the specified Docker image. \n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 587,
+        "candidates_token_count": 831,
+        "total_token_count": 1418,
+        "cached_content_token_count": 0
+    }
+}

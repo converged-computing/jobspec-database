@@ -1,0 +1,31 @@
+{
+    "application": "SLURM",
+    "details": {
+        "environment": "zsh",
+        "resources": {
+            "memory": "32GB",
+            "tasks": 1,
+            "cpus_per_task": 8,
+            "gpu": 1,
+            "partition": "main",
+            "array_size": 3,
+            "job_name": "al_baselines",
+            "output_directory": "/mnt/stud/home/ynagel/logs/al_baselines"
+        },
+        "python_script": "active_learning.py",
+        "python_arguments": {
+            "model": "resnet18",
+            "model.optimizer.lr": "1e-3",
+            "model.optimizer.weight_decay": "5e-2",
+            "dataset": "CIFAR10",
+            "dataset_path": "/mnt/stud/home/ynagel/data",
+            "al_strategy": "coreset",
+            "al_cycle.n_init": 250,
+            "al_cycle.acq_size": 250,
+            "al_cycle.n_acq": 9,
+            "random_seed": "$SLURM_ARRAY_TASK_ID",
+            "output_dir": "/mnt/stud/home/ynagel/dal-toolbox/results/al_baselines/CIFAR10/resnet18/coreset/budget_2750/seed${random_seed}/"
+        },
+        "virtual_environment": "/mnt/stud/home/ynagel/dal-toolbox/venv"
+    }
+}

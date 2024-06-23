@@ -1,0 +1,86 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"SLURM\",\n  \"details\": {\n    \"resource_requirements\": {\n      \"walltime\": \"24:00:00\",\n      \"processor_cores\": 1,\n      \"nodes\": 1,\n      \"processors_per_task\": 5\n    },\n    \"job_name\": \"rs4\",\n    \"output_file\": \"rs4-slurm.%N.%j.out\",\n    \"error_file\": \"rs4-slurm.%N.%j.err\",\n    \"modules\": [],\n    \"code\": [\n      \"python -u -c \\\"import PyHipp as pyh; \",\n      \"import DataProcessingTools as DPT; \",\n      \"import os; \",\n      \"import time; \",\n      \"t0 = time.time(); \",\n      \"print(time.localtime()); \",\n      \"DPT.objects.processDirs(dirs=None, objtype=pyh.RPLSplit, channel=[*range(97,125)]); \",\n      \"DPT.objects.processDirs(dirs=['sessioneye/array04','session01/array04'], cmd='import PyHipp as pyh; import DataProcessingTools as DPT; DPT.objects.processDirs(None, pyh.RPLLFP, saveLevel=1); DPT.objects.processDirs(None, pyh.RPLHighPass, saveLevel=1);'); \",\n      \"os.chdir('session01/array04'); \",\n      \"DPT.objects.processDirs(level='channel', cmd='import PyHipp as pyh; from PyHipp import mountain_batch; mountain_batch.mountain_batch(); from PyHipp import export_mountain_cells; export_mountain_cells.export_mountain_cells();'); \",\n      \"print(time.localtime()); \",\n      \"print(time.time()-t0);\\\"\",\n      \"aws sns publish --topic-arn arn:aws:sns:ap-southeast-1:018084650241:awsnotify --message \\\"RPLS4JobDone\\\"\"\n    ],\n    \"libraries\": [\n      \"PyHipp\",\n      \"DataProcessingTools\"\n    ]\n  }\n}\n```\n\n**Explanation:**\n\n* **SLURM:** The script utilizes the SLURM (Simple Linux Utility for Resource Management) workload manager to run the Python code on a high-performance computing (HPC) cluster. \n* **Resource Requirements:** The script defines the following resource requirements for the job:\n    * **walltime**: 24 hours\n    * **ntasks**: 1 processor core\n    * **nodes**: 1 node\n    * **cpus-per-task**: 5 processors per task\n* **Job Name:**  The job is named \"rs4\".\n* **Output and Error Files:** The script defines separate output and error files for the job.\n* **Python Code:** The script executes Python code using the `python` command, utilizing libraries like `PyHipp` and `DataProcessingTools` for data processing and analysis.\n* **AWS SNS Notification:** The script sends a notification to an AWS SNS topic after completing the job.\n\n**Note:**\n\n* The script assumes the existence of directories like \"sessioneye/array04\" and \"session01/array04\" on the HPC cluster.\n* The Python code likely involves complex data processing and analysis tasks specific to the domain of the application using `PyHipp` and `DataProcessingTools`. \n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "citation_metadata": {
+                "citation_sources": [
+                    {
+                        "start_index": 342,
+                        "end_index": 579,
+                        "uri": "https://github.com/RJ3801/PyHipp",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 416,
+                        "end_index": 609,
+                        "uri": "https://github.com/RJ3801/PyHipp",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 635,
+                        "end_index": 827,
+                        "uri": "https://github.com/isukdik/PyHipp",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 708,
+                        "end_index": 924,
+                        "uri": "https://github.com/RJ3801/PyHipp",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 941,
+                        "end_index": 1130,
+                        "uri": "https://github.com/RJ3801/PyHipp",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 1068,
+                        "end_index": 1340,
+                        "uri": "https://github.com/RJ3801/PyHipp",
+                        "license_": ""
+                    }
+                ]
+            },
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 538,
+        "candidates_token_count": 795,
+        "total_token_count": 1333,
+        "cached_content_token_count": 0
+    }
+}

@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"Slurm\",\n  \"details\": {\n    \"language\": \"Bash\",\n    \"libraries\": [\n      \"nccl\",\n      \"blas\",\n      \"fft\",\n      \"nsight\",\n      \"profiler\",\n      \"toolkit\",\n      \"cmake\"\n    ],\n    \"modules\": [\n      \"slurm/21.08.8\",\n      \"cuda11.8/blas/11.8.0\",\n      \"cuda11.8/fft/11.8.0\",\n      \"cuda11.8/nsight/11.8.0\",\n      \"cuda11.8/profiler/11.8.0\",\n      \"cuda11.8/toolkit/11.8.0\",\n      \"cmake/gcc/3.27.9\"\n    ],\n    \"resources\": {\n      \"cpu\": {\n        \"cores_per_task\": 1,\n        \"nodes\": 1\n      },\n      \"gpu\": {\n        \"per_node\": \"${NUM_GPUS}\",\n        \"per_task\": \"${NUM_GPUS}\"\n      },\n      \"memory\": \"not specified\"\n    }\n  }\n}\n```\n\nThis script uses **Slurm** as the job scheduler. It defines a job with specific resource requirements, including:\n\n* **CPU:** 1 node with 1 core per task.\n* **GPU:** Dynamically allocated based on the `NUM_GPUS` variable. \n* **Memory:** Not explicitly specified in the script, so the default Slurm settings will be used. \n\nThe script also uses various modules, including:\n\n* **Slurm:**  For job scheduling.\n* **CUDA:** For GPU programming and various CUDA libraries.\n* **CMake:** A build system for managing the software compilation process.\n\nThe script then dynamically creates Slurm scripts for each scenario and submits them using `sbatch`. Each Slurm script:\n\n* Defines the job name.\n* Requests specific resources.\n* Loads necessary modules.\n* Compiles the CUDA source code.\n* Executes the compiled program with arguments extracted from the scenario identifier.\n\nThe script leverages several libraries, including:\n\n* **nccl:** For high-performance communication between GPUs.\n* **blas:** For basic linear algebra operations.\n* **fft:** For fast Fourier transform operations.\n* **nsight:** For profiling and debugging CUDA applications.\n* **profiler:** For performance profiling.\n* **toolkit:** For the CUDA toolkit.\n\nThe script uses `nvcc` to compile CUDA code. It also uses `nvprof` to profile the application, although this is commented out in the provided example. \n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 1144,
+        "candidates_token_count": 600,
+        "total_token_count": 1744,
+        "cached_content_token_count": 0
+    }
+}

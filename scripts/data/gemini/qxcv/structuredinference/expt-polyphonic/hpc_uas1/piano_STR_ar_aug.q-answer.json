@@ -1,0 +1,28 @@
+{
+    "application": "PBS",
+    "details": {
+        "resources": {
+            "nodes": "1",
+            "ppn": "2",
+            "gpus": "1",
+            "gpu_type": "k80",
+            "walltime": "24:00:00",
+            "memory": "16GB"
+        },
+        "modules": [
+            "node",
+            "cmake",
+            "python/intel/2.7.6",
+            "numpy/intel/1.9.2",
+            "hdf5/intel/1.8.12",
+            "cuda/7.5.18",
+            "cudnn/7.0"
+        ],
+        "environment_variables": {
+            "RUNDIR": "$SCRATCH/structuredinference/expt-polyphonic",
+            "THEANO_FLAGS": "lib.cnmem=1.,scan.allow_gc=False,compiledir_format=gpu1"
+        },
+        "script": "train_dkf.py",
+        "arguments": "-vm R -infm structured -ar 5000 -etype conditional -previnp -dset piano-sorted  -bs 10 -dh 100 -ds 50"
+    }
+}

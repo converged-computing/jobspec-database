@@ -1,0 +1,41 @@
+{
+    "application": "JobScheduler",
+    "details": {
+        "scheduler": "SLURM",
+        "resources": {
+            "time": "11:59:55",
+            "partition": "gpu",
+            "gpu": "v100",
+            "gpu_count": 1,
+            "memory": "50G",
+            "email": "rikvannoord@gmail.com"
+        },
+        "script_language": "Bash",
+        "libraries": [
+            "Python",
+            "src/finetune.py",
+            "src/average_scores.py"
+        ],
+        "dependencies": [
+            "data",
+            "model",
+            "config"
+        ],
+        "execution": {
+            "task": [
+                "upos",
+                "xpos",
+                "ner"
+            ],
+            "model_type": [
+                "roberta",
+                "xlmroberta"
+            ],
+            "language": "lang"
+        },
+        "output": {
+            "format": "eval",
+            "location": "save_fol"
+        }
+    }
+}

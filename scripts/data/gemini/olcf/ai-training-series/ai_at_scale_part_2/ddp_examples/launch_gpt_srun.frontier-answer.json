@@ -1,0 +1,39 @@
+{
+    "application": "SLURM",
+    "details": {
+        "software": [
+            "miniconda3",
+            "TORCH2",
+            "PrgEnv-gnu",
+            "gcc",
+            "rocm",
+            "deepspeed",
+            "transformers",
+            "huggingface_datasets",
+            "python",
+            "aws-ofi-rccl",
+            "libfabric"
+        ],
+        "resources": {
+            "compute_nodes": 2,
+            "gpus_per_node": 8,
+            "ranks_per_node": 8,
+            "time": "00:20:00",
+            "partition": "batch",
+            "job_name": "gpt_frontier",
+            "environment": {
+                "TORCH_EXTENSIONS_DIR": "$PWD/deepspeed",
+                "HF_HOME": "$PWD/hfdata",
+                "ROCM_HOME": "/opt/rocm-5.4.0",
+                "OMP_NUM_THREADS": "2",
+                "NCCL_DEBUG": "INFO",
+                "FI_CXI_ATS": "0",
+                "LD_LIBRARY_PATH": "/opt/rocm-5.4.0/rccl/build:$PWD/aws-ofi-rccl/src/.libs/:/opt/cray/libfabric/1.15.2.0/lib64/:/opt/rocm-5.4.0/lib",
+                "FI_LOG_LEVEL": "info",
+                "NCCL_NET_GDR_LEVEL": "3",
+                "https_proxy": "https://proxy.ccs.ornl.gov:3128",
+                "http_proxy": "http://proxy.ccs.ornl.gov:3128"
+            }
+        }
+    }
+}

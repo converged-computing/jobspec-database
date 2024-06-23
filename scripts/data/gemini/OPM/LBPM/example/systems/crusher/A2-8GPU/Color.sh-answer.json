@@ -1,0 +1,39 @@
+{
+    "application": "LBPM",
+    "details": {
+        "environment": {
+            "modules": [
+                "PrgEnv-amd",
+                "rocm/4.5.0",
+                "cray-mpich",
+                "cray-hdf5-parallel"
+            ],
+            "variables": [
+                "PE_MPICH_GTL_DIR_amd_gfx90a",
+                "PE_MPICH_GTL_LIBS_amd_gfx90a",
+                "MPICH_GPU_SUPPORT_ENABLED",
+                "LD_LIBRARY_PATH",
+                "LBPM_BIN"
+            ]
+        },
+        "resources": {
+            "slurm": {
+                "account": "CSC380",
+                "job_name": "Color-dense",
+                "output": "%x-%j.out",
+                "time": "0:10:00",
+                "partition": "batch",
+                "nodes": 1,
+                "exclusive": true
+            },
+            "execution": {
+                "command": "srun --verbose -N1 -n8 --cpus-per-gpu=8 --gpus-per-task=1 --gpu-bind=closest ${MYCPUBIND} $LBPM_BIN/lbpm_color_simulator input.db",
+                "cpu_binding": "--cpu-bind=verbose,map_cpu:57,33,25,1,9,17,41,49",
+                "nodes": 1,
+                "tasks": 8,
+                "cpus_per_gpu": 8,
+                "gpus_per_task": 1
+            }
+        }
+    }
+}

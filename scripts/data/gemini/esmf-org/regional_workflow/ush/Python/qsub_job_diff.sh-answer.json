@@ -1,0 +1,31 @@
+{
+    "application": "PBS",
+    "details": {
+        "resource_requirements": {
+            "nodes": 1,
+            "mpi_processes": 24,
+            "cores_per_node": 24,
+            "walltime": "00:30:00"
+        },
+        "environment_variables": {
+            "HOMErrfs": "/path-to/ufs-srweather-app/regional_workflow",
+            "EXPTDIR1": "/path-to/expt_dirs/your_experiment1",
+            "EXPTDIR2": "/path-to/expt_dirs/your_experiment2",
+            "GLOBAL_VAR_DEFNS_FP": "${EXPTDIR}/var_defns.sh",
+            "CDATE": "${DATE_FIRST_CYCL}${CYCL_HRS}",
+            "FCST_START": 3,
+            "FCST_END": "${FCST_LEN_HRS}",
+            "FCST_INC": 3,
+            "SHAPE_FILES": "/glade/p/ral/jntp/UFS_SRW_app/tools/NaturalEarth"
+        },
+        "software_dependencies": {
+            "python_modules": [
+                "ncar_pylib",
+                "cartopy"
+            ]
+        },
+        "script_execution": {
+            "command": "python plot_allvars_diff.py ${CDATE} ${FCST_START} ${FCST_END} ${FCST_INC} ${EXPTDIR1} ${EXPTDIR2} ${SHAPE_FILES}"
+        }
+    }
+}

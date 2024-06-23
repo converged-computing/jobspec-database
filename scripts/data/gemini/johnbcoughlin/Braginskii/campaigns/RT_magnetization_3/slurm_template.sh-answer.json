@@ -1,0 +1,26 @@
+{
+    "application": "SLURM",
+    "details": {
+        "job_name": "RT-magnetization-3",
+        "account": "amath",
+        "partition": "gpu-rtx6k",
+        "nodes": 1,
+        "gpus_per_task": 1,
+        "gpus": 2,
+        "cpus_per_task": 2,
+        "array": "1-@@NTASKS@@%2",
+        "mem": "20G",
+        "time": "120:00:00",
+        "chdir": "@@WORKDIR@@",
+        "output": "@@WORKDIR@@/sims/RT-%a/sim.log",
+        "error": "@@WORKDIR@@/sims/RT-%a/sim.err",
+        "modules": [
+            "julia"
+        ],
+        "environment_variables": {
+            "OPENBLAS_NUM_THREADS": "1"
+        },
+        "julia_command": "julia --version",
+        "julia_run_command": "julia --project=../.. --startup-file=no main.jl --run $SLURM_ARRAY_TASK_ID"
+    }
+}

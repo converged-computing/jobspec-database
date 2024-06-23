@@ -1,0 +1,25 @@
+{
+    "application": "Slurm",
+    "details": {
+        "resource_requirements": {
+            "nodes": 1,
+            "processors_per_node": 32,
+            "cpus_per_task": 1,
+            "walltime": "1-08:30:00",
+            "email": "schroeder@princeton.edu",
+            "error_file": "job.err",
+            "output_file": "job.out"
+        },
+        "software_requirements": {
+            "matlab": "R2023b",
+            "anaconda": "2023.9",
+            "python": "images2gif.py"
+        },
+        "script_execution": {
+            "matlab_command": "polar_analytical_solution",
+            "python_command": "./images2gif.py",
+            "openmp_threads": "$SLURM_CPUS_PER_TASK",
+            "mpi_tasks": "$SLURM_NNODES*$(echo $SLURM_TASKS_PER_NODE | cut -d '(' -f 1)"
+        }
+    }
+}

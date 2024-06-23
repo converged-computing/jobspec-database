@@ -1,0 +1,28 @@
+{
+    "application": "Slurm",
+    "details": {
+        "resources": {
+            "time": "30 minutes",
+            "nodes": 2,
+            "partition": "fat_soil_shared",
+            "tasks": 13,
+            "gpus": 4
+        },
+        "modules": [
+            "2021",
+            "OpenMPI/4.1.1-GCC-10.3.0",
+            "Python/3.9.5-GCCcore-10.3.0",
+            "PyTorch-Lightning/1.5.9-foss-2021a-CUDA-11.3.1"
+        ],
+        "environment": "PYTHONUNBUFFERED=1",
+        "virtual_environment": "venv",
+        "python_version": "python --version",
+        "mps_servers": {
+            "method": "ssh",
+            "command": "nvidia-cuda-mps-control -d && echo \"start_server -uid $SLURM_JOB_UID\" | nvidia-cuda-mps-control"
+        },
+        "job_execution": {
+            "command": "mpirun python main.py --n_data_reuse 10 --game Hive --model_dir Hive_2 --n_sims 100 --mcts_iterations=150 --playing_batch_size 1"
+        }
+    }
+}

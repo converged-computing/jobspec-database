@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"Slurm\",\n  \"details\": {\n    \"scheduler\": \"Slurm\",\n    \"queue\": \"debug\",\n    \"time_limit\": \"60:00\",\n    \"output_file\": \"{{= it.dagdir}}/{{= it.nodo.directorio}}/{{= it.nodo.nombre}}{{? it.config.times > 1 }}.%a{{?}}.out\",\n    \"error_file\": \"{{= it.dagdir}}/{{= it.nodo.directorio}}/{{= it.nodo.nombre}}{{? it.config.times > 1 }}.%a{{?}}.err\",\n    \"job_name\": \"{{= it.nodo.directorio}}_{{= it.nodo.nombre}}\",\n    \"array_jobs\": \"{{? it.config.times && it.config.times > 1 }}#SBATCH --array 1-{{= it.config.times}}{{?}}\",\n    \"dependencies\": \"{{? it.nodo.dependencia && it.nodo.dependencia.length > 0 }}#SBATCH --dependency=afterok:{{= it.nodo.dependencia.join(\":\")}}{{?}}\",\n    \"docker_image\": \"{{? it.config.useDocker }}{{= it.config.image }}{{?}}\",\n    \"docker_volume\": \"{{? it.config.useDocker }}{{= it.dagdir}}/{{= it.nodo.directorio}}:{{= it.dagdir}}/{{= it.nodo.directorio}}{{?}}\",\n    \"docker_workdir\": \"{{? it.config.useDocker }}{{= it.dagdir}}/{{= it.nodo.directorio}}{{?}}\",\n    \"module\": \"{{? it.config.module }}module load {{= it.config.module }}{{?}}\",\n    \"working_directory\": \"{{? it.config.wd }}cd {{= it.config.wd }}{{?}}\",\n    \"command\": \"{{= it.config.location && it.config.location.trim() }} {{= it.config.argumento.trim() }}\"\n  }\n}\n```\n\n**Explanation:**\n\n* **Slurm:** The script uses `#SBATCH` directives, which are specific to the Slurm workload manager. This indicates the script is designed to be run within a Slurm environment.\n* **Other Software and Resource Requirements:**\n    * **Queue:** The script requests access to the \"debug\" queue.\n    * **Time Limit:** The script requests a maximum runtime of 60 minutes.\n    * **Output and Error Files:** The script specifies the names and locations for the output and error files.\n    * **Job Name:** The script sets the job name to reflect the directory and file name.\n    * **Array Jobs:** The script potentially utilizes an array job system, running the command multiple times (if `it.config.times > 1`).\n    * **Dependencies:** The script may require the completion of other jobs before starting (if `it.nodo.dependencia` is defined).\n    * **Docker Image and Volumes:** The script may run a command within a Docker container. This includes specifying the Docker image and mounting the working directory as a volume.\n    * **Module Loading:** The script may load specific modules for the execution environment.\n    * **Working Directory:** The script may change the working directory before running the command.\n    * **Command Execution:** The script specifies the command to be executed, including any location and arguments.\n\n**Note:** The script uses a templating system (presumably Jinja2) to generate the final script based on the provided data. The specific values for variables like `it.dagdir`, `it.nodo`, and `it.config` will determine the final script content.\n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 477,
+        "candidates_token_count": 831,
+        "total_token_count": 1308,
+        "cached_content_token_count": 0
+    }
+}

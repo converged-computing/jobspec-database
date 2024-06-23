@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"Slurm\",\n  \"details\": {\n    \"account\": \"project_2005718\",\n    \"partition\": \"small\",\n    \"job_name\": \"{{ job_name }}\",\n    \"log_file\": \"{{ log_file | worker-%A_%a.out }}\",\n    \"memory\": \"{{ memory | 8192 }}\",\n    \"array\": \"1-{{ n_jobs }}\",\n    \"cores\": \"{{ cores | 1 }}\",\n    \"ntasks\": 1,\n    \"time\": \"{{ time | 1:00:00 }}\",\n    \"temp_space\": \"{{ temp_space | 10 }}\",\n    \"auth\": \"{{ auth }}\",\n    \"local_scratch\": \"$LOCAL_SCRATCH\",\n    \"singularity_bind\": \"$(realpath ${LOCAL_SCRATCH}):$(pwd)/userdir\",\n    \"path\": \"/projappl/project_2005718/OptimOTU_v2/bin\",\n    \"r_command\": \"clustermq:::worker(\\\"{{ master }}\\\")\"\n  }\n}\n```\n\n**Explanation:**\n\n- **Slurm:** This script is designed to run within a Slurm workload manager environment. It uses Slurm's directives (`#SBATCH`) to define job parameters like resource allocation, execution environment, and scheduling.\n- **Details:**\n    - **Account:** `project_2005718` is the account under which the job is running.\n    - **Partition:** `small` indicates the specific resource partition the job is assigned to.\n    - **Job Name:**  `{{ job_name }}` is a placeholder for the job's name.\n    - **Log File:**  Logs are written to a file named `worker-%A_%a.out`.\n    - **Memory:**  `{{ memory | 8192 }}` specifies the amount of memory (likely in MB) per CPU.\n    - **Array:**  The `--array` directive indicates that this is an array job, potentially running multiple tasks (from 1 to `{{ n_jobs }}`).\n    - **Cores:**  `{{ cores | 1 }}` suggests that each task requires one core.\n    - **NTasks:**  `1` indicates that each job uses one task.\n    - **Time:**  The job has a time limit of `{{ time | 1:00:00 }}`.\n    - **Temp Space:** `{{ temp_space | 10 }}` indicates the amount of temporary storage space (likely in GB) requested.\n    - **CMQ_AUTH:**  `{{ auth }}` is an environment variable for authentication within the cluster manager.\n    - **OMP_STACKSIZE & OMP_THREAD_LIMIT:**  These settings relate to thread management within the application.\n    - **LOCAL_SCRATCH:**  This refers to a temporary storage location within the cluster, likely mounted for the job.\n    - **SINGULARITY_BIND:**  This environment variable is used for container environments, allowing access to local files from within a container.\n    - **PATH:** The script adds a directory (`/projappl/project_2005718/OptimOTU_v2/bin`) to the system's search path.\n    - **R Command:**  The script uses R's `clustermq` package and runs the `worker` function, connecting to a master process. \n\n**In summary:** This script sets up an array of Slurm jobs that likely utilize a container environment (Singularity/Apptainer) to run R code with the `clustermq` package. The jobs access shared resources and temporary storage, and rely on the `clustermq` package to distribute work within a cluster.\n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 426,
+        "candidates_token_count": 832,
+        "total_token_count": 1258,
+        "cached_content_token_count": 0
+    }
+}

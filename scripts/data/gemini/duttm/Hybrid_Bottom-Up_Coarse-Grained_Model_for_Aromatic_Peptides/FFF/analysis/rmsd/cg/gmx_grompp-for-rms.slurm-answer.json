@@ -1,0 +1,31 @@
+{
+    "application": "GROMACS",
+    "details": {
+        "version": "2018",
+        "modules": [
+            "gromacs/2018"
+        ],
+        "resources": {
+            "nodes": 1,
+            "tasks_per_node": 16,
+            "time": "00:20:00",
+            "partition": "RM-shared",
+            "output": "slurm.%N.%j.out",
+            "mail_user": "mh1314@scarletmail.rutgers.edu",
+            "mail_type": "ALL",
+            "job_name": "ana"
+        },
+        "input_files": [
+            "${MODELNO}cg${PEPCT}-5ns.gro",
+            "topol_aa${MODELNO}cg${PEPCT}.top",
+            "index-${MODELNO}cg${PEPCT}.ndx",
+            "grompp_CG-${MODELNO}cg.mdp"
+        ],
+        "output_files": [
+            "topol-aa${MODELNO}cg${PEPCT}.tpr"
+        ],
+        "commands": [
+            "mpirun -np 1 gmx_mpi grompp -f $MDPFILE -c $INPUT -p $TOPOL -n $INDEX -o $OUTPUT"
+        ]
+    }
+}

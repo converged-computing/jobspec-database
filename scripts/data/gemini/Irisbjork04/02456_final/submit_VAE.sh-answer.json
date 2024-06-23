@@ -1,0 +1,28 @@
+{
+    "application": "LSF",
+    "details": {
+        "queue": "gpuv100",
+        "job_name": "vanilla_VAE",
+        "cores": 10,
+        "gpu": "1 (exclusive process)",
+        "walltime": "24:00",
+        "memory": "10GB",
+        "email_notifications": "not specified",
+        "output_file": "gpu_%J.out",
+        "error_file": "gpu_%J.err",
+        "software": [
+            "nvidia-smi",
+            "cuda (version 11.6.0)",
+            "deviceQuery (from cuda samples)",
+            "python3",
+            "deep_learning_env"
+        ],
+        "commands": [
+            "nvidia-smi",
+            "mkdir -p $timeDir",
+            "/appl/cuda/11.6.0/samples/bin/x86_64/linux/release/deviceQuery",
+            "source deep_learning_env/bin/activate",
+            "/usr/bin/time -v -o $timeDir/linear_VAE.time python3 train_VAE.py"
+        ]
+    }
+}

@@ -1,0 +1,30 @@
+{
+    "application": "PBS",
+    "details": {
+        "resource_requirements": {
+            "nodes": 2,
+            "cpus_per_node": 36,
+            "mpi_processes": 36,
+            "walltime": "01:00:00",
+            "queue": "standard",
+            "job_name": "mcnpu0t4"
+        },
+        "modules": [
+            "mpi/sgimpt/2.15",
+            "mpi/intelmpi/17.0.1"
+        ],
+        "script_logic": {
+            "description": "The script launches 1 MPI job, splitting the nodes defined in PBS_NODEFILE into 2 groups.",
+            "steps": [
+                "Sets up the environment by loading necessary modules.",
+                "Changes directory to the job's working directory.",
+                "Copies the necessary files to separate folders for each job.",
+                "Creates a file containing the nodes for each job.",
+                "Launches the Python script 'main.py' on each set of nodes using a background process.",
+                "Waits for all jobs to complete."
+            ],
+            "python_script": "main.py",
+            "python_script_arguments": "structure.xsf el_list.txt"
+        }
+    }
+}

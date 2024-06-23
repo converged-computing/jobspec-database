@@ -1,0 +1,27 @@
+{
+    "application": "Slurm",
+    "details": {
+        "partition": "mlperf",
+        "nodes": 1,
+        "wall_time": "12:00:00",
+        "job_name": "object_detection",
+        "memory": "all available",
+        "tasks_per_node": 8,
+        "threads_per_core": 2,
+        "cores_per_socket": 20,
+        "benchmark": "object_detection",
+        "benchmark_name": "MASKRCNN",
+        "container": "mlperf-nvidia:object_detection",
+        "data_dir": "/raid/data/coco-2017",
+        "log_dir": "/raid/results/object_detection",
+        "nexp": 5,
+        "system": "DGX1",
+        "docker_volumes": "-v /raid/data/coco-2017:/data -v /raid/results/object_detection:/results",
+        "docker_exec": "nvidia-docker run --rm --net=host --uts=host --ipc=host --ulimit stack=67108864 --ulimit memlock=-1 --name=cont_${SLURM_JOB_ID} --security-opt seccomp=unconfined $IBDEVICES",
+        "mlperf_host_os": "cat /etc/issue | head -1 | cut -f1-3 -d\" \" / cat /etc/dgx-release | grep -E \"DGX_PRETTY_NAME|DGX_OTA_VERSION\" |cut -f2 -d= |cut -f2 -d '\"' |paste -sd' '",
+        "master_ip": "`getent hosts \\`hostname\\` | cut -d ' ' -f1`",
+        "port": "4242 + RANDOM%1000",
+        "ssh": "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no $hostn",
+        "srun": "srun --mem=0 -N 1 -n 1 -w $hostn"
+    }
+}

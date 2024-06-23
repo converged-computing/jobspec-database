@@ -1,0 +1,57 @@
+{
+    "application": "Slurm",
+    "details": {
+        "scheduler": "Slurm Workload Manager",
+        "resources": {
+            "partition": "allgroups",
+            "gpu": "titan_rtx",
+            "gpu_count": 1,
+            "tasks": 2,
+            "memory": "40G",
+            "time": "002:00:00"
+        },
+        "environment": {
+            "container": "singularity",
+            "image": "pytorch_v2.sif",
+            "python": "python -u -m torch.distributed.launch",
+            "script": "run.py"
+        },
+        "parameters": {
+            "batch_size": 8,
+            "task": "19-1",
+            "names": "SDR",
+            "loss_featspars": [
+                0.001
+            ],
+            "lfs_normalization": [
+                "max_maskedforclass"
+            ],
+            "lfs_shrinkingfn": [
+                "exponential"
+            ],
+            "lfs_loss_fn_touse": "ratio",
+            "loss_de_prototypes": [
+                0.01
+            ],
+            "loss_fc": [
+                0.001
+            ],
+            "lfc_sep_clust": [
+                0.001
+            ],
+            "loss_kd": [
+                100
+            ],
+            "steps": [
+                1
+            ],
+            "epochs": 30,
+            "lr_step0": 0.001,
+            "lr_stepN": 0.0001,
+            "dataset": "voc",
+            "sample_num": 10,
+            "where_to_sim": "GPU_windows",
+            "step_ckpt": "logs/19-1/19-1-voc_FT/19-1-voc_FT_0.pth"
+        }
+    }
+}

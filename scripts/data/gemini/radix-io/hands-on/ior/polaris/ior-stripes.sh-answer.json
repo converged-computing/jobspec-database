@@ -1,0 +1,51 @@
+{
+    "application": "IOR",
+    "details": {
+        "software": {
+            "ior": "/home/soft/polaris/ior-4.0.0rc1",
+            "mpi": "MPICH"
+        },
+        "resources": {
+            "nodes": 8,
+            "ranks_per_node": 16,
+            "threads_per_rank": 1,
+            "walltime": "1:00:00",
+            "filesystem": "grand",
+            "file_system_type": "Lustre",
+            "file_system_striping": "variable (for striping test)",
+            "file_system_overstriping": "not used"
+        },
+        "environment_variables": {
+            "PBS_O_WORKDIR": "current working directory",
+            "PBS_NODEFILE": "file containing list of nodes",
+            "HOME": "/home",
+            "OUTPUT": "/grand/ATPESC2023/usr/$USER/ior"
+        },
+        "command_line_arguments": {
+            "ior": [
+                "--mpiio.showHints",
+                "-a",
+                "MPIIO",
+                "-e",
+                "-C",
+                "-s",
+                "8",
+                "-i",
+                "5",
+                "-t",
+                "1MiB",
+                "-b",
+                "64MiB"
+            ],
+            "mpiexec": [
+                "-n",
+                "${NTOTRANKS}",
+                "--ppn",
+                "${NRANKS_PER_NODE}",
+                "--depth=${NDEPTH}",
+                "--cpu-bind",
+                "depth"
+            ]
+        }
+    }
+}

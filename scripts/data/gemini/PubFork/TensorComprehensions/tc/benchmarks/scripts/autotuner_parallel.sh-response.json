@@ -1,0 +1,56 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"Slurm\",\n  \"details\": {\n    \"job_name\": \"TensorComprehensions\",\n    \"cores\": 8,\n    \"memory\": \"40000 MB\",\n    \"execution_time\": \"2 hours\",\n    \"gpus\": 2,\n    \"partition\": \"priority,uninterrupted,learnfair,scavenge\",\n    \"environment_variables\": {\n      \"TUNER_THREADS\": \"20\",\n      \"TUNER_DEVICES\": \"0,1\",\n      \"DEVICE_NAME\": \"output of nvidia-smi\",\n      \"TC_PREFIX\": \"output of git rev-parse --show-toplevel\",\n      \"PREFIX\": \"tc/benchmarks/results_(date)/DEVICE_NAME\",\n      \"LOG_DIR\": \"tc/benchmarks/results_(date)/DEVICE_NAME/logs/SLURM_ARRAY_JOB_ID-SLURM_ARRAY_TASK_ID\"\n    },\n    \"commands\": [\n      \"mkdir -p ${LOG_DIR}\",\n      \"chmod -R 777 ${LOG_DIR}\",\n      \"cat ${TC_PREFIX}/tc/benchmarks/scripts/AUTOTUNER_COMMANDS | grep -v \\\"#\\\" | head -n ${SLURM_ARRAY_TASK_ID} | tail -n 1 | xargs -i echo {} > ${LOG_DIR}/COMMAND\",\n      \"cat ${TC_PREFIX}/tc/benchmarks/scripts/AUTOTUNER_COMMANDS | grep -v \\\"#\\\" | head -n ${SLURM_ARRAY_TASK_ID} | tail -n 1 | xargs -i bash -c \\\"{}\\\"\"\n    ],\n    \"execution_method\": \"sbatch --array=1-40 -C volta ./tc/benchmarks/scripts/autotuner_parallel.sh\"\n  }\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "citation_metadata": {
+                "citation_sources": [
+                    {
+                        "start_index": 636,
+                        "end_index": 1003,
+                        "uri": "https://github.com/LoopTactics/tc-cim",
+                        "license_": ""
+                    }
+                ]
+            },
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 511,
+        "candidates_token_count": 426,
+        "total_token_count": 937,
+        "cached_content_token_count": 0
+    }
+}

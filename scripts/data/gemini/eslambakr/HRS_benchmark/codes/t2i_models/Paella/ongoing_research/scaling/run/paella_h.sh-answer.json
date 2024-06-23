@@ -1,0 +1,51 @@
+{
+    "application": "paella",
+    "details": {
+        "resource_requirements": {
+            "partition": "gpu",
+            "nodes": 16,
+            "tasks_per_node": 1,
+            "job_name": "paella"
+        },
+        "software": {
+            "modules": [
+                "intelmpi"
+            ],
+            "libraries": [
+                "nccl",
+                "aws-ofi-nccl",
+                "efa",
+                "cuda-11.0"
+            ],
+            "environments": [
+                "paella_env"
+            ],
+            "python_packages": [
+                "transformers"
+            ]
+        },
+        "environment_variables": {
+            "LD_LIBRARY_PATH": "/opt/aws-ofi-nccl/lib:/opt/amazon/efa/lib64:/usr/local/cuda-11.0/efa/lib:/usr/local/cuda-11.0/lib:/usr/local/cuda-11.0/lib64:/usr/local/cuda-11.0:/opt/nccl/build/lib:/opt/aws-ofi-nccl-install/lib:/opt/aws-ofi-nccl/lib:$LD_LIBRARY_PATH",
+            "NCCL_PROTO": "simple",
+            "PATH": "/opt/amazon/efa/bin:$PATH",
+            "LD_PRELOAD": "/opt/nccl/build/lib/libnccl.so",
+            "FI_EFA_FORK_SAFE": "1",
+            "FI_LOG_LEVEL": "1",
+            "FI_EFA_USE_DEVICE_RDMA": "1",
+            "NCCL_ALGO": "ring",
+            "NCCL_DEBUG": "info",
+            "PYTHONFAULTHANDLER": "1",
+            "CUDA_LAUNCH_BLOCKING": "0",
+            "OMPI_MCA_mtl_base_verbose": "1",
+            "FI_EFA_ENABLE_SHM_TRANSFER": "0",
+            "FI_PROVIDER": "efa",
+            "FI_EFA_TX_MIN_CREDITS": "64",
+            "NCCL_TREE_THRESHOLD": "0",
+            "PYTHONWARNINGS": "ignore",
+            "CXX": "g++",
+            "TRANSFORMERS_CACHE": "/fsx/mas/.cache",
+            "WANDB_CACHE_DIR": "/fsx/mas/.cache"
+        },
+        "working_directory": "/fsx/mas/paella_unet"
+    }
+}

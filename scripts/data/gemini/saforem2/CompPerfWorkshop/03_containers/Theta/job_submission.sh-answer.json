@@ -1,0 +1,31 @@
+{
+    "application": "MPI",
+    "details": {
+        "resource_manager": "COBALT",
+        "mpi_implementation": "Cray MPICH",
+        "container_runtime": "Singularity",
+        "container_image": "$CONTAINER",
+        "applications": [
+            "/usr/source/mpi_hello_world",
+            "/usr/source/mpi_hello_world.py"
+        ],
+        "environment_variables": {
+            "RANKS_PER_NODE": 4,
+            "SINGULARITYENV_LD_LIBRARY_PATH": "$CRAY_LD_LIBRARY_PATH:$LD_LIBRARY_PATH:$ADDITIONAL_PATHS"
+        },
+        "cobalt_options": {
+            "time": "10",
+            "queue": "debug-flat-quad",
+            "nodes": 2,
+            "filesystems": "theta-fs0,home"
+        },
+        "bindings": [
+            "/opt",
+            "/etc/alternatives"
+        ],
+        "modules": [
+            "cray-mpich-abi",
+            "PrgEnv-intel"
+        ]
+    }
+}

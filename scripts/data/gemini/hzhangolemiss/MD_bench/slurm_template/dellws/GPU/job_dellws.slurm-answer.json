@@ -1,0 +1,36 @@
+{
+    "application": "LAMMPS",
+    "software": [
+        "SLURM",
+        "OpenMPI",
+        "OpenBLAS",
+        "FFTW3",
+        "LAMMPS",
+        "NVIDIA CUDA MPS"
+    ],
+    "resource_requirements": {
+        "nodes": 1,
+        "cores": 12,
+        "memory": "200M per CPU",
+        "time": "30-00:00:00",
+        "GPUs": 2,
+        "modules": [
+            "openmpi",
+            "openblas",
+            "fftw3",
+            "lammps/gcc/sfft/openmpi/cuda/2Aug23.3"
+        ],
+        "environment_variables": {
+            "CUDA_MPS_PIPE_DIRECTORY": "$SLURM_SUBMIT_DIR/nvidia-mps.$SLURM_JOB_ID",
+            "CUDA_MPS_LOG_DIRECTORY": "$SLURM_SUBMIT_DIR/nvidia-log.$SLURM_JOB_ID"
+        }
+    },
+    "notes": [
+        "Script uses NVIDIA GPU MPS accelerator for fast LAMMPS runs",
+        "Dell WS system configuration: 2*{cpu(26c)@2.0GHz} + 2*{gpu(56cu)} (HT disabled)",
+        "Multiple NVIDIA CUDA MPS instances can now run on different GPUs, allowing for concurrent jobs with one GPU each",
+        "Script optimizes for single urgent case with 1*12 MPI (~46% CPU) + 2 GPU",
+        "For series of normal cases, use 1*12 MPI (~46% CPU) + 1 GPU per job for better efficiency",
+        "Change the email address in '--mail-user' entry to receive notifications"
+    ]
+}

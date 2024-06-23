@@ -1,0 +1,28 @@
+{
+    "application": "Slurm",
+    "details": {
+        "job_name": "MPET",
+        "project": "nn9279k",
+        "wall_clock_limit": "1:00:00",
+        "max_memory_per_task": "4G",
+        "number_of_tasks": 8,
+        "nodes": 1,
+        "cpus_per_task": 1,
+        "partition": "long",
+        "output_file": "MPET.out",
+        "environment_setup": "/cluster/bin/jobsetup",
+        "python_version": "2.7",
+        "fenics_version": "1.6",
+        "python_packages": "$HOME/.local/lib/python2.7/site-packages/",
+        "cleanup_script": [
+            "mkdir -p /work/users/piersanti/MPET_output",
+            "cp -r $SCRATCH /work/users/piersanti/MPET_output"
+        ],
+        "file_copy": "/usit/abel/u1/piersanti/MPET $SCRATCH",
+        "job_execution": [
+            "cd $SCRATCH",
+            "cd MPET",
+            "mpirun --bind-to none python prova.py"
+        ]
+    }
+}

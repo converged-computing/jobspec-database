@@ -1,0 +1,30 @@
+{
+    "application": "SLURM",
+    "details": {
+        "job_name": "sdsc-ddp",
+        "time": "00:05:00",
+        "nodes": 4,
+        "tasks_per_node": 1,
+        "cpus_per_task": 12,
+        "constraint": "gpu",
+        "partition": "debug",
+        "account": "sd00",
+        "output_file": "logs/slurm-%x.%j.out",
+        "error_file": "logs/slurm-%x.%j.err",
+        "modules": [
+            "daint-gpu",
+            "sarus"
+        ],
+        "environment_variables": [
+            "OMP_NUM_THREADS",
+            "NCCL_DEBUG",
+            "NCCL_NET_GDR_LEVEL",
+            "MASTER_ADDR"
+        ],
+        "command": "srun -ul sarus run --workdir \"$(pwd)\" --mount type=bind,source=/scratch,destination=/scratch --mount type=bind,source=${HOME},destination=${HOME} nvcr.io/nvidia/pytorch:23.09-py3 bash -c \"source ./export_DDP_vars.sh python -u ${args}\"",
+        "other_software": [
+            "sarus",
+            "nvcr.io/nvidia/pytorch:23.09-py3"
+        ]
+    }
+}

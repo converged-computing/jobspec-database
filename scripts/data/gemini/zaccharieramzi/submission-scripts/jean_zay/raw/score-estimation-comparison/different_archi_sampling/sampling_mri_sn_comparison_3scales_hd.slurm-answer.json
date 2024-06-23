@@ -1,0 +1,29 @@
+{
+    "application": "Python",
+    "details": {
+        "environment": {
+            "module_purged": true,
+            "conda_env_deactivated": "fastmri-tf-2.1.0",
+            "module_loaded": "tensorflow-gpu/py3/2.3.0"
+        },
+        "resources": {
+            "slurm_job_name": "3scales_sampling_mri_hd",
+            "slurm_tasks": 1,
+            "slurm_tasks_per_node": 1,
+            "slurm_gres": "gpu:1",
+            "slurm_cpus_per_task": 10,
+            "slurm_hint": "nomultithread",
+            "slurm_distribution": "block:block",
+            "slurm_time": "20:00:00",
+            "slurm_qos": "qos_gpu-t3",
+            "slurm_output": "3scales_sampling_mri_hd%A_%a.out",
+            "slurm_error": "3scales_sampling_mri_hd%A_%a.out",
+            "slurm_array": "0-6",
+            "slurm_dependency": "afterok:387628",
+            "fastmri_data_dir": "$SCRATCH/",
+            "checkpoints_dir": "$SCRATCH/nsec_3scales/",
+            "figures_dir": "$SCRATCH/nsec_figures/sampling_3scales_hd_sn${opt[$SLURM_ARRAY_TASK_ID]}/"
+        },
+        "script": "python ./nsec/mri/sampling.py -ns 100000 --nps-train 50.0 -b 2 -c CORPD_FBK -sn ${opt[$SLURM_ARRAY_TASK_ID]} -sc 3"
+    }
+}

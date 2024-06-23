@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "SLURM\n\n```json\n{\n  \"application\": \"SLURM\",\n  \"details\": {\n    \"resource_requirements\": {\n      \"memory\": \"32gb\",\n      \"tasks\": 1,\n      \"cpus_per_task\": 24,\n      \"gpus\": 1,\n      \"partition\": \"main\",\n      \"array\": \"1-16%8\",\n      \"job_name\": \"self_supervised_learning\",\n      \"output_dir\": \"/mnt/stud/home/ynagel/logs/self_supervised_learning/CIFAR100/R50/%A_%a__%x.log\"\n    },\n    \"environment\": {\n      \"source\": \"/mnt/stud/home/ynagel/dal-toolbox/venv/bin/activate\",\n      \"working_directory\": \"~/dal-toolbox/experiments/self_supervised_learning/\",\n      \"random_seed\": \"$SLURM_ARRAY_TASK_ID\"\n    },\n    \"grid_search\": {\n      \"temperature\": [0.1, 0.5],\n      \"learning_rate\": [0.025, 0.075, 0.125, 0.175],\n      \"accumulate_batches\": [1, 4]\n    },\n    \"dataset\": {\n      \"name\": \"CIFAR100\",\n      \"color_distortion_strength\": 0.5\n    },\n    \"model\": {\n      \"type\": \"SIMCLR\",\n      \"epochs\": 801,\n      \"encoder\": \"resnet50_deterministic\",\n      \"projector\": \"mlp\",\n      \"projector_dimension\": 128,\n      \"batch_size\": 512,\n      \"accumulate_batches\": \"$accumulate_array[$((SLURM_ARRAY_TASK_ID % 2)) + 1]\",\n      \"optimizer\": {\n        \"base_learning_rate\": \"$lr_array[$((SLURM_ARRAY_TASK_ID / 2 % 4)) + 1]\",\n        \"weight_decay\": 0.000001\n      }\n    },\n    \"linear_evaluation\": {\n      \"batch_size\": 4096,\n      \"epochs\": 90,\n      \"optimizer\": {\n        \"base_learning_rate\": 0.1,\n        \"weight_decay\": 0.0,\n        \"momentum\": 0.9\n      }\n    },\n    \"output_directory\": \"/mnt/stud/home/ynagel/dal-toolbox/results/self_supervised_learning/${dataset}/simclr_${encoder}/baselr_${optimizer_base_lr}_bs_${effective_batch_size}_temp_${temperature}/seed${random_seed}/\",\n    \"python_script\": \"main.py\"\n  }\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 897,
+        "candidates_token_count": 661,
+        "total_token_count": 1558,
+        "cached_content_token_count": 0
+    }
+}

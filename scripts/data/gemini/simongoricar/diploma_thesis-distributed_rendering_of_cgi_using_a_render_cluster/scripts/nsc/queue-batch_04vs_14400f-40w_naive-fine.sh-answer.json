@@ -1,0 +1,56 @@
+{
+    "application": "Slurm",
+    "details": {
+        "job_name": "qb_04vs_14400f-40w_naive-fine",
+        "num_tasks": 41,
+        "time": "160 minutes",
+        "output_file": "/ceph/grid/home/sg7710/diploma/distributed-rendering-diploma/logs/%A.sbatch.qb_04vs_14400f-40w_naive-fine.log",
+        "cpus_per_task": 4,
+        "mem_per_cpu": "2G",
+        "tasks_per_core": 1,
+        "wait_all_nodes": true,
+        "constraint": "zen3",
+        "dependency": "singleton",
+        "runtime": {
+            "master_server": {
+                "application": "Rust",
+                "executable": "master",
+                "arguments": [
+                    "--host",
+                    "0.0.0.0",
+                    "--port",
+                    "9940",
+                    "--logFilePath",
+                    "$JOB_LOG_DIRECTORY_PATH/$LOG_NAME.master.log",
+                    "run-job",
+                    "--resultsDirectory",
+                    "$RESULTS_DIRECTORY",
+                    "$JOB_FILE_PATH"
+                ]
+            },
+            "workers": {
+                "application": "Singularity",
+                "image": "$RUN_BASE_DIRECTORY/blender-3.6.0.sif",
+                "arguments": [
+                    "$RUN_BASE_DIRECTORY/target/release/worker",
+                    "--logFilePath",
+                    "$JOB_LOG_DIRECTORY_PATH/$LOG_NAME.worker.$i.log",
+                    "--masterServerHost",
+                    "$SERVER_NODE_HOSTNAME",
+                    "--masterServerPort",
+                    "$SERVER_PORT",
+                    "--baseDirectory",
+                    "$RUN_BASE_DIRECTORY",
+                    "--blenderBinary",
+                    "/usr/bin/blender"
+                ]
+            }
+        },
+        "resources": {
+            "blender_project": "$RUN_BASE_DIRECTORY/blender-projects/04_very-simple",
+            "job_file": "$BLENDER_PROJECT_DIRECTORY/nsc-jobs/04_very-simple_measuring_14400f-40w_naive-fine.toml",
+            "results_directory": "$BLENDER_PROJECT_DIRECTORY/results",
+            "server_port": 9940
+        }
+    }
+}

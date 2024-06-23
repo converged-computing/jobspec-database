@@ -1,0 +1,62 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"Slurm\",\n  \"details\": {\n    \"partition\": \"mlperf\",\n    \"nodes\": 1,\n    \"wall_time\": \"12:00:00\",\n    \"job_name\": \"rnn_translator\",\n    \"memory\": \"all available\",\n    \"tasks_per_node\": 8,\n    \"threads_per_core\": 2,\n    \"cores_per_socket\": 20,\n    \"benchmark\": \"rnn_translator\",\n    \"benchmark_name\": \"GNMT\",\n    \"container\": \"mlperf-nvidia:rnn_translator\",\n    \"data_dir\": \"/raid/data/wmt16_de_en\",\n    \"preprocessed_data_dir\": \"/raid/scratch/gnmt\",\n    \"log_dir\": \"/raid/results/rnn_translator\",\n    \"number_of_runs\": 10,\n    \"system_specific_parameters\": \"config_DGX1.sh\",\n    \"docker_volumes\": \"-v /raid/data/wmt16_de_en:/data -v /raid/results/rnn_translator:/results -v /raid/scratch/gnmt:/preproc_data\",\n    \"docker_execution\": \"nvidia-docker run --init --rm --net=host --uts=host --ipc=host --ulimit stack=67108864 --ulimit memlock=-1 --name=cont_${SLURM_JOB_ID} --security-opt seccomp=unconfined $IBDEVICES\",\n    \"preprocessed_dataset_generation_command\": \"python preprocess_data.py --preproc-data-dir /preproc_data --dataset-dir /data --max-length-train ${MAX_SEQ_LEN}\",\n    \"benchmark_run_command\": \"./run_and_time.sh\",\n    \"environment_variables\": [\n      \"DGXSYSTEM\",\n      \"MULTI_NODE\",\n      \"LR\",\n      \"TRAIN_BATCH_SIZE\",\n      \"TEST_BATCH_SIZE\",\n      \"WARMUP_STEPS\",\n      \"REMAIN_STEPS\",\n      \"DECAY_INTERVAL\",\n      \"TARGET\",\n      \"NUMEPOCHS\",\n      \"MAX_SEQ_LEN\",\n      \"EXTRA_OPTS\",\n      \"SLURM_JOB_ID\",\n      \"SLURM_NTASKS_PER_NODE\",\n      \"SLURM_NNODES\"\n    ],\n    \"cache_clearing_command\": \"sync && sudo /sbin/sysctl vm.drop_caches=3\"\n  }\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "citation_metadata": {
+                "citation_sources": [
+                    {
+                        "start_index": 759,
+                        "end_index": 919,
+                        "uri": "https://github.com/mlcommons/training_results_v0.6",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 786,
+                        "end_index": 948,
+                        "uri": "https://github.com/popperized/popper-experiments",
+                        "license_": ""
+                    }
+                ]
+            },
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 2600,
+        "candidates_token_count": 595,
+        "total_token_count": 3195,
+        "cached_content_token_count": 0
+    }
+}

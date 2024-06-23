@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"PBS\",\n  \"software_requirements\": {\n    \"bash\": \"which bash\",\n    \"picard\": \"$picardir\",\n    \"samtools\": \"$samdir\",\n    \"gatk\": \"$gatk\",\n    \"tabix\": \"$tabixdir\",\n    \"vcftools\": \"$vcftoolsdir\",\n    \"launcher\": \"$launcherdir/scheduler.x\",\n    \"java\": \"$javadir\"\n  },\n  \"resource_requirements\": {\n    \"pbs_project_id\": \"$pbsprj\",\n    \"pbs_queue\": {\n      \"wgs\": \"$pbsqueueWGEN\",\n      \"wes\": \"$pbsqueueEXOME\"\n    },\n    \"pbs_cpu\": {\n      \"wgs\": \"$pbSCPUOtherWGEN\",\n      \"wes\": \"$pbSCPUOtherEXOME\"\n    },\n    \"pbs_threads\": \"$pbSTHREADS\",\n    \"nodes\": {\n      \"launcher\": \"$numnodes\",\n      \"per_sample\": \"1\"\n    }\n  }\n}\n```\n\n**Explanation of the JSON:**\n\n* **application:**  The script is primarily designed to run on the **PBS (Portable Batch System)** cluster. \n* **software_requirements:** Lists the required software tools and their locations.\n* **resource_requirements:**  Specifies the resources needed on the PBS cluster:\n    * **pbs_project_id:**  The project account for running the jobs.\n    * **pbs_queue:**  The queue to submit jobs to, depending on whether the analysis is whole genome sequencing (WGS) or whole exome sequencing (WES).\n    * **pbs_cpu:** The walltime requested for each job. \n    * **pbs_threads:** The number of threads requested per job. \n    * **nodes:** The number of nodes requested, broken down by use:\n        * **launcher:** The launcher job uses a number of nodes equal to the number of samples plus one.\n        * **per_sample:**  Jobs for individual samples each request one node.\n\n**Script Details:**\n\nThe script, named `schedule_realrecal_nonmultiplexed.sh`, orchestrates variant calling workflows on a PBS cluster. It supports various configurations, including:\n\n* **Sample splitting by region:**  The BAM files can be split by chromosome for analysis, either packaged by chromosome or by sample.\n* **Launcher usage:**  The script can use a dedicated launcher (`$launcherdir/scheduler.x`) to manage multiple jobs.\n* **Variant calling:** It performs realignment, recalibration, and variant calling using GATK and Picard. \n* **Cleanup:** An optional cleanup phase removes temporary files.\n* **Job scheduling:** It submits jobs to the PBS cluster with appropriate resource requests and dependencies.\n* **Summary reporting:**  Summary tables are generated after job completion. \n\n**Key Features:**\n\n* **Flexibility:** Handles different input types (WGS, WES) and analysis methods.\n* **Robustness:** Includes extensive error checking and handling.\n* **Modularization:** Uses multiple sub-scripts for specific tasks.\n* **Documentation:**  Contains comments for understanding the script's functionality. \n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 24569,
+        "candidates_token_count": 700,
+        "total_token_count": 25269,
+        "cached_content_token_count": 0
+    }
+}

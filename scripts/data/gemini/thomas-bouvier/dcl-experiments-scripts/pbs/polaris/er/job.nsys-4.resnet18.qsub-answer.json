@@ -1,0 +1,36 @@
+{
+    "application": "MPI",
+    "details": {
+        "environment": {
+            "spack": {
+                "setup": "source ${HOME}/git/spack-polaris/share/spack/setup-env.sh",
+                "activation": "spack env activate /home/tbouvier/git/spack-envs/polaris"
+            },
+            "wandb": {
+                "mode": "offline"
+            }
+        },
+        "resource_requirements": {
+            "nodes": {
+                "count": "$NNODES",
+                "ranks_per_node": "$NRANKS_PER_NODE",
+                "cores_per_node": "32"
+            },
+            "threads_per_rank": "$NTHREADS",
+            "walltime": "0:10:00",
+            "queue": "prod",
+            "filesystems": "home",
+            "account": "VeloC"
+        },
+        "execution": {
+            "command": "nsys profile --trace=cuda,nvtx mpiexec -n ${NTOTRANKS} --ppn ${NRANKS_PER_NODE} --depth=${NDEPTH} --cpu-bind depth ./set_affinity_gpu_polaris.sh python ../../main.py --yaml-config experiments_polaris.yaml --config er_resnet18_scale --log-level info --nsys-run",
+            "script": "set_affinity_gpu_polaris.sh",
+            "python_script": "main.py",
+            "yaml_config": "experiments_polaris.yaml"
+        },
+        "data": {
+            "dataset": "/grand/VeloC/tbouvier/datasets/ImageNet_blurred",
+            "local_scratch": "/local/scratch/"
+        }
+    }
+}

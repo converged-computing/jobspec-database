@@ -1,0 +1,28 @@
+{
+    "application": "Slurm",
+    "details": {
+        "slurm": {
+            "jobname": "Gbull",
+            "partition": "jumbo",
+            "nodes": 1,
+            "tasks_per_node": 1,
+            "cpus_per_task": 64,
+            "memory": "300000M"
+        },
+        "singularity": {
+            "image": "trinityrnaseq/trinityrnaseq:2.15.1",
+            "image_name": "trinityrnaseq_2.15.1.sif",
+            "binds": [
+                "${BINDS},${WORKINGDIR}:${WORKINGDIR}"
+            ]
+        },
+        "trinity": {
+            "seq_type": "fq",
+            "left": "${rcordir}/Gbull_020823_1.cor.fq.gz",
+            "right": "${rcordir}/Gbull_020823_2.cor.fq.gz",
+            "max_memory": "${TOTAL_RAM}G",
+            "cpu": "${SLURM_CPUS_PER_TASK}",
+            "output": "${assemblydir}/"
+        }
+    }
+}

@@ -1,0 +1,30 @@
+{
+    "application": "LSF",
+    "details": {
+        "queue": "lowpriority",
+        "gpu_num": 1,
+        "gpu_mode": "exclusive_process",
+        "container_image": "darraghdog/kaggle:apex_build",
+        "num_nodes": 1,
+        "processors": "span[ptile=4]",
+        "output_file": "log_train_%J",
+        "script": "python3 trainfused.py",
+        "script_arguments": [
+            "--logmsg Recursion-same-diff-$SIZE-fp16",
+            "--nbags 20",
+            "--epochs 60",
+            "--fold $FOLD",
+            "--lr 0.000025",
+            "--lrmult 20",
+            "--batchsize 64",
+            "--workpath scripts/$WDIR",
+            "--probsname probs_$SIZE",
+            "--cutmix_prob 1.0",
+            "--precision half",
+            "--beta 1.0",
+            "--imgpath data/mount/256X256X6/",
+            "--weightsname weights/pytorch_model_256_densenet$FOLD.bin"
+        ],
+        "working_directory": "/share/dhanley2/recursion/scripts/$WDIR"
+    }
+}

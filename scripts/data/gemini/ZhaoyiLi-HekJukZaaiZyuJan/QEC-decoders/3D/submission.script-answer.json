@@ -1,0 +1,47 @@
+{
+    "application": "Slurm",
+    "details": {
+        "job_array": "1-100",
+        "time_limit": "48:00:00",
+        "cpus_per_task": 2,
+        "output_file": "/scratch/users/ladmon/3D/results/%A_%a_terminal.out",
+        "mail_user": "ladmon@stanford.edu",
+        "mail_type": "END,FAIL",
+        "modules": [
+            "gcc"
+        ],
+        "executable": "./simulate",
+        "arguments": [
+            "-s",
+            "PLANE",
+            "--pmin",
+            "0.01",
+            "--pmax",
+            "0.01",
+            "--qmin",
+            "0",
+            "--qmax",
+            "0",
+            "--Np",
+            "1",
+            "--Nq",
+            "1",
+            "-n",
+            "1000000",
+            "--lmin",
+            "3",
+            "--lmax",
+            "19",
+            "-v",
+            "1",
+            "-N",
+            "INDEP",
+            "--fname",
+            "/scratch/users/ladmon/3D/results/${SLURM_ARRAY_JOB_ID}_$SLURM_ARRAY_TASK_ID.out"
+        ],
+        "environment_variables": [
+            "SLURM_ARRAY_JOB_ID",
+            "SLURM_ARRAY_TASK_ID"
+        ]
+    }
+}

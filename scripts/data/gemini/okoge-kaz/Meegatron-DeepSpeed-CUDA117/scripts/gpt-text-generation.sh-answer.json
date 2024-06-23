@@ -1,0 +1,43 @@
+{
+    "application": "SLURM",
+    "details": {
+        "scheduler": "SLURM",
+        "resources": {
+            "gpu": "a100",
+            "nodes": 1,
+            "cores": 1,
+            "time": "1 hour",
+            "output_files": "outputs/%j.out",
+            "error_files": "errors/%j.err"
+        },
+        "modules": [
+            "cuda/11.7",
+            "cudnn/cuda-11.x/8.9.0",
+            "nccl/cuda-11.7/2.14.3",
+            "openmpi/4.0.5"
+        ],
+        "environment": "conda environment 'env'",
+        "python_script": "tools/generate_samples_gpt.py",
+        "model_checkpoint": "checkpoints/gpt-fugaku/350m_dp4_fp32",
+        "vocabulary_file": "gpt2-vocab.json",
+        "merge_file": "gpt2-merges.txt",
+        "max_output_sequence_length": 1024,
+        "temperature": 1.0,
+        "top_p": 0.9,
+        "number_of_samples": 10,
+        "output_file": "gpu_350m_dp4.json",
+        "input_prefix": "dataset",
+        "model_parameters": {
+            "num_layers": 24,
+            "hidden_size": 1024,
+            "num_attention_heads": 16,
+            "micro_batch_size": 1,
+            "global_batch_size": 4,
+            "seq_length": 1024,
+            "max_position_embeddings": 1024
+        },
+        "data_implementation": "mmap",
+        "split": "949,50,1",
+        "recompute": true
+    }
+}

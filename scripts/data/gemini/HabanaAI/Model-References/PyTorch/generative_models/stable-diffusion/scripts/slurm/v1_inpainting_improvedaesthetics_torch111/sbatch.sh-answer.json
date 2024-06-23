@@ -1,0 +1,42 @@
+{
+    "application": "Stable Diffusion",
+    "details": {
+        "framework": "PyTorch 1.11",
+        "model": "Stable Diffusion v1",
+        "task": "Inpainting with improved aesthetics",
+        "resource_requirements": {
+            "compute_partition": "compute-od-gpu",
+            "nodes": 8,
+            "tasks_per_node": 1,
+            "cpus_per_gpu": 4,
+            "gpus": 8,
+            "mpi": "Intel MPI",
+            "cuda": "CUDA 11.0",
+            "nccl": "NCCL",
+            "efa": "AWS Elastic Fabric Adapter"
+        },
+        "environment_variables": {
+            "LD_LIBRARY_PATH": "/opt/aws-ofi-nccl/lib:/opt/amazon/efa/lib64:/usr/local/cuda-11.0/efa/lib:/usr/local/cuda-11.0/lib:/usr/local/cuda-11.0/lib64:/usr/local/cuda-11.0:/opt/nccl/build/lib:/opt/aws-ofi-nccl-inst/lib:/opt/aws-ofi-nccl/lib",
+            "NCCL_PROTO": "simple",
+            "PATH": "/opt/amazon/efa/bin:$PATH",
+            "LD_PRELOAD": "/opt/nccl/build/lib/libnccl.so",
+            "FI_EFA_FORK_SAFE": 1,
+            "FI_LOG_LEVEL": 1,
+            "FI_EFA_USE_DEVICE_RDMA": 1,
+            "NCCL_DEBUG": "info",
+            "PYTHONFAULTHANDLER": 1,
+            "CUDA_LAUNCH_BLOCKING": 0,
+            "OMPI_MCA_mtl_base_verbose": 1,
+            "FI_EFA_ENABLE_SHM_TRANSFER": 0,
+            "FI_PROVIDER": "efa",
+            "FI_EFA_TX_MIN_CREDITS": 64,
+            "NCCL_TREE_THRESHOLD": 0,
+            "HOSTNAMES": "scontrol show hostnames \"$SLURM_JOB_NODELIST\"",
+            "MASTER_ADDR": "scontrol show hostnames \"$SLURM_JOB_NODELIST\" | head -n 1",
+            "MASTER_PORT": 12802,
+            "COUNT_NODE": "scontrol show hostnames \"$SLURM_JOB_NODELIST\" | wc -l",
+            "WORLD_SIZE": "$COUNT_NODE"
+        },
+        "launch_script": "/fsx/robin/stable-diffusion/stable-diffusion/scripts/slurm/v1_inpainting_improvedaesthetics_torch111/launcher.sh"
+    }
+}

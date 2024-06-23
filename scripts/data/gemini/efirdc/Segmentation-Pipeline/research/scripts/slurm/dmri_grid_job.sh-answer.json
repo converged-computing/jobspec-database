@@ -1,0 +1,33 @@
+{
+    "application": "SLURM",
+    "details": {
+        "scheduler": "SLURM",
+        "resources": {
+            "nodes": 1,
+            "gpus": "v100l",
+            "gpu_count": 1,
+            "tasks_per_node": 1,
+            "cpus_per_task": 8,
+            "memory_per_cpu": "16G",
+            "time_limit": "12 hours",
+            "account": "def-uofavis-ab"
+        },
+        "software": {
+            "python_version": "3.8",
+            "libraries": [
+                "research.dmri_hippo",
+                "matplotlib"
+            ],
+            "environment": "ENV_new"
+        },
+        "script": {
+            "command": "python -m research.dmri_hippo.run augmentation_experiment_grid",
+            "arguments": [
+                "~/projects/def-uofavis-ab/shared_data/Diffusion_MRI_cropped.tar",
+                "~/scratch/Checkpoints/",
+                "--work_path ${SLURM_TMPDIR}/${$SLURM_ARRAY_TASK_ID}",
+                "--task_id $SLURM_ARRAY_TASK_ID"
+            ]
+        }
+    }
+}

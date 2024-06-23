@@ -1,0 +1,56 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"Singularity\",\n  \"details\": {\n    \"container_image\": \"docker://oggm/oggm:20181123\",\n    \"container_command\": \"bash -s\",\n    \"container_script\": \"set -e\\n  # Setup a fake home dir inside of our workdir, so we don't clutter the actual shared homedir with potentially incompatible stuff.\\n  export HOME=\\\"$WORKDIR/fake_home\\\"\\n  mkdir \\\"\\\\$HOME\\\"\\n  # Create a venv that _does_ use system-site-packages, since everything is already installed on the container.\\n  # We cannot work on the container itself, as the base system is immutable.\\n  python3 -m venv --system-site-packages \\\"$WORKDIR/oggm_env\\\"\\n  source \\\"$WORKDIR/oggm_env/bin/activate\\\"\\n  # Make sure latest pip is installed\\n  pip install --upgrade pip setuptools\\n  # Install a fixed OGGM version\\n  pip install --upgrade \\\"git+https://github.com/OGGM/oggm.git@a74695fcaba0fc50580109bb578ff64df51b3f62\\\"\\n  # pip install \\\"git+https://github.com/fmaussion/oggm.git@dev\\\"\\n  # Finally, the run\\n  python3 ./run.py\",\n    \"python_version\": \"3\",\n    \"python_requirements\": [\n      \"pip\",\n      \"setuptools\",\n      \"oggm==a74695fcaba0fc50580109bb578ff64df51b3f62\"\n    ],\n    \"resource_requirements\": {\n      \"slurm_job_name\": \"gmd_paper_dyn\",\n      \"slurm_ntasks\": \"1\",\n      \"slurm_exclusive\": \"true\",\n      \"slurm_time\": \"48:00:00\",\n      \"slurm_mail_user\": \"fabien.maussion@uibk.ac.at\",\n      \"slurm_mail_type\": \"ALL\",\n      \"workdir\": \"/work/$SLURM_JOB_USER/$SLURM_JOB_ID/rgi_reg_$RGI_REG\",\n      \"oggm_download_cache\": \"/home/data/download\",\n      \"oggm_download_cache_ro\": \"1\",\n      \"oggm_extract_dir\": \"/work/$SLURM_JOB_USER/$SLURM_JOB_ID/oggm_tmp\"\n    },\n    \"output_directory\": \"/home/users/fmaussion/gmd_run_output/rgi_reg_$RGI_REG/\",\n    \"output_files\": [\n      \"run_output*.nc\",\n      \"task_log*.csv\"\n    ]\n  }\n}\n```\n\n**Explanation of the JSON object:**\n\n* **application**: The primary application used in the script is **Singularity**, which is a containerization technology similar to Docker. \n* **details**: This section provides further details about the software and resource requirements used in the script.\n    * **container_image**: Specifies the Docker container image used for running the script.\n    * **container_command**: The command used to run the script inside the container.\n    * **container_script**: The actual bash script executed inside the Singularity container. \n    * **python_version**: The Python version used within the container.\n    * **python_requirements**:  Lists the Python packages and their versions used in the script.\n    * **resource_requirements**:  Details the resources required by the SLURM job scheduler.\n    * **output_directory**:  The directory where the script outputs its results.\n    * **output_files**:  Lists the specific files produced by the script and copied to the output directory.\n\n**Key points about the script:**\n\n* **SLURM**: The script is designed to run on a SLURM cluster. It uses SLURM directives to define job parameters like job name, number of tasks, time limit, and email notifications.\n* **Environment variables**:  The script sets up several environment variables, including:\n    * **RGI_REG**:  The region identifier for the current task.\n    * **WORKDIR**:  The working directory for the job, created on the cluster node.\n    * **OGGM_DOWNLOAD_CACHE**:  The path to the download cache for OGGM data.\n    * **OGGM_DOWNLOAD_CACHE_RO**:  Indicates that the cache is read-only.\n    * **OGGM_EXTRACT_DIR**:  The directory for temporary data extraction.\n* **Containerized execution**:  The script uses Singularity to execute the OGGM workflow inside a containerized environment. This helps ensure reproducibility and avoids potential conflicts with system dependencies.\n* **Virtual environment**:  Inside the container, a virtual environment is created to isolate the OGGM installation and prevent conflicts with existing Python packages.\n* **OGGM installation**: The script installs a specific version of OGGM (a74695fcaba0fc50580109bb578ff64df51b3f62) within the virtual environment. \n* **Script execution**: The script uses `python3 ./run.py` to execute the main OGGM workflow script.\n* **Output management**:  After job completion, the script copies relevant results from the working directory to a designated output location on the cluster. \n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "citation_metadata": {
+                "citation_sources": [
+                    {
+                        "start_index": 184,
+                        "end_index": 312,
+                        "uri": "https://github.com/OGGM/massbalance-debris",
+                        "license_": ""
+                    }
+                ]
+            },
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 943,
+        "candidates_token_count": 1256,
+        "total_token_count": 2199,
+        "cached_content_token_count": 0
+    }
+}

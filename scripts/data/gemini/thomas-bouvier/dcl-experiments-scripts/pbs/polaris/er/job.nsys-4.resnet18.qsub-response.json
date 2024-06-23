@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"MPI\",\n  \"details\": {\n    \"environment\": {\n      \"spack\": {\n        \"setup\": \"source ${HOME}/git/spack-polaris/share/spack/setup-env.sh\",\n        \"activation\": \"spack env activate /home/tbouvier/git/spack-envs/polaris\"\n      },\n      \"wandb\": {\n        \"mode\": \"offline\"\n      }\n    },\n    \"resource_requirements\": {\n      \"nodes\": {\n        \"count\": \"$NNODES\",\n        \"ranks_per_node\": \"$NRANKS_PER_NODE\",\n        \"cores_per_node\": \"32\"\n      },\n      \"threads_per_rank\": \"$NTHREADS\",\n      \"walltime\": \"0:10:00\",\n      \"queue\": \"prod\",\n      \"filesystems\": \"home\",\n      \"account\": \"VeloC\"\n    },\n    \"execution\": {\n      \"command\": \"nsys profile --trace=cuda,nvtx mpiexec -n ${NTOTRANKS} --ppn ${NRANKS_PER_NODE} --depth=${NDEPTH} --cpu-bind depth ./set_affinity_gpu_polaris.sh python ../../main.py --yaml-config experiments_polaris.yaml --config er_resnet18_scale --log-level info --nsys-run\",\n      \"script\": \"set_affinity_gpu_polaris.sh\",\n      \"python_script\": \"main.py\",\n      \"yaml_config\": \"experiments_polaris.yaml\"\n    },\n    \"data\": {\n      \"dataset\": \"/grand/VeloC/tbouvier/datasets/ImageNet_blurred\",\n      \"local_scratch\": \"/local/scratch/\"\n    }\n  }\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 543,
+        "candidates_token_count": 425,
+        "total_token_count": 968,
+        "cached_content_token_count": 0
+    }
+}

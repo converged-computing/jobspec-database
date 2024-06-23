@@ -1,0 +1,40 @@
+{
+    "application": "proteus",
+    "details": {
+        "software": [
+            "PBS",
+            "PrgEnv-gnu",
+            "acml",
+            "proteus",
+            "parun",
+            "python",
+            "aprun",
+            "MPICH"
+        ],
+        "resource_requirements": {
+            "nodes": 64,
+            "cpus_per_node": 32,
+            "mpi_processes": 16,
+            "walltime": "08:00:00",
+            "queue": "R755829",
+            "job_name": "profileProteus",
+            "email_address": "aron@ahmadia.net"
+        },
+        "environment_variables": [
+            "PARUN",
+            "PROTEUS_PYTHON",
+            "MPICH_RANK_REORDER_METHOD",
+            "procs_per_node",
+            "workdir",
+            "PBS_O_WORKDIR"
+        ],
+        "commands": [
+            "module swap PrgEnv-pgi PrgEnv-gnu",
+            "module unload xt-libsci",
+            "module load acml",
+            "source /u/aron/proteus/garnet.gnu/bin/proteus_env.sh",
+            "cp -R /u/aron/proteus-profile/scale/dambreak2D_short_trace $workdir",
+            "aprun -n $i ${PROTEUS_PYTHON} ${PARUN} dambreak_so.py -l 5 -v -O ./petsc.options.schur_upper_a11_asm_boomeramg"
+        ]
+    }
+}

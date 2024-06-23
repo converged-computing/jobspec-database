@@ -1,0 +1,31 @@
+{
+    "application": "PBS",
+    "details": {
+        "software": "Singularity",
+        "resource_requirements": {
+            "walltime": "2:00:00",
+            "nodes": 1,
+            "cpus_per_node": 4,
+            "memory_per_node": "24gb",
+            "gpus_per_node": 1,
+            "gpu_type": "RTX6000"
+        },
+        "file_transfer": {
+            "method": "scp",
+            "direction": "server to compute node",
+            "files": "final_not_in_ancestors_generation.sif"
+        },
+        "execution": {
+            "command": "singularity -d run --nv final_not_in_ancestors_generation.sif $PBS_ARRAY_INDEX ITE",
+            "environment_variables": [
+                "CUDA_VISIBLE_DEVICES",
+                "PBS_ARRAY_INDEX"
+            ]
+        },
+        "file_transfer_back": {
+            "method": "scp",
+            "direction": "compute node to server",
+            "files": "results"
+        }
+    }
+}

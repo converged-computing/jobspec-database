@@ -1,0 +1,34 @@
+{
+    "application": "Proteus",
+    "details": {
+        "version": "1.8.1",
+        "module": "proteus",
+        "resources": {
+            "nodes": 8,
+            "tasks": 384,
+            "threads_per_process": 1,
+            "walltime": "72:00:00",
+            "queue": "workq",
+            "account": "loni_ceds3d",
+            "output_file": "o.out",
+            "error_file": "e.err",
+            "job_name": "cox_2D_HD_tr2"
+        },
+        "environment_variables": {
+            "PROTEUS_ARCH": "linux",
+            "PYTHONPATH": "/project/cekees/cekees/proteus/1.7.5/lib/python3.7/site-packages:$PYTHONPATH",
+            "PATH": "${PROJECT}/bin:${PROJECT}/proteus/1.7.5/bin:${PATH}",
+            "LD_LIBRARY_PATH": "${PROJECT}/proteus/1.7.5/lib:${PROJECT}/proteus/1.7.5/lib64:${LD_LIBRARY_PATH}"
+        },
+        "commands": [
+            "module purge",
+            "module load proteus/1.8.1",
+            "mkdir -p $WORK/$SLURM_JOB_NAME.$SLURM_JOBID",
+            "cd $WORK/$SLURM_JOB_NAME.$SLURM_JOBID",
+            "cp $SLURM_SUBMIT_DIR/*.py .",
+            "cp $SLURM_SUBMIT_DIR/*.csv .",
+            "cp $SLURM_SUBMIT_DIR/*.sh .",
+            "srun parun -l5 -v -p --TwoPhaseFlow cox_flume2DV.py -C \"he=0.04 mangrove_porous=True filename='inp_HD_TR2.csv'\""
+        ]
+    }
+}

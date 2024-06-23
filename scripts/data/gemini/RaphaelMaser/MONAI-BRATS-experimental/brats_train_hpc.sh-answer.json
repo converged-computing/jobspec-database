@@ -1,0 +1,26 @@
+{
+    "application": "SLURM",
+    "details": {
+        "job_name": "BRATS",
+        "nodes": 1,
+        "cores": 7,
+        "gpu_type": "gpu",
+        "gpus": 1,
+        "time_limit": "0-30:00:00",
+        "array_range": "0-4",
+        "qos": "normal",
+        "environment": {
+            "python_environment": "MONAI-BRATS",
+            "path": "$HOME/miniconda/bin:$PATH"
+        },
+        "resource_limits": {
+            "open_files": 2048
+        },
+        "script": "brats_train.py",
+        "script_arguments": {
+            "nfolds": "${SLURM_ARRAY_TASK_COUNT}",
+            "fold": "${SLURM_ARRAY_TASK_ID}",
+            "epochs": 50
+        }
+    }
+}

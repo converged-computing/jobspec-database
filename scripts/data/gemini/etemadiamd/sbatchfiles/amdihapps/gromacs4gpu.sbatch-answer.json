@@ -1,0 +1,77 @@
+{
+    "application": "Slurm",
+    "details": {
+        "resource_requests": {
+            "nodes": 1,
+            "tasks_per_node": 4,
+            "cpus_per_task": 16,
+            "memory": "256GB",
+            "gpus": 4
+        },
+        "software_requirements": {
+            "modules": [
+                "rocm-5.4.2",
+                "ucx-1.13.1",
+                "ompi/4.1.4"
+            ],
+            "singularity_image": "/shared/apps/bin/gromacs_2022.3.amd1_174.sif",
+            "gromacs_version": "2022.3"
+        },
+        "benchmarks": [
+            {
+                "name": "ADH-DODEC",
+                "description": "Threaded-MPI",
+                "input_file": "/benchmarks/adh_dodec/adh_dodec.tar.gz",
+                "output_directory": "/tmp/$USER/gpu4-$$/adh_dodec",
+                "run_parameters": {
+                    "nsteps": 100000,
+                    "resetstep": 90000,
+                    "ntmpi": 4,
+                    "ntomp": 16,
+                    "nb": "gpu",
+                    "bonded": "gpu",
+                    "pme": "gpu",
+                    "npme": 1,
+                    "nstlist": 200,
+                    "gpu_id": "0123"
+                }
+            },
+            {
+                "name": "CELLULOSE_NVE",
+                "description": "Threaded-MPI",
+                "input_file": "/benchmarks/cellulose_nve/cellulose_nve.tar.gz",
+                "output_directory": "/tmp/$USER/gpu4-$$/cellulose_nve",
+                "run_parameters": {
+                    "nsteps": 100000,
+                    "resetstep": 90000,
+                    "ntmpi": 4,
+                    "ntomp": 16,
+                    "nb": "gpu",
+                    "bonded": "gpu",
+                    "pme": "gpu",
+                    "npme": 1,
+                    "nstlist": 200,
+                    "gpu_id": "0123"
+                }
+            },
+            {
+                "name": "STMV",
+                "description": "Threaded-MPI",
+                "input_file": "/benchmarks/stmv/stmv.tar.gz",
+                "output_directory": "/tmp/$USER/gpu4-$$/stmv",
+                "run_parameters": {
+                    "nsteps": 100000,
+                    "resetstep": 90000,
+                    "ntmpi": 8,
+                    "ntomp": 8,
+                    "nb": "gpu",
+                    "bonded": "gpu",
+                    "pme": "gpu",
+                    "npme": 1,
+                    "nstlist": 400,
+                    "gpu_id": "0123"
+                }
+            }
+        ]
+    }
+}

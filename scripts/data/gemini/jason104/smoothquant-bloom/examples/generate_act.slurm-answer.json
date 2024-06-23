@@ -1,0 +1,38 @@
+{
+    "application": "SLURM",
+    "details": {
+        "job_name": "generate_act",
+        "nodes": 1,
+        "tasks_per_node": 1,
+        "cpus_per_task": 32,
+        "gpus": 8,
+        "account": "ENT212162",
+        "partition": "gp4d",
+        "environment": {
+            "PYTHONUSERBASE": "$CONDA_PREFIX",
+            "HF_HOME": "/work/twsuzrf718/hf_home",
+            "MASTER_ADDR": "obtained from scontrol",
+            "MASTER_PORT": "calculated based on SLURM_JOBID",
+            "NCCL_DEBUG": "WARN",
+            "NCCL_SOCKET_IFNAME": "ib0",
+            "NCCL_IB_HCA": "mlx5_0",
+            "PYTORCH_CUDA_ALLOC_CONF": "max_split_size_mb:2048",
+            "OMP_NUM_THREADS": 1
+        },
+        "launcher": {
+            "options": [
+                "accelerate launch",
+                "deepspeed",
+                "python"
+            ],
+            "command": "bloom_generate_act_scales.py"
+        },
+        "resources": {
+            "conda": "used for environment setup",
+            "huggingface": "used for model loading and generation",
+            "deepspeed": "potentially used for distributed training or inference",
+            "accelerate": "potentially used for distributed training or inference",
+            "MPI": "potentially used for distributed training or inference"
+        }
+    }
+}

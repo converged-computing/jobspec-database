@@ -1,0 +1,22 @@
+{
+    "application": "SLURM",
+    "details": {
+        "software": "SLURM, singularity",
+        "resource_requirements": {
+            "cores_per_task": 2,
+            "nodes": 1,
+            "walltime": "24:00:00",
+            "output_file": "/scratch/users/ladmon/ML/results/%A_%a_terminal.out",
+            "mail_type": "END,FAIL",
+            "mail_user": "ladmon@stanford.edu",
+            "array_range": "1-100"
+        },
+        "other_libraries": [
+            "libtensorflow2",
+            "moismon"
+        ],
+        "commands": [
+            "srun ./simulate -s TORUS --pmin 0.135 --pmax 0.18 --Np 25 -n 10000 --Lmin 3 --Lmax 17 -v 1 --fname \"/scratch/users/ladmon/ML/results/${SLURM_ARRAY_JOB_ID}_${SLURM_ARRAY_TASK_ID}.out\" -d /scratch/users/ladmon/ML/ --dir 0  -m 'model_h,L=5(7),layer=3x128,epochs=100000,p=' --decode_with_NN --binary --cutoff 0.500005"
+        ]
+    }
+}

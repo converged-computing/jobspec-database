@@ -1,0 +1,34 @@
+{
+    "application": "Slurm",
+    "details": {
+        "partition": "A specific partition on the Slurm cluster",
+        "account": "The user's account on the Slurm cluster",
+        "jobname": "The name of the job",
+        "wall time": "The maximum time allowed for the job to run (30 minutes)",
+        "tasks per node": "Number of tasks to be run on each node (1)",
+        "memory": "All available memory on the node",
+        "email notification": "Email notification only sent on failure",
+        "container image": "nvcr.io/nvidia/pytorch:23.12-py3",
+        "training script": "train_ppo_llama.sh",
+        "GPUs per node": "8",
+        "project path": "../../",
+        "job log": "logs/train_ppo_llama.sh-$SLURM_JOB_ID.log",
+        "training commands": "Commands from the training script",
+        "master address": "The IP address of the master node",
+        "master port": "9901",
+        "container mounts": [
+            "$PROJECT_PATH:/root/openrlhf",
+            "$HOME/.cache:/root/.cache",
+            "$HOME/.local:/root/.local",
+            "$HOME/.triton:/root/.triton",
+            "/dev/null:/root/.bashrc"
+        ],
+        "torchrun arguments": {
+            "nproc_per_node": "8",
+            "nnodes": "$SLURM_NNODES",
+            "node_rank": "$SLURM_PROCID",
+            "master_addr": "$MASTER_ADDR",
+            "master_port": "$MASTER_PORT"
+        }
+    }
+}

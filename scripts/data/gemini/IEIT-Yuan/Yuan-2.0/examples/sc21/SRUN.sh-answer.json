@@ -1,0 +1,26 @@
+{
+    "application": "Megatron-LM",
+    "details": {
+        "framework": "PyTorch",
+        "version": "20.12",
+        "python_version": "3",
+        "runtime": "SLURM",
+        "container": "nvcr.io#nvidia/pytorch:20.12-py3",
+        "resources": {
+            "time": "0:30:00",
+            "memory": "0",
+            "cores": 8
+        },
+        "code_dir": "${MEGATRON_CODE_DIR}",
+        "parameters": "${MEGATRON_PARAMS}",
+        "docker_mounts": [
+            "${THIS_DIR}:${THIS_DIR}",
+            "${MEGATRON_CODE_DIR}:${MEGATRON_CODE_DIR}",
+            "${DOCKER_MOUNT_DIR}:${DOCKER_MOUNT_DIR}"
+        ],
+        "logging": {
+            "directory": "${THIS_DIR}/logs",
+            "filename": "%x_%j_$DATETIME.log"
+        }
+    }
+}

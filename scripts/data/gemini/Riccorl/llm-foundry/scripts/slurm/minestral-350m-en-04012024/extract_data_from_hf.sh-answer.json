@@ -1,0 +1,34 @@
+{
+    "application": "Slurm",
+    "details": {
+        "job_name": "extract_data_from_hf",
+        "output_file": "logs/minestral-350m-en-04012024/extract_data_from_hf-job.out",
+        "error_file": "logs/minestral-350m-en-04012024/extract_data_from_hf-job.err",
+        "nodes": 1,
+        "tasks_per_node": 1,
+        "cpus_per_task": 4,
+        "time_limit": "00:50:00",
+        "account": "IscrB_medit",
+        "modules": [
+            "profile/deeplrn",
+            "culturax/2309"
+        ],
+        "environment_variables": {
+            "OMP_PROC_BIND": "true",
+            "HF_DATASETS_CACHE": "$WORK/hf_cache"
+        },
+        "conda_environment": "~/llmfoundry-cuda-flash-attn2-env",
+        "python_script": "scripts/data_prep/extract_hf_to_jsonl.py",
+        "arguments": [
+            "--dataset_path",
+            "/leonardo/prod/data/ai/culturax/2309/en",
+            "--path_to_save",
+            "/leonardo_work/IscrB_medit/culturax/extracted/350M-model/en-v2/",
+            "--max_samples",
+            "10_000_000",
+            "--streaming",
+            "--split_size",
+            "500_000"
+        ]
+    }
+}

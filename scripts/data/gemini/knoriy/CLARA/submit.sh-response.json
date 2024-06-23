@@ -1,0 +1,62 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n\"application\": \"SLURM\",\n\"details\": {\n\"resource_requirements\": {\n\"partition\": \"g40x\",\n\"job_name\": \"clsp100M\",\n\"nodes\": 1,\n\"ntasks_per_node\": 8,\n\"gpus_per_node\": 8,\n\"cpus_per_task\": 12,\n\"account\": \"laion\",\n\"output_file\": \"logs/outs/%x_%j.out\",\n\"signals\": [\n{\n\"signal\": \"SIGUSR1\",\n\"time\": 90\n},\n{\n\"signal\": \"SIGTERM\",\n\"time\": 90\n}\n]\n},\n\"software_requirements\": {\n\"modules\": [\n\"openmpi\"\n],\n\"python_environment\": \"clara\"\n},\n\"script_execution\": {\n\"commands\": [\n\"srun --exclusive --ntasks=$SLURM_NNODES --nodes=$SLURM_NNODES echo $(hostname) >> ./logs/outs/hostnames.txt\",\n\"/admin/home-knoriy/miniconda3/envs/clara/bin/python ./scripts/download_from_s3.py --data $DATA_CONF_PATH --backend awscli\",\n\"/admin/home-knoriy/miniconda3/envs/clara/bin/python ./clara/train.py fit --config $BASE_CONF_PATH --trainer $TRAINER_BASE_CONF_PATH --trainer $TRAINER_CONF_PATH --model $MODEL_CONF_PATH --data $DATA_CONF_PATH --trainer.num_nodes $SLURM_JOB_NUM_NODES --data.num_workers 6 --data.batch_size 16 --trainer.logger.name $LOGGER_NAME --trainer.max_epochs 120\"\n],\n\"cleanup_function\": \"srun --exclusive --ntasks=$SLURM_NNODES --nodes=$SLURM_NNODES echo \\\"function your_cleanup_function called at $(date)\\\" && srun --exclusive --ntasks=$SLURM_NNODES --nodes=$SLURM_NNODES sh ./scripts/clean_tmp_files.sh\"\n},\n\"configuration_files\": {\n\"model\": \"./config/config/model/pl_clara_100M.yaml\",\n\"base\": \"./config/config/base.yaml\",\n\"trainer_base\": \"./config/config/trainer/base.yaml\",\n\"trainer\": \"./config/config/trainer/slurm.yaml\",\n\"data\": \"./config/config/data/base.yaml\"\n}\n}\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 2,
+                    "blocked": false
+                }
+            ],
+            "citation_metadata": {
+                "citation_sources": [
+                    {
+                        "start_index": 703,
+                        "end_index": 1072,
+                        "uri": "https://github.com/knoriy/CLARA",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 1059,
+                        "end_index": 1295,
+                        "uri": "https://github.com/knoriy/CLARA",
+                        "license_": ""
+                    }
+                ]
+            },
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 653,
+        "candidates_token_count": 603,
+        "total_token_count": 1256,
+        "cached_content_token_count": 0
+    }
+}

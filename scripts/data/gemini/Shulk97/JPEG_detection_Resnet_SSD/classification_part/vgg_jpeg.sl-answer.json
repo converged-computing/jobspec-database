@@ -1,0 +1,29 @@
+{
+    "application": "Slurm",
+    "details": {
+        "resource_requirements": {
+            "time": "48:00:00",
+            "memory": "100000",
+            "partition": "gpu_k80",
+            "gpus": 4,
+            "nodes": 4,
+            "tasks_per_node": 4,
+            "cpus_per_task": 7
+        },
+        "software_requirements": {
+            "cuda": "9.0",
+            "python3-DL": "3.6.1"
+        },
+        "environment_variables": {
+            "PYTHONUSERBASE": "$HOME/ssd/pao_jpeg_bis/classification_part",
+            "EXPERIMENTS_OUTPUT_DIRECTORY": "/dlocal/run/$SLURM_JOB_ID",
+            "LOG_DIRECTORY": "$HOME/pao/logs/",
+            "DATASET_PATH_TRAIN": "/save/2017018/PARTAGE/",
+            "DATASET_PATH_VAL": "/save/2017018/PARTAGE/",
+            "PROJECT_PATH": "$HOME/ssd/pao_jpeg_bis/classification_part"
+        },
+        "script_execution": {
+            "command": "srun python3 training.py -c config/resnetRGB --archi \"resnet_rgb\" --use_pretrained_weights \"True\" --horovod \"True\""
+        }
+    }
+}

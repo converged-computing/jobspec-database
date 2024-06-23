@@ -1,0 +1,51 @@
+{
+    "application": "SLURM",
+    "details": {
+        "job_name": "prometeo",
+        "resource_requirements": {
+            "queues": [
+                {
+                    "name": "compute",
+                    "cores_per_node": 16,
+                    "numa_domains_per_rank": 2,
+                    "ram_per_node": 25000,
+                    "cuda": false
+                },
+                {
+                    "name": "largemem",
+                    "cores_per_node": 24,
+                    "numa_domains_per_rank": 2,
+                    "ram_per_node": 220000,
+                    "cuda": false
+                },
+                {
+                    "name": "gpu-k40",
+                    "cores_per_node": 24,
+                    "numa_domains_per_rank": 2,
+                    "ram_per_node": 220000,
+                    "cuda": true,
+                    "gpus_per_node": 1,
+                    "framebuffer_per_gpu": 11000
+                },
+                {
+                    "name": "gpu-maxwell",
+                    "cores_per_node": 24,
+                    "numa_domains_per_rank": 2,
+                    "ram_per_node": 220000,
+                    "cuda": true,
+                    "gpus_per_node": 1,
+                    "framebuffer_per_gpu": 10000
+                }
+            ],
+            "shared_script": "jobscripts/jobscript_shared.sh"
+        },
+        "execution": {
+            "mpi_implementation": "pmix",
+            "number_of_ranks": "$NUM_RANKS",
+            "ranks_per_node": "$RANKS_PER_NODE",
+            "cores_per_rank": "$CORES_PER_RANK",
+            "environment_variables": "ALL",
+            "command": "$COMMAND"
+        }
+    }
+}

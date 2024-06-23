@@ -1,0 +1,31 @@
+{
+    "application": "PBS",
+    "software": [
+        "ncarenv/1.2",
+        "nvhpc/20.11",
+        "cuda/11.0.3",
+        "openmpi/4.1.0"
+    ],
+    "resources": {
+        "nodes": 1,
+        "cpus": 4,
+        "mpi_processes": 4,
+        "gpus": 4,
+        "gpu_type": "v100",
+        "walltime": "00:10:00",
+        "queue": "R123790",
+        "account": "NTDD0002"
+    },
+    "environment_variables": {
+        "LD_LIBRARY_PATH": "${NCAR_ROOT_CUDA}/lib64:${LD_LIBRARY_PATH}",
+        "UCX_TLS": "rc,sm,cuda_copy,cuda_ipc",
+        "OMPI_MCA_pml": "ucx",
+        "OMPI_MCA_btl": "self,vader,tcp,smcuda",
+        "UCX_MEMTYPE_CACHE": "n",
+        "UCX_RNDV_SCHEME": "put_zcopy",
+        "UCX_RNDV_THRESH": 2
+    },
+    "executable": "./mpi_acc_stencil.exe",
+    "arguments": "2048",
+    "mpi_processes": 4
+}

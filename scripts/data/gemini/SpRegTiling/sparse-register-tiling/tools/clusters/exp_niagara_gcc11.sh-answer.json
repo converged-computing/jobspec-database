@@ -1,0 +1,38 @@
+{
+    "application": "SBATCH",
+    "details": {
+        "environment": [
+            "NiaEnv/2019b",
+            "cmake/3.17.3",
+            "gcc",
+            "metis/5.1.0",
+            "papi"
+        ],
+        "libraries": [
+            "MKLROOT=/scinet/intel/oneapi/2021u4/mkl/2021.4.0/"
+        ],
+        "build_system": "cmake",
+        "build_type": "Release",
+        "build_flags": [
+            "-DENABLE_AVX512=True"
+        ],
+        "compiler_flags": [
+            "-j 20"
+        ],
+        "runtime_flags": [
+            "export MKL_ENABLE_INSTRUCTIONS=AVX512",
+            "export OMP_PROC_BIND=true"
+        ],
+        "slurm_options": [
+            "--cpus-per-task=40",
+            "--export=ALL",
+            "--job-name=$EXPERIMENT_NAME",
+            "--nodes=1",
+            "--account=def-mmehride",
+            "--output=\"log_$EXPERIMENT_NAME.%j.%N.out\"",
+            "-t $2:00:00",
+            "--constraint=cascade"
+        ],
+        "program": "SPMM_demo"
+    }
+}

@@ -1,0 +1,28 @@
+{
+    "application": "Snakemake",
+    "details": {
+        "modules": [
+            "cellranger/5.0.1"
+        ],
+        "resources": {
+            "memory": "4G",
+            "cores": 300,
+            "queue": "rna"
+        },
+        "drmaa_args": [
+            "-o {log.out}",
+            "-e {log.err}",
+            "-J {params.job_name}",
+            "-R \"{params.memory} span[hosts=1]\"",
+            "-R \"select[hname!=compute16]\"",
+            "-R \"select[hname!=compute19]\"",
+            "-n {threads}"
+        ],
+        "config_files": [
+            "src/configs/2021-01-08.yaml",
+            "src/configs/2021-04-16.yaml",
+            "src/configs/2021-07-16.yaml"
+        ],
+        "snakefile": "Snakefile"
+    }
+}

@@ -1,0 +1,32 @@
+{
+    "application": "SLURM",
+    "details": {
+        "cluster": "UF HiPerGator AI partition",
+        "container_runtime": "Singularity",
+        "libraries": [
+            "pytorch",
+            "conda",
+            "torch-timm"
+        ],
+        "resource_requirements": {
+            "nodes": 1,
+            "tasks": 1,
+            "tasks_per_node": 1,
+            "gpus_per_task": 8,
+            "cpus_per_task": 16,
+            "memory": "24gb"
+        },
+        "environment_variables": {
+            "NCCL_DEBUG": "WARN",
+            "LOGLEVEL": "INFO"
+        },
+        "command": "torchrun multigpu_torchrun.py 50 10",
+        "arguments": {
+            "nnodes": "$SLURM_JOB_NUM_NODES",
+            "nproc_per_node": "$SLURM_GPUS_PER_TASK",
+            "rdzv_id": "$RANDOM",
+            "rdzv_backend": "c10d",
+            "rdzv_endpoint": "$head_node_ip:29500"
+        }
+    }
+}

@@ -1,0 +1,65 @@
+{
+    "application": "SLURM",
+    "details": {
+        "slurm_options": {
+            "job_name": "viking_v2_13B_high_eps",
+            "nodes": 128,
+            "cpus_per_task": 7,
+            "ntasks_per_node": 8,
+            "mem": 0,
+            "partition": "standard-g",
+            "time": "01-00:00:00",
+            "gpus_per_node": "mi250:8",
+            "exclusive": "user",
+            "hint": "nomultithread",
+            "account": "project_462000353",
+            "output": "logs-13B_high_eps/%j-13B_high_eps.out",
+            "error": "logs-13B_high_eps/%j-13B_high_eps.err",
+            "exclude": "nid005138,nid006369,nid005796,nid007382"
+        },
+        "environment_variables": {
+            "MASTER_ADDR": "scontrol show hostnames \"$SLURM_JOB_NODELIST\" | head -n 1",
+            "MASTER_PORT": 9999,
+            "WORLD_SIZE": "$SLURM_NTASKS",
+            "CC": "gcc-10",
+            "CXX": "g++-10",
+            "CUDA_DEVICE_MAX_CONNECTIONS": 1,
+            "PYTHONUSERBASE": "pythonuserbase",
+            "MEMORY_OPT_ALLREDUCE_SIZE": 150000000
+        },
+        "container": {
+            "type": "Singularity",
+            "image": "/scratch/project_462000319/containers/vaino_flashattention_v2_new",
+            "binds": "/scratch/project_462000319,/flash/project_462000319,/scratch/project_462000086",
+            "command": "pretrain_gpt.py --tensor-model-parallel-size $TP_SIZE --pipeline-model-parallel-size $PP_SIZE $GPT_ARGS $OUTPUT_ARGS --train-data-path $TRAIN_DATA --valid-data-path $VALIDATION_DATA --data-impl mmap --dataloader-type single --num-workers 0"
+        },
+        "resources": {
+            "workdir": "workdir",
+            "checkpoint_path": "/scratch/project_462000086/viking-v2/13B_high_eps",
+            "tensorboard_path": "tensorboard/13B_high_eps.${SLURM_JOB_ID}",
+            "train_data": "0.07370182629 /scratch/project_462000319/viking_preprocessed_data/merged_datasets/finnish 0.3302641761 /scratch/project_462000319/viking_preprocessed_data/merged_datasets/slimpajama 0.330497442 /scratch/project_462000319/viking_preprocessed_data/merged_datasets/starcoderdata 0.08367352788 /scratch/project_462000319/viking_preprocessed_data/merged_datasets/nordic-en-xling-combined 0.002361170146 /scratch/project_462000319/viking_preprocessed_data/small_files/train-books_text_document 0.05157063372 /scratch/project_462000319/viking_preprocessed_data/nordics/mc4-da-train_text_document 0.004054463623 /scratch/project_462000319/viking_preprocessed_data/nordics/mc4-is-train_text_document 0.08052558051 /scratch/project_462000319/viking_preprocessed_data/nordics/mc4-sv-train_text_document 0.04188033719 /scratch/project_462000319/viking_preprocessed_data/nordics/nor_all_combined_text_document 0.001470842506 /scratch/project_462000319/viking_preprocessed_data/small_files/natural_instruct_train_text_document",
+            "validation_data": "0.07370182629 /scratch/project_462000319/viking_preprocessed_data/eval/finnish_eval_text_document 0.3302641761 /scratch/project_462000319/viking_preprocessed_data/eval/slim-pajama-validation_text_document 0.330497442 /scratch/project_462000319/viking_preprocessed_data/eval/starcoder-eval_content_document 0.08367352788 /scratch/project_462000319/viking_preprocessed_data/eval/xlint-test-all-combined_text_document 0.002361170146 /scratch/project_462000319/viking_preprocessed_data/eval/eval-books.json_text_document 0.05157063372 /scratch/project_462000319/viking_preprocessed_data/eval/mc4-da-validation_text_document 0.004054463623 /scratch/project_462000319/viking_preprocessed_data/eval/mc4-is-validation_text_document 0.08052558051 /scratch/project_462000319/viking_preprocessed_data/eval/mc4-sv-validation_text_document 0.04188033719 /scratch/project_462000319/viking_preprocessed_data/eval/nor_eval_all_text_document 0.001470842506 /scratch/project_462000319/viking_preprocessed_data/eval/natural_instruct_validation_text_document",
+            "merges": "/scratch/project_462000319/tokenizers/nordic_tokenizer_131072/merges.txt",
+            "vocab": "/scratch/project_462000319/tokenizers/nordic_tokenizer_131072/vocab.json",
+            "pp_size": 4,
+            "tp_size": 2,
+            "micro_batch_size": 1,
+            "global_batch_size": 1024,
+            "nlayers": 40,
+            "nhidden": 5120,
+            "nheads": 40,
+            "ffn_hidden_size": 13824,
+            "seq_len": 4096,
+            "total_tokens": "2_000_000_000_000",
+            "train_samples": "2_000_000_000_000/4096",
+            "lr_decay_samples": "2_000_000_000_000/4096",
+            "lr_warmup_samples": 2000,
+            "save_interval": 1000,
+            "log_interval": 10,
+            "eval_interval": 4000,
+            "eval_steps": 100,
+            "learning_rate": "3e-4",
+            "bind_mask": "0xfe0000000000,0xfe000000000000,0xfe0000,0xfe000000,0xfe,0xfe00,0xfe000000,0xfe00000000"
+        }
+    }
+}

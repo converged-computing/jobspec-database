@@ -1,0 +1,38 @@
+{
+    "application": "libEnsemble",
+    "software": [
+        "Python",
+        "libEnsemble",
+        "MPI",
+        "Conda",
+        "SBATCH",
+        "processcp.pl",
+        "plopper.pl",
+        "run_ytopt.py"
+    ],
+    "resource_requirements": {
+        "nodes": 4,
+        "cores_per_node": 64,
+        "gpus_per_node": 1,
+        "memory": "Not specified",
+        "time": "02:00:00",
+        "modules": [
+            "PrgEnv-amd/8.3.3",
+            "cray-hdf5/1.12.0.7",
+            "cmake",
+            "craype-accel-amd-gfx90a",
+            "rocm/4.5.2",
+            "cray-mpich/8.1.14"
+        ]
+    },
+    "environment_variables": {
+        "EXE": "run_ytopt.py",
+        "COMMS": "--comms local",
+        "NWORKERS": "--nworkers 5",
+        "CONDA_ENV_NAME": "ytune",
+        "PMI_NO_FORK": 1,
+        "PE_MPICH_GTL_DIR_amd_gfx90a": "-L${CRAY_MPICH_ROOTDIR}/gtl/lib",
+        "PE_MPICH_GTL_LIBS_amd_gfx90a": "-lmpi_gtl_hsa",
+        "PYTHONNOUSERSITE": 1
+    }
+}

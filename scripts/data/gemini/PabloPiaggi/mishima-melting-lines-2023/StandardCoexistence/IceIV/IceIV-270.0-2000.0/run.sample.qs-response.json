@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"LAMMPS\",\n  \"details\": {\n    \"environment\": {\n      \"modules\": [\n        \"cudatoolkit/10.0\",\n        \"cudnn/cuda-10.0/7.6.3\",\n        \"openmpi/gcc/3.1.3/64\"\n      ],\n      \"virtual_environment\": \"/home/ppiaggi/Programs/Software-deepmd-kit-1.0/tensorflow-venv/bin/activate\"\n    },\n    \"resources\": {\n      \"nodes\": 1,\n      \"tasks_per_node\": 4,\n      \"tasks_per_socket\": 2,\n      \"cpus_per_task\": 7,\n      \"gpus\": 4,\n      \"walltime\": \"72:00:00\"\n    },\n    \"execution\": {\n      \"command\": \"mpirun $LAMMPS_EXE -i in.lammps.sample\",\n      \"executable\": \"/home/ppiaggi/Programs/Software-deepmd-kit-1.0/lammps-git2/src/lmp_mpi\"\n    }\n  }\n}\n```\n\nThis script runs the **LAMMPS** molecular dynamics simulation package.  Here's a breakdown of the JSON object:\n\n* **application**:  \"LAMMPS\" - The molecular dynamics simulation software.\n* **details**:\n    * **environment**: \n        * **modules**:  The script loads specific versions of CUDA toolkit, cuDNN, and OpenMPI using module commands.\n        * **virtual_environment**: The script activates a TensorFlow virtual environment for potential use within the simulation. \n    * **resources**: \n        * **nodes**: The script requests 1 compute node.\n        * **tasks_per_node**: It asks for 4 tasks per node.\n        * **tasks_per_socket**:  2 tasks per socket are requested.\n        * **cpus_per_task**: Each task is assigned 7 CPUs.\n        * **gpus**: The script requests access to 4 GPUs.\n        * **walltime**: It sets a maximum runtime of 72 hours. \n    * **execution**: \n        * **command**: This is the actual command to run LAMMPS, using `mpirun` for parallel execution.\n        * **executable**: The path to the LAMMPS executable. \n \nThe script also shows an attempt to restart the simulation if it encounters an error.  This is done by using `sbatch` to submit a new job (`run.sample.qs`) that depends on the completion of the current job (`--dependency=afterok:$SLURM_JOB_ID`). \n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 361,
+        "candidates_token_count": 602,
+        "total_token_count": 963,
+        "cached_content_token_count": 0
+    }
+}

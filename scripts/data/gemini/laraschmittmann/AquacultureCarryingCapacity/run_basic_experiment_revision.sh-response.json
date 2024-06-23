@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n\"application\": \"Slurm\",\n\"software\": [\n\"Singularity\",\n\"gcc\",\n\"conda\",\n\"papermill\"\n],\n\"resources\": [\n\"cpu\",\n\"memory\",\n\"time\",\n\"storage\"\n],\n\"details\": {\n\"cpu\": \"123\",\n\"memory\": \"24G\",\n\"time\": \"24:00:00\",\n\"storage\": \"/sfs, /gxfs_work, $PWD\"\n}\n}\n```\n\nThis script is primarily designed to run on a high-performance computing (HPC) cluster managed by Slurm. It leverages Slurm's features for resource allocation and job management. Here's a breakdown of the script and its components:\n\n**1. Slurm Directives:**\n\n* `#SBATCH --job-name=north-sea_oysters_basic-exp`:  Assigns a name to the job.\n* `#SBATCH --ntasks=123`: Requests 123 tasks (likely CPU cores).\n* `#SBATCH --cpus-per-task=1`: Specifies that each task should run on a single CPU core.\n* `#SBATCH --mem-per-cpu=24G`: Allocates 24 GB of memory per CPU core.\n* `#SBATCH --time=24:00:00`: Sets a maximum runtime of 24 hours.\n* `#SBATCH --partition=base`: Requests the job to be run on the 'base' partition of the cluster.\n\n**2. Environment Setup:**\n\n* `module load gcc12-env/12.3.0`:  Loads a specific version of the GCC compiler environment.\n* `module load singularity/3.11.5`:  Loads a version of the Singularity container runtime.\n\n**3. Singularity Container:**\n\n* The script assumes a Singularity container image (likely a scientific software environment) is available at `quay.io/willirath/parcels-container:2022.07.14-801fbe4`.\n\n**4. Output Directory:**\n\n* `mkdir -p notebooks_executed/revision`: Creates an output directory for results.\n\n**5. Experiment Parameters:**\n\n* The script defines various parameters for the experiment, such as `runtime_days`, `start_depth_meters`, `number_particles`, and `RNG_seed`.\n\n**6. Looping Through Release Stations and Dates:**\n\n* The code iterates through a list of `release_station` locations, years, and start dates.\n\n**7. Running Papermill Notebooks:**\n\n* Within each iteration, the script uses `srun` to execute a command:\n    * `singularity run`: Runs the Singularity container.\n    * `-B /sfs -B /gxfs_work -B $PWD:/work`: Mounts specific directories within the container.\n    * `--pwd /work`: Sets the working directory within the container.\n    * `parcels-container_2022.07.14-801fbe4.sif`: The path to the Singularity image.\n    * `bash -c \"...\"`:  Executes a shell command.\n* The shell command:\n    * `. /opt/conda/etc/profile.d/conda.sh && conda activate base`:  Activates the 'base' conda environment.\n    * `papermill ...`:  Executes the `papermill` tool to run a Jupyter notebook.\n* `papermill` is used to run a notebook with specific parameters set using the `-p` flag. \n* The output of the notebook is written to a file with a unique name based on the iteration parameters.\n* `-k python`:  Specifies that the notebook should be executed using the Python kernel.\n\n**8. Waiting for Background Jobs:**\n\n* `wait`:  Waits for all the background jobs (notebook executions) to finish.\n\n**9. Printing Resource Information:**\n\n* `jobinfo`:  Prints information about the Slurm job (likely resource usage).\n\n**In summary, the script:**\n\n1. **Sets up environment** with necessary modules and software.\n2. **Uses Singularity** to run a container with specific software dependencies.\n3. **Executes Papermill** to run Jupyter notebooks with various parameters in a loop.\n4. **Manages resource allocation** through Slurm directives.\n\nThe code primarily utilizes the Slurm work queue system, Singularity containerization, and Papermill for notebook execution within a computational environment.\n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 906,
+        "candidates_token_count": 989,
+        "total_token_count": 1895,
+        "cached_content_token_count": 0
+    }
+}

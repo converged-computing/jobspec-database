@@ -1,0 +1,44 @@
+{
+    "application": "pytorch",
+    "details": {
+        "framework": "PyTorch",
+        "resource_requirements": {
+            "nodes": 1,
+            "tasks_per_node": 8,
+            "gpus": 8,
+            "time": "12:00:00",
+            "memory": "102400MB",
+            "partition": "your_partition_name"
+        },
+        "environment_variables": {
+            "CUDA_VISIBLE_DEVICES": "0,1,2,3,4,5,6,7",
+            "MASTER_ADDR": "localhost",
+            "MASTER_PORT": "1234",
+            "WORLD_SIZE": "8",
+            "NCLL_BLOCKING_WAIT": "1",
+            "NCCL_TIMEOUT": "200",
+            "BATCH_SIZE": "your_batch_size(int)",
+            "EPOCHS": "your_epochs(int)",
+            "LR": "your_lr(float)",
+            "WEIGHT_DECAY": "your_weight_decay(float)",
+            "OMP_NUM_THREADS": "1"
+        },
+        "modules": "your_module_name",
+        "command": "/your/torchrun",
+        "arguments": {
+            "nproc_per_node": "8",
+            "script": "eraser/main.py",
+            "batch_size": "$BATCH_SIZE",
+            "base_dir": "/path/to/your/dataset",
+            "pretrained_model": "vit-b-22k",
+            "erasing_method": "lmeraser",
+            "epochs": "$EPOCHS",
+            "lr": "$LR",
+            "weight_decay": "$WEIGHT_DECAY",
+            "test_dataset": "cifar100",
+            "num_gpus": "8",
+            "num_workers": "4",
+            "distributed": "true"
+        }
+    }
+}

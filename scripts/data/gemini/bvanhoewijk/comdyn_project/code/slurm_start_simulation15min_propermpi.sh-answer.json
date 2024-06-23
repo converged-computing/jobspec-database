@@ -1,0 +1,32 @@
+{
+    "application": "GROMACS",
+    "details": {
+        "environment": "SLURM",
+        "partition": "genoa",
+        "nodes": 1,
+        "tasks": 64,
+        "time": "0:15:00",
+        "modules": [
+            "2023",
+            "GROMACS/2023.3-foss-2023a"
+        ],
+        "input_files": [
+            "step7_production.mdp",
+            "step6.6_equilibration.gro",
+            "system.top",
+            "index.ndx"
+        ],
+        "output_files": [
+            "rep${rep}/step7_production_rep${rep}.tpr",
+            "rep${rep}/mdout.mdp",
+            "rep${rep}/step7_production_rep${rep}.cpt",
+            "rep${rep}/rep${rep}_md.log"
+        ],
+        "commands": [
+            "gmx grompp",
+            "mpirun gmx_mpi mdrun"
+        ],
+        "mpi_processes": 32,
+        "omp_threads": 1
+    }
+}

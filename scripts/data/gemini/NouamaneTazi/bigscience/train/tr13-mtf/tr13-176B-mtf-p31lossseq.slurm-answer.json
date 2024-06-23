@@ -1,0 +1,30 @@
+{
+    "application": "DeepSpeed",
+    "details": {
+        "framework": "PyTorch",
+        "model": "T0 176B",
+        "training_data": "p31_train.txt",
+        "validation_data": "p31_validation_pretr.txt",
+        "optimizer": "Adam",
+        "learning_rate": "2e-5",
+        "batch_size": 2048,
+        "sequence_length": 2048,
+        "tensor_parallelism": 1,
+        "pipeline_parallelism": 72,
+        "nodes": 36,
+        "gpus_per_node": 8,
+        "compute_resources": {
+            "partition": "gpu_p5",
+            "constraint": "a100",
+            "reservation": "hug",
+            "qos": "qos_gpu-gc",
+            "time_limit": "100:00:00",
+            "account": "six@a100"
+        },
+        "software_dependencies": {
+            "Megatron-DeepSpeed": "/gpfswork/rech/six/commun/code/tr13f-6B3-ml-t0/megdslossseqnew/Megatron-DeepSpeed",
+            "transformers": "bigscience/tokenizer",
+            "deepspeed_config": "ds_config.$SLURM_JOBID.json"
+        }
+    }
+}

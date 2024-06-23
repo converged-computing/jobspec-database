@@ -1,0 +1,38 @@
+{
+    "application": "SLURM",
+    "details": {
+        "partition": "csi",
+        "time": "00:10:00",
+        "account": "csigeneral",
+        "exclusive": true,
+        "nodes": 1,
+        "tasks": 4,
+        "qos": "csi",
+        "gpus": 4,
+        "environment_variables": [
+            "OMP_NUM_THREADS=4",
+            "OMPI_MCA_btl=^uct,openib",
+            "UCX_TLS=cuda,gdr_copy,rc,rc_x,sm,cuda_copy,cuda_ipc",
+            "UCX_RNDV_SCHEME=put_zcopy",
+            "UCX_RNDV_THRESH=16384",
+            "UCX_IB_GPU_DIRECT_RDMA=no",
+            "UCX_MEMTYPE_CACHE=n",
+            "OMP_NUM_THREAD=8"
+        ],
+        "commands": [
+            "nvidia-smi",
+            "numactl -H > numa.txt",
+            "lstopo A100-topo.pdf",
+            "./benchmarks/Benchmark_dwf_fp32 --mpi 1.1.1.1 --grid 16.32.32.32 --shm 2048 --shm-mpi 0  --accelerator-threads 16",
+            "./select_gpu ./benchmarks/Benchmark_dwf_fp32 --mpi 1.1.2.2 --grid 32.32.64.64 --shm 2048 --shm-mpi 0  --accelerator-threads 16"
+        ],
+        "other_software": [
+            "sourceme.sh",
+            "select_gpu",
+            "benchmarks/Benchmark_dwf_fp32",
+            "nvidia-smi",
+            "numactl",
+            "lstopo"
+        ]
+    }
+}

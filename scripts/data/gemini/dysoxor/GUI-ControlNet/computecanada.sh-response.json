@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"MachineLearning\",\n  \"details\": {\n    \"framework\": \"PyTorch\",\n    \"libraries\": [\n      \"numpy\",\n      \"torchvision\",\n      \"torch\",\n      \"ControlNet\"\n    ],\n    \"resources\": {\n      \"nodes\": 1,\n      \"gpus\": \"v100l:4\",\n      \"tasks_per_node\": 32,\n      \"memory\": \"96G\",\n      \"time\": \"0-24:00\",\n      \"account\": \"def-gabilode\",\n      \"python_version\": \"3.8\"\n    },\n    \"environment_variables\": [\n      \"NCCL_BLOCKING_WAIT=1\",\n      \"SLURM_TMPDIR\",\n      \"SLURM_NODEID\",\n      \"MASTER_ADDR\",\n      \"SLURM_NTASKS\"\n    ],\n    \"commands\": [\n      \"virtualenv --no-download $SLURM_TMPDIR/control\",\n      \"source $SLURM_TMPDIR/control/bin/activate\",\n      \"pip3 install numpy==1.24.2 --no-index\",\n      \"pip3 install torchvision==0.13.1 --no-index\",\n      \"pip3 install torch==1.12.1 --no-index\",\n      \"pip3 install -r /home/ansoba/projects/def-gabilode/ansoba/GUI-ControlNet/requirements.txt\",\n      \"cd $SLURM_TMPDIR\",\n      \"tar -xvzf /home/ansoba/projects/def-gabilode/ansoba/GUI-ControlNet/training/clay/data.tar.gz\",\n      \"python /home/ansoba/projects/def-gabilode/ansoba/GUI-ControlNet/tool_add_control_sd21.py /home/ansoba/projects/def-gabilode/ansoba/GUI-ControlNet/models/v2-1_512-ema-pruned.ckpt /home/ansoba/projects/def-gabilode/ansoba/GUI-ControlNet/models/control_sd21_ini.ckpt\",\n      \"python /home/ansoba/projects/def-gabilode/ansoba/GUI-ControlNet/tutorial_train_sd21.py\",\n      \"deactivate\"\n    ]\n  }\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 593,
+        "candidates_token_count": 560,
+        "total_token_count": 1153,
+        "cached_content_token_count": 0
+    }
+}

@@ -1,0 +1,72 @@
+{
+    "application": "Snakemake",
+    "details": {
+        "scheduler": "PBS Pro",
+        "resources": {
+            "memory": "4g",
+            "cpus": 1,
+            "walltime": "{MASTER_WALLTIME_H}:00:00",
+            "queue": "production"
+        },
+        "dependencies": {
+            "python": "python",
+            "snakemake": "snakemake",
+            "dotkit": "rc/dk_init.rc",
+            "snakemake_init": "rc/snakemake_init.rc"
+        },
+        "environment_variables": {
+            "DEBUG": "0",
+            "DRMAA_OFF": "1",
+            "DEFAULT_SLAVE_Q": "{DEFAULT_SLAVE_Q}",
+            "SNAKEFILE": "{SNAKEFILE}",
+            "LOGDIR": "{LOGDIR}",
+            "EXTRA_SNAKEMAKE_ARGS": "from environment or command line",
+            "SLAVE_Q": "from environment or default to {DEFAULT_SLAVE_Q}",
+            "ENVIRONMENT": "BATCH or local",
+            "ANALYSIS_ID": "generated timestamp"
+        },
+        "command_line_arguments": {
+            "sm_args": [
+                "-s",
+                "{SNAKEFILE}",
+                "--jobs",
+                "25",
+                "--rerun-incomplete",
+                "--timestamp",
+                "--printshellcmds",
+                "--stats",
+                "$LOGDIR/snakemake.stats",
+                "--configfile",
+                "conf.yaml",
+                "--latency-wait",
+                "60",
+                "--cluster-config",
+                "cluster.yaml",
+                "-l",
+                "select=1:ncpus={{threads}}:mem={{cluster.mem}}",
+                "-q",
+                "production",
+                "-l",
+                "walltime={{cluster.time}}",
+                "-e",
+                "$LOGDIR",
+                "-o",
+                "$LOGDIR",
+                "--jobname",
+                "\"{PIPELINE_NAME}.slave.{{rulename}}.{{jobid}}.sh\"",
+                "--config",
+                "ANALYSIS_ID={ANALYSIS_ID}"
+            ]
+        },
+        "logs": {
+            "master_log": "{MASTERLOG}"
+        },
+        "features": {
+            "dryrun": "supported",
+            "rerun-incomplete": "enabled",
+            "cluster_sync": "enabled",
+            "cluster_config": "enabled",
+            "mongodb_update": "enabled"
+        }
+    }
+}

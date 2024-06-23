@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"MPI\",\n  \"details\": {\n    \"software\": [\n      \"mpijob\",\n      \"intel C&fortran\",\n      \"mpt\",\n      \"torque\"\n    ],\n    \"resources\": {\n      \"nodes\": \"NNODE\",\n      \"cores_per_node\": \"NPROC\",\n      \"queue\": \"quv\"\n    },\n    \"files\": [\n      \"bin/${BINNAME}\",\n      \"data/mnginfo/${MNGINFO}\",\n      \"data/grid/vgrid/${VGRID}\",\n      \"data/grid/boundary/${dir2d}/*\",\n      \"data/zaxis\",\n      \"data/grid/llmap/gl${GL}rl${RL}/*\",\n      \"bin/fio_ico2ll_mpi\"\n    ],\n    \"environment_variables\": {\n      \"FORT_FMT_RECL\": 400\n    }\n  }\n}\n```\n\nThis script appears to be designed for running an MPI application on a Linux64 system with Intel C&Fortran, mpt, and torque. It utilizes the \"mpijob\" command to launch the application and sets up several environment variables and files for the execution. \n\nHere's a breakdown of the script:\n\n- **System Specific:** Defines the MPI execution command (`MPIEXEC`) as `mpijob`.\n- **Variable Declarations:** Sets up variables like `GLEV`, `RLEV`, `NMPI`, `ZL`, `VGRID`, `TOPDIR`, and `BINNAME` which seem to be passed as arguments to the script. It also calculates derived variables like `GL`, `RL`, `NP`, `dir2d`, `dir3d`, `res2d`, `res3d`, `MNGINFO`, `NNODE`, and `NPROC` based on the input arguments.\n- **run.sh Script:** Creates a `run.sh` script that will be submitted to the queuing system. This script sets the job queue (`quv`), number of nodes and cores per node, job name, output and error file locations, and sets the `FORT_FMT_RECL` environment variable. It then links the necessary files and directories from the `TOPDIR` directory and finally runs the application using `MPIEXEC`.\n- **ico2ll.sh Script:** Creates an `ico2ll.sh` script that uses `MPIEXEC` to run the `fio_ico2ll_mpi` application. This application appears to be related to processing data from a grid, as it takes arguments like `glevel`, `rlevel`, `mnginfo`, `layerfile_dir`, and `llmap_base`.\n\nThe provided JSON output includes:\n\n- **application**: The type of application being executed, which is \"MPI\" in this case.\n- **details**: A more detailed description of the software and resource requirements. This includes:\n    - **software**: A list of software components used, including the MPI execution command, compiler, MPI implementation, and queuing system.\n    - **resources**: Information about the computational resources required, including the number of nodes, cores per node, and the job queue used.\n    - **files**: A list of files and directories that need to be linked or copied for the application to run correctly.\n    - **environment_variables**: Key-value pairs for environment variables that need to be set before running the application.\n\nThis detailed information helps understand the context of the script and the specific environment it is designed for. \n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 973,
+        "candidates_token_count": 764,
+        "total_token_count": 1737,
+        "cached_content_token_count": 0
+    }
+}

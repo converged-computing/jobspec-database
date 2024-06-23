@@ -1,0 +1,41 @@
+{
+    "application": "Slurm",
+    "details": {
+        "job_name": "finetune",
+        "account": "eqb@a100",
+        "partition": "gpu_p5",
+        "nodes": 1,
+        "ntasks_per_node": 1,
+        "gres": "gpu:1",
+        "cpus_per_task": 8,
+        "hint": "nomultithread",
+        "time": "5:00:00",
+        "output": "out/train_all_parent_w_speaker_codes_c_0_latest.out",
+        "error": "out/train_all_parent_w_speaker_codes_c_0_latest.err",
+        "modules": [
+            "python/3.8.2",
+            "conda activate /linkhome/rech/genzuo01/uez75lm/.conda/envs/childes-grammaticality"
+        ],
+        "environment_variables": [
+            "PYTHONPATH=.",
+            "TRANSFORMERS_OFFLINE=1",
+            "CUDA_LAUNCH_BLOCKING=1"
+        ],
+        "python_script": "nn/fine_tuning_nn.py",
+        "python_arguments": [
+            "--accelerator",
+            "gpu",
+            "--model",
+            "microsoft/deberta-v3-large",
+            "--context-length",
+            "0",
+            "--model-type",
+            "parent"
+        ],
+        "software_requirements": [
+            "python",
+            "transformers",
+            "accelerate"
+        ]
+    }
+}

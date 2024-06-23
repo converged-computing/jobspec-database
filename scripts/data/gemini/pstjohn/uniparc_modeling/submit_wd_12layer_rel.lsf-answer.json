@@ -1,0 +1,42 @@
+{
+    "application": "jsrun",
+    "details": {
+        "modules": [
+            "ibm-wml-ce/1.7.0-3"
+        ],
+        "conda_env": "tf21-ibm",
+        "python_path": "$HOME/uniparc_modeling:$PYTHONPATH",
+        "environment_variables": {
+            "NCCL_DEBUG": "INFO",
+            "TF_ENABLE_AUTO_MIXED_PRECISION": "1",
+            "OMP_NUM_THREADS": "4"
+        },
+        "resources": {
+            "nodes": "${NODES}",
+            "gpus_per_node": "6",
+            "cpus_per_node": "42",
+            "tasks_per_node": "1",
+            "ranks_per_node": "1"
+        },
+        "script": "run_model_wd_at.py",
+        "arguments": [
+            "--modelName=$LSB_JOBNAME.$LSB_JOBID",
+            "--scratchDir=\"$MEMBERWORK/bie108/uniparc_checkpoints\"",
+            "--dataDir=\"$PROJWORK/bie108/split_uniref100\"",
+            "--checkpoint=\"/gpfs/alpine/scratch/pstjohn/bie108/uniparc_checkpoints/12_layer_relative_adam_20200625_highlr.184212/\"",
+            "--batchSize=$BATCH_SIZE",
+            "--warmup=500",
+            "--totalSteps=125000",
+            "--stepsPerEpoch=500",
+            "--validationSteps=5",
+            "--lr=1E-4",
+            "--maskingFreq=0.15",
+            "--sequenceLength=512",
+            "--modelDimension=768",
+            "--numberXformerLayers=12",
+            "--attentionType='relative'",
+            "--weightDecay='false'",
+            "--initialEpoch=0"
+        ]
+    }
+}

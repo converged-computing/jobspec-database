@@ -1,0 +1,49 @@
+{
+    "application": "FastEddy",
+    "details": {
+        "software": [
+            "Singularity",
+            "mpiexec",
+            "FastEddy",
+            "wget"
+        ],
+        "resources": {
+            "PBS": {
+                "account": "SCSG0001",
+                "queue": "main",
+                "walltime": "02:00:00",
+                "nodes": 6,
+                "cores_per_node": 64,
+                "mpi_processes_per_node": 4,
+                "gpus_per_node": 4
+            },
+            "environment_variables": [
+                "TMPDIR",
+                "LD_LIBRARY_PATH",
+                "MPICH_SMP_SINGLE_COPY_MODE",
+                "MPICH_GPU_SUPPORT_ENABLED",
+                "MPICH_GPU_MANAGED_MEMORY_SUPPORT_ENABLED",
+                "LD_PRELOAD",
+                "SCRATCH",
+                "WORK",
+                "PBS_NODEFILE"
+            ],
+            "files": [
+                "./rocky8-openhpc-fasteddy-sandbox/",
+                "./rocky8-openhpc-fasteddy.sif",
+                "./Example02_CBL.in",
+                "./output",
+                "config_env.sh",
+                "/opt/local/FastEddy-model/SRC/FEMAIN/FastEddy",
+                "/opt/cray/pe/mpich/${CRAY_MPICH_VERSION}/gtl/lib/libmpi_gtl_cuda.so.0"
+            ],
+            "bind_mounts": [
+                "/run",
+                "/usr/lib64:/host/lib64",
+                "/opt/cray",
+                "${SCRATCH}",
+                "${WORK}"
+            ]
+        }
+    }
+}

@@ -1,0 +1,45 @@
+{
+    "application": "TractoRL",
+    "details": {
+        "resource_requirements": {
+            "gpu": "v100l:1",
+            "cores": 12,
+            "memory": "12000M",
+            "time": "01-00:00",
+            "account": "$SALLOC_ACCOUNT"
+        },
+        "software_dependencies": [
+            "python/3.8",
+            "httpproxy",
+            "TrackToLearn",
+            "Tractometer"
+        ],
+        "environment_variables": {
+            "HOME": "~",
+            "WORK": "$SLURM_TMPDIR",
+            "DATASET_FOLDER": "${HOME}/projects/$SALLOC_ACCOUNT/$USER/tracktolearn",
+            "WORK_DATASET_FOLDER": "${WORK}/tracktolearn",
+            "VALIDATION_SUBJECT_ID": "fibercup",
+            "SUBJECT_ID": "fibercup",
+            "EXPERIMENTS_FOLDER": "${DATASET_FOLDER}/experiments",
+            "WORK_EXPERIMENTS_FOLDER": "${WORK_DATASET_FOLDER}/experiments",
+            "SCORING_DATA": "${DATASET_FOLDER}/datasets/${VALIDATION_SUBJECT_ID}/scoring_data",
+            "dataset_file": "$WORK_DATASET_FOLDER/datasets/${SUBJECT_ID}/${SUBJECT_ID}.hdf5",
+            "validation_dataset_file": "$WORK_DATASET_FOLDER/datasets/${VALIDATION_SUBJECT_ID}/${VALIDATION_SUBJECT_ID}.hdf5",
+            "reference_file": "$WORK_DATASET_FOLDER/datasets/${VALIDATION_SUBJECT_ID}/masks/${VALIDATION_SUBJECT_ID}_wm.nii.gz",
+            "EXPERIMENT": "SAC_Auto_FiberCupTrainLength1Exp5",
+            "ID": "${SLURM_JOB_ID}_${SLURM_ARRAY_TASK_ID}",
+            "rng_seed": "${seeds[${SLURM_ARRAY_TASK_ID}]}",
+            "DEST_FOLDER": "$WORK_EXPERIMENTS_FOLDER\"/\"$EXPERIMENT\"/\"$ID\"/\"$rng_seed\""
+        },
+        "parameters": {
+            "max_ep": 1000,
+            "log_interval": 50,
+            "lr": 1e-05,
+            "gamma": 0.5,
+            "prob": 0.0,
+            "npv": 10,
+            "theta": 30
+        }
+    }
+}

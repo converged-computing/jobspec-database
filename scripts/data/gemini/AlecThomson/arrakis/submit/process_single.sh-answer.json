@@ -1,0 +1,35 @@
+{
+    "application": "SLURM",
+    "details": {
+        "job_name": "processSPICE",
+        "mail_user": "alec.thomson@csiro.au",
+        "mail_type": "ALL",
+        "error_file": "/group/askap/athomson/projects/arrakis/spica/slurmLogs/slurm-%j.err",
+        "output_file": "/group/askap/athomson/projects/arrakis/spica/slurmLogs/slurm-%j.out",
+        "ntasks": 500,
+        "requeue": true,
+        "ntasks_per_node": 20,
+        "time": "12:00:00",
+        "cluster": "galaxy",
+        "account": "askaprt",
+        "environment": {
+            "OMP_NUM_THREADS": 1,
+            "SINGULARITY_BINDPATH": "$(pwd),/group"
+        },
+        "other_software": {
+            "conda_environment": "spice",
+            "singularity": "module load singularity",
+            "python_scripts": [
+                "find_sbid.py",
+                "spice_process"
+            ]
+        },
+        "data_files": {
+            "field": "1600-50A",
+            "zernike": "/group/askap/athomson/projects/arrakis/leakages/${weight_pad}_zernike_holo_cube.fits",
+            "data_dir": "/group/ja3/athomson/spica",
+            "config": "/group/askap/athomson/projects/arrakis/spica/spica_config.txt",
+            "cal_sbid": "$data_dir/$cal_sbid/RACS_test4_1.05_$field"
+        }
+    }
+}

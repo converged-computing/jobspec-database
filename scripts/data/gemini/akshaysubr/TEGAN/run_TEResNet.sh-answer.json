@@ -1,0 +1,24 @@
+{
+    "application": "Slurm",
+    "details": {
+        "job_name": "TEResNet",
+        "nodes": 1,
+        "tasks_per_node": 32,
+        "time": "24:00:00",
+        "output": "TEResNet-%j.out",
+        "error": "TEResNet-%j.err",
+        "partition": "gpu",
+        "qos": "normal",
+        "gres": "gpu:1",
+        "software": [
+            "cuda/9.0",
+            "cudnn/7.0.3",
+            "python",
+            "tensorFlowGpu"
+        ],
+        "environment_variables": {
+            "LD_LIBRARY_PATH": "/usr/local/cuda-9.0/extras/CUPTI/lib64:${LD_LIBRARY_PATH}"
+        },
+        "command": "python main.py --task TEResNet --num_resblock 12 --learning_rate 0.0001 --lambda_ens 0.2 --lambda_con 0.5 --lambda_phy 0.125 --max_iter 10000 --max_epoch 50 --save_freq 100 --summary_freq 10 --train_dir /farmshare/user_data/rborker/TEGAN/Data/train_small --dev_dir /farmshare/user_data/rborker/TEGAN/Data/test_small --output_dir /farmshare/user_data/rborker/TEGAN/TEResNet/output_small_RB12_LR0.0001_ENS0.2_CON0.5_PHY0.125 --summary_dir /farmshare/user_data/rborker/TEGAN/TEResNet/summary_small_RB12_LR0.0001_ENS0.2_CON0.5_PHY0.125 --log_file /farmshare/user_data/rborker/TEGAN/TEResNet/log_RB12_LR0.0001_ENS0.2_CON0.5_PHY0.125.dat --checkpoint /farmshare/user_data/rborker/TEGAN/TEResNet/output_RB12_LR0.0001_ENS0.2_CON0.5_PHY0.125/model-9200 --pre_trained_model True"
+    }
+}

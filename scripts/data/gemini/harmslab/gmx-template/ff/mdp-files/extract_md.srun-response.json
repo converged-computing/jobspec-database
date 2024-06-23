@@ -1,0 +1,68 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"Gromacs\",\n  \"details\": {\n    \"modules\": [\n      \"intel/19\",\n      \"gromacs/2019.4\"\n    ],\n    \"resources\": {\n      \"account\": \"harmslab\",\n      \"job_name\": \"extract\",\n      \"partition\": \"short\",\n      \"time\": \"24:00:00\",\n      \"nodes\": 1,\n      \"tasks_per_node\": 1,\n      \"cpus_per_task\": 1\n    },\n    \"dependencies\": [\n      \"gmx trjconv\"\n    ],\n    \"input_files\": [\n      \"{base_name}.xtc\",\n      \"{base_name}.tpr\",\n      \"{starting_gro}\"\n    ],\n    \"output_files\": [\n      \"hostname.out\",\n      \"hostname.err\",\n      \"{dest_dir}/{out_root}.gro\",\n      \"{dest_dir}/{out_root}.tpr\",\n      \"{dest_dir}/{out_root}.xtc\",\n      \"{dest_dir}/{out_root}-split.xtc\"\n    ],\n    \"commands\": [\n      \"rm -rf {dest_dir}\",\n      \"mkdir {dest_dir}\",\n      \"cp {starting_gro} {dest_dir}/{out_root}.gro\",\n      \"cp {tpr_file} {dest_dir}/{out_root}.tpr\",\n      \"mkdir extract-tmp\",\n      \"cd extract-tmp\",\n      \"echo \\\"0\\\" > junk.command\",\n      \"cat junk.command | gmx trjconv -f ../{xtc_file} -pbc whole -o {out_root}.xtc -s ../{tpr_file}\",\n      \"echo \\\"0\\\" > junk.command\",\n      \"cat junk.command | gmx trjconv -f {out_root}.xtc -pbc nojump -o {out_root}.xtc -s ../{tpr_file}\",\n      \"echo \\\"1\\\" > junk.command\",\n      \"echo \\\"0\\\" >> junk.command\",\n      \"cat junk.command | gmx trjconv -f {out_root}.xtc -center -pbc mol -o {out_root}.xtc -s ../{tpr_file}\",\n      \"echo \\\"3\\\" > junk.command\",\n      \"echo \\\"0\\\" >> junk.command\",\n      \"cat junk.command | gmx trjconv -f {out_root}.xtc -s ../{tpr_file} -fit rot+trans -o {out_root}.xtc\",\n      \"echo \\\"0\\\" > junk.command\",\n      \"cat junk.command | gmx trjconv -f {out_root}.xtc -split {split_interval} -s ../{tpr_file} -o {out_root}-split.xtc\",\n      \"cp *split* ../{dest_dir}\",\n      \"cp {out_root}.xtc ../{dest_dir}\",\n      \"cd ..\",\n      \"rm -rf extract-tmp\"\n    ]\n  }\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 2,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 2,
+                    "blocked": false
+                }
+            ],
+            "citation_metadata": {
+                "citation_sources": [
+                    {
+                        "start_index": 1203,
+                        "end_index": 1384,
+                        "uri": "https://github.com/harmslab/gmx-template",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 1384,
+                        "end_index": 1550,
+                        "uri": "https://github.com/harmslab/gmx-template",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 1563,
+                        "end_index": 1742,
+                        "uri": "https://github.com/harmslab/gmx-template",
+                        "license_": ""
+                    }
+                ]
+            },
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 991,
+        "candidates_token_count": 725,
+        "total_token_count": 1716,
+        "cached_content_token_count": 0
+    }
+}

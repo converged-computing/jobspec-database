@@ -1,0 +1,26 @@
+{
+    "application": "SLURM",
+    "details": {
+        "partition": "GPUQ",
+        "account": "ie-idi",
+        "time": "00:15:00",
+        "nodes": 1,
+        "tasks_per_node": 1,
+        "memory": "8G",
+        "gpus": 1,
+        "job_name": "plenoxels_train",
+        "output_file": "/cluster/home/einarjso/neodroid_plenoxels/output/training/JOB%j.out",
+        "software": [
+            "PyTorch/1.12.1-foss-2022a-CUDA-11.7.0",
+            "nvidia-smi",
+            "launch_neodroid.sh"
+        ],
+        "commands": [
+            "module purge",
+            "module load PyTorch/1.12.1-foss-2022a-CUDA-11.7.0",
+            "cd /cluster/home/einarjso/neodroid_plenoxels/svox2/opt",
+            "./launch_neodroid.sh exp_bbox_it256_init0p2_24_04 0 /cluster/home/einarjso/local_datasets/fruit_roi_scale4_backup -c /cluster/home/einarjso/neodroid_plenoxels/svox2/opt/configs/neodroid/neodroid_weightdecay.json --expanding_bbox_maxiter 256 --expanding_bbox_initvalue 0.2",
+            "tail -f ckpt/exp_bbox_it256_init0p2_24_04/log"
+        ]
+    }
+}

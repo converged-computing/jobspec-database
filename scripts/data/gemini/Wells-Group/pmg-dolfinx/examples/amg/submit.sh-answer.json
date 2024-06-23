@@ -1,0 +1,39 @@
+{
+    "application": "SLURM",
+    "details": {
+        "resource_requirements": {
+            "nodes": 1,
+            "tasks_per_node": 8,
+            "gpus": 8,
+            "time": "00:10:00",
+            "exclusive": true
+        },
+        "software": {
+            "modules": [
+                "PrgEnv-gnu",
+                "craype-x86-trento",
+                "craype-accel-amd-gfx90a",
+                "rocm"
+            ],
+            "spack": {
+                "environment": "fenicsx-gpu-env",
+                "packages": [
+                    "fenics-dolfinx"
+                ]
+            },
+            "compiler": "hipcc"
+        },
+        "environment_variables": {
+            "MPICH_GPU_SUPPORT_ENABLED": "1",
+            "MPICH_OFI_NIC_POLICY": "NUMA",
+            "HIPCC_COMPILE_FLAGS_APPEND": "--offload-arch=gfx90a $(CC --cray-print-opts=cflags)",
+            "HIPCC_LINK_FLAGS_APPEND": "$(CC --cray-print-opts=libs)",
+            "SPACK_DIR": "/scratch/project_465000633/adrianj/spack"
+        },
+        "execution": {
+            "command": "./mg",
+            "cpu_bind": "--cpu-bind=map_cpu:49,57,17,23,1,9,33,41",
+            "gpu_bind": "../select_gpu.sh"
+        }
+    }
+}

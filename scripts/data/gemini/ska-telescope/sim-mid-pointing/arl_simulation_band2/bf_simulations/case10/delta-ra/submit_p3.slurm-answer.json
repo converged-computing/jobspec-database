@@ -1,0 +1,29 @@
+{
+    "application": "Dask",
+    "details": {
+        "scheduler": "dask-scheduler",
+        "workers": "dask-worker",
+        "python_version": "python",
+        "libraries": [
+            "dask",
+            "distributed"
+        ],
+        "resource_requirements": {
+            "nodes": 16,
+            "tasks": 33,
+            "memory": "16GB per worker",
+            "time": "23:59:59",
+            "scheduler_port": 8786,
+            "shared_directory": "../../../../shared"
+        },
+        "environment_variables": [
+            "PYTHONPATH",
+            "ARL_DASK_SCHEDULER"
+        ],
+        "commands": {
+            "scheduler_launch": "dask-scheduler --port=8786",
+            "worker_launch": "dask-worker --host ${host} --nprocs 2 --nthreads 1  --memory-limit 16GB --local-directory /mnt/storage-ssd/tim/dask-workspace/${host} $scheduler:8786",
+            "application_run": "python  ../../../../pointing_simulation_distributed.py --context null --frequency 1.36e9 --rmax 1e5 --flux_limit 0.003 --show True --offset_dir 1.0 0.0 --seed 18051955  --pbtype MID_FEKO_B2 --memory 32 --integration_time 30 --use_agg True --time_series wind --time_chunk 1800 --shared_directory ../../../../shared | tee pointing_simulation.log"
+        }
+    }
+}

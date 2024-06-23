@@ -1,0 +1,31 @@
+{
+    "application": "Dask",
+    "details": {
+        "environment": {
+            "module_purge": true,
+            "python_path": "ARL",
+            "dask_scheduler_port": "8786",
+            "dask_workspace_directory": "/mnt/storage-ssd/tim/dask-workspace"
+        },
+        "resources": {
+            "nodes": 12,
+            "tasks": 29,
+            "memory_limit": "50GB",
+            "wallclock_time": "23:59:59"
+        },
+        "launch_method": {
+            "scheduler_launch": "dask-scheduler",
+            "worker_launch": "dask-worker",
+            "worker_interface": "ib0",
+            "worker_nprocs": 2,
+            "worker_nthreads": 4,
+            "worker_memory_limit": "50GB",
+            "worker_local_directory": "/mnt/storage-ssd/tim/dask-workspace/${host}"
+        },
+        "script": {
+            "python_script": "../../surface_simulation_elevation.py",
+            "script_arguments": "--context null --rmax 1e5 --flux_limit 0.003 --show True --elevation_sampling 1.0 --offset_dir 1.0 0.0 --seed 18051955 --band B1 --pbtype MID_FEKO_B1 --memory 32 --integration_time 30 --use_agg True --time_chunk 30 --time_range -6 6 --shared_directory /mnt/storage-ssd/tim/Code/sim-mid-surface/shared --vp_directory /mnt/storage-ssd/tim/Code/sim-mid-surface/beams/interpolated/",
+            "output_file": "surface_simulation.log"
+        }
+    }
+}

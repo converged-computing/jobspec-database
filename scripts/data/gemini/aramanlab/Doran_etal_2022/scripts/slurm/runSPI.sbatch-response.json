@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"slurm\",\n  \"details\": {\n    \"job_name\": \"runSPI\",\n    \"output_file\": \"/scratch/midway2/bend/projects/Doran_etal_2022/_research/logs/runSPI/runSPI_%A_%a.out\",\n    \"error_file\": \"/scratch/midway2/bend/projects/Doran_etal_2022/_research/logs/runSPI/runSPI_%A_%a.err\",\n    \"partition\": \"broadwl\",\n    \"array_tasks\": \"1-288\",\n    \"cpus_per_task\": 10,\n    \"time_limit\": \"0-00:05:00\",\n    \"memory_per_cpu\": \"2G\",\n    \"mail_type\": \"START,END\",\n    \"mail_user\": \"bend@uchicago.edu\",\n    \"julia_version\": \"1.7.2\",\n    \"project_directory\": \"/scratch/midway2/bend/projects/Doran_etal_2022\",\n    \"source_files\": \"ls $projdir/data/sims/MSAs/*\",\n    \"input_file\": \"${sourcefiles[$SLURM_ARRAY_TASK_ID]}\",\n    \"output_directory\": \"${projdir}/_research/runSPI/${name}\",\n    \"script\": \"scripts/slurm/runners/runSPI.jl\",\n    \"nboot\": 100,\n    \"output_file\": \"$outputdir/runSPI.out\"\n  }\n}\n```\n\n**Explanation:**\n\n* **Application:** The script is running on a **Slurm** cluster. Slurm is a workload manager for high-performance computing (HPC) systems, responsible for scheduling and managing resources. \n* **Details:**\n    * **Job Name:** The script is assigned the name `runSPI`. \n    * **Output & Error Files:**  Standard output and error messages are directed to specific log files within the project's directory.\n    * **Partition:** The job is submitted to the `broadwl` partition of the cluster.\n    * **Array Tasks:** The script will run 288 tasks, each assigned a unique array ID.\n    * **CPU & Memory:** Each task requests 10 CPUs and 2GB of memory per CPU.\n    * **Time Limit:**  Each task has a 5-minute time limit.\n    * **Mail Notifications:**  Emails are sent to the specified address upon job start and completion.\n    * **Julia:** The script loads the Julia 1.7.2 module.\n    * **Project Directory:** The script operates within the `/scratch/midway2/bend/projects/Doran_etal_2022` directory.\n    * **Input Files:** The script iterates through a list of files, with each task processing a specific file.\n    * **Output Directory:** Each task will produce output in a dedicated directory within the `_research/runSPI` folder.\n    * **Script:** The script invokes the `runSPI.jl` script, which is located in the `scripts/slurm/runners` directory.\n    * **Parameters:** The `runSPI.jl` script is passed the input file, output directory, and the number of bootstrap replicates (`--nboot 100`).\n    * **Output:** The script's output is written to a file named `runSPI.out` within the output directory.\n\n**Key points:**\n\n* The script uses Slurm directives (e.g., `#SBATCH`) to specify resources and execution parameters. \n* The script uses Julia, a high-performance programming language, for data analysis and processing.\n* The script is designed for parallel execution, utilizing multiple CPUs and running multiple tasks simultaneously. \n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 537,
+        "candidates_token_count": 848,
+        "total_token_count": 1385,
+        "cached_content_token_count": 0
+    }
+}

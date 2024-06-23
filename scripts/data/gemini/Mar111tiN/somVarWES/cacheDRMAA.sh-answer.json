@@ -1,0 +1,19 @@
+{
+    "application": "Snakemake",
+    "details": {
+        "scheduler": "SLURM",
+        "job_name": "EBcache",
+        "output_file": "slogs/%x-%j.log",
+        "cores": 2,
+        "nodes": 1,
+        "memory_per_cpu": "500M",
+        "partition": "long",
+        "time": "01:00:00",
+        "conda_environment": "snake-env",
+        "drmaa_options": "-p {cluster.partition} -t {cluster.t} --mem-per-cpu={cluster.mem} -J {cluster.name} --nodes={cluster.nodes} -n {cluster.threads} -o ${LOGDIR}/{rule}-%j.log",
+        "snakemake_options": "--snakefile cacheSnakefile --unlock --rerun-incomplete",
+        "cluster_config": "configs/cluster/PONcache-cluster.json",
+        "jobs": 3000,
+        "snakemake_flags": "-p -r -k"
+    }
+}

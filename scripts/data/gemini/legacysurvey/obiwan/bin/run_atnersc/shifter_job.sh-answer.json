@@ -1,0 +1,32 @@
+{
+    "application": "Slurm",
+    "details": {
+        "image": "docker:tskisner/desiconda:1.1.9-imaging-py27",
+        "nodes": 1,
+        "partition": "debug",
+        "time": "00:05:00",
+        "account": "desi",
+        "job_name": "docker",
+        "local_storage": "SCRATCH,project,projecta",
+        "cpu_type": "haswell",
+        "python_modules": [
+            "obiwan",
+            "legacypipe",
+            "theValidator"
+        ],
+        "environment_variables": [
+            "brick",
+            "obiwan_code",
+            "PYTHONPATH",
+            "obiwan_data",
+            "LEGACY_SURVEY_DIR",
+            "obiwan_outdir",
+            "log",
+            "MKL_NUM_THREADS"
+        ],
+        "commands": [
+            "srun -n 1 -c 32 shifter python obiwan/kenobi.py -b ${brick} -n 2 --DR 5 -o elg --outdir $obiwan_outdir --add_sim_noise --zoom 1550 1650 1550 1650 >> $log 2>&1",
+            "python legacypipe/runbrick.py --skip --threads 24 --skip-calibs --checkpoint checkpoints/${bri}/checkpoint-${brick}.pickle --pickle \"pickles/${bri}/runbrick-%(brick)s-%%(stage)s.pickle\" --brick $brick --outdir $outdir --nsigma 6 >> $log 2>&1"
+        ]
+    }
+}

@@ -1,0 +1,91 @@
+{
+    "application": "SLURM",
+    "details": {
+        "resource_requirements": {
+            "time": "24 hours",
+            "output_file": "/project/6033559/stanlo/da_for_polymers/da_for_polymers/ML_models/pytorch/CO2_Soleimani/slurm.out",
+            "error_file": "/project/6033559/stanlo/da_for_polymers/da_for_polymers/ML_models/pytorch/CO2_Soleimani/slurm.err",
+            "account": "rrg-aspuru",
+            "nodes": 1,
+            "cpus_per_task": 2,
+            "gpus_per_node": 4,
+            "memory": "12GB"
+        },
+        "software_requirements": {
+            "python_version": "3.9.6",
+            "virtual_environment": "/project/6025683/stanlo/opv_project/bin/activate",
+            "models": [
+                "LSTM",
+                "NN"
+            ],
+            "training_script": "../train.py"
+        },
+        "data_paths": {
+            "input_representation": {
+                "CO2_Soleimani": {
+                    "manual_frag": {
+                        "StratifiedKFold": {
+                            "input_train": "../../../data/input_representation/CO2_Soleimani/manual_frag/StratifiedKFold/input_train_[0-9].csv",
+                            "input_test": "../../../data/input_representation/CO2_Soleimani/manual_frag/StratifiedKFold/input_test_[0-9].csv"
+                        }
+                    },
+                    "augmentation": {
+                        "StratifiedKFold": {
+                            "input_train": "../../../data/input_representation/CO2_Soleimani/augmentation/StratifiedKFold/input_train_[0-9].csv",
+                            "input_test": "../../../data/input_representation/CO2_Soleimani/augmentation/StratifiedKFold/input_test_[0-9].csv"
+                        }
+                    },
+                    "BRICS": {
+                        "StratifiedKFold": {
+                            "input_train": "../../../data/input_representation/CO2_Soleimani/BRICS/StratifiedKFold/input_train_[0-9].csv",
+                            "input_test": "../../../data/input_representation/CO2_Soleimani/BRICS/StratifiedKFold/input_test_[0-9].csv"
+                        }
+                    },
+                    "fingerprint": {
+                        "StratifiedKFold": {
+                            "input_train": "../../../data/input_representation/CO2_Soleimani/fingerprint/StratifiedKFold/input_train_[0-9].csv",
+                            "input_test": "../../../data/input_representation/CO2_Soleimani/fingerprint/StratifiedKFold/input_test_[0-9].csv"
+                        }
+                    }
+                }
+            },
+            "training": {
+                "CO2_Soleimani": {
+                    "SMILES": "../../../training/CO2_Soleimani/SMILES",
+                    "Augmented_SMILES": "../../../training/CO2_Soleimani/Augmented_SMILES",
+                    "BRICS": "../../../training/CO2_Soleimani/BRICS",
+                    "manual_frag": "../../../training/CO2_Soleimani/manual_frag",
+                    "manual_frag_aug": "../../../training/CO2_Soleimani/manual_frag_aug",
+                    "manual_frag_SMILES": "../../../training/CO2_Soleimani/manual_frag_SMILES",
+                    "manual_frag_aug_SMILES": "../../../training/CO2_Soleimani/manual_frag_aug_SMILES",
+                    "manual_recombined_aug_SMILES": "../../../training/CO2_Soleimani/manual_recombined_aug_SMILES",
+                    "manual_recombined_aug_fingerprint": "../../../training/CO2_Soleimani/manual_recombined_aug_fingerprint",
+                    "fingerprint": "../../../training/CO2_Soleimani/fingerprint",
+                    "BigSMILES": "../../../training/CO2_Soleimani/BigSMILES",
+                    "SELFIES": "../../../training/CO2_Soleimani/SELFIES"
+                }
+            }
+        },
+        "features": [
+            "Polymer_SMILES",
+            "T_K",
+            "P_Mpa",
+            "Augmented_SMILES",
+            "Polymer_BRICS",
+            "Polymer_manual",
+            "Polymer_manual_aug",
+            "Polymer_manual_SMILES",
+            "Polymer_manual_aug_SMILES",
+            "Polymer_manual_recombined_aug_SMILES",
+            "Polymer_manual_recombined_aug_FP",
+            "CO2_FP_radius_3_nbits_512",
+            "Polymer_BigSMILES",
+            "Polymer_SELFIES"
+        ],
+        "target": "exp_CO2_sol_g_g",
+        "model_configs": {
+            "LSTM": "../LSTM/model_config.json",
+            "NN": "../NN/model_config.json"
+        }
+    }
+}

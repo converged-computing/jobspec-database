@@ -1,0 +1,56 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"PBS\",\n  \"details\": {\n    \"resource_requirements\": {\n      \"nodes\": 1,\n      \"cpus\": 40,\n      \"gpus\": 8,\n      \"memory\": \"160G\",\n      \"walltime\": \"23:59:59\"\n    },\n    \"queue\": \"dgx\",\n    \"project_code\": \"12001577\",\n    \"job_name\": \"train_base_{0}\",\n    \"docker_image\": \"nvcr.io/nvidia/pytorch:20.01-py3\",\n    \"docker_command\": \"nvidia-docker -u $UID:$GID -v /home:/home -v /raid:/raid --rm -i --shm-size=1g --ulimit memlock=-1 --ulimit stack=67108864 $image /bin/sh\",\n    \"script_file\": \"script.{0}.sh\"\n  }\n}\n```\n\nThis script is running a PBS (Portable Batch System) job on a DGX-1 node. \n\nHere's a breakdown of the details:\n\n* **PBS:** The script uses PBS commands to request resources, define job parameters, and submit the job to the DGX-1 queue.\n* **Resource Requirements:**  The script requests one node with 40 CPUs, 8 GPUs, and 160 GB of memory. It also specifies a walltime of 23 hours and 59 minutes. \n* **Queue:** The job is submitted to the `dgx` queue, which is specifically designed for DGX-1 nodes.\n* **Project Code:** The job is associated with project code `12001577`.\n* **Job Name:** The job is named `train_base_{0}`, where `{0}` likely represents a placeholder for a specific identifier.\n* **Docker Image:** The script utilizes the Docker image `nvcr.io/nvidia/pytorch:20.01-py3`, which provides a pre-configured environment with PyTorch and other necessary libraries for deep learning tasks.\n* **Docker Command:** The `nscc-docker run` command executes the Docker image and specifies various options, including:\n    * **User ID and Group ID:** `-u $UID:$GID` ensures the container runs with the user's privileges.\n    * **Volume Mounts:** `-v /home:/home` and `-v /raid:/raid` map the host directories `/home` and `/raid` into the container, allowing access to data and files.\n    * **Interactive Mode:** `-i` enables interactive shell access within the container.\n    * **Memory Limits:**  `--shm-size=1g`, `--ulimit memlock=-1`, and `--ulimit stack=67108864` set various memory-related limits for the container.\n* **Script File:** The script `script.{0}.sh` contains the actual commands to be executed within the Docker container. This file would likely contain the deep learning training code. \n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "citation_metadata": {
+                "citation_sources": [
+                    {
+                        "start_index": 340,
+                        "end_index": 491,
+                        "uri": "https://github.com/zhangks98/eeg-adapt",
+                        "license_": ""
+                    }
+                ]
+            },
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 656,
+        "candidates_token_count": 688,
+        "total_token_count": 1344,
+        "cached_content_token_count": 0
+    }
+}

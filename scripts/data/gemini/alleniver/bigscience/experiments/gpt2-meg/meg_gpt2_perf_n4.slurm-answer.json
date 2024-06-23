@@ -1,0 +1,33 @@
+{
+    "application": "slurm",
+    "details": {
+        "software": [
+            "python",
+            "torch",
+            "nvidia-smi",
+            "megatron-lm",
+            "srun"
+        ],
+        "resources": {
+            "nodes": 4,
+            "gpus": 4,
+            "cores": 40,
+            "memory": "32GB",
+            "time": "00:10:00"
+        },
+        "libraries": [
+            "torch.distributed"
+        ],
+        "environment": {
+            "LAUNCHER": "python -u -m torch.distributed.launch --nproc_per_node $GPUS_PER_NODE --nnodes $NNODES --master_addr $MASTER_ADDR --master_port $MASTER_PORT",
+            "CMD": "`pwd`/pretrain_gpt.py --tensor-model-parallel-size $TP_SIZE --pipeline-model-parallel-size $PP_SIZE $GPT_ARGS $OUTPUT_ARGS --save $SAVE_CHECKPOINT_PATH --load $SAVE_CHECKPOINT_PATH --data-path $DATA_PATH --data-impl mmap --split 949,50,1 --distributed-backend nccl"
+        },
+        "input": {
+            "data_path": "$six_ALL_CCFRWORK/datasets-custom/openwebtext-10k/meg-gpt2_text_document",
+            "vocab_file": "$CHECKPOINT_PATH/gpt2-vocab.json",
+            "merge_file": "$CHECKPOINT_PATH/gpt2-merges.txt",
+            "checkpoint_path": "$six_ALL_CCFRWORK/models-custom/megatron-gpt2/megatron_lm_345m_v0.0/release",
+            "save_checkpoint_path": "$six_ALL_CCFRSCRATCH/checkpoints/gpt2-1-node"
+        }
+    }
+}

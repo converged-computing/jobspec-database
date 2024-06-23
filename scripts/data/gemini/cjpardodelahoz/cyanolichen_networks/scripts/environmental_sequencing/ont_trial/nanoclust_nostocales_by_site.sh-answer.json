@@ -1,0 +1,45 @@
+{
+    "application": "Nanoclust",
+    "details": {
+        "software": [
+            "Nextflow",
+            "Java (version >8)",
+            "NCBI-BLAST (version 2.12.0-rhel8)",
+            "Nanoclust"
+        ],
+        "resources": {
+            "memory": "4G per CPU",
+            "cores": 32,
+            "partition": "scavenger",
+            "output_files": [
+                "log/environmental_sequencing/ont_trial/nanoclust_nostocales_by_site_%A_%a.out",
+                "log/environmental_sequencing/ont_trial/nanoclust_nostocales_by_site_%A_%a.err"
+            ]
+        },
+        "dependencies": {
+            "conda": {
+                "environment": "nanoclust"
+            },
+            "modules": [
+                "Java/11.0.8",
+                "NCBI-BLAST/2.12.0-rhel8"
+            ]
+        },
+        "paths": {
+            "nextflow": "/hpc/group/bio1/carlos/apps/nextflow_22.10.6",
+            "nanoclust": "/hpc/group/bio1/carlos/apps/NanoCLUST",
+            "base": "/hpc/group/bio1/carlos/nostoc_communities",
+            "reads": "analyses/environmental_sequencing/ont_trial/nanoclust/nostocales/reads",
+            "output": "analyses/environmental_sequencing/ont_trial/nanoclust/nostocales/site_pools"
+        },
+        "input_file": "misc_files/environmental_sequencing/trial_sites.txt",
+        "parameters": {
+            "min_read_length": 1200,
+            "max_read_length": 1600,
+            "database": {
+                "16S": "${nanoclust_path}/db/16S_ribosomal_RNA",
+                "tax": "${nanoclust_path}/db/taxdb"
+            }
+        }
+    }
+}

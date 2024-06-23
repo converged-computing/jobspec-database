@@ -1,0 +1,49 @@
+{
+    "application": "SLURM",
+    "details": {
+        "job_name": "pytorch",
+        "nodes": 2,
+        "tasks_per_node": 1,
+        "gres": "gpu:volta:1",
+        "cpus_per_task": 12,
+        "modules": [
+            "anaconda/2021a",
+            "mpi/openmpi-4.1.1"
+        ],
+        "environment_variables": [
+            "MPI_FLAGS",
+            "NCCL_IB_DISABLE",
+            "NCCL_DEBUG",
+            "MASTER_ADDR",
+            "MASTER_PORT"
+        ],
+        "python_script": "src/baseline_ssl_main.py",
+        "arguments": [
+            "--distributed_training",
+            "--model=resnet",
+            "--dataset=imagenetssl",
+            "--gpu=0",
+            "--iid=1",
+            "--batch_size=256",
+            "--local_bs 256",
+            "--local_ep ${local_ep}",
+            "--epochs=${total_ep}",
+            "--log_file_name \"imagenet_ssl\"",
+            "--average_without_bn",
+            "--lr 0.005",
+            "--optimizer adam",
+            "--full_size",
+            "--backbone resnet18",
+            "--batch_size 256",
+            "--num_users ${num_user}",
+            "--frac ${frac}",
+            "--model_continue_training 1",
+            "--y_partition_skew",
+            "--y_partition_ratio ${skew}",
+            "--log_directory \"full_imagenet_scripts\"",
+            "--load_pretrained_path ${pretrained}",
+            "--script_name \"${0} ${1} ${2} ${3} ${4} ${5} ${6} ${7} ${8} ${9} ${10}\"",
+            "--load_dataset_to_memory"
+        ]
+    }
+}

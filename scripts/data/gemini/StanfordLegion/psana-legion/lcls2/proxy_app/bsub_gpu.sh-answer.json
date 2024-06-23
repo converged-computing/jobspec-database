@@ -1,0 +1,33 @@
+{
+    "application": "Legion",
+    "details": {
+        "scheduler": "LSF",
+        "resources": {
+            "nodes": 1,
+            "walltime": "0:30",
+            "processors": "LSB_MAX_NUM_PROCESSORS",
+            "memory": "not specified",
+            "gpu": "3 per node",
+            "cpu": "21 per node"
+        },
+        "libraries": {
+            "legion": "from environment variable PS_PARALLEL",
+            "pick_hcas.py": "local script",
+            "user.py": "local script"
+        },
+        "environment_variables": {
+            "DATA_DIR": "$MEMBERWORK/chm137/mona_small_data",
+            "LIMIT": 10,
+            "IBV_FORK_SAFE": 1,
+            "all_proxy": "socks://proxy.ccs.ornl.gov:3128/",
+            "ftp_proxy": "ftp://proxy.ccs.ornl.gov:3128/",
+            "http_proxy": "http://proxy.ccs.ornl.gov:3128/",
+            "https_proxy": "https://proxy.ccs.ornl.gov:3128/",
+            "no_proxy": "localhost,127.0.0.0/8,*.ccs.ornl.gov,*.ncrc.gov",
+            "LD_LIBRARY_PATH": "environment variable and local build directory"
+        },
+        "commands": [
+            "jsrun -n $(( nodes * 2 )) --rs_per_host 2 --tasks_per_rs 1 --cpu_per_rs 21 --gpu_per_rs 3 --bind rs --smpiargs=\"-x PAMI_DISABLE_CUDA_HOOK=1 -disable_gpu_hooks\" ./pick_hcas.py legion_python user.py -ll:py 1 -ll:cpu 0 -ll:gpu 1"
+        ]
+    }
+}

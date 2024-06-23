@@ -1,0 +1,29 @@
+{
+    "application": "COBALT",
+    "details": {
+        "resource_requirements": {
+            "time": "1:00:00",
+            "nodes": 1,
+            "queue": "single-gpu",
+            "account": "datascience",
+            "output": "xbg_within_task_transfer_inceptionv_3",
+            "filesystems": "home,theta-fs0,grand,eagle"
+        },
+        "software_requirements": {
+            "environment": "conda",
+            "conda_environment": "tvm_build",
+            "modules": "conda/pytorch",
+            "python_version": "3",
+            "python_packages": [
+                "tvm"
+            ]
+        },
+        "script_execution": {
+            "workdir": "/lus/grand/projects/datascience/sraskar/projects/tvm_100/tenset/scripts",
+            "cuda_device": "1",
+            "tvm_home": "/lus/theta-fs0/projects/datascience/gverma/tenset",
+            "pythonpath": "/lus/theta-fs0/projects/datascience/gverma/tenset/python"
+        },
+        "command": "python3 tune_network.py --network inception_v3 --n-trials 100 --cost-model xgb --load-model /lus/theta-fs0/projects/datascience/gverma/tenset/scripts/A100_models_800/xgb_gpu_800_within_task.pkl --batch-size {batch_size} --transfer-tune --target \"cuda\""
+    }
+}

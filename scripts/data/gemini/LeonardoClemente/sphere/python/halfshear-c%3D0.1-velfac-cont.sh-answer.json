@@ -1,0 +1,31 @@
+{
+    "application": "PBS",
+    "details": {
+        "queue": "qfermi",
+        "nodes": 1,
+        "processors_per_node": 3,
+        "walltime": "48:00:00",
+        "email": "adc@geo.au.dk",
+        "email_options": "abe",
+        "software": {
+            "gcc": "/com/gcc/4.6.4",
+            "cuda": "/com/cuda/5.5.22",
+            "python": "/com/python/2.7.6",
+            "python_modules": [
+                "/home/adc/.local/lib/python",
+                "/home/adc/.local/lib64/python"
+            ]
+        },
+        "script_execution": {
+            "working_directory": "/home/adc/code/sphere",
+            "commands": [
+                "nvidia-smi",
+                "cmake . && make",
+                "python continue_sim.py halfshear-sigma0=20000.0-c=0.1-velfac=0.5-shear 1 0 &",
+                "python continue_sim.py halfshear-sigma0=20000.0-c=0.1-velfac=1.0-shear 1 1 &",
+                "python continue_sim.py halfshear-sigma0=20000.0-c=0.1-velfac=2.0-shear 1 2 &",
+                "wait"
+            ]
+        }
+    }
+}

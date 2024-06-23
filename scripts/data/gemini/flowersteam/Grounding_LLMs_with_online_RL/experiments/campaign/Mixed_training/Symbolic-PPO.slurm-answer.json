@@ -1,0 +1,23 @@
+{
+    "application": "SLURM",
+    "details": {
+        "script_language": "Bash",
+        "runtime": "10 hours",
+        "account": "# SLURM ACCOUNT",
+        "job_name": "Symbolic-PPO_seed_%a",
+        "nodes": 1,
+        "cores_per_node": 20,
+        "gpus_per_node": 1,
+        "output_log": "slurm_logs/Symbolic-PPO_seed_%a.out",
+        "error_log": "slurm_logs/Symbolic-PPO_seed_%a.err",
+        "array_tasks": "1-2",
+        "qos": "qos_gpu-t3",
+        "gpu_type": "v100-32g",
+        "modules": [
+            "python/3.8.2",
+            "dlp"
+        ],
+        "conda_environment": "dlp",
+        "command": "srun experiments/slurm/train_symbolic_ppo.sh BabyAI-MixedTrainLocal-v0 MTRL 6 ${SLURM_ARRAY_TASK_ID}"
+    }
+}

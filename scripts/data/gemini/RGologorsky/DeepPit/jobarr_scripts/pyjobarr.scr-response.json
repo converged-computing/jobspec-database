@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"Slurm\",\n  \"details\": {\n    \"resource_requirements\": {\n      \"nodes\": 1,\n      \"tasks_per_node\": 1,\n      \"cpus_per_task\": 1,\n      \"time\": \"0-04:00:00\",\n      \"memory_per_cpu\": \"16G\"\n    },\n    \"software\": {\n      \"singularity\": \"cuda_1906.sif\",\n      \"python\": \"new_monai_1906.sif\",\n      \"jupyter\": \"nbconvert\"\n    },\n    \"data\": {\n      \"input\": [\n        \"/gpfs/data/oermannlab/private_data/DeepPit/\",\n        \"/gpfs/home/gologr01/DeepPit/\"\n      ],\n      \"output\": [\n        \"jobarray_output/savePreds_job_array_n4_%A_%a.out\"\n      ]\n    }\n  }\n}\n```\n\n**Explanation:**\n\n* **Slurm:** This script utilizes the Slurm workload manager for resource allocation and job execution.\n* **Singularity:**  The script leverages Singularity containers to execute Jupyter notebook conversion and Python code. Two containers are specified: `cuda_1906.sif` for Jupyter conversion and `new_monai_1906.sif` for Python execution.\n* **Jupyter:** The script converts a Jupyter Notebook (`DeepPit/100b_test_dice_table.ipynb`) into a Python script using the `nbconvert` tool.\n* **Python:** The script executes the generated Python script (`DeepPit/100b_test_dice_table.py`).\n* **Data:** The script accesses data from two locations: `/gpfs/data/oermannlab/private_data/DeepPit/` and `/gpfs/home/gologr01/DeepPit/`. Output logs are written to `jobarray_output/savePreds_job_array_n4_%A_%a.out`.\n* **Resource Requirements:** The script requests a single node with one task, each consuming one CPU core. It requests 4 hours of runtime and 16GB of memory per core. \n\n**Key Components:**\n\n* **SBATCH directives:** These directives are used to specify resources and parameters for Slurm.\n* **Singularity exec:** This command executes commands within the specified Singularity containers.\n* **Jupyter nbconvert:** This command converts a Jupyter Notebook into a Python script.\n* **Python3:**  The script uses Python3 to execute the Python code.\n* **Data paths:** The script uses `--bind` flags to specify data volumes accessible within the Singularity containers.\n* **Output:** The script generates output logs with Slurm job identifiers. \n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 377,
+        "candidates_token_count": 630,
+        "total_token_count": 1007,
+        "cached_content_token_count": 0
+    }
+}

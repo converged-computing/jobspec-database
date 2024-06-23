@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n\"application\": \"Charmrun\",\n\"other_software\": [\n\"aprun\",\n\"mpirun\",\n\"mvapich2-start-mpd\",\n\"mpdtrace\",\n\"cmpirun\",\n\"qstat\",\n\"qsub\",\n\"qdel\",\n\"bjobs\",\n\"bsub\",\n\"bkill\",\n\"setarch\"\n],\n\"resource_requirements\": [\n\"PBS_NODEFILE\",\n\"LSB_HOSTS\",\n\"PBS_QUEUE\",\n\"LSF_QUEUE\",\n\"MPI_MACHINEFILE\"\n]\n}\n```\n\nThis script is a wrapper for running MPI programs on various HPC systems.  It uses the `mpirun`, `aprun`, or `cmpirun` command to launch the MPI program, depending on the environment it is run in. \n\nHere's a breakdown of what the script does:\n\n1. **Parses arguments:** \n    - It takes command-line arguments in the form `+pN`, `+ppn`, or `+ppnN` to specify the number of processors to use.\n    - It also takes a `-machinefile` option to specify the machinefile containing the list of nodes to use.\n\n2. **Checks for various environment variables:**\n    - It checks for environment variables like `PBS_NODEFILE`, `LSB_HOSTS`, `PBS_QUEUE`, and `LSF_QUEUE` to determine the type of HPC system being used.\n\n3. **Determines the appropriate MPI execution command:**\n    - It selects either `aprun`, `mpirun`, or `cmpirun` based on the environment.\n    - For PBS systems, it checks for `aprun` and uses it if available, otherwise it uses `mpirun`.\n    - For LSF systems, it uses `cmpirun`.\n    - If none of the above are found, it tries to find `mpiexec`.\n\n4. **Launches the MPI program:**\n    - It uses the selected command to launch the MPI program with the specified number of processors and arguments.\n\n5. **Handles interactive mode:**\n    - If the script is run in interactive mode (with a PBS_QUEUE or LSF_QUEUE environment variable), it creates a batch job script and submits it to the queue.\n    - It then monitors the job's status and prints its output when it is finished.\n\n6. **Handles errors:**\n    - It checks for errors during program execution and provides appropriate error messages.\n\nThis script provides a convenient way to launch MPI programs on various HPC systems by abstracting away the details of the different queuing systems and MPI implementations. \n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 2533,
+        "candidates_token_count": 577,
+        "total_token_count": 3110,
+        "cached_content_token_count": 0
+    }
+}

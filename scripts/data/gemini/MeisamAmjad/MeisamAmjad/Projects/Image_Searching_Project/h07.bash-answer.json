@@ -1,0 +1,53 @@
+{
+    "application": "PBS",
+    "details": {
+        "software": [
+            "c++",
+            "valgrind",
+            "ImageSearch",
+            "time"
+        ],
+        "resources": {
+            "walltime": "01:00:00",
+            "memory": "1GB",
+            "nodes": "1:ppn=8",
+            "libraries": [
+                "png"
+            ],
+            "compiler": "c++",
+            "compiler_options": [
+                "-g",
+                "-Wall",
+                "-fopenmp",
+                "-lpng",
+                "-std=c++14",
+                "-O3"
+            ],
+            "optimizer": "-O3"
+        },
+        "file_formats": [
+            "png"
+        ],
+        "libraries": [
+            "png"
+        ],
+        "environment_variables": {
+            "OMP_NUM_THREADS": "1 4 8",
+            "PBS_O_WORKDIR": "",
+            "PBS_NP": ""
+        },
+        "commands": [
+            "cd $PBS_O_WORKDIR",
+            "c++ -g -Wall -fopenmp -lpng -std=c++14 -O3 PNG.cpp ImageSearch.cpp -o ImageSearch",
+            "./ImageSearch Mammogram.png Cancer_mask.png result_Mammogram_${threads}.png true 75 32",
+            "./ImageSearch TestImage.png and_mask.png result_TestImage_${threads}.png true 75 16",
+            "./ImageSearch MiamiMarcumCenter.png WindowPane_mask.png result_MiamiMarcumCenter_${threads}.png true 50 64",
+            "valgrind --leak-check=yes ./ImageSearch TestImage.png and_mask.png result_TestImage_1.png true 75 16",
+            "valgrind --leak-check=yes ./ImageSearch MiamiMarcumCenter.png WindowPane_mask.png result_MiamiMarcumCenter_1.png true 50 64"
+        ],
+        "dependencies": [
+            "PNG.cpp",
+            "ImageSearch.cpp"
+        ]
+    }
+}

@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"Relion\",\n  \"details\": {\n    \"software\": [\n      \"openmpi/4.1.4\",\n      \"intel-oneapi-mkl/2022.2.1\",\n      \"relion/gpu/4.0.0+intel\"\n    ],\n    \"resource_requirements\": {\n      \"gpus\": \"XXXextra2XXX\",\n      \"mpi_tasks\": \"XXXmpinodesXXX\",\n      \"cpus_per_task\": \"XXXthreadsXXX\",\n      \"memory_per_cpu\": \"XXXextra3XXX GB\",\n      \"runtime\": \"XXXextra4XXX hours\",\n      \"account\": \"XXXextra5XXX\",\n      \"partition\": \"XXXqueueXXX\"\n    }\n  }\n}\n```\n\nThis script is for running a Relion job, a software package used for single-particle cryo-electron microscopy (cryo-EM) analysis, on a cluster utilizing multiple GPUs and hybrid MPI+OpenMP parallelization.\n\nHere's a breakdown of the script and the information it provides:\n\n* **Application:** Relion\n* **Software:** The script uses modules to load specific versions of OpenMPI, Intel oneAPI Math Kernel Library (MKL), and Relion. \n* **Resource Requirements:**  \n    * **GPUs:** The number of GPUs requested for the job is defined by the `--gres=gpu:XXXextra2XXX` option. \n    * **MPI Tasks:** The number of MPI tasks, or processes, to be launched is defined by `--ntasks=XXXmpinodesXXX`.\n    * **CPUs per Task:** The number of OpenMP threads to be used per MPI task is specified by `--cpus-per-task=XXXthreadsXXX`.\n    * **Memory per CPU:** The amount of RAM requested per MPI task is defined by `--mem-per-cpu=XXXextra3XXX`.\n    * **Runtime:** The maximum runtime for the job is set by `--time=XXXextra4XXX`.\n    * **Account:**  The account used to submit the job is defined by `--account=XXXextra5XXX`. \n    * **Partition:** The script requests the `XXXqueueXXX` partition, which is typically a partition designed for GPU-accelerated jobs. \n\nThe script also uses SLURM, a job scheduler, to manage the resources.  Here's a breakdown of the SLURM variables used:\n\n* **SLURM_NTASKS:**  The total number of MPI tasks requested. \n* **SLURM_CPUS_PER_TASK:** The number of OpenMP threads per MPI task.\n* **SLURM_JOB_ID:** The unique ID assigned to the job by SLURM.\n\nThe script performs several actions:\n\n* It loads the necessary software modules.\n* It prints out the list of available GPUs using `nvidia-smi`.\n* It sets the `OMP_NUM_THREADS` environment variable based on the SLURM `SLURM_CPUS_PER_TASK` value.\n* It creates a directory (`slurm`) and copies the output file (`XXXoutfileXXX`) to it for storage.\n* It runs the Relion command using `srun` with the `--mpi=pmix` option for MPI communication and specifying the number of MPI tasks using `$SLURM_NTASKS`.\n\n**Important Notes:**\n\n* This script requires you to replace the placeholder values (e.g., `XXXnameXXX`, `XXXoutfileXXX`) with your specific values. \n* The script assumes that the `$RELION_command` variable is defined elsewhere, likely in your shell environment.\n*  The script uses the `which relion_refine_mpi` command to ensure the Relion command is in your path.\n\nThis script provides a clear example of how to set up and run a GPU-accelerated Relion job using SLURM and hybrid MPI+OpenMP parallelization. \n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 763,
+        "candidates_token_count": 867,
+        "total_token_count": 1630,
+        "cached_content_token_count": 0
+    }
+}

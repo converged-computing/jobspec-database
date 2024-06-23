@@ -1,0 +1,35 @@
+{
+    "application": "PBS",
+    "details": {
+        "job_name": "run",
+        "output_file": "/rds/general/user/art4017/home/snRNAseq_analysis/log/run.out",
+        "error_file": "/rds/general/user/art4017/home/snRNAseq_analysis/log/run.err",
+        "resources": {
+            "nodes": 1,
+            "cpus": 1,
+            "memory": "20gb",
+            "walltime": "48:00:00"
+        },
+        "software": {
+            "conda_environment": "nfcore",
+            "gcc_version": "8.2.0",
+            "nextflow_options": "-Xms1g -Xmx4g",
+            "workflows": [
+                "../snRNAseq_workflow/01_filter.nf",
+                "../snRNAseq_workflow/02_integrate.nf",
+                "../snRNAseq_workflow/03_seurat_clustering.nf",
+                "../snRNAseq_workflow/04_infercnv.nf",
+                "../snRNAseq_workflow/05_integrate_and_cluster_infercnv.nf"
+            ],
+            "singularity_images": [
+                "singularity/snRNAseq_workflow.img",
+                "singularity/infercnv.latest.img"
+            ]
+        },
+        "config_files": [
+            "config/snRNAseq_workflow/oesophageal_10X.config",
+            "config/imperial.config"
+        ],
+        "working_directory": "work/snRNAseq_workflow/"
+    }
+}

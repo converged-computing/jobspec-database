@@ -1,0 +1,37 @@
+{
+    "application": "TensorFlow",
+    "details": {
+        "resource_requirements": {
+            "nodes": 9,
+            "time": "00:60:00",
+            "constraint": "gpu",
+            "modules": [
+                "daint-gpu",
+                "TensorFlow/1.2.1-CrayGNU-17.08-cuda-8.0-python3"
+            ],
+            "virtualenv": {
+                "name": "tf-daint",
+                "location": "~/Envs"
+            },
+            "script": {
+                "train": "/scratch/snx3000/youyang9/fjr/tf_workspace/large-scale-tensorflow-benchmark/resnet/resnet_main.py",
+                "eval": "/scratch/snx3000/youyang9/fjr/tf_workspace/large-scale-tensorflow-benchmark/resnet/resnet_eval.py"
+            },
+            "dataset": "cifar10",
+            "work_dir": "/scratch/snx3000/youyang9/fjr/tf_workspace/large-scale-tensorflow-benchmark/resnet"
+        },
+        "distributed_parameters": {
+            "ps": {
+                "num": "$1",
+                "per_node": 1,
+                "in_worker": true
+            },
+            "worker": {
+                "num": "$2",
+                "per_node": 1
+            }
+        },
+        "launcher_dir": "./logs/$1-ps-$2-wk-${DATASET}-log",
+        "launcher_script": "run_dist_tf_eval_daint.sh"
+    }
+}

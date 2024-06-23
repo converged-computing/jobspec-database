@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"SLURM\",\n  \"details\": {\n    \"job_name\": \"BRT-EVL\",\n    \"output\": \"report/%j.out\",\n    \"account\": \"project_465000157\",\n    \"walltime\": \"3:00:00\",\n    \"nodes\": 1,\n    \"tasks\": 1,\n    \"cpus_per_task\": 6,\n    \"mem_per_cpu\": \"7G\",\n    \"partition\": \"pilot\",\n    \"gpus\": 1,\n    \"modules\": [\n      \"LUMI/22.08\",\n      \"cray-python/3.9.12.1\",\n      \"rocm/5.0.2\"\n    ],\n    \"environment_variables\": [\n      \"NCCL_SOCKET_IFNAME=hsn\",\n      \"OMP_NUM_THREADS=$SLURM_CPUS_PER_TASK\",\n      \"OPENBLAS_VERBOSE=2\",\n      \"PYTHONUSERBASE='/projappl/project_465000157/.local'\",\n      \"PATH=$PYTHONUSERBASE/bin:$PATH\",\n      \"PYTHONPATH=$PYTHONUSERBASE/lib/python3.9/site-packages:$PYTHONPATH\",\n      \"WANDB_MODE=offline\"\n    ],\n    \"script_arguments\": [\n      \"CHECKPOINT_PATH\",\n      \"TASK\",\n      \"BATCH_SIZE\",\n      \"EPOCHS\"\n    ],\n    \"python_script\": \"glue.py\",\n    \"python_script_arguments\": [\n      \"--task\",\n      \"${TASK}\",\n      \"--batch_size\",\n      \"${BATCH_SIZE}\",\n      \"--epochs\",\n      \"${EPOCHS}\",\n      \"--input_dir\",\n      \"${GLUE_PATH}\",\n      \"--checkpoint_path\",\n      \"${CHECKPOINT_PATH}\"\n    ]\n  }\n}\n```\n\nThis script is designed to be run on the SLURM workload manager, which is commonly used for high-performance computing. It defines a job with specific resource requirements and then runs a Python script named `glue.py`.\n\nThe script sets up several environment variables, including:\n\n* **NCCL_SOCKET_IFNAME**: Used for network communication between processes.\n* **OMP_NUM_THREADS**: Sets the number of threads to use for OpenMP parallelism.\n* **OPENBLAS_VERBOSE**: Enables verbose output from the OpenBLAS library.\n* **PYTHONUSERBASE**: Defines the location for a user-specific Python installation.\n* **PATH**: Adds the user-specific Python installation to the system path.\n* **PYTHONPATH**: Adds the user-specific Python site-packages to the search path.\n* **WANDB_MODE**: Sets the Weights & Biases mode to offline.\n\nIt also defines several arguments for the `glue.py` script, including:\n\n* **CHECKPOINT_PATH**: The path to a checkpoint file.\n* **TASK**: The task to run.\n* **BATCH_SIZE**: The batch size for training.\n* **EPOCHS**: The number of epochs to train for.\n\nThe script then runs the `glue.py` script with these arguments, and if it fails, it exits with an error code.\n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 499,
+        "candidates_token_count": 735,
+        "total_token_count": 1234,
+        "cached_content_token_count": 0
+    }
+}

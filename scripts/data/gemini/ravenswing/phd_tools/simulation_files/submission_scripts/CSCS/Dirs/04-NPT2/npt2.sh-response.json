@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"GROMACS\",\n  \"details\": {\n    \"software\": [\n      \"GROMACS\",\n      \"PLUMED\",\n      \"CUDA\"\n    ],\n    \"resources\": [\n      \"SLURM\",\n      \"Cray\",\n      \"GPU\",\n      \"MPI\",\n      \"OMP\"\n    ],\n    \"modules\": [\n      \"daint-gpu\",\n      \"GROMACS/2018-CrayGNU-18.08-PLUMED-2.4.2-cuda-9.1\"\n    ],\n    \"partition\": \"normal\",\n    \"account\": \"pr49\",\n    \"time\": \"24:00:00\",\n    \"nodes\": 4,\n    \"tasks_per_core\": 1,\n    \"tasks_per_node\": 12,\n    \"cpus_per_task\": 1\n  }\n}\n```\n\nThe script runs a simulation using the **GROMACS** molecular dynamics software. It uses PLUMED for enhanced sampling, and CUDA for GPU acceleration. The simulation is run on the Cray supercomputer using SLURM for job scheduling. The script uses MPI for parallel processing and OpenMP for multithreading. \n\n**Explanation:**\n\n* The script starts by setting up a SLURM job using `#!/bin/bash -l` and `#SBATCH` directives.\n* It then loads the necessary modules for the simulation, including `daint-gpu` and `GROMACS/2018-CrayGNU-18.08-PLUMED-2.4.2-cuda-9.1`.\n* The script defines environment variables `OMP_NUM_THREADS`, `CRAY_CUDA_MPS`, and `GMX`.\n* It uses `cp` to copy files from the previous simulation steps to the current working directory.\n* It uses `sed` to modify the topology file `$FN.top`.\n* It runs the `gmx grompp` command to generate the input file for the simulation.\n* It runs the `gmx_mpi mdrun` command to execute the simulation using MPI.\n* It uses `gmx trjconv` to analyze the trajectory and extract specific frames.\n* It uses `gmx energy` to analyze the simulation data and extract specific quantities like energy, temperature, pressure, etc. \n\nThe output format is a JSON object with two fields:\n\n* **application**: The name of the main application used in the script.\n* **details**: A nested JSON object containing information about the software, resources, modules, and job parameters used in the script. \n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 839,
+        "candidates_token_count": 581,
+        "total_token_count": 1420,
+        "cached_content_token_count": 0
+    }
+}

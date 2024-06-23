@@ -1,0 +1,36 @@
+{
+    "application": "Slurm",
+    "details": {
+        "job_name": "pipeline",
+        "partition": "<HPC_partition>",
+        "nodes": 1,
+        "tasks_per_node": 1,
+        "cpus_per_task": 4,
+        "mem_per_cpu": 64000,
+        "singularity_module": "singularity/3.8.7",
+        "singularity_image": "fastp:0.23.4--hadf994f_2",
+        "working_directory": "${pipedir}",
+        "binds": "${BINDS},${WORKINGDIR}:${WORKINGDIR}",
+        "raw_directory": "${rawdir}",
+        "trim_directory": "${trimdir}",
+        "qc_directory": "${qcdir}",
+        "log_directory": "${log}"
+    },
+    "other_requirements": {
+        "tools": [
+            "wget",
+            "fastp",
+            "singularity",
+            "bash"
+        ],
+        "libraries": [],
+        "environment_variables": [
+            "SLURM_JOB_ID",
+            "SLURM_NTASKS",
+            "SLURM_NTASKS_PER_NODE",
+            "SLURM_CPUS_PER_TASK",
+            "SLURM_JOB_CPUS_PER_NODE",
+            "SLURM_MEM_PER_CPU"
+        ]
+    }
+}

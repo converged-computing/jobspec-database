@@ -1,0 +1,24 @@
+{
+    "application": "Slurm",
+    "details": {
+        "modules": [
+            "tensorflow/intel-1.13.1-py36",
+            "cray-hpo"
+        ],
+        "resources": {
+            "nodes": 8,
+            "queue": "regular",
+            "time": "1:00:00",
+            "processor": "knl",
+            "reservation": "dl4sci_sc19"
+        },
+        "environment_variables": {
+            "KMP_BLOCKTIME": "0",
+            "KMP_AFFINITY": "granularity=fine,compact,1,0"
+        },
+        "script": "hpo_train.py",
+        "arguments": "-N ${SLURM_JOB_NUM_NODES} --verbose",
+        "dataset": "cifar10",
+        "framework": "keras"
+    }
+}

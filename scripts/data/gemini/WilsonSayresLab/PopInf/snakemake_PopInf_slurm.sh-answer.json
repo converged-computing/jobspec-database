@@ -1,0 +1,34 @@
+{
+    "application": "Snakemake",
+    "details": {
+        "other_software": [
+            "plink",
+            "smartpca",
+            "Rscript",
+            "make_merge_list.py",
+            "make_par.py",
+            "pca_inferred_ancestry_report.R"
+        ],
+        "resource_requirements": {
+            "cluster_resources": {
+                "job_name": "popInf_master",
+                "memory_per_cpu": "16000",
+                "output_file": "slurm.%j.out",
+                "error_file": "slurm.%j.err",
+                "number_of_nodes": 1,
+                "time_limit": "48:00:00",
+                "email_type": "END,FAIL",
+                "email_address": "${EMAIL}"
+            },
+            "snakemake_resources": {
+                "number_of_jobs": 22,
+                "latency_wait": 20,
+                "cluster_command": "sbatch -n 8 -t 12:00:00 --mail-type=END,FAIL --mail-user=${EMAIL}"
+            }
+        },
+        "data_requirements": {
+            "reference_panel_samples_list": "${POPFILEREF}",
+            "unknown_panel_samples_list": "${POPFILEUNK}"
+        }
+    }
+}

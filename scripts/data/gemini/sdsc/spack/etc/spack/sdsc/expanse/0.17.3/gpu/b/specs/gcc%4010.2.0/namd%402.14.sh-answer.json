@@ -1,0 +1,26 @@
+{
+    "application": "NAMD",
+    "other_software": [
+        "Charm++",
+        "FFTW",
+        "Tcl",
+        "CUDA",
+        "Spack",
+        "Slurm"
+    ],
+    "resource_requirements": {
+        "nodes": 1,
+        "cores": 10,
+        "memory": "93G",
+        "gpus": 1,
+        "time": "01:00:00",
+        "scheduler": "Slurm"
+    },
+    "compilers": "gcc@10.2.0",
+    "variants": "+cuda cuda_arch=70,80 interface=tcl",
+    "dependencies": [
+        "^charmpp@6.10.2/$(spack find --format '{hash:7}' charmpp@6.10.2 % ${SPACK_COMPILER} backend=multicore)",
+        "^fftw@3.3.10/$(spack find --format '{hash:7}' fftw@3.3.10 % ${SPACK_COMPILER} ~mpi ~openmp)",
+        "^tcl@8.5.9/$(spack find --format '{hash:7}' tcl@8.5.9 % ${SPACK_COMPILER})"
+    ]
+}

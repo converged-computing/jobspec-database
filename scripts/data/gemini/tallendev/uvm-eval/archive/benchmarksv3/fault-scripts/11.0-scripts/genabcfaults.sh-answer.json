@@ -1,0 +1,44 @@
+{
+    "application": "abc",
+    "software": [
+        "cuda",
+        "nvidia-uvm",
+        "sys2csv",
+        "make",
+        "bash",
+        "time"
+    ],
+    "resources": [
+        "voltron",
+        "scratch1",
+        "module load cuda",
+        "sudo modprobe nvidia-uvm",
+        "sudo rmmod nvidia-uvm",
+        "make clean",
+        "make DEFS=-DTSIZE=$psize",
+        "mkdir -p $logdir",
+        "time ./abc",
+        "cat \"$logfile\" | wc -l",
+        "sleep 3",
+        "sleep 5",
+        "sleep 8",
+        "kill $pid",
+        "mv $logfile $logdir/",
+        "../../tools/sys2csv/log2csv.sh $logdir/$file"
+    ],
+    "environment_variables": [
+        "ITERS",
+        "psizes",
+        "psize",
+        "logdir",
+        "file",
+        "logfile",
+        "pid",
+        "len"
+    ],
+    "dependencies": [
+        "cuda11",
+        "NVIDIA-Linux-x86_64-450.51.05/kernel",
+        "/home/tnallen/dev/uvm-learn/data/scripts/log"
+    ]
+}

@@ -1,0 +1,42 @@
+{
+    "application": "SLURM",
+    "details": {
+        "scheduler": "SLURM",
+        "job_name": "CrossQ",
+        "array_tasks": "1-11",
+        "nodes": "1",
+        "cores": "4",
+        "memory_per_cpu": "7000",
+        "runtime": "72:00:00",
+        "partition": "gpu",
+        "gpu_type": "rtx3090",
+        "gpu_count": "1",
+        "output_log": "/home/palenicek/projects/sbx-crossq/logs/%A_%a.out.log",
+        "error_log": "/home/palenicek/projects/sbx-crossq/logs/%A_%a.err.log",
+        "environment": {
+            "conda": "crossq",
+            "GTIMER_DISABLE": "1"
+        },
+        "python_script": "/home/palenicek/projects/sbx-crossq/train.py",
+        "arguments": {
+            "algo": "$ALGO",
+            "env": "$ENV",
+            "seed": "$SLURM_ARRAY_TASK_ID",
+            "critic_activation": "$ACT",
+            "lr": "$LR",
+            "utd": "$UTD",
+            "policy_delay": "$PI_DELAY",
+            "adam_b1": "$B1",
+            "crossq_style": "$XQ_STYLE",
+            "bn": "$BN",
+            "ln": "$LN",
+            "n_critics": "$N_CRITICS",
+            "n_neurons": "$N_NEURONS",
+            "bn_mode": "$BN_MODE",
+            "bn_momentum": "$BN_MOM",
+            "total_timesteps": "$STEPS",
+            "eval_qbias": "$EVAL_QBIAS",
+            "wandb_mode": "online"
+        }
+    }
+}

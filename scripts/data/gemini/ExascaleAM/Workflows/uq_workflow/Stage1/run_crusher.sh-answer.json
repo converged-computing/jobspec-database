@@ -1,0 +1,35 @@
+{
+    "application": "Slurm",
+    "details": {
+        "resource_requirements": {
+            "nodes": 20,
+            "time": "04:00:00",
+            "memory": 0,
+            "cpus_per_task": 1,
+            "threads_per_core": 1
+        },
+        "software_requirements": {
+            "modules": [
+                "cray-python",
+                "craype-accel-amd-gfx908",
+                "rocm/5.1.0",
+                "OpenFOAM-8"
+            ],
+            "environment_variables": {
+                "OMP_NUM_THREADS": 1,
+                "WM_MPLIB": "SYSTEMMPI",
+                "MPI_ROOT": "$MPICH_DIR",
+                "MPI_ARCH_FLAGS": "-DMPICH_SKIP_MPICXX",
+                "MPI_ARCH_INC": "-I$MPI_ROOT/include",
+                "MPI_ARCH_LIBS": "-L$MPI_ROOT/lib -lmpich -lrt",
+                "CRAYPE_LINK_TYPE": "dynamic",
+                "MPIR_CVAR_GPU_EAGER_DEVICE_MEM": 0,
+                "MPICH_GPU_SUPPORT_ENABLED": 1
+            },
+            "other_software": [
+                "ExaCA",
+                "additiveFoam"
+            ]
+        }
+    }
+}

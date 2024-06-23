@@ -1,0 +1,48 @@
+{
+    "application": "Translation",
+    "details": {
+        "framework": "PyTorch",
+        "model": "facebook/nllb-200-3.3B",
+        "environment": "/ikerlariak/igarcia945/envs/pytorch-tximista",
+        "compute resources": {
+            "cpus": 8,
+            "gpu": 1,
+            "memory": "64G"
+        },
+        "libraries": [
+            "accelerate",
+            "transformers",
+            "openmpi"
+        ],
+        "settings": {
+            "mixed precision": "fp16",
+            "tokenization": {
+                "parallelism": true,
+                "OMP_NUM_THREADS": 16
+            },
+            "translation": {
+                "max_length": 516,
+                "num_beams": 3,
+                "num_return_sequences": 1
+            },
+            "environment variables": [
+                "LC_ALL",
+                "LANG",
+                "LANGUAGE",
+                "TOKENIZERS_PARALLELISM",
+                "OMP_NUM_THREADS",
+                "PMI_SIZE",
+                "OMPI_COMM_WORLD_SIZE",
+                "MV2_COMM_WORLD_SIZE",
+                "WORLD_SIZE",
+                "TRANSFORMERS_NO_ADVISORY_WARNINGS",
+                "PATH",
+                "LD_LIBRARY_PATH"
+            ]
+        },
+        "data": {
+            "source": "/ikerlariak/igarcia945/alpaca-lora-mt/data/en.sentences.txt",
+            "target": "/ikerlariak/igarcia945/alpaca-lora-mt/data/{lang}.sentences.txt"
+        }
+    }
+}

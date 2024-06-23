@@ -1,0 +1,35 @@
+{
+    "application": "LAMMPS",
+    "details": {
+        "resource_manager": "LSF",
+        "scheduler_directives": [
+            "BSUB -P MAT201",
+            "BSUB -J 8PSU_H_2000MVm_-x",
+            "BSUB -o std.oe%J",
+            "BSUB -W 2:00",
+            "BSUB -nnodes 1",
+            "BSUB -alloc_flags \"gpumps smt1\""
+        ],
+        "environment_variables": [
+            "ESPRESSO_PSEUDO",
+            "LSB_INTERACTIVE",
+            "LS_SUBCWD",
+            "LSB_MAX_NUM_PROCESSORS"
+        ],
+        "libraries": "lammps",
+        "runtime_parameters": {
+            "Ncpu": "LSB_MAX_NUM_PROCESSORS - 1",
+            "Nnode": "Ncpu / 42",
+            "Ngpu": "Nnode * 6",
+            "Nmpi": "Ngpu",
+            "N_rs": "Nmpi",
+            "N__r": "N_rs / Nnode",
+            "N__a": "Nmpi / N_rs",
+            "N__g": "Ngpu / N_rs",
+            "N__c": "Ncpu / N_rs",
+            "N_kt": "N__c / N__a",
+            "N_kg": "N__g / N__a"
+        },
+        "execution_command": "jsrun -n${N_rs} -a${N__a} -c${N__c} -g${N__g} -r${N__r} --bind none --latency_priority cpu-memory --smpiargs \"-gpu\" ${my_lmp_mpi} -nocite -k on g ${N_kg} t ${N_kt} -sf kk -pk kokkos newton on -i ./nvt.lmpi"
+    }
+}

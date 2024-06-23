@@ -1,0 +1,34 @@
+{
+    "application": "Dask",
+    "details": {
+        "scheduler": {
+            "launch command": "srun --cpu-bind=verbose --ntasks=1 --nodes=1 -l --output=scheduler.log dask-scheduler --interface ib0 --scheduler-file=$SCHEFILE",
+            "scheduler file": "scheduler.json"
+        },
+        "workers": {
+            "launch command": "srun --cpu-bind=verbose -l --output=worker-%t.log dask-worker --interface ib0 --local-directory /tmp --nprocs $NWORKERPNODE --scheduler-file=${SCHEFILE}",
+            "number of workers per node": 4
+        },
+        "client": {
+            "launch command": "`which python` client.py",
+            "connection information": "obtained from scheduler file"
+        },
+        "simulation": {
+            "launch command": "srun --ntasks=$NPROC --ntasks-per-node=$NPROCPNODE -l ./simulation",
+            "total processes": 4,
+            "processes per node": 4
+        },
+        "slurm": {
+            "job name": "dask-cluster",
+            "account": "dask_coupling",
+            "time limit": "01:00:00",
+            "nodes": 1,
+            "partition": "cpu_med",
+            "exclusive": true
+        },
+        "environment": {
+            "interface": "ib0",
+            "local directory": "/tmp"
+        }
+    }
+}

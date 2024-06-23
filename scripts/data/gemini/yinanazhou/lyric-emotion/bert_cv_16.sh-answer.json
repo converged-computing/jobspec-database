@@ -1,0 +1,38 @@
+{
+    "application": "SLURM",
+    "details": {
+        "account": "def-ichiro",
+        "time": "3-00:00:00",
+        "output": "run_output/bert_cv_output_%A_%a.out",
+        "gpu": "v100:1",
+        "cpus-per-task": 1,
+        "array": "1-6",
+        "mem": "150G",
+        "modules": [
+            "python/3.8",
+            "scipy-stack",
+            "cuda",
+            "torch/1.4.0"
+        ],
+        "virtualenv": "env",
+        "pip_install": [
+            "numpy==1.20.0",
+            "requirements.txt"
+        ],
+        "python_script": "bert_cv.py",
+        "script_parameters": {
+            "ml": 512,
+            "bs": 16,
+            "epochs": 50,
+            "lr": "SLURM_ARRAY_TASK_ID",
+            "es": [
+                1,
+                2,
+                3,
+                4,
+                5,
+                6
+            ]
+        }
+    }
+}

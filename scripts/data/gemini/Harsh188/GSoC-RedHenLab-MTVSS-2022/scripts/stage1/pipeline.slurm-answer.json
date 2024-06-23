@@ -1,0 +1,42 @@
+{
+    "application": "Singularity",
+    "details": {
+        "software": [
+            "python3",
+            "rsync",
+            "sbcast",
+            "module load singularity/3.8.1",
+            "Singularity container: /scratch/users/$USER/mtvss_dev6.sif",
+            "run_pipeline_stage1.py"
+        ],
+        "resource_requirements": {
+            "nodes": 1,
+            "tasks": 1,
+            "time": "20:00:00",
+            "memory": "30gb",
+            "partition": "gpu",
+            "constraints": "gpu4v100",
+            "gres": "gpu:1",
+            "cores": 2,
+            "scratch_space": "/scratch/users/$USER/"
+        },
+        "data_sources": [
+            "/mnt/rds/redhen/gallina/home/hxm471/RedHenLab-Multimodal_TV_Show_Segmentation/mtvss",
+            "/mnt/rds/redhen/gallina/home/hxm471/RedHenLab-Multimodal_TV_Show_Segmentation/inaSpeechSegmenter/inaSpeechSegmenter",
+            "/scratch/users/hxm471/model_output",
+            "/mnt/rds/redhen/gallina/home/hxm471/image_dataset"
+        ],
+        "output_files": [
+            "/scratch/users/$USER/jobs/$SLURM_ARRAY_JOB_ID/py_output_${SLURM_ARRAY_JOB_ID}_${SLURM_ARRAY_TASK_ID}.txt",
+            "/scratch/users/$USER/jobs/$SLURM_ARRAY_JOB_ID/arrayjob_%A_%a.o"
+        ],
+        "temporary_files": [
+            "$TMPDIR/$USER/mtvss",
+            "$TMPDIR/$USER/inaSpeechSegmenter",
+            "$TMPDIR/$USER/model_output",
+            "$TMPDIR/$USER/image_dataset",
+            "$TMPDIR/$USER/video_files",
+            "$TMPDIR/$USER/seg"
+        ]
+    }
+}

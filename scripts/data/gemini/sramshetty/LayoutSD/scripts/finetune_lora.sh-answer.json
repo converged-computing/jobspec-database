@@ -1,0 +1,75 @@
+{
+    "application": "LayoutSD",
+    "details": {
+        "resource_requirements": {
+            "partition": "g40x",
+            "account": "laion",
+            "nodes": 4,
+            "tasks_per_node": 8,
+            "gpus_per_task": 1,
+            "cpus_per_gpu": 8,
+            "modules": [
+                "openmpi",
+                "cuda/11.7"
+            ],
+            "environment_variables": [
+                "NCCL_PROTO=simple",
+                "FI_EFA_FORK_SAFE=1",
+                "FI_LOG_LEVEL=1",
+                "FI_EFA_USE_DEVICE_RDMA=1",
+                "NCCL_DEBUG=info",
+                "PYTHONFAULTHANDLER=1",
+                "CUDA_LAUNCH_BLOCKING=0",
+                "OMPI_MCA_mtl_base_verbose=1",
+                "FI_EFA_ENABLE_SHM_TRANSFER=0",
+                "FI_PROVIDER=efa",
+                "FI_EFA_TX_MIN_CREDITS=64",
+                "NCCL_TREE_THRESHOLD=0"
+            ],
+            "virtual_environment": "/fsx/home-shivr/layoutsd_venv"
+        },
+        "script_details": {
+            "command": "python /fsx/home-shivr/LayoutSD/finetune.py",
+            "arguments": [
+                "--data_path",
+                "pipe:aws s3 cp s3://laion-west/flickr-narrative-boxes/output_wds/{00000..01392..2}.tar -",
+                "--supp_data_path",
+                "pipe:aws s3 cp s3://laion-west/GRIT/wds_no_imgs/coyo_{0..20}_snappy.tar -",
+                "--dataset_type",
+                "narrative_wds",
+                "--supp_dataset_type",
+                "grit",
+                "--num_samples",
+                "25000",
+                "--supp_num_samples",
+                "100000",
+                "--batch_size",
+                "2",
+                "--supp_batch_size",
+                "8",
+                "--resampled",
+                "--model",
+                "gpt2-xl",
+                "--lora",
+                "--workers",
+                "8",
+                "--lr",
+                "5e-6",
+                "--lr_schedule",
+                "cosine",
+                "--decay",
+                "0.1",
+                "--epochs",
+                "100",
+                "--warmup",
+                "5000",
+                "--logging_interval",
+                "500",
+                "--run_name",
+                "gpt2-xl_lora_local-narratives",
+                "--delete_previous_checkpoint"
+            ],
+            "fallback_command": "sbatch /fsx/home-shivr/LayoutSD/scripts/finetune_lora.sh"
+        }
+    }
+}

@@ -1,0 +1,44 @@
+{
+    "application": "DeepSpeed",
+    "details": {
+        "framework": "PyTorch",
+        "library": "DeepSpeed",
+        "model": "GPT",
+        "hardware": {
+            "gpu": "A100",
+            "nodes": 2,
+            "cores_per_task": 40,
+            "gpus_per_node": 8
+        },
+        "slurm": {
+            "queue": "qos_gpu-t3",
+            "partition": "gpu_p5",
+            "account": "ajs@a100",
+            "time": "04:00:00"
+        },
+        "training": {
+            "optimizer": "Adam",
+            "lr_scheduler": "Cosine",
+            "loss_scaler": "Dynamic",
+            "fp16": "Enabled",
+            "zero_stage": 1
+        },
+        "model_params": {
+            "layers": 32,
+            "hidden_size": 2560,
+            "heads": 32,
+            "seq_len": 2048
+        },
+        "data": {
+            "path": "ajs_ALL_CCFRSCRATCH/datasets/c4/gpt2tok_c4_text_document",
+            "tokenizer": "t5-small",
+            "dataset": "C4"
+        },
+        "checkpoint": {
+            "path": "ajs_ALL_CCFRSCRATCH/checkpoints/tr14-2B7-mup-lr$1-init$2-inpm$3-outm$4-atnm$5-mup/checkpoints/main"
+        },
+        "logs": {
+            "path": "ajs_ALL_CCFRSCRATCH/checkpoints/tr14-2B7-mup-lr$1-init$2-inpm$3-outm$4-atnm$5-mup-logs/logs/main"
+        }
+    }
+}

@@ -1,0 +1,34 @@
+{
+    "application": "GROMACS",
+    "details": {
+        "version": "2020.5-RAMD-2.0",
+        "build": "fosscuda-2019b",
+        "resources": {
+            "time": "3 hours",
+            "nodes": 1,
+            "tasks": 8,
+            "gpus": 1,
+            "memory": "500MB",
+            "queue": "prio",
+            "partition": "gpu"
+        },
+        "dependencies": {
+            "modules": [
+                "GROMACS/2020.5-RAMD-2.0-fosscuda-2019b"
+            ]
+        },
+        "input_files": [
+            "../MDP/md.mdp",
+            "../umb0_start.gro",
+            "../topol.top",
+            "../index.ndx"
+        ],
+        "output_files": [
+            "md${SLURM_ARRAY_TASK_ID}.mdp",
+            "md${SLURM_ARRAY_TASK_ID}.tpr",
+            "md${SLURM_ARRAY_TASK_ID}.xtc",
+            "md${SLURM_ARRAY_TASK_ID}_noPBC.xtc",
+            "md${SLURM_ARRAY_TASK_ID}_aligned.xtc"
+        ]
+    }
+}

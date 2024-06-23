@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"SLURM\",\n  \"details\": {\n    \"scheduler\": \"SLURM\",\n    \"account\": \"dune\",\n    \"job_name\": \"blip_segmentation_test\",\n    \"constraint\": \"gpu\",\n    \"queue\": \"shared\",\n    \"time\": \"24:00:00\",\n    \"nodes\": 1,\n    \"tasks\": 1,\n    \"cores_per_task\": 32,\n    \"gpus_per_task\": 1,\n    \"gpus_per_node\": 1,\n    \"gpu_bind\": \"none\",\n    \"dependency\": \"afterok:<optimize_blip_segmentation_prep_id>\",\n    \"array\": \"0-9\",\n    \"container\": \"docker:infophysics/blip:latest\",\n    \"volumes\": [\n      \"/pscratch/sd/${USER:0:1}/${USER}/$SLURM_JOB_ID/$SLURM_ARRAY_TASK_ID:/local_scratch\",\n      \"/global/cfs/cdirs/dune/users/${USER}:/local_blip\",\n      \"/global/cfs/cdirs/dune/users/${USER}:/local_data\"\n    ],\n    \"script\": \"blip_segmentation_optimize.sh\",\n    \"hyper_parameter_file\": \"${LOCAL_BLIP}/hyper_parameter_data.csv\",\n    \"hyper_parameter_config\": \"${LOCAL_BLIP}/hyper_parameter_data.csv:$(head -n $((SLURM_ARRAY_TASK_ID+1)) \\\"${LOCAL_BLIP}/hyper_parameter_data.csv\\\" | tail -1 | tr -d '\\r')/hyper_parameter_config.yaml\"\n  }\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 708,
+        "candidates_token_count": 408,
+        "total_token_count": 1116,
+        "cached_content_token_count": 0
+    }
+}

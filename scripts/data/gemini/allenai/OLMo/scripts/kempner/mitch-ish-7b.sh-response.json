@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"SLURM\",\n  \"details\": {\n    \"resource_requirements\": {\n      \"nodes\": 8,\n      \"tasks_per_node\": 4,\n      \"gpus_per_node\": 4,\n      \"cpus_per_task\": 16,\n      \"time\": \"167:00:00\",\n      \"memory\": \"all\",\n      \"partition\": \"kempner_project\"\n    },\n    \"environment_variables\": {\n      \"OMP_NUM_THREADS\": \"$SLURM_CPUS_PER_TASK\",\n      \"MPICH_GPU_SUPPORT_ENABLED\": \"1\",\n      \"MIOPEN_USER_DB_PATH\": \"/tmp/${USER}-miopen-cache-${SLURM_JOB_ID}\",\n      \"MIOPEN_CUSTOM_CACHE_DIR\": \"${MIOPEN_USER_DB_PATH}\",\n      \"PYTHONPATH\": \".:${PYTHONPATH}\",\n      \"DATA_PATH\": \"/n/home06/dgroeneveld/data/preprocessed/olmo-mix\",\n      \"EVAL_DATA_PATH\": \"/n/home06/dgroeneveld/data/eval-data\",\n      \"CHECKPOINTS_PATH\": \"/n/home06/dgroeneveld/checkpoints\",\n      \"PYTORCH_KERNEL_CACHE_PATH\": \"/tmp/pytorch_kernel_cache/\"\n    },\n    \"software_requirements\": {\n      \"python_environment\": \"LLM\",\n      \"script\": \"train.py\"\n    },\n    \"command\": \"srun --cpus-per-task=$SLURM_CPUS_PER_TASK --distribution=block:block --kill-on-bad-exit scripts/run_with_environment.sh $HOME/miniconda3/envs/LLM/bin/python -u scripts/train.py configs/v1_5-mix-medium-mitch-ish-s3.yaml --run_name=kempner_${SLURM_JOB_ID} --wandb.name=v1_5-mix-mitch-ish-final-tulu '--data.paths=[s3://ai2-llm/preprocessed/tulu-v2-sft-mixture/gpt-neox-20b-pii-special/data.npy,s3://ai2-llm/preprocessed/olmo-mix/v1_5-sample-9B/gpt-neox-20b-pii-special/data.npy]' --eval_interval=100 --save_interval=500 --load_path=${LOAD_PATH} --restore_dataloader=false --optimizer.learning_rate=0.000023 --scheduler.t_warmup=556000 --scheduler.alpha_f=0.001 --scheduler.t_max=558223 --stop_at=558223 --time_limit=$((167 * 60 * 60)) --model.flash_attention=true --save_folder=/n/holyscratch01/kempner_lab/Lab/checkpoints/${SLURM_JOB_ID}/\"\n  }\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 962,
+        "candidates_token_count": 737,
+        "total_token_count": 1699,
+        "cached_content_token_count": 0
+    }
+}

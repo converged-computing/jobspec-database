@@ -1,0 +1,183 @@
+{
+    "application": "Magpie",
+    "software": [
+        {
+            "name": "Hadoop",
+            "version": "3.3.1",
+            "setup_type": [
+                "MR",
+                "YARN",
+                "HDFS"
+            ],
+            "filesystem_mode": [
+                "hdfs",
+                "hdfsoverlustre",
+                "hdfsovernetworkfs",
+                "rawnetworkfs"
+            ],
+            "job_type": [
+                "terasort",
+                "upgradehdfs",
+                "decommissionhdfsnodes"
+            ]
+        },
+        {
+            "name": "Hive",
+            "version": "2.3.0",
+            "job_type": [
+                "testbench",
+                "interactive",
+                "setuponly",
+                "checkhiveup"
+            ],
+            "execution_engine": [
+                "MapReduce",
+                "Tez"
+            ]
+        },
+        {
+            "name": "Zookeeper",
+            "version": "3.4.14",
+            "job_type": "zookeeperruok"
+        },
+        {
+            "name": "Tez",
+            "version": "0.9.1"
+        },
+        {
+            "name": "Postgres",
+            "port": 11115
+        },
+        {
+            "name": "Hive-Testbench",
+            "benchmark_type": [
+                "tpcds",
+                "tpch"
+            ],
+            "cli_version": [
+                "hive",
+                "beeline"
+            ]
+        }
+    ],
+    "resources": [
+        {
+            "name": "JAVA_HOME",
+            "value": "/usr/lib/jvm/jre-1.8.0/"
+        },
+        {
+            "name": "MAGPIE_SCRIPTS_HOME",
+            "value": "${HOME}/magpie"
+        },
+        {
+            "name": "MAGPIE_LOCAL_DIR",
+            "value": "/tmp/${USER}/magpie"
+        },
+        {
+            "name": "HADOOP_HOME",
+            "value": "${HOME}/hadoop-${HADOOP_VERSION}"
+        },
+        {
+            "name": "HADOOP_LOCAL_DIR",
+            "value": "/tmp/${USER}/hadoop"
+        },
+        {
+            "name": "HIVE_HOME",
+            "value": "${HOME}/apache-hive-${HIVE_VERSION}-bin"
+        },
+        {
+            "name": "HIVE_LOCAL_DIR",
+            "value": "/tmp/${USER}/hive"
+        },
+        {
+            "name": "HIVE_METASTORE_DIR",
+            "value": "/lustre/${USER}/hive/database/postgres/data"
+        },
+        {
+            "name": "POSTGRES_HOME",
+            "value": "${HOME}/pgsql"
+        },
+        {
+            "name": "PGDATA",
+            "value": "/lustre/${USER}/hive/database/postgres/data"
+        },
+        {
+            "name": "TEZ_HOME",
+            "value": "${HOME}/apache-tez-${TEZ_VERSION}-bin"
+        },
+        {
+            "name": "ZOOKEEPER_HOME",
+            "value": "${HOME}/zookeeper-${ZOOKEEPER_VERSION}"
+        },
+        {
+            "name": "ZOOKEEPER_DATA_DIR",
+            "value": "/lustre/${USER}/zookeeper"
+        },
+        {
+            "name": "ZOOKEEPER_LOCAL_DIR",
+            "value": "/tmp/${USER}/zookeeper"
+        },
+        {
+            "name": "HIVE_TESTBENCH_DIR",
+            "value": "${HOME}/hive-testbench"
+        }
+    ],
+    "execution": [
+        {
+            "command": "mpirun",
+            "arguments": [
+                "$MPIRUN_OPTIONS",
+                "$MAGPIE_SCRIPTS_HOME/magpie-check-inputs"
+            ]
+        },
+        {
+            "command": "mpirun",
+            "arguments": [
+                "$MPIRUN_OPTIONS",
+                "$MAGPIE_SCRIPTS_HOME/magpie-setup-core"
+            ]
+        },
+        {
+            "command": "mpirun",
+            "arguments": [
+                "$MPIRUN_OPTIONS",
+                "$MAGPIE_SCRIPTS_HOME/magpie-setup-projects"
+            ]
+        },
+        {
+            "command": "mpirun",
+            "arguments": [
+                "$MPIRUN_OPTIONS",
+                "$MAGPIE_SCRIPTS_HOME/magpie-setup-post"
+            ]
+        },
+        {
+            "command": "mpirun",
+            "arguments": [
+                "$MPIRUN_OPTIONS",
+                "$MAGPIE_SCRIPTS_HOME/magpie-pre-run"
+            ]
+        },
+        {
+            "command": "mpirun",
+            "arguments": [
+                "$MPIRUN_OPTIONS",
+                "$MAGPIE_SCRIPTS_HOME/magpie-run"
+            ]
+        },
+        {
+            "command": "mpirun",
+            "arguments": [
+                "$MPIRUN_OPTIONS",
+                "$MAGPIE_SCRIPTS_HOME/magpie-cleanup"
+            ]
+        },
+        {
+            "command": "mpirun",
+            "arguments": [
+                "$MPIRUN_OPTIONS",
+                "$MAGPIE_SCRIPTS_HOME/magpie-post-run"
+            ]
+        }
+    ]
+}

@@ -1,0 +1,36 @@
+{
+    "application": "LSF",
+    "details": {
+        "resources": {
+            "cpu": 4,
+            "gpu": {
+                "type": "TeslaV100_SXM2_32GB",
+                "count": 1,
+                "mode": "exclusive_process"
+            },
+            "memory": {
+                "requested": "20G",
+                "minimum": "20G"
+            }
+        },
+        "queue": "general",
+        "group": "compute-crponce",
+        "job_name": "cosine_exp_resnet[40-57]",
+        "docker_image": "pytorchlightning/pytorch_lightning:base-cuda-py3.9-torch1.9",
+        "output_file": "/scratch1/fs1/crponce/cosine_exp_resnet.%J.%I",
+        "user": "binxu.wang@wustl.edu",
+        "script_file": "cosine_evol_RIS_cluster.py",
+        "script_arguments": {
+            "net": "resnet50",
+            "G": "fc6",
+            "layer": ".layer3.Bottleneck0",
+            "popsize": "500",
+            "pop_rand_seed": "0",
+            "target_idx": "0 50",
+            "score_method": "cosine corr MSE dot",
+            "reps": "3",
+            "RFresize": "true",
+            "resize_ref": "true"
+        }
+    }
+}

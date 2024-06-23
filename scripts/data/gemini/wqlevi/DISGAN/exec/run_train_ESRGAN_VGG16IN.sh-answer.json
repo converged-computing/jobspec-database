@@ -1,0 +1,39 @@
+{
+    "application": "SLURM",
+    "details": {
+        "environment": {
+            "anaconda": "3/2020.02",
+            "cuda": "11.2",
+            "nibabel": "2.5.0",
+            "pytorch": "gpu-cuda-11.2/1.8.1"
+        },
+        "script": {
+            "command": "python /u/wangqi/git_wq/test_3d_SR/mains/train_script_instnoise_wandb.py",
+            "arguments": {
+                "--path": "/ptmp/wangqi/transfer_folder/LS200X_Norm/LS_all_subj_norm/crops",
+                "--path_save": "/ptmp/wangqi/saved_models",
+                "--model": "instancenoise_res10_b16_1subj",
+                "--checkpoint": "4",
+                "--precision": "1",
+                "--batch_size": "16",
+                "--epochs": "6",
+                "--lr": ".0001",
+                "--inst_noise": "0",
+                "--FE_type": "'resnet10'",
+                "--D_type": "'Discriminator_Unet'",
+                "--update_FE": ""
+            }
+        },
+        "resources": {
+            "nodes": 1,
+            "cpus_per_task": 16,
+            "tasks_per_node": 1,
+            "gpu": {
+                "type": "a100",
+                "count": 4
+            },
+            "wall_time": "24:00:00",
+            "working_dir": "/u/wangqi/torch_env/crop_gan"
+        }
+    }
+}

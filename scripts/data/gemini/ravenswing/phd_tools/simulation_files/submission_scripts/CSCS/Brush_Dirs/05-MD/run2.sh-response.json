@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"Gromacs\",\n  \"details\": {\n    \"scheduler\": \"Slurm\",\n    \"nodes\": 4,\n    \"cores_per_node\": 12,\n    \"threads_per_core\": 1,\n    \"partition\": \"normal\",\n    \"constraints\": \"gpu\",\n    \"account\": \"pr49\",\n    \"software\": {\n      \"gromacs\": \"/users/revans/programs/gromacs\",\n      \"easybuild\": \"/users/revans/programs/gromacs/modules/all\"\n    },\n    \"environment_variables\": {\n      \"OMP_NUM_THREADS\": \"$SLURM_CPUS_PER_TASK\",\n      \"CRAY_CUDA_MPS\": \"1\",\n      \"EASYBUILD_PREFIX\": \"/users/revans/programs/gromacs\",\n      \"FN\": \"(cd ..; basename -- \"$PWD\")\",\n      \"GMX\": \"gmx\"\n    },\n    \"commands\": [\n      \"gmx_mpi mdrun -s md.tpr -ntomp 1 -deffnm md -cpi md.cpt -append -maxh 23.5\",\n      \"cp md.cpt md_${num}.cpt\",\n      \"cp md_prev.cpt md_${num}_prev.cpt\",\n      \"bash CONT.sh\",\n      \"$GMX trjconv -s md.tpr -f md.trr -o md_lastframe.gro -b 500000 -e 500000 -pbc whole\",\n      \"$GMX trjconv -s md.tpr -f md.trr -o ${FN}_protein.gro -b 500000 -e 500000 -pbc whole\",\n      \"$GMX trjconv -s md.tpr -f md.trr -o MD_reimaged.xtc -pbc whole\",\n      \"$GMX trjconv -s min.tpr -f MD_reimaged.xtc -o MD_protraj.xtc -pbc nojump -center\",\n      \"$GMX trjconv -s min.tpr -f MD_protraj.xtc -o MD_cluster.xtc -pbc cluster\",\n      \"$GMX trjconv -s min.tpr -f MD_cluster.xtc -o MD_final.xtc -pbc mol -ur compact -center\",\n      \"$GMX trjconv -s min.tpr -f MD_final.xtc -o ${FN}_protein.pdb -b 500000 -e 500000\",\n      \"$GMX gyrate -s min.tpr -f MD_final.xtc -o ${FN}_Rgyr.xvg\",\n      \"$GMX rms -s min.tpr -f MD_final.xtc -o ${FN}_RMSD.xvg -fit rot+trans\"\n    ]\n  }\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 2,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 733,
+        "candidates_token_count": 690,
+        "total_token_count": 1423,
+        "cached_content_token_count": 0
+    }
+}

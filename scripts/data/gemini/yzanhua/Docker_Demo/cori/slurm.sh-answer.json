@@ -1,0 +1,26 @@
+{
+    "application": "SLURM",
+    "details": {
+        "docker_image": "wkliao/cori_image:latest",
+        "scratch_mount": "/global/cscratch1/sd/wkliao:/scratch",
+        "account": "m844",
+        "runtime": "20:00",
+        "nodes": 16,
+        "output_file": "qout.docker.1024.%j",
+        "error_file": "qout.docker.1024.%j",
+        "scratch_access": "SCRATCH",
+        "qos": "regular",
+        "constraint": "knl,quad,cache",
+        "tasks_per_node": 64,
+        "mpi_processes": "$SLURM_JOB_NUM_NODES * $SLURM_NTASKS_PER_NODE",
+        "environment_variables": {
+            "OMP_NUM_THREADS": "1",
+            "KMP_AFFINITY": "disabled"
+        },
+        "python_script": "example/process.py",
+        "input_directory": "/scratch/uboone_in",
+        "input_file": "uboone_numu_slice_seq.h5",
+        "output_directory": "/scratch/uboone_out",
+        "output_prefix": "uboone_numu_slice_panoptic_graphs"
+    }
+}

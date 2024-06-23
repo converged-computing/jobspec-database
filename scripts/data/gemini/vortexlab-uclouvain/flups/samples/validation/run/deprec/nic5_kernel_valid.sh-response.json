@@ -1,0 +1,56 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"SLURM\",\n  \"details\": {\n    \"job_name\": \"vector-validation\",\n    \"time_limit\": \"00:15:00\",\n    \"memory_per_cpu\": \"2625 MB\",\n    \"partition\": \"batch\",\n    \"modules\": [\n      \"FFTW/3.3.8-gompi-2020b\",\n      \"HDF5/1.10.7-gompi-2020b\"\n    ],\n    \"executable\": \"flups_validation_nb\",\n    \"mpi_library\": \"OpenMPI\",\n    \"libraries\": [\n      \"FFTW\",\n      \"HDF5\"\n    ],\n    \"environment_variables\": [\n      \"OMP_NUM_THREADS\",\n      \"HOME_FLUPS\",\n      \"EXEC_FLUPS\",\n      \"SCRATCH\"\n    ],\n    \"commands\": [\n      \"module purge\",\n      \"module load FFTW/3.3.8-gompi-2020b HDF5/1.10.7-gompi-2020b\",\n      \"module list\",\n      \"mkdir -p $SCRATCH/data\",\n      \"mkdir -p $SCRATCH/prof\",\n      \"cp $HOME_FLUPS/$EXEC_FLUPS $SCRATCH\",\n      \"cd $SCRATCH\",\n      \"srun --label valgrind --leak-check=full --track-origins=yes ./flups\",\n      \"mpirun ${EXEC_FLUPS} -np ${MY_NX} ${MY_NY} ${MY_NZ} -res ${MY_SIZEX} ${MY_SIZEY} ${MY_SIZEZ} -nres ${MY_NRES} -ns ${MY_NSOLVE} -k ${MY_KERNEL} -c 0 -bc ${MY_BC}\"\n    ]\n  }\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "citation_metadata": {
+                "citation_sources": [
+                    {
+                        "start_index": 644,
+                        "end_index": 837,
+                        "uri": "https://github.com/vortexlab-uclouvain/flups",
+                        "license_": ""
+                    }
+                ]
+            },
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 429,
+        "candidates_token_count": 440,
+        "total_token_count": 869,
+        "cached_content_token_count": 0
+    }
+}

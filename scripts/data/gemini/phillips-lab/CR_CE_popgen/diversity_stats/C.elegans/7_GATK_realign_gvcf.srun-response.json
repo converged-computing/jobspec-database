@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"GATK\",\n  \"details\": {\n    \"software\": [\n      \"GATK\",\n      \"java\",\n      \"easybuild\"\n    ],\n    \"resources\": [\n      \"SLURM\",\n      \"partition: phillips\",\n      \"job-name: GATK\",\n      \"walltime: 240:00:00\",\n      \"nodes: 1\",\n      \"ntasks: 1\",\n      \"array: 0-27\",\n      \"cpus-per-task: 1\",\n      \"memory: 5g\",\n      \"tmp: /projects/phillipslab/ateterina/tmp\",\n      \"reference: /projects/phillipslab/ateterina/CE_haw_subset/ref_245/c_elegans.PRJNA13758.WS245.genomic.fa\",\n      \"input: /projects/phillipslab/ateterina/CE_haw_subset/data/BAMS/*.re.bam\"\n    ]\n  }\n}\n```\n\n**Explanation:**\n\n* **Application:** The script primarily utilizes the **GATK** (Genome Analysis Toolkit) software.\n* **Software:** The script utilizes several software packages:\n    * **GATK:**  A toolkit for analyzing and manipulating genomic data.\n    * **Java:** GATK is written in Java and requires a Java runtime environment.\n    * **Easybuild:**  A system for installing and managing software packages.\n* **Resources:** The script uses the **SLURM** workload manager for resource allocation. It specifies the following resource requirements:\n    * **Partition:**  \"phillips\" (for resource allocation)\n    * **Job Name:** \"GATK\"\n    * **Walltime:**  240 hours\n    * **Nodes:** 1 (a single compute node)\n    * **Tasks:** 1 (one task per array job)\n    * **Array:**  0-27 (runs the script 28 times with different input files)\n    * **CPUs:**  1 core per task\n    * **Memory:** 5 GB of RAM\n    * **Tmp Directory:**  \"/projects/phillipslab/ateterina/tmp\" for temporary files\n    * **Reference Genome:** \"/projects/phillipslab/ateterina/CE_haw_subset/ref_245/c_elegans.PRJNA13758.WS245.genomic.fa\"\n    * **Input Files:**  Located in \"/projects/phillipslab/ateterina/CE_haw_subset/data/BAMS/\" and have a \".re.bam\" extension.\n\n**Script Breakdown:**\n\nThe script is designed to perform variant calling using GATK, specifically:\n\n1. **Loading Modules:**  The script uses `module load` to load the necessary software packages (Java, Easybuild, and GATK) onto the system.\n2. **Setting Variables:**  It sets various variables for the reference genome, temporary directory, and the location of the GATK executable.\n3. **File Handling:**  It uses wildcard expansion to get a list of input files and selects a specific file based on the SLURM array index.\n4. **GATK Commands:** It executes GATK commands to perform the following tasks:\n    * **RealignerTargetCreator:**  Identifies regions in the genome that need to be realigned.\n    * **IndelRealigner:** Performs indel realignment, which improves the accuracy of variant calling.\n    * **HaplotypeCaller:**  Calls variants in the form of a genomic variant call format (GVCF).\n\nThe script's output is stored in new files with the extensions \".intervals\", \".ind.bam\", and \".raw.new.g.vcf\", based on the input file names.\n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 537,
+        "candidates_token_count": 854,
+        "total_token_count": 1391,
+        "cached_content_token_count": 0
+    }
+}

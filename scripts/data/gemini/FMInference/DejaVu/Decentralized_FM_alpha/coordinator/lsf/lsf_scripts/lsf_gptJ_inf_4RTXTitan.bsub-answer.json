@@ -1,0 +1,41 @@
+{
+    "application": "LSF",
+    "details": {
+        "resources": {
+            "cores": 1,
+            "memory": "16GB",
+            "gpu": {
+                "type": "NVIDIA TITAN RTX",
+                "count": 1
+            },
+            "runtime": "20 minutes"
+        },
+        "software": {
+            "modules": [
+                "gcc/6.3.0",
+                "cuda/11.0.3"
+            ],
+            "environment": "base (conda)",
+            "script": "dist_inference_runner_w_euler_coordinator.py",
+            "libraries": [
+                "NCCL",
+                "GLOO"
+            ]
+        },
+        "other": {
+            "world_size": 4,
+            "model_type": "gptj",
+            "model_name": "./pretrained_models/gpt-j-6B",
+            "inference_settings": {
+                "fp16": true,
+                "batch_size": 64,
+                "input_seq_length": 512,
+                "generate_seq_length": 32,
+                "micro_batch_size": 1,
+                "num_layers": 7
+            },
+            "coordinator_server_ip": "129.132.93.88",
+            "log_dir": "/nfs/iiscratch-zhang.inf.ethz.ch/export/zhang/export/fm/exe_log"
+        }
+    }
+}

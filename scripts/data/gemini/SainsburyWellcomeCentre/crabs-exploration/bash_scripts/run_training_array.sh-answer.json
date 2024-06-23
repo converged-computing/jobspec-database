@@ -1,0 +1,35 @@
+{
+    "application": "Slurm",
+    "details": {
+        "resource_requirements": {
+            "partition": "gpu",
+            "gpu": "a100",
+            "nodes": 1,
+            "tasks_per_node": 8,
+            "memory": "32G",
+            "time": "3-00:00",
+            "mail_type": "ALL",
+            "mail_user": "s.minano@ucl.ac.uk"
+        },
+        "software_requirements": {
+            "miniconda": {
+                "version": "3.10"
+            },
+            "python_packages": [
+                "crabs-exploration"
+            ],
+            "environment_name": "crabs-dev-$SPLIT_SEED-$SLURM_ARRAY_JOB_ID",
+            "environment_prefix": "$TMPDIR/$ENV_NAME"
+        },
+        "other_settings": {
+            "pytorch_cuda_alloc_conf": "expandable_segments:True",
+            "mlflow_folder": "/ceph/zoo/users/sminano/ml-runs-all/ml-runs-scratch",
+            "dataset_dir": "/ceph/zoo/users/sminano/crabs_bboxes_labels/Sep2023_labelled",
+            "train_config_file": "/ceph/zoo/users/sminano/cluster_train_config.yaml",
+            "git_branch": "main",
+            "experiment_name": "Sept2023",
+            "list_seeds": "[42, 43, 44]",
+            "split_seed": "${LIST_SEEDS[${SLURM_ARRAY_TASK_ID}]}"
+        }
+    }
+}

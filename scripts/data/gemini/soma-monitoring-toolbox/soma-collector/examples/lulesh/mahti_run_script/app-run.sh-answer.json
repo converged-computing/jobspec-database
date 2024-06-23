@@ -1,0 +1,43 @@
+{
+    "application": "LULESH",
+    "details": {
+        "resource_manager": "SLURM",
+        "job_name": "soma-symbiomon",
+        "account": "project_2006549",
+        "partition": "medium",
+        "time": "02:00:00",
+        "nodes": 2,
+        "cpus_per_task": 1,
+        "output_file": "slurm-lulesh-%j.out",
+        "error_file": "slurm-lulesh-%j.err",
+        "environment": {
+            "spack": {
+                "setup_script": "/projappl/project_2006549/spack/share/spack/setup-env.sh",
+                "packages": [
+                    "mochi-bedrock",
+                    "conduit"
+                ]
+            },
+            "soma": {
+                "server_addr_file": "server.add",
+                "node_addr_file": "node.add",
+                "num_server_instances": 1,
+                "num_servers_per_instance": 2,
+                "server_instance_id": 0
+            },
+            "ld_library_path": [
+                "`pkg-config --libs-only-L soma-client soma-server soma-admin | sed -e \"s/ -L/:/g\" | sed -e \"s/-L//g\" | sed -e \"s/ //g\"`",
+                "`spack location -i conduit`/lib"
+            ],
+            "tau": {
+                "plugins": [
+                    "libTAU-mochi-soma-remote-collector-plugin.so"
+                ],
+                "plugins_path": "/users/dewiy/tau2/x86_64/lib/shared-mpi",
+                "soma_monitoring_frequency": 10
+            }
+        },
+        "lulesh_executable": "./lulesh2.0",
+        "lulesh_arguments": "-i 500 -p"
+    }
+}

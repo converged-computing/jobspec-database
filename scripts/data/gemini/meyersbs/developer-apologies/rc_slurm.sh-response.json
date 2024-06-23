@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"SLURM\",\n  \"details\": {\n    \"job_name\": \"devaps1\",\n    \"output_file\": \"devaps1.stdout\",\n    \"error_file\": \"devaps1.stderr\",\n    \"email\": \"bsm9339@rit.edu\",\n    \"email_type\": \"ALL\",\n    \"duration\": \"0-05:00:00\",\n    \"account\": \"mistakes\",\n    \"partition\": \"tier3\",\n    \"cores\": 1,\n    \"memory\": \"200GB\",\n    \"environment\": \"spack env activate mistakes-21091601\",\n    \"dependencies\": {\n      \"python3\": \"ensurepip --upgrade\",\n      \"coverage\": \"pip3 install --user coverage\",\n      \"spacy\": \"spacy download en_core_web_sm\"\n    },\n    \"script\": [\n      \"python3 -u main.py info_rate_limit\",\n      \"python3 -u tests.py\",\n      \"python3 -u main.py download repos.txt.DM all data_850_stars/DM/\",\n      \"python3 -u main.py info_data data_850_stars/DM/\",\n      \"python3 -u main.py load experiment.hdf5 data_850_stars/DM/\",\n      \"python3 -u main.py info_hdf5 experiment.hdf5\",\n      \"python3 -u main.py preprocess experiment.hdf5 0\",\n      \"python3 -u main.py info_hdf5 experiment.hdf5\",\n      \"python3 -u main.py classify experiment.hdf5 0\",\n      \"python3 -u main.py info_hdf5 experiment.hdf5\",\n      \"cp -r -v data_850_stars/ zenodo/\",\n      \"mv zenodo/C++/ zenodo/C-PlusPlus/\",\n      \"mv zenodo/C#/ zenodo/C-Sharp/\",\n      \"mv zenodo/F#/ zenodo/F-Sharp/\",\n      \"python3 -u scripts/prepare_data_for_zenodo.py zenodo/\",\n      \"mv zenodo/ 88_million_developer_comments/\",\n      \"zip -9 -r 88_million_developer_comments.zip 88_million_developer_comments/\"\n    ]\n  }\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 2,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 938,
+        "candidates_token_count": 562,
+        "total_token_count": 1500,
+        "cached_content_token_count": 0
+    }
+}

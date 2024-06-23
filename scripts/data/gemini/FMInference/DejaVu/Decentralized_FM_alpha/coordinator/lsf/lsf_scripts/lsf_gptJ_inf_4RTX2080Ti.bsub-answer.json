@@ -1,0 +1,39 @@
+{
+    "application": "LSF",
+    "details": {
+        "resources": {
+            "cores": 1,
+            "runtime": "20 minutes",
+            "memory": "16GB",
+            "gpu": {
+                "type": "NVIDIA GeForce RTX 2080Ti",
+                "count": 1
+            }
+        },
+        "modules": {
+            "gcc": "6.3.0",
+            "cuda": "11.0.3"
+        },
+        "environment": {
+            "conda": "base",
+            "working_directory": "/nfs/iiscratch-zhang.inf.ethz.ch/export/zhang/export/fm/GPT-home-private"
+        },
+        "software": {
+            "python_script": "dist_inference_runner_w_euler_coordinator.py",
+            "model": "gpt-j-6B"
+        },
+        "configuration": {
+            "world_size": 4,
+            "distribution_mode": "pipe_sync_greedy",
+            "pipeline_group_size": 4,
+            "cuda_id": 0,
+            "fp16": true,
+            "batch_size": 24,
+            "input_seq_length": 512,
+            "generate_seq_length": 32,
+            "micro_batch_size": 1,
+            "num_layers": 7,
+            "coordinator_server_ip": "129.132.93.88"
+        }
+    }
+}

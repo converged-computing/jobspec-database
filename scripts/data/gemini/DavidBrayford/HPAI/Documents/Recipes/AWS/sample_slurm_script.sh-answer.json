@@ -1,0 +1,36 @@
+{
+    "application": "SLURM",
+    "details": {
+        "job_name": "charliecloud_mpi_CERN_impi_768_opt_intel03_mpi",
+        "output": "output_charliecloud_CERN_impi_768_opt_intel03_mpi.txt",
+        "error": "error_charliecloud_CERN_impi_768_opt_intel03_mpi.txt",
+        "time": "04:30:00",
+        "account": "pr28fa",
+        "partition": "general",
+        "nodes": 768,
+        "ntasks": 3072,
+        "ntasks_per_node": 4,
+        "cpus_per_task": 12,
+        "modules": [
+            "slurm_setup",
+            "mpi.intel/2019",
+            "devEnv/Intel/2019",
+            "charliecloud",
+            "amplifier_xe/2019"
+        ],
+        "environment_variables": {
+            "KMP_SETTINGS": 1,
+            "KMP_AFFINITY": "granularity=fine,compact,1,0",
+            "KMP_BLOCKTIME": 0,
+            "OMP_NUM_THREADS": "$SLURM_CPUS_PER_TASK",
+            "I_MPI_PIN_RESPECT_CPUSET": 0,
+            "I_MPI_JOB_RESPECT_PROCESS_PLACEMENT": 0
+        },
+        "mpi_command": "mpiexec",
+        "mpi_options": "-n $SLURM_NTASKS -ppn $SLURM_NTASKS_PER_NODE",
+        "charliecloud_command": "ch-run",
+        "charliecloud_options": "-b /lrz/sys/.:/lrz/sys/ -w /dss/dsshome1/08/di72giz/Docker/02d6e22ec5ec",
+        "python_script": "/CERN/3Dgan-svalleco-sc18/keras/EcalEnergyTrain_hvd.py",
+        "python_script_arguments": "--model=EcalEnergyGan --datapath=/CERN/Data/*.h5 --channel_format='channels_first' --batchsize 16 --learningRate 0.001 --optimizer=Adam --latentsize 200 --intraop 12 --interop 2 --warmupepochs 0 --nbepochs 2"
+    }
+}

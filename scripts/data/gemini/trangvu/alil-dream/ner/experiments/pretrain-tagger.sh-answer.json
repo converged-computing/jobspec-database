@@ -1,0 +1,59 @@
+{
+    "application": "SLURM",
+    "details": {
+        "job_name": "alner-transfer",
+        "account": "da33",
+        "tasks": 1,
+        "cpus_per_task": 1,
+        "memory_per_cpu": "50000M",
+        "gpus": 1,
+        "partition": "m3g",
+        "time": "5-00:00:00",
+        "mail_type": "BEGIN,END,FAIL",
+        "mail_user": "vuth0001@student.monash.edu",
+        "output": "%x-%j.out",
+        "error": "%x-%j.err",
+        "modules": [
+            "cuda/9.0",
+            "python/3.6.2",
+            "tensorflow/1.12.0-python3.6-gcc5"
+        ],
+        "environment": "env/bin/activate",
+        "python_script": "AL-tagger-qual.py",
+        "datasets": [
+            "conll2003",
+            "conll2002",
+            "conll2002",
+            "conll2002"
+        ],
+        "experiments": [
+            "en.bi",
+            "es",
+            "de",
+            "nl"
+        ],
+        "train_files": [
+            "en.train",
+            "es.train",
+            "de.train",
+            "nl.train"
+        ],
+        "dev_files": [
+            "en.testb",
+            "es.testb",
+            "de.testb",
+            "nl.testb"
+        ],
+        "test_files": [
+            "en.testa",
+            "es.testa",
+            "de.testa",
+            "nl.testa"
+        ],
+        "embedding_file": "datadir/twelve.table4.multiCCA.window_5+iter_10+size_40+threads_16.normalized",
+        "text_data_dir": "datadir/{{DATASET_NAME}}",
+        "output_dir": "results/dreaming_{{DATASET_NAME}}_{{EXP_NAME}}_{{DATE}}",
+        "policy_name": "{{POLICY_NAME}}",
+        "policy_path": "{{POLICY_PATH}}"
+    }
+}

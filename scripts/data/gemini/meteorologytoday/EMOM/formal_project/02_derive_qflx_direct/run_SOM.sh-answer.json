@@ -1,0 +1,39 @@
+{
+    "application": "julia",
+    "details": {
+        "environment": {
+            "PBS": {
+                "account": "UCIR0040",
+                "job_name": "QFLX_SOM",
+                "queue": "economy",
+                "nodes": "1",
+                "cpus_per_node": "36",
+                "mpi_processes": "36",
+                "omp_threads": "1",
+                "walltime": "12:00:00",
+                "output": "stdout and stderr combined"
+            },
+            "module": "openmpi/4.0.3"
+        },
+        "libraries": {
+            "julia": {
+                "project_mode": true,
+                "mpi_binary": "system",
+                "package": "MPI",
+                "build_verbose": true
+            },
+            "mpiexec": {
+                "processes": "10",
+                "executable": "main.jl",
+                "arguments": {
+                    "SOM": "true",
+                    "config-file": "$wdir/data/config_SOM.toml",
+                    "hist-dir": "$wdir/hist",
+                    "year-rng": "22 52"
+                },
+                "output": "iom_SOM.${LID}.log"
+            }
+        },
+        "working_directory": "/glade/u/home/tienyiao/paper2021/24_compute_Qflx_direct"
+    }
+}

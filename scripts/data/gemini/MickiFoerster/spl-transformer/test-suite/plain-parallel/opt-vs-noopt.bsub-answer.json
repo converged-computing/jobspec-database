@@ -1,0 +1,29 @@
+{
+    "application": "LSF",
+    "details": {
+        "job_name": "plain-parallel",
+        "output_file": "job%J-plain-parallel.stdout",
+        "error_file": "job%J-plain-parallel.stderr",
+        "user": "foerster@stce.rwth-aachen.de",
+        "queue": "hpcwork",
+        "memory": "1020000",
+        "walltime": "4500",
+        "nodes": 128,
+        "resources": {
+            "compiler": "gcc/4.8",
+            "libraries": [
+                "papi-5.1.0",
+                "spl-transformer"
+            ]
+        },
+        "commands": [
+            "make test",
+            "rsync -av $SPLDIR/ $SPLcOnHPCWORK",
+            "cmake CMakeLists.txt && make",
+            "hostname >>  hostconfig.txt; echo >>  hostconfig.txt; echo >>  hostconfig.txt; echo >>  hostconfig.txt;",
+            "cat /proc/cpuinfo >>  hostconfig.txt; echo >>  hostconfig.txt; echo >>  hostconfig.txt; echo >>  hostconfig.txt;",
+            "cat /proc/meminfo >>  hostconfig.txt; echo >>  hostconfig.txt; echo >>  hostconfig.txt; echo >>  hostconfig.txt;",
+            "make clean adjoint_scale_test_O3; echo \"Test how many atomic constructs we have in adjoint code\"; grep atomic a1_test.in.papi; ./adjoint_scale_test_O3"
+        ]
+    }
+}

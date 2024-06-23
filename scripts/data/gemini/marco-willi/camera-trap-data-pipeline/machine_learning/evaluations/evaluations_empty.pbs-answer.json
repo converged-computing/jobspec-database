@@ -1,0 +1,55 @@
+{
+    "application": "PBS",
+    "details": {
+        "scheduler": "PBS",
+        "walltime": "12 hours",
+        "nodes": "1 node",
+        "cores": "12 cores",
+        "queue": "small",
+        "job_name": "eval_empty",
+        "output_file": "${HOME}/job_ml_output_eval_empty_${PBS_JOBID}.log",
+        "error_file": "${HOME}/job_ml_error_eval_empty_${PBS_JOBID}.log",
+        "modules": [
+            "singularity",
+            "python3"
+        ],
+        "container": "docker://will5448/camera-trap-classifier:latest-cpu",
+        "container_command": "ctc.predict",
+        "container_arguments": [
+            "-csv_path",
+            "$TO_PREDICT_PATH",
+            "-csv_id_col",
+            "capture_id",
+            "-csv_images_cols",
+            "image1 image2 image3",
+            "-csv_images_root_path",
+            "$IMAGES_ROOT",
+            "-export_file_type",
+            "json",
+            "-results_file",
+            "$OUTPUT_PATH",
+            "-model_path",
+            "$MODEL_PATH",
+            "-class_mapping_json",
+            "$MODEL_CLASS_MAPPING",
+            "-pre_processing_json",
+            "$MODEL_PRE_PROCESSING",
+            "-aggregation_mode",
+            "min"
+        ],
+        "input_data": {
+            "path": "/home/packerc/shared/machine_learning/data/info_files/SNAPSHOT_SAFARI/",
+            "file": "SNAPSHOT_SAFARI_data_blank_species_balanced_test.csv"
+        },
+        "output_data": {
+            "path": "/home/packerc/shared/machine_learning/data/predictions/empty_or_not/PANTHERA_SNAPSHOT_SAFARI/ResNet18_448_v1/",
+            "file": "predictions.json"
+        },
+        "model_data": {
+            "path": "/home/packerc/shared/machine_learning/data/models/PANTHERA_SNAPSHOT_SAFARI/empty_or_not/ResNet18_448_v1/",
+            "model": "best_model.hdf5",
+            "mapping": "label_mappings.json",
+            "preprocessing": "image_processing.json"
+        }
+    }
+}

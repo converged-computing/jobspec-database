@@ -1,0 +1,39 @@
+{
+    "application": "Singularity",
+    "details": {
+        "script": "example.py",
+        "framework": "PyTorch",
+        "model": "IDEA-CCNL/Erlangshen-UniEX-RoBERTa-110M-Chinese",
+        "gpu": "hgx:1",
+        "cpu": "12",
+        "memory": "16G per cpu",
+        "docker_image": "/cognitive_comp/yangping/containers/pytorch21_06_py3_docker_image.sif",
+        "data": {
+            "data_dir": "/cognitive_comp/yangping/data/unidata/spandata/preprocessing_data/ner/cluener",
+            "train_data": "train.json",
+            "valid_data": "dev.json",
+            "test_data": "dev.json"
+        },
+        "training": {
+            "batch_size": 16,
+            "max_length": 512,
+            "learning_rate": 1e-05,
+            "weight_decay": 0.1,
+            "warmup": 0.1,
+            "max_epochs": 47,
+            "check_val_every_n_epoch": 1,
+            "gradient_clip_val": 0.25,
+            "val_check_interval": 40,
+            "save_top_k": 3,
+            "mode": "max",
+            "every_n_train_steps": 40,
+            "save_weights_only": true,
+            "checkpoint_path": "/$ROOT_PATH/yangping/checkpoints/mrc/uniex_test",
+            "output_path": "/cognitive_comp/yangping/nlp/finetune/scripts/UniEX/finetune/predict.json"
+        },
+        "environment": {
+            "root_path": "/cognitive_comp",
+            "default_root_dir": "/cognitive_comp/yangping/nlp/finetune/log/"
+        }
+    }
+}

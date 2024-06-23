@@ -1,0 +1,33 @@
+{
+    "application": "MPI",
+    "details": {
+        "resource_requirements": {
+            "nodes": 8,
+            "walltime": "1:45:00",
+            "queue": "preemptable",
+            "filesystems": "home"
+        },
+        "software": {
+            "spack": {
+                "environment": "/home/tbouvier/git/spack-envs/polaris",
+                "setup_script": "${HOME}/git/spack-polaris/share/spack/setup-env.sh"
+            },
+            "wandb": {
+                "mode": "offline"
+            },
+            "mpiexec": {
+                "ranks_per_node": 4,
+                "depth": 8,
+                "threads_per_rank": 1,
+                "cpu_bind": "depth",
+                "script": "./set_affinity_gpu_polaris.sh"
+            },
+            "python": {
+                "script": "../../main.py",
+                "yaml_config": "experiments_polaris.yaml",
+                "config": "baseline_scratch_resnet_scale",
+                "log_level": "info"
+            }
+        }
+    }
+}

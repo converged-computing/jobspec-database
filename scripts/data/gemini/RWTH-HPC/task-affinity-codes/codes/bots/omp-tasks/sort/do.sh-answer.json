@@ -1,0 +1,51 @@
+{
+    "application": "Slurm",
+    "details": {
+        "job_scheduler": "Slurm",
+        "partition": "c16s",
+        "nodes": 1,
+        "tasks_per_node": 1,
+        "job_name": "STREAM_TASK_AFFINITY_TEST",
+        "output_file": "sbatch_output.txt",
+        "runtime": "00:30:00",
+        "exclusive_mode": true,
+        "program_command": "./sort.exe -n $((2**31))",
+        "environment_variables": {
+            "KMP_TASK_STEALING_CONSTRAINT": "0",
+            "OMP_PLACES": "cores",
+            "OMP_PROC_BIND": "spread",
+            "OMP_NUM_THREADS": "64",
+            "KMP_AFFINITY": "verbose",
+            "T_AFF_SINGLE_CREATOR": "1",
+            "T_AFF_NUM_TASK_MULTIPLICATOR": "16",
+            "TASK_AFF_THREAD_SELECTION_STRATEGY": "-1",
+            "TASK_AFF_AFFINITY_MAP_MODE": "-1",
+            "TASK_AFF_PAGE_SELECTION_MODE": "-1",
+            "TASK_AFF_PAGE_WEIGHTING_STRATEGY": "-1",
+            "TASK_AFF_NUMBER_OF_AFFINITIES": "1",
+            "TASK_AFF_THRESHOLD": "0.4"
+        },
+        "modules": {
+            "intel": "intel/18.0",
+            "omp": "omp/task_aff.${PROG_VERSION}"
+        },
+        "functions": {
+            "compile": {
+                "description": "Compiles the affinity code with a given version",
+                "arguments": "version"
+            },
+            "run": {
+                "description": "Runs the program with a given version and outputs results to a file",
+                "arguments": "version, iteration"
+            },
+            "compile_and_run": {
+                "description": "Compiles and runs the program with a given version",
+                "arguments": "version"
+            },
+            "set_up_affinity": {
+                "description": "Sets up affinity parameters",
+                "arguments": "thread_selection_strategy, map_mode, page_selection_strategy, page_weight_strategy, num_threads, threshold"
+            }
+        }
+    }
+}

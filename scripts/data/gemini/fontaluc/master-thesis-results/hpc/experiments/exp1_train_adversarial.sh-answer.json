@@ -1,0 +1,35 @@
+{
+    "application": "LSF",
+    "details": {
+        "queue": "gpuv100",
+        "job_name": "exp_1_train_adversarial",
+        "job_array": "[1-18]%6",
+        "cores": 1,
+        "gpu": "1 (exclusive process mode)",
+        "walltime": "5:00",
+        "memory": "5GB",
+        "environment": {
+            "miniconda3": "activated",
+            "cuda": "11.6",
+            "python_version": "3"
+        },
+        "software": [
+            "nvidia-smi",
+            "deviceQuery"
+        ],
+        "script": "src/train_adversarial.py",
+        "arguments": [
+            "+conditional=${cond[$LSB_JOBINDEX - 1]}",
+            "+e=${e[$LSB_JOBINDEX - 1]}",
+            "+bx=1",
+            "+bw=10",
+            "+bz=1",
+            "+by=10",
+            "+bhw=10",
+            "+bhz=10",
+            "+byz=1",
+            "+bc=1",
+            "++seed=${seed[$LSB_JOBINDEX - 1]}"
+        ]
+    }
+}

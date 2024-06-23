@@ -1,0 +1,35 @@
+{
+    "application": "SLURM",
+    "details": {
+        "resource_requirements": {
+            "nodes": 8,
+            "gres": "gpu:1",
+            "time": "00:05:00",
+            "account": "g110",
+            "constraint": "gpu",
+            "partition": "normal"
+        },
+        "modules": [
+            "daint-gpu",
+            "craype-accel-nvidia60",
+            "sarus"
+        ],
+        "environment_variables": {
+            "MALLOC_MMAP_MAX_": "0",
+            "MALLOC_TRIM_THRESHOLD_": "536870912",
+            "OMP_NUM_THREADS": "1",
+            "MV2_ENABLE_AFFINITY": "0",
+            "MV2_USE_CUDA": "1",
+            "MPICH_RDMA_ENABLED_CUDA": "1",
+            "MPICH_G2G_PIPELINE": "256",
+            "CRAY_TCMALLOC_MEMFS_FORCE": "1",
+            "MPICH_ENV_DISPLAY": "1",
+            "MPICH_VERSION_DISPLAY": "1",
+            "docker_image": "load/c2sm/cosmo:gpu",
+            "LD_PRELOAD": "/usr/lib/x86_64-linux-gnu/libcuda.so"
+        },
+        "commands": [
+            "srun -u --ntasks-per-node=1 -n 8 -C gpu sarus run --mpi --mount=type=bind,src=$PWD,target=$PWD --workdir=$PWD $docker_image 'export LD_PRELOAD=\"/usr/lib/x86_64-linux-gnu/libcuda.so\" && /root/cosmo_gpu' >& run.out"
+        ]
+    }
+}

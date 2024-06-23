@@ -1,0 +1,25 @@
+{
+    "application": "Singularity",
+    "details": {
+        "container": "tensorflow-2.8.0.sif",
+        "image": "docker:sfarrell/cosmoflow-cpu-mpich:latest",
+        "environment_variables": [
+            "OMP_NUM_THREADS=32",
+            "KMP_BLOCKTIME=1",
+            "KMP_AFFINITY=\"granularity=fine,compact,1,0\"",
+            "HDF5_USE_FILE_LOCKING=FALSE"
+        ],
+        "module_requirements": [
+            "singularity",
+            "tensorflow/2.8.0"
+        ],
+        "script": "train.py",
+        "configuration": "../configs/cosmo.yaml",
+        "slurm_job_parameters": {
+            "queue": "debug",
+            "time": "30",
+            "job_name": "train-cori",
+            "output_file": "logs/%x-%j.out"
+        }
+    }
+}

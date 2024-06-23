@@ -1,0 +1,26 @@
+{
+    "application": "slurm",
+    "details": {
+        "cluster": "gpu",
+        "gpu_count": 1,
+        "partitions": [
+            "titanx",
+            "gtx1080"
+        ],
+        "job_name": "train-kp20k-bidirectional.general",
+        "output_file": "slurm_output/train-kp20k-bidirectional.general.no_input_feeding.out",
+        "nodes": 1,
+        "tasks_per_node": 1,
+        "cpus_per_task": 1,
+        "memory": "64GB",
+        "walltime": "6-00:00:00",
+        "qos": "long",
+        "environment_variables": {
+            "EXP_NAME": "rnn.general.no_input_feeding.rerun",
+            "ATTENTION": "general",
+            "ROOT_PATH": "/zfs1/pbrusilovsky/rum20/seq2seq-keyphrase-pytorch",
+            "DATA_NAME": "kp20k"
+        },
+        "command": "python -m train -data data/$DATA_NAME/$DATA_NAME -vocab data/$DATA_NAME/$DATA_NAME.vocab.pt  -exp_path \"$ROOT_PATH/exp/$EXP_NAME/%s.%s\" -model_path \"$ROOT_PATH/model/$EXP_NAME/%s.%s\" -pred_path \"$ROOT_PATH/pred/$EXP_NAME/%s.%s\" -exp \"$DATA_NAME\" -batch_size 128 -bidirectional -run_valid_every 2000 -save_model_every 10000 -beam_size 16 -beam_search_batch_size 32 -train_ml -attention_mode $ATTENTION -copy_mode $ATTENTION"
+    }
+}

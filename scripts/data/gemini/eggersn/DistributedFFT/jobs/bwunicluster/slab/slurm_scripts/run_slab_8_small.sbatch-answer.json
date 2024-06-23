@@ -1,0 +1,35 @@
+{
+    "application": "Slurm",
+    "details": {
+        "resource_requirements": {
+            "partition": "gpu_8",
+            "exclusive": true,
+            "gpus": 8,
+            "nodes": 2,
+            "tasks": 16,
+            "time": "12:00:00",
+            "job_name": "gpu8_slab",
+            "output": "gpu8_slab.%j.out",
+            "account": "st"
+        },
+        "software_requirements": {
+            "compiler": "gnu/8.3.1",
+            "cuda": "11.0",
+            "cmake": "3.18",
+            "mpi": "openmpi/4.1"
+        },
+        "other_requirements": {
+            "build_directory": "$HOME/DistributedFFT/build",
+            "python_script": "launch.py",
+            "benchmark_files": [
+                "bwunicluster/slab/benchmarks_base.json",
+                "bwunicluster/slab/validation.json"
+            ],
+            "benchmark_directories": [
+                "../benchmarks/bwunicluster/gpu8/small/forward",
+                "../benchmarks/bwunicluster/gpu8/small/inverse"
+            ],
+            "affinity": "0:0-9 0:0-9 0:0-9 0:0-9 1:0-9 1:0-9 1:0-9 1:0-9"
+        }
+    }
+}

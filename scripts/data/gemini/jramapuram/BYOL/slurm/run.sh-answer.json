@@ -1,0 +1,43 @@
+{
+    "application": "SimCLR",
+    "software": [
+        "Singularity",
+        "Python",
+        "PyTorch",
+        "Visdom",
+        "CUDA",
+        "GCCcore",
+        "SLURM"
+    ],
+    "resources": {
+        "compute": {
+            "nodes": 1,
+            "cores": 2,
+            "gpus": 1
+        },
+        "memory": "16000 MB",
+        "time": "12:00:00",
+        "partition": "<MY_PARTITIONS_HERE>",
+        "constraints": "COMPUTE_CAPABILITY_6_0|COMPUTE_CAPABILITY_6_1",
+        "modules": [
+            "GCCcore/8.2.0",
+            "Singularity/3.4.0-Go-1.12",
+            "CUDA/10.1.243"
+        ],
+        "storage": {
+            "data_dir": "<DATA_DIR>"
+        }
+    },
+    "configuration": {
+        "epochs": 100,
+        "batch_size": 1024,
+        "convert_to_sync_bn": true,
+        "visdom_url": "http://MY_VISDOM_URL",
+        "visdom_port": 8097,
+        "num_replicas": 16,
+        "distributed_master": "$MASTER",
+        "distributed_port": 29301,
+        "distributed_rank": "${SLURM_ARRAY_TASK_ID}",
+        "uid": "simclrv00_0"
+    }
+}

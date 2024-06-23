@@ -1,0 +1,22 @@
+{
+    "application": "SLURM",
+    "details": {
+        "job_name": "mlm_task",
+        "output": "./mlm-task-%j.out",
+        "error": "./mlm-task-%j.err",
+        "partition": "learnfair",
+        "nodes": 1,
+        "tasks_per_node": 1,
+        "time": "2500",
+        "memory_per_cpu": "5120",
+        "gpu": 8,
+        "cpus_per_task": 80,
+        "modules": [
+            "cuda/9.2",
+            "cudnn/v7.3-cuda.9.2",
+            "NCCL/2.2.13-1-cuda.9.2"
+        ],
+        "python_environment": "/private/home/zhangguanheng/anaconda3/envs/slurm_envir",
+        "command": "python distributed_mlm_task.py --world_size 8 --parallel DDP --seed 5431916812 --epochs 100 --emsize 768 --nhid 3072 --nlayers 12 --nhead 12 --save-vocab squad_30k_vocab_cls_sep.pt --dataset EnWik9 --lr 6 --bptt 128 --batch_size 56 --clip 0.1 --log-interval 600"
+    }
+}

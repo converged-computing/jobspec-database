@@ -1,0 +1,39 @@
+{
+    "application": "PBS",
+    "details": {
+        "job_name": "wip-varA3",
+        "nodes": "1",
+        "cores_per_node": "3",
+        "walltime": "48:00:00",
+        "queue": "qfermi",
+        "email": "adc@geo.au.dk",
+        "email_options": "abe",
+        "software": [
+            {
+                "name": "Grendel CUDA",
+                "version": "5.5.22",
+                "path": "/com/cuda/5.5.22"
+            },
+            {
+                "name": "Python",
+                "version": "2.7.6",
+                "path": "/com/python/2.7.6"
+            }
+        ],
+        "commands": [
+            "nvidia-smi",
+            "cmake . && make",
+            "python continue_sim.py halfshear-darcy-sigma0=10000.0-k_c=2e-16-mu=2.08e-07-ss=3000.0-A=4000.0-f=0.2 1 0 &",
+            "python continue_sim.py halfshear-darcy-sigma0=10000.0-k_c=2e-16-mu=2.08e-07-ss=3000.0-A=4250.0-f=0.2 1 1 &",
+            "python continue_sim.py halfshear-darcy-sigma0=10000.0-k_c=2e-16-mu=2.08e-07-ss=3000.0-A=4500.0-f=0.2 1 2 &",
+            "wait"
+        ],
+        "files": [
+            "continue_sim.py",
+            "CMakeCache.txt",
+            "output/*"
+        ],
+        "working_directory": "/home/adc/code/sphere",
+        "scratch_directory": "/scratch/$PBS_JOBID"
+    }
+}

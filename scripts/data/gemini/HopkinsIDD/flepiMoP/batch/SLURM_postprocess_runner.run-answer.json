@@ -1,0 +1,37 @@
+{
+    "application": "Slurm",
+    "details": {
+        "environment": {
+            "modules": [
+                "anaconda",
+                "anaconda3/2022.05"
+            ],
+            "conda_env": "flepimop-env",
+            "aws_cli": "installed and configured"
+        },
+        "scripts": {
+            "postprocessing-scripts": "source $FLEPI_PATH/batch/postprocessing-scripts.sh",
+            "slack_credentials": "source /data/struelo1/flepimop-code/slack_credentials.sh"
+        },
+        "libraries": {
+            "python": "required",
+            "Rscript": "required"
+        },
+        "resources": {
+            "nodes": 1,
+            "tasks_per_node": 1,
+            "cpus_per_task": 48,
+            "storage": {
+                "results_path": "$FS_RESULTS_PATH",
+                "s3_results_path": "$S3_RESULTS_PATH"
+            }
+        },
+        "notifications": {
+            "ntfy_channel": "ntfy.sh/flepimop_alerts",
+            "slack_token": "$SLACK_TOKEN"
+        },
+        "other": {
+            "slurm_logs": "mv slurm-$SLURM_ARRAY_JOB_ID_${SLURM_ARRAY_TASK_ID}.out $FS_RESULTS_PATH/slurm-$SLURM_ARRAY_JOB_ID_${SLURM_ARRAY_TASK_ID}.out"
+        }
+    }
+}

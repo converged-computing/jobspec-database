@@ -1,0 +1,32 @@
+{
+    "application": "SLURM",
+    "details": {
+        "environment": {
+            "Anaconda3": "module load Anaconda3",
+            "Dassl": "source activate dassl"
+        },
+        "resources": {
+            "partition": "gpu",
+            "gpus": 1,
+            "cpus_per_gpu": 4,
+            "python": "which python"
+        },
+        "code_location": "~/Code_causal_neural_style_transfer/Code-CausalStyleTransfer/imcls",
+        "data_location": "~/Code_causal_neural_style_transfer/Dataset",
+        "dassl_location": "~/Code_causal_neural_style_transfer/Code-CausalStyleTransfer/Dassl.pytorch",
+        "script_purpose": "Training a model with a causal approach for domain generalization, with mixstyle",
+        "script_parameters": {
+            "DATASET": "The dataset used for training",
+            "TRAINER": "CausalFD (a domain generalization trainer)",
+            "NET": "The backbone network used for training, e.g. resnet18_ms_l123",
+            "MIX": "Mixstyle configuration"
+        },
+        "training_setup": {
+            "source_domains": "Varying based on DATASET, e.g. 'art_painting', 'cartoon', 'photo', 'sketch'",
+            "target_domains": "Varying based on DATASET, e.g. 'art_painting', 'cartoon', 'photo', 'sketch'",
+            "dataset_config_file": "configs/datasets/dg/${DATASET}.yaml",
+            "config_file": "configs/trainers/mixstyle/${DATASET}_causal_${MIX}.yaml",
+            "output_dir": "all_output/${DATASET}/${T}/${TRAINER}/${MIX}/FAGT/${NET}/seed${SEED}"
+        }
+    }
+}

@@ -1,0 +1,37 @@
+{
+    "application": "Slurm",
+    "details": {
+        "job_name": "gMshNoSoot",
+        "nodes": 128,
+        "time": "24:00:00",
+        "partition": "pbatch",
+        "mail_type": "ALL",
+        "account": "sunyb",
+        "mail_user": "mtmcgurn@buffalo.edu",
+        "modules": [
+            "gcc",
+            "mkl/2019.0",
+            "valgrind/3.16.1",
+            "gcc/10.2.1",
+            "cmake/3.21.1"
+        ],
+        "environment_variables": [
+            "PETSC_DIR",
+            "PETSC_ARCH",
+            "PKG_CONFIG_PATH",
+            "HDF5_ROOT",
+            "PATH",
+            "DM_REFINE",
+            "TITLE",
+            "FILE"
+        ],
+        "parallel_execution": {
+            "command": "spindle --location=/var/tmp/mcgurn4 srun -n4608 /usr/workspace/mcgurn4/ablateOpt/ablate",
+            "arguments": [
+                "--input $FILE",
+                "-yaml::environment::title $TITLE",
+                "-yaml::timestepper::domain::options::dm_refine $DM_REFINE"
+            ]
+        }
+    }
+}

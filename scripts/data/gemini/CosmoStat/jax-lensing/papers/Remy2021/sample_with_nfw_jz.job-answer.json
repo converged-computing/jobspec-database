@@ -1,0 +1,44 @@
+{
+    "application": "Slurm",
+    "details": {
+        "resource_requirements": {
+            "gpu": 1,
+            "cpus": 10,
+            "memory": "32 GB",
+            "time": "20 hours",
+            "qos": "qos_gpu-t3",
+            "partition": "xdy@gpu"
+        },
+        "software": {
+            "tensorflow": "tensorflow-gpu/py3/2.5.0"
+        },
+        "script": {
+            "language": "bash",
+            "purpose": "run a python script multiple times to sample a model using Hamiltonian Monte Carlo"
+        },
+        "python_script": {
+            "name": "sample_hmc.py",
+            "arguments": {
+                "convergence": "../data/ktng/ktng_kappa360v2.fits",
+                "mask": "../data/COSMOS/cosmos_full_mask_0.29arcmin360copy.fits",
+                "model_weights": "/gpfswork/rech/xdy/commun/Remy2021/score_sn1.0_std0.2_v2/model-final.pckl",
+                "batch_size": 10,
+                "initial_step_size": 0.013,
+                "initial_temperature": 1.0,
+                "gaussian_only": "False",
+                "reduced_shear": "False",
+                "gaussian_path": "../data/ktng/ktng_PS_theory.npy",
+                "gaussian_prior": "True",
+                "output_folder": "validation/annealed_hmc/clusters3e14",
+                "cosmos_noise_realisation": "False",
+                "no_cluster": "False",
+                "mass_halo": "3e14",
+                "x_cluster": 65,
+                "y_cluster": 130,
+                "z_halo": 0.5,
+                "zs": 1.0,
+                "COSMOS": "False"
+            }
+        }
+    }
+}

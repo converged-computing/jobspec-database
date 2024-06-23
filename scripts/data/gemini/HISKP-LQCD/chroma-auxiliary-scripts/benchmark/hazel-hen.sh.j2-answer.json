@@ -1,0 +1,37 @@
+{
+    "application": "Chroma",
+    "details": {
+        "software": [
+            "PrgEnv-intel",
+            "gcc/6.3.0",
+            "intel/17.0.2.174",
+            "aprun"
+        ],
+        "resource_requirements": {
+            "nodes": "{{ nodes }}",
+            "ppn": 24,
+            "walltime": "00:10:00",
+            "OMP_NUM_THREADS": 12
+        },
+        "libraries": [
+            "perftools-base"
+        ],
+        "environment_variables": [
+            "PBS_JOBNAME",
+            "PBS_JOBID",
+            "PBS_O_WORKDIR",
+            "MPICH_RANK_ORDER",
+            "MPICH_RANK_REORDER_METHOD",
+            "OMP_NUM_THREADS",
+            "OMP_PROC_BIND"
+        ],
+        "script_commands": [
+            "module swap PrgEnv-cray PrgEnv-intel",
+            "module load gcc/6.3.0",
+            "module load intel/17.0.2.174",
+            "module list",
+            "cd $PBS_O_WORKDIR",
+            "aprun -n $((geometry[0] * geometry[1] * geometry[2] * geometry[3])) -N 2 -d 12 -cc depth $prog -c 12 -sy 1 -sz 1 -geom ${geometry[@]} -by 4 -bz 4 -pxy 1 -pxyz 0 -minct 1 -x {{ lattice }} -y {{ lattice }} -z {{ lattice }} -t 96 -prec d -cg -i 100 -compress12"
+        ]
+    }
+}

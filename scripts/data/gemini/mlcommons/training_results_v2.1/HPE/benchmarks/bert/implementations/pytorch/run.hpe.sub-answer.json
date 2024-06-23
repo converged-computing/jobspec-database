@@ -1,0 +1,41 @@
+{
+    "application": "MLPerf",
+    "details": {
+        "software": [
+            "bash",
+            "enroot",
+            "nvidia-smi",
+            "python",
+            "mlperf_logging",
+            "all_reduce_perf_mpi",
+            "ibv_devinfo"
+        ],
+        "resources": {
+            "compute": {
+                "nodes": "${SLURM_JOB_NUM_NODES}",
+                "tasks_per_node": "${DGXNGPU}",
+                "cpus_per_task": 8
+            },
+            "storage": {
+                "type": "${FS}",
+                "mount_point": "/${FS}/bruno/mlperf",
+                "data_dir": "${DATADIR}",
+                "eval_dir": "${EVALDIR}",
+                "checkpoint_dir": "${CHECKPOINTDIR_PHASE1}"
+            },
+            "container": {
+                "image": "${CONT}",
+                "preload": "${CONTAINER_PRELOAD_LUSTRE}",
+                "mounts": [
+                    "${LOGDIR}:/results",
+                    "${NVMLPERF_NSIGHT_LOCATION}:/nsight"
+                ]
+            },
+            "network": {
+                "protocol": "MPI",
+                "implementation": "pmix",
+                "test": "${NCCL_TEST}"
+            }
+        }
+    }
+}

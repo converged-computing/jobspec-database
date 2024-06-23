@@ -1,0 +1,34 @@
+{
+    "application": "Slurm",
+    "details": {
+        "job_name": "omp_scale2",
+        "partition": "THIN",
+        "nodes": 1,
+        "exclusive": true,
+        "tasks_per_node": 2,
+        "tasks_per_socket": 1,
+        "memory": "490G",
+        "time": "02:00:00",
+        "environment": {
+            "MPI_MODULE": "openMPI/4.1.5/gnu/12.2.1",
+            "EXECUTABLE": "./gameoflife.x"
+        },
+        "output": "scale_omp_thin_2_job_%j.out",
+        "software": {
+            "architecture": "AMD",
+            "openMPI": "4.1.5/gnu/12.2.1"
+        },
+        "script_arguments": {
+            "TYPE": "i",
+            "SNAPAT": 0,
+            "SIZE": 100
+        },
+        "execution_details": {
+            "OMP_PLACES": "cores",
+            "OMP_PROC_BIND": "close",
+            "MPIRUN_OPTIONS": "--bind-to core --map-by socket:PE=${SLURM_CPUS_PER_TASK} -report-bindings",
+            "OMP_NUM_THREADS": "${SLURM_CPUS_PER_TASK}"
+        },
+        "executable": "gameoflife.x"
+    }
+}

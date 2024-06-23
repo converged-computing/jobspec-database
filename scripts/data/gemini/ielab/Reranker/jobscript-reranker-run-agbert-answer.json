@@ -1,0 +1,30 @@
+{
+    "application": "SLURM",
+    "details": {
+        "job_name": "reranker",
+        "output_file": "reranker_slurm_output_%j.out",
+        "error_file": "reranker_slurm_output_%j.err",
+        "time_limit": "00:30:00",
+        "gpu_request": "1",
+        "cpu_request": "1",
+        "node_request": "1",
+        "memory_request": "10GB",
+        "signal_time": "300",
+        "tasks_per_node": "1",
+        "modules": [
+            "cuda",
+            "tensorflow/2.5.0-py39-cuda112"
+        ],
+        "virtual_environment": "venv",
+        "python_script": "bert_reranker.py",
+        "arguments": {
+            "run_file": "examples/agask/runs/run-bm25-agask-query-test50.res",
+            "collection_file": "examples/agask/collection/agask_collection-test50.tsv",
+            "query_file": "/home/koo01a/scratch/agvaluate/data/queries/agask_questions-test50.csv",
+            "model_name_or_path": "examples/agask/models/agask_model_custom_params_queries",
+            "tokenizer_name_or_path": "examples/agask/models/agask_model_custom_params_queries",
+            "batch_size": "32",
+            "cut_off": "500"
+        }
+    }
+}

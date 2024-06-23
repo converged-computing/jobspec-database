@@ -1,0 +1,32 @@
+{
+    "application": "SLURM",
+    "details": {
+        "resource_requirements": {
+            "partition": "gpu",
+            "cpus_per_task": 20,
+            "mem_per_cpu": "1200M",
+            "gres": "gpu:v100:1",
+            "time": "06:00:00",
+            "array": "0-31"
+        },
+        "environment": {
+            "RUST_BACKTRACE": "1",
+            "DATA": "data/${MODEL_NAME}.hdf5"
+        },
+        "modules": [
+            "opence/1.5.1"
+        ],
+        "conda_environment": "elasticc",
+        "python_script": "./extract_features.py",
+        "python_script_arguments": [
+            "-i",
+            "${DATA}",
+            "-m",
+            "model/parsnip-elasticc-extragal-SNe.pt",
+            "-o",
+            "features",
+            "--device=cuda",
+            "--s2n=5.0"
+        ]
+    }
+}

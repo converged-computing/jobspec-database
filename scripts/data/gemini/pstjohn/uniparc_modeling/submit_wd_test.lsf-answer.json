@@ -1,0 +1,48 @@
+{
+    "application": "LSF",
+    "details": {
+        "resource_requirements": {
+            "queue": "batch-hm",
+            "walltime": "00:10",
+            "nodes": 2,
+            "job_name": "wd_test_hm",
+            "output_file": "/ccs/home/pstjohn/job_output/%J.out",
+            "error_file": "/ccs/home/pstjohn/job_output/%J.err"
+        },
+        "software_requirements": {
+            "modules": [
+                "ibm-wml-ce/1.7.0-3"
+            ],
+            "conda_environment": "tf21-ibm",
+            "python_path": "$HOME/uniparc_modeling:$PYTHONPATH",
+            "environment_variables": {
+                "NCCL_DEBUG": "INFO",
+                "TF_ENABLE_AUTO_MIXED_PRECISION": "1",
+                "OMP_NUM_THREADS": "4"
+            }
+        },
+        "execution_details": {
+            "script": "run_model_wd_at.py",
+            "execution_command": "jsrun -n ${NODES} -g 6 -c 42 -r1 -a1 -b none python run_model_wd_at.py",
+            "arguments": {
+                "modelName": "$LSB_JOBNAME.$LSB_JOBID",
+                "scratchDir": "$MEMBERWORK/bie108/uniparc_checkpoints",
+                "dataDir": "$PROJWORK/bie108/split_uniref100",
+                "checkpoint": "/gpfs/alpine/scratch/pstjohn/bie108/12_layer_relative_adam_20200625.185237/",
+                "batchSize": "$BATCH_SIZE",
+                "warmup": "25",
+                "totalSteps": "100",
+                "stepsPerEpoch": "10",
+                "validationSteps": "10",
+                "lr": "1E-4",
+                "maskingFreq": "0.05",
+                "sequenceLength": "1024",
+                "modelDimension": "768",
+                "numberXformerLayers": "12",
+                "attentionType": "relative",
+                "weightDecay": "false",
+                "initialEpoch": "0"
+            }
+        }
+    }
+}

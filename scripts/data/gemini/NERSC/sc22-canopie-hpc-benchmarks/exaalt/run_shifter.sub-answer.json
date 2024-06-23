@@ -1,0 +1,41 @@
+{
+    "application": "LAMMPS",
+    "details": {
+        "software": [
+            "LAMMPS",
+            "Shifter",
+            "SLURM",
+            "MPICH"
+        ],
+        "resources": [
+            "GPU",
+            "CPU",
+            "Network",
+            "Storage",
+            "Image: registry.nersc.gov/das/exaalt:benchmark"
+        ],
+        "configuration": {
+            "nodes": "_NTASKS_",
+            "cpus_per_task": 32,
+            "gpus_per_task": 1,
+            "gpu_bind": "none",
+            "queue": "early_science",
+            "reservation": "podman_gpu_4",
+            "job_time": "00:45:00"
+        },
+        "environment_variables": [
+            "PMI_MMAP_SYNC_WAIT_TIME=300",
+            "MPICH_GPU_SUPPORT_ENABLED=1"
+        ],
+        "input_files": "in.run",
+        "output_files": "log._NREP_",
+        "commands": [
+            "module purge",
+            "mkdir $jobdir",
+            "cp -r files/* $jobdir",
+            "cd $jobdir",
+            "sed -i 's/_N_/'_NREP_'/g' in.run",
+            "srun shifter ./wrap.sh $exe $input -log log._NREP_"
+        ]
+    }
+}

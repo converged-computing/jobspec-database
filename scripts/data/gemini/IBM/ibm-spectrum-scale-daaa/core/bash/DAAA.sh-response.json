@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"LSF\",\n  \"details\": {\n    \"description\": \"The script uses LSF (Load Sharing Facility) for job scheduling and management. It defines a series of LSF jobs, each dependent on the successful completion of the previous one, to manage the workflow of data processing.\",\n    \"jobs\": [\n      \"searchDiscover\",\n      \"recallDataIn\",\n      \"cacheDataIn\",\n      \"runAnalytics\",\n      \"searchDiscoverC\",\n      \"evictDataOut\",\n      \"migrateDataOut\",\n      \"cleanup\"\n    ],\n    \"dependencies\": {\n      \"searchDiscover\": [],\n      \"recallDataIn\": [\"searchDiscover\"],\n      \"cacheDataIn\": [\"recallDataIn\"],\n      \"runAnalytics\": [\"cacheDataIn\"],\n      \"searchDiscoverC\": [\"runAnalytics\"],\n      \"evictDataOut\": [\"searchDiscoverC\"],\n      \"migrateDataOut\": [\"evictDataOut\"],\n      \"cleanup\": [\"migrateDataOut\"]\n    },\n    \"commands\": [\n      \"bsub\",\n      \"source\",\n      \"date\",\n      \"cd\",\n      \"env\",\n      \"egrep\",\n      \"awk\",\n      \"unset\",\n      \"sleep\"\n    ],\n    \"resources\": {\n      \"files\": [\n        \"searchDiscover.sh\",\n        \"recallArchive.sh\",\n        \"cacheDataIn.sh\",\n        \"runAnalytics.sh\",\n        \"runAnalyticsDummy.sh\",\n        \"runAnalyticsWr.sh\",\n        \"searchDiscover.sh\",\n        \"evictDataOut.sh\",\n        \"migrateArchive.sh\",\n        \"cleanup.sh\"\n      ],\n      \"environment_variables\": [\n        \"LSF_ENVDIR\",\n        \"SCRIPT_PATH\",\n        \"UNIQUE\",\n        \"args\",\n        \"ELEMENTS\",\n        \"LSF_ARGS\"\n      ],\n      \"directories\": [\n        \"/shared/lsf/conf\",\n        \"${SCRIPT_PATH}\"\n      ]\n    }\n  }\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 2,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 877,
+        "candidates_token_count": 470,
+        "total_token_count": 1347,
+        "cached_content_token_count": 0
+    }
+}

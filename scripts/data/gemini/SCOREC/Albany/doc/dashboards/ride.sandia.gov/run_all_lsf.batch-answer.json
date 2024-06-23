@@ -1,0 +1,48 @@
+{
+    "application": "CTest",
+    "details": {
+        "resource_requirements": {
+            "nodes": 8,
+            "walltime": "08:00",
+            "partition": "openmpi",
+            "processors_per_node": 16,
+            "environment_variables": {
+                "RIDE_MODULES_CUDA": "ride_modules_cuda.sh"
+            }
+        },
+        "dependencies": {
+            "libraries": [
+                "Trilinos",
+                "Albany"
+            ],
+            "scripts": [
+                "nightly_cron_script_trilinos_ride.sh",
+                "nightly_cron_script_albany_ride.sh",
+                "process_results_ctest.sh",
+                "send_email_ctest.sh"
+            ],
+            "files": [
+                "trilinos ctest_nightly.cmake.frag",
+                "albany ctest_nightly.cmake.frag",
+                "ctest_nightly.cmake"
+            ]
+        },
+        "output_files": [
+            "albanyCDash.out",
+            "albanyCDash.err",
+            "modules_trilinos.out",
+            "modules_albany.out"
+        ],
+        "cleanup": {
+            "files": [
+                "repos",
+                "build",
+                "ctest_nightly.cmake.work",
+                "nightly_log*",
+                "results*",
+                "slurm*",
+                "modules*out"
+            ]
+        }
+    }
+}

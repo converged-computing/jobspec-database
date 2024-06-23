@@ -1,0 +1,62 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"SLURM\",\n  \"details\": {\n    \"job_name\": \"Cross-Fusion\",\n    \"nodes\": 1,\n    \"time\": \"1:00:00\",\n    \"exclusive\": true,\n    \"partition\": \"standard-g\",\n    \"account\": \"project_462000238\",\n    \"gpus_per_node\": 8,\n    \"modules\": [\n      \"LUMI/22.08\",\n      \"partition/G\",\n      \"singularity-bindings\",\n      \"aws-ofi-rccl\"\n    ],\n    \"environment_variables\": {\n      \"NCCL_SOCKET_IFNAME\": \"hsn\",\n      \"NCCL_NET_GDR_LEVEL\": 3,\n      \"MIOPEN_USER_DB_PATH\": \"/tmp/${USER}-miopen-cache-${SLURM_JOB_ID}\",\n      \"MIOPEN_CUSTOM_CACHE_DIR\": \"${MIOPEN_USER_DB_PATH}\",\n      \"CXI_FORK_SAFE\": 1,\n      \"CXI_FORK_SAFE_HP\": 1,\n      \"FI_CXI_DISABLE_CQ_HUGETLB\": 1,\n      \"SINGULARITYENV_LD_LIBRARY_PATH\": \"/opt/ompi/lib:${EBROOTAWSMINOFIMINRCCL}/lib:/opt/cray/xpmem/2.4.4-2.3_9.1__gff0e1d9.shasta/lib64:${SINGULARITYENV_LD_LIBRARY_PATH}\"\n    },\n    \"singularity_image\": \"pytorch_rocm5.4.1_ubuntu20.04_py3.7_pytorch_1.12.1.sif\",\n    \"python_environment\": \"~/pt_rocm5.4.1_env/bin/activate\",\n    \"python_script\": \"train_CrossVIO.py\",\n    \"arguments\": {\n      \"model_type\": \"DeepCrossVIO\",\n      \"data_dir\": \"./ADVIO/\",\n      \"train_seq\": \"01 02 03 04 05 06 07 09 10 11 13 14 16 17 18 19 21 22 23\",\n      \"val_seq\": \"20 15 12 08\",\n      \"workers\": 1,\n      \"skip_frames\": 1,\n      \"save_dir\": \"./training_results\",\n      \"pretrain_flownet\": \"./pretrain_models/flownets_bn_EPE2.459.pth.tar\",\n      \"batch_size\": 1,\n      \"v_f_len\": 512,\n      \"i_f_len\": 512,\n      \"rnn_hidden_size\": 512,\n      \"imu_encoder\": \"InertialTransformer\",\n      \"optimizer\": \"AdamW\",\n      \"epochs_warmup\": 40,\n      \"epochs_joint\": 40,\n      \"epochs_fine\": 21,\n      \"lr_warmup\": 5e-4,\n      \"lr_joint\": 5e-5,\n      \"lr_fine\": 1e-6,\n      \"experiment_name\": \"ADVIO-test\",\n      \"print_frequency\": 20\n    }\n  }\n}\n```\n\nThis script is running within a SLURM job manager environment. The script uses the SLURM commands to request resources on a compute cluster, such as the number of nodes, the runtime, and the partition to use. It also uses singularity to run a containerized environment and specify modules to be loaded. It executes a Python script for training a DeepCrossVIO model. \n\nThe script relies on several software and resources:\n\n- **SLURM**: For job submission and resource management.\n- **Singularity**: For containerized execution of the Python script.\n- **ROCm**: For GPU acceleration with AMD GPUs.\n- **PyTorch**: The deep learning framework used in the script.\n- **FlowNet**: A pre-trained model for optical flow estimation.\n- **NCCL**: For distributed training across multiple GPUs.\n- **MIOPEN**: For optimized GPU matrix operations.\n- **MPI**: For communication between processes.\n- **CXI**: For network communication between nodes.\n- **AWS-ofi-rccl**: For high-performance communication.\n\nThe script also specifies various environment variables to configure the execution environment.\n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "citation_metadata": {
+                "citation_sources": [
+                    {
+                        "start_index": 425,
+                        "end_index": 589,
+                        "uri": "https://github.com/Lumi-supercomputer/lumi-reframe-tests",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 682,
+                        "end_index": 844,
+                        "uri": "https://github.com/Lumi-supercomputer/lumi-reframe-tests",
+                        "license_": ""
+                    }
+                ]
+            },
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 790,
+        "candidates_token_count": 1045,
+        "total_token_count": 1835,
+        "cached_content_token_count": 0
+    }
+}

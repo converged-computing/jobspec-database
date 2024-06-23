@@ -1,0 +1,104 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"PBS\",\n  \"details\": {\n    \"queue\": \"batch\",\n    \"job_name\": \"getfasta\",\n    \"nodes\": \"1\",\n    \"processors_per_node\": \"1\",\n    \"processor_type\": \"AMD\",\n    \"walltime\": \"12:00:00\",\n    \"memory\": \"20gb\",\n    \"email\": \"hcm14449@uga.edu\",\n    \"email_options\": \"abe\",\n    \"software\": [\n      \"BEDOPS/2.4.30\",\n      \"BEDTools/2.29.2-GCC-8.2.0-2.31.1\"\n    ],\n    \"file_resources\": [\n      \"SNMs_H0_daveCalls.txt\",\n      \"H0_FullCohort_Unfiltered.vcf\",\n      \"indels_H0_daveCalls.txt\",\n      \"snp_locations_D0.txt\",\n      \"D0_FullCohort_Unfiltered.vcf\",\n      \"Indels_D0.txt\",\n      \"snpPosD1.txt\",\n      \"D1_FullCohort_Unfiltered.vcf\",\n      \"indels_noTy1_D1.txt\",\n      \"/scratch/hcm14449/TE_MA_Paradoxus/Illumina_Data/Out/H0/H0_snps_final.vcf\",\n      \"/scratch/hcm14449/TE_MA_Paradoxus/Illumina_Data/Out/H0/H0_snps_final_HM.bed\",\n      \"/scratch/hcm14449/TE_MA_Paradoxus/Illumina_Data/Out/D0/D0_snps_final.vcf\",\n      \"/scratch/hcm14449/TE_MA_Paradoxus/Illumina_Data/Out/D0/D0_snps_final_HM.bed\",\n      \"/scratch/hcm14449/TE_MA_Paradoxus/Illumina_Data/Out/D1/D1_snps_final.vcf\",\n      \"/scratch/hcm14449/TE_MA_Paradoxus/Illumina_Data/Out/D1/D1_snps_final_HM.bed\",\n      \"/scratch/hcm14449/TE_MA_Paradoxus/ref_genome/paradoxus/337Ref/genome.337.fasta\",\n      \"/scratch/hcm14449/TE_MA_Paradoxus/Illumina_Data/Out/D0/D0_snps_final_HM_tri.bed\",\n      \"/scratch/hcm14449/TE_MA_Paradoxus/Illumina_Data/Out/D0/D0_snps_context.txt\",\n      \"/scratch/hcm14449/TE_MA_Paradoxus/Illumina_Data/Out/D1/D1_snps_final_HM_tri.bed\",\n      \"/scratch/hcm14449/TE_MA_Paradoxus/Illumina_Data/Out/D1/D1_snps_context.txt\"\n    ],\n    \"commands\": [\n      \"awk 'NR==FNR{a[$1,$2]; next} (($1,$2) in a)' SNMs_H0_daveCalls.txt H0_FullCohort_Unfiltered.vcf > H0_snps_final.vcf\",\n      \"awk 'NR==FNR{a[$1,$2]; next} (($1,$2) in a)' indels_H0_daveCalls.txt H0_FullCohort_Unfiltered.vcf > H0_indels_final.vcf\",\n      \"awk 'NR==FNR{a[$1,$2]; next} (($1,$2) in a)' snp_locations_D0.txt D0_FullCohort_Unfiltered.vcf > D0_snps_final.vcf\",\n      \"awk 'NR==FNR{a[$1,$2]; next} (($1,$2) in a)' Indels_D0.txt D0_FullCohort_Unfiltered.vcf > D0_Indels_final.vcf\",\n      \"awk 'NR==FNR{a[$1,$2]; next} (($1,$2) in a)' snpPosD1.txt D1_FullCohort_Unfiltered.vcf > D1_snps_final.vcf\",\n      \"awk 'NR==FNR{a[$1,$2]; next} (($1,$2) in a)' indels_noTy1_D1.txt D1_FullCohort_Unfiltered.vcf > D1_Indels_final.vcf\",\n      \"vcf2bed < /scratch/hcm14449/TE_MA_Paradoxus/Illumina_Data/Out/H0/H0_snps_final.vcf > /scratch/hcm14449/TE_MA_Paradoxus/Illumina_Data/Out/H0/H0_snps_final_HM.bed\",\n      \"vcf2bed < /scratch/hcm14449/TE_MA_Paradoxus/Illumina_Data/Out/D0/D0_snps_final.vcf > /scratch/hcm14449/TE_MA_Paradoxus/Illumina_Data/Out/D0/D0_snps_final_HM.bed\",\n      \"vcf2bed < /scratch/hcm14449/TE_MA_Paradoxus/Illumina_Data/Out/D1/D1_snps_final.vcf > /scratch/hcm14449/TE_MA_Paradoxus/Illumina_Data/Out/D1/D1_snps_final_HM.bed\",\n      \"awk '{$2-=1;$3+=1}1' OFS='\\t' H0_snps_final.bed > H0_snps_final_HM_tri.bed\",\n      \"awk '{$2-=1;$3+=1}1' OFS='\\t' D0_snps_final_HM.bed > D0_snps_final_HM_tri.bed\",\n      \"awk '{$2-=1;$3+=1}1' OFS='\\t' D1_snps_final_HM.bed > D1_snps_final_HM_tri.bed\",\n      \"bedtools getfasta -tab -fi /scratch/hcm14449/TE_MA_Paradoxus/ref_genome/paradoxus/337Ref/genome.337.fasta -bed /scratch/hcm14449/TE_MA_Paradoxus/Illumina_Data/Out/D0/D0_snps_final_HM_tri.bed -fo /scratch/hcm14449/TE_MA_Paradoxus/Illumina_Data/Out/D0/D0_snps_context.txt\",\n      \"bedtools getfasta -tab -fi /scratch/hcm14449/TE_MA_Paradoxus/ref_genome/paradoxus/337Ref/genome.337.fasta -bed /scratch/hcm14449/TE_MA_Paradoxus/Illumina_Data/Out/D1/D1_snps_final_HM_tri.bed -fo /scratch/hcm14449/TE_MA_Paradoxus/Illumina_Data/Out/D1/D1_snps_context.txt\"\n    ],\n    \"description\": \"Script for finding nucleotide context of SNPs using BEDOPS and BEDTools\"\n  }\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "citation_metadata": {
+                "citation_sources": [
+                    {
+                        "start_index": 692,
+                        "end_index": 845,
+                        "uri": "https://github.com/hollygene/TE_MA",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 859,
+                        "end_index": 1012,
+                        "uri": "https://github.com/hollygene/TE_MA",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 1026,
+                        "end_index": 1179,
+                        "uri": "https://github.com/hollygene/TE_MA",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 1650,
+                        "end_index": 2377,
+                        "uri": "https://github.com/hollygene/TE_MA",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 2388,
+                        "end_index": 2545,
+                        "uri": "https://github.com/hollygene/TE_MA",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 2558,
+                        "end_index": 2715,
+                        "uri": "https://github.com/hollygene/TE_MA",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 2728,
+                        "end_index": 2885,
+                        "uri": "https://github.com/hollygene/TE_MA",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 2898,
+                        "end_index": 3156,
+                        "uri": "https://github.com/hollygene/TE_MA",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 3156,
+                        "end_index": 3702,
+                        "uri": "https://github.com/hollygene/TE_MA",
+                        "license_": ""
+                    }
+                ]
+            },
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 1192,
+        "candidates_token_count": 1761,
+        "total_token_count": 2953,
+        "cached_content_token_count": 0
+    }
+}

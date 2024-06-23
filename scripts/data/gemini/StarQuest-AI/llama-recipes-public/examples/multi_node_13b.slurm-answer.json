@@ -1,0 +1,46 @@
+{
+    "application": "SLURM",
+    "details": {
+        "job_name": "Llama2-13b-sft",
+        "nodes": 2,
+        "tasks": 2,
+        "gpus_per_task": 8,
+        "partition": "debug",
+        "software": {
+            "python": "pip",
+            "pytorch": "torch",
+            "torchvision": "torchvision",
+            "torchaudio": "torchaudio",
+            "llama-recipes": "llama-recipes",
+            "efa": "FI_PROVIDER",
+            "nccl": "NCCL"
+        },
+        "environment_variables": [
+            "FI_PROVIDER",
+            "LOGLEVEL",
+            "NCCL_DEBUG",
+            "NCCL_DEBUG_SUBSYS",
+            "PYTHONFAULTHANDLER",
+            "LD_LIBRARY_PATH",
+            "CUDA_LAUNCH_BLOCKING",
+            "NCCL_SOCKET_IFNAME",
+            "FI_EFA_USE_DEVICE_RDMA"
+        ],
+        "command": "torchrun",
+        "arguments": {
+            "nproc_per_node": 8,
+            "rdzv_id": "$RANDOM",
+            "rdzv_backend": "c10d",
+            "rdzv_endpoint": "$head_node_ip:29500",
+            "examples/finetuning.py": {
+                "enable_fsdp": true,
+                "use_peft": true,
+                "peft_method": "lora",
+                "batch_size_training": 8,
+                "model_name": "/data0/models/huggingface/meta-llama/Llama-2-13b-hf",
+                "output_dir": "/data0/model_output/Llama-2-13b-hf-sft/",
+                "dist_checkpoint_root_folder": "/data0/model_output/checkpoint/Llama-2-13b-hf-sft/"
+            }
+        }
+    }
+}

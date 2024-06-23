@@ -1,0 +1,26 @@
+{
+    "application": "SLURM",
+    "details": {
+        "job_name": "sdsc-single",
+        "time": "00:05:00",
+        "nodes": 1,
+        "ntasks_per_node": 1,
+        "cpus_per_task": 12,
+        "constraint": "gpu",
+        "partition": "debug",
+        "account": "sd00",
+        "output": "logs/slurm-%x.%j.out",
+        "error": "logs/slurm-%x.%j.err",
+        "modules": [
+            "daint-gpu",
+            "sarus"
+        ],
+        "environment": {
+            "OMP_NUM_THREADS": "$SLURM_CPUS_PER_TASK"
+        },
+        "runtime_environment": {
+            "container": "nvcr.io/nvidia/pytorch:23.09-py3",
+            "command": "python -u ${args}"
+        }
+    }
+}

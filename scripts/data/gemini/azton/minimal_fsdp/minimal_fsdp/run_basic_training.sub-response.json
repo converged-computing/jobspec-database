@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"MPI\",\n  \"details\": {\n    \"pbs_requirements\": {\n      \"nodes\": \"1\",\n      \"system\": \"polaris\",\n      \"placement\": \"scatter\",\n      \"walltime\": \"1 hour\",\n      \"filesystems\": \"home,eagle\",\n      \"queue\": \"R564516\",\n      \"account\": \"tpc\",\n      \"job_name\": \"minfsdp\"\n    },\n    \"modules\": [\n      \"conda/2023-01-10-unstable\"\n    ],\n    \"conda_environment\": \"/lus/eagle/projects/tpc/azton/fsdp_pt2.0\",\n    \"python_version\": \"python --version\",\n    \"pytorch_version\": \"import torch; print(torch.__version__)\",\n    \"proxy_settings\": {\n      \"http_proxy\": \"http://proxy.alcf.anl.gov:3128\",\n      \"https_proxy\": \"http://proxy.alcf.anl.gov:3130\"\n    },\n    \"communication_settings\": {\n      \"master_node\": \"cat $PBS_NODEFILE | head -1\",\n      \"master_addr\": \"host $master_node | head -1 | awk '{print $4}'\",\n      \"master_port\": \"23450\"\n    },\n    \"cuda_tuning\": {\n      \"nccl_net_gdr_level\": \"PHB\",\n      \"cuda_visible_devices\": \"0,1,2,3\",\n      \"mpich_gpu_support_enabled\": \"1\"\n    },\n    \"mpi_settings\": {\n      \"nnodes\": \"wc -l < $PBS_NODEFILE\",\n      \"nranks_per_node\": \"4\",\n      \"ntotranks\": \"NNODES * NRANKS_PER_NODE\"\n    },\n    \"ulimit\": \"ulimit -s unlimited\",\n    \"datetime\": \"`date +'date_%y-%m-%d_time_%H-%M-%S'`\",\n    \"mpiexec_arguments\": {\n      \"n\": \"NTOTRANKS\",\n      \"ppn\": \"NRANKS_PER_NODE\",\n      \"cpu_bind\": \"verbose,list:0,16,32,48\",\n      \"hostfile\": \"$PBS_NODEFILE\",\n      \"python_arguments\": \"-u basic_training.py --max_epochs 20 --environment pbs\",\n      \"output\": \"basic_training.out\"\n    }\n  }\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 809,
+        "candidates_token_count": 601,
+        "total_token_count": 1410,
+        "cached_content_token_count": 0
+    }
+}

@@ -1,0 +1,28 @@
+{
+    "application": "Nextflow",
+    "details": {
+        "modules": [
+            "nextflow/v22.04.1"
+        ],
+        "resources": {
+            "partition": "shortterm",
+            "nodes": 1,
+            "cores": 1,
+            "memory": "2GB",
+            "output_format": "slurm-%x-%j.out"
+        },
+        "files": [
+            "hic_to_cool.nf",
+            "hic_to_cool_params.yaml"
+        ],
+        "commands": [
+            "mkdir -p $WORK/hic_to_cool_nextflow_launchdir",
+            "rsync -rc * $WORK/hic_to_cool_nextflow_launchdir/",
+            "cd $WORK/hic_to_cool_nextflow_launchdir",
+            "rm slurm*.out",
+            "nextflow log | wc -l",
+            "nextflow clean -f",
+            "nextflow run hic_to_cool.nf -params-file hic_to_cool_params.yaml -resume"
+        ]
+    }
+}

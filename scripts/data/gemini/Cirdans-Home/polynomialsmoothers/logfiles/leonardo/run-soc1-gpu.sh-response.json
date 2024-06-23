@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"Slurm\",\n  \"details\": {\n    \"job_name\": \"anisopb\",\n    \"partition\": \"boost_usr_prod\",\n    \"time\": \"01:00:00\",\n    \"nodes\": \"@NNODES@\",\n    \"gres\": \"gpu:@NGPUS@\",\n    \"ntasks\": \"@NTASKS@\",\n    \"ntasks_per_node\": 4,\n    \"account\": \"CNHPC_1465132\",\n    \"modules\": [\n      \"openmpi/4.1.6--gcc--12.2.0\",\n      \"openblas/0.3.24--gcc--12.2.0\",\n      \"gcc/12.2.0\",\n      \"cuda/12.1\"\n    ],\n    \"environment_variables\": {\n      \"LD_LIBRARY_PATH\": \"$LD_LIBRARY_PATH:/leonardo/home/userexternal/pdambra0/polynomialsmoothers/install/lib\",\n      \"UCX_IB_LS\": \"1\"\n    },\n    \"executable\": \"./anisopsblascuda\",\n    \"arguments\": [\n      \"%%%%%%%%%%%  General  arguments % Lines starting with % are ignored.\",\n      \"HLG\",\n      \"! matrix storage format\",\n      \"@SIZE@\",\n      \"! Discretization grid size\",\n      \"30\",\n      \"! Theta Coefficient (Degree)\",\n      \"100\",\n      \"! Epsilon of the anisotropy\",\n      \"FCG\",\n      \"! Krylov Solver\",\n      \"2\",\n      \"! Stopping criterion\",\n      \"500\",\n      \"! Maximum number of iterations\",\n      \"1\",\n      \"! Trace of FCG\",\n      \"500\",\n      \"! Restart (RGMRES e BICGSTAB)\",\n      \"1.d-7\",\n      \"! Tolerance\",\n      \"%%%%%%%%%%%  Main preconditioner choices %%%%%%%%%%%%%%%%\",\n      \"ML-VSVBM-@DEGITER@CHEB4-30L1JAC\",\n      \"! verbose description of the prec\",\n      \"ML\",\n      \"! Preconditioner type\",\n      \"%%%%%%%%%%%  First smoother (for all levels but coarsest) %%%%%%%%%%%%%%%%\",\n      \"POLY\",\n      \"! smoother type\",\n      \"1\",\n      \"! (pre-)smoother / 1-lev prec sweeps\",\n      \"@DEGITER@\",\n      \"! degree for polynomial smoother\",\n      \"POLY_LOTTES\",\n      \"! polynomial variant\",\n      \"POLY_RHO_EST_POWER\",\n      \"! Algorithm to estimate spectral radius (ignored if next larger than 0)\",\n      \"1.0\",\n      \"! Spectral radius estimate\",\n      \"0\",\n      \"! number of overlap layers\",\n      \"HALO\",\n      \"! restriction  over application of AS\",\n      \"NONE\",\n      \"! prolongation over application of AS\",\n      \"L1-JACOBI\",\n      \"! local subsolver\",\n      \"1\",\n      \"! inner solver sweeps\",\n      \"LLK\",\n      \"! AINV variant\",\n      \"0\",\n      \"! Fill level P for ILU(P) and ILU(T,P)\",\n      \"1\",\n      \"! Inverse Fill level P for INVK\",\n      \"1.d-4\",\n      \"! Threshold T for ILU(T,P)\",\n      \"%%%%%%%%%%%  Second smoother, always ignored for non-ML  %%%%%%%%%%%%%%%%\",\n      \"NONE\",\n      \"! Second (post) smoother, ignored if NONE\",\n      \"1\",\n      \"! Number of sweeps for (post) smoother\",\n      \"8\",\n      \"! degree for polynomial smoother\",\n      \"POLY_LOTTES_BETA\",\n      \"! Polynomial variant\",\n      \"POLY_RHO_EST_POWER\",\n      \"! Algorithm to estimate spectral radius (ignored if next larger than 0)\",\n      \"1.0\",\n      \"! Spectral radius estimate\",\n      \"0\",\n      \"! Number of overlap layers for AS preconditioner\",\n      \"HALO\",\n      \"! AS restriction operator: NONE HALO\",\n      \"NONE\",\n      \"! AS prolongation operator: NONE SUM AVG\",\n      \"L1-JACOBI\",\n      \"! Subdomain solver for BJAC/AS: JACOBI GS BGS ILU ILUT MILU MUMPS SLU UMF\",\n      \"1\",\n      \"! Inner solver sweeps (GS and JACOBI)\",\n      \"LLK\",\n      \"! AINV variant\",\n      \"0\",\n      \"! Fill level P for ILU(P) and ILU(T,P)\",\n      \"8\",\n      \"! Inverse Fill level P for INVK\",\n      \"1.d-4\",\n      \"! Threshold T for ILU(T,P)\",\n      \"%%%%%%%%%%%  Multilevel parameters %%%%%%%%%%%%%%%%\",\n      \"VCYCLE\",\n      \"! AMG cycle type\",\n      \"1\",\n      \"! number of 1lev/outer sweeps\",\n      \"-3\",\n      \"! Max Number of levels in a multilevel preconditioner; if <0, lib default\",\n      \"-3\",\n      \"! Target coarse matrix size per process; if <0, lib default\",\n      \"SMOOTHED\",\n      \"! Type of aggregation: SMOOTHED UNSMOOTHED\",\n      \"DEC\",\n      \"! Parallel aggregation: DEC, SYMDEC, COUPLED\",\n      \"SOC1\",\n      \"! aggregation measure SOC1, MATCHBOXPcall read_data(prec%aggr_size,inp_unit) ! Requested size of the aggregates for MATCHBOXP\",\n      \"8\",\n      \"! Requested size of the aggregates for MATCHBOXP\",\n      \"NATURAL\",\n      \"! Ordering of aggregation NATURAL DEGREE\",\n      \"-1.5\",\n      \"! Coarsening ratio, if < 0 use library default\",\n      \"FILTER\",\n      \"! Filtering of matrix:  FILTER NOFILTER\",\n      \"-0.0100d0\",\n      \"! Smoothed aggregation threshold, ignored if < 0\",\n      \"-2\",\n      \"! Number of thresholds in vector, next line ignored if <= 0\",\n      \"0.05 0.025\",\n      \"! Thresholds\",\n      \"%%%%%%%%%%%  Coarse level solver  %%%%%%%%%%%%%%%%\",\n      \"L1-JACOBI\",\n      \"! coarsest-lev solver\",\n      \"L1-JACOBI\",\n      \"! coarsest-lev subsolver\",\n      \"FCG\",\n      \"! type of Krylov method\",\n      \"DIST\",\n      \"! coarsest mat layout\",\n      \"0\",\n      \"! fill-in for incompl LU\",\n      \"1.d-2\",\n      \"! Threshold for ILUT\",\n      \"30\",\n      \"! sweeps for GS/JAC subsolver\",\n      \"%%%%%%%%%%%  Dump parms %%%%%%%%%%%%%%%%%%%%%%%%%% \",\n      \"F\",\n      \"! Dump on file?\",\n      \"1\",\n      \"! Minimum level to dump\",\n      \"10\",\n      \"! Maximum level to dump\",\n      \"T\",\n      \"! Dump coarse matrices\",\n      \"T\",\n      \"! Dump restrictors\",\n      \"T\",\n      \"! Dump prolongators\",\n      \"T\",\n      \"! Dump smoothers\",\n      \"T\",\n      \"! Dump coarse solver\",\n      \"T\",\n      \"! Dump using global numbering?\"\n    ],\n    \"output_files\": [\n      \"soc1/@DEGITER@/log_cheby4_svbm_l1jac_@SIZE@_task_@NTASKS@_thr_1.txt\",\n      \"soc1/@DEGITER@/log_optcheby4_svbm_l1jac_@SIZE@_task_@NTASKS@_thr_1.txt\",\n      \"soc1/@DEGITER@/log_optcheby1_svbm_l1jac_@SIZE@_task_@NTASKS@_thr_1.txt\",\n      \"soc1/@DEGITER@/log_l1jac_svbm_l1jac_@SIZE@_task_@NTASKS@_thr_1.txt\"\n    ]\n  }\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 4603,
+        "candidates_token_count": 1823,
+        "total_token_count": 6426,
+        "cached_content_token_count": 0
+    }
+}

@@ -1,0 +1,24 @@
+{
+    "application": "SLURM",
+    "details": {
+        "description": "The script is a SLURM script, designed to run on a high-performance computing (HPC) cluster managed by SLURM. It defines various SLURM options to configure the job execution environment.",
+        "resources": {
+            "nodes": 3,
+            "gpus_per_node": 4,
+            "tasks_per_node": 4,
+            "cpus_per_task": 6,
+            "partition": "gpu",
+            "time": "36:00:00",
+            "memory": "90G",
+            "output": "slurm_logs/%j.out"
+        },
+        "environment": {
+            "NCCL_IB_DISABLE": 1,
+            "NCCL_SOCKET_IFNAME": "^docker0,lo"
+        },
+        "scripts": {
+            "artifact_estimator.py": "This script appears to be a Python script used for artifact estimation. It's called with the argument '--num-nodes 1' indicating single-node execution and additional arguments passed through the '$@' variable. This suggests the script utilizes multiple nodes for processing.",
+            "run.py": "This is another Python script, executed with the argument 'nodes=3' indicating a multi-node setup. It also takes additional arguments passed through '$1'."
+        }
+    }
+}

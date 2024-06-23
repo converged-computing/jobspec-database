@@ -1,0 +1,29 @@
+{
+    "application": "PyTorch",
+    "details": {
+        "resource_requirements": {
+            "nodes": 1,
+            "cores_per_node": 1,
+            "queue": "gpu",
+            "conda_environment": "PyTorch-190",
+            "OMP_NUM_THREADS": 16
+        },
+        "software_requirements": {
+            "python": "3",
+            "torch": "distributed",
+            "conda": "activate"
+        },
+        "other": {
+            "command": "python3 -m torch.distributed.run",
+            "arguments": {
+                "nproc_per_node": "NPROC_PER_NODE",
+                "max_restarts": "0",
+                "nnodes": "PBS_NUM_NODES",
+                "rdzv_id": "PBS_JOBID",
+                "rdzv_backend": "c10d",
+                "rdzv_endpoint": "MASTER:10032"
+            },
+            "output_file": "out"
+        }
+    }
+}

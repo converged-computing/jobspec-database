@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"LSF\",\n  \"details\": {\n    \"queue\": \"lowpriority\",\n    \"gpu_request\": \"num=1:mode=exclusive_process\",\n    \"gpu_app\": \"gpu\",\n    \"num_nodes\": 1,\n    \"container_image\": \"docker.optum.com/dhanley2/bert:cgan_build\",\n    \"resources\": \"span[ptile=4]\",\n    \"output_file\": \"log_train_%J\",\n    \"command\": \"cd /share/dhanley2/recursion/scripts/$WDIR  && python3 train.py  --nbags 20  --epochs 60 --fold $FOLD  --lr 0.0001 --batchsize 16 --workpath scripts/$WDIR  --cutmix_prob 1.0 --beta 1.0  --imgpath data/mount/512X512X6/ --weightsname weights/pytorch_model_densenet$FOLD.bin\",\n    \"python_script\": \"train.py\",\n    \"arguments\": \"--nbags 20  --epochs 60 --fold $FOLD  --lr 0.0001 --batchsize 16 --workpath scripts/$WDIR  --cutmix_prob 1.0 --beta 1.0  --imgpath data/mount/512X512X6/ --weightsname weights/pytorch_model_densenet$FOLD.bin\"\n  }\n}\n```\n\n**Explanation:**\n\n* **LSF (Load Sharing Facility)** is the application used to submit the job. LSF is a batch system that manages and schedules jobs on a cluster.\n* **-q lowpriority:**  Specifies the job queue to be \"lowpriority\".\n* **-gpu \"num=1:mode=exclusive_process\":** Requests one GPU with exclusive access.\n* **-app gpu:** Specifies that the job requires a GPU resource.\n* **-n 1:** Requests one node.\n* **-env LSB_CONTAINER_IMAGE=docker.optum.com/dhanley2/bert:cgan_build:** Sets the environment variable to specify the container image to use for the job.\n* **-R \"span[ptile=4]\":** Specifies a resource requirement related to processor tiles. \n* **-o log_train_%J:** Redirects standard output to the specified log file.\n* **sh -c \"cd ... && python3 train.py ...\":** Executes the shell command to change directory and run the Python script \"train.py\".\n\nThe script utilizes a Python script called `train.py` with various arguments to train a model. The script likely uses a deep learning library like TensorFlow or PyTorch to train the model. \n\nThe script also references an image path (`data/mount/512X512X6/`) and a weights file path (`weights/pytorch_model_densenet$FOLD.bin`). This suggests that the model is likely being trained using a dataset of images and that the trained weights will be saved to the specified location. \n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 486,
+        "candidates_token_count": 697,
+        "total_token_count": 1183,
+        "cached_content_token_count": 0
+    }
+}

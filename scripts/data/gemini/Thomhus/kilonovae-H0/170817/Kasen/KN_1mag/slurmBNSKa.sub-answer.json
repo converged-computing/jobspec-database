@@ -1,0 +1,47 @@
+{
+    "application": "MultiNest",
+    "details": {
+        "batch_system": "Slurm",
+        "job_name": "BNSKa.job",
+        "output_file": "BNSKa%A_%a.out",
+        "error_file": "BNSKa%A_%a.err",
+        "partition": "shared",
+        "nodes": 1,
+        "tasks_per_node": 32,
+        "memory": "96G",
+        "time": "01:00:00",
+        "mail_type": "ALL",
+        "mail_user": "thomas.hussenot@ijclab.in2p3.fr",
+        "account": "umn131",
+        "modules": [
+            "sdsc cpu/0.15.4",
+            "gcc/9.2.0",
+            "openmpi/4.1.1",
+            "anaconda3/2020.11"
+        ],
+        "conda_environment": "multinest",
+        "mpi_command": "mpiexec -n 32",
+        "executable": "lightcurve-analysis",
+        "arguments": [
+            "--model Ka2017",
+            "--svd-path /home/thussenot/nmma/svdmodels",
+            "--outdir outdirBNSKa32cores",
+            "--label AT170817",
+            "--prior ./Ka2017_AT170817.prior",
+            "--tmin 0.01",
+            "--tmax 26",
+            "--dt 0.01",
+            "--nlive 2048",
+            "--Ebv-max 0",
+            "--trigger-time 57982.52851851852",
+            "--data ../../AT2017gfoMWcorrected.dat",
+            "--plot",
+            "--xlim 0,14",
+            "--ylim 26,16",
+            "--bestfit"
+        ],
+        "environment_variables": {
+            "LD_LIBRARY_PATH": "/home/thussenot/MultiNest/lib/:$LD_LIBRARY_PATH"
+        }
+    }
+}

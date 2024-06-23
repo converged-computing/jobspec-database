@@ -1,0 +1,38 @@
+{
+    "application": "Horovod",
+    "details": {
+        "slurm": {
+            "job_name": "myjob",
+            "output_file": "myjob-t.o%j",
+            "error_file": "myjob-t.e%j",
+            "queue": "rtx",
+            "nodes": 2,
+            "mpi_tasks": 8,
+            "run_time": "00:30:00"
+        },
+        "environment": {
+            "python_env": "~/python-env/cuda10-home",
+            "modules": [
+                "intel/18.0.5",
+                "impi/18.0.5",
+                "cuda/10.1",
+                "cudnn",
+                "nccl"
+            ],
+            "file_path": "/file_path/",
+            "horovod_params": {
+                "np": "$SLURM_NTASKS",
+                "hosts": "$HOSTS",
+                "gloo": true,
+                "network_interface": "ib0",
+                "start_timeout": 120,
+                "gloo_timeout_seconds": 120
+            }
+        },
+        "script": "you_file.py",
+        "arguments": {
+            "epochs": 90,
+            "model": "resnet50"
+        }
+    }
+}

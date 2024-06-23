@@ -1,0 +1,41 @@
+{
+    "application": "LSF",
+    "details": {
+        "resources": {
+            "cores": 4,
+            "memory": "48GB",
+            "gpu": {
+                "type": "TeslaV100_SXM2_32GB",
+                "count": 1
+            }
+        },
+        "queue": "general",
+        "group": "compute-crponce",
+        "job_name": "simclr_fast_sal_new_train",
+        "output_file": "/scratch1/fs1/crponce/simclr_fast_salienc_debug_train.%J.%I",
+        "docker_image": "pytorchlightning/pytorch_lightning:base-cuda-py3.9-torch1.9",
+        "docker_volumes": [
+            "$HOME:$HOME",
+            "$SCRATCH1:$SCRATCH1",
+            "$STORAGE1:$STORAGE1"
+        ],
+        "docker_shm_size": "16g"
+    },
+    "script": {
+        "python_file": "run_salcrop.py",
+        "arguments": [
+            "-data",
+            "$SCRATCH1/Datasets",
+            "-dataset-name",
+            "stl10",
+            "--workers",
+            "16",
+            "--ckpt_every_n_epocs",
+            "5",
+            "--epochs",
+            "100",
+            "--batch-size",
+            "256"
+        ]
+    }
+}

@@ -1,0 +1,62 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"Slurm\",\n  \"details\": {\n    \"job_name\": \"psana_legion\",\n    \"dependency\": \"singleton\",\n    \"nodes\": 129,\n    \"time\": \"01:00:00\",\n    \"qos\": \"regular\",\n    \"constraint\": \"knl,quad,cache\",\n    \"core_spec\": 4,\n    \"image\": \"docker:stanfordlegion/psana-mpi:latest\",\n    \"exclusive\": true,\n    \"mail_type\": \"ALL\",\n    \"account\": \"m2859\",\n    \"environment_variables\": {\n      \"HOST_PSANA_DIR\": \"$HOME/psana_legion/psana-legion\",\n      \"HOST_DATA_DIR\": \"$SCRATCH/noepics_c24_s1_data/reg\",\n      \"SIT_PSDM_DATA\": \"$HOST_DATA_DIR/d/psdm\",\n      \"EAGER\": 1,\n      \"KERNEL_KIND\": \"memory_bound\"\n    },\n    \"script\": {\n      \"language\": \"bash\",\n      \"commands\": [\n        \"echo \\\"HOST_DATA_DIR=$HOST_DATA_DIR\\\"\",\n        \"for rounds in 20 40 80 160; do\",\n        \"  export KERNEL_ROUNDS=$rounds\",\n        \"  for n in 128; do\",\n        \"    export LIMIT=$(( n * 2048 ))\",\n        \"    for c in 256 128 64 32 16; do\",\n        \"      ./make_nodelist.py $c > nodelist.txt\",\n        \"      export SLURM_HOSTFILE=$PWD/nodelist.txt\",\n        \"      if [[ ! -e rax_rounds\\\"$rounds\\\"_n\\\"$n\\\"_c\\\"$c\\\".log ]]; then\",\n        \"        srun -n $(( n * c + 1 )) -N $(( n + 1 )) --cpus-per-task $(( 256 / c )) --cpu_bind threads --distribution=arbitrary --output rax_rounds\\\"$rounds\\\"_n\\\"$n\\\"_c\\\"$c\\\".log \\\\\",\n        \"          shifter \\\\\",\n        \"            python $HOST_PSANA_DIR/psana_legion/mpi_rax.py\",\n        \"      fi\",\n        \"    done\",\n        \"  done\",\n        \"done\"\n      ]\n    },\n    \"software\": {\n      \"psana\": {\n        \"location\": \"$HOME/psana_legion/psana-legion\"\n      },\n      \"mpi_rax\": {\n        \"location\": \"$HOST_PSANA_DIR/psana_legion/mpi_rax.py\"\n      },\n      \"make_nodelist\": {\n        \"location\": \"./make_nodelist.py\"\n      },\n      \"shifter\": {\n        \"location\": \"shifter\"\n      }\n    },\n    \"resource_requirements\": {\n      \"data\": {\n        \"location\": \"$SCRATCH/noepics_c24_s1_data/reg/d/psdm\"\n      },\n      \"output\": {\n        \"files\": \"rax_rounds{rounds}_n{n}_c{c}.log\"\n      },\n      \"nodelist\": {\n        \"file\": \"nodelist.txt\"\n      }\n    }\n  }\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 2,
+                    "blocked": false
+                }
+            ],
+            "citation_metadata": {
+                "citation_sources": [
+                    {
+                        "start_index": 738,
+                        "end_index": 1034,
+                        "uri": "https://github.com/StanfordLegion/psana-legion",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 838,
+                        "end_index": 1449,
+                        "uri": "https://github.com/StanfordLegion/psana-legion",
+                        "license_": ""
+                    }
+                ]
+            },
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 587,
+        "candidates_token_count": 808,
+        "total_token_count": 1395,
+        "cached_content_token_count": 0
+    }
+}

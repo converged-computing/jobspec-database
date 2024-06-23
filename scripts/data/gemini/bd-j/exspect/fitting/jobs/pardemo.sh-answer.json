@@ -1,0 +1,55 @@
+{
+    "application": "SLURM",
+    "software": [
+        "gcc/9.2.0-fasrc01",
+        "Anaconda3/5.0.1-fasrc01",
+        "prox"
+    ],
+    "resources": {
+        "cores": 1,
+        "runtime": "12:00:00",
+        "partition": "conroy,shared",
+        "constraint": "intel",
+        "memory": "4000 MB"
+    },
+    "script_details": {
+        "python_script": "specphot_demo.py",
+        "arguments": [
+            "fit",
+            "model",
+            "mock",
+            "--zred_disp=1e-3",
+            "data",
+            "--snr_spec=$snr_spec",
+            "--snr_phot=$snr_phot",
+            "--outfile=output/mock_parametric_$tag"
+        ],
+        "variables": {
+            "tag": [
+                "phot",
+                "spec",
+                "specphot"
+            ],
+            "snr_phot": [
+                20,
+                0,
+                20
+            ],
+            "snr_spec": [
+                0,
+                10,
+                10
+            ],
+            "model": "--add_neb --add_duste",
+            "fit": "--dynesty --nested_method=rwalk",
+            "data": "--add_noise --continuum_optimize",
+            "zred": 0.1,
+            "logzsol": -0.3,
+            "dust2": 0.3,
+            "mass": 10000000000.0,
+            "tau": 4,
+            "tage": 12,
+            "mock": "--zred=${zred} --tau=$tau --tage=$tage --logzsol=$logzsol --mass=$mass --dust2=$dust2"
+        }
+    }
+}

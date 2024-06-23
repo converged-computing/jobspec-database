@@ -1,0 +1,40 @@
+{
+    "application": "Slurm",
+    "details": {
+        "job_name": "navigation_pointgoal",
+        "gpu": "1",
+        "constraint": "volta32gb",
+        "nodes": "1",
+        "cpus_per_task": "10",
+        "ntasks_per_node": "8",
+        "memory": "450GB",
+        "time": "72:00:00",
+        "signal": "USR1@600",
+        "partition": "devlab",
+        "open_mode": "append",
+        "comment": "navigation_pointgoal",
+        "environment_variables": [
+            "GLOG_minloglevel=2",
+            "MAGNUM_LOG=quiet",
+            "MASTER_ADDR=$(srun --ntasks=1 hostname 2>&1 | tail -n1)",
+            "CUDA_HOME=/public/apps/cuda/10.1",
+            "CUDA_NVCC_EXECUTABLE=/public/apps/cuda/10.1/bin/nvcc",
+            "CUDNN_INCLUDE_PATH=/public/apps/cuda/10.1/include/",
+            "CUDNN_LIBRARY_PATH=/public/apps/cuda/10.1/lib64/",
+            "LIBRARY_PATH=/public/apps/cuda/10.1/lib64",
+            "CMAKE_PREFIX_PATH=${CONDA_PREFIX:-\"$(dirname $(which conda))/../\"}",
+            "USE_CUDA=1",
+            "USE_CUDNN=1",
+            "USE_MKLDNN=1"
+        ],
+        "modules": [
+            "cuda/10.1",
+            "cudnn/v7.6.5.32-cuda.10.1",
+            "anaconda3/5.0.1",
+            "gcc/7.1.0",
+            "cmake/3.10.1/gcc.5.4.0"
+        ],
+        "conda_environment": "challenge_2021",
+        "python_command": "/private/home/maksymets/.conda/envs/my_fair_env/bin/python -u -m habitat_baselines.run --exp-config config_files/ddppo/ddppo_pointnav_2021.yaml --run-type eval ${CMD_OPTS}"
+    }
+}

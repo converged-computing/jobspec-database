@@ -1,0 +1,40 @@
+{
+    "application": "LAMMPS",
+    "other_software": [
+        "SLURM",
+        "Python",
+        "log_binary_execution_time.py",
+        "check_executable_driver.py",
+        "test_harness_driver.py",
+        "setup_env.sh",
+        "find_n_close_factors.py"
+    ],
+    "resource_requirements": {
+        "environment_variables": [
+            "SCRIPTS_DIR",
+            "WORK_DIR",
+            "RESULTS_DIR",
+            "HARNESS_ID",
+            "BUILD_DIR",
+            "RGT_APP_SOURCE_",
+            "RGT_TEST_",
+            "LAMMPS_BENCHMARK",
+            "LAMMPS_ATOMS_PER_TASK",
+            "RGT_GPU_ARCH",
+            "RGT_TASKS_PER_NODE",
+            "LMP_PKG_KOKKOS_CMD",
+            "SLURM_NNODES",
+            "check_memory__",
+            "atoms_per_system__",
+            "default_systems_per_task__",
+            "resubmit__"
+        ],
+        "modules": "module -t list",
+        "libraries": "ldd ${LAMMPS_EXE} &> ldd.log",
+        "hardware": {
+            "nodes": "scontrol show hostnames > job.nodes",
+            "GPUs": "srun -N ${nodect} -n ${NRANKS} \\n        --gpus-per-node=${RGT_TASKS_PER_NODE} --gpu-bind=closest --cpu-bind=map_cpu:57,33,25,1,9,17,41,49 \\n        ${LAMMPS_EXE} -k on g 1"
+        },
+        "execution_time": "#SBATCH -t __walltime__"
+    }
+}

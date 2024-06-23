@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"PBS\",\n  \"details\": {\n    \"resource_requirements\": {\n      \"walltime\": \"59:00\",\n      \"nodes\": 2,\n      \"queue\": \"v4\"\n    },\n    \"software\": {\n      \"warg\": \"~/usr/bin/warg\",\n      \"xmfa\": \"core_alignment.xmfa.$PBS_ARRAYID\",\n      \"clonaltree\": \"clonaltree.nwk\"\n    },\n    \"other\": {\n      \"job_name\": \"Strep\",\n      \"job_number\": \"${PBS_JOBID%%.*}\",\n      \"cores_per_node\": \"CORESPERNODE\",\n      \"task_count\": \"TASKCNT\",\n      \"scratch_directory\": \"/tmp/$USER-$PBS_ARRAYID\"\n    }\n  }\n}\n```\n\nThis script is primarily designed to run on a **PBS** (Portable Batch System) cluster. It utilizes several features of PBS, including:\n\n* **Resource allocation:** It requests 2 nodes with a walltime of 59:00 minutes and uses the \"v4\" queue.\n* **Job management:** It assigns a job name (\"Strep\") and uses the \"oe\" option for job dependencies.\n* **Array jobs:** It runs as an array job, with tasks numbered 0-1, using the \"$PBS_ARRAYID\" variable.\n\nThe script uses the `warg` software to perform some analysis on clonal tree data, specifically using `core_alignment.xmfa` files. It relies on a number of environment variables provided by PBS to manage its execution, including:\n\n* `$PBS_O_WORKDIR`: The working directory of the job.\n* `$PBS_NODEFILE`: A file listing the nodes allocated to the job.\n* `$PBS_ARRAYID`: The current array task ID.\n* `$HOSTNAME`: The hostname of the current node.\n\nThe script performs several tasks:\n\n* Copies relevant files to a temporary directory on the compute node.\n* Uses the `warg` software to process the data, specifically analyzing \"core_alignment.xmfa\" files.\n* Records the start and end times of each task and calculates the elapsed time.\n* Cleans up the temporary directory after completion.\n\nOverall, this script demonstrates a typical workflow for running computationally intensive tasks on a PBS cluster. It highlights the use of PBS for resource allocation, job management, and array jobs, while leveraging specific software tools for data analysis. \n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 793,
+        "candidates_token_count": 558,
+        "total_token_count": 1351,
+        "cached_content_token_count": 0
+    }
+}

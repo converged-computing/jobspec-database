@@ -1,0 +1,28 @@
+{
+    "application": "SLURM",
+    "details": {
+        "job_name": "apogee-rerun",
+        "output_file": "logs/apogee-rerun.o%j",
+        "error_file": "logs/apogee-rerun.e%j",
+        "nodes": 10,
+        "tasks_per_node": 64,
+        "walltime": "36:00:00",
+        "partition": "cca",
+        "constraint": "rome",
+        "environment": {
+            "CONDA_PREFIX": "path_to_conda_prefix",
+            "HQ_RUN_PATH": "path_to_hq_run_path"
+        },
+        "executable": "python3",
+        "arguments": [
+            "-m",
+            "mpi4py.run",
+            "-rc",
+            "thread_level='funneled'",
+            "$CONDA_PREFIX/bin/hq",
+            "rerun_thejoker",
+            "-v",
+            "--mpi"
+        ]
+    }
+}

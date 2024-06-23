@@ -1,0 +1,56 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"LSF\",\n  \"details\": {\n    \"job_name\": \"@@@JOBNAME@@@\",\n    \"queue\": \"cpuqueue\",\n    \"priority\": \"low (1)\",\n    \"wall_time\": \"1 hour\",\n    \"memory\": \"8 GB\",\n    \"cores\": \"1\",\n    \"environment\": {\n      \"OPENMM_CPU_THREADS\": \"1\",\n      \"OE_LICENSE\": \"~/.openeye/oe_license.txt\",\n      \"conda_env\": \"espaloma\",\n      \"script_path\": \"/home/takabak/data/exploring-rna/refit-espaloma/openff-default/01-create-dataset/script\",\n      \"dataset_path\": \"/home/takabak/data/exploring-rna/download-qca-dataset/openff-default/Dataset/rna-diverse\"\n    },\n    \"script\": \"getgraph_hdf5.py\",\n    \"script_arguments\": {\n      \"--hdf5\": \"${DATASET_PATH}/RNA-DIVERSE-OPENFF-DEFAULT.hdf5\",\n      \"--output_prefix\": \"mydata\",\n      \"--keyname\": \"@@@KEYNAME@@@\",\n      \"--index\": \"@@@INDEX@@@\"\n    }\n  }\n}\n```\n\n**Explanation:**\n\n* **LSF (Load Sharing Facility):** The script starts with `#!/bin/bash` and contains LSF directives (like `#BSUB -J`, `#BSUB -q`, etc.). This indicates it's designed to run within an LSF environment. \n* **Job Name:** The `#BSUB -J \"@@@JOBNAME@@@\"` line sets the job name, which will likely be replaced with a specific name at runtime.\n* **Queue:** The job is submitted to the `cpuqueue`.\n* **Priority:** The script sets a low priority using `#BSUB -sp 1`. \n* **Resources:** The script requests 1 core (`#BSUB -n 1`), 8 GB of memory (`#BSUB -R rusage[mem=8]`), and specifies that the job should run on a single host (`#BSUB -R span[hosts=1]`).\n* **Wall Time:** The job is allowed to run for a maximum of 1 hour (`#BSUB -W 1:00`).\n* **Output:** The standard output and error are redirected to files named `out_%J_%I.stdout` and `out_%J_%I.stderr`, respectively.\n* **Environment:** The script sources the user's `.bashrc` file and sets environment variables like `OPENMM_CPU_THREADS` and `OE_LICENSE`. It also activates the \"espaloma\" conda environment.\n* **Script:** The `getgraph_hdf5.py` script is executed with arguments specifying the input HDF5 file, output prefix, key name, and index.\n\n**Note:** \nThe placeholders `@@@JOBNAME@@@`, `@@@KEYNAME@@@`, and `@@@INDEX@@@` suggest these values will be dynamically replaced based on specific job requirements. \n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 2,
+                    "blocked": false
+                }
+            ],
+            "citation_metadata": {
+                "citation_sources": [
+                    {
+                        "start_index": 324,
+                        "end_index": 538,
+                        "uri": "https://github.com/choderalab/refit-espaloma",
+                        "license_": ""
+                    }
+                ]
+            },
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 428,
+        "candidates_token_count": 696,
+        "total_token_count": 1124,
+        "cached_content_token_count": 0
+    }
+}

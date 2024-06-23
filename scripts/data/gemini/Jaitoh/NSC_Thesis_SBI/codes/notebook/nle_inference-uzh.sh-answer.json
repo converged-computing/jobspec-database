@@ -1,0 +1,39 @@
+{
+    "application": "Slurm",
+    "details": {
+        "software": [
+            "anaconda3",
+            "sbi",
+            "python3"
+        ],
+        "resources": {
+            "time": "6-24:00:00",
+            "tasks": 1,
+            "array": "0-26",
+            "gpus": 1,
+            "memory": "15G",
+            "cpus": 5,
+            "constraints": "GPUMEM32GB"
+        },
+        "script": "nle_inference.py",
+        "script_arguments": [
+            "--pipeline_version",
+            "nle-p2",
+            "--train_id",
+            "L0-nle-p2-cnn",
+            "--exp_id",
+            "L0-nle-p2-cnn-datav2",
+            "--log_exp_id",
+            "nle-p2-cnn-datav2",
+            "--use_chosen_dur",
+            "0",
+            "--T_idx",
+            "${SLURM_ARRAY_TASK_ID}",
+            "--iid_batch_size_theta",
+            "50",
+            "--num_samples",
+            "2000"
+        ],
+        "output_log": "${LOG_DIR}/${log_exp_id}_posterior_samples_T${T_idx}_all.log"
+    }
+}

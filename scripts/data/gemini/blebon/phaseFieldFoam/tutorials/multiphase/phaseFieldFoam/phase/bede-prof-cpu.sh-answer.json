@@ -1,0 +1,34 @@
+{
+    "application": "OpenFOAM",
+    "software_requirements": [
+        "gcc/10.2.0",
+        "openmpi",
+        "cmake",
+        "boost",
+        "vtk",
+        "nvhpc",
+        "cuda",
+        "conda",
+        "OpenFOAM",
+        "nsys"
+    ],
+    "resource_requirements": {
+        "account": "bddir15",
+        "time": "2:0:0",
+        "partition": "gpu",
+        "nodes": 1,
+        "gres": "gpu:2",
+        "email": "<your.email>@brunel.ac.uk"
+    },
+    "other_details": {
+        "run_functions": "source $WM_PROJECT_DIR/bin/tools/RunFunctions",
+        "parallel_execution": "foamDictionary system/decomposeParDict -entry numberOfSubdomains -set 16",
+        "hierarchical_decomposition": "foamDictionary system/decomposeParDict -entry hierarchicalCoeffs/n -set \"( 4 4 1 )\"",
+        "blockMeshDict_modification": "sed -i 's/(400 400 1)/(4000 4000 1)/g' system/blockMeshDict",
+        "nvidia_smi_log": "nvidia-smi > log.nvidia-smi",
+        "pre_processing": "./Allrun.pre",
+        "profiling": "nsys profile -t nvtx,cuda -o report_cpu -f true --stats=true /nobackup/projects/bddir15/hpc_sdk/Linux_ppc64le/23.1/comm_libs/mpi/bin/mpirun -n $nProcs $FOAM_USER_APPBIN/$application -parallel > log.$application 2>&1",
+        "reconstruction": "runApplication reconstructPar",
+        "post_processing": "./Allpost"
+    }
+}

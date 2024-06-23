@@ -1,0 +1,22 @@
+{
+    "application": "SLURM",
+    "details": {
+        "partition": "express",
+        "time": "00:10:00",
+        "ntasks": 100,
+        "cpus-per-task": 2,
+        "mem-per-cpu": "1G",
+        "job-name": "per_problem_pass_rates",
+        "software": {
+            "gnu-parallel": "module load gnu-parallel",
+            "python": "python3 ../per_problem_pass_rates.py"
+        },
+        "resource_requirements": {
+            "parallel_tasks": "PARALLEL_TASKS=$(($SLURM_NTASKS - 1))",
+            "parallel": "PARALLEL=\"parallel -j $PARALLEL_TASKS\"",
+            "srun": "SRUN=\"srun -N1 -n1\"",
+            "output_file": "OUT_FILE=$1",
+            "directories": "shift"
+        }
+    }
+}

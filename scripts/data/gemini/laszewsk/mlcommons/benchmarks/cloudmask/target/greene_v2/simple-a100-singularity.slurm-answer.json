@@ -1,0 +1,37 @@
+{
+    "application": "Singularity",
+    "details": {
+        "resource_requirements": {
+            "nodes": 1,
+            "tasks": 1,
+            "time": "2:00:00",
+            "partition": "bii-gpu",
+            "account": "bii_dsc_community",
+            "gres": "gpu:a100",
+            "reservation": "bi_fox_dgx",
+            "constraint": "a100_80gb",
+            "memory": "64G"
+        },
+        "software_requirements": {
+            "modules": [
+                "gcc/9.2.0",
+                "cuda/11.0.228",
+                "openmpi/3.1.6",
+                "python/3.8.8",
+                "singularity",
+                "tensorflow/2.8.0"
+            ],
+            "environment": {
+                "USER_SCRATCH": "/scratch/$USER",
+                "PROJECT_DIR": "$USER_SCRATCH/mlcommons/benchmarks/cloudmask",
+                "PYTHON_DIR": "$USER_SCRATCH/ENV3",
+                "PROJECT_DATA": "$USER_SCRATCH/data"
+            },
+            "container": "tensorflow-2.8.0.sif"
+        },
+        "script_details": {
+            "command": "python slstr_cloud.py --config simple-config.yaml",
+            "directory": "$PROJECT_DIR/target/rivanna"
+        }
+    }
+}

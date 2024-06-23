@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"SLURM\",\n  \"details\": {\n    \"job_name\": \"3dlap\",\n    \"partition\": \"boost_usr_prod\",\n    \"time\": \"01:00:00\",\n    \"nodes\": \"@NNODES@\",\n    \"gres\": \"gpu:@NGPUS@\",\n    \"ntasks\": \"@NTASKS@\",\n    \"ntasks_per_node\": 4,\n    \"account\": \"CNHPC_1465132\",\n    \"modules\": [\n      \"openmpi/4.1.6--gcc--12.2.0\",\n      \"openblas/0.3.24--gcc--12.2.0\",\n      \"gcc/12.2.0\",\n      \"cuda/12.1\"\n    ],\n    \"environment_variables\": {\n      \"LD_LIBRARY_PATH\": \"$LD_LIBRARY_PATH:/leonardo/home/userexternal/pdambra0/polynomialsmoothers/install/lib\"\n    },\n    \"working_directory\": \"${HOME}/polynomialsmoothers/logfiles/leonardo\",\n    \"executable\": \"./3dlaplacian\",\n    \"arguments\": [\n      \"%%%%%%%%%%%  General  arguments % Lines starting with % are ignored.\",\n      \"HLG                     ! matrix storage format\",\n      \"@SIZE@                 ! Discretization grid size\",\n      \"CONST                   ! PDECOEFF: CONST, EXP, BOX, GAUSS Coefficients of the PDE\",\n      \"FCG                     ! Krylov Solver\",\n      \"2                       ! Stopping criterion\",\n      \"00500                   ! Maximum number of iterations\",\n      \"1                       ! Trace of FCG\",\n      \"30                      ! Restart (RGMRES e BICGSTAB)\",\n      \"1.d-7                   ! Tolerance\",\n      \"%%%%%%%%%%%  Main preconditioner choices %%%%%%%%%%%%%%%%\",\n      \"ML-VSMATCH-@DEGITER@CHEB4-30L1JAC ! verbose description of the prec\",\n      \"ML                      ! Preconditioner type\",\n      \"%%%%%%%%%%%  First smoother (for all levels but coarsest) %%%%%%%%%%%%%%%%\",\n      \"POLY                    ! smoother type\",\n      \"1                       ! (pre-)smoother / 1-lev prec sweeps\",\n      \"@DEGITER@              ! degree for polynomial smoother\",\n      \"POLY_LOTTES             ! polynomial variant\",\n      \"POLY_RHO_EST_POWER      ! Algorithm to estimate spectral radius (ignored if next larger than 0)\",\n      \"1.0                     ! Spectral radius estimate\",\n      \"0                       ! number of overlap layers\",\n      \"HALO                    ! restriction  over application of AS\",\n      \"NONE                    ! prolongation over application of AS\",\n      \"L1-JACOBI               ! local subsolver\",\n      \"1                       ! inner solver sweeps\",\n      \"LLK                     ! AINV variant\",\n      \"0                       ! Fill level P for ILU(P) and ILU(T,P)\",\n      \"1                       ! Inverse Fill level P for INVK\",\n      \"1.d-4                   ! Threshold T for ILU(T,P)\",\n      \"%%%%%%%%%%%  Second smoother, always ignored for non-ML  %%%%%%%%%%%%%%%%\",\n      \"NONE                    ! Second (post) smoother, ignored if NONE\",\n      \"1                       ! Number of sweeps for (post) smoother\",\n      \"4                       ! degree for polynomial smoother\",\n      \"POLY_LOTTES_BETA        ! Polynomial variant\",\n      \"POLY_RHO_EST_POWER      ! Algorithm to estimate spectral radius (ignored if next larger than 0)\",\n      \"1.0                     ! Spectral radius estimate\",\n      \"0                       ! Number of overlap layers for AS preconditioner\",\n      \"HALO                    ! AS restriction operator: NONE HALO\",\n      \"NONE                    ! AS prolongation operator: NONE SUM AVG\",\n      \"L1-JACOBI               ! Subdomain solver for BJAC/AS: JACOBI GS BGS ILU ILUT MILU MUMPS SLU UMF\",\n      \"1                       ! Inner solver sweeps (GS and JACOBI)\",\n      \"LLK                     ! AINV variant\",\n      \"0                       ! Fill level P for ILU(P) and ILU(T,P)\",\n      \"8                       ! Inverse Fill level P for INVK\",\n      \"1.d-4                   ! Threshold T for ILU(T,P)\",\n      \"%%%%%%%%%%%  Multilevel parameters %%%%%%%%%%%%%%%%\",\n      \"VCYCLE                  ! AMG cycle type\",\n      \"1                       ! number of 1lev/outer sweeps\",\n      \"-3                      ! Max Number of levels in a multilevel preconditioner; if <0, lib default\",\n      \"-3                      ! Target coarse matrix size per process; if <0, lib default\",\n      \"SMOOTHED                ! Type of aggregation: SMOOTHED UNSMOOTHED\",\n      \"COUPLED                 ! Parallel aggregation: DEC, SYMDEC, COUPLED\",\n      \"MATCHBOXP               ! aggregation measure SOC1, MATCHBOXP \",\n      \"8                       ! Requested size of the aggregates for MATCHBOXP\",\n      \"NATURAL                 ! Ordering of aggregation NATURAL DEGREE\",\n      \"-1.5                    ! Coarsening ratio, if < 0 use library default\",\n      \"FILTER                  ! Filtering of matrix:  FILTER NOFILTER\",\n      \"-0.0100d0               ! Smoothed aggregation threshold, ignored if < 0\",\n      \"-2                      ! Number of thresholds in vector, next line ignored if <= 0\",\n      \"0.05 0.025              ! Thresholds\",\n      \"%%%%%%%%%%%  Coarse level solver  %%%%%%%%%%%%%%%%\",\n      \"L1-JACOBI               ! coarsest-lev solver\",\n      \"L1-JACOBI               ! coarsest-lev subsolver\",\n      \"DIST                    ! coarsest mat layout\",\n      \"0                       ! fill-in for incompl LU\",\n      \"1.d-2                   ! Threshold for ILUT\",\n      \"30                      ! sweeps for GS/JAC subsolver\",\n      \"%%%%%%%%%%%  Dump parms %%%%%%%%%%%%%%%%%%%%%%%%%% \",\n      \"F                       ! Dump on file?\",\n      \"1                       ! Minimum level to dump\",\n      \"10                      ! Maximum level to dump\",\n      \"T                       ! Dump coarse matrices\",\n      \"T                       ! Dump restrictors\",\n      \"T                       ! Dump prolongators\",\n      \"T                       ! Dump smoothers\",\n      \"T                       ! Dump coarse solver\",\n      \"T                       ! Dump using global numbering?\"\n    ],\n    \"output_file\": \"3dlap/match/@DEGITER@/log_cheby4_match_l1jac_@SIZE@_task_@NTASKS@_thr_1.txt\",\n    \"error_file\": \"3dlap/match/@DEGITER@/log_cheby4_match_l1jac_@SIZE@_task_@NTASKS@_thr_1.txt\",\n    \"mpi_options\": {\n      \"np\": \"@NTASKS@\"\n    }\n  }\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 4474,
+        "candidates_token_count": 1596,
+        "total_token_count": 6070,
+        "cached_content_token_count": 0
+    }
+}

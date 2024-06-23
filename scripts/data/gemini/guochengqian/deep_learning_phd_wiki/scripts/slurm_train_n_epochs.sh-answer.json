@@ -1,0 +1,26 @@
+{
+    "application": "SLURM",
+    "details": {
+        "scheduler": "SLURM",
+        "resources": {
+            "time": "24:00:00",
+            "cpus_per_gpu": "6",
+            "mem_per_gpu": "45G",
+            "gpu_type": "not specified",
+            "gpu_count": "not specified",
+            "modules": [
+                "cuda/10.0.130",
+                "gcc"
+            ],
+            "conda_env": "deepgcn"
+        },
+        "code": {
+            "language": "Python",
+            "script": "train.py",
+            "arguments": "--multi_gpus --phase train --data_dir $DATA_DIR --block $BLOCK --conv $CONV --n_blocks $N_BLOCKS --n_filters $N_FILTERS --norm $NORM --batch_size $BATCH_SIZE --lr $LR --total_epochs $EPOCHS --exp_name $EXP_NAME --job_name $JOB_NAME --pretrained_model \"$PRETRAIN\"",
+            "dependencies": [
+                "nvidia-smi"
+            ]
+        }
+    }
+}

@@ -1,0 +1,42 @@
+{
+    "application": "Slurm",
+    "details": {
+        "resource_requirements": {
+            "partition": "THIN",
+            "nodes": 1,
+            "exclusive": true,
+            "tasks_per_node": 24,
+            "memory": "490G",
+            "time": "02:00:00"
+        },
+        "modules": [
+            "mkl/latest",
+            "openBLAS/0.3.23-omp"
+        ],
+        "environment_variables": {
+            "OMP_PLACES": "cores",
+            "OMP_PROC_BIND": "close",
+            "LD_LIBRARY_PATH": "/u/dssc/slippo00/PROJECT_sl_and_gv/Foundations_of_HPC_2022/Assignment/exercise2/blis/lib/skx:$LD_LIBRARY_PATH"
+        },
+        "matrix_multiplication_executables": [
+            "sgemm_mkl.x",
+            "dgemm_mkl.x",
+            "sgemm_oblas.x",
+            "dgemm_oblas.x",
+            "sgemm_blis.x",
+            "dgemm_blis.x",
+            "sgemm_mkl_opt.x",
+            "dgemm_mkl_opt.x",
+            "sgemm_oblas_opt.x",
+            "dgemm_oblas_opt.x",
+            "sgemm_blis_opt.x",
+            "dgemm_blis_opt.x"
+        ],
+        "matrix_size": 10000,
+        "iterations_per_size": 5,
+        "output_files": {
+            "summary_file_format": "csv_results_scalability_deepening_{current_type}/{matrix_multiply_executable}_{current_type}_{size}_{current_policy}_summary.csv",
+            "detailed_file_format": "csv_results_scalability_deepening_{current_type}/{matrix_multiply_executable}_{current_type}_{size}_{current_policy}_detailed.csv"
+        }
+    }
+}

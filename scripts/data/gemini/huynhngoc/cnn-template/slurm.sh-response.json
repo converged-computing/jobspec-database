@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"Singularity\",\n  \"details\": {\n    \"slurm\": {\n      \"cores\": 1,\n      \"nodes\": 1,\n      \"job_name\": \"msc_unet\",\n      \"memory\": \"8G\",\n      \"partition\": \"gpu\",\n      \"gpu\": 1,\n      \"mail_user\": \"user.name@nmbu.no\",\n      \"mail_type\": \"ALL\",\n      \"output\": \"outputs/unet-%A.out\",\n      \"error\": \"outputs/unet-%A.out\"\n    },\n    \"modules\": [\n      \"singularity\"\n    ],\n    \"script\": {\n      \"name\": \"experiment.py\",\n      \"arguments\": [\n        \"$1\",\n        \"$HOME/hnperf/$2\",\n        \"--epochs\",\n        \"$3\",\n        \"${@:4}\"\n      ]\n    },\n    \"data\": {\n      \"source\": \"$HOME/datasets/headneck\",\n      \"destination\": \"$TMPDIR/$USER/hn_delin\"\n    },\n    \"gpu_driver\": {\n      \"command\": \"nvidia-modprobe -u -c=0\"\n    }\n  }\n}\n```\n\n**Explanation:**\n\n* **Application:** The script uses **Singularity** to run a containerized environment. This allows for reproducible execution across different systems.\n* **SLURM:** The script uses SLURM (Simple Linux Utility for Resource Management) to submit the job to a cluster. It defines resource requirements like:\n    * **Cores (CPU):** 1\n    * **Nodes:** 1\n    * **Job Name:** \"msc_unet\"\n    * **Memory:** 8GB\n    * **Partition:** \"gpu\" (for access to GPUs)\n    * **GPUs:** 1\n    * **Email notifications:** Sent to \"user.name@nmbu.no\" when the job starts, ends, and encounters errors.\n    * **Output/Error files:** \"outputs/unet-%A.out\"\n* **Modules:** The script loads the \"singularity\" module, which provides necessary tools and libraries for Singularity.\n* **Data:** The script copies data from \"$HOME/datasets/headneck\" to \"$TMPDIR/$USER/hn_delin\" for the containerized environment to access.\n* **Script Execution:**\n    * The script runs the \"experiment.py\" script inside the \"deoxys.sif\" Singularity container.\n    * It passes several arguments:\n        * \"$1\" - first command-line argument\n        * \"$HOME/hnperf/$2\" - path to another argument\n        * \"--epochs\" - a flag\n        * \"$3\" - third argument\n        * \"${@:4}\" - remaining command-line arguments\n* **GPU Driver:** The script runs \"nvidia-modprobe -u -c=0\" to ensure the GPU driver is properly loaded for the Singularity container to use the GPU. \n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 524,
+        "candidates_token_count": 668,
+        "total_token_count": 1192,
+        "cached_content_token_count": 0
+    }
+}

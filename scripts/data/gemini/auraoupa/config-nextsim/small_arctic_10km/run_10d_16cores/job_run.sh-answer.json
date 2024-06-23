@@ -1,0 +1,30 @@
+{
+    "application": "OAR",
+    "details": {
+        "resource_requirements": {
+            "nodes": 1,
+            "cores": 16,
+            "walltime": "00:30:00"
+        },
+        "output_files": [
+            "nextsim_small_arctic_10km.out",
+            "nextsim_small_arctic_10km.err"
+        ],
+        "project": "pr-data-ocean",
+        "queue": "devel",
+        "environment": "env_dahu.src",
+        "execution_environment": "Singularity",
+        "image": "$NEXTSIM_IMAGE_NAME",
+        "command": "mpirun --allow-run-as-root --mca btl_vader_single_copy_mechanism none --mca btl ^openib --mca pml ob1 -np 16 nextsim.exec --config-files=/config_files/bbm_control.cfg",
+        "additional_details": {
+            "MPI_options": {
+                "allow-run-as-root": true,
+                "btl_vader_single_copy_mechanism": "none",
+                "btl": "^openib",
+                "pml": "ob1",
+                "np": 16
+            },
+            "nextsim_config_file": "/config_files/bbm_control.cfg"
+        }
+    }
+}

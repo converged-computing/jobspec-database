@@ -1,0 +1,27 @@
+{
+    "application": "SLURM",
+    "details": {
+        "scheduler": "SLURM",
+        "resources": {
+            "walltime": "24:00:00",
+            "cores": 1,
+            "nodes": 1,
+            "memory": "256G per core",
+            "gpus": 1,
+            "job_name": "inference",
+            "requeue": true,
+            "signal": "SIGHUP after 90 minutes",
+            "output": "%x_%j.out"
+        },
+        "environment": {
+            "OpenMP threads": "set to $SLURM_CPUS_ON_NODE",
+            "modules": "not specified, but loaded in the script",
+            "python version": "3",
+            "conda environment": "rocket"
+        },
+        "programs": {
+            "nvidia-smi": "for checking GPU status",
+            "python inference.py": "for running inference, using a configuration file"
+        }
+    }
+}

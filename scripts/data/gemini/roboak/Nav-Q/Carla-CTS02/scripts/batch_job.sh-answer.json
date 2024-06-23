@@ -1,0 +1,39 @@
+{
+    "application": "SLURM",
+    "details": {
+        "scheduler": "SLURM",
+        "job_name": "Q_A2C_ls_32_q_4_l_1_multi_runs",
+        "output_file": "%j.log",
+        "partition": "RTX3090",
+        "time": "03-00:00:00",
+        "tasks": 1,
+        "cpus_per_task": 4,
+        "gpus_per_task": 1,
+        "memory": "70GB",
+        "array_tasks": 5,
+        "environment_variables": {
+            "NCCL_SOCKET_IFNAME": "bond",
+            "NCCL_IB_HCA": "mlx5"
+        },
+        "container_image": "/netscratch/$USER/vanilla.sqsh",
+        "container_workdir": "/netscratch/sinha/Q-DRL-for-CFN",
+        "container_mounts": [
+            "/netscratch/$USER:/netscratch/$USER",
+            "/ds:/ds:ro",
+            "/home/sinha:/home/sinha"
+        ],
+        "python_interpreter": "/netscratch/sinha/c_qns/bin/python3",
+        "python_script": "train_a2c.py",
+        "arguments": [
+            "--latent_space_dim=\"$latent_space_dim\"",
+            "--n_qubits=\"$q\"",
+            "--n_layers=\"$layers\"",
+            "--quantum",
+            "--ansatz 1",
+            "--port=$(shuf -i $lower-$upper -n 1)",
+            "--batch_name=${batch_name}",
+            "--checkpoint=${batch_checkpoint}",
+            "--seed=${seed}"
+        ]
+    }
+}

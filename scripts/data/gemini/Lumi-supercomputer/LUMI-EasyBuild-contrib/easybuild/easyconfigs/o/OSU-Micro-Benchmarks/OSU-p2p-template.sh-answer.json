@@ -1,0 +1,35 @@
+{
+    "application": "Slurm",
+    "details": {
+        "job_name": "OSU-p2p",
+        "partition": "standard",
+        "exclusive": true,
+        "nodes": 2,
+        "hint": "nomultithread",
+        "time": "10:00",
+        "output": "%x-%j.txt",
+        "error": "%x-errors-%j.txt",
+        "modules": [
+            "LUMI/%toolchainversion% partition/C",
+            "lumi-CPEtools/%CPEtoolsversion%-%toolchain%-%toolchainversion%%suffix%",
+            "OSU-Micro-Benchmark/%OSUversion%-%toolchain%-%toolchainversion%%suffix%%cleanup%"
+        ],
+        "tests": [
+            "mpi_check",
+            "osu_latency",
+            "osu_bw",
+            "osu_bibw",
+            "hybrid_check",
+            "osu_latency_mt"
+        ],
+        "environment_variables": [
+            "OMP_NUM_THREADS",
+            "OMP_PLACES",
+            "OMP_PROC_BIND"
+        ],
+        "resource_requirements": {
+            "threads_per_process": 16,
+            "nodes": 2
+        }
+    }
+}

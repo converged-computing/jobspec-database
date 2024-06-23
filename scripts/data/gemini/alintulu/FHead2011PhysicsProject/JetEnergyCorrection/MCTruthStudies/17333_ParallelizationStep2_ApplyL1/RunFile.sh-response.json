@@ -1,0 +1,74 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"LSF\",\n  \"details\": {\n    \"queue\": \"1nh\",\n    \"software\": [\n      \"CMSSW_9_4_3\",\n      \"jet_apply_jec_x\",\n      \"jet_response_analyzer_x\"\n    ],\n    \"resources\": {\n      \"files\": [\n        \"My*PileupHistogram.root\",\n        \"jra_dr_finebinning.config\",\n        \"$CMSSW_BASE/src/JetMETAnalysis/JetAnalyzers/config/jra_dr_finebinning.config\"\n      ],\n      \"directories\": [\n        \"~/work/CMSSW/CMSSW_9_4_3/src\",\n        \"/afs/cern.ch/user/c/chenyi/work/PhysicsWorkspace/JetEnergyCorrection/MCTruthStudies/17333_ParallelizationStep2_ApplyL1/\",\n        \"$WorkDir/MagdaWithPUAfterL1/\"\n      ],\n      \"environment_variables\": {\n        \"SCRAM_ARCH\": \"slc6_amd64_gcc630\"\n      },\n      \"commands\": [\n        \"scramv1 runtime -sh\",\n        \"cp $WorkDir/*txt .\",\n        \"cp $WorkDir/My*PileupHistogram.root .\",\n        \"hadd -k -f Input.root __FILE__\",\n        \"jet_apply_jec_x -input Input.root -output JRA_jecl1.root -jecpath ./ -era Parallelize_MC -levels 1 -algs ak4pfchs -L1FastJet true -saveitree false\",\n        \"cp $CMSSW_BASE/src/JetMETAnalysis/JetAnalyzers/config/jra_dr_finebinning.config jra.config\",\n        \"jet_response_analyzer_x jra.config -input JRA_jecl1.root -nbinsabsrsp 0 -nbinsetarsp 0 -nbinsphirsp 0 -nbinsrelrsp 200 -doflavor false -flavorDefinition phys -MCPUReWeighting MyMCPileupHistogram.root -MCPUHistoName pileup -DataPUReWeighting MyDataPileupHistogram.root -DataPUHistoName pileup -output jra.root -useweight true -nrefmax 3 -algs ak4pfchsl1 -drmax 0.2 -relrspmin 0.0 -relrspmax 2.0\",\n        \"cp jra.root $WorkDir/MagdaWithPUAfterL1/JRA_jecl1___ID__.root\"\n      ]\n    }\n  }\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "citation_metadata": {
+                "citation_sources": [
+                    {
+                        "start_index": 841,
+                        "end_index": 1093,
+                        "uri": "https://github.com/FHead/PhysicsJetEnergyCorrection",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 973,
+                        "end_index": 1322,
+                        "uri": "https://github.com/FHead/PhysicsJetEnergyCorrection",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 1201,
+                        "end_index": 1484,
+                        "uri": "https://github.com/FHead/PhysicsHIJetRAA2018",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 1428,
+                        "end_index": 1609,
+                        "uri": "https://github.com/FHead/PhysicsJetEnergyCorrection",
+                        "license_": ""
+                    }
+                ]
+            },
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 564,
+        "candidates_token_count": 624,
+        "total_token_count": 1188,
+        "cached_content_token_count": 0
+    }
+}

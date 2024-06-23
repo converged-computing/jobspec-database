@@ -1,0 +1,51 @@
+{
+    "application": "SLURM",
+    "details": {
+        "resource_requirements": {
+            "walltime": "10:00:00",
+            "nodes": 1,
+            "exclusive": true,
+            "tasks_per_node": 1,
+            "memory": "1000G",
+            "cpus_per_task": 112,
+            "partition": "eval",
+            "constraint": "sapphire",
+            "node": "worker6302"
+        },
+        "software_requirements": {
+            "modules": [
+                "modules/2.1.1-20230405",
+                "slurm",
+                "gcc",
+                "cmake",
+                "nccl",
+                "cuda/11.8.0",
+                "cudnn/8.4.0.27-11.6",
+                "openmpi/4.0.7"
+            ],
+            "conda_environment": "tf2",
+            "python_version": "python3",
+            "library_path": "/mnt/sw/nix/store/3xpm36w2kcri3j1m5j15hg025my1p4kx-cuda-11.8.0/extras/CUPTI/lib64/"
+        },
+        "script_execution": {
+            "inference_script": "mlpf/pipeline.py infer",
+            "training_directory": "/mnt/ceph/users/ewulff/particleflow/experiments/bsm10_1GPU_clic-gnn-tuned-v130_20230724_035617_375578.workergpu037",
+            "output_directory": "/mnt/ceph/users/ewulff/particleflow/inference_tests/",
+            "batch_sizes": [
+                1024,
+                512,
+                256,
+                128,
+                64,
+                32,
+                16,
+                8,
+                4,
+                2,
+                1
+            ],
+            "number_of_events": 4000,
+            "number_of_runs": 11
+        }
+    }
+}

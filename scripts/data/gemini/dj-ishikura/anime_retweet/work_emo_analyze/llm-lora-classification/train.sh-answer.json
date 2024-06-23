@@ -1,0 +1,21 @@
+{
+    "application": "accelerate",
+    "details": {
+        "framework": "PyTorch",
+        "model": "rinna/japanese-gpt-neox-3.6b",
+        "mixed_precision": "bf16",
+        "resource_requirements": {
+            "compute": "8 CPUs",
+            "memory": "64 GB",
+            "gpu": "1 GPU",
+            "docker_image": "imc.tut.ac.jp/transformers-pytorch-cuda118:4.31.0"
+        },
+        "environment_variables": {
+            "TORCH_HOME": "${PBS_O_WORKDIR}/.cache/torch",
+            "TRANSFORMERS_CACHE": "${PBS_O_WORKDIR}/.cache/transformers",
+            "HF_HOME": "${PBS_O_WORKDIR}/.cache/huggingface",
+            "TORCH_USE_CUDA_DSA": "1"
+        },
+        "command": "poetry run accelerate launch --mixed_precision=bf16 src/train.py --model_name rinna/japanese-gpt-neox-3.6b"
+    }
+}

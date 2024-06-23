@@ -1,0 +1,34 @@
+{
+    "application": "Slurm",
+    "details": {
+        "software": [
+            "Python",
+            "CUDA 10.0.130",
+            "cuDNN 7.6.0.64_10.0",
+            "miniconda3",
+            "meta_learning_pytorch_env_2"
+        ],
+        "resources": {
+            "nodes": 1,
+            "tasks": 1,
+            "gpu": 1,
+            "partition": "General_Usage",
+            "memory": "12000 MB",
+            "time": "2-23:00:00",
+            "array": "1-6%6"
+        },
+        "script": {
+            "file": "main.py",
+            "arguments": [
+                "--mode",
+                "distill_basic",
+                "--dataset",
+                "MNIST",
+                "--arch",
+                "LeNet",
+                "--distill_steps",
+                "${STEPS[SLURM_ARRAY_TASK_ID-1]}"
+            ]
+        }
+    }
+}

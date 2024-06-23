@@ -1,0 +1,65 @@
+{
+    "application": "PBS",
+    "details": {
+        "resource_requirements": {
+            "nodes": 1,
+            "ppn": 16,
+            "gpus": 4,
+            "partition": "gpu",
+            "walltime": "168:00:00",
+            "pmem": "5gb"
+        },
+        "environment": {
+            "conda_env": "devlbert",
+            "script_path": "/scratch/leuven/336/vsc33642/EXP_NAME",
+            "output_dir": "/scratch/leuven/336/vsc33642/EXP_NAME"
+        },
+        "software": {
+            "python": {
+                "modules": [
+                    "train_concap.py",
+                    "train_tasks.py",
+                    "eval_retrieval.py"
+                ],
+                "libraries": [
+                    "config/pretrain_concap_devlbert.yml",
+                    "config/bert_base_6layer_6conect.json",
+                    "save/devlbert/pytorch_model_11.bin",
+                    "config/bert_base_6layer_6conect.json",
+                    "/cw/working-gimli/nathan/ckpts_downstream/RetrievalFlickr30k_bert_base_6layer_6conect-24_ep_devlbert_i/pytorch_model_11_ema.bin"
+                ]
+            }
+        },
+        "tasks": {
+            "training": {
+                "epochs": 24,
+                "region_mask_probs": [
+                    0.15,
+                    0.3
+                ],
+                "batch_size": 128,
+                "seed": 4
+            },
+            "fine_tuning": {
+                "model": "bert-base-uncased",
+                "from_pretrained": "save/devlbert/pytorch_model_11.bin",
+                "config_file": "config/bert_base_6layer_6conect.json",
+                "learning_rate": "4e-5",
+                "tasks": 3,
+                "save_name": "devlbert_i",
+                "use_ema": true,
+                "ema_decay_ratio": 0.9999,
+                "num_workers": 1,
+                "batch_size": 16
+            },
+            "evaluation": {
+                "model": "bert-base-uncased",
+                "from_pretrained": "/cw/working-gimli/nathan/ckpts_downstream/RetrievalFlickr30k_bert_base_6layer_6conect-24_ep_devlbert_i/pytorch_model_11_ema.bin",
+                "config_file": "config/bert_base_6layer_6conect.json",
+                "tasks": 3,
+                "split": "test",
+                "batch_size": 1
+            }
+        }
+    }
+}

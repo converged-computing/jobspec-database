@@ -1,0 +1,37 @@
+{
+    "application": "Singularity",
+    "details": {
+        "resource_requirements": {
+            "cores": 1,
+            "nodes": 1,
+            "memory": "64G",
+            "partition": "gpu",
+            "gpus": 1
+        },
+        "software": [
+            "Singularity",
+            "Python",
+            "nvidia-modprobe",
+            "Ray"
+        ],
+        "scripts": [
+            "interpretability.py",
+            "post_processing.py",
+            "run_test.py"
+        ],
+        "data_files": {
+            "source": "$PROJECTS/ngoc/datasets/headneck/*",
+            "destination": "$TMPDIR/$USER/hn_delin"
+        },
+        "environment_variables": {
+            "ITER_PER_EPOCH": 200,
+            "NUM_CPUS": 4,
+            "RAY_ROOT": "$TMPDIR/ray",
+            "MAX_SAVE_STEP_GB": 0
+        },
+        "output_files": {
+            "stdout": "outputs/interpret-%A.out",
+            "stderr": "outputs/interpret-%A.out"
+        }
+    }
+}

@@ -1,0 +1,44 @@
+{
+    "application": "Magpie",
+    "details": {
+        "purpose": "Running Hadoop on traditional HPC systems",
+        "dependencies": [
+            "SLURM",
+            "Python",
+            "Tensorflow (optional)",
+            "NFS"
+        ],
+        "resource_requirements": {
+            "nodes": "<my_node_count>",
+            "time": "<my_time_in_minutes>",
+            "partition": "<my_partition>",
+            "job_name": "<my_job_name>",
+            "local_scratch": "/tmp/${USER}/magpie",
+            "scripts_home": "${HOME}/magpie"
+        },
+        "configuration_options": {
+            "magpie_job_type": [
+                "tensorflow",
+                "testall",
+                "script"
+            ],
+            "tensorflow_job": [
+                "tfadd",
+                "script"
+            ]
+        },
+        "script_execution": {
+            "pre_job_run": "${MAGPIE_SCRIPTS_HOME}/scripts/pre-job-run-scripts/my-pre-job-script",
+            "post_job_run": "${MAGPIE_SCRIPTS_HOME}/scripts/post-job-run-scripts/my-post-job-script",
+            "pre_execute_run": "${MAGPIE_SCRIPTS_HOME}/scripts/pre-job-run-scripts/my-pre-job-script",
+            "post_execute_run": "${MAGPIE_SCRIPTS_HOME}/scripts/post-job-run-scripts/my-post-job-script"
+        },
+        "other_notes": {
+            "one_time_run": "Enables unique data paths and faster teardown for testing",
+            "hostname_cmd": "Allows customization of hostname retrieval for cluster configuration",
+            "python_path": "Used for Spark PySpark and Tensorflow task launching",
+            "tensorflow_setup": "Enables or disables Tensorflow setup",
+            "tensorflow_script_path": "Specifies python script for Tensorflow jobs"
+        }
+    }
+}

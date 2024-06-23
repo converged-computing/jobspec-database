@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "Slurm\n\n```json\n{\n  \"application\": \"Slurm\",\n  \"software\": [\n    \"GNU\",\n    \"R\",\n    \"Singularity\",\n    \"Wine\"\n  ],\n  \"resources\": {\n    \"partition\": \"normal\",\n    \"nodes\": 1,\n    \"tasks_per_node\": 1,\n    \"cpus_per_task\": 1,\n    \"memory_per_cpu\": \"10G\",\n    \"time\": \"05-00:00\",\n    \"constraint\": \"amd\"\n  },\n  \"files\": [\n    \"ME-2.exe\",\n    \"me2key.key\",\n    \"PMF_ab_base.dat\",\n    \"PMF_bs_6f8xx_sealed_GUI_MOD.ini\",\n    \"iniparams_base_C_${Cluster_number}_F_${Factor_number}.txt\",\n    \"iniparams_BS_C_${Cluster_number}_F_${Factor_number}_use.txt\",\n    \"iniparams_DISP_C_${Cluster_number}_F_${Factor_number}_use.txt\",\n    \"minQ_Task_numoldsol.R\"\n  ],\n  \"environment_variables\": [\n    \"LANG\",\n    \"SINGULARITY_BASE\",\n    \"CONTAINER\",\n    \"ShR_SCRIPT_DIR\",\n    \"BASE_SCRIPT_DIR\",\n    \"SINGULARITY_RUN\",\n    \"SCRIPT\",\n    \"DOS_COMMAND\"\n  ],\n  \"commands\": [\n    \"module load gnu10/10.3.0-ya\",\n    \"module load r\",\n    \"module load singularity\",\n    \"cp ../*.csv .\",\n    \"cp ${ShR_SCRIPT_DIR}/me2key.key .\",\n    \"cp ${ShR_SCRIPT_DIR}/PMF_ab_base.dat .\",\n    \"cp ${ShR_SCRIPT_DIR}/ME-2.exe .\",\n    \"cp ${ShR_SCRIPT_DIR}/PMF_bs_6f8xx_sealed_GUI_MOD.ini .\",\n    \"find ${BASE_SCRIPT_DIR} -type f -name '*_base.txt' | wc -l\",\n    \"find ${BASE_SCRIPT_DIR} -type f -name '*_base.txt'\",\n    \"du -b \\\"$base_txt_file\\\" | awk '{print $1}'\",\n    \"grep -c \\\"Results written by postprocessing for task\\\" \\\"$base_txt_file\\\"\",\n    \"cp iniparams_base_C_${Cluster_number}_F_${Factor_number}.txt iniparams.txt\",\n    \"echo $DOS_COMMAND\",\n    \"echo $PWD\",\n    \"$DOS_COMMAND\",\n    \"mv ${dataset}_noCsub_noExtreme_C_${Cluster_number}_F_${Factor_number}_.txt ${dataset}_noCsub_noExtreme_C_${Cluster_number}_F_${Factor_number}_base.txt\",\n    \"Rscript ${ShR_SCRIPT_DIR}/minQ_Task_numoldsol.R ${dataset}_noCsub_noExtreme_C_${Cluster_number}_F_${Factor_number}_base.txt ${Cluster_number} ${Factor_number} ${BASE_SCRIPT_DIR}\",\n    \"cp ${param_file} iniparams.txt\",\n    \"$DOS_COMMAND\",\n    \"rm iniparams.txt\",\n    \"mv DISPres1.txt ${dataset}_C_${Cluster_number}_F_${Factor_number}_DISPres1.txt\"\n  ]\n}\n```\n\nThis script is designed to run on a Slurm cluster. It utilizes several software packages, including GNU, R, Singularity, and Wine, for running simulations and analyzing results. The script also leverages various Slurm commands for resource allocation, job management, and output redirection. \n\nThe script utilizes a Singularity container for running the ME-2.exe application under Wine. The container is specified by the `CONTAINER` variable and is mounted to the job's working directory using the `-B` option of the `singularity exec` command.\n\nThe script also defines a series of functions that are executed based on the existence and size of a specific base result file. The functions involve running the ME-2.exe application with different sets of parameters, manipulating input and output files, and calling R scripts for analysis.\n\nThe script includes a number of environment variables that control the execution environment, including the path to the Singularity container, the working directory, and the name of the executable file.\n\nThis script provides a comprehensive example of how Slurm can be used to manage complex computational jobs involving various software packages and data manipulation tasks. \n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 2276,
+        "candidates_token_count": 1048,
+        "total_token_count": 3324,
+        "cached_content_token_count": 0
+    }
+}

@@ -1,0 +1,38 @@
+{
+    "application": "GLNexus",
+    "software": [
+        "Singularity",
+        "parallel",
+        "glnexus_cli",
+        "bcftools",
+        "bgzip"
+    ],
+    "resources": {
+        "slurm": {
+            "job_name": "glnexus",
+            "account": "pararch",
+            "partition": "nodelong",
+            "time": "100:00:00",
+            "memory": "470G",
+            "exclusive": true,
+            "mail_type": "FAIL",
+            "mail_user": "juenger@uni-mainz.de"
+        },
+        "modules": {
+            "tools/Singularity": "3.5.2-Go-1.13.1",
+            "tools/parallel": "20190822"
+        },
+        "environment": {
+            "LD_PRELOAD": "/usr/lib/x86_64-linux-gnu/libjemalloc.so",
+            "numactl": "--interleave=all"
+        },
+        "input": {
+            "gvcf_dir": "$1",
+            "gvcf_list": "$JOBDIR/gvcf_list"
+        },
+        "output": {
+            "out_dir": "glnexus_output",
+            "output_file": "$JOBDIR/output.cohort.vcf.gz"
+        }
+    }
+}

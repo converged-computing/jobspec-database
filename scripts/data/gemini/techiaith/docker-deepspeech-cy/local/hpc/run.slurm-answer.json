@@ -1,0 +1,35 @@
+{
+    "application": "Singularity",
+    "details": {
+        "software": [
+            "Singularity",
+            "DeepSpeech",
+            "SLURM"
+        ],
+        "resources": {
+            "nodes": 1,
+            "cpus_per_task": 8,
+            "gpus": 2,
+            "partition": "gpu",
+            "account": "scw1097"
+        },
+        "environment_variables": [
+            "DEEPSPEECH_IMG",
+            "DEEPSPEECH_RUN",
+            "DEEPSPEECH_OUTPUT",
+            "DEEPSPEECH_DATA",
+            "DEEPSPEECH_BIN"
+        ],
+        "script_execution": {
+            "compute_command": "singularity exec --nv -B ${DEEPSPEECH_DATA}:/data,${DEEPSPEECH_BIN}:/DeepSpeech/bin,/usr/local/cuda/lib64/stubs/ ${DEEPSPEECH_IMG} ${DEEPSPEECH_BIN}/${DEEPSPEECH_RUN}",
+            "srun_command": "srun --exclusive -N1 -n1",
+            "output_directory": "${DEEPSPEECH_OUTPUT}/${SLURM_JOB_ID}",
+            "logs": [
+                "cy_deepspeech.out.%J",
+                "cy_deepspeech.err.%J",
+                "paldaruo.log",
+                "global.log"
+            ]
+        }
+    }
+}

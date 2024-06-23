@@ -1,0 +1,24 @@
+{
+    "application": "LSF",
+    "details": {
+        "queue": "gpuv100",
+        "job_name": "tune_adversarial",
+        "job_array": "1-24",
+        "cores": 1,
+        "gpu": "1 (exclusive process)",
+        "walltime": "5:00",
+        "memory": "5GB",
+        "environment": {
+            "PYTHONHOME": "unset",
+            "PYTHONPATH": "unset",
+            "conda_environment": "miniconda3",
+            "cuda_version": "11.6"
+        },
+        "scripts": [
+            "nvidia-smi",
+            "/appl/cuda/11.6.0/samples/bin/x86_64/linux/release/deviceQuery",
+            "python3 src/train_adversarial.py +conditional=false +e=0.2 +n=0.2 +bx=1 +bw=2 +bz=1 +by=1 +bhw=$bmi +bhz=$bmi +byz=1 +bc=1 ++seed=$s",
+            "python3 src/tune_bm.py -input outputs/train_adversarial/++seed=$s,+bc=1,+bhw=$bmi,+bhz=$bmi,+bw=2,+bx=1,+by=1,+byz=1,+bz=1,+conditional=false,+e=0.2,+n=0.2"
+        ]
+    }
+}

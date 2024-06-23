@@ -1,0 +1,35 @@
+{
+    "application": "matlab",
+    "software": [
+        "OpenFOAM",
+        "cuda",
+        "java",
+        "matlab",
+        "openmpi"
+    ],
+    "resources": {
+        "partition": "hpc",
+        "nodes": 1,
+        "memory": "160G",
+        "time": "72:00:00",
+        "output": "slurm.%j.out",
+        "error": "slurm.%j.err",
+        "environment": "ALL",
+        "exclusive": true,
+        "malloc_arena_max": 4
+    },
+    "script_details": {
+        "description": "This script appears to be running a set of CFD simulations using OpenFOAM and MATLAB. It copies a base folder containing simulation settings to multiple cases, launches each case with a submit script, and then uses MATLAB to run a function called 'escooter_runSail' which likely manages the simulations. Finally, it sends a stop signal to each case. ",
+        "commands": [
+            "module load java/default",
+            "module load cuda/default",
+            "module load matlab/R2019b",
+            "module load openmpi/gnu",
+            "source ~/OpenFOAM-plus/etc/bashrc",
+            "cp -TR $baseFolderName $caseName",
+            "sbatch -D \"$caseName\" $caseName/submit.sh",
+            "matlab -batch \"escooter_runSail('nCases',$nCases,'caseStart',$startCase)\"",
+            "touch \"$caseName/stop.signal\""
+        ]
+    }
+}

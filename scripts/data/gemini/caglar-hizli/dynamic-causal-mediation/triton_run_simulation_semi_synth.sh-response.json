@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"Slurm\",\n  \"details\": {\n    \"resource_requirements\": {\n      \"time\": \"24:00:00\",\n      \"memory\": \"32G\",\n      \"output_file\": \"triton_run_%A_%a.out\",\n      \"array_size\": \"1-10\"\n    },\n    \"software_dependencies\": {\n      \"modules\": [\n        \"r\",\n        \"anaconda\",\n        \"tensorflow\"\n      ],\n      \"pip_packages\": [\n        \"seaborn\"\n      ]\n    },\n    \"script_commands\": [\n      \"export SRDIR=out/sampler_semi_synth\",\n      \"export Np=50\",\n      \"export OPID=12,25,28\",\n      \"export BASEDIR=out/semi_synth\",\n      \"export SDIR=${BASEDIR}/samples.000\",\n      \"export MDIR=${BASEDIR}/models.000\",\n      \"export pA=0.0\",\n      \"srun python simulate/semi_synth/simulate_observational.py --sampler_dir ${SRDIR} --samples_dir ${SDIR} --oracle_outcome_pid_str ${OPID} --n_patient $Np --n_day 1 --seed $SLURM_ARRAY_TASK_ID --prob_activity $pA --tc_folder out/time-correction-015\",\n      \"srun Rscript models/benchmarks/fpca/R_script/simulation_fpca.R ${SDIR} Baseline $Np ${OPID} $SLURM_ARRAY_TASK_ID\",\n      \"srun Rscript models/benchmarks/fpca/R_script/simulation_fpca.R ${SDIR} Operation $Np ${OPID} $SLURM_ARRAY_TASK_ID\",\n      \"srun python simulate/semi_synth/run_simulation.py --task semi-synth --sampler_dir ${SRDIR} --samples_dir ${SDIR} --output_dir ${MDIR} --oracle_outcome_pid_str ${OPID} --n_patient $Np --n_day 1 --seed $SLURM_ARRAY_TASK_ID --prob_activity $pA --tc_folder out/time-correction-015\"\n    ]\n  }\n}\n```\n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 487,
+        "candidates_token_count": 542,
+        "total_token_count": 1029,
+        "cached_content_token_count": 0
+    }
+}

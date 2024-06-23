@@ -1,0 +1,32 @@
+{
+    "application": "EasyBuild",
+    "details": {
+        "software": "EasyBuild",
+        "resource_requirements": {
+            "account": "easybuild",
+            "job_name": "EB-install",
+            "time": "6:00:00",
+            "nodes": 1,
+            "tasks_per_node": 4,
+            "constraints": "broadwell"
+        },
+        "environment_variables": {
+            "EB_BRANCH": "develop",
+            "EBUSER": "user",
+            "EB_INSTALL_PARAMS": "--robot --rebuild",
+            "EB_INSTALL_PKG": "pomkl-2018b.eb",
+            "EB_CMD": "eb",
+            "SBATCH_CONSTRAINT": "broadwell",
+            "SBATCH_ACCOUNT": "easybuild"
+        },
+        "modules": [
+            "eb_builder/${EB_BRANCH:-default}"
+        ],
+        "other": {
+            "buildpath": "$p/$SLURM_JOB_ID",
+            "tmp_logdir": "$p/tmplogs/$SLURM_JOB_ID",
+            "tmpdir": "$p/tmpdir/$SLURM_JOB_ID",
+            "easybuild_tmpdir": "$p/tmpdir/$SLURM_JOB_ID"
+        }
+    }
+}

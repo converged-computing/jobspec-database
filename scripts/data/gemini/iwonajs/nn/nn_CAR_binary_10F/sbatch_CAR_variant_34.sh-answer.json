@@ -1,0 +1,37 @@
+{
+    "application": "SLURM",
+    "details": {
+        "resource_requests": {
+            "gpu": 1,
+            "cpus_per_task": 4,
+            "memory": "32000M",
+            "time": "03:00:00"
+        },
+        "software_modules": [
+            "python/3.7.4",
+            "cuda",
+            "cudnn",
+            "scipy-stack"
+        ],
+        "virtual_environment": {
+            "name": "env",
+            "packages": [
+                "tensorflow_gpu"
+            ]
+        },
+        "script_commands": [
+            "cp *.json $SLURM_TMPDIR",
+            "cp *.py $SLURM_TMPDIR",
+            "cp *.sh $SLURM_TMPDIR",
+            "tar xf input.tar.gz -C $SLURM_TMPDIR",
+            "virtualenv --no-download $SLURM_TMPDIR/env",
+            "source $SLURM_TMPDIR/env/bin/activate",
+            "pip install --no-index tensorflow_gpu",
+            "nvidia-smi",
+            "cd $SLURM_TMPDIR",
+            "ls -l",
+            "python ./run_terminal.py -n $SLURM_ARRAY_TASK_ID -u 10 -m 34 --chkpt True --flat 1",
+            "tar -cf ~/projects/def-miranska/iwonajs/nn_CAR_binary_10F/CAR_variant_34_$SLURM_ARRAY_TASK_ID.tar results"
+        ]
+    }
+}

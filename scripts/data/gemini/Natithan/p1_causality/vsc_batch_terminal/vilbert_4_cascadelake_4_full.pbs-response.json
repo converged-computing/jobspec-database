@@ -1,0 +1,56 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"PBS\",\n  \"details\": {\n    \"resource_requirements\": {\n      \"nodes\": 1,\n      \"ppn\": 16,\n      \"gpus\": 4,\n      \"partition\": \"gpu\",\n      \"walltime\": \"168:00:00\",\n      \"pmem\": \"5gb\"\n    },\n    \"environment\": {\n      \"conda_env\": \"devlbert\",\n      \"script_path\": \"/scratch/leuven/336/vsc33642/EXP_NAME\",\n      \"output_dir\": \"/scratch/leuven/336/vsc33642/EXP_NAME\"\n    },\n    \"software\": {\n      \"python\": {\n        \"modules\": [\n          \"train_concap.py\",\n          \"train_tasks.py\",\n          \"eval_retrieval.py\"\n        ],\n        \"libraries\": [\n          \"config/pretrain_concap_devlbert.yml\",\n          \"config/bert_base_6layer_6conect.json\",\n          \"save/devlbert/pytorch_model_11.bin\",\n          \"config/bert_base_6layer_6conect.json\",\n          \"/cw/working-gimli/nathan/ckpts_downstream/RetrievalFlickr30k_bert_base_6layer_6conect-24_ep_devlbert_i/pytorch_model_11_ema.bin\"\n        ]\n      }\n    },\n    \"tasks\": {\n      \"training\": {\n        \"epochs\": 24,\n        \"region_mask_probs\": [\n          0.15,\n          0.3\n        ],\n        \"batch_size\": 128,\n        \"seed\": 4\n      },\n      \"fine_tuning\": {\n        \"model\": \"bert-base-uncased\",\n        \"from_pretrained\": \"save/devlbert/pytorch_model_11.bin\",\n        \"config_file\": \"config/bert_base_6layer_6conect.json\",\n        \"learning_rate\": \"4e-5\",\n        \"tasks\": 3,\n        \"save_name\": \"devlbert_i\",\n        \"use_ema\": true,\n        \"ema_decay_ratio\": 0.9999,\n        \"num_workers\": 1,\n        \"batch_size\": 16\n      },\n      \"evaluation\": {\n        \"model\": \"bert-base-uncased\",\n        \"from_pretrained\": \"/cw/working-gimli/nathan/ckpts_downstream/RetrievalFlickr30k_bert_base_6layer_6conect-24_ep_devlbert_i/pytorch_model_11_ema.bin\",\n        \"config_file\": \"config/bert_base_6layer_6conect.json\",\n        \"tasks\": 3,\n        \"split\": \"test\",\n        \"batch_size\": 1\n      }\n    }\n  }\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "citation_metadata": {
+                "citation_sources": [
+                    {
+                        "start_index": 1152,
+                        "end_index": 1330,
+                        "uri": "https://github.com/Natithan/p1_causality",
+                        "license_": ""
+                    }
+                ]
+            },
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 683,
+        "candidates_token_count": 724,
+        "total_token_count": 1407,
+        "cached_content_token_count": 0
+    }
+}

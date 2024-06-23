@@ -1,0 +1,49 @@
+{
+    "application": "Slurm",
+    "details": {
+        "scheduler": "Slurm",
+        "partition": "fwkt_v100",
+        "account": "fwkt_v100",
+        "time": "10:00:00",
+        "nodes": 1,
+        "tasks": 1,
+        "tasks_per_node": 1,
+        "gpus": 2,
+        "memory": "200000",
+        "cpus_per_task": 24,
+        "exclusive": true,
+        "array_tasks": 9,
+        "mail_type": "ALL",
+        "mail_user": "j.schenke@hzdr.de",
+        "output": "log.ob.slurm-%A_%a.out",
+        "error": "err.ob.slurm-%A_%a.out",
+        "modules": [
+            "git",
+            "gcc",
+            "cuda",
+            "cmake",
+            "boost",
+            "python"
+        ],
+        "environment_variables": {
+            "alpaka_DIR": "/home/schenk24/workspace/alpaka/",
+            "CUDA_VISIBLE_DEVICES": "0",
+            "GOMPC_CPU_AFFINITY": "0-11",
+            "OMP_PROC_BIND": "true"
+        },
+        "executable": "bench",
+        "arguments": [
+            "0",
+            "100",
+            "12.4",
+            "2",
+            "1",
+            "0",
+            "0",
+            "../../../data_pool/synthetic/pede.bin",
+            "../../../data_pool/px_101016/gainMaps_M022.bin",
+            "../../../data_pool/synthetic/random_clusters_overlapping/cluster_$SLURM_ARRAY_TASK_ID.bin",
+            "clustercount$SLURM_ARRAY_TASK_ID"
+        ]
+    }
+}

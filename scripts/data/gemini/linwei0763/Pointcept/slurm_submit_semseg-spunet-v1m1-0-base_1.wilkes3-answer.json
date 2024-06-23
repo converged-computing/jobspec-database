@@ -1,0 +1,26 @@
+{
+    "application": "sbatch",
+    "details": {
+        "slurm_directives": {
+            "job_name": "pointcept-semseg-spunet-v1m1-0-base",
+            "project": "SHEIL-SL3-GPU",
+            "nodes": 1,
+            "tasks": 1,
+            "gpus": 1,
+            "wall_time": "12:00:00",
+            "mail_type": "ALL",
+            "partition": "ampere"
+        },
+        "environment": {
+            "modules": [
+                "rhel8/default-amp",
+                "cuda/11.8",
+                "cudnn/8.9_cuda-11.8"
+            ],
+            "conda_environment": "pointcept",
+            "cuda_visible_devices": "${CUDA_VISIBLE_DEVICES}"
+        },
+        "application_command": "sh scripts/train.sh -p python -g 1 -d seg2tunnel -c semseg-spunet-v1m1-0-base -n semseg-spunet-v1m1-0-base -r true",
+        "openmp_threads": 1
+    }
+}

@@ -1,0 +1,29 @@
+{
+    "application": "SLURM",
+    "details": {
+        "scheduler": "SLURM",
+        "language": "Bash",
+        "libraries": [
+            "python",
+            "conda",
+            "nvidia-smi"
+        ],
+        "resources": {
+            "cpu": "2 cores",
+            "memory": "2GB",
+            "gpu": "1",
+            "constraints": "khazadum|rivendell|belegost|shire|gondor"
+        },
+        "job_name": "${RUN_CONFIG_PREFIX}",
+        "array_size": "${SLURM_ARRAY_TASK_ID}%${SLURM_MAX_TASKS}",
+        "output_file": "${RUNS_PATH}/%A_%a_slurm.out",
+        "error_file": "${RUNS_PATH}/%A_%a_slurm.err",
+        "mail_type": "BEGIN,END,FAIL",
+        "mail_user": "${USER}@kth.se",
+        "python_script": "workshop.train_yaml",
+        "config_file_format": "YAML",
+        "config_file_prefix": "array.$(date +'%F_%T.%N')",
+        "queue_folder": "${RUNS_PATH}/queue",
+        "error_folder": "${RUNS_PATH}/error"
+    }
+}

@@ -1,0 +1,70 @@
+{
+    "application": "SLURM",
+    "details": {
+        "queue": "megatron",
+        "job_name": "Megatron-LM",
+        "nodes": 1,
+        "cpus_per_task": 64,
+        "docker_image": "registry-intl.cn-hongkong.aliyuncs.com/sixpublic/pytorch:23.10-py3",
+        "script": "process_data.sh",
+        "environment_variables": {
+            "LOGLEVEL": "INFO",
+            "WANDB_API_KEY": "YourOwnWandbAPIKey",
+            "PROJECT_ROOT": "/aifs4su/code/",
+            "NVIDIA_VISIBLE_DEVICES": "all",
+            "NCCL_SOCKET_IFNAME": "ibp",
+            "NCCL_IB_HCA": "mlx5",
+            "NCCL_DEBUG": "INFO",
+            "NCCL_DEBUG_SUBSYS": "ALL",
+            "GPUS_PER_NODE": 8,
+            "MASTER_PORT": "6000",
+            "NNODES": 4,
+            "CUDA_DEVICE_MAX_CONNECTIONS": 10,
+            "OMP_NUM_THREADS": 10
+        },
+        "mount_points": [
+            {
+                "source": "/aifs4su/code/Megatron-LM",
+                "destination": "/workspace/megatron"
+            },
+            {
+                "source": "/aifs4su/code/dataset",
+                "destination": "/workspace/dataset"
+            },
+            {
+                "source": "/aifs4su/data/rawdata/yubo_slimpajama/",
+                "destination": "/workspace/data/"
+            },
+            {
+                "source": "/run/mellanox/drivers",
+                "destination": "/run/mellanox/drivers",
+                "type": "shared"
+            },
+            {
+                "source": "/etc/network",
+                "destination": "/etc/network"
+            },
+            {
+                "source": "/etc",
+                "destination": "/host/etc"
+            },
+            {
+                "source": "/lib/udev",
+                "destination": "/host/lib/udev"
+            },
+            {
+                "source": "/aifs4su/code/checkpoints",
+                "destination": "/workspace/checkpoints"
+            }
+        ],
+        "docker_options": [
+            "--net=host",
+            "--ipc=host",
+            "--rm",
+            "--user=root",
+            "--shm-size=1024g",
+            "--ulimit memlock=-1",
+            "--privileged"
+        ]
+    }
+}

@@ -1,0 +1,37 @@
+{
+    "application": "SLURM",
+    "details": {
+        "job_name": "_SLURM_JOBID_TEMPLATE__eagle",
+        "nodes": 1,
+        "output": "eagle__SLURM_JOBID_TEMPLATE__%A.out",
+        "error": "eagle__SLURM_JOBID_TEMPLATE__%A.err",
+        "tasks_per_node": 1,
+        "cpus_per_task": "_NUM_CPU_TEMPLATE_",
+        "time": "00:40:00",
+        "memory": "_NUM_RAMMB_TEMPLATE_",
+        "gres": "_GRES_GPU_TEMPLATE_",
+        "modules": [
+            "singularity",
+            "R",
+            "hdf5",
+            "cuda"
+        ],
+        "environment_variables": {
+            "NTHREADS": "_OMP_CPU_TEMPLATE_",
+            "NGPUS": "_NUM_GPU_TEMPLATE_",
+            "SING_CUDA_ACC": "/flush1/bow355/AMplus_new_code/Mid_docker_tests/mro_cuda8_eagle_acc2_hdf-latest.img"
+        },
+        "command": "cat am_big__RFILE_TEMPLATE_.R | EAGLE_PROFILE_STR=1 KMP_AFFINITY=granularity=fine,scatter OMP_NUM_THREADS=$NTHREADS  /flush1/bow355/AMplus_new_code/Mid_docker_tests/runR.sh _NUM_GPU_TEMPLATE_  > eagle_REPEAT_cs_ROWMAJOR_MASTER__SLURM_JOBID_TEMPLATE___${SLURM_JOBID}_gpu_${NGPUS}_ncpu_${NTHREADS}.res 2>&1",
+        "other_details": [
+            "This script uses SLURM to submit a job to a cluster.",
+            "The job runs a script called 'am_big__RFILE_TEMPLATE_.R' within a Singularity container.",
+            "The container is built from the image '/flush1/bow355/AMplus_new_code/Mid_docker_tests/mro_cuda8_eagle_acc2_hdf-latest.img'.",
+            "The script uses the 'runR.sh' script from the same directory to run the R script.",
+            "The script uses environment variables for the number of threads, GPUs, and SING_CUDA_ACC.",
+            "The job is configured to use a specific number of nodes, CPUs, and memory.",
+            "The output and error files are named according to a specific pattern.",
+            "The script uses the 'module load' command to load necessary software modules.",
+            "The script uses the 'singularity exec --nv' command to execute the R script within the Singularity container."
+        ]
+    }
+}

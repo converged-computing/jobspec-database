@@ -1,0 +1,26 @@
+{
+    "application": "SLURM",
+    "details": {
+        "job_name": "parameterized",
+        "output_file": "./job_out/%x.pre-%A.out",
+        "error_file": "./job_err/%x.pre-%A.err",
+        "partition": "cpu",
+        "cores": 8,
+        "memory": "60G",
+        "time": "1-00:00:00",
+        "environment": {
+            "bashrc": "${HOME}/.bashrc",
+            "conda_env": "tds_py37_pt",
+            "PYTHONPATH": "./",
+            "OMP_NUM_THREADS": 2
+        },
+        "script": {
+            "language": "python",
+            "path": "./$1/Prepare_dataset.py",
+            "arguments": [
+                "--data_dir=/ivi/ilps/personal/jpei/TDS",
+                "$2"
+            ]
+        }
+    }
+}

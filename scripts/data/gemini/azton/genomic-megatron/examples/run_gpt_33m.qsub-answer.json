@@ -1,0 +1,35 @@
+{
+    "application": "megatron-lm",
+    "software": [
+        "PBS",
+        "conda",
+        "python",
+        "pytorch",
+        "git",
+        "deepspeed",
+        "mpiexec"
+    ],
+    "resource_requirements": {
+        "compute_nodes": 32,
+        "walltime": "00:10:00",
+        "filesystems": [
+            "home",
+            "eagle"
+        ],
+        "queue": "prod",
+        "account": "FoundEpidem",
+        "output_file": "/lus/eagle/projects/candle_aesp/azton/GenomeLM/genomelm/runlog.out",
+        "error_file": "/lus/eagle/projects/candle_aesp/azton/GenomeLM/genomelm/runlog.err",
+        "proxy": "http://proxy.alcf.anl.gov:3128",
+        "cuda_devices": "0,1,2,3",
+        "ranks_per_node": 4
+    },
+    "data_requirements": {
+        "data_path": "/lus/eagle/projects/FoundEpidem/azton/genomes/megatron_bins/bvbrc-bpe-tokenize_30k",
+        "vocab_file": "/lus/eagle/projects/FoundEpidem/azton/GenomeLM/genomelm/tokenizer_files/15.0M_BVBRC_BPETokenizer_16384.json"
+    },
+    "other_requirements": {
+        "deepspeed_config": "./ds_config_zero1_bf16.json",
+        "reload_path": "/lus/eagle/projects/RL-fold/azton/mega-genomes/checkpoints/BERT_SP1_MP1_PP1_NL8_H768_A8_L1024_ZERO1_FLASH1_NN128"
+    }
+}

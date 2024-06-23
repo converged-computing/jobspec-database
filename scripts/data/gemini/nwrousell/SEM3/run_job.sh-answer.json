@@ -1,0 +1,29 @@
+{
+    "application": "apptainer",
+    "details": {
+        "resource_requirements": {
+            "nodes": 1,
+            "cores": 1,
+            "gpus": 1,
+            "memory_per_cpu": "32G",
+            "runtime_limit": "48:00:00"
+        },
+        "environment_variables": {
+            "APPTAINER_BINDPATH": "/oscar/home/$USER,/oscar/scratch/$USER,/oscar/data",
+            "PYTHONUNBUFFERED": "TRUE"
+        },
+        "image": "../tensorflow-24.03-tf2-py3.simg",
+        "python_module": "main",
+        "arguments": [
+            "--train",
+            "--seed",
+            "3",
+            "--name",
+            "$SLURM_JOB_NAME"
+        ],
+        "other_software": {
+            "slurm": "for job scheduling and resource allocation",
+            "python": "for running the main module"
+        }
+    }
+}

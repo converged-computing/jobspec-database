@@ -1,0 +1,77 @@
+{
+    "application": "PBS",
+    "details": {
+        "job_name": "hs-d-r",
+        "nodes": "1",
+        "cores_per_node": "3",
+        "walltime": "48:00:00",
+        "queue": "qfermi",
+        "email": "adc@geo.au.dk",
+        "email_options": "abe",
+        "software": [
+            {
+                "name": "Grendel CUDA",
+                "version": "5.5.22",
+                "source": "/com/cuda/5.5.22"
+            },
+            {
+                "name": "Python",
+                "version": "2.7.6",
+                "source": "/com/python/2.7.6"
+            },
+            {
+                "name": "CMake",
+                "version": "Unknown",
+                "source": "Locally installed"
+            }
+        ],
+        "libraries": [
+            {
+                "name": "CUDA",
+                "path": "/com/cuda/5.5.22/lib64:/com/cuda/5.5.22/lib"
+            }
+        ],
+        "environment_variables": [
+            {
+                "name": "CUDAPATH",
+                "value": "/com/cuda/5.5.22"
+            },
+            {
+                "name": "PYTHONPATH",
+                "value": "/com/python/2.7.6/lib:/home/adc/.local/lib/python:/home/adc/.local/lib64/python"
+            }
+        ],
+        "commands": [
+            {
+                "command": "source /com/gcc/4.6.4/load.sh",
+                "description": "Loads the GCC 4.6.4 environment"
+            },
+            {
+                "command": "nvidia-smi",
+                "description": "Displays NVIDIA-SMI information"
+            },
+            {
+                "command": "cmake . && make",
+                "description": "Builds the project using CMake"
+            },
+            {
+                "command": "python halfshear-darcy-starter.py 0 1 1.0 3.5e-15 20000.0 6.110e-7 1.0 &",
+                "description": "Runs the Python script on device 0"
+            },
+            {
+                "command": "python halfshear-darcy-starter.py 1 1 1.0 3.5e-15 20000.0 1.797e-7 1.0 &",
+                "description": "Runs the Python script on device 1"
+            },
+            {
+                "command": "python halfshear-darcy-starter.py 2 1 1.0 3.5e-15 20000.0 1.797e-8 1.0 &",
+                "description": "Runs the Python script on device 2"
+            },
+            {
+                "command": "wait",
+                "description": "Waits for all background processes to finish"
+            }
+        ],
+        "working_directory": "/home/adc/code/sphere",
+        "scratch_directory": "/scratch/$PBS_JOBID"
+    }
+}

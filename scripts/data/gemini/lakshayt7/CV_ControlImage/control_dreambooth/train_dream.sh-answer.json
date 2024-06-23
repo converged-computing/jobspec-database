@@ -1,0 +1,34 @@
+{
+    "application": "Dreambooth",
+    "details": {
+        "framework": "Accelerate",
+        "model": "CompVis/stable-diffusion-v1-4",
+        "script": "train_dreambooth_control.py",
+        "resources": {
+            "nodes": 1,
+            "tasks_per_node": 2,
+            "cpus_per_task": 4,
+            "time": "24:00:00",
+            "memory_per_cpu": "16G",
+            "gpu": "a100",
+            "gpu_count": 1
+        },
+        "environment": {
+            "conda_env": "/gpfs/scratch/lt2504/bert/bin/activate",
+            "instance_data_dir": "/gpfs/home/lt2504/dreambooth/Dreambooth-Stable-Diffusion/training_images/Sam_Altman",
+            "output_dir": "/gpfs/scratch/lt2504/diffusers_out/dreambooth-control-8000step-prior-preserve"
+        },
+        "training_parameters": {
+            "instance_prompt": "a photo of sks",
+            "class_prompt": "photo of a man",
+            "resolution": 512,
+            "train_batch_size": 1,
+            "gradient_accumulation_steps": 1,
+            "learning_rate": 5e-06,
+            "lr_scheduler": "constant",
+            "lr_warmup_steps": 0,
+            "max_train_steps": 8000,
+            "with_prior_preservation": true
+        }
+    }
+}

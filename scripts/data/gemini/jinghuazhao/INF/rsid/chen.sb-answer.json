@@ -1,0 +1,26 @@
+{
+    "application": "tabix",
+    "details": {
+        "slurm_account": "CARDIO-SL0-CPU",
+        "slurm_partition": "cardio",
+        "slurm_job_name": "tabix",
+        "slurm_array_task_id": "1-15",
+        "slurm_qos": "cardio",
+        "slurm_memory": "50000",
+        "slurm_time": "12:00:00",
+        "slurm_output": "/rds/user/jhz22/hpc-work/work/_tabix_%A_%a.o",
+        "slurm_error": "/rds/user/jhz22/hpc-work/work/_tabix_%A_%a.e",
+        "environment_variables": {
+            "TMPDIR": "${HPC_WORK}/work",
+            "f": "ls ~/rds/rds-jmmh2-results/public/gwas/blood_cell_traits/chen_2020/*EUR* | awk 'NR==ENVIRON[\"SLURM_ARRAY_TASK_ID\"]'",
+            "d": "dirname $f",
+            "trait": "basename $f | tr '_' '\t' | cut -f1"
+        },
+        "commands": [
+            "gunzip -c $f | head -1 | awk -vFS=\"\\t\" -vOFS=\"\\t\" '{print \"snpid\",$0}'",
+            "gunzip -c $f | sed '1d' | sort -k1,1n -k2,2n | awk -vFS=\"\\t\" -vOFS=\"\\t\" '{if($3<$4) snpid=\"chr\"$1:\"$2_\"$3_\"$4; else snpid=\"chr\"$1:\"$2_\"$3_\"$4; print snpid,$0}'",
+            "bgzip -f > $d/tsv/EUR-$trait.tsv.gz",
+            "tabix -S1 -s2 -b3 -e3 $d/tsv/EUR-$trait.tsv.gz"
+        ]
+    }
+}

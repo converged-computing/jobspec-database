@@ -1,0 +1,48 @@
+{
+    "application": "Magpie",
+    "details": {
+        "software": {
+            "magpie": {
+                "description": "Scripts for running Hadoop on traditional HPC systems.",
+                "url": "https://github.com/llnl/magpie",
+                "license": "GNU General Public License v2"
+            },
+            "ray": {
+                "description": "A distributed execution framework for Python.",
+                "url": "https://docs.ray.io/en/master/",
+                "setup_required": "yes"
+            },
+            "mpirun": {
+                "description": "A command for launching parallel programs.",
+                "required": "yes"
+            }
+        },
+        "resource_requirements": {
+            "lsf": {
+                "required": "yes",
+                "details": {
+                    "node_count": "<my_node_count>",
+                    "time_limit": "<my_time_in_hours:minutes>",
+                    "job_name": "<my_job_name>",
+                    "queue": "<my_queue>"
+                }
+            },
+            "storage": {
+                "local": {
+                    "directory": "/tmp/${USER}/magpie",
+                    "usage": "Local configuration files and log files for the job."
+                },
+                "remote": {
+                    "directory": "${HOME}/magpie",
+                    "usage": "Location of scripts and files used by Magpie."
+                }
+            },
+            "remote_shell": {
+                "command": "ssh",
+                "options": "MAGPIE_REMOTE_CMD_OPTS",
+                "required": "yes",
+                "details": "Passwordless remote shell command required for launching daemons across the job allocation."
+            }
+        }
+    }
+}

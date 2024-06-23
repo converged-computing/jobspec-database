@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"relion\",\n  \"details\": {\n    \"scheduler\": \"slurm\",\n    \"spack\": {\n      \"version\": \"0.17.3\",\n      \"instance_name\": \"gpu\",\n      \"instance_dir\": \"${HOME}/cm/shared/apps/spack/0.17.3/gpu\",\n      \"package\": \"relion@4.0.0\",\n      \"compiler\": \"gcc@10.2.0\",\n      \"variants\": \"+allow_ctf_in_sagd +cuda cuda_arch=70,80 +double ~double-gpu ~gui ~ipo ~mklfft\",\n      \"dependencies\": \"^fftw@3.3.10/$(spack find --format '{hash:7}' fftw@3.3.10 % ${SPACK_COMPILER} +mpi ~openmp ^openmpi@4.1.3)\",\n      \"spec\": \"${SPACK_PACKAGE} % ${SPACK_COMPILER} ${SPACK_VARIANTS} ${SPACK_DEPENDENCIES}\"\n    },\n    \"resources\": {\n      \"nodes\": 1,\n      \"tasks_per_node\": 1,\n      \"cpus_per_task\": 10,\n      \"memory\": \"93G\",\n      \"gpus\": 1,\n      \"time\": \"01:00:00\"\n    },\n    \"environment\": {\n      \"system_name\": \"expanse\",\n      \"local_time\": \"$(date +'%Y%m%dT%H%M%S%z')\",\n      \"unix_time\": \"$(date +'%s')\",\n      \"slurm_job_script\": \"$(scontrol show job ${SLURM_JOB_ID} | awk -F= '/Command=/{print $2}')\",\n      \"slurm_job_md5sum\": \"$(md5sum ${SLURM_JOB_SCRIPT})\"\n    },\n    \"additional_script\": \"plumed@2.6.3.sh\"\n  }\n}\n```\n\nThis JSON output provides a structured representation of the information gathered from the script. It identifies the application as \"relion\" and then details various aspects of the script's environment, resource requirements, and dependencies. \n\nHere's a breakdown of the JSON output:\n\n* **application:** \"relion\" - This clearly indicates the main application the script is designed to run.\n* **details:**  This section provides a comprehensive description of the script's setup:\n    * **scheduler:** \"slurm\" -  Specifies the workload manager used.\n    * **spack:** This section describes the Spack package manager configuration:\n        * **version:** \"0.17.3\" - The version of Spack being used.\n        * **instance_name:** \"gpu\" - The name of the Spack instance.\n        * **instance_dir:**  \"${HOME}/cm/shared/apps/spack/0.17.3/gpu\" -  The directory where Spack is installed.\n        * **package:** \"relion@4.0.0\" -  The specific Relion package to be installed.\n        * **compiler:** \"gcc@10.2.0\" - The GCC compiler version used.\n        * **variants:** \"+allow_ctf_in_sagd +cuda cuda_arch=70,80 +double ~double-gpu ~gui ~ipo ~mklfft\" -  The compilation flags and options.\n        * **dependencies:** \"^fftw@3.3.10/$(spack find --format '{hash:7}' fftw@3.3.10 % ${SPACK_COMPILER} +mpi ~openmp ^openmpi@4.1.3)\" -  The dependencies for the Relion package.\n        * **spec:**  \"${SPACK_PACKAGE} % ${SPACK_COMPILER} ${SPACK_VARIANTS} ${SPACK_DEPENDENCIES}\" -  The complete Spack specification.\n    * **resources:** This section outlines the computational resources required:\n        * **nodes:** 1 - The number of nodes to use.\n        * **tasks_per_node:** 1 -  The number of tasks to run per node.\n        * **cpus_per_task:** 10 - The number of CPU cores per task.\n        * **memory:** \"93G\" -  The amount of RAM required.\n        * **gpus:** 1 - The number of GPUs to be used.\n        * **time:** \"01:00:00\" -  The maximum runtime allocated.\n    * **environment:**  This section defines variables used within the script:\n        * **system_name:** \"expanse\" -  The name of the system running the script.\n        * **local_time:** \"$(date +'%Y%m%dT%H%M%S%z')\" -  The current local time.\n        * **unix_time:** \"$(date +'%s')\" - The current Unix timestamp.\n        * **slurm_job_script:** \"$(scontrol show job ${SLURM_JOB_ID} | awk -F= '/Command=/{print $2}')\" -  The script's contents.\n        * **slurm_job_md5sum:** \"$(md5sum ${SLURM_JOB_SCRIPT})\" -  The MD5 hash of the script.\n    * **additional_script:** \"plumed@2.6.3.sh\" -  This indicates that the script depends on another script, \"plumed@2.6.3.sh\", which will be executed after Relion installation. \n\nThis JSON output provides a clear and structured way to understand the various components and dependencies of this shell script. \n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 1052,
+        "candidates_token_count": 1295,
+        "total_token_count": 2347,
+        "cached_content_token_count": 0
+    }
+}

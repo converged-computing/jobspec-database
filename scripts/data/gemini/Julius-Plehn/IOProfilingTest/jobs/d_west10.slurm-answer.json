@@ -1,0 +1,27 @@
+{
+    "application": "MPI",
+    "details": {
+        "resource_requirements": {
+            "time_limit": "2 hours",
+            "nodes": 10,
+            "tasks": 10,
+            "partition": "west"
+        },
+        "environment_setup": {
+            "modules": {
+                "profile": "/etc/profile.d/modules.sh",
+                "wr-spack": "/etc/profile.d/wr-spack.sh",
+                "spack_load": "mpi with dependencies"
+            },
+            "environment_variables": {
+                "MPICH_NEMESIS_NETMOD": "ib (if SLURM_PARTITION is 'abu')",
+                "DARSHAN_DISABLE_SHARED_REDUCTION": 1,
+                "LD_PRELOAD": "/home/plehn/darshan-build/lib/libdarshan.so"
+            }
+        },
+        "executables": [
+            "../writefile 1000000000 1 3",
+            "../writefile 1000000000 2 3"
+        ]
+    }
+}

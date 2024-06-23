@@ -1,0 +1,42 @@
+{
+    "application": "Singularity",
+    "details": {
+        "job_name": "a100-cloudmask-gpu-greene",
+        "nodes": 1,
+        "tasks": 1,
+        "time": "2:00:00",
+        "partition": "bii-gpu",
+        "account": "bii_dsc_community",
+        "gres": "gpu:a100",
+        "output_file": "outputs/a100-%u-%j.out",
+        "error_file": "outputs/a100-%u-%j.err",
+        "reservation": "bi_fox_dgx",
+        "constraint": "a100_80gb",
+        "memory": "64G",
+        "environment_variables": {
+            "USER_SCRATCH": "/scratch/$USER",
+            "PROJECT_DIR": "/scratch/$USER/mlcommons/benchmarks/cloudmask",
+            "PYTHON_DIR": "/scratch/$USER/ENV3",
+            "PROJECT_DATA": "/scratch/$USER/data"
+        },
+        "modules": [
+            "gcc/9.2.0",
+            "cuda/11.0.228",
+            "openmpi/3.1.6",
+            "python/3.8.8",
+            "singularity tensorflow/2.8.0"
+        ],
+        "container": "tensorflow-2.8.0.sif",
+        "python_script": "slstr_cloud.py",
+        "configuration_file": "simple-config.yaml",
+        "gpu_monitoring": {
+            "gpu_id": 0,
+            "delay": 0.5,
+            "output_file": "outputs/gpu0.log"
+        },
+        "performance_metrics": {
+            "seff": true,
+            "time": true
+        }
+    }
+}

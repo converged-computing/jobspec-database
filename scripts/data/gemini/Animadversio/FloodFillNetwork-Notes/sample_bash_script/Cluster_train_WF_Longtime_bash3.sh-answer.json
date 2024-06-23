@@ -1,0 +1,33 @@
+{
+    "application": "PBS",
+    "details": {
+        "job_name": "ffn-train-WF-Longtime3",
+        "email_notification": "be",
+        "nodes": "1",
+        "cores_per_node": "4",
+        "gpus": "1",
+        "gpu_type": "V100",
+        "walltime": "168:00:00",
+        "memory": "6gb",
+        "queue": "dque",
+        "software": [
+            "singularity-2.4.2",
+            "python",
+            "tensorflow-1.7.0"
+        ],
+        "libraries": [
+            "hdf5"
+        ],
+        "files": [
+            "~/ffn-master/train.py",
+            "/scratch/binxu.wang/ffn-Data/LGN_DATA/tf_record_file_LR_WF",
+            "/scratch/binxu.wang/ffn-Data/LGN_DATA/grayscale_maps_LR.h5",
+            "/scratch/binxu.wang/ffn-Data/LGN_DATA/groundtruth_LR.h5",
+            "/scratch/binxu.wang/ffn-Data/models/LR_model_WF_Longtime"
+        ],
+        "environment_variables": {
+            "HDF5_USE_FILE_LOCKING": "FALSE"
+        },
+        "command": "singularity exec -B /scratch:/scratch --nv /export/tensorflow-1.7.0/test/ubuntu_tf_gpu python ~/ffn-master/train.py --train_coords /scratch/binxu.wang/ffn-Data/LGN_DATA/tf_record_file_LR_WF --data_volumes LGN_LR:/scratch/binxu.wang/ffn-Data/LGN_DATA/grayscale_maps_LR.h5:raw --label_volumes LGN_LR:/scratch/binxu.wang/ffn-Data/LGN_DATA/groundtruth_LR.h5:stack --train_dir /scratch/binxu.wang/ffn-Data/models/LR_model_WF_Longtime --model_name convstack_3d.ConvStack3DFFNModel --model_args \"{\"depth\": 9, \"fov_size\": [77, 51, 23], \"deltas\": [15,10,5]}\" --max_steps 30000000 --summary_rate_secs 300 --image_mean 136 --image_stddev 55 --permutable_axes 0"
+    }
+}

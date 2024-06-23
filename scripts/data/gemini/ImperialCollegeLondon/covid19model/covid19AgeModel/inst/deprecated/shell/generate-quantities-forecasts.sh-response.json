@@ -1,0 +1,62 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"PBS\",\n  \"details\": {\n    \"software\": [\n      \"cmdstan\",\n      \"anaconda3\",\n      \"Rscript\"\n    ],\n    \"resources\": [\n      \"walltime=23:59:00\",\n      \"select=1:ncpus=37:ompthreads=37:mem=333gb\",\n      \"queue=pqcovid19c\",\n      \"job array\"\n    ],\n    \"libraries\": [\n      \"covid19model\"\n    ],\n    \"input_files\": [\n      \"~/git/R0t/base-ages-generate-quantities-forecast.R\",\n      \"$JOB_TO_PROCESS_FILE\"\n    ],\n    \"output_files\": [\n      \"$JOB_TO_PROCESS_FILE\"\n    ],\n    \"commands\": [\n      \"source activate covid19model\",\n      \"ls -d $JOB_DIR1/*/ > $JOB_TO_PROCESS_FILE\",\n      \"cat \\\"$JOB_TO_PROCESS_FILE\\\" | wc -l\",\n      \"sed -n \\\"$PBS_ARRAY_INDEX\\\"'p' \\\"$JOB_TO_PROCESS_FILE\\\"\",\n      \"Rscript \\\"$CODE_DIR\\\"/base-ages-generate-quantities-forecast.R -indir.code \\\"$CODE_DIR\\\" -indir.results \\\"$PBS_ARRAY_INPUT\\\" -location.index {} -with.flow 1 -forecast.period $FORECAST_PERIOD -school.reopen \\\"0\\\" -multiplier_cntct_school_opening \\\"1\\\"\",\n      \"Rscript \\\"$CODE_DIR\\\"/base-ages-generate-quantities-forecast.R -indir.code \\\"$CODE_DIR\\\" -indir.results \\\"$PBS_ARRAY_INPUT\\\" -location.index {} -with.flow 1 -forecast.period $FORECAST_PERIOD -school.reopen \\\"1\\\" -multiplier_cntct_school_opening \\\"$i\\\"\"\n    ]\n  }\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "citation_metadata": {
+                "citation_sources": [
+                    {
+                        "start_index": 721,
+                        "end_index": 969,
+                        "uri": "https://github.com/ImperialCollegeLondon/covid19model",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 981,
+                        "end_index": 1230,
+                        "uri": "https://github.com/ImperialCollegeLondon/covid19model",
+                        "license_": ""
+                    }
+                ]
+            },
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 977,
+        "candidates_token_count": 464,
+        "total_token_count": 1441,
+        "cached_content_token_count": 0
+    }
+}

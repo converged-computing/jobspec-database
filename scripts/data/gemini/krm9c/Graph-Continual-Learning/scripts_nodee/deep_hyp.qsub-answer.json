@@ -1,0 +1,31 @@
+{
+    "application": "Ray",
+    "details": {
+        "resource_requirements": {
+            "cpus_per_node": 8,
+            "gpus_per_node": 8
+        },
+        "cluster_setup": {
+            "head_node": {
+                "start_command": "ray start --head --node-ip-address=$head_node_ip --port=$port --num-cpus $CPUS_PER_NODE --num-gpus $GPUS_PER_NODE --block"
+            },
+            "worker_nodes": {
+                "start_command": "ray start --address $ip_head --num-cpus $CPUS_PER_NODE --num-gpus $GPUS_PER_NODE --block"
+            }
+        },
+        "environment_setup": {
+            "init_script": "init-dh-environment.sh",
+            "execution_directory": "$EXP_DIR"
+        },
+        "job_execution": {
+            "search_script": "deephyper_Proteins.py",
+            "execution_command": "python deephyper_Proteins.py"
+        },
+        "cobalt_job_submission": {
+            "account": "NuQMC",
+            "nodes": 5,
+            "queue": "full-node",
+            "time": 600
+        }
+    }
+}

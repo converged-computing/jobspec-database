@@ -1,0 +1,54 @@
+{
+    "application": "SLURM",
+    "details": {
+        "constraints": "gpuv100x",
+        "nodes": 6,
+        "partition": "gpu",
+        "gpus": "v100x:4",
+        "tasks_per_node": 4,
+        "cpus_per_task": 8,
+        "memory": "100gb",
+        "time": "10:00:00",
+        "error_file": "/home/luberjm/pl/code/benchmarking/bw18.out",
+        "output_file": "/home/luberjm/pl/code/benchmarking/bw18.out",
+        "conda_environment": "ml2",
+        "module_loads": [
+            "nccl/2.7.8_cuda11.0"
+        ],
+        "environment_variables": {
+            "NCCL_DEBUG": "INFO",
+            "NCCL_DEBUG_SUBSYS": "COLL",
+            "NCCL_SOCKET_IFNAME": "^docker0,lo"
+        },
+        "python_script": "/home/luberjm/pl/code/adjustments.py",
+        "script_arguments": [
+            "--batch-size",
+            "32",
+            "--epochs",
+            "15",
+            "--gpus",
+            "4",
+            "--nodes",
+            "6",
+            "--workers",
+            "32",
+            "--custom-coords-file",
+            "/home/luberjm/pl/code/patch_coords.data",
+            "--accelerator",
+            "ddp",
+            "--logging-name",
+            "bw18",
+            "--train-size",
+            "500000",
+            "--test-size",
+            "33500",
+            "--enc-dim",
+            "512",
+            "--latent-dim",
+            "256",
+            "--resnet",
+            "resnet18",
+            "--read-coords"
+        ]
+    }
+}

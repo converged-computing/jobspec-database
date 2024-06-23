@@ -1,0 +1,28 @@
+{
+    "application": "GROMACS",
+    "details": {
+        "version": "2020.5-cpeCray-21.11",
+        "environment_module": "PDC",
+        "runtime_environment": "Cray",
+        "resources": {
+            "nodes": 4,
+            "tasks_per_node": 128,
+            "time": "0:30:00",
+            "account": "snic2021-3-15",
+            "partition": "main"
+        },
+        "input_files": [
+            "topol.tpr",
+            "state.cpt"
+        ],
+        "output_files": [
+            "slurm.out",
+            "slurm.err",
+            "confout.gro"
+        ],
+        "commands": [
+            "gmx_mpi mdrun -v -maxh $time -s topol.tpr  -pin on  -cpi state.cpt",
+            "sbatch gromacs_dardel.sh"
+        ]
+    }
+}

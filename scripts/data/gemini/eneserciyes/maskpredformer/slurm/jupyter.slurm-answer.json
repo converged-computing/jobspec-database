@@ -1,0 +1,25 @@
+{
+    "application": "Jupyter",
+    "details": {
+        "resource_requirements": {
+            "partition": "n1s8-v100-1",
+            "gpus": 1,
+            "cpus": 8,
+            "time": "6:00:00",
+            "output_file": "logs/jupyter_%j.out"
+        },
+        "software_requirements": {
+            "singularity": "/share/apps/images/cuda11.7.99-cudnn8.5-devel-ubuntu22.04.2.sif",
+            "jupyter_lab": "jupyter-lab --no-browser --port $port --notebook-dir=$(pwd)",
+            "ssh": "ssh $opts $USER@log-$i.nyu.cluster",
+            "environment_variables": {
+                "SINGULARITY_CACHEDIR": "/tmp/$USER",
+                "XDG_RUNTIME_DIR": "$SLURM_JOBTMP"
+            },
+            "bindings": {
+                "/scratch": "rw",
+                "/scratch/me2646/maskpredformer.ext3": "ro"
+            }
+        }
+    }
+}

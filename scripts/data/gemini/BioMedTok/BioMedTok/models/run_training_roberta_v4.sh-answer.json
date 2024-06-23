@@ -1,0 +1,44 @@
+{
+    "application": "Slurm",
+    "details": {
+        "job_name": "BertTok",
+        "constraint": "v100-32g",
+        "total_tasks": 32,
+        "tasks_per_node": 4,
+        "gpus_per_node": 4,
+        "cpus_per_task": 10,
+        "hyperthreading": "disabled",
+        "max_runtime": "20:00:00",
+        "output_file": "./logs_slurm/mlm_test%j.out",
+        "error_file": "./logs_slurm/mlm_test%j.err",
+        "mail_type": "begin,fail,abort,end",
+        "modules": [
+            "pytorch-gpu/py3/1.12.1"
+        ],
+        "environment_variables": [
+            "OMP_NUM_THREADS=10",
+            "CUDA_LAUNCH_BLOCKING=1",
+            "NCCL_ASYNC_ERROR_HANDLING=1"
+        ],
+        "script": "run_training_roberta_v1.py",
+        "framework": "PyTorch",
+        "model_type": "camembert",
+        "config_overrides": "max_position_embeddings=514,type_vocab_size=1,vocab_size=32000,bos_token_id=0,pad_token_id=1,eos_token_id=2",
+        "training_parameters": {
+            "per_device_train_batch_size": 32,
+            "warmup_steps": 10000,
+            "max_seq_length": 512,
+            "logging_steps": 500,
+            "report_to": "tensorboard",
+            "save_strategy": "epoch",
+            "skip_memory_metrics": "False",
+            "log_level": "info",
+            "logging_first_step": "True",
+            "num_train_epochs": 400,
+            "fp16": true,
+            "save_total_limit": 400,
+            "ddp_timeout": 600,
+            "ddp_find_unused_parameters": "False"
+        }
+    }
+}

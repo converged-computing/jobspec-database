@@ -1,0 +1,27 @@
+{
+    "application": "Gromacs",
+    "details": {
+        "environment": "SLURM",
+        "nodes": 2,
+        "tasks_per_node": 120,
+        "cpus_per_task": 1,
+        "constraints": "rome,ib",
+        "partition": "ccb",
+        "time": "01:00:00",
+        "job_name": "slurm_gromacs_examplerun1",
+        "output": "slurm_gromacs_examplerun1.log",
+        "modules": [
+            "modules/2.2-20230808",
+            "openmpi/cuda-4.0.7",
+            "gromacs/mpi-2023.1"
+        ],
+        "openmp_threads": "$SLURM_CPUS_PER_TASK",
+        "resources": [
+            "lscpu",
+            "nvidia-smi",
+            "numactl -H"
+        ],
+        "compilation": "mpirun -np 1 gmx_mpi grompp -f gromacs_examplerun1.mdp -o gromacs_examplerun1.tpr -c step6.6_equilibration.gro -p topol.top -n index.ndx",
+        "execution": "mpirun --map-by socket:pe=$OMP_NUM_THREADS gmx_mpi mdrun -v -deffnm gromacs_examplerun1"
+    }
+}

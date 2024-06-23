@@ -1,0 +1,48 @@
+{
+    "application": "SLURM",
+    "details": {
+        "job_name": "cpt-v2-7b-residual",
+        "output_file": "logs-cpt/%x-%j.log",
+        "error_file": "logs-cpt/%x-%j.log",
+        "partition": "MoE",
+        "tasks_per_node": 1,
+        "cpus_per_task": 64,
+        "memory": 0,
+        "nodes": 2,
+        "gpus": 8,
+        "quota_type": "reserved",
+        "conda_environment": "llama-moe",
+        "model_type": "llama_moe_residual",
+        "tokenizer_path": "/mnt/petrelfs/share_data/quxiaoye/models/llama_7B",
+        "dataset_dir": "/mnt/petrelfs/share_data/quxiaoye/SlimPajama_processed",
+        "validation_dir": "/mnt/petrelfs/share_data/quxiaoye/data/llama1_7B_val_set_tokenized",
+        "learning_rate": 0.0003,
+        "final_lr_portion": 0.1,
+        "per_device_train_batch_size": 8,
+        "per_device_eval_batch_size": 8,
+        "gradient_accumulation_steps": 4,
+        "block_size": 4096,
+        "num_tokens": "2*10^11",
+        "seed": 1227,
+        "deepspeed_config_file": "conf/deepspeed/bf16_zero1_default.json",
+        "num_selects": 2,
+        "data_cache": "resources/cache",
+        "output_dir": "/mnt/petrelfs/share_data/quxiaoye/runs/residual_2_2_14_scale2_112gpus/",
+        "pretrained_model": "/mnt/petrelfs/share_data/quxiaoye/models/LlamaMoEResidualForCausalLM/Gradient-max-l1_norm-sample-feature_change/llama2_7B-14Select2-2Residuals-688Neurons",
+        "comment": "llama 2 7B, residual 2, gradient 2/14 | residual learn soft 2.0, moe soft 2.0 | GPU num 16, per-device bs 32, lr 3e-4",
+        "software": [
+            "SLURM",
+            "Anaconda",
+            "torchrun",
+            "deepspeed",
+            "smoe"
+        ],
+        "resource_requirements": [
+            "CPU (64 cores per task)",
+            "GPU (8 per node)",
+            "Memory (0 per node)",
+            "Network (for distributed training)",
+            "Storage (for model, data, and output)"
+        ]
+    }
+}

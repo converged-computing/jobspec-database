@@ -1,0 +1,32 @@
+{
+    "application": "Slurm",
+    "details": {
+        "resource_requirements": {
+            "nodes": 1,
+            "tasks": 1,
+            "cpus_per_task": 96,
+            "memory": "240G",
+            "partition": "stsi",
+            "time": "600:00:00",
+            "gres": "gpu:a100:4"
+        },
+        "software_requirements": {
+            "modules": [
+                "pytorch/1.7.1py38-cuda",
+                "samtools/1.10",
+                "R",
+                "bzip2"
+            ],
+            "python_packages": [
+                "cyvcf2"
+            ]
+        },
+        "script_execution": {
+            "command": "bash 3_train_best_model.sh $train_list A100",
+            "environment_variables": [
+                "train_list",
+                "SLURM_SUBMIT_DIR"
+            ]
+        }
+    }
+}

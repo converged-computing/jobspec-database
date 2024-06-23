@@ -1,0 +1,52 @@
+{
+    "application": "DeepSpeed",
+    "details": {
+        "framework": "PyTorch",
+        "model": "meta-llama/Llama-2-7b-hf",
+        "training_data": "data/data1.jsonl, data/data2.jsonl",
+        "evaluation_data": "data/eval_data1.jsonl, data/eval_data2.jsonl",
+        "compute_resources": {
+            "nodes": 8,
+            "tasks_per_node": 1,
+            "cpus_per_task": 96,
+            "gpus_per_node": 8
+        },
+        "deepspeed_config": {
+            "train_batch_size": 64,
+            "train_micro_batch_size_per_gpu": 1,
+            "steps_per_print": 1,
+            "gradient_clipping": 1.0,
+            "zero_optimization": {
+                "stage": 3,
+                "reduce_scatter": true,
+                "contiguous_gradients": true,
+                "overlap_comm": true
+            },
+            "bf16": {
+                "enabled": true
+            },
+            "offload_optimizer": {
+                "device": "cpu"
+            },
+            "offload_param": {
+                "device": "cpu"
+            }
+        },
+        "training_parameters": {
+            "num_epochs": 1,
+            "learning_rate": 2e-05,
+            "warmup_steps": 10,
+            "weight_decay": 0.1,
+            "gradient_checkpointing": true,
+            "rope_scaling_type": "linear",
+            "rope_scaling_factor": 8,
+            "max_seq_len": 32768
+        },
+        "environment": {
+            "python_version": "3",
+            "deepspeed_env": "~/pyenv/deepspeed/bin/activate",
+            "script_path": "./train",
+            "output_path": "./output"
+        }
+    }
+}

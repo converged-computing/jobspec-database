@@ -1,0 +1,39 @@
+{
+    "application": "Torque",
+    "details": {
+        "resource_requirements": {
+            "nodes": "1",
+            "processors_per_node": "10",
+            "memory": "100gb",
+            "walltime": "300:00:00",
+            "queue": "high"
+        },
+        "other_options": {
+            "job_dependency": "afterok:<jobid>[:<jobid2>:<jobid3>:...]",
+            "mail_options": {
+                "abort": true,
+                "begin": true,
+                "end": true,
+                "recipient": "<your username, e.g. sean.lawlor>"
+            },
+            "environment_variables": {
+                "TESTVAR": "test value"
+            },
+            "shell": "/bin/bash",
+            "output_file": "ex.o",
+            "error_file": "example.sh.err",
+            "merge_error_and_output": true
+        },
+        "matlab_options": {
+            "matlab_command": "/usr/local/bin/matlab",
+            "matlab_flags": "-nosplash -nodisplay -singleCompThread",
+            "matlab_script": "run_all_model",
+            "matlab_parallel_pool": "parpool('local', $PBS_NUM_PPN)"
+        },
+        "cuda_device_selection": {
+            "command": "cat $PBS_GPUFILE | rev | cut -d\"-\" -f1 | rev | cut -c \"4\" | sed ':a;N;$!ba;s/\n/ /g'",
+            "matlab_array_format": "[$CUDA_DEVICES]"
+        },
+        "working_directory": "/raid60/soumyasundar.pal/PFPFGMM"
+    }
+}

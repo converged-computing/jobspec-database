@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"Slurm\",\n  \"details\": {\n    \"resource_requirements\": {\n      \"qos\": \"%qos\",\n      \"partition\": \"%partition\",\n      \"nodes\": 1,\n      \"wallclock_time\": \"01:00:00\",\n      \"gres\": \"gpu:1\"\n    },\n    \"modules\": \"%modules\",\n    \"scratch_host\": \"%scratch_host\",\n    \"inputs\": \"datasets/MNIST\",\n    \"outputs\": \"output_$job_id\",\n    \"container\": \"sciml-bench_cu11.sif\",\n    \"container_command\": \"sciml-bench run MNIST_torch --output_dir=./output_$job_id --dataset_dir=/scratch_mount/MNIST\",\n    \"run_command\": \"singularity exec --nv --bind $scratch:/scratch_mount --pwd /scratch_mount $container $container_command\"\n  }\n}\n```\n\nThis script is running within the **Slurm** workload manager. It leverages Slurm for resource allocation and job management. \n\nHere's a breakdown of the details:\n\n* **Resource Requirements:** The script sets up specific resource requirements for the job within Slurm using directives like `--qos`, `--partition`, `--nodes`, `--time`, and `--gres` to specify the QoS level, partition, number of nodes, maximum wallclock time, and number of GPUs required for the job.\n* **Modules:** The script utilizes the `module` command to load specific software modules (`%modules`) required for the job execution.\n* **Scratch Directory:** The script utilizes a scratch directory on the host (`%scratch_host`) to store input and output files during the job execution. The directory is created dynamically based on the job ID.\n* **Inputs and Outputs:** The script defines specific input (`datasets/MNIST`) and output (`output_$job_id`) files or directories that are copied to and from the scratch directory before and after the job execution.\n* **Singularity Container:** The script utilizes a Singularity container (`sciml-bench_cu11.sif`) to encapsulate the necessary software and dependencies required for the job.\n* **Container Command:** The script defines a command (`sciml-bench run MNIST_torch --output_dir=./output_$job_id --dataset_dir=/scratch_mount/MNIST`) that is executed within the Singularity container, using the specified input and output directories.\n* **Run Command:** The script combines the Singularity container and container command to form the final `run_command` that is executed within the Slurm environment. This command utilizes `singularity exec` with options for GPU access (`--nv`), binding the scratch directory (`--bind`), and setting the working directory (`--pwd`) within the container.\n\nThe script then utilizes Slurm functionalities for job monitoring and management, including GPU usage tracking with `nvidia-smi`, job start and end time recording, and cleanup of the scratch directory after the job completes. \n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 693,
+        "candidates_token_count": 664,
+        "total_token_count": 1357,
+        "cached_content_token_count": 0
+    }
+}

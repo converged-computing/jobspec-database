@@ -1,0 +1,33 @@
+{
+    "application": "Slurm",
+    "details": {
+        "job_name": "DelSwitch",
+        "partition": "high",
+        "excluded_nodes": "node0[19-21,25]",
+        "gpu_count": 1,
+        "tasks": 1,
+        "cpus_per_task": 8,
+        "memory": "32G",
+        "array_range": "0-6",
+        "output_file": "/homedtic/gjimenez/DADES/DADES/Delineator/Logs/%A-%a.out",
+        "error_file": "/homedtic/gjimenez/DADES/DADES/Delineator/Logs/%A-%a.err",
+        "modules": [
+            "Python/3.6.4-foss-2017a",
+            "PyTorch/1.6.0-foss-2017a-Python-3.6.4-CUDA-10.1.105",
+            "OpenBLAS/0.2.19-foss-2017a-LAPACK-3.7.0",
+            "OpenMPI/2.0.2-GCC-6.3.0-2.27"
+        ],
+        "environment_variables": {
+            "OMP_NUM_THREADS": "$SLURM_CPUS_PER_TASK"
+        },
+        "virtual_environment": "DeepLearning3",
+        "working_directory": "~/GitHub/DelineatorSwitchAndCompose",
+        "python_script": "train_multi.py",
+        "script_arguments": [
+            "--config_file ./configurations/HPC/${SLURM_ARRAY_TASK_ID}.json",
+            "--input_files ./pickle/",
+            "--model_name TESTF1Loss_${SLURM_ARRAY_TASK_ID}",
+            "--hpc 1"
+        ]
+    }
+}

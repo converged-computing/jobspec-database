@@ -1,0 +1,42 @@
+{
+    "application": "PBS",
+    "details": {
+        "scheduler": "PBS",
+        "resources": {
+            "nodes": 2,
+            "system": "polaris",
+            "placement": "scatter",
+            "walltime": "0:15:00",
+            "filesystems": "home",
+            "queue": "debug",
+            "account": "radix-io"
+        },
+        "environment": {
+            "output_file": "margo-regression.output",
+            "exe_path": {
+                "gitlab-ci": "$CI_PROJECT_DIR/sandbox/install/bin/",
+                "run-regression.sh": "./"
+            },
+            "spack": {
+                "environment": "mochi-regression"
+            }
+        },
+        "commands": [
+            "spack find -vN",
+            "mpiexec -n 2 $EXE_PATH/margo-p2p-latency -i 100000 -n cxi://",
+            "mpiexec -n 2 $EXE_PATH/margo-p2p-bw -x 1048576 -n cxi:// -c 1 -D 20",
+            "mpiexec -n 2 $EXE_PATH/margo-p2p-bw -x 1048576 -n cxi:// -c 8 -D 20",
+            "mpiexec -n 2 $EXE_PATH/margo-p2p-bw -x 8388608 -n cxi:// -c 1 -D 20",
+            "mpiexec -n 2 $EXE_PATH/margo-p2p-bw -x 8388608 -n cxi:// -c 8 -D 20",
+            "mpiexec -n 2 $EXE_PATH/margo-p2p-bw -x 1000000 -n cxi:// -c 1 -D 20",
+            "mpiexec -n 2 $EXE_PATH/margo-p2p-bw -x 1000000 -n cxi:// -c 8 -D 20",
+            "mpiexec -n 2 $EXE_PATH/margo-p2p-latency -i 10000 -n cxi:// -t 0,0",
+            "mpiexec -n 2 $EXE_PATH/margo-p2p-bw -x 1048576 -n cxi:// -c 1 -D 20 -t 0,0",
+            "mpiexec -n 2 $EXE_PATH/margo-p2p-bw -x 1048576 -n cxi:// -c 8 -D 20 -t 0,0",
+            "mpiexec -n 2 $EXE_PATH/margo-p2p-bw -x 8388608 -n cxi:// -c 1 -D 20 -t 0,0",
+            "mpiexec -n 2 $EXE_PATH/margo-p2p-bw -x 8388608 -n cxi:// -c 8 -D 20 -t 0,0",
+            "mpiexec -n 2 $EXE_PATH/margo-p2p-bw -x 1000000 -n cxi:// -c 1 -D 20 -t 0,0",
+            "mpiexec -n 2 $EXE_PATH/margo-p2p-bw -x 1000000 -n cxi:// -c 8 -D 20 -t 0,0"
+        ]
+    }
+}

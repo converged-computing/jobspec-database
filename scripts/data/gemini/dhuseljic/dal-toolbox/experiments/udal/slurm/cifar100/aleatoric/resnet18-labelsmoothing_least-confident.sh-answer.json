@@ -1,0 +1,30 @@
+{
+    "application": "Slurm",
+    "details": {
+        "memory": "32GB",
+        "tasks": 1,
+        "cpus per task": 8,
+        "gpu": 1,
+        "partition": "main",
+        "array": "1-10%2",
+        "job name": "udal",
+        "output": "/mnt/stud/home/ynagel/logs/udal/active_learning/%A_%a__%x.log",
+        "environment": {
+            "virtual environment": "/mnt/stud/home/ynagel/dal-toolbox/venv/bin/activate",
+            "working directory": "/mnt/stud/home/ynagel/dal-toolbox/experiments/udal/"
+        },
+        "python script": "active_learning.py",
+        "arguments": {
+            "model": "resnet18_labelsmoothing",
+            "dataset": "CIFAR100",
+            "dataset path": "/mnt/stud/home/ynagel/data",
+            "al strategy": "least_confident",
+            "al cycle n init": 2048,
+            "al cycle init pool file": "/mnt/stud/home/ynagel/dal-toolbox/experiments/udal/initial_pools/${dataset}/random_${n_init}_seed${random_seed}.json",
+            "al cycle acq size": 2048,
+            "al cycle n acq": 9,
+            "output dir": "/mnt/stud/home/ynagel/dal-toolbox/results/udal/active_learning/${dataset}/${model}/${al_strat}/N_INIT${n_init}__ACQ_SIZE${acq_size}__N_ACQ${n_acq}/seed${random_seed}/",
+            "random seed": "$SLURM_ARRAY_TASK_ID"
+        }
+    }
+}

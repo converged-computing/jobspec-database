@@ -1,0 +1,25 @@
+{
+    "application": "HPCToolkit",
+    "details": {
+        "software": [
+            "HPCToolkit 2021.11",
+            "xhpcg (binary)"
+        ],
+        "resources": {
+            "queue": "debug",
+            "time": "10 minutes",
+            "nodes": 1,
+            "tasks_per_node": 16,
+            "cpus_per_task": 1,
+            "constraint": "knl",
+            "ranks": 8
+        },
+        "commands": [
+            "module use /global/common/software/m3977/hpctoolkit/2021-11/modules",
+            "module load hpctoolkit/2021.11-cpu",
+            "hpcstruct ${OUT}.m",
+            "srun -n $ranks  --cpu-bind=cores hpcprof-mpi --metric-db yes -o ${OUT}.d ${OUT}.m",
+            "touch log.analyze-parallel.done"
+        ]
+    }
+}

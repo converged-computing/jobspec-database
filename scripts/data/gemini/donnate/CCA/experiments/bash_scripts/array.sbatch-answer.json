@@ -1,0 +1,29 @@
+{
+    "application": "Slurm",
+    "details": {
+        "job_name": "array-job",
+        "output_files": "logs/array_%A_%a.out",
+        "error_files": "logs/array_%A_%a.err",
+        "array_size": "1-100",
+        "time_limit": "35:00:00",
+        "account": "pi-cdonnat",
+        "tasks": "1",
+        "partition": "caslake",
+        "memory": "20G",
+        "modules": [
+            "python",
+            "pytorch"
+        ],
+        "working_directory": "$SCRATCH/$USER/CCA",
+        "script": "experiments/experiment.py",
+        "arguments": [
+            "--model $1",
+            "--epochs 2000",
+            "--patience 3",
+            "--dataset $2",
+            "--lr $3",
+            "--normalize $4",
+            "--result_file $SLURM_ARRAY_TASK_ID"
+        ]
+    }
+}

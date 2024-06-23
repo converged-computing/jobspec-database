@@ -1,0 +1,19 @@
+{
+    "application": "Dask",
+    "details": {
+        "scheduler": "dask-scheduler",
+        "workers": "dask-worker",
+        "resource_requirements": {
+            "nodes": 12,
+            "tasks": 29,
+            "memory": "50GB",
+            "time": "23:59:59"
+        },
+        "environment_setup": {
+            "module_purge": true,
+            "python_path": "$PYTHONPATH:$ARL",
+            "dask_scheduler_address": "$ARL_DASK_SCHEDULER"
+        },
+        "execution_command": "python ../../../surface_simulation_elevation.py --context s3sky --rmax 1e5 --flux_limit 0.003 \\\\\n --show True \\\\\n--elevation_sampling 1.0 --declination -75.0 \\\\\n--seed 18051955  --band Ku --pbtype MID_FEKO_Ku --memory 32  --integration_time 30 --use_agg True \\\\\n--time_chunk 30 --time_range -6 6  --shared_directory /mnt/storage-ssd/tim/Code/sim-mid-surface/shared \\\\\n--vp_directory /mnt/storage-ssd/tim/Code/sim-mid-surface/beams/interpolated/ \\\\\n| tee surface_simulation.log"
+    }
+}

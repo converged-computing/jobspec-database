@@ -1,0 +1,46 @@
+{
+    "application": "Slurm",
+    "details": {
+        "job_name": "pro3",
+        "work_dir": "/home/bingxing2/home/scx6069/zzr/code/proj/d3/code/output/log/pro2/",
+        "output_file": "LOG-%x.%j-OUTPUT.txt",
+        "error_file": "LOG-%x.%j-ERROR.txt",
+        "nodes": 8,
+        "tasks_per_node": 1,
+        "gpus_per_node": 4,
+        "time_limit": "48:10:00",
+        "modules": [
+            "anaconda/2021.11",
+            "compilers/cuda/12.2",
+            "cudnn/8.9.5.29_cuda12.x",
+            "compilers/gcc/12.2.0"
+        ],
+        "environment_variables": {
+            "GPUS_PER_NODE": 4,
+            "NCCL_ALGO": "Ring",
+            "NCCL_MAX_NCHANNELS": 16,
+            "NCCL_MIN_NCHANNELS": 16,
+            "NCCL_DEBUG": "INFO",
+            "NCCL_TOPO_FILE": "/home/bingxing2/apps/nccl/conf/dump.xml",
+            "NCCL_IB_HCA": "mlx5_0,mlx5_2",
+            "NCCL_IB_GID_INDEX": 3,
+            "NCCL_IB_TIMEOUT": 23,
+            "NCCL_IB_RETRY_CNT": 7
+        },
+        "python_script": "/home/bingxing2/home/scx6069/zzr/pynlfff/pynlfff/pycomputer/gpu/run_grid1.py",
+        "log_dir": "/home/bingxing2/home/scx6069/zzr/data/nlfff_append/run2/rlog",
+        "commands": [
+            "mkdir -p $LOP",
+            "nohup python $PYPHRUN 5 0 >> $LOP/log5.txt &",
+            "nohup python $PYPHRUN 6 1 >> $LOP/log6.txt &",
+            "nohup python $PYPHRUN 7 2 >> $LOP/log7.txt &",
+            "nohup python $PYPHRUN 8 3 >> $LOP/log8.txt &",
+            "while true; do",
+            "top -n 1",
+            "echo \"--------------------------------------\"",
+            "date",
+            "sleep 600",
+            "done"
+        ]
+    }
+}

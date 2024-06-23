@@ -1,0 +1,44 @@
+{
+    "application": "python",
+    "details": {
+        "script": "train_sampling.py",
+        "environment": {
+            "cuda": "10.1.105",
+            "cudnn": "7.5.0",
+            "nccl": "2.4.8-cuda10.1",
+            "gcc": "6.4.0"
+        },
+        "cluster_resources": {
+            "nodes": 1,
+            "partition": "batch",
+            "job_name": "GCN",
+            "output_file": "test.out",
+            "error_file": "test.err",
+            "runtime": "6:00:00",
+            "gpu": "p100:2",
+            "memory": "32768M",
+            "tasks": 2
+        },
+        "mpi": {
+            "command": "mpirun",
+            "options": [
+                "--tag-output",
+                "-x WANDB_PROJECT=e2e_exps",
+                "-x WANDB_NAME=GCN",
+                "-x WANDB_ENTITY=phlix",
+                "-x WANDB_API_KEY=3c748bd8c7fcc9d54534495a1d0a10b58bb3570e",
+                "-x WANDB_TAGS=gcn_test",
+                "-n 2"
+            ]
+        },
+        "script_arguments": {
+            "data_name": "ml-100k",
+            "gcn_agg_accum": "stack",
+            "train_max_epoch": 30,
+            "train_lr": 0.02,
+            "use_one_hot_fea": true,
+            "gpu": "0,1",
+            "init": "tcp://127.0.0.1:33333"
+        }
+    }
+}

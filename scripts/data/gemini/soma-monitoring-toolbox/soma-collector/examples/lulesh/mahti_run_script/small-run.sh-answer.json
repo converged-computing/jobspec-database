@@ -1,0 +1,51 @@
+{
+    "application": "LULESH",
+    "details": {
+        "environment": {
+            "spack": {
+                "setup": "/projappl/project_2006549/spack/share/spack/setup-env.sh",
+                "activated_env": ".",
+                "loaded_modules": [
+                    "mochi-bedrock",
+                    "conduit"
+                ]
+            },
+            "soma": {
+                "server_address_file": "server.add",
+                "node_address_file": "node.add",
+                "num_server_instances": 1,
+                "num_servers_per_instance": 2,
+                "server_instance_id": 0,
+                "monitoring_frequency": 10
+            },
+            "tau": {
+                "plugins": "libTAU-mochi-soma-remote-collector-plugin.so",
+                "plugins_path": "/users/dewiy/tau2/x86_64/lib/shared-mpi",
+                "path": "/users/dewiy/tau2/x86_64/bin"
+            },
+            "ld_library_path": "`pkg-config --libs-only-L soma-client soma-server soma-admin | sed -e \"s/ -L/:/g\" | sed -e \"s/-L//g\" | sed -e \"s/ //g\"`:spack location -i conduit/lib"
+        },
+        "resources": {
+            "slurm": {
+                "job_name": "soma-symbiomon",
+                "account": "project_2006549",
+                "partition": "medium",
+                "time": "02:00:00",
+                "nodes": 2,
+                "cpus_per_task": 1,
+                "output": "slurm-lulesh-%j.out",
+                "error": "slurm-lulesh-%j.err"
+            },
+            "lulesh": {
+                "executable": "/users/dewiy/soma-collector/build/examples/lulesh2.0",
+                "iterations": 500,
+                "processes": 8
+            },
+            "soma_server": {
+                "executable": "/users/dewiy/soma-collector/build/examples/example-server",
+                "processes": 2,
+                "nodes": 1
+            }
+        }
+    }
+}

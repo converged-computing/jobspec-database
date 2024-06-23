@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"Slurm\",\n  \"details\": {\n    \"job_name\": \"stencil-bench-weak\",\n    \"nodes\": 1,\n    \"tasks_per_node\": 8,\n    \"cores_per_task\": 16,\n    \"account\": \"proj16\",\n    \"partition\": \"palamut-cuda\",\n    \"gpus_per_node\": 8,\n    \"walltime\": \"24:00:00\",\n    \"output\": \"stencil_bench_weak_output_%j.log\",\n    \"environment_script\": \"./scripts/modules_truba.sh\",\n    \"binaries\": {\n      \"jacobi\": \"./jacobi -s 1\",\n      \"jacobi_nvshmem\": \"./jacobi_nvshmem -s 1\"\n    },\n    \"parameters\": {\n      \"NUM_ITER\": 10000,\n      \"NUM_RUNS\": 5\n    },\n    \"versions\": {\n      \"jacobi\": {\n        \"Baseline Copy\": 0,\n        \"Baseline Copy Overlap\": 1,\n        \"Baseline P2P\": 2,\n        \"Single Stream 1TB\": 4,\n        \"Single Stream 2TB\": 5,\n        \"Double Stream\": 6,\n        \"Baseline Copy (No compute)\": 7,\n        \"Baseline Copy Overlap (No Compute)\": 8,\n        \"Baseline P2P (No Compute)\": 9,\n        \"Single Stream 1TB (No Compute)\": 10,\n        \"Single Stream 2TB (No Compute)\": 11,\n        \"Double Stream (No Compute)\": 12\n      },\n      \"jacobi_nvshmem\": {\n        \"NVSHMEM Baseline\": 0,\n        \"NVSHMEM Baseline Optimized\": 1,\n        \"NVSHMEM Single Stream 1TB\": 2,\n        \"NVSHMEM Single Stream 2TB\": 3,\n        \"NVSHMEM Double Stream\": 4,\n        \"NVSHMEM Baseline (No Compute)\": 5,\n        \"NVSHMEM Baseline Optimized (No Compute)\": 6,\n        \"NVSHMEM Single Stream 1TB (No Compute)\": 7,\n        \"NVSHMEM Single Stream 2TB (No Compute)\": 8,\n        \"NVSHMEM Double Stream (No Compute)\": 9\n      }\n    },\n    \"resources\": {\n      \"CUDA_VISIBLE_DEVICES\": [\"0\", \"0\", \"0,1\", \"0,1,2\", \"0,1,2,3\", \"0,1,2,3,4\", \"0,1,2,3,4,5\", \"0,1,2,3,4,5,6\", \"0,1,2,3,4,5,6,7\"],\n      \"MAX_NUM_GPUS\": 8,\n      \"STARTING_NX\": 16384\n    },\n    \"execution_flow\": {\n      \"loop1\": {\n        \"variable\": \"STARTING_NX\",\n        \"start\": 16384,\n        \"increment\": \"*=2\",\n        \"loop2\": {\n          \"variable\": \"version_name\",\n          \"values\": [\"Baseline Copy\", \"Baseline Copy Overlap\", \"Baseline P2P\", \"Single Stream 1TB\", \"Single Stream 2TB\", \"Double Stream\", \"Baseline Copy (No compute)\", \"Baseline Copy Overlap (No Compute)\", \"Baseline P2P (No Compute)\", \"Single Stream 1TB (No Compute)\", \"Single Stream 2TB (No Compute)\", \"Double Stream (No Compute)\"],\n          \"loop3\": {\n            \"variable\": \"NUM_GPUS\",\n            \"start\": 1,\n            \"increment\": \" *=2\",\n            \"loop4\": {\n              \"variable\": \"i\",\n              \"start\": 1,\n              \"end\": \"${NUM_RUNS}\",\n              \"increment\": \"++\",\n              \"command\": \"${BIN} -v ${version_idx} -nx ${NX} -ny ${NY} -niter ${NUM_ITER}\"\n            }\n          }\n        }\n      },\n      \"loop5\": {\n        \"variable\": \"version_name\",\n        \"values\": [\"NVSHMEM Baseline\", \"NVSHMEM Baseline Optimized\", \"NVSHMEM Single Stream 1TB\", \"NVSHMEM Single Stream 2TB\", \"NVSHMEM Double Stream\", \"NVSHMEM Baseline (No Compute)\", \"NVSHMEM Baseline Optimized (No Compute)\", \"NVSHMEM Single Stream 1TB (No Compute)\", \"NVSHMEM Single Stream 2TB (No Compute)\", \"NVSHMEM Double Stream (No Compute)\"],\n        \"loop6\": {\n          \"variable\": \"NP\",\n          \"start\": 1,\n          \"increment\": \" *=2\",\n          \"loop7\": {\n            \"variable\": \"i\",\n            \"start\": 1,\n            \"end\": \"${NUM_RUNS}\",\n            \"increment\": \"++\",\n            \"command\": \"mpirun -np ${NP} ${NV_BIN} -v ${version_idx} -nx ${NX} -ny ${NY} -niter ${NUM_ITER}\"\n          }\n        }\n      }\n    }\n  }\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 1437,
+        "candidates_token_count": 1221,
+        "total_token_count": 2658,
+        "cached_content_token_count": 0
+    }
+}

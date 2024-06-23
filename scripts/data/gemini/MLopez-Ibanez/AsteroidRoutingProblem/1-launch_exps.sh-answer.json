@@ -1,0 +1,48 @@
+{
+    "application": "SLURM",
+    "details": {
+        "job_submission_system": "SLURM",
+        "script_purpose": "Run multiple parallel jobs",
+        "jobs_launched": "umm, cego, randomsearch, greedynn",
+        "software_requirements": {
+            "python": "3.8.8",
+            "R": "4.1.0_sin",
+            "anaconda3": "apps/anaconda3"
+        },
+        "resource_requirements": {
+            "cpus_per_task": "N_SLURM_CPUS",
+            "memory": "2gb",
+            "time": "50:00:00",
+            "constraint": "cal",
+            "output_files": "OUTDIR/${JOBNAME}_%J.stderr",
+            "error_files": "OUTDIR/${JOBNAME}_%J.stdout"
+        },
+        "parallelization_method": "parallel",
+        "job_execution_environment": "local",
+        "dependencies": [
+            "target-runner",
+            "asteroides"
+        ],
+        "configuration": {
+            "OUTDIR": ".",
+            "N_LOCAL_CPUS": 4,
+            "nruns": 30,
+            "budget": "400",
+            "eval_ranks": [
+                "0",
+                "1"
+            ],
+            "budgetGA": 4,
+            "m_ini": 10,
+            "inits": [
+                "maxmindist",
+                "greedy_euclidean"
+            ],
+            "distances": [
+                "kendall",
+                "euclidean",
+                "energy"
+            ]
+        }
+    }
+}

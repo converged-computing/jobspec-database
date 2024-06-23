@@ -1,0 +1,35 @@
+{
+    "application": "SLURM",
+    "details": {
+        "job_name": "eval-mn5",
+        "account": "bsc70",
+        "qos": "acc_bsccs",
+        "nodes": 1,
+        "cpus_per_task": 80,
+        "time": "02:00:00",
+        "gres": "gpu:4",
+        "model_name": "c4ai-command-r-v01",
+        "model_path": "/gpfs/projects/bsc70/heka/models/c4ai-command-r-v01",
+        "singularity_image": "/gpfs/projects/bsc70/heka/singularity/lm-evaluation-harness/lmharness.sif",
+        "python_script": "/home/lm-evaluation-harness/lm_eval",
+        "model_type": "vllm",
+        "model_args": {
+            "pretrained": "/gpfs/projects/bsc70/heka/models/c4ai-command-r-v01",
+            "tensor_parallel_size": 4,
+            "dtype": "bfloat16",
+            "gpu_memory_utilization": 0.9,
+            "data_parallel_size": 1,
+            "max_model_len": 8192
+        },
+        "tasks": "medmcqa",
+        "batch_size": "auto:4",
+        "num_fewshot": 0,
+        "output_path": "${CURRENT_DIR}/${COMMIT_TAG}.txt",
+        "log_samples": true,
+        "environment_variables": {
+            "HF_HUB_OFFLINE": 1,
+            "HF_HOME": "/gpfs/scratch/bsc70/hpai/storage/projects/heka/hf_caches/hf_cache2",
+            "HF_DATASETS_CACHE": "/gpfs/scratch/bsc70/hpai/storage/projects/heka/hf_caches/hf_cache2"
+        }
+    }
+}

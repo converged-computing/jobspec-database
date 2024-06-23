@@ -1,0 +1,39 @@
+{
+    "application": "MPI",
+    "details": {
+        "resource_manager": "PBS",
+        "queue": "workq",
+        "walltime": "0:10:00",
+        "filesystems": [
+            "home",
+            "tegu"
+        ],
+        "account": "datascience",
+        "nodes": 2,
+        "software": [
+            "NCCL",
+            "AWS Libfabric",
+            "hwloc",
+            "conda",
+            "mpiexec"
+        ],
+        "libraries": [
+            "/soft/libraries/aws-ofi-nccl/v1.9.1-aws/lib",
+            "/soft/libraries/hwloc/lib/"
+        ],
+        "modules": [
+            "/soft/modulefiles",
+            "conda"
+        ],
+        "environment_variables": {
+            "NCCL_NET_GDR_LEVEL": "PHB",
+            "NCCL_CROSS_NIC": "1",
+            "NCCL_COLLNET_ENABLE": "1",
+            "NCCL_NET": "AWS Libfabric",
+            "LD_LIBRARY_PATH": "/soft/libraries/aws-ofi-nccl/v1.9.1-aws/lib:/soft/libraries/hwloc/lib/:$LD_LIBRARY_PATH",
+            "NCCL_DEBUG": "INFO",
+            "OUTPUT": "logs1/$(date +\"%Y-%m-%d-%H-%M-%S\")",
+            "MASTER_ADDR": "`hostname`"
+        }
+    }
+}

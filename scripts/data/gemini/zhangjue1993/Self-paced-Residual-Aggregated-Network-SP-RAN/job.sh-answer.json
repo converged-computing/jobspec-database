@@ -1,0 +1,88 @@
+{
+    "application": "PBS",
+    "details": {
+        "queue": "gpuvolta",
+        "gpus": 1,
+        "cpus": 12,
+        "memory": "32GB",
+        "walltime": "48:00:00",
+        "working_directory": "wd",
+        "storage": "scratch/po21",
+        "mail_options": "abe",
+        "job_name": "temp",
+        "jobfs": "100GB",
+        "modules": [
+            "cuda/10.1",
+            "cudnn/7.6.5-cuda10.1"
+        ],
+        "conda_environment": "tf",
+        "python_scripts": [
+            "train.py",
+            "train_aux_sp_lc_1.py"
+        ],
+        "script_arguments": [
+            {
+                "script": "train.py",
+                "arguments": [
+                    "--loss",
+                    "BSGCRF",
+                    "--crf_w",
+                    "0.3",
+                    "--batch_size",
+                    "8",
+                    "--lr",
+                    "0.001",
+                    "--decay_ep",
+                    "30",
+                    "--model",
+                    "FPN_RFA_3",
+                    "--block",
+                    "4",
+                    "--max_epochs",
+                    "200",
+                    "--data_dir",
+                    "/scratch/po21/jz1585/",
+                    "--aux",
+                    "False",
+                    "--self_pace",
+                    "False"
+                ]
+            },
+            {
+                "script": "train_aux_sp_lc_1.py",
+                "arguments": [
+                    "--loss",
+                    "BSGCRF",
+                    "--crf_w",
+                    "0.3",
+                    "--batch_size",
+                    "8",
+                    "--lr",
+                    "0.00001",
+                    "--decay_ep",
+                    "3000",
+                    "--model",
+                    "FPN_RFA_3",
+                    "--block",
+                    "4",
+                    "--max_epochs",
+                    "100",
+                    "--data_dir",
+                    "/scratch/po21/jz1585/",
+                    "--aux",
+                    "True",
+                    "--self_pace",
+                    "True",
+                    "--lamda",
+                    "0.04",
+                    "--lamda_decay_ep",
+                    "1",
+                    "--label_update_dir",
+                    "/scratch/po21/jz1585/0118Bris/1/label4/",
+                    "--checkpoint",
+                    "/scratch/po21/jz1585/0118Bris/1/2021-02-28-19-12-15/model/"
+                ]
+            }
+        ]
+    }
+}

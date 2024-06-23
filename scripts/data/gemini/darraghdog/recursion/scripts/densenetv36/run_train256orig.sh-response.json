@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"LSF\",\n  \"details\": {\n    \"queue\": \"lowpriority\",\n    \"gpu\": {\n      \"num\": 1,\n      \"mode\": \"exclusive_process\"\n    },\n    \"container_image\": \"darraghdog/kaggle:apex_build\",\n    \"num_nodes\": 1,\n    \"resources\": {\n      \"span\": \"ptile=4\"\n    },\n    \"output\": \"log_train_%J\",\n    \"script\": {\n      \"command\": \"python3 trainorig.py\",\n      \"arguments\": [\n        \"--logmsg Recursion-addexpt-cut1-$SIZE\",\n        \"--nbags 20\",\n        \"--epochs 100\",\n        \"--fold $FOLD\",\n        \"--lr 0.000025\",\n        \"--lrmult 20\",\n        \"--batchsize 64\",\n        \"--workpath scripts/$WDIR\",\n        \"--probsname probs_$SIZE\",\n        \"--cutmix_prob 1.0\",\n        \"--precision half\",\n        \"--beta 1.0\",\n        \"--imgpath data/mount/256X256X6/\",\n        \"--weightsname weights/pytorch_cut_model_256_densenet$FOLD.bin\"\n      ],\n      \"working_directory\": \"/share/dhanley2/recursion/scripts/$WDIR\"\n    }\n  }\n}\n```\n\nThe script is running on the LSF (Load Sharing Facility) cluster, submitting a job using the `bsub` command. \n\nIt's configured with the following:\n\n- **Queue:** `lowpriority` - indicates a job that can be queued and run when resources are available.\n- **GPU:** 1 GPU with `exclusive_process` mode - the job will run on a single GPU, with exclusive access to it.\n- **Container:** `darraghdog/kaggle:apex_build` - a Docker image containing the necessary software and dependencies for the training task.\n- **Number of nodes:** 1 - the job will run on a single node.\n- **Resources:** `span[ptile=4]` - This likely refers to the node's memory or core allocation. \n- **Output:** `log_train_%J` - the output of the job will be saved to a file named \"log_train_%J,\" where %J is replaced with the job ID.\n\nThe job runs a Python script called `trainorig.py` with specific arguments. This suggests it's a machine learning training script, likely for a deep learning model like DenseNet.  \n\n**Note:** The script includes a commented out section which appears to be a similar training job with a different `cutmix_prob` argument. This indicates a potential experiment with different training configurations. \n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 569,
+        "candidates_token_count": 635,
+        "total_token_count": 1204,
+        "cached_content_token_count": 0
+    }
+}

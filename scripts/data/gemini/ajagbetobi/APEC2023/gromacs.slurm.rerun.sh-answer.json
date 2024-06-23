@@ -1,0 +1,35 @@
+{
+    "application": "Gromacs",
+    "details": {
+        "version": "2019",
+        "build_type": "Debug_Build-Skylake-GPU",
+        "resources": {
+            "nodes": 1,
+            "cores": 16,
+            "time": "23:59:00",
+            "memory": "45G",
+            "gpu": {
+                "type": "p100",
+                "count": 1
+            },
+            "queue": "qPHOGPU"
+        },
+        "environment_variables": {
+            "Project": "NOMEPROGETTO",
+            "WorkDir": "/runjobs/RS10237/$SLURM_JOB_ID",
+            "InpDir": "NOMEDIRETTORI",
+            "outdir": "NOMEDIRETTORI"
+        },
+        "input_files": [
+            "dynamic_sol_NVT.mdp",
+            "${Project}_box_sol.gro",
+            "${Project}_box_sol.ndx",
+            "${Project}_box_sol.top"
+        ],
+        "output_files": [
+            "${Project}_box_sol.tpr",
+            "${Project}.trr"
+        ],
+        "command": "/apps/Computation_Chemistry/gromacs-2019/Debug_Build-Skylake-GPU/bin/gmx mdrun -nt 16 -s $Project.tpr -rerun $Project.trr"
+    }
+}

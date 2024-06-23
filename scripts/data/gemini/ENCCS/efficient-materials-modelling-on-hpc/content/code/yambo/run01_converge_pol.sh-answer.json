@@ -1,0 +1,43 @@
+{
+    "application": "YAMBO",
+    "details": {
+        "software": [
+            "YAMBO",
+            "SLURM"
+        ],
+        "resources": {
+            "nodes": 1,
+            "tasks_per_node": 16,
+            "cpus_per_task": 1,
+            "partition": "cpu",
+            "time": "0:30:00",
+            "account": "d2021-135-users",
+            "memory_per_cpu": "2000MB",
+            "job_name": "mos2",
+            "environment_variables": {
+                "OMP_NUM_THREADS": "${SLURM_CPUS_PER_TASK}"
+            }
+        },
+        "input_files": [
+            "i01-GW"
+        ],
+        "output_files": [
+            "summary_01_${POL_BANDS}bands.txt",
+            "job_${label}",
+            "out_${label}",
+            "i01-GW_${label}",
+            "o-${jdir}.qp"
+        ],
+        "commands": [
+            "module purge",
+            "module use /ceph/hpc/data/d2021-135-users/modules",
+            "module load YAMBO/5.1.1-FOSS-2022a",
+            "sed \"s/NGsBlkXp=.*/NGsBlkXp=${NGsBlkXp_Ry} Ry/; % BndsRnXp/{n;s/.*/  1 |  ${POL_BANDS} |/}\" $file0 > $filein",
+            "srun --mpi=pmix -n ${SLURM_NTASKS} yambo -F $filein -J $jdir -C $cdir",
+            "grep -v '#' ${cdir}/o-${jdir}.qp|head -n 1| awk '{print $3+$4}'",
+            "grep -v '#' ${cdir}/o-${jdir}.qp|tail -n 1| awk '{print $3+$4}'",
+            "echo $E_GW_c - $E_GW_v |bc",
+            "echo ${NGsBlkXp_Ry} '        ' ${E_GW_v} '        ' ${E_GW_c} '        ' ${GAP_GW} >> summary_01_${POL_BANDS}bands.txt"
+        ]
+    }
+}

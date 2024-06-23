@@ -1,0 +1,35 @@
+{
+    "application": "SLURM",
+    "details": {
+        "resource_requirements": {
+            "nodes": 1,
+            "gpu": "v100l",
+            "gpu_count": 1,
+            "tasks_per_node": 1,
+            "cpus_per_task": 8,
+            "memory_per_cpu": "16G",
+            "walltime": "0-12:0:0",
+            "account": "def-uofavis-ab"
+        },
+        "software_requirements": {
+            "python": "3.8",
+            "environment": "~/ENV_new",
+            "module": "python/3.8",
+            "script": "research.dmri_hippo.run cascade_experiment",
+            "model_type": "basic_unet",
+            "prior_label_name": "whole_roi_pred_task502",
+            "group_name": "cascade_tuning"
+        },
+        "data_paths": [
+            "~/projects/def-uofavis-ab/shared_data/Diffusion_MRI/",
+            "~/projects/def-uofavis-ab/shared_data/Predictions/Diffusion_MRI_cropped/Priors/",
+            "~/scratch/Checkpoints/"
+        ],
+        "other_parameters": {
+            "work_path": "${SLURM_TMPDIR}/${SLURM_ARRAY_TASK_ID}",
+            "fold": "$SLURM_ARRAY_TASK_ID",
+            "max_training_time": "0-12:0:0",
+            "num_cpu_threads": 8
+        }
+    }
+}

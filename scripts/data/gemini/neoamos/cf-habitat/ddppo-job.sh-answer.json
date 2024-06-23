@@ -1,0 +1,28 @@
+{
+    "application": "SLURM",
+    "details": {
+        "job_name": "test-hab",
+        "output_file": "/home/an38gezy/thesis/cf-habitat/data/experiments/job_out/job.out.%j",
+        "error_file": "/home/an38gezy/thesis/cf-habitat/data/experiments/job_out/job.err.%j",
+        "cpu_cores": 128,
+        "memory_per_cpu": 7200,
+        "run_time": "17:00:00",
+        "gpu_type": "a100",
+        "gpu_count": 8,
+        "modules": [
+            "gcc",
+            "cuda"
+        ],
+        "environment_variables": {
+            "MAGNUM_GPU_VALIDATION": "on",
+            "GLOG_minloglevel": 2,
+            "MAGNUM_LOG": "quiet"
+        },
+        "python_command": "python -u -m torch.distributed.launch --use_env --nproc_per_node 8 main.py --exp-config configs/experiments/ddppo_pointnav_gibson4plus_mobilenet_lstm1.yaml --run-type train",
+        "libraries": [
+            "pytest",
+            "torch",
+            "torch.distributed"
+        ]
+    }
+}

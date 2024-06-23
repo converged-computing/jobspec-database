@@ -1,0 +1,68 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"SLURM\",\n  \"details\": {\n    \"software\": [\n      \"python\",\n      \"cudnn\",\n      \"singularity\",\n      \"gcc\",\n      \"cuda\",\n      \"openmpi\",\n      \"tensorflow\"\n    ],\n    \"resources\": {\n      \"nodes\": 1,\n      \"gres\": \"gpu:v100:1\",\n      \"time\": \"02:00:00\",\n      \"mem\": \"64G\"\n    },\n    \"libraries\": [\n      \"cloudmesh\",\n      \"seff\"\n    ],\n    \"environment_variables\": [\n      \"USER_SCRATCH\",\n      \"PROJECT_DIR\",\n      \"PYTHON_DIR\",\n      \"PROJECT_DATA\",\n      \"CONTAINERDIR\",\n      \"CODE_DIR\"\n    ],\n    \"commands\": [\n      \"module load cudnn/8.6.0.163-cuda11\",\n      \"module load singularity\",\n      \"module load  gcc/9.2.0  cuda/11.0.228  openmpi/3.1.6 python/3.8.8\",\n      \"module load singularity tensorflow/2.8.0\",\n      \"source $PYTHON_DIR/bin/activate\",\n      \"which python\",\n      \"nvidia-smi\",\n      \"cd $CODE_DIR\",\n      \"pwd\",\n      \"ls\",\n      \"singularity exec --nv ./cloudmask.sif bash -c \\\"cd ${CODE_DIR} ; python -c \\\"import os; os.system('ls')\\\"\",\n      \"cms gpu watch --gpu=0 --delay=0.5 --dense > outputs/simple-$USER-$SLURM_JOB_ID-gpu0.log &\",\n      \"singularity exec --nv ./cloudmask.sif bash -c \\\"cd ${CODE_DIR} ; python cloudmask_v2.py --config=config.yaml\\\"\",\n      \"python cloudmask_v2.py --config=simple-config-greene.yaml\",\n      \"seff $SLURM_JOB_ID\"\n    ]\n  }\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "citation_metadata": {
+                "citation_sources": [
+                    {
+                        "start_index": 553,
+                        "end_index": 731,
+                        "uri": "https://github.com/mlcommons-cloudmask/mlcommons",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 630,
+                        "end_index": 826,
+                        "uri": "https://github.com/laszewsk/mlcommons-cloudmask",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 1099,
+                        "end_index": 1276,
+                        "uri": "https://github.com/mlcommons-cloudmask/mlcommons",
+                        "license_": ""
+                    }
+                ]
+            },
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 1084,
+        "candidates_token_count": 496,
+        "total_token_count": 1580,
+        "cached_content_token_count": 0
+    }
+}

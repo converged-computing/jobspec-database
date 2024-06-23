@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"Slurm\",\n  \"details\": {\n    \"resource_requirements\": {\n      \"nodes\": 1,\n      \"wallclock_time\": \"12:00:00\",\n      \"gpu\": 1\n    },\n    \"software_requirements\": {\n      \"modules\": \"%modules\",\n      \"container\": \"sciml-bench_cu11.sif\",\n      \"container_command\": \"sciml-bench run em_denoise --output_dir=./output_$job_id --dataset_dir=/scratch_mount/em_graphene_sim\"\n    },\n    \"job_parameters\": {\n      \"job_id\": \"$job_id\",\n      \"scratch_host\": \"%scratch_host\",\n      \"scratch\": \"$scratch_host/$job_id\",\n      \"inputs\": \"datasets/em_graphene_sim\",\n      \"outputs\": \"output_$job_id\"\n    },\n    \"monitoring_tools\": \"nvidia-smi dmon\"\n  }\n}\n```\n\n**Explanation:**\n\n* **Application:** The script is running within the **Slurm** workload manager, indicated by the `#SBATCH` directives.\n* **Resource Requirements:**  The script requests one node, a maximum wall clock time of 12 hours, and one GPU.\n* **Software Requirements:** The script uses modules specified by `%modules` and a Singularity container named \"sciml-bench_cu11.sif\" to execute the \"sciml-bench run em_denoise\" command. \n* **Job Parameters:** The script sets up a job ID, a scratch directory on the specified host (`%scratch_host`), and defines input and output files and directories.\n* **Monitoring Tools:** The script uses `nvidia-smi dmon` to monitor GPU usage.\n\nThe script copies inputs to the scratch directory, runs the containerized application, monitors GPU usage, copies outputs back, and cleans up the scratch directory. \n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 701,
+        "candidates_token_count": 442,
+        "total_token_count": 1143,
+        "cached_content_token_count": 0
+    }
+}

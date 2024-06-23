@@ -1,0 +1,46 @@
+{
+    "application": "Python",
+    "details": {
+        "software": [
+            "conda",
+            "python",
+            "slurm"
+        ],
+        "resources": {
+            "nodes": 1,
+            "tasks": 1,
+            "cpus_per_task": 1,
+            "gpus": "a5000",
+            "gpu_count": 1,
+            "memory": "16G",
+            "time": "08:00:00",
+            "output_file": "full_model_task_2.out"
+        },
+        "libraries": [
+            "nlproofs"
+        ],
+        "dependencies": [
+            "t5-large"
+        ],
+        "environment": {
+            "conda_env": "nlproofs",
+            "module": "purge"
+        },
+        "script": "main.py",
+        "arguments": [
+            "test",
+            "--config",
+            "cli_task2_stepwise_t5-large.yaml",
+            "--log_name",
+            "full_model_{$1}",
+            "--ckpt_path",
+            "../../weights/task2_stepwise.ckpt",
+            "--model.verifier_weight",
+            "0.5",
+            "--model.verifier_ckpt",
+            "../../weights/task2_verifier.ckpt",
+            "--model.proof_search",
+            "true"
+        ]
+    }
+}

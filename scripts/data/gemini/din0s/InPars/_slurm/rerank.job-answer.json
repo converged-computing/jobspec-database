@@ -1,0 +1,27 @@
+{
+    "application": "Slurm",
+    "details": {
+        "job_name": "RerankInPars",
+        "partition": "gpu",
+        "gpu_count": 1,
+        "task_count": 1,
+        "cpus_per_task": 18,
+        "memory": "120gb",
+        "time": "04:00:00",
+        "array_range": "1-4%4",
+        "output_file_format": "slurm_rerank_%A_%a.out",
+        "modules": [
+            "2022",
+            "Anaconda3/2022.05",
+            "thesis"
+        ],
+        "python_script": "inpars.rerank",
+        "model_path": "./models/arguana/",
+        "dataset": "arguana",
+        "chunk_queries": "SLURM_ARRAY_TASK_MAX",
+        "chunk_idx": "SLURM_ARRAY_TASK_ID - 1",
+        "output_run": "./runs/arguana_$CHUNK_IDX.txt",
+        "batch_size": 128,
+        "bf16": true
+    }
+}

@@ -1,0 +1,36 @@
+{
+    "application": "Snakemake",
+    "details": {
+        "environment": {
+            "conda_env": "ViromeDataProcessing",
+            "bash_profile": "~/.bashrc"
+        },
+        "slurm_parameters": {
+            "job_name": "RNA1snakemake",
+            "output_file": "logs/RNA1snakemake_%j.out",
+            "error_file": "logs/RNA1snakemake_%j.err",
+            "mail_type": "END",
+            "mail_user": "lhillary@ucdavis.edu",
+            "nodes": 1,
+            "time": "3-10:00:00",
+            "tasks": 1,
+            "cpus_per_task": 1,
+            "partition": "high2"
+        },
+        "snakemake_parameters": {
+            "snakefile": [
+                "../scripts/0-preprocessing.smk",
+                "../scripts/1.1-QC.smk",
+                "../scripts/sortmerna.smk",
+                "../scripts/1.2-bbcms.smk",
+                "../scripts/1.2-BBNorm.smk",
+                "../scripts/megahit_rna.smk",
+                "../scripts/3.1-genomad_rna.smk",
+                "../scripts/4-bbmap_index.smk"
+            ],
+            "profile": "slurm",
+            "configfile": "../rna1_pipeline_config.yml"
+        },
+        "working_directory": "rna1"
+    }
+}

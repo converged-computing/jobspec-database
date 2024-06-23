@@ -1,0 +1,35 @@
+{
+    "application": "LSF",
+    "details": {
+        "resource_manager": "LSF",
+        "scheduler": "LSF",
+        "queue": "gpu-normal or gpu-cellgeni-a100",
+        "nodes": 1,
+        "memory": "64GB",
+        "cores": 2,
+        "gpu": "1 NVIDIA A100",
+        "image": "/nfs/cellgeni/singularity/images/c2l_v0.1.3p_240119.sif",
+        "application_image": "c2l_v0.1.3p_240119.sif",
+        "script": "01.estimate.signatures.py",
+        "script_path": "/actions/c2l/src/py/01.estimate.signatures.py",
+        "environment": {
+            "PATH": "/software/singularity/3.11.4/bin:$PATH"
+        },
+        "binding_paths": [
+            "/lustre",
+            "/nfs"
+        ],
+        "parameters": {
+            "REFIN": "${ref[$LSB_JOBINDEX-1]}.h5ad",
+            "REFOUT": "ref/${ref[$LSB_JOBINDEX-1]}",
+            "CELLTYPE": "",
+            "SAMPLE": "",
+            "COV": ""
+        },
+        "commands": [
+            "nvidia-smi",
+            "cd ${WDIR}",
+            "$c2lref --batch_key $SAMPLE --categorical_covariate_key $COV $REFIN $REFOUT $CELLTYPE"
+        ]
+    }
+}

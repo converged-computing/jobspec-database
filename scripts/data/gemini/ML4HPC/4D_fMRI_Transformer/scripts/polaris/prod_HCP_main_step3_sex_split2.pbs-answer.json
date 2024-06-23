@@ -1,0 +1,50 @@
+{
+    "application": "MPI",
+    "details": {
+        "resource_manager": "PBS",
+        "scheduler_options": {
+            "nodes": 10,
+            "system": "polaris",
+            "placement": "scatter",
+            "walltime": "1:00:00",
+            "filesystems": [
+                "home",
+                "grand"
+            ],
+            "queue": "prod",
+            "account": "STlearn",
+            "job_dependency": "oe"
+        },
+        "environment_variables": {
+            "MPICH_GPU_SUPPORT_ENABLED": "1",
+            "NCCL_COLLNET_ENABLE": "1",
+            "NCCL_NET_GDR_LEVEL": "PHB",
+            "MASTER_ADDR": "hostname",
+            "NUM_OF_NODES": "NNODES",
+            "TOTAL_NUM_RANKS": "NTOTRANKS",
+            "RANKS_PER_NODE": "NRANKS_PER_NODE",
+            "NDEPTH": "16",
+            "OMP_NUM_THREADS": "NTHREADS",
+            "OMP_PLACES": "threads"
+        },
+        "modules": {
+            "conda": "conda activate 3DCNN",
+            "set_affinity_cmd": "./scripts/polaris/set_affinity_gpu_polaris.sh"
+        },
+        "command": "mpiexec -n ${NTOTRANKS} --ppn ${NRANKS_PER_NODE} --depth=${NDEPTH} --cpu-bind depth  $set_affinity_cmd $Command",
+        "python_script": "main.py",
+        "python_script_arguments": {
+            "step": 3,
+            "batch_size_phase3": 4,
+            "lr_policy_phase3": "SGDR",
+            "lr_warmup_phase3": 2200,
+            "lr_gamma_phase3": 0.5,
+            "lr_step_phase3": 11000,
+            "lr_T_mult_phase3": 2,
+            "lr_init_phase3": 0.001,
+            "exp_name": "split_2_SGDR",
+            "image_path": "/lus/grand/projects/STlearn/HCP_MNI_to_TRs",
+            "dataset_split_num": 2
+        }
+    }
+}

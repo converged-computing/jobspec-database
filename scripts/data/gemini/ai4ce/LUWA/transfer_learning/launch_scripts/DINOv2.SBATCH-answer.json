@@ -1,0 +1,35 @@
+{
+    "application": "SLURM",
+    "details": {
+        "resource_requirements": {
+            "nodes": 1,
+            "tasks_per_node": 1,
+            "cpus_per_task": 10,
+            "time": "44:00:00",
+            "memory": "40GB",
+            "gpu": 1,
+            "partition": "a100_2,a100_1,tandon_a100_2,tandon_a100_1,stake_a100_1,stake_a100_2"
+        },
+        "software": {
+            "singularity": {
+                "image": "/scratch/work/public/singularity/cuda11.7.99-cudnn8.5-devel-ubuntu22.04.2.sif",
+                "overlay": "../overlay_1.ext3:ro"
+            },
+            "python": "dl_supervised_pipeline.py"
+        },
+        "environment_variables": {
+            "NCCL_DEBUG": "INFO",
+            "RESOLUTION": "256",
+            "MAGNIFICATION": "20x",
+            "MODALITY": "heightmap",
+            "MODEL": "DINOv2",
+            "PRETRAINED": "pretrained",
+            "FROZEN": "unfrozen",
+            "EPOCHS": 10,
+            "BATCH_SIZE": 100,
+            "START_LR": 0.01,
+            "SEED": 1234,
+            "VOTE": "vote"
+        }
+    }
+}

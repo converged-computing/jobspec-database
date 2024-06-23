@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"slurm\",\n  \"details\": {\n    \"resources\": {\n      \"nodes\": 1,\n      \"gpus\": 4,\n      \"tasks_per_gpu\": 1,\n      \"cpus_per_gpu\": 32,\n      \"time\": \"05:00:00\",\n      \"partition\": \"<add your partition>\"\n    },\n    \"environment\": {\n      \"NCCL_IB_TIMEOUT\": 30,\n      \"SHARP_COLL_LOG_LEVEL\": 3,\n      \"OMPI_MCA_coll_hcoll_enable\": 0,\n      \"NCCL_SOCKET_IFNAME\": \"ib0\",\n      \"NCCL_COLLNET_ENABLE\": 0,\n      \"NCCL_DEBUG_SUBSYS\": \"INIT,GRAPH\"\n    },\n    \"software\": {\n      \"python_venv\": \"/path/to/python/venv\",\n      \"training_script\": \"~/Wahn/scripts/mmdet/train.py\"\n    },\n    \"parameters\": {\n      \"srun_params\": [\n        \"--mpi=\\\"pmi2\\\"\",\n        \"--label\",\n        #  \"--cpu-bind=\\\"none\\\"\",\n        \"--cpus-per-task=16\",\n        \"--unbuffered\"\n      ],\n      \"launcher\": \"slurm\",\n      \"seed\": \"<seed>\",\n      \"deterministic\": true\n    }\n  }\n}\n```\n\n**Explanation:**\n\n* **Application:** The script is primarily designed to run under the **Slurm workload manager**.  It utilizes Slurm's job submission and resource allocation features.\n* **Details:**\n    * **Resources:** The script requests one node, four GPUs, one task per GPU, 32 CPUs per GPU, a runtime of 5 hours, and a specific partition (<add your partition>).\n    * **Environment:** The script sets several environment variables related to the NCCL communication library (used for distributed training) and other network settings.\n    * **Software:** The script utilizes a Python virtual environment located at `/path/to/python/venv` and calls a training script named `train.py`.\n    * **Parameters:** The script provides parameters to the `srun` command to specify the MPI implementation, label the job, set CPU bindings (commented out), set CPUs per task, and enable unbuffered communication. Additionally, it uses `python` within the `srun` command to execute the training script, specifying the launcher as `slurm`, the seed value, and the configuration file.\n\n**Key Takeaways:**\n\n* This script is intended for running a distributed training process on a Slurm-managed cluster using GPUs.\n* The script leverages NCCL for communication between GPUs and specifies various environment variables to fine-tune network behavior.\n* The script uses a Python virtual environment and executes a training script (`train.py`) within the `srun` command."
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 498,
+        "candidates_token_count": 651,
+        "total_token_count": 1149,
+        "cached_content_token_count": 0
+    }
+}

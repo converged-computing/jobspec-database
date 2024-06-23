@@ -1,0 +1,27 @@
+{
+    "application": "NAMD",
+    "details": {
+        "scheduler": "SLURM",
+        "partition": "standard96",
+        "nodes": 2,
+        "tasks_per_node": 96,
+        "account": "nip00058",
+        "modules": [
+            "HLRNenv",
+            "vmd",
+            "impi",
+            "namd/2.13"
+        ],
+        "environment_variables": {
+            "SLURM_CPU_BIND": "none",
+            "NTASKS": "${SLURM_NNODES} * ${SLURM_NTASKS_PER_NODE}",
+            "namdexecution": "mpirun namd2",
+            "replicaexecution": "mpirun namd2",
+            "sortreplicas": "which sortreplicas"
+        },
+        "scripts": [
+            "${MAINDIR}/02_Simulation_Setup/00_generate_setup.sh"
+        ],
+        "runtime": "12 hours"
+    }
+}

@@ -1,0 +1,35 @@
+{
+    "application": "Slurm",
+    "details": {
+        "resource_allocation": {
+            "partition": "boost_usr_prod",
+            "time": "24:00:00",
+            "nodes": 4,
+            "tasks_per_node": 4,
+            "gpus_per_node": 4,
+            "memory_per_node": "123G"
+        },
+        "software_requirements": {
+            "virtual_environment": "neox-env",
+            "modules": [
+                "profile/deeplrn",
+                "python/3.10.8--gcc--11.3.0",
+                "cuda/11.8",
+                "openmpi/4.1.4--gcc--11.3.0-cuda-11.8",
+                "zlib/1.2.13--gcc--11.3.0",
+                "git-lfs"
+            ],
+            "training_framework": "DeepSpeed",
+            "model_library": "GPT-NeoX"
+        },
+        "configuration": {
+            "model_size": "7B",
+            "training_phase": "finetuning",
+            "data_source": "latxa-v1",
+            "save_path": "/leonardo_scratch/large/userexternal/jetxaniz/Llama-2-7b-neox-eus-v0_proba",
+            "load_path": "/leonardo_scratch/large/userexternal/jetxaniz/Llama-2-7b-neox-TP-1",
+            "distributed_training": true,
+            "hostfile_path": "${HOME}/hostfiles/hosts_$SLURM_JOBID"
+        }
+    }
+}

@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"PBS\",\n  \"details\": {\n    \"job_name\": \"diffusivity-c_grad_p=0.5\",\n    \"nodes\": 1,\n    \"processors_per_node\": 3,\n    \"walltime\": \"1920:00:00\",\n    \"queue\": \"qfermi\",\n    \"email\": \"adc@geo.au.dk\",\n    \"email_options\": \"abe\",\n    \"software\": {\n      \"gcc\": \"4.6.4\",\n      \"cuda\": \"5.5.22\",\n      \"python\": \"2.7.6\"\n    },\n    \"libraries\": {\n      \"cuda_libraries\": \"/com/cuda/5.5.22/lib64:/com/cuda/5.5.22/lib\",\n      \"python_libraries\": \"/home/adc/.local/lib/python:/home/adc/.local/lib64/python:/com/python/2.7.6/lib\"\n    },\n    \"script_execution\": {\n      \"working_directory\": \"/home/adc/code/sphere\",\n      \"commands\": [\n        \"nvidia-smi\",\n        \"rm CMakeCache.txt\",\n        \"cmake . && make\",\n        \"cd python\",\n        \"python diffusivity-starter.py 0 1.0 0.5 10.0e3 20.0e3 &\",\n        \"python diffusivity-starter.py 1 1.0 0.5 40.0e3 60.0e3 &\",\n        \"python diffusivity-starter.py 2 1.0 0.5 80.0e3 120.0e3 &\",\n        \"wait\"\n      ]\n    }\n  }\n}\n```\n\n**Explanation:**\n\n- **PBS** is the Portable Batch System, a workload manager commonly used in High Performance Computing (HPC) environments. This script uses PBS to submit and manage the execution of the job.\n- The script utilizes several software components:\n    - **GCC (GNU Compiler Collection) 4.6.4:** Used for compiling the code.\n    - **CUDA 5.5.22:**  A parallel computing platform and programming model developed by Nvidia. Used for GPU-accelerated computations.\n    - **Python 2.7.6:** The scripting language used for the `diffusivity-starter.py` script.\n- The script sets environment variables for various software components and libraries:\n    - **`CUDAPATH`:** Defines the installation directory for CUDA.\n    - **`PYTHONPATH`:** Sets the search path for Python modules.\n    - **`LD_LIBRARY_PATH`:** Specifies the location of CUDA libraries.\n- The script utilizes `nvidia-smi` to monitor GPU performance.\n- The `diffusivity-starter.py` script appears to be a Python program that performs some computations, likely related to diffusion simulations. It is executed multiple times in parallel (using the ampersand `&`) to simulate different scenarios.\n- The `cmake` and `make` commands suggest that the code is likely written in C++ and uses a build system like CMake to manage the compilation process.\n- The script logs the start and end time of the job. \n- The `wait` command ensures that all parallel processes of the `diffusivity-starter.py` script finish before the job concludes. \n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 515,
+        "candidates_token_count": 780,
+        "total_token_count": 1295,
+        "cached_content_token_count": 0
+    }
+}

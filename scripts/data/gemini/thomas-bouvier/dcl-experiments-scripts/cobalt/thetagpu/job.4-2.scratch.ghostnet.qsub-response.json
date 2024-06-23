@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"COBALT\",\n  \"details\": {\n    \"software\": [\n      \"zsh\",\n      \"spack\",\n      \"openmpi\",\n      \"python\",\n      \"wandb\",\n      \"torch\",\n      \"nccl\",\n      \"cuda\"\n    ],\n    \"resources\": {\n      \"nodes\": 4,\n      \"time\": \"2:25:00\",\n      \"queue\": \"full-node\",\n      \"filesystem\": \"home\",\n      \"environment_variables\": {\n        \"FI_MR_CACHE_MAX_COUNT\": 0,\n        \"FI_OFI_RXM_USE_SRX\": 1,\n        \"WANDB_MODE\": \"offline\",\n        \"LD_LIBRARY_PATH\": \"/home/tbouvier/view/thetagpu/lib;/home/tbouvier/view/thetagpu/lib64;/home/tbouvier/view/thetagpu/lib/python3.10/site-packages/torch/lib;/lus/theta-fs0/software/thetagpu/openmpi/openmpi-4.1.4_ucx-1.14.0_gcc-9.4.0_cuda-11.4/lib;/usr/local/cuda-11/lib64\"\n      }\n    }\n  }\n}\n```\n\nThe script uses COBALT to submit a job on a cluster. Here is a breakdown of what the script does:\n\n- **COBALT**: The script starts by setting up COBALT job parameters. \n  - **-A VeloC**: Specifies the project account.\n  - **-n 4**: Requests 4 nodes.\n  - **-t 2:25:00**: Sets the wall time for the job.\n  - **--mode script**: Specifies that the job will be run in script mode.\n  - **-q full-node**: Requests access to the \"full-node\" queue.\n  - **--attr filesystems=home**: Requests access to the \"home\" filesystem.\n  - **-M thomas.bouvier@inria.fr**: Sets the email address for notifications.\n\n- **Environment Setup**: The script configures the environment variables.\n  - **FI_MR_CACHE_MAX_COUNT=0**: Disables the registration cache for the Verbs provider.\n  - **FI_OFI_RXM_USE_SRX=1**: Enables the shared receive context in RXM.\n  - **WANDB_MODE=offline**: Sets the Weights & Biases mode to offline.\n  - **LD_LIBRARY_PATH**: Sets the library path, adding various directories relevant for the job.\n\n- **Software**:\n  - **Spack**: The script sets up a Spack environment to activate an environment named \"thetagpu\".\n  - **OpenMPI**: The script uses OpenMPI to launch the job.\n  - **Python**: The script uses Python to run the `main.py` file.\n  - **Torch**: The script uses PyTorch library.\n  - **NCCL**: The script uses NCCL for multi-GPU communication.\n  - **CUDA**: The script leverages CUDA for GPU acceleration.\n\n- **Job Execution**: The script uses `mpiexec` to launch the main script (`main.py`) with 32 processes (8 per node). \n  - **-np 32**: Sets the number of processes to 32.\n  - **-npernode 8**: Sets the number of processes per node to 8.\n  - **-hostfile $COBALT_NODEFILE**: Uses the COBALT-provided hostfile to determine the nodes.\n  - **-bind-to none**: Disables binding of processes to specific cores.\n  - **-map-by slot**: Maps processes to slots in a round-robin fashion.\n  - **-x NCCL_DEBUG=INFO**: Sets the NCCL debug level to INFO.\n  - **-x LD_LIBRARY_PATH**: Exports the LD_LIBRARY_PATH to the environment.\n  - **-x WANDB_MODE**: Exports the WANDB_MODE to the environment.\n  - **-x PATH**: Exports the PATH to the environment.\n\nThe script then executes `main.py` with the specified configuration parameters (`--yaml-config experiments_thetagpu.yaml`, `--config baseline_scratch_ghostnet_scale`, `--log-level info`). \n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 534,
+        "candidates_token_count": 1001,
+        "total_token_count": 1535,
+        "cached_content_token_count": 0
+    }
+}

@@ -1,0 +1,37 @@
+{
+    "application": "Slurm",
+    "details": {
+        "job_name": "dbg",
+        "partition": "gpushort",
+        "time": "00:10:00",
+        "gres": "gpu:v100",
+        "ntasks_per_node": 1,
+        "mem": "16GB",
+        "array": 1,
+        "modules": [
+            "Python/3.8.6-GCCcore-10.2.0"
+        ],
+        "environment": "source ~/activate_py3.8.6",
+        "python_packages": [
+            "htr"
+        ],
+        "script": "main.py",
+        "arguments": {
+            "main_model_arch": "WriterCodeAdaptiveModel",
+            "base_model_arch": "fphtr",
+            "trained_model_path": "/data/s4314719/full_page_HTR/lightning_logs/FPHTR_word_resnet18_lr=3e-4_bsz=32_seed=3/checkpoints/epoch=64-char_error_rate=0.1500-word_error_rate=0.1738.ckpt",
+            "cache_dir": "/data/s4314719/thesis/writer_code/lightning_logs/cache_without_bad_segmentation",
+            "learning_rate": "1e-5",
+            "weight_decay": 0,
+            "seed": "$SLURM_ARRAY_TASK_ID",
+            "shots": 4,
+            "ways": 4,
+            "data_dir": "/data/s4314719/IAM",
+            "max_epochs": 1000,
+            "num_workers": 12,
+            "track_grad_norm": 2,
+            "check_val_every_n_epoch": 10000,
+            "num_sanity_val_steps": 0
+        }
+    }
+}

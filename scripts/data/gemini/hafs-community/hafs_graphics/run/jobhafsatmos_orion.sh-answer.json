@@ -1,0 +1,52 @@
+{
+    "application": "SLURM",
+    "details": {
+        "job_name": "jobhafsgraph",
+        "account": "hurricane",
+        "qos": "batch",
+        "nodes": 12,
+        "tasks_per_node": 10,
+        "cpus_per_task": 1,
+        "walltime": "01:00:00",
+        "partition": "orion",
+        "memory": 0,
+        "exclusive": true,
+        "output_file": "jobhafsgraph.log.%j",
+        "error_file": "jobhafsgraph.log.%j",
+        "work_directory": ".",
+        "environment_variables": {
+            "HOMEgraph": "/mnt/lfs4/HFIP/hwrfv3/${USER}/hafs_graphics",
+            "USHgraph": "${HOMEgraph}/ush",
+            "DRIVERSH": "${USHgraph}/driverAtmos.sh",
+            "COMhafs": "/hafs/com/${YMDH}/${STORMID}",
+            "WORKgraph": "${COMhafs}/../../../${YMDH}/${STORMID}/emc_graphics",
+            "COMgraph": "${COMhafs}/emc_graphics",
+            "machine": "wcoss2",
+            "cartopyDataDir": "/lfs/h2/emc/hur/noscrub/local/share/cartopy",
+            "TOTAL_TASKS": "${SLURM_NTASKS:-480}",
+            "NCTSK": 10,
+            "NCNODE": 10,
+            "OMP_NUM_THREADS": 1
+        },
+        "software_requirements": {
+            "python": "3.x",
+            "cartopy": "0.18.x",
+            "matplotlib": "3.x"
+        },
+        "data_requirements": {
+            "HAFS data": "/hafs/com/${YMDH}/${STORMID}",
+            "graphics data": "/mnt/lfs4/HFIP/hwrfv3/${USER}/hafs_graphics/ush"
+        },
+        "execution_steps": [
+            "source ${USHgraph}/graph_pre_job.sh.inc",
+            "mkdir -p ${WORKgraph}",
+            "cd ${WORKgraph}",
+            "Generate cmdfile: cmdfile.$STORM$STORMID.$YMDH",
+            "loop through fhhhAll, stormDomain, figScriptAll and levAll to generate commands in cmdfile",
+            "chmod u+x ./$cmdfile",
+            "${APRUNC} ${MPISERIAL} -m ./$cmdfile",
+            "date",
+            "echo 'job done'"
+        ]
+    }
+}

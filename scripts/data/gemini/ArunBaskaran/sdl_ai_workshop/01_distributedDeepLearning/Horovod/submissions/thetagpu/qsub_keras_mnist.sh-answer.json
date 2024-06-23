@@ -1,0 +1,39 @@
+{
+    "application": "Horovod",
+    "details": {
+        "scheduler": "Cobalt",
+        "resources": {
+            "nodes": 2,
+            "walltime": "1 hour",
+            "queue": "training-gpu",
+            "account": "SDL_Workshop",
+            "output_directory": "results/thetagpu/"
+        },
+        "modules": {
+            "conda": "loaded",
+            "conda_environment": "activated"
+        },
+        "framework": "TensorFlow",
+        "model": "Keras MNIST",
+        "execution_modes": [
+            {
+                "processes": [
+                    1,
+                    2,
+                    4,
+                    8
+                ],
+                "device": "gpu",
+                "epochs": 32,
+                "output_file": "results/thetagpu/tensorflow2_keras_mnist.out.$n"
+            },
+            {
+                "processes": 16,
+                "processes_per_node": 8,
+                "device": "gpu",
+                "epochs": 32,
+                "output_file": "results/thetagpu/tensorflow2_keras_mnist.out.16"
+            }
+        ]
+    }
+}

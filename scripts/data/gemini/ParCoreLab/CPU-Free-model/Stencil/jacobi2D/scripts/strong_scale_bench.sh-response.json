@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"SLURM\",\n  \"details\": {\n    \"resource_requirements\": {\n      \"job_name\": \"stencil-bench\",\n      \"ntasks\": 8,\n      \"gres\": \"gpu:8\",\n      \"partition\": \"hgx2q\",\n      \"time\": \"03:00:00\",\n      \"output\": \"sbatch_output_%j.log\"\n    },\n    \"software_requirements\": {\n      \"modules\": {\n        \"source\": \"./scripts/modules.sh\"\n      },\n      \"binaries\": {\n        \"jacobi\": \"./jacobi\",\n        \"jacobi_nvshmem\": \"./jacobi_nvshmem\"\n      },\n      \"libraries\": {\n        \"MPI\": \"Required for nvshmem versions\",\n        \"CUDA\": \"Required for all versions\"\n      }\n    },\n    \"script_parameters\": {\n      \"MAX_NUM_GPUS\": 8,\n      \"MAX_NX\": 16384,\n      \"MAX_NY\": 16384,\n      \"STARTING_NX\": 4096,\n      \"STARTING_NY\": 4096,\n      \"NUM_ITER\": 100000,\n      \"NUM_RUNS\": 5\n    },\n    \"execution_flow\": {\n      \"loop_1\": {\n        \"variable\": \"STARTING_NX\",\n        \"start\": 16384,\n        \"end\": 16384,\n        \"increment\": \"x2\"\n      },\n      \"loop_2\": {\n        \"variable\": \"version_name\",\n        \"source\": \"version_name_to_idx_map\"\n      },\n      \"loop_3\": {\n        \"variable\": \"NUM_GPUS\",\n        \"start\": 1,\n        \"end\": \"MAX_NUM_GPUS\",\n        \"increment\": 1\n      },\n      \"loop_4\": {\n        \"variable\": \"i\",\n        \"start\": 1,\n        \"end\": \"NUM_RUNS\",\n        \"increment\": 1\n      },\n      \"loop_5\": {\n        \"variable\": \"version_name\",\n        \"source\": \"version_name_to_idx_map_nvshmem\"\n      },\n      \"loop_6\": {\n        \"variable\": \"NP\",\n        \"start\": 1,\n        \"end\": \"MAX_NUM_GPUS\",\n        \"increment\": 1\n      },\n      \"loop_7\": {\n        \"variable\": \"i\",\n        \"start\": 1,\n        \"end\": \"NUM_RUNS\",\n        \"increment\": 1\n      }\n    },\n    \"benchmark_types\": [\n      \"Baseline Copy\",\n      \"Baseline Copy Overlap\",\n      \"Baseline P2P\",\n      \"Single Stream 1TB\",\n      \"Single Stream 2TB\",\n      \"Double Stream\",\n      \"Baseline Copy (No compute)\",\n      \"Baseline Copy Overlap (No Compute)\",\n      \"Baseline P2P (No Compute)\",\n      \"Single Stream 1TB (No Compute)\",\n      \"Single Stream 2TB (No Compute)\",\n      \"Double Stream (No Compute)\",\n      \"NVSHMEM Baseline\",\n      \"NVSHMEM Baseline Optimized\",\n      \"NVSHMEM Single Stream 1TB\",\n      \"NVSHMEM Single Stream 2TB\",\n      \"NVSHMEM Double Stream\",\n      \"NVSHMEM Baseline (No Compute)\",\n      \"NVSHMEM Baseline Optimized (No Compute)\",\n      \"NVSHMEM Single Stream 1TB (No Compute)\",\n      \"NVSHMEM Single Stream 2TB (No Compute)\",\n      \"NVSHMEM Double Stream (No Compute)\"\n    ],\n    \"data_processing\": {\n      \"output\": {\n        \"format\": \"Execution Time\",\n        \"units\": \"Time units not specified in the script\"\n      }\n    }\n  }\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 1426,
+        "candidates_token_count": 929,
+        "total_token_count": 2355,
+        "cached_content_token_count": 0
+    }
+}

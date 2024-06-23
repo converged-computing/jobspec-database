@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"COBALT\",\n  \"details\": {\n    \"modules\": [\n      \"datascience/tensorflow-1.13\",\n      \"datascience/horovod-0.16.1\",\n      \"cray-hdf5-parallel/1.10.2.0\"\n    ],\n    \"environment_variables\": {\n      \"HDF5_USE_FILE_LOCKING\": \"FALSE\",\n      \"PYTHONPATH\": \"$PYTHONPATH:/lus/theta-fs0/projects/datascience/keceli/pip_ffn\"\n    },\n    \"resources\": {\n      \"nodes\": \"NNODE\",\n      \"ranks_per_node\": \"NRANK_PER_NODE\",\n      \"threads_per_core\": \"NTHREAD_PER_CORE\",\n      \"ranks\": \"NRANK\",\n      \"threads_per_rank\": \"NTHREAD\"\n    },\n    \"script\": {\n      \"name\": \"run_inference.py\",\n      \"path\": \"/home/keceli/ffn/google_ffn/run_inference.py\",\n      \"arguments\": [\n        \"--inference_request='(contents of config.txt)'\",\n        \"--bounding_box 'start { x:0 y:0 z:0 } size { x:250 y:250 z:250 }'\"\n      ]\n    },\n    \"command\": \"aprun -n $NRANK -N $NRANK_PER_NODE -e MKL_VERBOSE=0 -e MKLDNN_VERBOSE=0 -e KMP_BLOCKTIME=0 -e KMP_AFFINITY=granularity=fine,compact,1,0 -e OMP_NUM_THREADS=$NTHREAD -cc depth -d $NTHREAD -j $NTHREAD_PER_CORE python $MYSCRIPT \\\\\"\n  }\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 2,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 584,
+        "candidates_token_count": 424,
+        "total_token_count": 1008,
+        "cached_content_token_count": 0
+    }
+}

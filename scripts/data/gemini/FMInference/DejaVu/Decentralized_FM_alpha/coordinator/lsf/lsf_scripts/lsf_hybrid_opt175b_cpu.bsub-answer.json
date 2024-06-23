@@ -1,0 +1,39 @@
+{
+    "application": "LSF",
+    "details": {
+        "scheduler": "LSF",
+        "cores": 32,
+        "memory_per_core": "6000",
+        "modules": [
+            "gcc/6.3.0",
+            "cuda/11.0.3"
+        ],
+        "conda_env": "base",
+        "python_script": "dist_inference_hybrid_runner_w_euler_coordinator.py",
+        "environment_variables": {
+            "NCCL_SOCKET_IFNAME": "access",
+            "GLOO_SOCKET_IFNAME": "access",
+            "OMP_NUM_THREADS": 32
+        },
+        "arguments": [
+            "--fp16",
+            "--pp-mode pipe_hybrid_greedy_async",
+            "--world-size 8",
+            "--pipeline-group-size 4",
+            "--node-type CPU",
+            "--use-cuda False",
+            "--model-type gptj",
+            "--model-name ./pretrained_models/gpt-j-66B",
+            "--num-iters 2",
+            "--input-seq-length 512",
+            "--generate-seq-length 32",
+            "--prompt-micro-batch-size 1",
+            "--token-micro-batch-size 1",
+            "--stage-num-layers 1",
+            "--global-num-layers 4",
+            "--producer-buffer-size 4",
+            "--consumer-buffer-size 2",
+            "--coordinator-server-ip 129.132.93.110"
+        ]
+    }
+}

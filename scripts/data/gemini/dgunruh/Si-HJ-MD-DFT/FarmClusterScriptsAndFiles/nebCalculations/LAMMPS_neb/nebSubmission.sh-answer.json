@@ -1,0 +1,38 @@
+{
+    "application": "lammps",
+    "details": {
+        "scheduler": "slurm",
+        "resources": {
+            "nodes": 1,
+            "cores_per_node": 16,
+            "tasks": 64,
+            "memory": "50G",
+            "partition": "med2",
+            "walltime": "0-01:00",
+            "mail_user": "dgunruh@ucdavis.edu",
+            "mail_type": [
+                "END",
+                "FAIL"
+            ],
+            "array_range": "14-14",
+            "environment_variables": {
+                "OMP_NUM_THREADS": 1,
+                "j": "$SLURM_JOB_ID",
+                "t": "$SLURM_ARRAY_TASK_ID"
+            },
+            "modules": "openmpi"
+        },
+        "input_files": [
+            "neb_input_${t}.out",
+            "neb_end_${t}.out",
+            "neb_atoms_${t}.out",
+            "nebGAP.in"
+        ],
+        "output_files": [
+            "outputs/cSiaSiMD-%j.output",
+            "logfiles/${log}/log.lammps",
+            "screenfiles/screen${temp}"
+        ],
+        "executable": "../lammps_3Mar2020/build/lmp_mpi"
+    }
+}

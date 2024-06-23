@@ -1,0 +1,40 @@
+{
+    "application": "Slurm",
+    "details": {
+        "resource_requirements": {
+            "nodes": 2,
+            "tasks_per_node": 76,
+            "gpus_per_task": 0,
+            "time": "4:00:00",
+            "partition": "cpuonly",
+            "account": "haicore-project-scc"
+        },
+        "software": {
+            "framework": "optuna",
+            "container": "scratch-tf-sql.sif",
+            "environment_variables": [
+                "FNAME=step",
+                "EVALS_PER_WORKER=256",
+                "DATA_DIR=/hkfs/work/workspace/scratch/qv2382-bigearthnet/",
+                "BASE_DIR=/hkfs/work/workspace/scratch/qv2382-propulate/",
+                "SQL_DATA_DIR=/hkfs/work/workspace/scratch/qv2382-propulate/sqldata/step",
+                "SQL_CONFIG=/hkfs/work/workspace/scratch/qv2382-propulate/exps/function_benchmark/mysqlconfs/step.cnf",
+                "SQL_SOCKET=/hkfs/work/workspace/scratch/qv2382-propulate/bigearthnet_kit/mysql/step/var/run/mysqld/mysqld.sock",
+                "SQL_DIR=/hkfs/work/workspace/scratch/qv2382-propulate/bigearthnet_kit/mysql/step/",
+                "CONTAINER_DIR=/hkfs/work/workspace/scratch/qv2382-propulate/containers/",
+                "SINGULARITY_FILE=/hkfs/work/workspace/scratch/qv2382-propulate/containers/scratch-tf-sql.sif",
+                "UCX_MEMTYPE_CACHE=0",
+                "NCCL_IB_TIMEOUT=100",
+                "SHARP_COLL_LOG_LEVEL=3",
+                "OMPI_MCA_coll_hcoll_enable=0",
+                "NCCL_SOCKET_IFNAME=ib0",
+                "NCCL_COLLNET_ENABLE=0"
+            ],
+            "libraries": [
+                "propulate/wrapper.py",
+                "propulate/propulator.py"
+            ]
+        },
+        "command": "singularity exec --bind /hkfs/work/workspace/scratch/qv2382-propulate/ --bind /hkfs/work/workspace/scratch/qv2382-propulate/bigearthnet_kit/mysql/step/var/lib/mysql/:/var/lib/mysql --bind /hkfs/work/workspace/scratch/qv2382-propulate/bigearthnet_kit/mysql/step/run/mysqld:/run/mysqld --bind /hkfs/work/workspace/scratch/qv2382-propulate/bigearthnet_kit/mysql/step/var/log/mysql/:/var/log/mysql --bind \"${DATA_DIR}\",\"/scratch\",\"$TMP\" --bind \"/hkfs/work/workspace/scratch/qv2382-propulate/propulate/propulate/wrapper.py\":\"/usr/local/lib/python3.8/dist-packages/propulate/wrapper.py\" --bind \"/hkfs/work/workspace/scratch/qv2382-propulate/propulate/propulate/propulator.py\":\"/usr/local/lib/python3.8/dist-packages/propulate/propulator.py\" ${SINGULARITY_FILE} bash optuna.sh"
+    }
+}

@@ -1,0 +1,41 @@
+{
+    "application": "SLURM",
+    "details": {
+        "software": [
+            "Python",
+            "GCCcore",
+            "Stages",
+            "CUDA"
+        ],
+        "resources": {
+            "nodes": 1,
+            "tasks": 4,
+            "tasks_per_node": 4,
+            "gpus": 4,
+            "cpus_per_task": 10,
+            "partition": "booster",
+            "time": "01:00:00",
+            "job_name": "BE_LC_s1",
+            "output_file": "srun_outputs/BE_s1_LC_rn50_decur_1_%j.out",
+            "error_file": "srun_outputs/BE_s1_LC_rn50_decur_1_%j.err"
+        },
+        "virtual_environment": "/p/project/hai_dm4eo/wang_yi/env2/bin/activate",
+        "script": "linear_BE.py",
+        "arguments": [
+            "--lmdb_dir /p/project/hai_dm4eo/wang_yi/data/BigEarthNet/",
+            "--mode s1",
+            "--checkpoints_dir /p/project/hai_dm4eo/wang_yi/decur/src/transfer_classification/checkpoints/BE_s1_LC_rn50_decur_1",
+            "--backbone resnet50",
+            "--train_frac 0.01",
+            "--batchsize 64",
+            "--lr 0.5",
+            "--schedule 60 80",
+            "--epochs 100",
+            "--num_workers 10",
+            "--seed 42",
+            "--dist_url $dist_url",
+            "--linear",
+            "--pretrained /p/project/hai_dm4eo/wang_yi/decur/src/pretrain/checkpoints/late_fusion_2p2/B2B13_bt_decu_rn50_prj8192/checkpoint_0099.pth"
+        ]
+    }
+}

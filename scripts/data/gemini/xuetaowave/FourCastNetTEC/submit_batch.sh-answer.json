@@ -1,0 +1,22 @@
+{
+    "application": "SLURM",
+    "details": {
+        "job_name": "afno",
+        "time_limit": "01:00:00",
+        "nodes": 1,
+        "tasks_per_node": 2,
+        "cpus_per_task": 8,
+        "gpus_per_node": 2,
+        "gpu_type": "a100",
+        "partition": "GPU-8A100",
+        "qos": "gpu_8a100",
+        "environment_variables": [
+            "HDF5_USE_FILE_LOCKING=FALSE",
+            "NCCL_NET_GDR_LEVEL=PHB",
+            "MASTER_ADDR=$(hostname)"
+        ],
+        "python_script": "train.py",
+        "python_arguments": "--enable_amp --yaml_config=$config_file --config=$config --run_num=$run_num",
+        "other_scripts": "export_DDP_vars.sh"
+    }
+}

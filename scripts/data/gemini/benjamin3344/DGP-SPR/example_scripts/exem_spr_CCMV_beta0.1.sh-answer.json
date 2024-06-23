@@ -1,0 +1,75 @@
+{
+    "application": "SLURM",
+    "details": {
+        "resource_requests": {
+            "gpu": "v100l:1",
+            "cpus": 6,
+            "memory": "64000M",
+            "time": "1-22:50"
+        },
+        "account": "def-janehowe",
+        "modules": [
+            "StdEnv/2020",
+            "python/3.7",
+            "cuda",
+            "cudnn"
+        ],
+        "virtualenv": {
+            "path": "$SLURM_TMPDIR/env",
+            "packages": [
+                "torch==1.8.0",
+                "pillow",
+                "matplotlib",
+                "tensorboard",
+                "tensorboardX",
+                "scipy",
+                "ninja",
+                "pandas",
+                "torchdiffeq-0.2.2",
+                "torchvision"
+            ]
+        },
+        "script": "train_exemplar.py",
+        "arguments": [
+            "$DATADIR/particles.256.mrcs",
+            "--poses",
+            "$DATADIR/pose.pkl",
+            "--ctf",
+            "$DATADIR/ctf.pkl",
+            "--zdim",
+            "10",
+            "-n",
+            "101",
+            "--root",
+            "$RESULT",
+            "--save",
+            "'exp_exemplar'",
+            "--enc-dim",
+            "256",
+            "--enc-layers",
+            "3",
+            "--dec-dim",
+            "256",
+            "--dec-layers",
+            "3",
+            "--amp",
+            "--lazy",
+            "--lr",
+            "0.00005",
+            "--beta",
+            "0.1",
+            "--checkpoint",
+            "5",
+            "--batch-size",
+            "8",
+            "--prior",
+            "'exemplar'",
+            "--number-cachecomponents",
+            "5000",
+            "--approximate-prior",
+            "--log-interval",
+            "10000"
+        ],
+        "working_directory": "DGP-SPR"
+    }
+}

@@ -1,0 +1,56 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "LSF\n```json\n{\n  \"application\": \"LSF\",\n  \"resources\": {\n    \"queue\": \"batch\",\n    \"nodes\": 1600,\n    \"walltime\": \"2:00\",\n    \"modules\": [\n      \"cuda/11.0.3\",\n      \"open-ce/1.2.0-py38-0\"\n    ],\n    \"conda_environment\": \"/gpfs/alpine/world-shared/bip214/deepspeed-env\",\n    \"environment_variables\": {\n      \"CUDA_HOME\": \"${CUDA_TOOLKIT_ROOT_DIR}\",\n      \"HF_HOME\": \"/gpfs/alpine/world-shared/bip214/affinity_pred/train\",\n      \"HF_DATASETS_CACHE\": \"/gpfs/alpine/world-shared/bip214/affinity_pred/train/dataset-cache\",\n      \"TORCH_EXTENSIONS_DIR\": \"/gpfs/alpine/world-shared/bip214/affinity_pred/train/build\",\n      \"CC\": \"`which gcc`\",\n      \"GCC\": \"`which gcc`\",\n      \"CXX\": \"`which g++`\",\n      \"OMP_NUM_THREADS\": \"1\",\n      \"PYTHONUNBUFFERED\": \"1\"\n    },\n    \"script\": {\n      \"language\": \"bash\",\n      \"command\": \"jsrun -n 320 -g 6 -a 6 -c 42 python ../affinity_pred/finetune.py \\\\\",\n      \"arguments\": [\n        \"--deepspeed='ds_config_rocm.json'\",\n        \"--model_type='regex'\",\n        \"--n_cross_attention=10\",\n        \"--dataset='/gpfs/alpine/world-shared/bip214/binding_affinity'\",\n        \"--split='train'\",\n        \"--output_dir=./results_ensemble_regex_10cross_${ENSEMBLE_ID}\",\n        \"--num_train_epochs=45\",\n        \"--per_device_train_batch_size=32\",\n        \"--per_device_eval_batch_size=32\",\n        \"--warmup_steps=5\",\n        \"--learning_rate=2.5e-4\",\n        \"--weight_decay=0.01\",\n        \"--logging_dir=./logs_ensemble_regex_10cross_${ENSEMBLE_ID}\",\n        \"--logging_steps=1\",\n        \"--evaluation_strategy=\\\"epoch\\\"\",\n        \"--gradient_accumulation_steps=1\",\n        \"--fp16=True\",\n        \"--run_name=\\\"seq_smiles_affinity\\\"\",\n        \"--save_strategy=\\\"epoch\\\"\",\n        \"--seed=$((42+${ENSEMBLE_ID}))\"\n      ]\n    }\n  }\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "citation_metadata": {
+                "citation_sources": [
+                    {
+                        "start_index": 921,
+                        "end_index": 1729,
+                        "uri": "https://github.com/ORNL/affinity_pred",
+                        "license_": ""
+                    }
+                ]
+            },
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 689,
+        "candidates_token_count": 640,
+        "total_token_count": 1329,
+        "cached_content_token_count": 0
+    }
+}

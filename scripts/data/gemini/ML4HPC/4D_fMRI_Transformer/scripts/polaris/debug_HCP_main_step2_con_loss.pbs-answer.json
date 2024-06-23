@@ -1,0 +1,41 @@
+{
+    "application": "MPI",
+    "details": {
+        "software": [
+            "PBS",
+            "mpiexec",
+            "conda",
+            "python",
+            "nvidia-smi",
+            "set_affinity_gpu_polaris.sh"
+        ],
+        "resources": {
+            "nodes": 10,
+            "walltime": "0:05:00",
+            "filesystems": [
+                "home",
+                "grand"
+            ],
+            "queue": "prod",
+            "account": "STlearn",
+            "environment_variables": [
+                "MPICH_GPU_SUPPORT_ENABLED=1",
+                "NCCL_COLLNET_ENABLE=1",
+                "NCCL_NET_GDR_LEVEL=PHB",
+                "MASTER_ADDR",
+                "NNODES",
+                "NRANKS_PER_NODE",
+                "NTOTRANKS",
+                "NDEPTH",
+                "OMP_NUM_THREADS",
+                "OMP_PLACES"
+            ]
+        },
+        "commands": [
+            "module load conda",
+            "conda activate 3DCNN",
+            "cd /lus/grand/projects/STlearn/4D_fMRI_Transformer/",
+            "mpiexec -n ${NTOTRANKS} --ppn ${NRANKS_PER_NODE} --depth=${NDEPTH} --cpu-bind depth  $set_affinity_cmd $Command"
+        ]
+    }
+}

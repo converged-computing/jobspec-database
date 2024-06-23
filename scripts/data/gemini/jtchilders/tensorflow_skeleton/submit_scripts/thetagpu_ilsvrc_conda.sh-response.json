@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"Horovod\",\n  \"details\": {\n    \"environment\": {\n      \"conda\": \"/lus/theta-fs0/software/thetagpu/conda/tf_master/2020-11-11/mconda3\",\n      \"OMP_NUM_THREADS\": 64\n    },\n    \"resources\": {\n      \"nodes\": \"$COBALT_NODEFILE\",\n      \"ppn\": 8,\n      \"ranks\": \"NODES * PPN\",\n      \"hostfile\": \"$COBALT_NODEFILE\",\n      \"logdir\": \"logdir/$COBALT_JOBID/$(date +\\\"%Y-%m-%d-%H-%M\\\")/conda\"\n    },\n    \"libraries\": {\n      \"python\": \"main.py\",\n      \"configs\": \"configs/ilsvrc.json\"\n    },\n    \"flags\": {\n      \"horovod\": \"--horovod\",\n      \"profiler\": \"--profiler\",\n      \"batch-term\": 50\n    },\n    \"dependencies\": {\n      \"mpirun\": \"mpirun -n $RANKS -npernode $PPN -hostfile $COBALT_NODEFILE $(which python)\"\n    },\n    \"optional_flags\": {\n      \"TF_ENABLE_AUTO_MIXED_PRECISION\": \"1\",\n      \"TF_XLA_FLAGS\": \"--tf_xla_auto_jit=1\",\n      \"TF_XLA_FLAGS\": \"--tf_xla_auto_jit=fusible\"\n    }\n  }\n}\n```\n\n**Explanation:**\n\n* **Application:** The script utilizes **Horovod** for distributed training, as indicated by the `--horovod` flag and the use of `mpirun` for parallel execution. \n* **Details:**\n    * **Environment:** The script sets up a conda environment for the training process. It also defines the number of OpenMP threads using the `OMP_NUM_THREADS` variable.\n    * **Resources:** The script utilizes a cluster environment with specified nodes and processes per node (PPN). It relies on the `COBALT_NODEFILE` environment variable for cluster management. The `logdir` variable is defined for storing log files and the script copies itself to that directory. \n    * **Libraries:** The script uses a Python script called `main.py` for the training process and relies on a configuration file `configs/ilsvrc.json`.\n    * **Flags:**  It uses flags such as `--horovod` to activate Horovod, `--profiler` for profiling performance, and `--batch-term` to set the batch termination condition.\n    * **Dependencies:**  The script utilizes `mpirun` for distributed execution, requiring a MPI implementation on the cluster.\n    * **Optional Flags:** The script includes optional flags for enabling mixed precision training (`TF_ENABLE_AUTO_MIXED_PRECISION`) and XLA optimization (`TF_XLA_FLAGS`) using TensorFlow. \n\nThis JSON object provides a detailed description of the application and its resource and software requirements, making it easy to understand the script's purpose and dependencies. \n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 463,
+        "candidates_token_count": 707,
+        "total_token_count": 1170,
+        "cached_content_token_count": 0
+    }
+}

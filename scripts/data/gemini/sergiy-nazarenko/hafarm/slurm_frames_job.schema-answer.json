@@ -1,0 +1,30 @@
+{
+    "application": "Slurm",
+    "details": {
+        "scheduler": "Slurm",
+        "resource_requirements": {
+            "nodes": "{{ tile_x }}-{{ tile_x * tile_y }}",
+            "slots": "{{ slots }}",
+            "exclusive": "{{ slots }}",
+            "requeue": "{{ rerun_on_error }}",
+            "hold": "{{ job_on_hold }}",
+            "tmp_dir": "{{ req_tmpdir * 1024 }}",
+            "memory": "{{ req_memory * 1024 }}",
+            "license": "{{ req_license.split('=') | join(':') }}",
+            "aftercorr": "{{ slurm_aftercorr|join(',') }}",
+            "email": "{{ email_list|join(',') }}",
+            "queue": "{{ queue }}"
+        },
+        "environment_variables": {
+            "HAFARM_VERSION": "{{ env['REZ_HAFARM_VERSION'] }}",
+            "OUTPUT_PICTURE": "{{ output_picture }}"
+        },
+        "rendering_commands": {
+            "command": "{{ command }}",
+            "command_args": "{{ command_arg|join(' ') }}",
+            "scene_file": "{{ scene_file }}"
+        },
+        "pre_render_script": "{{ pre_render_script }}",
+        "post_render_script": "{{ post_render_script }}"
+    }
+}

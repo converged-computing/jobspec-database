@@ -1,0 +1,66 @@
+{
+    "application": "deepspeed",
+    "details": {
+        "framework": "PyTorch",
+        "model": "GPT",
+        "distributed_training": true,
+        "resource_requirements": {
+            "nodes": 48,
+            "walltime": "06:00:00",
+            "filesystem": "eagle:home",
+            "queue": "prod",
+            "account": "argonne_tpc"
+        },
+        "libraries": [
+            "deepspeed",
+            "python3",
+            "conda",
+            "mpich"
+        ],
+        "environment": {
+            "conda_env": "polaris/2024-03-14",
+            "deepspeed_config": "deepspeed_config.json"
+        },
+        "command_line_arguments": {
+            "--use-flash-attn-v2": true,
+            "--DTYPE": "float16",
+            "--num-workers": 0,
+            "--split": "100,0,0",
+            "--log-interval": 1,
+            "--no-bias-gelu-fusion": true,
+            "--lr-decay-style": "cosine",
+            "--no-bias-dropout-fusion": true,
+            "--no-masked-softmax-fusion": true,
+            "--tokenizer-type": "Llama2Tokenizer",
+            "--no-gradient-accumulation-fusion": true,
+            "--accumulate-allreduce-grads-in-fp32": true,
+            "--use-checkpoint-opt_param-scheduler": true,
+            "--lr": "${LR}",
+            "--seq-length": "$SEQ",
+            "--save": "${CKPT_DIR}",
+            "--load": "${CKPT_DIR}",
+            "--num-layers": "${NLAYERS}",
+            "--hidden-size": "${HIDDEN}",
+            "--train-iters": "${TRAIN_ITER}",
+            "--eval-iters": "${EVAL_ITERS}",
+            "--distributed-backend": "${BE}",
+            "--num-attention-heads": "${HEADS}",
+            "--save-interval": "${SAVE_INTERVAL}",
+            "--eval-interval": "${EVAL_INTERVAL}",
+            "--max-position-embeddings": "${SEQ}",
+            "--micro-batch-size": "${MICRO_BATCH}",
+            "--data-file-list": "${DATA_FILE_LIST}",
+            "--tensor-model-parallel-size": "${TP}",
+            "--global-batch-size": "${GLOBAL_BATCH}",
+            "--pipeline-model-parallel-size": "${PP}",
+            "--num-key-value-heads": "${NUM_KV_HEAD}",
+            "--data-cache-path": "${DATA_CACHE_PATH}",
+            "--ffn-hidden-size": "${FFN_HIDDEN_SIZE}",
+            "--tokenizer-model": "${TOKENIZER_MODEL}",
+            "${LLAMA_ARGS}": "${LLAMA_ARGS}",
+            "$ds_args": "$ds_args",
+            "${gpt_args[*]}": "${gpt_args[*]}",
+            "$custom_args": "$custom_args"
+        }
+    }
+}

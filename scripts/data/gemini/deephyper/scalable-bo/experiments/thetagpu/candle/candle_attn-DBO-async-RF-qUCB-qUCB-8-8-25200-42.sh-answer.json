@@ -1,0 +1,60 @@
+{
+    "application": "ScalBO",
+    "details": {
+        "framework": "COBALT",
+        "runtime": "Python",
+        "library": "scalbo",
+        "resource_requirements": {
+            "nodes": 8,
+            "cores_per_node": 8,
+            "wall_time": 425,
+            "queue": "full-node",
+            "account": "datascience"
+        },
+        "environment_variables": {
+            "RANKS_PER_NODE": 8,
+            "COBALT_JOBSIZE": 8,
+            "acq_func": "qUCB",
+            "strategy": "qUCB",
+            "model": "RF",
+            "timeout": 25200,
+            "random_state": 42,
+            "problem": "candle_attn",
+            "sync_val": 0,
+            "search": "DBO",
+            "sync_str": "async",
+            "log_dir": "output/candle_attn-DBO-async-RF-qUCB-qUCB-8-8-25200-42",
+            "PYTHONPATH": "../../../build/dhenv/lib/python3.8/site-packages/:$PYTHONPATH",
+            "CUDA_MPS_PIPE_DIRECTORY": "/tmp/nvidia-mps",
+            "CUDA_MPS_LOG_DIRECTORY": "/tmp/nvidia-log"
+        },
+        "mpi": {
+            "executable": "python",
+            "module": "scalbo.exp",
+            "arguments": [
+                "--problem",
+                "candle_attn",
+                "--search",
+                "DBO",
+                "--model",
+                "RF",
+                "--sync",
+                "0",
+                "--timeout",
+                "25200",
+                "--acq-func",
+                "qUCB",
+                "--strategy",
+                "qUCB",
+                "--random-state",
+                "42",
+                "--log-dir",
+                "output/candle_attn-DBO-async-RF-qUCB-qUCB-8-8-25200-42",
+                "--verbose",
+                "1"
+            ],
+            "processes": 64,
+            "hostfile": "$COBALT_NODEFILE"
+        }
+    }
+}

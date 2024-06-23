@@ -1,0 +1,39 @@
+{
+    "application": "SLURM",
+    "details": {
+        "environment": {
+            "conda": "ml2",
+            "modules": [
+                "nccl/2.7.8_cuda11.0"
+            ],
+            "environment_variables": {
+                "NCCL_DEBUG": "INFO",
+                "NCCL_DEBUG_SUBSYS": "COLL",
+                "NCCL_SOCKET_IFNAME": "^docker0,lo"
+            }
+        },
+        "resources": {
+            "nodes": 4,
+            "gpus": 4,
+            "cpus": 32,
+            "memory": "100gb",
+            "time": "00:20:00",
+            "partition": "gpu",
+            "constraint": "gpuv100x"
+        },
+        "script": "/home/luberjm/pl/code/experiment.py",
+        "arguments": {
+            "batch-size": 4,
+            "epochs": 2,
+            "gpus": 4,
+            "nodes": 4,
+            "workers": 32,
+            "custom-coords-file": "/home/luberjm/pl/code/pc.data",
+            "accelerator": "ddp",
+            "logging-name": "v100x_4nodes_16gpus_32bit",
+            "train-size": 1600,
+            "test-size": 400,
+            "read-coords": true
+        }
+    }
+}

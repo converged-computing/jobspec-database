@@ -1,0 +1,46 @@
+{
+    "application": "COBALT",
+    "details": {
+        "resource_requirements": {
+            "queue": "debug-cache-quad",
+            "account": "CSC249ADSE09",
+            "nodes": 1,
+            "time": 60,
+            "output_option": "nightly",
+            "attributes": "mcdram=cache:numa=quad"
+        },
+        "modules": [
+            "cray-hdf5-parallel",
+            "gcc",
+            "cmake/3.14.5",
+            "miniconda-3/latest"
+        ],
+        "environment_variables": {
+            "TEST_SITE_NAME": "theta.alcf.anl.gov",
+            "N_PROCS": 16,
+            "N_PROCS_BUILD": 16,
+            "N_CONCURRENT_TESTS": 1,
+            "QMC_DATA": "/projects/catalyst/yeluo/benchmark/h5data",
+            "compiler": "Intel19.0.5",
+            "CC": "cc",
+            "CXX": "CC",
+            "QMCPACK_TEST_SUBMIT_NAME": "${compiler}-${sys}-Release"
+        },
+        "software": {
+            "qmcpack_branch": "develop",
+            "qmcpack_entry": "qmcpack-${branch}"
+        },
+        "build_system": "cmake",
+        "test_framework": "ctest",
+        "test_targets": [
+            "deterministic",
+            "performance-NiO-cpu-a128-e1536"
+        ],
+        "test_options": [
+            "release",
+            "ENABLE_TIMERS=1",
+            "QMC_OPTIONS='-DMPIEXEC_EXECUTABLE=/bin/sh;-DMPIEXEC_NUMPROC_FLAG=$place/$entry/tests/scripts/aprunhelper.sh'"
+        ],
+        "log_location": "$place/log/$entry/$mydate"
+    }
+}

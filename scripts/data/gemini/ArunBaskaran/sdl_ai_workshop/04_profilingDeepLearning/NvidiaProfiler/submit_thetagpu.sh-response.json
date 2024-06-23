@@ -1,0 +1,56 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"Cobalt\",\n  \"details\": {\n    \"resource_requirements\": {\n      \"nodes\": 1,\n      \"time\": \"1:00:00\",\n      \"queue\": \"training-gpu\",\n      \"account\": \"SDL_Workshop\",\n      \"attributes\": \"pubnet\"\n    },\n    \"software_requirements\": {\n      \"conda_environment\": \"tensorflow\",\n      \"python_packages\": [\n        \"nvidia-pyindex\",\n        \"nvidia-dlprof\"\n      ]\n    },\n    \"profilers\": {\n      \"nsight\": {\n        \"commands\": [\n          \"nsys profile --stats=true --output nsys.out python tensorflow2_cifar10.py --device gpu --epochs 5 > nsys-profile.log 2>&1\"\n        ],\n        \"visualization\": {\n          \"method1\": \"ssh -XL to enable GUI\",\n          \"method2\": \"copy nsys.out.qdrep to local machine with Nvidia Nsight UI installed\"\n        }\n      },\n      \"dlprof\": {\n        \"commands\": [\n          \"mkdir ./results\",\n          \"dlprof --reports=all --mode=simple --nsys_opts=\\\"-t cuda,nvtx --force-overwrite true\\\" --output_path=./results/  python tensorflow2_cifar10.py --epochs 1 --device gpu\"\n        ]\n      }\n    },\n    \"script_arguments\": {\n      \"profiler\": {\n        \"options\": [\n          \"nsight\",\n          \"dlprof\"\n        ],\n        \"description\": \"The profiler to use for performance analysis\"\n      }\n    }\n  }\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "citation_metadata": {
+                "citation_sources": [
+                    {
+                        "start_index": 829,
+                        "end_index": 1056,
+                        "uri": "https://github.com/argonne-lcf/sdl_workshop",
+                        "license_": ""
+                    }
+                ]
+            },
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 713,
+        "candidates_token_count": 396,
+        "total_token_count": 1109,
+        "cached_content_token_count": 0
+    }
+}

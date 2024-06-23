@@ -1,0 +1,36 @@
+{
+    "application": "Slurm",
+    "details": {
+        "resource_requirements": {
+            "nodes": 2,
+            "wall_time": "00:15:00",
+            "memory": "all available",
+            "tasks_per_node": 1,
+            "container": "nvcr.io/nvidian/jax_t5x:cuda11.4-cudnn8.2-ubuntu20.04-manylinux2014-multipython",
+            "container_name": "multinode_ci_test_container"
+        },
+        "software_requirements": {
+            "python": "3.8",
+            "packages": [
+                "jaxlib",
+                "jax",
+                "pytest",
+                "pytest-forked"
+            ]
+        },
+        "other_requirements": {
+            "network": "Ethernet with NCCL configured for IB-like communication",
+            "filesystem": "Mounted workspace directory"
+        },
+        "execution_flow": {
+            "setup_commands": [
+                "install jaxlib and jax",
+                "install pytest and pytest-forked",
+                "create output directory"
+            ],
+            "main_command": "run pytest with forked mode, verbose output, and junit xml generation",
+            "output_redirection": "stdout and stderr to single file per task",
+            "barrier_synchronization": "wait for all tasks to complete setup before executing the main command"
+        }
+    }
+}

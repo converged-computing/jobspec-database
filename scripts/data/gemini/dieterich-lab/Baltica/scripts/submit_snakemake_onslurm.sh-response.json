@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"Snakemake\",\n  \"details\": {\n    \"resource_requirements\": {\n      \"nodes\": 1,\n      \"memory\": \"4G\",\n      \"partition\": \"long\",\n      \"job_name\": \"smk-parent\",\n      \"mail_user\": \"thiago.brittoborges@uni-heidelberg.de\"\n    },\n    \"environment\": {\n      \"conda_environment\": \"snakemake\",\n      \"cluster_config\": \"cluster.yml\"\n    },\n    \"execution_options\": {\n      \"parallel_jobs\": 100,\n      \"print_shell_commands\": true,\n      \"unlock\": true\n    }\n  }\n}\n```\n\n**Explanation:**\n\n* **Application:** The script is running the **Snakemake** workflow management system.\n* **Details:**\n    * **Resource Requirements:** The script specifies resource requirements for the Snakemake workflow using the SLURM job scheduler. These include:\n        * **-n 1:**  One processor core.\n        * **-N 1:** One node.\n        * **--mem=4G:** 4GB of RAM.\n        * **--job-name=\"smk-parent\":** Name for the SLURM job.\n        * **--mail-user=thiago.brittoborges@uni-heidelberg.de:** Email address for job notifications.\n        * **--partition=long:**  Use the \"long\" partition of the SLURM cluster.\n    * **Environment:**\n        * **source ~/bin/snakemake/bin/activate:** Activates a conda environment named \"snakemake\" (presumably containing the Snakemake installation).\n        * **--use-conda:** Use the conda environment for executing the workflow.\n        * **--cluster-config cluster.yml:** Specifies a configuration file \"cluster.yml\" for the cluster environment.\n    * **Execution Options:**\n        * **-s $1:** The script takes the workflow definition file (Snakefile) as an input argument ($1).\n        * **--unlock:** Unlocks the workflow, allowing it to be run even if it was previously interrupted.\n        * **--printshellcmds:** Prints the shell commands that Snakemake would execute, but does not actually run them.\n        * **--cluster 'sbatch -p {cluster.partition} --mem {cluster.mem} --out {cluster.out} --error {cluster.out} -c {cluster.cpu}':** Specifies a custom cluster configuration for running Snakemake tasks on a SLURM cluster. \n        * **--jobs 100:** Runs up to 100 tasks in parallel. \n\nThis script sets up a Snakemake workflow to run on a SLURM cluster, using a conda environment and specific resource requirements. The script also allows for custom cluster configuration and parallel execution of tasks. \n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 207,
+        "candidates_token_count": 638,
+        "total_token_count": 845,
+        "cached_content_token_count": 0
+    }
+}

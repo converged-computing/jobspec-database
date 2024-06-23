@@ -1,0 +1,36 @@
+{
+    "application": "SLURM",
+    "details": {
+        "job_scheduler": "SLURM",
+        "resources": {
+            "account": "gdrobertslab",
+            "nodes": 1,
+            "tasks": 1,
+            "cpus_per_task": 5,
+            "walltime": "0-10:00:00",
+            "mail_user": "matthew.cannon@nationwidechildrens.org",
+            "mail_type": "FAIL,REQUEUE,TIME_LIMIT_80"
+        },
+        "modules": [
+            "GCC/9.3.0",
+            "GCCcore/9.3.0",
+            "BCFtools/1.11",
+            "rstudio/1.4.1717",
+            "R/4.1.0"
+        ],
+        "commands": [
+            "bcftools mpileup",
+            "bcftools call",
+            "bcftools filter",
+            "bcftools view",
+            "java -jar ~/bin/snpEff/snpEff.jar GRCh38.105",
+            "gzip"
+        ],
+        "files": [
+            "/reference/homo_sapiens/hg38/ucsc_assembly/illumina_download/Sequence/WholeGenomeFasta/genome.fa",
+            "${scrDir}/stjude/realigned/${baseName}_combined.bam",
+            "/gpfs0/scratch/mvc002/roberts/${baseName}.vcf",
+            "output/vcfs/p53Char/${baseName}.vcf.gz"
+        ]
+    }
+}

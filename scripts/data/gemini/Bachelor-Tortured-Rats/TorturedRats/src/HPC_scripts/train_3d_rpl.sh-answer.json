@@ -1,0 +1,43 @@
+{
+    "application": "LSF",
+    "details": {
+        "queue": "gpuv100",
+        "jobName": "train_3drpl_pretask",
+        "cores": 1,
+        "gpu": {
+            "num": 1,
+            "mode": "exclusive_process"
+        },
+        "walltime": "24:00",
+        "memory": "256GB",
+        "gpuMemory": "32GB",
+        "email": "s204159@student.dtu.dk",
+        "output": "train_3drpl%J.out",
+        "error": "train_3drpl%J.err",
+        "modules": [
+            "python3/3.7.14",
+            "cuda/10.2",
+            "cudnn/v8.3.2.44-prod-cuda-10.2",
+            "ffmpeg/4.2.2"
+        ],
+        "pythonEnvironment": "$HOME/Desktop/work3S204159/PythonEnvironments/bachelor37",
+        "script": "src/pipelines/train_3drpl.py",
+        "arguments": {
+            "rat": {
+                "num_samples": 6,
+                "dataset": "rat_kidney",
+                "model_save_path": "models/selfsupervised_pretask_models/rat_data_final",
+                "learning_rate": "1e-4",
+                "epochs": "3000",
+                "loss": "online"
+            },
+            "hepatic": {
+                "dataset": "hepatic",
+                "model_save_path": "models/selfsupervised_pretask_models/hepatic/final",
+                "learning_rate": "1e-5",
+                "epochs": "1500",
+                "loss": "online"
+            }
+        }
+    }
+}

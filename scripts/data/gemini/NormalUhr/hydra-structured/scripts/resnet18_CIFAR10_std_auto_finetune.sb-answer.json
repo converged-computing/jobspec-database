@@ -1,0 +1,33 @@
+{
+    "application": "Slurm",
+    "details": {
+        "software": [
+            "GCC/6.4.0-2.28",
+            "OpenMPI/2.1.2",
+            "CUDA/10.0.130",
+            "cuDNN/7.5.0.56-CUDA-10.0.130",
+            "Python/3.8.5",
+            "anaconda3"
+        ],
+        "resources": {
+            "time": "1:50:00",
+            "nodes": 1,
+            "tasks": 1,
+            "cpus-per-task": 4,
+            "mem-per-cpu": "2G",
+            "gpu": "v100:1"
+        },
+        "commands": [
+            "module purge",
+            "module load GCC/6.4.0-2.28  OpenMPI/2.1.2",
+            "module load CUDA/10.0.130 cuDNN/7.5.0.56-CUDA-10.0.130",
+            "module load Python/3.8.5",
+            "export PATH=$PATH:$HOME/anaconda3/bin",
+            "source activate biprune",
+            "cd ~/hydra-structured",
+            "python3 train.py --arch resnet18 --dataset CIFAR10 --k ${k} --exp-mode finetune --exp-name resnet18_ratio${k}_std_auto --trainer base --val-method base --source-net results/resnet18/resnet18_ratio${k}_std_auto/prune/latest_exp/checkpoint/model_best.pth.tar --result-dir results --use_trainable_router --router_arch resnet18",
+            "scontrol show job $SLURM_JOB_ID"
+        ],
+        "submission_command": "sbatch --job-name=resnet18_CIFAR10_k${k}_std_auto_finetune --output=log/slurm/resnet18_CIFAR10_k${k}_std_auto_finetune.log --export=k=${k} scripts/resnet18_CIFAR10_std_auto_finetune.sb"
+    }
+}

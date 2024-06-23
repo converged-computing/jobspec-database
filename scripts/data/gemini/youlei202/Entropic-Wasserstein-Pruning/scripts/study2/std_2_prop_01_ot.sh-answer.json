@@ -1,0 +1,71 @@
+{
+    "application": "LSF",
+    "details": {
+        "queue": "gpuv100",
+        "jobName": "resnet20-ot",
+        "cores": 4,
+        "gpu": "1 (exclusive process mode)",
+        "walltime": "4:00",
+        "memory": "10GB",
+        "email": "leiyo@dtu.dk",
+        "notifications": {
+            "start": "true",
+            "completion": "true"
+        },
+        "output": "logs/resnet20/many_seeds/many_seeds_std=2_prop=0.1/gpu_resnet20_ot.out",
+        "error": "logs/resnet20/many_seeds/many_seeds_std=2_prop=0.1/gpu_resnet20_ot.err"
+    },
+    "other_software": [
+        "nvidia-smi",
+        "cuda/11.6",
+        "python3"
+    ],
+    "resources": [
+        "gpu",
+        "memory",
+        "disk space"
+    ],
+    "commands": [
+        "nvidia-smi",
+        "module load cuda/11.6",
+        "mkdir -p ${LOG_DIR}",
+        "mkdir -p ${CSV_DIR}"
+    ],
+    "python_script": "main.py",
+    "script_arguments": [
+        "--exp_name=${SWEEP_NAME}",
+        "--dset=cifar10",
+        "--dset_path=${DATA_DIR}",
+        "--arch=resnet20",
+        "--config_path=${ROOT_DIR}/configs/resnet20_optimal_transport.yaml",
+        "--workers=1",
+        "--batch_size=64",
+        "--logging_level debug",
+        "--gpus=0",
+        "--from_checkpoint_path=${CKP_PATH}",
+        "--batched-test",
+        "--not-oldfashioned",
+        "--disable-log-soft",
+        "--use-model-config",
+        "--sweep-id ${ID}",
+        "--fisher-damp ${FISHER_DAMP}",
+        "--prune-modules ${MODULE}",
+        "--fisher-subsample-size ${FISHER_SUBSAMPLE_SIZE}",
+        "--fisher-mini-bsz ${FISHER_MINIBSZ}",
+        "--update-config",
+        "--prune-class ${PRUNER}",
+        "--target-sparsity ${TARGET_SPARSITY}",
+        "--result-file ${CSV_DIR}/prune_module-woodfisher-based_all_epoch_end-${EPOCH_END}.csv",
+        "--seed ${SEED}",
+        "--deterministic",
+        "--full-subsample ${JOINT_FLAG}",
+        "--epochs ${EPOCH_END}",
+        "--fisher-optimized",
+        "--fisher-parts 5",
+        "--offload-grads",
+        "--offload-inv",
+        "${ONE_SHOT}",
+        "${OPTIMAL_TRANSPORTATION}",
+        "${ADD_NOISE}"
+    ]
+}

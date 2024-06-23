@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"PBS\",\n  \"details\": {\n    \"resource_requirements\": {\n      \"nodes\": 36,\n      \"cores_per_node\": 16,\n      \"walltime\": \"72:00:00\",\n      \"queue\": \"workq\"\n    },\n    \"software_requirements\": {\n      \"python\": \"2.x\",\n      \"ssh\": \"any\"\n    },\n    \"files\": {\n      \"input_files\": \"/project/jembrown/sonofvin/wang_analyses/wang_analyses/wang_c/PPDataList_2\",\n      \"task_script\": \"/project/jembrown/sonofvin/wang_analyses/wang_analyses/wang_c/wq_mb.sh\",\n      \"wq_module\": \"/project/jembrown/sonofvin/wang_analyses/wang_analyses/wang_c/wq.py\"\n    },\n    \"configuration\": {\n      \"workers_per_node\": 2,\n      \"start_line\": 1\n    }\n  }\n}\n```\n\nThis script is designed to run on a PBS (Portable Batch System) cluster. It uses PBS commands to request resources and manage job execution.\n\nHere's a breakdown of the script's functionality and requirements:\n\n**PBS Directives:**\n\n* **`#PBS -A hpc_jembrown01`**:  Specifies the account to charge for the job.\n* **`#PBS -l nodes=36:ppn=16`**: Requests 36 nodes, each with 16 processing cores.\n* **`#PBS -l walltime=72:00:00`**: Sets a maximum runtime of 72 hours.\n* **`#PBS -q workq`**:  Specifies the queue to submit the job to.\n* **`#PBS -N PPmbDataList_2`**: Defines the job name.\n* **`#PBS -o PPmbDataList_2`**:  Specifies the output file for job logs.\n\n**Script Logic:**\n\n1. **Configuration:** The script defines several variables for customizing the job:\n   * **`WPN`**: Workers per node (number of cores per node / number of processes per task).\n   * **`WORKDIR`**:  Working directory for the job.\n   * **`FILES`**:  File containing a list of input files for processing.\n   * **`START`**:  Starting line in the input file to begin processing.\n   * **`TASK`**:  The script to be executed by workers for each input file.\n\n2. **Mother Superior Node:** This section runs on the \"mother superior\" node (the node where the PBS job is launched).\n   * It performs sanity checks to ensure the required files exist and are accessible.\n   * It creates a hostlist file containing the names of all nodes assigned to the job, with the mother superior listed first.\n   * It starts the \"dispatcher\" (a Python script `wq.py`) on the mother superior, which is responsible for managing the workers and distributing tasks.\n   * It launches the worker script (`wq.py`) on all other nodes, providing them with the wall time and the job number.\n\n3. **Compute Node:** This section runs on the compute nodes. \n   * It retrieves the mother superior's hostname from the hostlist file.\n   * It starts the worker script, connecting to the dispatcher on the mother superior and receiving tasks.\n\n4. **Cleanup:** After all the processes have finished, the script waits for a short time to allow the dispatcher to shut down cleanly.\n\n**Software Requirements:**\n\n* **PBS:** This script relies heavily on PBS for job submission, resource allocation, and management.\n* **Python 2.x:** The script uses Python for the dispatcher (`wq.py`) and worker scripts.\n* **SSH:** SSH is used to launch the worker script on remote nodes.\n\n**File Requirements:**\n\n* **`wq_mb.sh`**:  The script executed by each worker to process the input files.\n* **`wq.py`**: The Python script responsible for managing the dispatcher and workers.\n* **`PPDataList_2`**: A file containing a list of input files. \n\n**Output:**\n\nThe script's output is mainly logs stored in the specified output file (`PPmbDataList_2`).\n\n**Note:** This script uses a \"mother superior\" / \"worker\" model for parallelization. The mother superior node manages the workers, distributes tasks, and collects results. The workers execute the task script (`wq_mb.sh`) on the assigned input files."
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 1531,
+        "candidates_token_count": 1017,
+        "total_token_count": 2548,
+        "cached_content_token_count": 0
+    }
+}

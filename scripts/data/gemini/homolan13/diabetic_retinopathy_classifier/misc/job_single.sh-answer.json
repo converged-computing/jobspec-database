@@ -1,0 +1,30 @@
+{
+    "application": "SLURM",
+    "details": {
+        "scheduler": "SLURM",
+        "job_name": "single",
+        "array_tasks": 9,
+        "output_file_format": "%x_%A_%a.out",
+        "runtime": "8:00:00",
+        "cpus_per_task": 4,
+        "memory_per_cpu": "4G",
+        "partition": "gpu",
+        "gpu_type": "rtx3090",
+        "gpu_count": 1,
+        "dependencies": [
+            "pytorch/pytorch:1.13.1-cuda11.6-cudnn8-runtime",
+            "tensorboard",
+            "scikit-learn"
+        ],
+        "script": "training.py",
+        "script_arguments": {
+            "-t": "type",
+            "-b": "backbone",
+            "-v": "fvs",
+            "-m": "image_modality",
+            "-i": "image_size",
+            "-s": "batch_size",
+            "-n": "suffix"
+        }
+    }
+}

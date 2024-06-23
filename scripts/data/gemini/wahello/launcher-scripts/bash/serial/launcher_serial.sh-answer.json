@@ -1,0 +1,23 @@
+{
+    "application": "GNU Parallel",
+    "details": {
+        "resource_requirements": {
+            "nodes": 1,
+            "cores": 28,
+            "walltime": "0-01:00:00"
+        },
+        "job_name": "SerialGNUParallel",
+        "output_file": "SerialGNUParallel-%j.out",
+        "queue": "batch",
+        "qos": "qos-batch",
+        "task": "$HOME/mytask.sh",
+        "arg_task_file": "ARG_TASK_FILE",
+        "nb_tasks": "NB_TASKS",
+        "modules": "toolchain/ictce",
+        "nb_cores_headnode": "NB_CORES_HEADNODE"
+    },
+    "parallel_options": {
+        "parallel_method": "parallel -u -j ${NB_CORES_HEADNODE}",
+        "task_execution": "seq ${NB_TASKS} | parallel -u -j ${NB_CORES_HEADNODE} ${TASK} {}"
+    }
+}

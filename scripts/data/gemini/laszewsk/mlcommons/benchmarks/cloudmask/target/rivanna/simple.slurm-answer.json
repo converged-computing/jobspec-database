@@ -1,0 +1,39 @@
+{
+    "application": "Slurm",
+    "details": {
+        "resource_requirements": {
+            "nodes": 1,
+            "gres": "gpu:v100:1",
+            "time": "06:00:00",
+            "mem": "64G",
+            "partition": "bii-gpu",
+            "account": "bii_dsc_community"
+        },
+        "software_requirements": {
+            "singularity": true,
+            "python": "3.8.8",
+            "tensorflow": "2.8.0",
+            "cuda": "11.0.228",
+            "gcc": "9.2.0",
+            "openmpi": "3.1.6"
+        },
+        "environment_variables": {
+            "USER_SCRATCH": "/scratch/$USER",
+            "PROJECT_DIR": "$USER_SCRATCH/mlcommons/benchmarks/cloudmask",
+            "PYTHON_DIR": "$USER_SCRATCH/ENV3",
+            "PROJECT_DATA": "/project/bii_dsc_community/thf2bn/data/cloudmask",
+            "CONTAINERDIR": ".",
+            "CODE_DIR": "$PROJECT_DIR/target/rivanna"
+        },
+        "commands": [
+            "module load singularity",
+            "source $PYTHON_DIR/bin/activate",
+            "which python",
+            "nvidia-smi",
+            "singularity exec --nv ./cloudmask.sif bash -c \"cd ${CODE_DIR} ; python -c \"import os; os.system('ls')\"\"",
+            "cms gpu watch --gpu=0 --delay=0.5 --dense > outputs/simple-$USER-$SLURM_JOB_ID-gpu0.log &",
+            "singularity exec --nv ./cloudmask.sif bash -c \"cd ${CODE_DIR} ; python cloudmask_v2.py --config=config-new.yaml\"",
+            "seff $SLURM_JOB_ID"
+        ]
+    }
+}

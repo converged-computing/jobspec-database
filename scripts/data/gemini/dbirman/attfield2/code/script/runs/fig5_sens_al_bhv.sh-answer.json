@@ -1,0 +1,42 @@
+{
+    "application": "SLURM",
+    "details": {
+        "job_name": "f5salbhv",
+        "array_size": 4,
+        "time": "2:00:00",
+        "ntasks": 1,
+        "cpus_per_task": 1,
+        "mem_per_cpu": "16GB",
+        "partition": "gpu",
+        "gres": "gpu:1",
+        "constraint": "GPU_MEM:32GB",
+        "output_path": "/scratch/users/kaifox/attfield/data/runs/fig5/logs/salbhv_%a.out",
+        "error_path": "/scratch/users/kaifox/attfield/data/runs/fig5/logs/salbhv_%a.err",
+        "environment": {
+            "python": "3.6.1",
+            "project_path": "$HOME/proj/attfield",
+            "code_path": "$CODE/script/shrlk.bash_rc"
+        },
+        "command": {
+            "executable": "python3",
+            "script": "$CODE/script/reg_task.py",
+            "arguments": [
+                "$DATA/runs/fig5/bhv_sens_al_n${N_IMG_PER_CAT}_b$BETA.h5",
+                "$DATA/imagenet/imagenet_four224l0.h5",
+                "$N_IMG_PER_CAT",
+                "$DATA/models/logregs_iso224_t100.npz",
+                "--model",
+                "code/cornet/cornet/cornet_zr.py",
+                "--attn",
+                "$CODE/proc/att_models/sens_shift.py",
+                "--attn_cfg",
+                "layer=$L:beta=$ADJ:neg_mode='fix'",
+                "--decoders",
+                "(0,5,2)",
+                "--cuda",
+                "--batch_size",
+                "5"
+            ]
+        }
+    }
+}

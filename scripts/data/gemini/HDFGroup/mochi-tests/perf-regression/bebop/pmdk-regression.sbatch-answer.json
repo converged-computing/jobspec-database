@@ -1,0 +1,39 @@
+{
+    "application": "PMDK",
+    "details": {
+        "environment": {
+            "SBATCH": {
+                "nodes": 1,
+                "account": "radix-io",
+                "tasks_per_node": 1,
+                "time": "15:00",
+                "partition": "bdwall"
+            },
+            "HOME": "$SANDBOX",
+            "spack": {
+                "environment": "mochi-regression",
+                "find": "-vN"
+            },
+            "PSM2_MULTI_EP": 1
+        },
+        "libraries": [
+            "PMDK",
+            "libfabric",
+            "MPI"
+        ],
+        "resources": {
+            "storage": {
+                "device": "/dev/shm",
+                "file": "foo.dat",
+                "size": "60G"
+            },
+            "concurrency": 8,
+            "es": 8,
+            "preallocated_pool": true
+        },
+        "commands": [
+            "pmempool create obj",
+            "./pmdk-bw"
+        ]
+    }
+}

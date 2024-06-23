@@ -1,0 +1,48 @@
+{
+    "application": "Tensorflow Horovod",
+    "details": {
+        "runtime": "singularity",
+        "image": "/shared/apps/bin/tensorflow_rocm5.4-tf2.11-dev.sif",
+        "framework": "Tensorflow 2.11",
+        "library": "Horovod",
+        "resources": {
+            "nodes": 1,
+            "cpus": 16,
+            "memory": "128GB",
+            "gpus": 2,
+            "partition": {
+                "options": [
+                    "ubuntu",
+                    "rhel8",
+                    "rhel9",
+                    "sles15",
+                    "centos8",
+                    "rocky9"
+                ],
+                "module_path": "/shared/apps/modules/{partition}/modulefiles"
+            }
+        },
+        "modules": {
+            "rocm": "5.4.2",
+            "ucx": "1.13.1",
+            "ompi": "4.1.4"
+        },
+        "script": {
+            "command": "/usr/local/bin/horovodrun",
+            "arguments": [
+                "-np",
+                "2",
+                "-H",
+                "localhost:2",
+                "python3",
+                "/root/benchmarks/scripts/tf_cnn_benchmarks/tf_cnn_benchmarks.py",
+                "--model",
+                "resnet101",
+                "--batch_size",
+                "64",
+                "--variable_update",
+                "horovod"
+            ]
+        }
+    }
+}

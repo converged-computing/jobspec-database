@@ -1,0 +1,26 @@
+{
+    "application": "SLURM",
+    "details": {
+        "resource_manager": "SLURM",
+        "mpi_implementation": "OpenMPI",
+        "communication_protocols": [
+            "vader",
+            "self",
+            "tcp"
+        ],
+        "container_runtime": "Singularity (or similar)",
+        "container_image": "{{ .ContainerPath }}",
+        "container_mounts": {
+            "source": "{{ .Workspace }}/hpl.dat",
+            "destination": "/test.dat"
+        },
+        "hpl_configuration": {
+            "affinity": {
+                "cpu": "{{ .CpuAffinity }}",
+                "gpu": "{{ .GpuAffinity }}"
+            },
+            "cores_per_rank": "{{ .CpusPerTasks }}",
+            "data_file": "/test.dat"
+        }
+    }
+}

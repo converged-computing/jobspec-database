@@ -1,0 +1,35 @@
+{
+    "application": "ncu",
+    "details": {
+        "requirements": {
+            "gpu": "A100",
+            "partition": "a100q",
+            "time_limit": "15 minutes",
+            "memory": "Not specified",
+            "libraries": "CUDA",
+            "software": [
+                "ncu",
+                "nvcc",
+                "make",
+                "gunzip",
+                "srun"
+            ],
+            "dependencies": [
+                "CUDA",
+                "SLURM"
+            ],
+            "files": [
+                "row_per_thread",
+                "spmm_1D"
+            ]
+        },
+        "other_details": {
+            "matrix_directory": "/global/D1/homes/james/sparcity/suitesparse/mtx/amd/",
+            "output_directory": "reports",
+            "temporary_directory": "/work/$USER/tmp1",
+            "file_format": "mtx.gz",
+            "command": "srun ncu -o \"reports/report_spmm_1D_amd_$base_filename\" -k spmm_1D -c 1 --set full ./row_per_thread \"/work/santiago/tmp1/$base_filename\"",
+            "benchmark": "spmm_1D"
+        }
+    }
+}

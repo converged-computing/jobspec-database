@@ -1,0 +1,41 @@
+{
+    "application": "SLURM",
+    "details": {
+        "software": [
+            "python",
+            "srun",
+            "main.py"
+        ],
+        "resources": {
+            "partition": "m3443_g",
+            "nodes": 1,
+            "tasks_per_node": 1,
+            "cores_per_task": 32,
+            "gpus_per_task": 1,
+            "gpu_bind": "none",
+            "queue": "regular",
+            "time": "24:00:00",
+            "scratch": true,
+            "cfs": true,
+            "mail_type": "ALL",
+            "signal": "SIGUSR1@120",
+            "requeue": true,
+            "job_name": "odd_v1"
+        },
+        "environment_variables": {
+            "NCCL_DEBUG": "INFO",
+            "PYTHONFAULTHANDLER": "1"
+        },
+        "command": "srun python main.py experiment=odd model.model.n_embd=1024 model.model.n_layer=24 datamodule.block_size=22 datamodule.batch_size=1024 datamodule.num_workers=0 trainer.max_epochs=100 +trainer.limit_val_batches=10",
+        "arguments": {
+            "experiment": "odd",
+            "model.model.n_embd": 1024,
+            "model.model.n_layer": 24,
+            "datamodule.block_size": 22,
+            "datamodule.batch_size": 1024,
+            "datamodule.num_workers": 0,
+            "trainer.max_epochs": 100,
+            "trainer.limit_val_batches": 10
+        }
+    }
+}

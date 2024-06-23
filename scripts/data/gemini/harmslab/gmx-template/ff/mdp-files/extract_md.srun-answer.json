@@ -1,0 +1,58 @@
+{
+    "application": "Gromacs",
+    "details": {
+        "modules": [
+            "intel/19",
+            "gromacs/2019.4"
+        ],
+        "resources": {
+            "account": "harmslab",
+            "job_name": "extract",
+            "partition": "short",
+            "time": "24:00:00",
+            "nodes": 1,
+            "tasks_per_node": 1,
+            "cpus_per_task": 1
+        },
+        "dependencies": [
+            "gmx trjconv"
+        ],
+        "input_files": [
+            "{base_name}.xtc",
+            "{base_name}.tpr",
+            "{starting_gro}"
+        ],
+        "output_files": [
+            "hostname.out",
+            "hostname.err",
+            "{dest_dir}/{out_root}.gro",
+            "{dest_dir}/{out_root}.tpr",
+            "{dest_dir}/{out_root}.xtc",
+            "{dest_dir}/{out_root}-split.xtc"
+        ],
+        "commands": [
+            "rm -rf {dest_dir}",
+            "mkdir {dest_dir}",
+            "cp {starting_gro} {dest_dir}/{out_root}.gro",
+            "cp {tpr_file} {dest_dir}/{out_root}.tpr",
+            "mkdir extract-tmp",
+            "cd extract-tmp",
+            "echo \"0\" > junk.command",
+            "cat junk.command | gmx trjconv -f ../{xtc_file} -pbc whole -o {out_root}.xtc -s ../{tpr_file}",
+            "echo \"0\" > junk.command",
+            "cat junk.command | gmx trjconv -f {out_root}.xtc -pbc nojump -o {out_root}.xtc -s ../{tpr_file}",
+            "echo \"1\" > junk.command",
+            "echo \"0\" >> junk.command",
+            "cat junk.command | gmx trjconv -f {out_root}.xtc -center -pbc mol -o {out_root}.xtc -s ../{tpr_file}",
+            "echo \"3\" > junk.command",
+            "echo \"0\" >> junk.command",
+            "cat junk.command | gmx trjconv -f {out_root}.xtc -s ../{tpr_file} -fit rot+trans -o {out_root}.xtc",
+            "echo \"0\" > junk.command",
+            "cat junk.command | gmx trjconv -f {out_root}.xtc -split {split_interval} -s ../{tpr_file} -o {out_root}-split.xtc",
+            "cp *split* ../{dest_dir}",
+            "cp {out_root}.xtc ../{dest_dir}",
+            "cd ..",
+            "rm -rf extract-tmp"
+        ]
+    }
+}

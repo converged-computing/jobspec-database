@@ -1,0 +1,29 @@
+{
+    "application": "GEOS-Chem",
+    "details": {
+        "scheduler": "SLURM or LSF",
+        "cores": "24",
+        "memory": "90 GB",
+        "time": "6 hours",
+        "partition": "REQUESTED_PARTITION",
+        "docker": "registry.gsc.wustl.edu/sleong/esm:intel-2021.1.2",
+        "environment": {
+            "envDir": "${ptRoot}/${ENV_DIR}",
+            "codeDir": "${ptRoot}/CodeDir",
+            "logsDir": "${ptRoot}/${LOGS_DIR}",
+            "rundirsDir": "${ptRoot}/${RUNDIRS_DIR}"
+        },
+        "scripts": [
+            "commonFunctionsForTests.sh"
+        ],
+        "libraries": [
+            "gcc",
+            "geos-chem",
+            "hemco"
+        ],
+        "other": {
+            "OMP_NUM_THREADS": "determined based on scheduler",
+            "OMP_STACKSIZE": "500 MB"
+        }
+    }
+}

@@ -1,0 +1,29 @@
+{
+    "application": "Singularity",
+    "details": {
+        "container_image": "/share/apps/images/cuda11.7.99-cudnn8.5-devel-ubuntu22.04.2.sif",
+        "command": "/bin/bash -c 'source /ext3/env.sh; python eval.py'",
+        "resources": {
+            "partition": "n1c24m128-v100-4",
+            "gpus": 4,
+            "cpus": 24,
+            "time": "12:00:00",
+            "account": "csci_ga_2572_2023sp_19",
+            "output": "logs/eval_%j.out",
+            "error": "logs/eval_%j.err"
+        },
+        "bind_mounts": [
+            {
+                "source": "data/dataset_v2.sqsh",
+                "destination": "/dataset",
+                "options": "image-src=/"
+            },
+            {
+                "source": "/scratch",
+                "destination": "/scratch",
+                "options": ""
+            }
+        ],
+        "overlay_file": "overlay-15GB-500K.ext3"
+    }
+}

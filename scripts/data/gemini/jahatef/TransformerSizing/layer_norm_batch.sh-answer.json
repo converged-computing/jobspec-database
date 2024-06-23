@@ -1,0 +1,31 @@
+{
+    "application": "Slurm",
+    "details": {
+        "scheduler": "Slurm",
+        "partition": "g40x",
+        "memory_per_cpu": "16GB",
+        "nodes": 1,
+        "tasks_per_node": 8,
+        "cpus_per_task": 6,
+        "gpus": 8,
+        "account": "neox",
+        "environment": "/fsx/home-jacob/setup.sh",
+        "python_environment": {
+            "NCCL_DEBUG": "WARN",
+            "NCCL_TREE_THRESHOLD": 0,
+            "NCCL_PROTO": "simple",
+            "NCCL_IBEXT_DISABLE": 1,
+            "NCCL_SOCKET_IFNAME": "^docker0,lo",
+            "FI_EFA_FORK_SAFE": 1,
+            "FI_EFA_USE_DEVICE_RDMA": 1,
+            "FI_EFA_ENABLE_SHM_TRANSFER": 0,
+            "FI_PROVIDER": "efa",
+            "FI_EFA_TX_MIN_CREDITS": 64,
+            "PYTHONFAULTHANDLER": 1,
+            "OMPI_MCA_mtl_base_verbose": 1,
+            "OMPI_MCA_btl": "^openib"
+        },
+        "hostfile": "/fsx/home-jacob/hostfiles/hosts_$SLURM_JOBID",
+        "script": "layernorm_flops.py"
+    }
+}

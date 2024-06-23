@@ -1,0 +1,28 @@
+{
+    "application": "TOAST",
+    "software": [
+        "toast_satellite_sim.py",
+        "python",
+        "srun"
+    ],
+    "resources": {
+        "slurm": {
+            "partition": "regular",
+            "account": "mp107",
+            "nodes": "{{ nodes }}",
+            "time": "00:20:00",
+            "job_name": "pico-ffp-{{ band }}",
+            "output": "out_pico_band_{{ band }}_%j.log",
+            "mail_type": "ALL",
+            "license": "scratch3"
+        },
+        "environment": {
+            "OMP_NUM_THREADS": "${node_thread}",
+            "OMP_PLACES": "threads",
+            "OMP_PROC_BIND": "spread",
+            "TOAST_NODE_COUNT": "${nodes}",
+            "TOAST_NUM_THREADS": "${OMP_NUM_THREADS}",
+            "TMPDIR": "/dev/shm"
+        }
+    }
+}

@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"SLURM\",\n  \"details\": {\n    \"resource_requirements\": {\n      \"nodes\": 1,\n      \"tasks_per_node\": 1,\n      \"cpus_per_task\": 36,\n      \"memory\": \"180G\",\n      \"time\": \"12-0\",\n      \"qos\": \"fortnight\"\n    },\n    \"software_requirements\": {\n      \"modules\": [\n        \"COVID_OCP\"\n      ],\n      \"python_environment\": {\n        \"venv\": \"$HOME/venvs/$SYS_TYPE/bin/activate\",\n        \"libraries\": {\n          \"hsl\": \"$HOME/src/hsl/20190503_${SYS_TYPE}/lib\"\n        }\n      },\n      \"other\": {\n        \"MKLROOT\": {\n          \"library\": \"libmkl_rt.so\"\n        }\n      }\n    },\n    \"execution\": {\n      \"command\": \"python -u main-agpost.py\",\n      \"arguments\": [\n        \"-s ${SLURM_ARRAY_TASK_ID}\",\n        \"-t $MDL_DAYS\",\n        \"-n $MDL_NNODES\",\n        \"-f $F_PREFIX\",\n        \"-d $F_DIR\",\n        \"--use_matlab False\",\n        \"--optimize True\",\n        \"--objective $OBJ\"\n      ],\n      \"output_file\": \"${F_DIR}out${SLURM_ARRAY_TASK_ID}.txt\"\n    }\n  }\n}\n```\n\nThis script is running on the **SLURM** workload manager. It uses the following resources:\n\n* **1 node** with **1 task per node** and **36 CPUs per task**.\n* **180 GB of memory** per node.\n* A wall time of **12 hours**.\n* The **fortnight** quality of service.\n\nThe script requires the following software:\n\n* The **COVID_OCP** module.\n* A Python environment activated with the command `source $HOME/venvs/$SYS_TYPE/bin/activate`.\n* The **hsl** library located at `/home/user/src/hsl/20190503_${SYS_TYPE}/lib`.\n* The **MKLROOT** library `libmkl_rt.so`.\n\nThe script executes the `python -u main-agpost.py` command with specific arguments and redirects the output to a file.\n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 2,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 768,
+        "candidates_token_count": 564,
+        "total_token_count": 1332,
+        "cached_content_token_count": 0
+    }
+}

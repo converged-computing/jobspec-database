@@ -1,0 +1,48 @@
+{
+    "application": "MultiNest",
+    "details": {
+        "batch_system": "SLURM",
+        "job_name": "nmmaSNgauss.job",
+        "output_file": "nmmaSNgauss%A_%a.out",
+        "error_file": "nmmaSNgauss%A_%a.err",
+        "partition": "shared",
+        "nodes": 1,
+        "tasks_per_node": 32,
+        "memory": "96G",
+        "time": "12:00:00",
+        "mail_type": "ALL",
+        "mail_user": "thomas.hussenot@ijclab.in2p3.fr",
+        "account": "umn131",
+        "modules": [
+            "sdsc cpu/0.15.4",
+            "gcc/9.2.0",
+            "openmpi/4.1.1",
+            "anaconda3/2020.11"
+        ],
+        "conda_environment": "multinest",
+        "environment_variables": {
+            "LD_LIBRARY_PATH": "/home/thussenot/MultiNest/lib/:$LD_LIBRARY_PATH"
+        },
+        "executable": "mpiexec",
+        "command": "light_curve_analysis",
+        "arguments": {
+            "model": "nugent-hyper,TrPi2018",
+            "outdir": "outdirSNgauss32cores",
+            "label": "GRB211211A",
+            "prior": "./nugent_TrPi2018.prior",
+            "conditional-gaussian-prior-thetaObs": true,
+            "conditional-gaussian-prior-N-sigma": 1,
+            "tmin": 0.01,
+            "tmax": 10,
+            "dt": 0.01,
+            "error-budget": 1,
+            "nlive": 2048,
+            "Ebv-max": 0,
+            "trigger-time": 59559.54791666667,
+            "data": "../../../GRB211211A.txt",
+            "plot": true,
+            "xlim": "0,14",
+            "ylim": "26,16"
+        }
+    }
+}

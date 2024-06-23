@@ -1,0 +1,35 @@
+{
+    "application": "SLURM",
+    "details": {
+        "scheduler": "SLURM",
+        "resources": {
+            "nodes": 1,
+            "tasks_per_node": 1,
+            "cpus_per_task": 96,
+            "gpus": 8,
+            "memory_per_cpu": "11G"
+        },
+        "environment": {
+            "conda_environment": "finetune",
+            "wandb_project": "test",
+            "hf_datasets_cache": "/fsx/armel/.cache",
+            "path_to_log": "/fsx/armel/vectors/logs",
+            "launcher": "python",
+            "nccl_async_error_handling": 1,
+            "cuda_home": "/usr/local/cuda-11.6",
+            "ld_preload": "/usr/local/cuda-11.6/lib/libnccl.so",
+            "ld_library_path": "/usr/local/cuda-11.6/efa/lib:/usr/local/cuda-11.6/lib:/usr/local/cuda-11.6/lib64:$LD_LIBRARY_PATH",
+            "nccl_proto": "simple",
+            "rdmav_fork_safe": 1,
+            "fi_efa_fork_safe": 1,
+            "fi_efa_use_device_rdma": 1,
+            "fi_provider": "efa",
+            "fi_log_level": 1,
+            "nccl_ib_disable": 1,
+            "nccl_socket_ifname": "ens"
+        },
+        "script": "ranks_all.py",
+        "command": "srun --wait=60 --kill-on-bad-exit=1 --jobid $SLURM_JOB_ID bash -c \"$LAUNCHER $CMD\"",
+        "output_file": "/fsx/armel/vectors/logs/%x-%j.out"
+    }
+}

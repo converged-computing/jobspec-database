@@ -1,0 +1,32 @@
+{
+    "application": "Slurm",
+    "details": {
+        "resources": {
+            "partition": "gpu_p4",
+            "gpu": "v100-32g",
+            "memory": "40G",
+            "cpus": "8",
+            "time": "20:00:00",
+            "array": "0-77%1"
+        },
+        "modules": [
+            "cmake/3.14.4",
+            "cuda/11.2",
+            "nccl/2.6.4-1-cuda",
+            "cudnn/8.1.1.33-cuda",
+            "intel-mkl/2020.1",
+            "magma/2.5.4-cuda",
+            "gcc/10.1.0",
+            "openmpi/4.1.1-cuda",
+            "boost/1.74.0"
+        ],
+        "environment": {
+            "conda_env": "py38",
+            "python_script": "scripts/finetune_t5.py",
+            "data_file": "data/paraphrase/parabank2-parts/parabank2.jsonl.part-${SLURM_ARRAY_TASK_ID}",
+            "batch_size": "8",
+            "output_dir": "models/train_t5_parabank2/",
+            "log_file": "models/train_t5_parabank2/train.log"
+        }
+    }
+}

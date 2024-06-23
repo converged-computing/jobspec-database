@@ -1,0 +1,30 @@
+{
+    "application": "Slurm",
+    "details": {
+        "resource_manager": "Slurm",
+        "job_name": "mpi_bcast",
+        "partition": "all",
+        "walltime": "00:05:00",
+        "nodes": 16,
+        "tasks_per_node": 1,
+        "cpus_per_task": 128,
+        "exclusive_mode": true,
+        "output_file": "mpi_bcast_job-%A.out",
+        "modules": [
+            "r",
+            "lang/JuliaHPC/1.10.0-foss-2022a-CUDA-11.7.0"
+        ],
+        "environment_variables": {
+            "JULIA_DEPOT_PATH": "/scratch/hpc-lco-usrtr/.julia_ucl",
+            "SLURM_EXPORT_ENV": "ALL"
+        },
+        "program": "julia",
+        "mpi_implementation": "mpiexecjl",
+        "mpi_programs": [
+            "../mpi_bcast_builtin.jl",
+            "../mpi_bcast_tree.jl",
+            "../mpi_bcast_sequential.jl"
+        ],
+        "data_size": 268435456
+    }
+}

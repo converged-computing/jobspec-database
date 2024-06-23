@@ -1,0 +1,46 @@
+{
+    "application": "LSF",
+    "details": {
+        "resources": {
+            "nodes": 1,
+            "walltime": "24:00",
+            "queue": "gpu",
+            "gpu": {
+                "type": [
+                    "rtx2080",
+                    "gtx1080",
+                    "p100"
+                ],
+                "number": 1,
+                "mode": "shared",
+                "mps": true
+            },
+            "memory": "32GB"
+        },
+        "modules": [
+            "conda",
+            "cuda/10.2",
+            "rclone"
+        ],
+        "conda_environment": "yolov5",
+        "python_packages": [
+            "yolov5",
+            "glob"
+        ],
+        "scripts": [
+            "predict.sh",
+            "yolov5/detect.py",
+            "filter_results.py",
+            "rclone"
+        ],
+        "commands": [
+            "wget",
+            "mv",
+            "mkdir"
+        ],
+        "data": {
+            "source": "$PARENT_DIRECTORY/*",
+            "destination": "$REMOTE:$PARENT_DIRECTORY"
+        }
+    }
+}

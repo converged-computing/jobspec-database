@@ -1,0 +1,34 @@
+{
+    "application": "SLURM",
+    "details": {
+        "scheduler": "SLURM",
+        "nodes": 1,
+        "tasks_per_node": 4,
+        "cpus_per_task": 10,
+        "gpus": 4,
+        "gpus_per_node": 4,
+        "gpu_type": "a100",
+        "time": "03:00:00",
+        "reservation": "DS-TRAINING",
+        "environment": {
+            "conda_environment": "dist-pytorch",
+            "modules": [
+                "dl",
+                "pytorch"
+            ],
+            "NCCL_DEBUG": "INFO",
+            "PYTHONFAULTHANDLER": 1,
+            "DATA_DIR": "/ibex/ai/reference/CV/ILSVR/classification-localization/data/jpeg",
+            "NV_PORT": "dynamically assigned",
+            "node": "hostname"
+        },
+        "script": "multi_gpu.py",
+        "arguments": {
+            "epochs": 2,
+            "num-nodes": "${SLURM_NNODES}",
+            "gpus-per-node": "${SLURM_GPUS_PER_NODE}",
+            "num-workers": 10,
+            "precision": 32
+        }
+    }
+}

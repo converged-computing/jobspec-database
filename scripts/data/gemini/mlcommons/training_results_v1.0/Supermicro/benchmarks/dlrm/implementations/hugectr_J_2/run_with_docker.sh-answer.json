@@ -1,0 +1,45 @@
+{
+    "application": "Docker",
+    "software": [
+        "Bash",
+        "Docker",
+        "Python",
+        "mlperf_logging",
+        "HugeCTR",
+        "run_and_time.sh"
+    ],
+    "resources": {
+        "gpu": "all",
+        "network": "host",
+        "uts": "host",
+        "ipc": "host",
+        "security_opt": "seccomp=unconfined"
+    },
+    "environment_variables": [
+        "DGXSYSTEM",
+        "CONT",
+        "NEXP",
+        "DATESTAMP",
+        "CLEAR_CACHES",
+        "MOUNTS",
+        "LOGDIR",
+        "DATADIR",
+        "DATASET_TYPE"
+    ],
+    "volumes": [
+        "/raid/datasets:/raid/datasets",
+        "/gpfs/fs1:/gpfs/fs1",
+        "${DATADIR}:/raid/datasets/criteo/mlperf/40m.limit_preshuffled/",
+        "${LOGDIR}:${LOGDIR}",
+        "$(pwd):/workspace/dlrm"
+    ],
+    "commands": [
+        "mkdir -p \"${LOGDIR}\"",
+        "source \"${_config_file}\"",
+        "docker run --rm --init --detach --gpus all --net=host --uts=host --ipc=host --security-opt=seccomp=unconfined --name=\"${_cont_name}\" \"${_cont_mounts[@]}\" \"${CONT}\" sleep infinity",
+        "docker exec -it \"${_cont_name}\" true",
+        "bash -c \"echo -n 'Clearing cache on ' && hostname && sync && sudo /sbin/sysctl vm.drop_caches=3\"",
+        "docker exec -it \"${_cont_name}\" python3 -c \"from mlperf_logging.mllog import constants; from mlperf_logger.utils import log_event; log_event(key=constants.CACHE_CLEAR, value=True)\"",
+        "docker exec -it ${_config_env[@]} ${_cont_name} bash ./run_and_time.sh"
+    ]
+}

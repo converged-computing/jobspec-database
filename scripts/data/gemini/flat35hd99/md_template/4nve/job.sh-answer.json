@@ -1,0 +1,63 @@
+{
+    "application": "Amber",
+    "details": {
+        "software": [
+            "Amber",
+            "PMEMD (pmemd.cuda)"
+        ],
+        "resources": {
+            "gpu": "1",
+            "mpi_procs": "1",
+            "omp_threads": "1",
+            "walltime": "4:00:00",
+            "memory": "not specified"
+        },
+        "submission_system": [
+            "PJM",
+            "PBS"
+        ],
+        "script_features": {
+            "job_id_handling": {
+                "pjm": true,
+                "pbs": true
+            },
+            "restart_files": {
+                "restart_file_path": "$prefix/3sampling/output/$run/sampling/md.rst_${trajectory_num}",
+                "trajectory_num": 20000000,
+                "smp": 3
+            },
+            "output_logging": {
+                "output_directory": "$prefix/4nve/output/${run}_${smp}",
+                "log_files": [
+                    "time.log",
+                    "md.out",
+                    "md.info",
+                    "md.log"
+                ]
+            },
+            "data_storage": {
+                "local": {
+                    "path": "/local/${PJM_JOBID}[${PJM_BULKNUM}]",
+                    "files": [
+                        "md.crd.nc",
+                        "md.vel.nc"
+                    ]
+                },
+                "ramd": {
+                    "path": "/ramd/users/$USER/$PBS_JOBID/$RANDOM",
+                    "files": [
+                        "md.crd.nc",
+                        "md.vel.nc"
+                    ]
+                }
+            },
+            "environment_setup": {
+                "module_purge": true,
+                "load_amber": {
+                    "gpu": "$prefix/util/load_amber_gpu",
+                    "ims": "$prefix/util/load_amber_on_ims"
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,41 @@
+{
+    "application": "Slurm",
+    "details": {
+        "job_name": "finetune_4xA100_4tp",
+        "output_file": "logs/%j.%N.finetune_4xA100_4tp.out",
+        "partition": "gpuA100x4",
+        "memory": "208G",
+        "nodes": 1,
+        "tasks_per_node": 1,
+        "cpus_per_task": 64,
+        "constraints": "scratch&projects",
+        "gpus_per_node": 4,
+        "gpu_bind": "closest",
+        "account": "TODO_YOUR_ACCOUNT",
+        "exclusive": true,
+        "requeue": false,
+        "time_limit": "24:00:00",
+        "container_image": "TODO_YOUR_IMAGE_DIR/pt-megatron-llm_v1.1.1.sif",
+        "environment_variables": [
+            "HUGGING_FACE_HUB_TOKEN",
+            "WANDB_API_KEY"
+        ],
+        "container_arguments": [
+            "--nv",
+            "--no-home",
+            "--no-mount",
+            "bind-paths",
+            "--cleanenv",
+            "--env",
+            "HUGGING_FACE_HUB_TOKEN=$HUGGING_FACE_HUB_TOKEN",
+            "--env",
+            "WANDB_API_KEY=$WANDB_API_KEY",
+            "--writable-tmpfs",
+            "--bind",
+            "$WORK_DIR:/workspace",
+            "/bin/bash",
+            "-c",
+            "cd /workspace && $SCRIPT_TO_RUN"
+        ]
+    }
+}

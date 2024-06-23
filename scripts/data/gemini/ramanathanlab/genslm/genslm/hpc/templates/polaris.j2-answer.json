@@ -1,0 +1,46 @@
+{
+    "application": "PBS",
+    "details": {
+        "resource_requirements": {
+            "nodes": "{{ nodes }}",
+            "filesystems": "{{ filesystems }}",
+            "walltime": "{{ time }}",
+            "queue": "{{ queue }}",
+            "allocation": "{{ allocation }}"
+        },
+        "software_requirements": {
+            "conda_environment": "genslm",
+            "modules": [
+                "conda/2022-09-08",
+                "genslm"
+            ],
+            "mpi_implementation": "mpiexec",
+            "gpu_support": "NCCL",
+            "nccl_settings": {
+                "NCCL_DEBUG": "WARN",
+                "NCCL_NET_GDR_LEVEL": "PHB"
+            },
+            "application_path": "{{ genslm_path / \"hpc\" / \"templates\" / \"run-polaris.sh\" }}",
+            "python_module": "{{ module }}",
+            "python_module_arguments": "{{ module_args }}"
+        },
+        "environment_variables": {
+            "HTTP_PROXY": "http://proxy.alcf.anl.gov:3128",
+            "HTTPS_PROXY": "http://proxy.alcf.anl.gov:3128",
+            "http_proxy": "http://proxy.alcf.anl.gov:3128",
+            "https_proxy": "http://proxy.alcf.anl.gov:3128",
+            "MASTER_ADDR": "obtained from host $master_node",
+            "MASTER_PORT": "2345",
+            "MPICH_GPU_SUPPORT_ENABLED": "1",
+            "NCCL_DEBUG": "WARN",
+            "NCCL_NET_GDR_LEVEL": "PHB"
+        },
+        "configuration": {
+            "workdir": "{{ workdir }}",
+            "job_name": "{{ job_name }}",
+            "NRANKS_PER_NODE": "1",
+            "NDEPTH": "64",
+            "NTOTRANKS": "calculated based on NNODES and NRANKS_PER_NODE"
+        }
+    }
+}

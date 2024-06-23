@@ -1,0 +1,34 @@
+{
+    "application": "Singularity",
+    "details": {
+        "image": "/scratch/project_465000301/tf-rocm5.6-tf2.12.simg",
+        "environment": {
+            "LD_LIBRARY_PATH": "/opt/rocm/lib/",
+            "PYTHONPATH": "hep_tfds",
+            "TFDS_DATA_DIR": "/scratch/project_465000301/tensorflow_datasets",
+            "MIOPEN_DISABLE_CACHE": "true",
+            "MIOPEN_USER_DB_PATH": "/tmp/${USER}-${SLURM_JOB_ID}-miopen-cache",
+            "MIOPEN_CUSTOM_CACHE_DIR": "${MIOPEN_USER_DB_PATH}",
+            "TF_CPP_MAX_VLOG_LEVEL": "-1",
+            "ROCM_PATH": "/opt/rocm",
+            "NCCL_DEBUG": "WARN",
+            "MIOPEN_ENABLE_LOGGING": "1",
+            "MIOPEN_ENABLE_LOGGING_CMD": "1",
+            "MIOPEN_LOG_LEVEL": "4"
+        },
+        "modules": [
+            "LUMI/23.09",
+            "partition/G"
+        ],
+        "resources": {
+            "nodes": 1,
+            "tasks_per_node": 1,
+            "cpus_per_task": 16,
+            "memory": "160G",
+            "gpus_per_task": 8,
+            "partition": "small-g",
+            "time": "3-00:00:00"
+        },
+        "command": "python3 mlpf/pipeline.py train --config parameters/cms-gen.yaml --plot-freq 1 --num-cpus 8 --batch-multiplier 2 --plot-freq -1 --weights experiments/cms-gen_20240108_154245_299103.nid005026/weights/weights-05-4.250307.hdf5"
+    }
+}

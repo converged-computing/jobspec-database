@@ -1,0 +1,68 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n\"application\": \"SLURM\",\n\"details\": {\n\"resource_requirements\": {\n\"cpus\": 80,\n\"nodes\": 8,\n\"gpus\": 8,\n\"time\": \"8:00:00\",\n\"partition\": \"learnlab\",\n\"constraint\": \"volta32gb\"\n},\n\"software_requirements\": {\n\"python\": \"train.py\",\n\"model\": \"google/t5-${size}-lm-adapt\"\n},\n\"data_requirements\": {\n\"train_data\": \"${DATA_DIR}/data/mmlu_data/full/train.jsonl\",\n\"eval_data\": \"${DATA_DIR}/data/mmlu_data/full/combined_valid.jsonl ${DATA_DIR}/data/mmlu_data/full/combined_test.jsonl\",\n\"pretrained_model\": \"${DATA_DIR}/models/atlas/${size}\",\n\"pretrained_index\": \"${DATA_DIR}/indices/atlas/wiki/${size}\"\n},\n\"output_paths\": {\n\"output_file\": \"run_dir/%A.out\",\n\"error_file\": \"run_dir/%A.err\",\n\"save_dir\": \"${DATA_DIR}/experiments/\"\n},\n\"other\": {\n\"job_name\": \"mmlu\",\n\"experiment_name\": \"$SLURM_JOB_ID-${size}-mmlu-full\",\n\"precision\": \"fp32\",\n\"port\": \"random between 15000-16000\"\n},\n\"parameters\": {\n\"shuffle\": \"True\",\n\"train_retriever\": \"True\",\n\"gold_score_mode\": \"ppmean\",\n\"use_gradient_checkpoint_reader\": \"True\",\n\"use_gradient_checkpoint_retriever\": \"True\",\n\"precision\": \"fp32\",\n\"shard_optim\": \"True\",\n\"shard_grads\": \"True\",\n\"temperature_gold\": 0.1,\n\"temperature_score\": 0.1,\n\"refresh_index\": 100000000000,\n\"target_maxlength\": 16,\n\"reader_model_type\": \"google/t5-${size}-lm-adapt\",\n\"dropout\": 0.1,\n\"lr\": 5e-5,\n\"lr_retriever\": 1e-5,\n\"scheduler\": \"linear\",\n\"weight_decay\": 0.01,\n\"text_maxlength\": 512,\n\"model_path\": \"${PRETRAINED_MODEL}\",\n\"train_data\": \"${TRAIN_FILE}\",\n\"eval_data\": \"${EVAL_FILES}\",\n\"per_gpu_batch_size\": 1,\n\"n_context\": 30,\n\"retriever_n_context\": 30,\n\"name\": \"${EXPERIMENT_NAME}\",\n\"checkpoint_dir\": \"${SAVE_DIR}\",\n\"eval_freq\": 150,\n\"log_freq\": 4,\n\"total_steps\": 2000,\n\"warmup_steps\": 50,\n\"save_freq\": 10000000000,\n\"main_port\": \"$port\",\n\"write_results\": \"True\",\n\"task\": \"multiple_choice\",\n\"multiple_choice_train_permutations\": \"all\",\n\"multiple_choice_eval_permutations\": \"cyclic\",\n\"index_mode\": \"flat\",\n\"query_side_retriever_training\": \"True\",\n\"load_index_path\": \"${PRETRAINED_INDEX}\"\n}\n}\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "citation_metadata": {
+                "citation_sources": [
+                    {
+                        "start_index": 372,
+                        "end_index": 588,
+                        "uri": "https://github.com/facebookresearch/atlas",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 1196,
+                        "end_index": 1753,
+                        "uri": "https://github.com/facebookresearch/atlas",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 1766,
+                        "end_index": 1931,
+                        "uri": "https://github.com/facebookresearch/atlas",
+                        "license_": ""
+                    }
+                ]
+            },
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 813,
+        "candidates_token_count": 827,
+        "total_token_count": 1640,
+        "cached_content_token_count": 0
+    }
+}

@@ -1,0 +1,30 @@
+{
+    "application": "SLURM",
+    "details": {
+        "job_name": "FCAST_SPA2",
+        "nodes": 1,
+        "tasks_per_node": 1,
+        "partition": "intel",
+        "time_limit": "10:00:00",
+        "email": "batti.filippi@@gmail.com",
+        "email_type": "all",
+        "environment_variables": {
+            "MPIRUN": "mpirun -np 20"
+        },
+        "commands": [
+            "ulimit -c 0",
+            "ulimit -s unlimited",
+            ". ~/runMNH",
+            "ln -sf ../001_pgd/PGD_D*A.nested.* .",
+            "ln -sf ../004_SpawnReal/M2* .",
+            "time ${MPIRUN} SPAWNING${XYZ}",
+            "time ${MPIRUN} PREP_REAL_CASE${XYZ}"
+        ],
+        "software_dependencies": [
+            "SPAWNING${XYZ}",
+            "PREP_REAL_CASE${XYZ}",
+            "mpirun",
+            "~/runMNH"
+        ]
+    }
+}

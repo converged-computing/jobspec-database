@@ -1,0 +1,48 @@
+{
+    "application": "SLURM",
+    "details": {
+        "software": [
+            "Python",
+            "WandB",
+            "Hugging Face Transformers",
+            "SLURM"
+        ],
+        "resources": {
+            "nodes": 1,
+            "cores": 4,
+            "output_logs": "logs/wikiann/slurm.%N.%j.out",
+            "error_logs": "logs/wikiann/slurm.%N.%j.err"
+        },
+        "environment_variables": {
+            "PYTHON_ENV_PATH": "Path to Python environment",
+            "HOME_PATH": "Path to home directory",
+            "WANDB_TAGS": "${MODEL_NAME},${TASK_NAME}"
+        },
+        "libraries": [
+            "transformers",
+            "datasets",
+            "evaluate",
+            "wandb"
+        ],
+        "data": {
+            "dataset_name": "${HOME_PATH}src/bg_glue_benchmark/bgdatasets/bgglue",
+            "dataset_config_name": "wikiannbg",
+            "data_dir": "${HOME_PATH}data",
+            "cache_dir": "${HOME_PATH}cache"
+        },
+        "model": {
+            "model_name_or_path": "${MODEL_NAME}"
+        },
+        "training": {
+            "epochs": "${EPOCHS}",
+            "batch_size": "${BATCH_SIZE}",
+            "eval_batch_size": "${EVAL_BATCH_SIZE}",
+            "learning_rate": "${LEARNING_RATE}",
+            "gradient_accumulation_steps": "${GRAD_ACC}",
+            "warmup_ratio": "${WARMUP}",
+            "weight_decay": "${WEIGHT_DEC}",
+            "max_seq_length": "${MAX_SEQ_LEN}",
+            "seed": "${SEED}"
+        }
+    }
+}

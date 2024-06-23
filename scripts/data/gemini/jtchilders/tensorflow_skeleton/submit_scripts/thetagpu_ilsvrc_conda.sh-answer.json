@@ -1,0 +1,32 @@
+{
+    "application": "Horovod",
+    "details": {
+        "environment": {
+            "conda": "/lus/theta-fs0/software/thetagpu/conda/tf_master/2020-11-11/mconda3",
+            "OMP_NUM_THREADS": 64
+        },
+        "resources": {
+            "nodes": "$COBALT_NODEFILE",
+            "ppn": 8,
+            "ranks": "NODES * PPN",
+            "hostfile": "$COBALT_NODEFILE",
+            "logdir": "logdir/$COBALT_JOBID/$(date +\"%Y-%m-%d-%H-%M\")/conda"
+        },
+        "libraries": {
+            "python": "main.py",
+            "configs": "configs/ilsvrc.json"
+        },
+        "flags": {
+            "horovod": "--horovod",
+            "profiler": "--profiler",
+            "batch-term": 50
+        },
+        "dependencies": {
+            "mpirun": "mpirun -n $RANKS -npernode $PPN -hostfile $COBALT_NODEFILE $(which python)"
+        },
+        "optional_flags": {
+            "TF_ENABLE_AUTO_MIXED_PRECISION": "1",
+            "TF_XLA_FLAGS": "--tf_xla_auto_jit=fusible"
+        }
+    }
+}

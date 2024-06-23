@@ -1,0 +1,33 @@
+{
+    "application": "Slurm",
+    "details": {
+        "job_name": "tps_cylinder",
+        "output_file": "tps_cylinder.o%j",
+        "error_file": "tps_cylinder.e%j",
+        "queue": "gpu-a100",
+        "nodes": 2,
+        "mpi_tasks": 6,
+        "run_time": "00:10:00",
+        "email_type": "all",
+        "project": "FTA-SUB-Ghattas",
+        "email_address": "uvilla@oden.utexas.edu",
+        "modules": [
+            "gcc/11.2.0",
+            "mvapich2/2.3.7",
+            "tacc-apptainer/1.1.8",
+            "cuda/11.4"
+        ],
+        "environment_variables": [
+            "ORG=uvilla",
+            "IMAGE_NAME=tps_env_parla",
+            "TAG=gnu9-mvapich2-sm_80",
+            "IMAGE=$(pwd)/${IMAGE_NAME}_$TAG.sif",
+            "EXE=$(pwd)/tps/build-gpu/src/tps",
+            "PYEXE=$(pwd)/tps/build-gpu/src/tps-time-loop.py",
+            "RAW_EXE=$(pwd)/tps/build-gpu/src/.libs/tps",
+            "RAW_LIB=$(pwd)/tps/build-gpu/src/.libs/libtps.so"
+        ],
+        "container_image": "docker://$ORG/$IMAGE_NAME:$TAG",
+        "command": "ibrun apptainer exec --nv $IMAGE $EXE -run inputs/coupled-3d-boltzmann.dtconst.ini"
+    }
+}

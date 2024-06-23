@@ -1,0 +1,30 @@
+{
+    "application": "Slurm",
+    "details": {
+        "job_name": "npdes_test",
+        "output": "npdes_test_o.%j.%N.out",
+        "error": "npdes_test_e.%j.%N.out",
+        "partition": "gpu",
+        "nodes": 1,
+        "gpus": 4,
+        "ntasks_per_node": 4,
+        "account": "mia326",
+        "time": "00:30:00",
+        "mail_type": "ALL",
+        "mail_user": "sidsriva@gmail.com",
+        "environment": {
+            "conda_env": "/expanse/projects/qstore/mia326/sids/pde",
+            "modules": [
+                "anaconda3",
+                "openmpi/4.0.4-nocuda"
+            ],
+            "mpi_parameters": {
+                "OMPI_MCA_btl_openib_allow_ib": 1,
+                "OMPI_MCA_btl_openib_if_include": "mlx5_0:1",
+                "OMPI_MCA_btl": "openib,self,vader"
+            }
+        },
+        "executable": "mpirun",
+        "arguments": "-np 4 python main.py cnn-gpu4.ini"
+    }
+}

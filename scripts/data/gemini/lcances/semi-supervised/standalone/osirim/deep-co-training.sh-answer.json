@@ -1,0 +1,50 @@
+{
+    "application": "SLURM",
+    "other_software": [
+        "Python",
+        "Singularity",
+        "DCT",
+        "CUDA"
+    ],
+    "resource_requirements": [
+        "GPUs",
+        "CPU cores",
+        "Memory",
+        "Storage"
+    ],
+    "script_details": {
+        "SBATCH_JOB_NAME": "dct_${DATASET}_${MODEL}_${RATIO}S",
+        "LOG_DIR": "logs",
+        "container": "/users/samova/lcances/container/pytorch-dev.sif",
+        "python": "/users/samova/lcances/.miniconda3/envs/pytorch-dev/bin/python",
+        "script": "../co-training/co-training.py",
+        "folds": {
+            "ubs8k": "-t 1 2 3 4 5 6 7 8 9 -v 10",
+            "esc10": "-t 1 2 3 4 -v 5",
+            "esc50": "-t 1 2 3 4 -v 5",
+            "SpeechCommand": "-t 1 -v 2"
+        },
+        "common_args": [
+            "--dataset ${DATASET}",
+            "--model ${MODEL}",
+            "--supervised_ratio ${RATIO}",
+            "--nb_epoch ${EPOCH}",
+            "--learning_rate ${LR}",
+            "--batch_size ${BATCH_SIZE}",
+            "--seed ${SEED}",
+            "--lambda_cot_max ${LCM}",
+            "--lambda_diff_max ${LDM}",
+            "--warmup_length ${WL}"
+        ],
+        "dataset_args": {
+            "ubs8k": "--num_classes 10",
+            "esc10": "--num_classes 10",
+            "esc50": "--num_classes 50",
+            "SpeechCommand": "--num_classes 35"
+        },
+        "extra_params": {
+            "tensorboard_sufix": "--tensorboard_sufix run${run_number}",
+            "folds": "${folds[${i}]}"
+        }
+    }
+}

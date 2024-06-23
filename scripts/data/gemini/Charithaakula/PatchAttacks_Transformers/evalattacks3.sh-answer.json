@@ -1,0 +1,37 @@
+{
+    "application": "Singularity",
+    "details": {
+        "script": "patchattackgrad_multi.py",
+        "resources": {
+            "nodes": 1,
+            "tasks_per_node": 1,
+            "cpus_per_task": 4,
+            "time": "7:00:00",
+            "memory_per_cpu": "24G",
+            "gpu": 1,
+            "overlay_volumes": [
+                "/vast/work/public/ml-datasets/imagenet/imagenet-val.sqf:ro",
+                "/vast/work/public/ml-datasets/imagenet/imagenet-train.sqf:ro",
+                "/scratch/sca321/conda/simple2/overlay-50G-10M.ext3:ro"
+            ],
+            "singularity_image": "/scratch/work/public/singularity/cuda11.2.2-cudnn8-devel-ubuntu20.04.sif"
+        },
+        "environment": {
+            "module_purged": true,
+            "environment_file": "/ext3/env.sh"
+        },
+        "command_arguments": {
+            "output_directory": "alloutputs/$1",
+            "model_type": "$1",
+            "gpu_id": 0,
+            "data_path": "$2",
+            "image_type": "$3",
+            "model_path": "$4",
+            "number_iterations": "$5",
+            "clip_gradients": true,
+            "learning_rate": "$6",
+            "patch_size": "$7",
+            "search_iterations": "$8"
+        }
+    }
+}

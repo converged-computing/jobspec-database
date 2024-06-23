@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"Slurm\",\n  \"details\": {\n    \"resource_requests\": {\n      \"gpu\": 1,\n      \"cpus\": 12,\n      \"memory\": \"120G\",\n      \"time\": \"3-12:00\",\n      \"account\": \"def-franlp\"\n    },\n    \"environment\": {\n      \"modules\": [\n        \"StdEnv/2020\",\n        \"python/3.9\",\n        \"cuda\",\n        \"cudnn\"\n      ],\n      \"user\": \"sebwood\",\n      \"source_dir\": \"~/projects/def-franlp/sebwood/MemSE\",\n      \"data_path\": \"$SLURM_TMPDIR/data\"\n    },\n    \"python_dependencies\": [\n      \"torch\",\n      \"pip\",\n      \"setuptools\"\n    ],\n    \"commands\": [\n      \"nvidia-smi\",\n      \"python -m torch.utils.collect_env\",\n      \"python -m venv $SLURM_TMPDIR/env\",\n      \"source $SLURM_TMPDIR/env/bin/activate\",\n      \"python -m pip install --no-index --upgrade pip setuptools\",\n      \"python -m pip install --no-index -r $SOURCEDIR/requirements.txt\",\n      \"mkdir $datapath\",\n      \"cp ~/projects/def-franlp/$u/data/cifar-10-python.tar.gz $datapath\",\n      \"tar xzf $datapath/cifar-10-python.tar.gz -C $datapath\",\n      \"sed -n \\\"$line_to_read\\\"p \\\"$SOURCEDIR/experiments/paper/experiments.dat\\\"\",\n      \"eval \\\"${SED_RES} --datapath ${datapath}\\\"\"\n    ]\n  }\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 983,
+        "candidates_token_count": 436,
+        "total_token_count": 1419,
+        "cached_content_token_count": 0
+    }
+}

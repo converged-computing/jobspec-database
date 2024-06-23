@@ -1,0 +1,33 @@
+{
+    "application": "Slurm",
+    "details": {
+        "job_name": "sgemm_epyc",
+        "partition": "EPYC",
+        "nodes": 1,
+        "exclusive": true,
+        "tasks_per_node": 64,
+        "memory": "490G",
+        "time": "02:00:00",
+        "output_file": "sgemm_epyc_job_%j.out",
+        "modules": [
+            "mkl",
+            "openBLAS/0.3.23-omp"
+        ],
+        "environment_variables": {
+            "OMP_PLACES": "cores",
+            "OMP_PROC_BIND": "close",
+            "OMP_NUM_THREADS": 64,
+            "BLIS_NUM_THREADS": 64,
+            "LD_LIBRARY_PATH": "/u/dssc/mvicar00/blis/lib:$LD_LIBRARY_PATH"
+        },
+        "executable": "./sgemm_$LIB.x",
+        "arguments": [
+            "$SIZE",
+            "$SIZE",
+            "$SIZE"
+        ],
+        "libraries": [
+            "blis"
+        ]
+    }
+}

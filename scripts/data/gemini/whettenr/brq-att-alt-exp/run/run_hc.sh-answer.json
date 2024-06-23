@@ -1,0 +1,24 @@
+{
+    "application": "pytorch",
+    "details": {
+        "software": {
+            "pytorch": "2.1.1",
+            "conda": "aa"
+        },
+        "resources": {
+            "gpu": "v100",
+            "gpu_count": 8,
+            "cpu": 16,
+            "partition": "gpu_p2",
+            "account": "nkp@v100",
+            "time_limit": "20:00:00",
+            "job_name": "hc",
+            "output_file": "log/hc_%j.log"
+        },
+        "script": {
+            "directory": "/gpfswork/rech/nkp/uaj64gk/attention_alt/brq-att-alt-exp",
+            "command": "python -m torch.distributed.run --nproc_per_node=8 --rdzv_backend c10d --rdzv-endpoint=localhost:0 train.py hparams/hyperconformer.yaml --find_unused_parameters",
+            "hparams_file": "hparams/hyperconformer.yaml"
+        }
+    }
+}

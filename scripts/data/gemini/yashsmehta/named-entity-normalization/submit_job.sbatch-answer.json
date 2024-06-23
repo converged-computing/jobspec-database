@@ -1,0 +1,32 @@
+{
+    "application": "Slurm",
+    "details": {
+        "job_name": "np",
+        "output_file": "logs/ym_%A.out",
+        "time_limit": "0-1:00",
+        "nodes": 1,
+        "memory": "7G",
+        "partition": "gpu",
+        "gpu_count": 1,
+        "python_scripts": [
+            "scraper.py",
+            "finetune_models/MLP_combined_features.py"
+        ],
+        "python_script_arguments": {
+            "finetune_models/MLP_combined_features.py": [
+                "-embed",
+                "'bert-base'",
+                "-mode",
+                "'256_head_tail'",
+                "-embed_mode",
+                "'mean'",
+                "-epochs",
+                "10",
+                "-layer",
+                "11",
+                "-seed",
+                "${SLURM_ARRAY_TASK_ID}"
+            ]
+        }
+    }
+}

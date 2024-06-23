@@ -1,0 +1,36 @@
+{
+    "application": "TensorFlow",
+    "details": {
+        "software": [
+            "TensorFlow",
+            "Horovod",
+            "Intel MKL-DNN",
+            "MPI"
+        ],
+        "resources": {
+            "hardware": "KNL (Knights Landing) processors",
+            "compute nodes": "At least one, but potentially many",
+            "memory": "SCRATCH filesystem",
+            "time limit": "30 minutes",
+            "job name": "cifar_horovod"
+        },
+        "environment variables": {
+            "KMP_BLOCKTIME": "1",
+            "KMP_SETTINGS": "1",
+            "KMP_AFFINITY": "granularity=fine,compact,1,0",
+            "OMP_NUM_THREADS": "66",
+            "PYTHON": "python",
+            "WORK_DIR": "`pwd`/..",
+            "TF_SCRIPT": "${WORK_DIR}/resnet_cifar_main.py",
+            "TF_EVAL_SCRIPT": "${WORK_DIR}/resnet_cifar_eval.py",
+            "DATASET": "cifar10",
+            "BATCH_SIZE": "calculated based on the number of nodes",
+            "TF_FLAGS": "flags for TensorFlow training",
+            "TF_EVAL_FLAGS": "flags for TensorFlow evaluation",
+            "TF_NUM_PS": "1",
+            "TF_NUM_WORKERS": "number of nodes minus 1",
+            "DIST_TF_LAUNCHER_SCRIPT": "run_dist_train_eval_daint.sh",
+            "DIST_TF_LAUNCHER_DIR": "directory for logs and scripts"
+        }
+    }
+}

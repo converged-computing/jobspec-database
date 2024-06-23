@@ -1,0 +1,27 @@
+{
+    "application": "Slurm",
+    "details": {
+        "resource_requirements": {
+            "nodes": 1,
+            "exclude_nodes": "hpc1,hpc2,hpc3,hpc4,hpc5,hpc6,hpc7,hpc8,hpc9,vine3,vine4,vine6,vine11,vine12,lion17,rose7,rose8,rose9",
+            "gres": "gpu:2",
+            "memory": "16GB",
+            "time": "12:00:00"
+        },
+        "software_requirements": {
+            "cuda": "10.0",
+            "python": "3.7"
+        },
+        "script_details": {
+            "job_name": "sketch",
+            "output_file": "sketch_%A_%a.out",
+            "commands": [
+                "module purge",
+                "module load cuda-10.0",
+                "source /home/eo41/venv/bin/activate",
+                "python -u /misc/vlgscratch4/LakeGroup/emin/oos_benchmarks/evaluate_imagenets.py '/misc/vlgscratch4/LakeGroup/emin/robust_vision/imagenet-sketch/' --model-name 'moco_v2'",
+                "python -u /misc/vlgscratch4/LakeGroup/emin/oos_benchmarks/evaluate_imagenets.py '/misc/vlgscratch4/LakeGroup/emin/robust_vision/imagenet-sketch/' --model-name 'resnet50'"
+            ]
+        }
+    }
+}

@@ -1,0 +1,67 @@
+{
+    "application": "pytorch",
+    "details": {
+        "software": [
+            "CUDA/11.3.1",
+            "cuDNN/8.2.1.32-CUDA-11.3.1",
+            "Anaconda3/2022.05",
+            "wandb",
+            "git-lfs",
+            "python",
+            "torch"
+        ],
+        "resources": {
+            "queue": "qnvidia",
+            "nodes": 1,
+            "gpus": 16,
+            "walltime": "48:00:00",
+            "project": "DD-22-70",
+            "output_dir": "/scratch/project/dd-22-70/experiments/",
+            "cache_dir": "/scratch/project/dd-22-70/cache/data/",
+            "wandb_dir": "/scratch/project/dd-22-70/wandb/"
+        },
+        "environment": {
+            "conda_env": "pixel-env",
+            "wandb_api_key": "6e62fdec81f0b81d70d3756f1391f44988935dab",
+            "wandb_entity": "nadav_b",
+            "wandb_project": "pixel-real-scans-training"
+        },
+        "script": {
+            "training_script": "pixel/scripts/training/run_intermediate_training.py",
+            "model_name_or_path": "Nadav/PretrainedPHD",
+            "dataset_names": [
+                "wikipedia",
+                "bookcorpusopen",
+                "Nadav/CaribbeanScans"
+            ],
+            "dataset_configs": [
+                "20220301.en",
+                "plain_text"
+            ],
+            "label_names": "pixel_values",
+            "max_steps": 1000000,
+            "num_train_epochs": 1,
+            "per_device_train_batch_size": 32,
+            "per_device_eval_batch_size": 16,
+            "gradient_accumulation_steps": 1,
+            "logging_strategy": "steps",
+            "logging_steps": 500,
+            "evaluation_strategy": "steps",
+            "eval_steps": 2000,
+            "save_strategy": "steps",
+            "save_steps": 1000,
+            "seed": 123,
+            "fp16": true,
+            "streaming": true,
+            "report_to": "wandb",
+            "push_to_hub": false,
+            "hub_model_id": "copenlu/pixel",
+            "hub_strategy": "checkpoint",
+            "hub_token": "6e62fdec81f0b81d70d3756f1391f44988935dab",
+            "hub_private_repo": true,
+            "ddp_find_unused_parameters": false,
+            "dataloader_num_workers": 16,
+            "dropout_prob": 0.1
+        }
+    }
+}

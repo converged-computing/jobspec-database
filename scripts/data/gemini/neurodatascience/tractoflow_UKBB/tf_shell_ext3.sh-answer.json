@@ -1,0 +1,63 @@
+{
+    "application": "Singularity",
+    "details": {
+        "software": [
+            "Singularity",
+            "Nextflow",
+            "Tractoflow"
+        ],
+        "resources": {
+            "account": "rpp-aevans-ab",
+            "email": "adam.trefonides@mcgill.ca",
+            "cpus": 8,
+            "memory": "2G per CPU",
+            "time": "20 hours",
+            "output": "slurm_out/%x-%j.out",
+            "work_dir": "/lustre03/project/6008063/atrefo/sherbrooke/TF_RUN",
+            "image": "/lustre03/project/6008063/atrefo/sherbrooke/TF_RUN/ext3_images/TF_raw/TF-raw-${FB}.img",
+            "output_dir": "/TF_OUT/${FB}",
+            "symtree": "/lustre03/project/6008063/atrefo/sherbrooke/TF_RUN/ext3_images/symtree.squashfs",
+            "bids_dir": "/lustre03/project/6008063/atrefo/sherbrooke/TF_RUN/fake_bids/dwi_subs-${FB}",
+            "trace_dir": "/lustre03/project/6008063/atrefo/sherbrooke/TF_RUN/sanity_out/nf_traces",
+            "trace_file": "/lustre03/project/6008063/atrefo/sherbrooke/TF_RUN/sanity_out/nf_traces/trace-${FB}.txt",
+            "singularity_image": "/lustre03/project/6008063/atrefo/sherbrooke/TF_RUN/tractoflow.sif",
+            "ukbb_squashfs_dir": "/project/6008063/neurohub/ukbb/imaging",
+            "ukbb_squashfs": [
+                "neurohub_ukbb_dwi_ses2_0_bids.squashfs",
+                "neurohub_ukbb_dwi_ses2_1_bids.squashfs",
+                "neurohub_ukbb_dwi_ses2_2_bids.squashfs",
+                "neurohub_ukbb_t1_ses2_0_bids.squashfs",
+                "neurohub_ukbb_t1_ses3_0_bids.squashfs",
+                "neurohub_ukbb_participants.squashfs",
+                "neurohub_ukbb_t1_ses2_0_jsonpatch.squashfs"
+            ],
+            "singularity_binds": [
+                "-H ${OUT_ROOT}",
+                "-B ${TASK_ROOT}",
+                "-B ${OUT_IMAGE}:${OUT_ROOT}:image-src=/upper,ro"
+            ],
+            "ukbb_overlays": [
+                "--overlay",
+                "/project/6008063/neurohub/ukbb/imaging/neurohub_ukbb_dwi_ses2_0_bids.squashfs",
+                "--overlay",
+                "/project/6008063/neurohub/ukbb/imaging/neurohub_ukbb_dwi_ses2_1_bids.squashfs",
+                "--overlay",
+                "/project/6008063/neurohub/ukbb/imaging/neurohub_ukbb_dwi_ses2_2_bids.squashfs",
+                "--overlay",
+                "/project/6008063/neurohub/ukbb/imaging/neurohub_ukbb_t1_ses2_0_bids.squashfs",
+                "--overlay",
+                "/project/6008063/neurohub/ukbb/imaging/neurohub_ukbb_t1_ses3_0_bids.squashfs",
+                "--overlay",
+                "/project/6008063/neurohub/ukbb/imaging/neurohub_ukbb_participants.squashfs",
+                "--overlay",
+                "/project/6008063/neurohub/ukbb/imaging/neurohub_ukbb_t1_ses2_0_jsonpatch.squashfs"
+            ],
+            "dwi_overlays": [
+                "--overlay",
+                "/lustre03/project/6008063/atrefo/sherbrooke/TF_RUN/ext3_images/symtree.squashfs"
+            ],
+            "singularity_version": "3.7.1-1.el7",
+            "nextflow_cluster_seed": "$(shuf -i 0-16777216 -n 1)"
+        }
+    }
+}

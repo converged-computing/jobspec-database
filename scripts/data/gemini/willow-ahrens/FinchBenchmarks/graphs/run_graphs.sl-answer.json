@@ -1,0 +1,25 @@
+{
+    "application": "SLURM",
+    "details": {
+        "resources": {
+            "tasks_per_node": 24,
+            "nodes": 1,
+            "exclusive": true,
+            "time": "04:00:00",
+            "partition": "lanka-v3",
+            "qos": "commit-main",
+            "memory": "102400",
+            "array": "1-6%6"
+        },
+        "environment": {
+            "source": "/afs/csail.mit.edu/u/w/willow/everyone/.bashrc",
+            "julia_depot_path": "$JULIA_DEPOT_PATH",
+            "julia_up_depot_path": "$JULIAUP_DEPOT_PATH",
+            "scratch": "$SCRATCH"
+        },
+        "script_execution": {
+            "command": "julia run_graphs.jl -d \"yang${SLURM_ARRAY_TASK_ID}\" -o \"graphs_data_${SLURM_ARRAY_TASK_ID}.json\"",
+            "working_directory": "/data/scratch/willow/FinchBenchmarks/graphs"
+        }
+    }
+}

@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n\"Application\": \"WRF-Chem\",\n\"Software Requirements\": [\n\"WPS_v3.9.1.1\",\n\"GEOG_DATA\",\n\"WRFDA_v3.9.1.1\",\n\"WRF_v3.9.1.1\",\n\"WRFCHEM_v3.9.1.1\",\n\"DART_CHEM_REPOSITORY\",\n\"MATLAB\"\n],\n\"Resource Requirements\": [\n\"SCRATCH_DIR=/home/amizzi/DATA_OUTPUT\",\n\"WORK_DIR=/home/amizzi\",\n\"INPUT_DATA_DIR=/home/amizzi/DATA_INPUT\",\n\"EXPERIMENT_DIR=${SCRATCH_DIR}\",\n\"RUN_DIR=${EXPERIMENT_DIR}/real_FRAPPE_WRF_NFRDM_250m\",\n\"TRUNK_DIR=${WORK_DIR}/TRUNK\",\n\"WPS_DIR=${TRUNK_DIR}/${WPS_VER}\",\n\"WPS_GEOG_DIR=${INPUT_DATA_DIR}/${WPS_GEOG_VER}\",\n\"WRFCHEM_DIR=${TRUNK_DIR}/${WRFCHEM_VER}\",\n\"WRFDA_DIR=${TRUNK_DIR}/${WRFDA_VER}\",\n\"DART_DIR=${TRUNK_DIR}/${DART_VER}\",\n\"BUILD_DIR=${WRFDA_DIR}/var/da\",\n\"WRF_DIR=${TRUNK_DIR}/${WRF_VER}\",\n\"HYBRID_SCRIPTS_DIR=${DART_DIR}/models/wrf_chem/hybrid_scripts\",\n\"EXPERIMENT_DATA_DIR=${INPUT_DATA_DIR}/FRAPPE_REAL_TIME_DATA\",\n\"EXPERIMENT_PREPBUFR_DIR=${EXPERIMENT_DATA_DIR}/met_obs_prep_data\",\n\"EXPERIMENT_GFS_DIR=${EXPERIMENT_DATA_DIR}/gfs_forecasts\",\n\"VTABLE_DIR=${WPS_DIR}/ungrib/Variable_Tables\",\n\"BE_DIR=${WRFDA_DIR}/var/run\",\n\"GEOGRID_DIR=${RUN_DIR}/geogrid\",\n\"METGRID_DIR=${RUN_DIR}/${DATE}/metgrid\",\n\"REAL_DIR=${RUN_DIR}/${DATE}/real\",\n\"WRFCHEM_MET_IC_DIR=${RUN_DIR}/${DATE}/wrfchem_met_ic\",\n\"WRFCHEM_MET_BC_DIR=${RUN_DIR}/${DATE}/wrfchem_met_bc\",\n\"WRFCHEM_INITIAL_DIR=${RUN_DIR}/${INITIAL_DATE}/wrfchem_initial\",\n\"WRFCHEM_CYCLE_CR_DIR=${RUN_DIR}/${DATE}/wrfchem_cycle_cr\",\n\"WRFCHEM_CYCLE_FR_DIR=${RUN_DIR}/${DATE}/wrfchem_cycle_fr\",\n\"WRFCHEM_LAST_CYCLE_CR_DIR=${RUN_DIR}/${PAST_DATE}/wrfchem_cycle_cr\",\n\"PREPBUFR_MET_OBS_DIR=${RUN_DIR}/${DATE}/prepbufr_met_obs\",\n\"COMBINE_OBS_DIR=${RUN_DIR}/${DATE}/combine_obs\",\n\"PREPROCESS_OBS_DIR=${RUN_DIR}/${DATE}/preprocess_obs\",\n\"DART_FILTER_DIR=${RUN_DIR}/${DATE}/dart_filter\",\n\"UPDATE_BC_DIR=${RUN_DIR}/${DATE}/update_bc\",\n\"BAND_DEPTH_DIR=${RUN_DIR}/${DATE}/band_depth\",\n\"ENSEMBLE_MEAN_INPUT_DIR=${RUN_DIR}/${DATE}/ensemble_mean_input\",\n\"ENSEMBLE_MEAN_OUTPUT_DIR=${RUN_DIR}/${DATE}/ensemble_mean_output\",\n\"REAL_TIME_DIR=${DART_DIR}/models/wrf/run_scripts/RUN_REAL_TIME\",\n\"PROJ_NUMBER=P93300612\",\n\"GENERAL_JOB_CLASS=normal\",\n\"GENERAL_TIME_LIMIT=00:05:00\",\n\"GENERAL_NODES=1\",\n\"GENERAL_TASKS=1\",\n\"WRFDA_JOB_CLASS=normal\",\n\"WRFDA_TIME_LIMIT=00:05:00\",\n\"WRFDA_NODES=1\",\n\"WRFDA_TASKS=1\",\n\"SINGLE_JOB_CLASS=normal\",\n\"SINGLE_TIME_LIMIT=00:05:00\",\n\"SINGLE_NODES=1\",\n\"SINGLE_TASKS=1\",\n\"FILTER_JOB_CLASS=normal\",\n\"FILTER_TIME_LIMIT=02:59:00\",\n\"FILTER_NODES=4\",\n\"FILTER_TASKS=48\",\n\"WRFCHEM_JOB_CLASS=normal\",\n\"WRFCHEM_TIME_LIMIT=01:00:00\",\n\"WRFCHEM_NODES=4\",\n\"WRFCHEM_TASKS=48\"\n]\n}\n``` \nThe script is a shell script that runs the WRF-Chem atmospheric model. \n\nIt includes a complex set of configurations and parameter settings for various components like WPS (Weather Research and Forecasting Preprocessing System), WRFDA (WRF Data Assimilation System), DART (Data Assimilation Research Testbed), and WRF-Chem itself. The script handles data preparation, pre-processing, model runs, and post-processing tasks.\n\nHere's a breakdown of the script's functionalities:\n\n* **Environment Variables:** The script defines various environment variables specifying dates, directories, file names, model versions, and other settings used for running WRF-Chem. These variables are used throughout the script to control the execution of different tasks.\n* **Model Setup and Configuration:** The script performs a series of tasks to set up the WRF-Chem environment:\n    * Copies necessary files and executables from various directories.\n    * Generates or modifies namelist files (input files containing model parameters) for different components like WPS, WRFDA, DART, and WRF-Chem.\n    * Sets up directories for storing input data and output results.\n* **Pre-Processing:** This section prepares input data for the WRF-Chem model:\n    * **Ungrib:** It processes GRIB files (weather data in a specific format) from a large-scale model (e.g., GFS).\n    * **Metgrid:** It interpolates the large-scale model data onto the WRF-Chem grid.\n    * **Real:** It runs the \"real\" WRF-Chem model for a short time to provide initial and boundary conditions for the assimilation process.\n* **Data Assimilation:** This section performs data assimilation using DART:\n    * **Prepare Observations:** It preprocesses meteorological observations (e.g., radiosonde data) in various formats to prepare them for DART.\n    * **Filter:** It runs the DART Kalman filter to assimilate the observations into the WRF-Chem forecast.\n* **Post-Processing:** The script performs post-processing tasks after the WRF-Chem run:\n    * **Ensemble Mean:** It calculates the ensemble mean of the WRF-Chem forecasts for different ensemble members.\n* **Cycling:** The script implements a cycling strategy for the WRF-Chem model. The script loops through a specified time window, running various tasks (e.g., data assimilation, WRF-Chem forecast) for each time step. \n* **Fine Scale Forecast:** The script can be used to run a fine-scale forecast using WRF-Chem. This is achieved by adjusting parameters and running additional WRF-Chem simulations. \n* **Special Forecasts:** The script allows for running \"special\" forecasts to investigate specific events or phenomena. This involves running WRF-Chem with modified parameters for a limited number of ensemble members.\n\nThe script uses a combination of shell commands, namelist generation scripts, and external executables to manage the entire WRF-Chem workflow. \n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 45493,
+        "candidates_token_count": 1735,
+        "total_token_count": 47228,
+        "cached_content_token_count": 0
+    }
+}

@@ -1,0 +1,37 @@
+{
+    "application": "PBS",
+    "details": {
+        "resource_requirements": {
+            "walltime": "6:00:00",
+            "nodes": "1:ppn=24",
+            "queue": "small"
+        },
+        "software_requirements": [
+            "singularity",
+            "python3",
+            "camera-trap-classifier:latest-cpu"
+        ],
+        "script_functionality": "Creates training datasets for a camera trap classifier, iterating over different content (species, blank_species_balanced) and seasons.",
+        "data_paths": {
+            "info_file_root_path": "/home/packerc/shared/machine_learning/data/info_files/",
+            "data_inventory_path": "${INFO_FILE_ROOT_PATH}${SITE}/${SEASON}_data_inventory_${CONTENT}.json",
+            "training_data_root_path": "/home/packerc/shared/machine_learning/data/training_data/${CONTENT}/",
+            "training_data_path": "${TRAINING_DATA_ROOT_PATH}${SITE}/",
+            "image_root_path": "/home/packerc/shared/albums/${SITE}/"
+        },
+        "command_line_arguments": [
+            "ctc.create_dataset",
+            "-inventory $DATA_INVENTORY_PATH",
+            "-output_dir $TRAINING_DATA_PATH",
+            "-image_save_side_smallest 600",
+            "-image_save_quality 75",
+            "-split_by_meta split_name",
+            "-remove_multi_label_records",
+            "-image_root_path $IMAGE_ROOT_PATH",
+            "-process_images_in_parallel",
+            "-process_images_in_parallel_size 320",
+            "-processes_images_in_parallel_n_processes 24",
+            "-max_records_per_file 5000"
+        ]
+    }
+}

@@ -1,0 +1,56 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"LSF\",\n  \"software\": [\n    \"python\",\n    \"pytorchlightning/pytorch_lightning:base-cuda-py3.9-torch1.9\",\n    \"SimCLR-torch\"\n  ],\n  \"resources\": {\n    \"nodes\": 8,\n    \"queue\": \"general\",\n    \"group\": \"compute-crponce\",\n    \"gpu\": \"TeslaV100_SXM2_32GB\",\n    \"gpu_mode\": \"exclusive_process\",\n    \"memory\": \"48GB\",\n    \"docker_shm_size\": \"16g\",\n    \"docker_volumes\": \"$HOME:$HOME $SCRATCH1:$SCRATCH1 $STORAGE1:$STORAGE1\"\n  },\n  \"datasets\": [\n    \"stl10\"\n  ],\n  \"parameters\": [\n    \"-data $SCRATCH1/Datasets\",\n    \"-dataset-name stl10\",\n    \"--workers 16\",\n    \"--ckpt_every_n_epocs 5\",\n    \"--epochs 100\",\n    \"--batch-size 256\",\n    \"--out_dim 256\",\n    \"$extra_param\"\n  ]\n}\n```\n\nThe script is running in the LSF (Load Sharing Facility) environment. This is a batch system commonly used for running computationally intensive jobs on clusters.\n\nThe script defines several resources and software dependencies:\n\n* **Software:** It uses Python, a specific Docker image \"pytorchlightning/pytorch_lightning:base-cuda-py3.9-torch1.9\", and the SimCLR-torch library.\n* **Resources:** It requests 8 nodes from the \"general\" queue in the \"compute-crponce\" group. It also requires a TeslaV100_SXM2_32GB GPU in exclusive process mode and 48GB of memory per node. \n* **Datasets:** It uses the \"stl10\" dataset, which is likely stored in the SCRATCH1 directory.\n\nThe script also sets environment variables for Docker, including the shared memory size and volumes to be mounted. \n\nFinally, it runs a Python script called `run_salcrop.py` from the SimCLR-torch directory with various parameters including the dataset path, dataset name, number of workers, checkpoints, epochs, batch size, output dimension, and a set of specific experimental parameters defined in `$extra_param`.\n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "citation_metadata": {
+                "citation_sources": [
+                    {
+                        "start_index": 505,
+                        "end_index": 687,
+                        "uri": "https://github.com/Animadversio/Foveated_Saccade_SimCLR",
+                        "license_": ""
+                    }
+                ]
+            },
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 1326,
+        "candidates_token_count": 545,
+        "total_token_count": 1871,
+        "cached_content_token_count": 0
+    }
+}

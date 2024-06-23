@@ -1,0 +1,33 @@
+{
+    "application": "SLURM",
+    "details": {
+        "resource_requirements": {
+            "nodes": 2,
+            "cpus_per_task": 16,
+            "ntasks_per_node": 1,
+            "gres": "gpu:4",
+            "wait_all_nodes": 1,
+            "exclusive": true,
+            "output": "/apps/aws-distributed-training-workshop-pcluster/head-node-scripts/cls_out_%j.out",
+            "error": "/apps/aws-distributed-training-workshop-pcluster/head-node-scripts/cls_err_%j.err"
+        },
+        "environment_variables": {
+            "WORLD_SIZE": 8,
+            "LD_LIBRARY_PATH": "/usr/local/lib/:$LD_LIBRARY_PATH",
+            "LOGLEVEL": "INFO",
+            "NCCL_DEBUG": "INFO",
+            "NCCL_DEBUG_SUBSYS": "ALL",
+            "PYTHONFAULTHANDLER": 1
+        },
+        "software_requirements": {
+            "conda_environment": "pytorch-py38",
+            "python_module": "torch.distributed.run",
+            "python_script": "pyscripts/compute_CLS_features.py",
+            "yaml_parser": "yq"
+        },
+        "other_requirements": {
+            "configuration_file": "scDINO_full_pipeline.yaml",
+            "dataset_dir": "$(yq '.meta.dataset_dir' scDINO_full_pipeline.yaml)"
+        }
+    }
+}

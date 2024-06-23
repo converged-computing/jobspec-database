@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"LSF\",\n  \"details\": {\n    \"queue\": \"lowpriority\",\n    \"gpu_request\": \"num=1:mode=exclusive_process\",\n    \"gpu_count\": 1,\n    \"container_image\": \"docker.optum.com/dhanley2/bert:cgan_build\",\n    \"nodes\": 1,\n    \"resource_request\": \"span[ptile=4]\",\n    \"output_file\": \"log_train_%J\",\n    \"command\": \"cd /share/dhanley2/recursion/scripts/densenetv20 && python3 train.py --nbags 15 --epochs 60 --fold 0 --lr 0.0001 --batchsize 64 --workpath scripts/densenetv20 --cutmix_prob 1.0 --beta 1.0 --imgpath data/mount/256X256X6/ --weightsname weights/pytorch_model_densenet0.bin\"\n  }\n}\n```\n\nThe script is running on **LSF (Load Sharing Facility)**, a batch job scheduler. \n\nHere's a breakdown of the script's other requirements:\n\n* **GPU:** The script requests one GPU with exclusive access (num=1:mode=exclusive_process).\n* **Container:** The script specifies the Docker container image to use: `docker.optum.com/dhanley2/bert:cgan_build`. This image likely contains the necessary software (Python, libraries) and dependencies for running the `train.py` script.\n* **Nodes:** The script requests one node (-n 1).\n* **Resource Request:** The script requires a resource span with a priority tile (ptile) of 4. This signifies the desired resource allocation and priority within the LSF system.\n* **Output File:**  The script directs output to a file named `log_train_%J`, where %J represents the job ID.\n* **Command:** The script executes the command `python3 train.py` within the specified directory. This script likely performs a machine learning training task with the given parameters (e.g., number of bags, epochs, learning rate, batch size, data path, weights file). \n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 486,
+        "candidates_token_count": 503,
+        "total_token_count": 989,
+        "cached_content_token_count": 0
+    }
+}

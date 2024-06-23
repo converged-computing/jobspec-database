@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"SLURM\",\n  \"details\": {\n    \"scheduler\": \"SLURM\",\n    \"partition\": \"bosch_cpu-cascadelake\",\n    \"time_limit\": \"0-00:10\",\n    \"cpus\": 2,\n    \"output_files\": \"log/%x.%A_%a.out\",\n    \"job_name\": \"mdp-playground-job-array\",\n    \"working_directory\": \"/work/dlclarge2/rajanr-mdpp\",\n    \"array_size\": 200,\n    \"environment_variables\": {\n      \"EXP_NAME\": \"dqn_seq_del\"\n    },\n    \"software_requirements\": {\n      \"python\": \"3\",\n      \"conda_environment\": \"/home/rajanr/anaconda3/envs/old_py36_toy_rl\"\n    },\n    \"script_arguments\": {\n      \"exp-name\": \"${EXP_NAME}\",\n      \"config-file\": \"/home/rajanr/mdp-playground/experiments/${EXP_NAME}\",\n      \"config-num\": \"${SLURM_ARRAY_TASK_ID}\"\n    }\n  }\n}\n```\n\n**Explanation:**\n\n* **SLURM:** The script uses SLURM (Simple Linux Utility for Resource Management) to manage the execution of the Python script on a cluster.\n* **Partition:** The script requests resources from the \"bosch_cpu-cascadelake\" partition, indicating a CPU-based cluster.\n* **Time Limit:**  The script is allowed to run for a maximum of 10 minutes (0-00:10).\n* **CPUs:** The script requests 2 CPUs per task.\n* **Output Files:**  Standard output and error are directed to files named \"log/%x.%A_%a.out\", which will be created in a directory named \"log\".\n* **Job Name:** The job is named \"mdp-playground-job-array\".\n* **Working Directory:** The script runs in the directory \"/work/dlclarge2/rajanr-mdpp\".\n* **Array Size:**  The \"-a 0-199\" option indicates that the script is submitted as an array job with 200 tasks.\n* **Environment Variable:** The script defines an environment variable \"EXP_NAME\" with the value \"dqn_seq_del\".\n* **Software Requirements:** The script requires Python version 3 and a conda environment named \"/home/rajanr/anaconda3/envs/old_py36_toy_rl\".\n* **Script Arguments:**  The script passes the following arguments to the Python script:\n    * `--exp-name`:  The value of the EXP_NAME variable.\n    * `--config-file`: The path to a configuration file in the \"experiments\" directory.\n    * `--config-num`: The SLURM_ARRAY_TASK_ID variable, which will be unique for each task.\n* **Python Script:** The script uses `run_experiments.py` from the `mdp-playground` directory to perform the actual experiment. \n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 1190,
+        "candidates_token_count": 698,
+        "total_token_count": 1888,
+        "cached_content_token_count": 0
+    }
+}

@@ -1,0 +1,30 @@
+{
+    "application": "PBS",
+    "details": {
+        "software": [
+            "mvapich2/2.0b-intel-14.0",
+            "mpiexec",
+            "OpenMP"
+        ],
+        "resources": {
+            "walltime": "00:05:00",
+            "nodes": "2",
+            "cores_per_node": "12",
+            "queue": "secondary",
+            "output_file": "hybridjob.out",
+            "error_file": "hybridjob.err",
+            "mail_options": "be"
+        },
+        "environment_variables": {
+            "OMP_NUM_THREADS": "`nproc`",
+            "PBS_NODEFILE": "list of nodes allocated by PBS"
+        },
+        "commands": [
+            "module load mvapich2/2.0b-intel-14.0",
+            "cd $PBS_O_WORKDIR",
+            "uniq ${PBS_NODEFILE} > /tmp/${USER}_NODEFILE",
+            "mpiexec -np ${PBS_NUM_NODES} -hostfile /tmp/${USER}_NODEFILE ./a.out",
+            "rm -r /tmp/${USER}_NODEFILE"
+        ]
+    }
+}

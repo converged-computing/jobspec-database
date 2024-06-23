@@ -1,0 +1,30 @@
+{
+    "application": "SLURM",
+    "details": {
+        "software": [
+            "cgpu",
+            "tensorflow/2.4.1-gpu",
+            "nsight-systems (optional)"
+        ],
+        "resource_requirements": {
+            "nodes": 1,
+            "cores": 10,
+            "tasks_per_node": 8,
+            "gpus_per_task": 1,
+            "exclusive": true,
+            "runtime": "1:00:00",
+            "account": "nstaff",
+            "job_name": "cosmoflow-cgpu",
+            "output_file": "logs/%x-%j.out",
+            "error_file": "logs/%x-%j.err"
+        },
+        "environment_variables": {
+            "BATCHSIZE": 8,
+            "DO_PROFILING": "false",
+            "DO_NCCL_DEBUG": "false",
+            "PYTHONPATH": "/usr/common/software/tensorflow/2.4.1-gpu/bin/python",
+            "NODES": "${SLURM_NNODES}",
+            "XLA_FLAGS": "--xla_gpu_cuda_data_dir=$CUDA_DIR"
+        }
+    }
+}

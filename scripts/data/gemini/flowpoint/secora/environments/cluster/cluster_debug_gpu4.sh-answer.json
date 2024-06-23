@@ -1,0 +1,30 @@
+{
+    "application": "Secora",
+    "software_requirements": [
+        "gcc/8.2.0",
+        "cmake",
+        "cuda/11.2",
+        "python3"
+    ],
+    "resource_requirements": [
+        "partition: gpu4",
+        "nodes: 1",
+        "tasks per node: 32",
+        "memory: 96 GB",
+        "time: 00:50:00",
+        "output file: slurm_logs/slurm_debug.%j.out",
+        "error file: slurm_logs/slurm_debug.%j.err"
+    ],
+    "environment_variables": [
+        "HF_HOME: /scratch/fhoels2s/huggingface",
+        "MASTER_ADDR: localhost",
+        "MASTER_PORT: 15000 + random port",
+        "TORCH_DISTRIBUTED_DEBUG: DETAIL",
+        "NCCL_DEBUG_SUBSYS: ALL",
+        "NCCL_DEBUG: INFO",
+        "NCCL_IB_DISABLE: 1",
+        "CUDA_LAUNCH_BLOCKING: 1",
+        "TOKENIZERS_PARALLELISM: false"
+    ],
+    "command": "pipenv run python secora/train.py --debug configs/cluster.yml --name debug_cluster_gpu4"
+}

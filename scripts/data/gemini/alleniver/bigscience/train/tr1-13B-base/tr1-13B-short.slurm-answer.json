@@ -1,0 +1,63 @@
+{
+    "application": "DeepSpeed",
+    "details": {
+        "software": {
+            "DeepSpeed": "Megatron-DeepSpeed-tr1-13B",
+            "launcher": "torch.distributed.launch",
+            "python": "python -u -m",
+            "training_script": "pretrain_gpt.py"
+        },
+        "resources": {
+            "nodes": 2,
+            "gpus_per_node": 4,
+            "cores_per_task": 40,
+            "slurm_account": "six@v100",
+            "slurm_constraint": "v100-32g",
+            "slurm_job_name": "tr1-13B-short",
+            "slurm_time": "20:00:00",
+            "slurm_output": "%x-%j.out"
+        },
+        "parameters": {
+            "micro_batch_size": 1,
+            "global_batch_size": 64,
+            "nlayers": 8,
+            "nhidden": 512,
+            "nheads": 8,
+            "ffn_hidden_size": 2048,
+            "seq_len": 512,
+            "vocab_size": 50257,
+            "save_interval": 2000,
+            "optimizer": "adam",
+            "adam_beta1": 0.9,
+            "adam_beta2": 0.999,
+            "adam_eps": 1e-08,
+            "lr": 0.0001,
+            "min_lr": 1e-05,
+            "lr_decay_style": "cosine",
+            "lr_decay_samples": 126953125,
+            "lr_warmup_samples": 216320,
+            "clip_grad": 1.0,
+            "weight_decay": 0.1,
+            "exit_duration_in_mins": 1190,
+            "zero_stage": 1,
+            "deepspeed_activation_checkpointing": true,
+            "tensor_model_parallel_size": 2,
+            "pipeline_model_parallel_size": 2,
+            "data_impl": "mmap",
+            "split": "949,50,1",
+            "distributed_backend": "nccl"
+        },
+        "data": {
+            "data_path": "$six_ALL_CCFRWORK/datasets-custom/oscar-en/meg-gpt2_text_document",
+            "vocab_file": "$MEGATRON_DEEPSPEED_REPO/data/gpt2-vocab.json",
+            "merge_file": "$MEGATRON_DEEPSPEED_REPO/data/gpt2-merges.txt"
+        },
+        "paths": {
+            "data_output_path": "$six_ALL_CCFRSCRATCH/checkpoints/tr1-13B-test",
+            "checkpoint_path": "$DATA_OUTPUT_PATH/checkpoints",
+            "tensorboard_path": "$DATA_OUTPUT_PATH/tensorboard",
+            "codecarbon_path": "$DATA_OUTPUT_PATH/codecarbon",
+            "logs_path": "$DATA_OUTPUT_PATH/logs"
+        }
+    }
+}

@@ -1,0 +1,33 @@
+{
+    "application": "SLURM",
+    "details": {
+        "job_name": "sft",
+        "output_file": "run_outputs/sft.%j.out",
+        "cores": 12,
+        "runtime": "24:00:00",
+        "gpu": "a100_40gb",
+        "partition": "brown,red",
+        "mail_type": "BEGIN,FAIL,END",
+        "account": "researchers",
+        "software": [
+            "poetry",
+            "pip",
+            "torch",
+            "python",
+            "accelerate"
+        ],
+        "libraries": [
+            "src.social_llama.training.sft"
+        ],
+        "commands": [
+            "hostname",
+            "nvidia-smi",
+            "module load poetry/1.5.1-GCCcore-12.3.0",
+            "poetry shell",
+            "poetry install",
+            "pip install torch",
+            "python -m src.social_llama.training.sft",
+            "accelerate launch src/social_llama/training/sft.py"
+        ]
+    }
+}

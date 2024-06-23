@@ -1,0 +1,21 @@
+{
+    "application": "PIConGPU",
+    "details": {
+        "batch_system": "LSF (bsub)",
+        "environment_profile": "${PROJWORK}/!TBG_nameProject/${USER}/picongpu.profile",
+        "mpi_implementation": "OpenMPI",
+        "gpu_per_node": 6,
+        "cores_per_gpu": 7,
+        "command": "jsrun --nrs !TBG_tasks --tasks_per_rs 1 --cpu_per_rs !TBG_coresPerGPU --gpu_per_rs 1 --latency_priority GPU-CPU --bind rs --smpiargs=\"-gpu\" !TBG_dstPath/input/bin/picongpu --mpiDirect !TBG_author !TBG_programParams",
+        "environment_variables": {
+            "OMP_NUM_THREADS": "!TBG_coresPerGPU",
+            "OMPI_MCA_coll_ibm_skip_barrier": "true"
+        },
+        "dependencies": [
+            "OpenMPI",
+            "CUDA",
+            "MPI",
+            "LSF"
+        ]
+    }
+}

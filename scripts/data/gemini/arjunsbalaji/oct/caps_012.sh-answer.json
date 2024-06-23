@@ -1,0 +1,29 @@
+{
+    "application": "Singularity",
+    "details": {
+        "resource_requirements": {
+            "nodes": 1,
+            "time": "02:00:00",
+            "partition": "gpuq",
+            "constraint": "p100",
+            "account": "pawsey0271",
+            "gres": "gpu:1",
+            "mail_type": "END",
+            "mail_user": "21713337@student.uwa.edu.au"
+        },
+        "software_requirements": {
+            "singularity": "module load singularity",
+            "python": "python3",
+            "container_image": "$containerImage"
+        },
+        "environment_variables": {
+            "myRep": "$MYGROUP/singularity/oct_ca",
+            "containerImage": "$myRep/oct_ca_latest-fastai-skl-ski-mlflow-d2-opencv-coco.sif",
+            "projectDir": "$MYGROUP/projects",
+            "X_MEMTYPE_CACHE": "n"
+        },
+        "script_execution": {
+            "command": "srun --export=all -n 1 singularity exec -B $projectDir:/workspace --nv $containerImage python3 pawsey/caps_012.py"
+        }
+    }
+}

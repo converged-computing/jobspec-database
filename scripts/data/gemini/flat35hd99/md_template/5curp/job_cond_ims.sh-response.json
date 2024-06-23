@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"curp\",\n  \"details\": {\n    \"environment\": {\n      \"PBS\": true,\n      \"modules\": {\n        \"curp\": true,\n        \"ims\": true\n      },\n      \"prefix\": \"$TEMPLATE_PROJECT_PREFIX\",\n      \"tmp\": \"/ramd/users/$USER/$PBS_JOBID\"\n    },\n    \"resources\": {\n      \"nodes\": 1,\n      \"cpus\": 40,\n      \"mpiprocs\": 8,\n      \"ompthreads\": 5,\n      \"walltime\": \"167:00:00\"\n    },\n    \"output\": \"$prefix/5curp/output/$group_type/${run}_${smp}\",\n    \"input\": {\n      \"flux.nc\": \"$output/flux.nc\",\n      \"acf.nc\": \"$output/acf.nc\"\n    },\n    \"commands\": {\n      \"curp\": \"curp cal-tc --frame-range 1 50000 1 --average-shift 2 --dt 0.001 -a acf.nc -o $output/conductivity.dat flux.nc\"\n    }\n  }\n}\n```\n\n**Explanation:**\n\n* **Application:** The script uses the `curp` application, specifically the `cal-tc` command.\n* **Environment:** \n    * The script utilizes PBS (Portable Batch System) for job scheduling.\n    * It loads specific modules, `curp` and `ims`, likely for accessing libraries and dependencies.\n    * It utilizes a prefix variable, `$TEMPLATE_PROJECT_PREFIX`, which probably points to a directory containing project-specific files and utilities.\n    * It creates a temporary directory on the `ramd` filesystem for intermediate files.\n* **Resources:** The script requests specific resources from the PBS system:\n    * 1 node\n    * 40 CPUs\n    * 8 MPI processes\n    * 5 OpenMP threads\n    * A walltime of 167 hours\n* **Output:** The script produces output files in a directory structure defined by the variables `$prefix`, `$group_type`, `$run`, and `$smp`.\n* **Input:** The script requires input files named `flux.nc` and `acf.nc`, which are copied to the temporary directory.\n* **Commands:** The script uses the `mpirun` command to execute the `curp cal-tc` command with specified parameters for processing the `flux.nc` file.\n\n**In summary:**\n\nThe script uses the `curp` application to perform calculations on data stored in `flux.nc` files. It leverages PBS to manage job resources and utilize specific modules and temporary directories for efficient execution. \n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 428,
+        "candidates_token_count": 615,
+        "total_token_count": 1043,
+        "cached_content_token_count": 0
+    }
+}

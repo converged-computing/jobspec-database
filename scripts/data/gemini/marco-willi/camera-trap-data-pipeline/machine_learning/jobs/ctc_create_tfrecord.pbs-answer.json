@@ -1,0 +1,43 @@
+{
+    "application": "PBS",
+    "details": {
+        "resource_requirements": {
+            "walltime": "12:00:00",
+            "nodes": "1:ppn=24",
+            "queue": "small"
+        },
+        "software_requirements": {
+            "modules": [
+                "singularity",
+                "python3"
+            ],
+            "container": "docker://will5448/camera-trap-classifier:latest-cpu"
+        },
+        "script": {
+            "name": "create_tfrecord",
+            "command": "ctc.create_dataset",
+            "arguments": [
+                "-inventory",
+                "$DATA_INVENTORY_PATH",
+                "-output_dir",
+                "$TRAINING_DATA_PATH",
+                "-image_save_side_smallest",
+                "500",
+                "-image_save_quality",
+                "75",
+                "-split_by_meta",
+                "split_name",
+                "-remove_multi_label_records",
+                "-image_root_path",
+                "$IMAGE_ROOT_PATH",
+                "-process_images_in_parallel",
+                "-process_images_in_parallel_size",
+                "320",
+                "-processes_images_in_parallel_n_processes",
+                "24",
+                "-max_records_per_file",
+                "5000"
+            ]
+        }
+    }
+}

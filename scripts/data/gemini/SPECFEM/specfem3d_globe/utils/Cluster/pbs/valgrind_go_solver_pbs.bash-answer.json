@@ -1,0 +1,74 @@
+{
+    "application": "Valgrind",
+    "details": {
+        "software": [
+            "Valgrind",
+            "mpiexec",
+            "xspecfem3D"
+        ],
+        "resources": {
+            "nodes": 18,
+            "ppn": [
+                8,
+                6
+            ],
+            "walltime": "15:00:00",
+            "queue": "tromp",
+            "preloaded_library": "/my_valgrind_path/valgrind/lib/valgrind/libmpiwrap-x86-linux.so",
+            "environment_variables": {
+                "LD_PRELOAD": "/my_valgrind_path/valgrind/lib/valgrind/libmpiwrap-x86-linux.so",
+                "PBS_O_WORKDIR": "current working directory",
+                "BASEMPIDIR": "path specified in DATA/Par_file",
+                "NPROC_XI": "value specified in DATA/Par_file",
+                "NPROC_ETA": "value specified in DATA/Par_file",
+                "NCHUNKS": "value specified in DATA/Par_file",
+                "numnodes": "calculated based on NCHUNKS, NPROC_XI, NPROC_ETA",
+                "PBS_NODEFILE": "file containing node information",
+                "PBS_JOBID": "job identifier"
+            }
+        },
+        "data_files": [
+            "DATA/Par_file",
+            "DATA/STATIONS",
+            "DATA/CMTSOLUTION",
+            "*.f90",
+            "*.c",
+            "*.in",
+            "*.h",
+            "addr*.txt",
+            "list*.txt",
+            "OUTPUT_FILES/compute_nodes",
+            "OUTPUT_FILES/jobid",
+            "cachegrind.out.*"
+        ],
+        "output_files": [
+            "OUTPUT_FILES/job.o",
+            "OUTPUT_FILES/job.memory-leaks.o",
+            "OUTPUT_FILES/job.cache-misses.o"
+        ],
+        "commands": [
+            "cd $PBS_O_WORKDIR",
+            "mkdir -p OUTPUT_FILES",
+            "cp DATA/Par_file OUTPUT_FILES/",
+            "cp DATA/STATIONS OUTPUT_FILES/",
+            "cp DATA/CMTSOLUTION OUTPUT_FILES/",
+            "rm -rf OUTPUT_FILES/src",
+            "mkdir OUTPUT_FILES/src",
+            "cp -p *.f90 OUTPUT_FILES/src/",
+            "cp -p *.c OUTPUT_FILES/src/",
+            "cp -p *.in OUTPUT_FILES/src/",
+            "cp -p *.h OUTPUT_FILES/src/",
+            "cat $PBS_NODEFILE > OUTPUT_FILES/compute_nodes",
+            "echo \"$PBS_JOBID\" > OUTPUT_FILES/jobid",
+            "cp $BASEMPIDIR/addr*.txt OUTPUT_FILES/",
+            "cp $BASEMPIDIR/list*.txt OUTPUT_FILES/",
+            "sleep 2",
+            "LD_PRELOAD=$PRELOAD_LIB mpiexec -np $numnodes valgrind --leak-check=full $PWD/bin/xspecfem3D",
+            "cp OUTPUT_FILES/job.o OUTPUT_FILES/job.memory-leaks.o",
+            "sleep 2",
+            "LD_PRELOAD=$PRELOAD_LIB mpiexec -np $numnodes valgrind --tool=cachegrind $PWD/bin/xspecfem3D",
+            "cp OUTPUT_FILES/job.o OUTPUT_FILES/job.cache-misses.o",
+            "cp cachegrind.out.* OUTPUT_FILES/"
+        ]
+    }
+}

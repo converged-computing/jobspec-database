@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n\"application\": \"HYPRE\",\n\"details\": {\n\"software\": [\n\"HYPRE\",\n\"MPI\",\n\"OpenMP\",\n\"Slurm\"\n],\n\"resource_requirements\": {\n\"nodes\": 1,\n\"partition\": \"amd\",\n\"constraint\": \"amd7543&mhz-2800\",\n\"time\": \"06:00:00\",\n\"job_name\": \"ITER_SOLVERS\",\n\"exclusive\": true,\n\"cpu_info\": {\n\"model_name\": \"AMD EPYC 7543\",\n\"socket\": 1,\n\"cores_per_socket\": 64,\n\"NUMA_nodes\": 1\n}\n},\n\"environment\": {\n\"LD_LIBRARY_PATH\": \"${HOME}/HYPRE/build_amd/lib:${LD_LIBRARY_PATH}\",\n\"OMP_DISPLAY_ENV\": true,\n\"OMP_DISPLAY_AFFINITY\": true,\n\"OMP_NUM_THREADS\": [8, 16, 32]\n}\n}\n}\n```\n\nThis script runs the **HYPRE** iterative solver library.\n\nHere are the details about the software and resource requirements:\n\n**Software:**\n\n- **HYPRE:** A high-performance library for solving large sparse linear systems of equations.\n- **MPI:** Message Passing Interface, a standard for parallel programming.\n- **OpenMP:** A multi-threading API for shared memory parallelism.\n- **Slurm:** A workload manager used to manage the execution of jobs on a cluster.\n\n**Resource Requirements:**\n\n- **Nodes:** 1 node of the cluster is requested for this job.\n- **Partition:** The job is scheduled to run on the \"amd\" partition of the cluster.\n- **Constraint:** The job requires access to nodes with AMD EPYC 7543 processors with a minimum clock speed of 2800 MHz.\n- **Time:** The job is allowed to run for a maximum of 6 hours (06:00:00).\n- **Job Name:** The job is named \"ITER_SOLVERS\" for easier identification.\n- **Exclusive:** This flag ensures that no other job will be allowed to run on the same node during the execution of this job.\n- **CPU Info:** The script prints information about the CPU architecture, number of sockets, cores per socket, and NUMA nodes to help determine the hardware configuration.\n\n**Environment:**\n\n- **LD_LIBRARY_PATH:** This environment variable is set to ensure that the HYPRE library can be found during runtime.\n- **OMP_DISPLAY_ENV:** This variable is set to true to enable the display of OpenMP environment variables.\n- **OMP_DISPLAY_AFFINITY:** This variable is set to true to enable the display of information about the OpenMP thread affinity settings.\n- **OMP_NUM_THREADS:** The script runs the solver with three different thread counts: 8, 16, and 32.\n\n**Additional Notes:**\n\n- The script uses the Slurm batch system to submit the job. \n- The script sets up the environment variables needed to run the HYPRE solver.\n- The script executes the HYPRE solver with different numbers of threads using the `mpirun` command. \n- The `-report-bindings` and `--map-by ppr:2:node:pe=32` options tell `mpirun` to report how processes are bound to the CPU cores and to map each MPI process to a specific processor on the node.\n- The `-x OMP_PROC_BIND=spread` option tells `mpirun` to spread OpenMP threads across the cores allocated to each MPI process. \n- The script also provides options to control the logging level, the number of iterations, and the tolerance for the solver.\n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 1270,
+        "candidates_token_count": 835,
+        "total_token_count": 2105,
+        "cached_content_token_count": 0
+    }
+}

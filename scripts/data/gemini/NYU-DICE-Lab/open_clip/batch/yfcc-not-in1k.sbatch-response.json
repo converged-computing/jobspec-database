@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"SLURM\",\n  \"details\": {\n    \"scheduler\": \"SLURM\",\n    \"nodes\": 1,\n    \"tasks_per_node\": 8,\n    \"cpus_per_task\": 8,\n    \"time\": \"47:59:00\",\n    \"memory\": \"256GB\",\n    \"gpus\": \"mi50:8\",\n    \"job_name\": \"yfcc-not-in1k\",\n    \"dependency\": \"afterany:22179172\",\n    \"mail_type\": \"BEGIN,END\",\n    \"mail_user\": \"bf996@nyu.edu\",\n    \"modules\": \"purge\",\n    \"environment_variables\": [\n      \"OMP_NUM_THREADS=$SLURM_CPUS_PER_TASK\",\n      \"MASTER_PORT=$(shuf -i 10000-65500 -n 1)\",\n      \"MASTER_ADDR=\\\"$(hostname -s).hpc.nyu.edu\\\"\"\n    ],\n    \"run_command\": \"srun --cpu_bind=v --accel-bind=v /bin/bash src/script/run-singularity-rocm.bash /bin/bash -c 'export PYTHONPATH=\\\"$PYTHONPATH:$PWD/src\\\"; python src/training/main.py --report-to wandb --train-data=\\\"/scratch/bf996/open_clip/yfcc-subsets/yfcc_not_in1k_10264405.csv\\\" --csv-separator \\\",\\\" --imagenet-a \\\"/imagenet-a\\\" --imagenet-r \\\"/imagenet-r\\\" --imagenet-val \\\"/imagenet/val/\\\" --imagenet-v2 \\\"/scratch/bf996/datasets\\\" --imagenet-s \\\"/imagenet-sketch\\\" --zeroshot-frequency=8 --save-frequency 4 --warmup 2000 --batch-size=256 --epochs=64 --workers=8 --model=RN50 --resume \\\"/scratch/bf996/open_clip/logs/yfcc-not-in1k-ep1-19/checkpoints/epoch_16.pt\\\" --local-loss --gather-with-grad'\",\n    \"software\": [\n      \"Singularity\",\n      \"Python\",\n      \"OpenCLIP\"\n    ],\n    \"data\": [\n      \"/scratch/bf996/open_clip/yfcc-subsets/yfcc_not_in1k_10264405.csv\",\n      \"/imagenet-a\",\n      \"/imagenet-r\",\n      \"/imagenet/val/\",\n      \"/scratch/bf996/datasets\",\n      \"/imagenet-sketch\",\n      \"/scratch/bf996/open_clip/logs/yfcc-not-in1k-ep1-19/checkpoints/epoch_16.pt\"\n    ]\n  }\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 577,
+        "candidates_token_count": 703,
+        "total_token_count": 1280,
+        "cached_content_token_count": 0
+    }
+}

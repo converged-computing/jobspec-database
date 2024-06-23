@@ -1,0 +1,28 @@
+{
+    "application": "SLURM",
+    "details": {
+        "job_name": "Cifar10-1node",
+        "output_file": "Cifar10-1node.out",
+        "nodes": 1,
+        "tasks_per_node": 1,
+        "queue": "normal",
+        "run_time": "01:00:00",
+        "project": "Intel-TensorFlow",
+        "environment_variables": {
+            "OMP_NUM_THREADS": 64,
+            "KMP_BLOCKTIME": 0,
+            "KMP_SETTINGS": 1,
+            "KMP_AFFINITY": "granularity=fine,verbose,compact,1,0"
+        },
+        "modules": "phdf5",
+        "data_preparation": {
+            "directory": "/dev/shm/keras",
+            "source_file": "/home1/apps/keras/data/datasets.tar",
+            "target_file": "/dev/shm/keras/datasets.tar",
+            "extraction": "tar xf /dev/shm/keras/datasets.tar -C /dev/shm/keras"
+        },
+        "execution": {
+            "command": "ibrun -np 1 python cifar10_resnet_keras.py"
+        }
+    }
+}

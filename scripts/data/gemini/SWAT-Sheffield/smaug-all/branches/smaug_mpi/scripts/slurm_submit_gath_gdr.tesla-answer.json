@@ -1,0 +1,40 @@
+{
+    "application": "smaug",
+    "details": {
+        "environment": {
+            "module_loads": [
+                "default-wilkes",
+                "cuda/6.5",
+                "mvapich2-GDR/gnu/2.0-8_cuda-6.5"
+            ],
+            "environment_variables": {
+                "MV2_USE_CUDA": "1",
+                "MV2_USE_GPUDIRECT": "1",
+                "MV2_RAIL_SHARING_POLICY": "FIXED_MAPPING",
+                "MV2_PROCESS_TO_RAIL_MAPPING": "mlx5_0:mlx5_1",
+                "MV2_RAIL_SHARING_LARGE_MSG_THRESHOLD": "1G",
+                "MV2_CPU_BINDING_LEVEL": "SOCKET",
+                "MV2_CPU_BINDING_POLICY": "SCATTER",
+                "CUDA_VISIBLE_DEVICE": "0"
+            }
+        },
+        "slurm_settings": {
+            "job_name": "sgather_ngdr",
+            "project": "SHEFFIELD-GPU",
+            "nodes": 2,
+            "tasks": 4,
+            "wall_time": "02:00:00",
+            "mail_type": "FAIL",
+            "partition": "tesla"
+        },
+        "mpi_settings": {
+            "processes_per_node": 2,
+            "openmp_threads": 1,
+            "pinning_strategy": {
+                "domain": "omp:compact",
+                "order": "scatter"
+            }
+        },
+        "application_launch": "mpirun -ppn $mpi_tasks_per_node -np $np $options $application"
+    }
+}

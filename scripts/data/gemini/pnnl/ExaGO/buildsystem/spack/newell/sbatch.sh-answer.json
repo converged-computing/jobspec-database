@@ -1,0 +1,29 @@
+{
+    "application": "Spack",
+    "details": {
+        "resource_requirements": {
+            "partition": "newell8",
+            "nodes": 1,
+            "tasks_per_node": 128,
+            "job_name": "exago_spack",
+            "walltime": "240"
+        },
+        "dependencies": {
+            "spack": "develop",
+            "exago": "develop",
+            "hiop": "develop",
+            "coinhsl-archive-2019.05.21.tar.gz": "/qfs/projects/earthshot/src/coinhsl-archive-2019.05.21.tar.gz"
+        },
+        "configuration": {
+            "MY_CLUSTER": "newell",
+            "SPACKENV": "environment variable"
+        },
+        "actions": {
+            "load_spack": ". buildsystem/spack/load_spack.sh",
+            "develop_exago": "spack -e $SPACKENV develop --no-clone --path=$(pwd) exago@develop",
+            "clone_hiop": "spack -e $SPACKENV develop --clone --force FORCE --path=$(pwd)/hiop_dev hiop@develop",
+            "update_submodules": "git submodule update --init --recursive",
+            "configure_modules": "./buildsystem/spack/configure_modules.sh 128"
+        }
+    }
+}

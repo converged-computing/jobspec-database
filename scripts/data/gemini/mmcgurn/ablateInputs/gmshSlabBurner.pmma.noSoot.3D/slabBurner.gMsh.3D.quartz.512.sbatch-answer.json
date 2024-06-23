@@ -1,0 +1,38 @@
+{
+    "application": "Ablate",
+    "details": {
+        "resource_manager": "Slurm",
+        "nodes": 512,
+        "job_name": "gMshNoSoot",
+        "walltime": "24:00:00",
+        "partition": "pbatch",
+        "account": "sunyb",
+        "email": "mtmcgurn@buffalo.edu",
+        "modules": [
+            "clang/14.0.6-magic",
+            "cmake/3.25.2"
+        ],
+        "environment_variables": {
+            "PETSC_DIR": "/usr/workspace/mcgurn4/petsc",
+            "PETSC_ARCH": "arch-ablate-opt",
+            "PKG_CONFIG_PATH": "${PETSC_DIR}/${PETSC_ARCH}/lib/pkgconfig:$PKG_CONFIG_PATH",
+            "HDF5_ROOT": "${PETSC_DIR}/${PETSC_ARCH}",
+            "DM_REFINE": "1",
+            "TITLE": "lowG-gMsh-512n-dm$DM_REFINE-pmma-$SLURM_JOBID",
+            "FILE": "/p/lustre2/ubchrest/ablateInputs/gmshSlabBurner.pmma.noSoot.3D/slabBurner3D.noSoot.lowG.3_8_23.yaml"
+        },
+        "parallel_execution": "srun -n18432",
+        "command": "/usr/workspace/mcgurn4/ablateOpt/ablate",
+        "arguments": [
+            "--input",
+            "$FILE",
+            "-yaml::environment::title",
+            "$TITLE",
+            "-yaml::timestepper::domain::options::dm_refine",
+            "$DM_REFINE",
+            "-build_twosided",
+            "redscatter"
+        ],
+        "temp_directory": "tmp_$SLURM_JOBID"
+    }
+}

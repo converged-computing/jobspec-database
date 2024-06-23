@@ -1,0 +1,30 @@
+{
+    "application": "Singularity",
+    "details": {
+        "container": "camera-trap-classifier:latest-gpu",
+        "command": "ctc.predict",
+        "arguments": {
+            "-csv_path": "$TO_PREDICT_PATH",
+            "-csv_id_col": "capture_id",
+            "-csv_images_cols": "image1 image2 image3",
+            "-csv_images_root_path": "$IMAGES_ROOT",
+            "-export_file_type": "json",
+            "-results_file": "$OUTPUT_PATH",
+            "-model_path": "$MODEL_PATH",
+            "-class_mapping_json": "$MODEL_CLASS_MAPPING",
+            "-pre_processing_json": "$MODEL_PRE_PROCESSING",
+            "-aggregation_mode": "mean"
+        },
+        "resources": {
+            "walltime": "24:00:00",
+            "nodes": "1",
+            "ppn": "24",
+            "gpus": "2",
+            "queue": "k40"
+        },
+        "modules": [
+            "singularity",
+            "python3"
+        ]
+    }
+}

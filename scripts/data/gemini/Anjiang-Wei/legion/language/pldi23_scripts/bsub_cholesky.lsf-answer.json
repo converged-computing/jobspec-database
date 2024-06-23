@@ -1,0 +1,69 @@
+{
+    "application": "Legion",
+    "details": {
+        "software": {
+            "gcc": "7.3.1",
+            "cmake": "3.14.5",
+            "cuda": "11.7.0"
+        },
+        "resources": {
+            "nodes": {
+                "max": 16,
+                "min": 1,
+                "calculated": "(($LSB_DJOB_NUMPROC - 1) / 40)"
+            },
+            "gpus": 0,
+            "cpus": 10,
+            "libraries": [
+                "$PWD"
+            ]
+        },
+        "parameters": {
+            "repeat": 5,
+            "csize": "150000",
+            "rsize": "512",
+            "gsize": "0",
+            "level": "5",
+            "fsize": "15000",
+            "zsize": "2048"
+        },
+        "execution": {
+            "command": "jsrun",
+            "arguments": [
+                "-b",
+                "none",
+                "-c",
+                "ALL_CPUS",
+                "-g",
+                "ALL_GPUS",
+                "-r",
+                "1",
+                "-n",
+                "$n",
+                "$root_dir/cholesky",
+                "-nn",
+                "$(( $n * 4096 ))",
+                "-p",
+                "16"
+            ],
+            "options": {
+                "ori": {
+                    "cmd": [
+                        "oricmd",
+                        "ori_wrapper",
+                        "ori_prof"
+                    ],
+                    "subfolder": "ori"
+                },
+                "dsl": {
+                    "cmd": [
+                        "dslcmd",
+                        "dsl_wrapper",
+                        "dsl_prof"
+                    ],
+                    "subfolder": "dsl"
+                }
+            }
+        }
+    }
+}

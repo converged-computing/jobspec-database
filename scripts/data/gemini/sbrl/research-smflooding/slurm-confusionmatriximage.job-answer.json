@@ -1,0 +1,41 @@
+{
+    "application": "Slurm",
+    "details": {
+        "job_name": "TwImgCfM",
+        "nodes": 1,
+        "tasks_per_node": 4,
+        "gpu_resources": "gpu:1",
+        "output_file": "%j.%N.%a.cfmatrix-image.out.log",
+        "error_file": "%j.%N.%a.cfmatrix-image.err.log",
+        "partition": "gpu05,gpu",
+        "time_limit": "12:00:00",
+        "memory": "25600",
+        "modules": [
+            "utilities/multi",
+            "readline/7.0",
+            "gcc/10.2.0",
+            "cuda/11.5.0",
+            "python/anaconda/4.6/miniconda/3.7"
+        ],
+        "environment_variables": [
+            "CHECKPOINT",
+            "INPUT",
+            "CONFIG",
+            "POSTFIX"
+        ],
+        "python_environment": "py38",
+        "python_requirements": "requirements.txt",
+        "python_script": "src/confusion_matrix_image.py",
+        "arguments": [
+            "--config",
+            "${CONFIG}",
+            "--input-tweets",
+            "${INPUT}",
+            "--output",
+            "${target_output}",
+            "--only-gpu",
+            "--model",
+            "${CHECKPOINT}"
+        ]
+    }
+}

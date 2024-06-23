@@ -1,0 +1,37 @@
+{
+    "application": "Singularity",
+    "details": {
+        "resource_requirements": {
+            "nodes": 1,
+            "cpu_cores": 5,
+            "gpu_count": 1,
+            "memory": "16gb",
+            "walltime": "00:05:00",
+            "queue": "gpu",
+            "project": "12001577"
+        },
+        "software_dependencies": {
+            "cuda": "10.1",
+            "singularity": "latest version"
+        },
+        "script_execution": {
+            "command": "python /mnt/xquickruns.py",
+            "arguments": [
+                "--scoremap_root=xresearchlog/resnet50_cam_ImageNet_test/",
+                "--dataset_name ILSVRC",
+                "--split test",
+                "--scoremap_mode resnet50_cam",
+                "--metadata_root=metadata/",
+                "--mask_root=dataset/",
+                "--cam_curve_interval=0.01",
+                "--debug_toggles 100000",
+                "--ROOT_DIR wsolevaluation-master"
+            ],
+            "working_directory": "$PBS_O_WORKDIR",
+            "mounted_volume": {
+                "source": "wsolevaluation-master/",
+                "target": "/mnt"
+            }
+        }
+    }
+}

@@ -1,0 +1,36 @@
+{
+    "application": "SLURM",
+    "details": {
+        "resource_requirements": {
+            "time": "10:00:00",
+            "account": "def-descotea",
+            "gres": "gpu:1",
+            "cpus_per_task": 4
+        },
+        "output_logging": {
+            "stdout": "/home/jord2201/logs/$TASKMAN_NAME.o%j",
+            "stderr": "/home/jord2201/logs/$TASKMAN_NAME.e%j"
+        },
+        "software_dependencies": {
+            "singularity": "loaded via module",
+            "python": "implicitly required for vslic_eval_model.py execution",
+            "bash": "script execution"
+        },
+        "script_execution": {
+            "command": "vslic_run_in_singularity.sh",
+            "arguments": [
+                "--data-mount-path",
+                "${SCRATCH}/vslic_test_dir",
+                "--venv-mount-path",
+                "${SCRATCH}/vslic_test_venv_3",
+                "--code-mount-path",
+                "${HOME}/git/repositories/vslic",
+                "--singularity-image",
+                "${SCRATCH}/vslic-3.sif",
+                "vslic_eval_model.py",
+                "-c",
+                "${SCRATCH}/vslic_test_dir/configs/$TASKMAN_ARGS"
+            ]
+        }
+    }
+}

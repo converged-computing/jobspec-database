@@ -1,0 +1,68 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"LAMMPS\",\n  \"details\": {\n    \"software\": [\n      \"LAMMPS\",\n      \"SLURM\",\n      \"podman\",\n      \"MPICH\",\n      \"kokkos\",\n      \"gtl\"\n    ],\n    \"resources\": [\n      \"GPU\",\n      \"CPU\",\n      \"MPI\",\n      \"network\",\n      \"storage\"\n    ],\n    \"environment\": {\n      \"PODMAN_IMAGE\": \"registry.nersc.gov/das/exaalt:benchmark\",\n      \"benchmark_dir\": \"/pscratch/sd/s/stephey/exaalt-in-shifter-for-perlmutter/LAMMPS_Benchmarks/perlmutter-mpich/example-scaling-snapc\",\n      \"PMI_MMAP_SYNC_WAIT_TIME\": \"300\",\n      \"MPICH_GPU_SUPPORT_ENABLED\": \"1\",\n      \"gpus_per_node\": \"4\",\n      \"exe\": \"/opt/LAMMPS_INSTALL/bin/lmp\",\n      \"input\": \"-pk kokkos newton on neigh half -k on g $gpus_per_node -sf kk -in in.run\"\n    },\n    \"execution\": {\n      \"command\": \"time srun podman-hpc.py run --mpich --gpu --rm --env 'MPICH_GPU_SUPPORT_ENABLED=1' --env 'LD_PRELOAD=/opt/udiImage/modules/mpich/libmpi_gtl_cuda.so.0' --env 'OMP_NUM_THREADS' --env 'LD_LIBRARY_PATH=/opt/LAMMPS_INSTALL/lib64:/opt/udiImage/modules/mpich:/opt/udiImage/modules/mpich/dep' -v /tmp/:/run/nvidia-persistenced --workdir /opt/workdir -v $benchmark_dir/$jobdir:/opt/workdir $PODMAN_IMAGE $exe $input -log log._NREP_\"\n    }\n  }\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "citation_metadata": {
+                "citation_sources": [
+                    {
+                        "start_index": 300,
+                        "end_index": 482,
+                        "uri": "https://github.com/NERSC/sc22-canopie-hpc-benchmarks",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 537,
+                        "end_index": 728,
+                        "uri": "https://github.com/NERSC/sc22-canopie-hpc-benchmarks",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 825,
+                        "end_index": 1155,
+                        "uri": "https://github.com/NERSC/sc22-canopie-hpc-benchmarks",
+                        "license_": ""
+                    }
+                ]
+            },
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 717,
+        "candidates_token_count": 467,
+        "total_token_count": 1184,
+        "cached_content_token_count": 0
+    }
+}

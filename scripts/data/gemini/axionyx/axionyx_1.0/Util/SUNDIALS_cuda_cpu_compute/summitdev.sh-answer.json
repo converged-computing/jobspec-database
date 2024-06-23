@@ -1,0 +1,36 @@
+{
+    "application": "LSF",
+    "details": {
+        "resources": {
+            "nodes": 1,
+            "processors": 1,
+            "walltime": "8 hours",
+            "queue": "CSC308"
+        },
+        "modules": [
+            "pgi/18.4",
+            "cuda"
+        ],
+        "libraries": {
+            "MPICH_RDMA_ENABLED_CUDA": 1
+        },
+        "environment": {
+            "OMP_NUM_THREADS": 1,
+            "LD_LIBRARY_PATH": "$CRAY_LD_LIBRARY_PATH:$LD_LIBRARY_PATH"
+        },
+        "executable": "main3d.pgi.ex",
+        "input_files": [
+            "inputs",
+            "TREECOOL_middle",
+            "inputs_atomic"
+        ],
+        "run_command": "jsrun -n 1 -a 1 -g 1 -c 1 --bind=packed:1 --smpiargs=\"-gpu\" ./main3d.pgi.ex inputs",
+        "output_files": [
+            "nvprof.txt",
+            "nvprof${LSB_JOBID}.txt",
+            "nvprof-timeline-%p.nvvp",
+            "nvprof-metrics-kernel-%p.nvvp",
+            "nvprof-metrics-%p.nvvp"
+        ]
+    }
+}

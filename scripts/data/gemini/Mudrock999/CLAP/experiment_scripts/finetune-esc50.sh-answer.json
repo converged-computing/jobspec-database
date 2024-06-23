@@ -1,0 +1,83 @@
+{
+    "application": "SLURM",
+    "details": {
+        "resource_requirements": {
+            "partition": "gpu",
+            "job_name": "mclap",
+            "nodes": 1,
+            "tasks_per_node": 1,
+            "cpus_per_gpu": 6,
+            "gres": "gpu:1",
+            "exclude": "gpu-st-p4d-24xlarge-[23,30,31,108,115,134,135,183,185,186,187,188,275,277,374]"
+        },
+        "modules": {
+            "intelmpi": "latest"
+        },
+        "environment_variables": {
+            "LD_LIBRARY_PATH": "/opt/aws-ofi-nccl/lib:/opt/amazon/efa/lib64:/usr/local/cuda-11.0/efa/lib:/usr/local/cuda-11.0/lib:/usr/local/cuda-11.0/lib64:/usr/local/cuda-11.0:/opt/nccl/build/lib:/opt/aws-ofi-nccl-install/lib:/opt/aws-ofi-nccl/lib:$LD_LIBRARY_PATH",
+            "NCCL_PROTO": "simple",
+            "PATH": "/opt/amazon/efa/bin:$PATH",
+            "LD_PRELOAD": "/opt/nccl/build/lib/libnccl.so",
+            "FI_EFA_FORK_SAFE": 1,
+            "FI_LOG_LEVEL": 1,
+            "FI_EFA_USE_DEVICE_RDMA": 1,
+            "NCCL_DEBUG": "info",
+            "PYTHONFAULTHANDLER": 1,
+            "CUDA_LAUNCH_BLOCKING": 0,
+            "OMPI_MCA_mtl_base_verbose": 1,
+            "FI_EFA_ENABLE_SHM_TRANSFER": 0,
+            "FI_PROVIDER": "efa",
+            "FI_EFA_TX_MIN_CREDITS": 64,
+            "NCCL_TREE_THRESHOLD": 0,
+            "HOSTNAMES": "`scontrol show hostnames \"$SLURM_JOB_NODELIST\"`",
+            "MASTER_ADDR": "$(scontrol show hostnames \"$SLURM_JOB_NODELIST\" | head -n 1)",
+            "MASTER_PORT": 12802,
+            "COUNT_NODE": "`scontrol show hostnames \"$SLURM_JOB_NODELIST\" | wc -l`",
+            "TRANSFORMERS_CACHE": "/fsx/yusong/transformers_cache"
+        },
+        "software": {
+            "python": "evaluate.eval_linear_probe",
+            "libraries": [
+                "transformers",
+                "wandb"
+            ]
+        },
+        "data": {
+            "dataset_type": "webdataset",
+            "datasetnames": "esc50",
+            "datasetinfos": "train",
+            "class_label_path": "../class_labels/ESC50_class_labels_indices_space.json",
+            "openai-model-cache-dir": "/fsx/yusong/transformers_cache",
+            "pretrained": "/fsx/clap_logs/2022_10_14-04_05_14-model_PANN-14-lr_0.0001-b_160-j_6-p_fp32/checkpoints"
+        },
+        "parameters": {
+            "save_frequency": 50,
+            "save_top_performance": 3,
+            "save_most_recent": true,
+            "precision": "fp32",
+            "warmup": 0,
+            "batch_size": 160,
+            "lr": 0.0001,
+            "wd": 0.1,
+            "epochs": 100,
+            "workers": 4,
+            "use_bn_sync": true,
+            "freeze_text": true,
+            "amodel": "PANN-14",
+            "tmodel": "roberta",
+            "report_to": "wandb",
+            "wandb_notes": "10.14-finetune-esc50",
+            "seed": 3407,
+            "remotedata": true,
+            "logs": "/fsx/clap_logs",
+            "gather_with_grad": true,
+            "lp_loss": "ce",
+            "lp_metrics": "acc",
+            "lp_lr": 0.0001,
+            "lp_mlp": true,
+            "data_filling": "repeatpad",
+            "data_truncating": "rand_trunc",
+            "optimizer": "adam"
+        }
+    }
+}

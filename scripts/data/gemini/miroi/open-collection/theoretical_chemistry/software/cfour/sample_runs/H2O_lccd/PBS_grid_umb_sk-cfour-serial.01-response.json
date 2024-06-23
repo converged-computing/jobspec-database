@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"CFOUR\",\n  \"details\": {\n    \"software\": [\n      \"Intel 2013 compilers\",\n      \"Intel MKL 2013 math library\",\n      \"PGI compiler\",\n      \"OpenMPI\",\n      \"Python\",\n      \"CFOUR\"\n    ],\n    \"resources\": {\n      \"nodes\": \"1\",\n      \"ppn\": \"4\",\n      \"walltime\": \"5:00:00\",\n      \"memory\": \"4GB\",\n      \"queue\": \"batch\",\n      \"scratch_dir\": \"/mnt/local/$USER/$PBS_JOBID\"\n    },\n    \"environment_variables\": [\n      \"PROD_DIR\",\n      \"MKLROOT\",\n      \"LD_LIBRARY_PATH\",\n      \"PATH\",\n      \"PMIX_MCA_gds\",\n      \"OMP_NUM_THREADS\",\n      \"MKL_DYNAMIC\",\n      \"OMP_DYNAMIC\",\n      \"MKL_NUM_THREADS\",\n      \"CFOUR_NUM_CORES\"\n    ]\n  }\n}\n```\n\nThis script launches a quantum chemistry calculation using the CFOUR software package on a PBS (Portable Batch System) cluster. \n\nHere's a breakdown of the key parts:\n\n**PBS Directives:**\n\n* `#PBS -S /bin/bash`: Specifies the shell to use.\n* `#PBS -A UMB-ITMS-26110230082`: Specifies the accounting information for the job.\n* `#PBS -N C4s`: Sets the job name.\n* `#PBS -r n`: Makes the job non-rerunnable.\n* `#PBS -l nodes=1:ppn=4`: Requests one node with four processors per node.\n* `#PBS -l walltime=5:00:00`: Requests a maximum wall time of 5 hours.\n* `#PBS -l mem=4g`: Requests 4 GB of memory per node.\n* `#PBS -j oe`: Joins the standard output and standard error streams into one file.\n* `#PBS -q batch`: Submits the job to the \"batch\" queue.\n* `#PBS -M Miroslav.Ilias@umb.sk`: Sets the email address for job notifications.\n\n**Environment Setup:**\n\n* **Intel Compilers and MKL:** The script sources the necessary environment variables to activate Intel Fortran/C/C++ compilers and the Intel Math Kernel Library (MKL) for optimized mathematical operations.\n* **PGI Compiler:**  It also sources the environment for the PGI compiler, which is another common compiler for high-performance computing.\n* **OpenMPI:** The script sets up the environment variables for OpenMPI, a library for parallel communication, potentially for parallel execution of the CFOUR calculation.\n* **Python:**  The script verifies that Python is installed and checks its version.\n\n**CFOUR Execution:**\n\n* **Setting Environment Variables:** The script sets various environment variables: \n    * `OMP_NUM_THREADS`:  Determines the number of threads for OpenMP parallelization.\n    * `MKL_DYNAMIC`: Controls the dynamic threading behavior of MKL.\n    * `MKL_NUM_THREADS`: Sets the number of threads for MKL. \n    * `CFOUR_NUM_CORES`: (Possibly) sets the number of cores for CFOUR.\n* **Path Setup:** The script adds the `CFOUR/bin` directory to the `PATH` environment variable to ensure that the CFOUR executables can be found.\n* **Scratch Directory:** It creates a temporary working directory on the local scratch space for the job.\n* **Input File Linking:** The script links the CFOUR basis set files, input ZMAT file, and other necessary files into the scratch directory.\n* **CFOUR Execution:** The script finally runs the CFOUR calculation using the `xcfour` command.\n\n**Post-Execution Cleanup:**\n\n* The script copies the output files back to the home directory.\n* It then deletes the temporary scratch directory. \n\n**Important Considerations:**\n\n* **OpenMPI:** The comments about OpenMPI suggest that the script might be set up for parallel CFOUR calculations. However, the code doesn't explicitly call `mpirun` to launch a parallel job.\n* **Environment Variables:** The script uses various environment variables to configure the software execution. These variables can have significant impact on the performance and resource usage of the calculation.\n* **Memory and CPU Allocation:** The PBS directives control the allocation of memory and CPU resources. The exact memory and CPU requirements for the CFOUR calculation will depend on the specific chemical system being studied. \n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 1824,
+        "candidates_token_count": 1023,
+        "total_token_count": 2847,
+        "cached_content_token_count": 0
+    }
+}

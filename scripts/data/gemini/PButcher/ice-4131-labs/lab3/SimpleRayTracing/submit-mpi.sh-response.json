@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"SBATCH\",\n  \"details\": {\n    \"software\": [\n      \"cmake\",\n      \"mpi/intel\",\n      \"gcc\",\n      \"mpirun\",\n      \"lscpu\"\n    ],\n    \"resources\": {\n      \"nodes\": \"1-4\",\n      \"cpus_per_task\": \"1\",\n      \"ntasks_per_node\": \"1-40\",\n      \"time\": \"00:25:00 - 00:50:00\",\n      \"memory\": \"5GB - 600mb\"\n    },\n    \"files\": [\n      \"submit-MPI-$NODES-$process_number.sh\",\n      \"env-gnu.sh\",\n      \"bin-gnu/main-mpi\",\n      \"timing.csv\",\n      \"temp-mpi-$NODES-$process_number\",\n      \"timing-mpi-$NODES-$process_number.csv\"\n    ]\n  }\n}\n```\n\nThe script uses `sbatch` to submit jobs to a cluster using SLURM. It sets up a series of jobs to run an MPI application called `main-mpi`, varying the number of nodes and processes. \n\n**Key points:**\n\n* **SLURM:** The script relies on SLURM (Simple Linux Utility for Resource Management) to manage the cluster resources. It uses `sbatch` to submit jobs and defines various SLURM directives like `--nodes`, `--cpus-per-task`, `--ntasks-per-node`, `--time`, and `--mem`.\n* **MPI:** The script runs an MPI application, `main-mpi`. It uses `mpirun` to launch the application across multiple nodes and processes.\n* **Environment:** The script uses `module load` to load required modules like `cmake` and `mpi/intel`. It sources an environment file (`env-gnu.sh`) and uses `gcc` to determine the compiler version. \n* **Job Setup:** It generates shell scripts (`submit-MPI-$NODES-$process_number.sh`) with different SLURM settings and commands to run `main-mpi`. Each script also includes logging and timing information.\n* **Output:** The script creates output files `timing.csv`, `temp-mpi-$NODES-$process_number`, and `timing-mpi-$NODES-$process_number.csv` to store runtime and performance data. \n\nThis script is designed to perform a performance analysis of the `main-mpi` application across different node and process configurations on a SLURM cluster. \n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 1305,
+        "candidates_token_count": 566,
+        "total_token_count": 1871,
+        "cached_content_token_count": 0
+    }
+}

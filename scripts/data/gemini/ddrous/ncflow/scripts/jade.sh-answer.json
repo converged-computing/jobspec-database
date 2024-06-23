@@ -1,0 +1,38 @@
+{
+    "application": "SLURM",
+    "details": {
+        "resources": {
+            "nodes": 1,
+            "wallclock_time": "01:00:00",
+            "job_name": "nodepint",
+            "gpus": 1,
+            "output_folder": "./graphpint/tests/data"
+        },
+        "software": {
+            "jax_version": "0.4.7",
+            "cudnn": "11.2",
+            "tensorflow": "2.9.1",
+            "cuda": "11.1-gcc-9.1.0",
+            "python": "anaconda3",
+            "conda_env": "jaxenv"
+        },
+        "commands": [
+            "sbatch scripts/jade.sh",
+            "sacct -u rrn27-wwp02",
+            "srun --job-name \"GraphPinT\" --gres=gpu:1 --time 0:30:00 --pty bash -i",
+            "/jmain02/apps/docker/tensorflow -c",
+            "source /etc/profile.d/modules.sh",
+            "module load tensorflow/2.9.1",
+            "module load cuda/11.1-gcc-9.1.0",
+            "module load python/anaconda3",
+            "source activate base",
+            "conda activate jaxenv",
+            "srun --job-name \"NodeBias\" --gres=gpu:1 --time 7:30:00 --pty bash -i",
+            "module load cuda/11.1-gcc-9.1.0",
+            "nohup python main.py > tmp/nohup.log 2>&1 &",
+            "python3 ./scripts/jax_test.py",
+            "nvidia-smi",
+            "python3 graphpint/tests/jax_test.py"
+        ]
+    }
+}

@@ -1,0 +1,50 @@
+{
+    "application": "MPI",
+    "details": {
+        "resources": {
+            "walltime": "0:10:00",
+            "nodes": 1
+        },
+        "software": {
+            "mpiexec": "MPI execution environment",
+            "srun": "Slurm job launcher",
+            "aprun": "Cray Alpaka job launcher",
+            "gdb": "GNU debugger",
+            "valgrind": "Memory leak and error detection tool",
+            "dsymutil": "Symbol table utility"
+        },
+        "platforms": {
+            "TITAN": {
+                "queue": "csc242",
+                "job_name": "test",
+                "job_output": "oe"
+            },
+            "CORI": {
+                "partition": "debug",
+                "job_name": "my_job",
+                "job_output": "my_job.o%j"
+            },
+            "EDISON": {
+                "partition": "debug",
+                "job_name": "my_job",
+                "job_output": "my_job.o%j"
+            },
+            "BGQ": {
+                "queue": "SDAV",
+                "job_time": "60"
+            },
+            "LINUX": {
+                "mpiexec": "mpiexec -n $num_procs $exe",
+                "gdb": "mpiexec -n $num_procs xterm -e gdb -x gdb.run --args $exe",
+                "valgrind": "mpiexec -n $num_procs valgrind -q $exe",
+                "valgrind_leak": "mpiexec -n $num_procs valgrind -q --leak-check=yes $exe"
+            },
+            "MAC_OSX": {
+                "mpiexec": "mpiexec -l -n $num_procs $exe",
+                "gdb": "dsymutil $exe ; mpiexec -l -n $num_procs xterm -e gdb -x gdb.run --args $exe",
+                "valgrind": "dsymutil $exe ; mpiexec -n $num_procs valgrind -q $exe",
+                "valgrind_leak": "dsymutil $exe ; mpiexec -n $num_procs valgrind -q --leak-check=yes $exe"
+            }
+        }
+    }
+}

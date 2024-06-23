@@ -1,0 +1,29 @@
+{
+    "application": "SLURM",
+    "details": {
+        "resource_requirements": {
+            "nodes": 1,
+            "tasks_per_node": 2,
+            "cpus_per_task": 16,
+            "memory": "128GB",
+            "gpus": 2
+        },
+        "software_requirements": {
+            "modules": {
+                "rocm": "5.4.2",
+                "ucx": "1.13.1",
+                "ompi": "4.1.4"
+            },
+            "singularity_image": "/shared/apps/bin/namd2.15a2-20211101.sif"
+        },
+        "commands": [
+            "cp -r /examples ./examples-$$",
+            "singularity run --bind ./examples-$$:/examples-$$ --pwd /examples-$$ /shared/apps/bin/namd2.15a2-20211101.sif /opt/namd/bin/namd2 jac/jac.namd +p64 +setcpuaffinity +devices 0,1",
+            "singularity run --bind ./examples-$$:/examples-$$ --pwd /examples-$$ /shared/apps/bin/namd2.15a2-20211101.sif /opt/namd/bin/namd2 apoa1/apoa1.namd +p64 +setcpuaffinity +devices 0,1",
+            "singularity run --bind ./examples-$$:/examples-$$ --pwd /examples-$$ /shared/apps/bin/namd2.15a2-20211101.sif /opt/namd/bin/namd2 f1atpase/f1atpase.namd +p64 +setcpuaffinity +devices 0,1",
+            "singularity run --bind ./examples-$$:/examples-$$ --pwd /examples-$$ /shared/apps/bin/namd2.15a2-20211101.sif /opt/namd/bin/namd2 stmv/stmv.namd +p64 +setcpuaffinity +devices 0,1",
+            "cp -r ./examples-$$   $PWD/gpu2-$$-$SLURM_JOB_NODELIST-$SLURM_JOB_ID",
+            "rm -rf examples-$$/"
+        ]
+    }
+}

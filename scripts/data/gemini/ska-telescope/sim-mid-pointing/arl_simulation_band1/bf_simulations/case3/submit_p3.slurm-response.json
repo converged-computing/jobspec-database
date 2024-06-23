@@ -1,0 +1,68 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"dask\",\n  \"details\": {\n    \"software\": [\n      \"dask-scheduler\",\n      \"dask-worker\",\n      \"python\",\n      \"ssh\"\n    ],\n    \"resource_requirements\": {\n      \"nodes\": 16,\n      \"tasks\": 33,\n      \"memory\": \"16GB per worker\",\n      \"wallclock_time\": \"23:59:59\",\n      \"environment\": {\n        \"module purge\": true,\n        \"pythonpath\": \"ARL\",\n        \"dask_scheduler\": \"scheduler:8786\"\n      },\n      \"files\": {\n        \"hostfile\": \"hostfile.$JOBID\",\n        \"pointing_simulation.log\": \"pointing_simulation.log\",\n        \"pointing_simulation_distributed.py\": \"pointing_simulation_distributed.py\",\n        \"shared\": \"../../../shared\"\n      }\n    },\n    \"execution_method\": {\n      \"scheduler_launch\": \"ssh $host dask-scheduler --port=8786\",\n      \"worker_launch\": \"ssh $host dask-worker --host ${host} --nprocs 2 --nthreads 1 --memory-limit 16GB --local-directory /mnt/storage-ssd/tim/dask-workspace/${host} $scheduler:8786\",\n      \"application_launch\": \"python ../../../pointing_simulation_distributed.py --context s3sky --frequency 0.765e9 --rmax 1e5 --flux_limit 0.003 --show True --seed 18051955  --pbtype MID_FEKO_B1 --memory 32  --integration_time 10 --use_agg True --time_series wind --time_chunk 180 --time_range -0.05 0.05 --shared_directory ../../../shared | tee pointing_simulation.log\"\n    }\n  }\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 2,
+                    "blocked": false
+                }
+            ],
+            "citation_metadata": {
+                "citation_sources": [
+                    {
+                        "start_index": 791,
+                        "end_index": 944,
+                        "uri": "https://github.com/SKA-ScienceDataProcessor/rascil",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 981,
+                        "end_index": 1180,
+                        "uri": "https://github.com/ska-telescope/sim-mid-pointing",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 1150,
+                        "end_index": 1322,
+                        "uri": "https://github.com/ska-telescope/sim-mid-pointing",
+                        "license_": "BSD - 3 - Clause"
+                    }
+                ]
+            },
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 961,
+        "candidates_token_count": 463,
+        "total_token_count": 1424,
+        "cached_content_token_count": 0
+    }
+}

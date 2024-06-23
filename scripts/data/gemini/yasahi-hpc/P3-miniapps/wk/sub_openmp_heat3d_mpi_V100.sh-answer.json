@@ -1,0 +1,45 @@
+{
+    "application": "heat3d_mpi",
+    "details": {
+        "scheduler": "PBS",
+        "queue": "sg8",
+        "nodes": 1,
+        "cpus": 12,
+        "mpi_processes": 1,
+        "omp_threads": 12,
+        "gpus": 1,
+        "walltime": "01:00:00",
+        "project": "CityLBM@PG22010",
+        "modules": [
+            "cuda/11.0",
+            "gnu/7.4.0",
+            "nvidia/22.3",
+            "mpt/2.23-ga"
+        ],
+        "environment_variables": {
+            "MPI_SHEPHERD": "1",
+            "MPI_USE_CUDA": "1"
+        },
+        "mpi_command": "mpirun",
+        "executable": "./wrapper_mpt.sh",
+        "arguments": [
+            "../build/miniapps/heat3d_mpi/openmp/heat3d_mpi",
+            "--px",
+            "1",
+            "--py",
+            "1",
+            "--pz",
+            "1",
+            "--nx",
+            "512",
+            "--ny",
+            "512",
+            "--nz",
+            "512",
+            "--nbiter",
+            "1000",
+            "--freq_diag",
+            "0"
+        ]
+    }
+}

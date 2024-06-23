@@ -1,0 +1,40 @@
+{
+    "application": "MPI",
+    "details": {
+        "software": [
+            "PBS",
+            "mpiexec",
+            "conda",
+            "python",
+            "nvidia-smi",
+            "torchrun"
+        ],
+        "resources": [
+            "polaris",
+            "grand",
+            "GPU",
+            "MPI",
+            "OpenMP",
+            "CUDA"
+        ],
+        "configuration": {
+            "nodes": 2,
+            "walltime": "0:30:00",
+            "filesystems": "home:grand",
+            "queue": "debug-scaling",
+            "account": "STlearn",
+            "job_name": "debug_HCP_main_step3_per_loss",
+            "mpich_gpu_support": "enabled",
+            "nccl_collnet": "enabled",
+            "nccl_net_gdr_level": "PHB",
+            "conda_environment": "3DCNN",
+            "master_address": "hostname",
+            "ranks_per_node": "nvidia-smi -L | wc -l",
+            "total_ranks": "NNODES * NRANKS_PER_NODE",
+            "depth": 16,
+            "threads_per_rank": "8",
+            "affinity_script": "./scripts/polaris/set_affinity_gpu_polaris.sh",
+            "command": "python main.py --step 3 --batch_size_phase3 4 --exp_name per_loss  --image_path /lus/grand/projects/STlearn/HCP_MNI_to_TRs  --which_perceptual densenet3d --dataset_split_num 1 --model_weights_path_phase2 './experiments/S1200_transformer_reconstruction_sex_per_loss/S1200_transformer_reconstruction_sex_per_loss_epoch_14_batch_index_1118_BEST_val_loss.pth'"
+        }
+    }
+}

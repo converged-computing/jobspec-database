@@ -1,0 +1,40 @@
+{
+    "application": "TensorFlow",
+    "details": {
+        "software": [
+            "TensorFlow 1.15.0",
+            "cuDNN 7.6.3",
+            "Python 3.6.6",
+            "NCCL 2.4.7",
+            "OpenMPI",
+            "Horovod"
+        ],
+        "resources": {
+            "nodes": 4,
+            "cores": 16,
+            "gpu_partition": "gpu_titanrtx",
+            "runtime": "5-00:00:00",
+            "environment_variables": [
+                "OMP_NUM_THREADS=6",
+                "PATH=/sw/arch/Debian9/EB_production/2019/software/CUDA/10.0.130/:$PATH",
+                "TF_USE_CUDNN=0",
+                "NCCL_DEBUG=INFO",
+                "LD_LIBRARY_PATH",
+                "PATH",
+                "TF_USE_CUDNN"
+            ],
+            "mpi_options": [
+                "mpirun",
+                "-np 16",
+                "-npernode 4",
+                "-bind-to none",
+                "-x NCCL_DEBUG=INFO",
+                "-x LD_LIBRARY_PATH",
+                "-x PATH",
+                "-x TF_USE_CUDNN",
+                "-mca pml ob1",
+                "-mca btl ^openib"
+            ]
+        }
+    }
+}

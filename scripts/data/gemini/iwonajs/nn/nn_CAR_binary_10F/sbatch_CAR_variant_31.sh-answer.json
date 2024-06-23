@@ -1,0 +1,40 @@
+{
+    "application": "SLURM",
+    "details": {
+        "resources": {
+            "gpu": "1",
+            "cpus_per_task": "4",
+            "memory": "32000M",
+            "time": "03:00:00",
+            "account": "def-miranska"
+        },
+        "modules": [
+            "python/3.7.4",
+            "cuda",
+            "cudnn",
+            "scipy-stack"
+        ],
+        "virtual_environment": {
+            "name": "env",
+            "packages": [
+                "tensorflow_gpu"
+            ]
+        },
+        "script": {
+            "name": "run_terminal.py",
+            "arguments": [
+                "-n",
+                "$SLURM_ARRAY_TASK_ID",
+                "-u",
+                "10",
+                "-m",
+                "31",
+                "--chkpt",
+                "True",
+                "--flat",
+                "1"
+            ],
+            "output": "CAR_variant_31_$SLURM_ARRAY_TASK_ID.tar"
+        }
+    }
+}

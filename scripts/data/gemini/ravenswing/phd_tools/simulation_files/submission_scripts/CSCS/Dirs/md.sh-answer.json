@@ -1,0 +1,38 @@
+{
+    "application": "Gromacs",
+    "details": {
+        "resource_requirements": {
+            "time": "24 hours",
+            "nodes": 32,
+            "tasks_per_core": 1,
+            "tasks_per_node": 12,
+            "cpus_per_task": 1,
+            "partition": "normal",
+            "constraint": "gpu",
+            "account": "pr49"
+        },
+        "software_requirements": {
+            "gromacs_version": "loaded from EASYBUILD_PREFIX",
+            "daint-gpu_module": "loaded",
+            "OMP_NUM_THREADS": "set to $SLURM_CPUS_PER_TASK",
+            "CRAY_CUDA_MPS": "set to 1"
+        },
+        "input_files": [
+            "posre_lig.itp",
+            "posre_prot.itp",
+            "i.ndx",
+            "ligand*.itp",
+            "min.tpr",
+            "NPT2.cpt",
+            "$FN.top",
+            "NPT2ed.gro"
+        ],
+        "output_files": [
+            "md.tpr",
+            "md.cpt",
+            "md_1.cpt",
+            "md_prev.cpt",
+            "md_1_prev.cpt"
+        ]
+    }
+}

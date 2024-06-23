@@ -1,0 +1,38 @@
+{
+    "application": "Slurm",
+    "details": {
+        "resources": {
+            "nodes": 10,
+            "tasks_per_node": 40,
+            "queue": "batch",
+            "time": "07:50:00",
+            "account": "marine-cpu",
+            "partition": "orion",
+            "exclusive": true,
+            "ulimit": {
+                "stack_size": "unlimited",
+                "core_size": 0
+            }
+        },
+        "software": {
+            "main_job": "ww3_multi",
+            "manager_script": "jobmanager.sh",
+            "input_varsfuncts": "/work/noaa/marine/ricardo.campos/work/ww3runs/scripts/input_varsfuncts.sh",
+            "prep_windice": "/work/noaa/marine/ricardo.campos/work/ww3runs/scripts/stream${STRM}/prep_windice.sh",
+            "prep_multi": "/work/noaa/marine/ricardo.campos/work/ww3runs/scripts/stream${STRM}/prep_multi.sh",
+            "org_out": "/work/noaa/marine/ricardo.campos/work/ww3runs/scripts/stream${STRM}/org_out.sh",
+            "ww3_multi": "${WW3MAIN}/exe/ww3_multi"
+        },
+        "data": {
+            "restart_files": "${DIRRS}/stream${STRM}/${RENSM}/${NDATE}.030000.restart.${grid}",
+            "input_files": {
+                "wind": "NA",
+                "ice": "NA"
+            },
+            "output_files": {
+                "out_grd": "${DIROUT}/stream${STRM}/${ENSM}/out_grd.${NDATE}.${grid}",
+                "out_pnt": "${DIROUT}/stream${STRM}/${ENSM}/out_pnt.${NDATE}.${LMDEFS[4]}"
+            }
+        }
+    }
+}

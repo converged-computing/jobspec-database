@@ -1,0 +1,32 @@
+{
+    "application": "spack",
+    "details": {
+        "scheduler": "slurm",
+        "module_load": "slurm",
+        "spack_version": "0.17.3",
+        "spack_instance": "gpu",
+        "spack_instance_version": "b",
+        "spack_instance_dir": "/cm/shared/apps/spack/0.17.3/gpu/b",
+        "package": "valgrind@3.17.0",
+        "compiler": "gcc@10.2.0",
+        "variants": "+boost +mpi +only64bit +ubsan",
+        "dependencies": "^boost@1.77.0/$(spack find --format '{hash:7}' boost@1.77.0 % ${SPACK_COMPILER} +mpi ^intel-mpi@2019.10.317)",
+        "spec": "valgrind@3.17.0 % gcc@10.2.0 +boost +mpi +only64bit +ubsan ^boost@1.77.0/$(spack find --format '{hash:7}' boost@1.77.0 % ${SPACK_COMPILER} +mpi ^intel-mpi@2019.10.317)",
+        "slurm_job_name": "valgrind@3.17.0",
+        "slurm_account": "use300",
+        "slurm_reservation": "rocky8u7_testing",
+        "slurm_partition": "ind-gpu-shared",
+        "slurm_nodes": 1,
+        "slurm_tasks_per_node": 1,
+        "slurm_cpus_per_task": 10,
+        "slurm_mem": "93G",
+        "slurm_gpus": 1,
+        "slurm_time": "00:30:00",
+        "slurm_output": "%x.o%j.%N",
+        "local_scratch_dir": "/scratch/${USER}/job_${SLURM_JOB_ID}",
+        "tmpdir": "/scratch/${USER}/job_${SLURM_JOB_ID}",
+        "system_name": "expanse",
+        "slurm_job_script": "$(scontrol show job ${SLURM_JOB_ID} | awk -F= '/Command=/{print $2})",
+        "slurm_job_md5sum": "$(md5sum ${SLURM_JOB_SCRIPT})"
+    }
+}

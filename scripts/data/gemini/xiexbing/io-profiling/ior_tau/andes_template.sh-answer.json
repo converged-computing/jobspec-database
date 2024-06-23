@@ -1,0 +1,42 @@
+{
+    "application": "Slurm",
+    "details": {
+        "resource_requirements": {
+            "memory": "0",
+            "time": "1:00:00",
+            "nodes": "1",
+            "account": "stf008"
+        },
+        "software_dependencies": {
+            "modules": [
+                "hdf5",
+                "tau_exec"
+            ],
+            "executables": [
+                "/gpfs/alpine/stf008/scratch/bing/ior_tau/src/ior"
+            ],
+            "environment_variables": {
+                "PATH": "/gpfs/alpine/stf008/scratch/bing/hacc_io/tau/tau2/x86_64/bin:$PATH"
+            }
+        },
+        "script_logic": {
+            "description": "The script runs four I/O benchmarks using the 'ior' tool, each with different file formats and operations (POSIX write, POSIX read, HDF5 write, HDF5 read). The script utilizes the 'tau_exec' tool for performance analysis. It leverages Slurm for job submission and resource management. ",
+            "steps": [
+                "Unload darshan-runtime module",
+                "Load hdf5 module",
+                "Set path to IOR executable",
+                "Clean up previous files and directories",
+                "List loaded modules",
+                "Create data directory and logs directory",
+                "Run POSIX write benchmark with tau_exec and store output in logs/posix_write",
+                "Move skel files to tau_log/posix_write",
+                "Run POSIX read benchmark with tau_exec and store output in logs/posix_read",
+                "Move skel files to tau_log/posix_read",
+                "Run HDF5 write benchmark with tau_exec and store output in logs/hdf5_write",
+                "Move skel files to tau_log/hdf5_write",
+                "Run HDF5 read benchmark with tau_exec and store output in logs/hdf5_read",
+                "Move skel files to tau_log/hdf5_read"
+            ]
+        }
+    }
+}

@@ -1,0 +1,67 @@
+{
+    "application": "DeepSpeed",
+    "software": [
+        "PyTorch",
+        "Deepspeed",
+        "WandB",
+        "Bash"
+    ],
+    "resources": {
+        "nodes": 1,
+        "tasks_per_node": 8,
+        "cpus_per_task": 4,
+        "memory_per_cpu": "20G",
+        "gpus_per_node": 8,
+        "partition": "pol"
+    },
+    "libraries": [
+        "transformers",
+        "datasets",
+        "accelerate"
+    ],
+    "configuration": {
+        "zero_optimization": {
+            "stage": 2
+        },
+        "fp16": {
+            "enabled": true
+        },
+        "activation_checkpointing": {
+            "partition_activations": true,
+            "contiguous_memory_optimization": true,
+            "number_checkpoints": 20
+        },
+        "gradient_clipping": 1,
+        "train_micro_batch_size_per_gpu": 2
+    },
+    "data": {
+        "train_file": "../../workspace/finetune_ziya_llama13b/data/small_train.json",
+        "val_file": "../../workspace/finetune_ziya_llama13b/data/small_valid.json",
+        "test_file": "../../workspace/finetune_ziya_llama13b/data/small_test.json"
+    },
+    "model": {
+        "model_path": "../../workspace/llama13b_fs",
+        "tokenizer_path": "../../workspace/llama13b_fs",
+        "learning_rate": "1e-4",
+        "min_learning_rate": "1e-5",
+        "weight_decay": 0.1,
+        "warmup_ratio": 0.1,
+        "adam_beta1": 0.9,
+        "adam_beta2": 0.95,
+        "max_seq_length": 512,
+        "model_parallel_size": 1
+    },
+    "training": {
+        "max_epoch": 6,
+        "gpus": 8,
+        "num_nodes": 1,
+        "log_every_n_steps": 1,
+        "precision": 16,
+        "accumulate_grad_batches": 1,
+        "default_root_dir": "../../workspace/finetune_ziya_llama13b",
+        "replace_sampler_ddp": false,
+        "check_val_every_n_epoch": 1,
+        "wandb_project": "ziya_llama13b_finetune_example",
+        "wandb_name": "finetune_no_tp"
+    }
+}

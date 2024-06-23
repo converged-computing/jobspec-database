@@ -1,0 +1,76 @@
+{
+    "application": "SLURM",
+    "details": {
+        "software": [
+            "anaconda/3",
+            "ffcv_new",
+            "python",
+            "wandb"
+        ],
+        "resources": {
+            "partition": "long",
+            "gpu": "rtx8000",
+            "memory": "16GB",
+            "time": "3:00:00",
+            "cpus_per_gpu": 4,
+            "output": "sbatch_out/multiPatch_vicreg_sweep.%A.%a.out",
+            "error": "sbatch_err/multiPatch_vicreg_sweep.%A.%a.err",
+            "job_name": "multiPatch_vicreg_sweep",
+            "scratch_dir": "$SCRATCH/fastssl/checkpoints_vicreg_mp",
+            "dataset_dir": "$SCRATCH/ffcv/ffcv_datasets/{dataset}"
+        },
+        "libraries": [
+            "scripts/train_model_multiPatch.py",
+            "configs/cc_VICReg.yaml",
+            "configs/cc_precache.yaml",
+            "configs/cc_classifier.yaml"
+        ],
+        "models": [
+            "resnet50proj",
+            "resnet50feat"
+        ],
+        "hyperparameters": {
+            "lambd": [
+                1.0,
+                2.0,
+                5.0,
+                10.0,
+                15.0,
+                25.0,
+                40.0,
+                50.0,
+                75.0,
+                100.0
+            ],
+            "mu": [
+                1.0,
+                2.0,
+                5.0,
+                10.0,
+                15.0,
+                25.0,
+                40.0,
+                50.0,
+                75.0,
+                100.0
+            ],
+            "pdim": [
+                256
+            ],
+            "augs": [
+                4
+            ],
+            "epochs": 100,
+            "batch_size": [
+                64,
+                128
+            ],
+            "dataset": [
+                "cifar10",
+                "stl10"
+            ],
+            "wandb_group": "blake-richards",
+            "wandb_projname": "multiPatch-VICReg-sweep-ep100"
+        }
+    }
+}

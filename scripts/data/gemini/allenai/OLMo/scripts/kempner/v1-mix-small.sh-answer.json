@@ -1,0 +1,39 @@
+{
+    "application": "SLURM",
+    "details": {
+        "job_name": "v1-mix-small",
+        "account": "kempner_lab",
+        "output_path": "/n/holyscratch01/kempner_lab/Lab/logs/%j.log",
+        "nodes": 16,
+        "tasks_per_node": 4,
+        "gpus_per_node": 4,
+        "cpus_per_task": 16,
+        "time_limit": "167:00:00",
+        "memory": "all",
+        "partition": "kempner_project",
+        "environment_variables": [
+            "OMP_NUM_THREADS=$SLURM_CPUS_PER_TASK",
+            "MPICH_GPU_SUPPORT_ENABLED=1",
+            "MIOPEN_USER_DB_PATH=/tmp/${USER}-miopen-cache-${SLURM_JOB_ID}",
+            "MIOPEN_CUSTOM_CACHE_DIR=${MIOPEN_USER_DB_PATH}",
+            "PYTHONPATH=.:${PYTHONPATH}",
+            "DATA_PATH=/n/home06/dgroeneveld/data/preprocessed/olmo-mix",
+            "EVAL_DATA_PATH=/n/home06/dgroeneveld/data/eval-data",
+            "CHECKPOINTS_PATH=/n/home06/dgroeneveld/checkpoints",
+            "PYTORCH_KERNEL_CACHE_PATH=/tmp/pytorch_kernel_cache/"
+        ],
+        "command": "srun --cpus-per-task=$SLURM_CPUS_PER_TASK --distribution=block:block --kill-on-bad-exit scripts/run_with_environment.sh $HOME/miniconda3/envs/LLM/bin/python -u scripts/train.py configs/v1-mix-small.yaml --run_name=kempner_${SLURM_JOB_ID} --time_limit=$((167 * 60 * 60)) --device_train_microbatch_size=2 --fsdp.sharding_strategy=NO_SHARD --save_folder=/n/holyscratch01/kempner_lab/Lab/checkpoints/${SLURM_JOB_ID}/ --model.flash_attention=true ${@}",
+        "software": [
+            "SLURM",
+            "python",
+            "miniconda3",
+            "pytorch",
+            "flash attention",
+            "MIOPEN",
+            "MPICH",
+            "scripts/run_with_environment.sh",
+            "scripts/train.py",
+            "configs/v1-mix-small.yaml"
+        ]
+    }
+}

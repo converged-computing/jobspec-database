@@ -1,0 +1,36 @@
+{
+    "application": "LLVM",
+    "details": {
+        "resource_requirements": {
+            "nodes": 1,
+            "cores_per_node": 32,
+            "gpus": 1,
+            "time": "3h",
+            "exclusive": true
+        },
+        "software_requirements": {
+            "modules": [
+                "rocm",
+                "ninja",
+                "gcc/12.1.1"
+            ],
+            "environment_variables": {
+                "LLVMDIR": "/dev/shm/rydahl1/LLVMgfx906ocml",
+                "LLVMSRCDIR": "/p/lustre1/rydahl/",
+                "PROJECTDIR": "pwd",
+                "VENDOR": "AMDGPU",
+                "GPUARCH": "gfx906",
+                "OMPTARGET": "amdgcn-amd-amdhsa",
+                "LIBC_GPU_VENDOR_MATH": "ON",
+                "LIBC_GPU_BUILTIN_MATH": "OFF"
+            },
+            "commands": [
+                "git checkout 3d8010363895bd063a2d33172a07985b4c9b97ee",
+                "git apply $PROJECTDIR/patches/D156263.diff",
+                "source install_libc.sh",
+                "./gpu_ocml.sh",
+                "./gpu_nv.sh"
+            ]
+        }
+    }
+}

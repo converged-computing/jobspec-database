@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "Magpie\n```json\n{\n  \"resource_manager\": \"Moab\",\n  \"submission_type\": \"msubtorquepdsh\",\n  \"scripts_home\": \"${HOME}/magpie\",\n  \"local_dir\": \"/tmp/${USER}/magpie\",\n  \"job_type\": \"spark\",\n  \"startup_time\": \"30 minutes (default)\",\n  \"shutdown_time\": \"30 minutes (default)\",\n  \"one_time_run\": \"no (default)\",\n  \"pre_job_run\": \"None (default)\",\n  \"post_job_run\": \"None (default)\",\n  \"pre_execute_run\": \"None (default)\",\n  \"post_execute_run\": \"None (default)\",\n  \"environment_variable_script\": \"None (default)\",\n  \"environment_variable_script_shell\": \"/bin/bash (default)\",\n  \"remote_cmd\": \"ssh (default)\",\n  \"remote_cmd_opts\": \"\"\n}\n```\n\nThis script is designed to run a Spark application using Magpie, a tool for running Hadoop on traditional HPC systems.  \n\nThe script outlines the configuration for various software components and resource requirements: \n\n* **Resource Manager:** Moab (an open-source workload manager) is the underlying resource manager for this script. \n* **Submission Type:** The job submission is handled via `msubtorquepdsh`, likely utilizing Moab's `msub` command for submission and `pdsh` for parallel execution. \n* **Scripts Home:** The script expects Magpie scripts to be located in `${HOME}/magpie`.\n* **Local Directory:** The script uses `/tmp/${USER}/magpie` for storing temporary data and configuration files.\n* **Job Type:** The script is configured to run a Spark job.\n* **Startup/Shutdown Time:** The script defaults to 30 minutes for both startup and shutdown, though these values can be customized.\n* **One Time Run:** The script assumes data persistence, but this can be toggled by setting `MAGPIE_ONE_TIME_RUN` to `yes`.\n* **Pre/Post Job Run Scripts:** The script allows for optional scripts to be executed before and after the job. \n* **Environment Variable Script:** This allows for a custom script to be created containing environment variables for interactive use. \n* **Remote Command:** The script utilizes `ssh` for remote execution, but can be customized with an alternative command.\n* **Remote Command Options:** Options for the remote command can be specified via `MAGPIE_REMOTE_CMD_OPTS`.\n\nThe script also defines configurations for:\n\n* **Java:** `JAVA_HOME` is set to `/usr/lib/jvm/jre-1.8.0/`.\n* **Python:** `MAGPIE_PYTHON` is set to `/usr/bin/python`.\n\nFinally, the script launches the Spark job using a series of Magpie scripts:\n\n1. **`magpie-check-inputs`:** Checks if necessary input arguments are provided.\n2. **`magpie-setup-core`:** Sets up core configurations for the resource manager and environment.\n3. **`magpie-setup-projects`:** Configures the specific software projects (Hadoop, Spark, etc.) for this job.\n4. **`magpie-setup-post`:**  Executes any post-setup actions.\n5. **`magpie-pre-run`:**  Executes any pre-job scripts.\n6. **`magpie-run`:** Executes the main Spark job.\n7. **`magpie-cleanup`:** Cleans up the job environment.\n8. **`magpie-post-run`:**  Executes any post-job scripts.\n\nThis sequence ensures the appropriate setup, execution, and cleanup of the Spark job within the Magpie environment.\n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 12766,
+        "candidates_token_count": 835,
+        "total_token_count": 13601,
+        "cached_content_token_count": 0
+    }
+}

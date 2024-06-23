@@ -1,0 +1,26 @@
+{
+    "application": "OpenFOAM",
+    "details": {
+        "software": {
+            "openfoam": "11",
+            "mpi": "OpenMPI",
+            "singularity": "Docker container runtime"
+        },
+        "resource_requirements": {
+            "nodes": "1 or more",
+            "cpu_cores": "At least 12, in multiples of the number of nodes"
+        },
+        "case_directory": "$HOME/cyclone",
+        "sif_file_path": "$HOME/openfoam.sif",
+        "mpi_processes": "12",
+        "mesh_commands": [
+            "blockMesh",
+            "snappyHexMesh -overwrite",
+            "decomposePar"
+        ],
+        "simulation_commands": {
+            "external_mpi": "mpiexec -np ${num_mpi_proc} singularity exec ${SIF_PATH} /bin/bash -c \"source /opt/openfoam11/etc/bashrc; foamRun -parallel\"",
+            "internal_mpi": "singularity exec ${SIF_PATH} /bin/bash -c \"source /opt/openfoam11/etc/bashrc; mpirun -np ${num_mpi_proc} foamRun -parallel\""
+        }
+    }
+}

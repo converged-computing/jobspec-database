@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"Spack\",\n  \"details\": {\n    \"scheduler\": \"Slurm\",\n    \"spack_version\": \"0.17.3\",\n    \"spack_instance_name\": \"cpu\",\n    \"spack_instance_dir\": \"/cm/shared/apps/spack/0.17.3/cpu\",\n    \"spack_package\": \"arpack-ng@3.7.0\",\n    \"spack_compiler\": \"gcc@10.2.0\",\n    \"spack_variants\": \"+mpi +shared\",\n    \"spack_dependencies\": \" ^openblas@0.3.17/$(spack find --format '{hash:7}' openblas@0.3.17 % ${SPACK_COMPILER} ~ilp64 threads=none) ^intel-mpi@2019.10.317/$(spack find --format '{hash:7}' intel-mpi@2019.10.317 % ${SPACK_COMPILER}) ^cmake@3.21.4/$(spack find --format '{hash:7}' cmake@3.21.4 % ${SPACK_COMPILER})\",\n    \"spack_spec\": \"arpack-ng@3.7.0 % gcc@10.2.0 +mpi +shared ^openblas@0.3.17/$(spack find --format '{hash:7}' openblas@0.3.17 % ${SPACK_COMPILER} ~ilp64 threads=none) ^intel-mpi@2019.10.317/$(spack find --format '{hash:7}' intel-mpi@2019.10.317 % ${SPACK_COMPILER}) ^cmake@3.21.4/$(spack find --format '{hash:7}' cmake@3.21.4 % ${SPACK_COMPILER})\",\n    \"slurm_job_name\": \"arpack-ng@3.7.0\",\n    \"slurm_account\": \"sys200\",\n    \"slurm_partition\": \"hotel\",\n    \"slurm_nodes\": 1,\n    \"slurm_ntasks_per_node\": 1,\n    \"slurm_cpus_per_task\": 8,\n    \"slurm_time\": \"00:30:00\",\n    \"slurm_output\": \"%x.o%j.%N\"\n  }\n}\n```\n\nThis script is using Spack, a package manager for high-performance computing, to install the `arpack-ng` package with specific dependencies and configurations. The script utilizes the Slurm workload manager to manage job submission and execution on a cluster. \n\nHere's a breakdown of the key elements:\n\n* **Spack:**  Spack is used for package management and dependency resolution. It's configured to use the `gcc@10.2.0` compiler and specific variants for the `arpack-ng` package.\n* **Slurm:**  Slurm is the job scheduler responsible for resource allocation and execution. The script requests one node with eight CPU cores and a 30-minute runtime.\n* **Dependencies:** The script includes dependencies for `openblas`, `intel-mpi`, and `cmake`. These dependencies are specified using Spack's package specifications.\n* **Job Execution:** The script submits a new job using `sbatch` with a dependency on the completion of the current job.\n\nThe script performs the following actions:\n\n1. **Setup:**  Defines variables, loads required modules, and sets up the Spack environment.\n2. **Package Installation:**  Uses Spack to concretize and install the specified `arpack-ng` package.\n3. **Module Refresh:** Updates the Lmod module tree after installation.\n4. **Dependency Job Submission:** Submits a new job (`boost@1.77.0.sh`) with a dependency on the current job's completion.\n\nThe script ensures that the `arpack-ng` package is installed with the necessary dependencies and configurations on the Slurm cluster. It also schedules the execution of a subsequent job (`boost@1.77.0.sh`) after the installation is complete. \n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 875,
+        "candidates_token_count": 958,
+        "total_token_count": 1833,
+        "cached_content_token_count": 0
+    }
+}

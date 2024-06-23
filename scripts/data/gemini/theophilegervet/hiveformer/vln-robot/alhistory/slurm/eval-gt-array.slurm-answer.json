@@ -1,0 +1,60 @@
+{
+    "application": "SLURM",
+    "details": {
+        "job_name": "dataset",
+        "tasks": 1,
+        "gpus": 1,
+        "nodes": 1,
+        "tasks_per_node": 1,
+        "partition": "gpu_p13",
+        "cores": 10,
+        "account": "vuo@v100",
+        "multithreading": "disabled",
+        "time": "20:00:00",
+        "output": "logs/%A_%a.out",
+        "error": "logs/%A_%a.out",
+        "modules": [
+            "singularity"
+        ],
+        "environment_variables": [
+            "PYTHONPATH=/opt/YARR/",
+            "XDG_RUNTIME_DIR=$SCRATCH/tmp/runtime-$SLURM_JOBID"
+        ],
+        "software": [
+            "Singularity",
+            "Python 3.9",
+            "xvfb-run"
+        ],
+        "commands": [
+            "tar",
+            "srun",
+            "singularity exec",
+            "python3.9",
+            "rm"
+        ],
+        "files": [
+            "$task_file",
+            "$HOME/src/vln-robot/alhistory/eval.py",
+            "$HOME/src/vln-robot/alhistory/logs/${SLURM_JOBID}.out",
+            "$store_dir/$task-$variation.tar.gz",
+            "$data_dir/$task/variation$variation"
+        ],
+        "directories": [
+            "$HOME/src/vln-robot/alhistory",
+            "$HOME/src/vln-robot/alhistory/logs",
+            "$HOME/src/vln-robot/alhistory/demos",
+            "$STORE/datasets/vln-robot/c2farm/100/seed$seed",
+            "$SCRATCH/tmp/runtime-$SLURM_JOBID",
+            "$WORK",
+            "$SCRATCH",
+            "$STORE",
+            "/gpfslocalsup",
+            "/gpfslocalsys",
+            "/gpfs7kw",
+            "/gpfsssd",
+            "/gpfsdsmnt",
+            "/gpfsdsstore",
+            "$SINGULARITY_ALLOWED_DIR"
+        ]
+    }
+}

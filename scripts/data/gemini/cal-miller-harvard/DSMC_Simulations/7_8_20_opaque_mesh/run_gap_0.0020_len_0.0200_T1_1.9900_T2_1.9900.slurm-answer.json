@@ -1,0 +1,53 @@
+{
+    "application": "julia",
+    "details": {
+        "environment": {
+            "modules": [
+                "intel/19.0.5-fasrc01",
+                "openmpi/4.0.2-fasrc01",
+                "fftw/3.3.8-fasrc01",
+                "cmake/3.12.1-fasrc01",
+                "Anaconda3/2019.10",
+                "python/3.7.7-fasrc01"
+            ],
+            "environment_variables": [
+                {
+                    "name": "OMP_PROC_BIND",
+                    "value": "spread"
+                },
+                {
+                    "name": "OMP_PLACES",
+                    "value": "threads"
+                },
+                {
+                    "name": "JULIA_NUM_THREADS",
+                    "value": "$SLURM_CPUS_ON_NODE"
+                }
+            ]
+        },
+        "resources": {
+            "slurm": {
+                "cores": 24,
+                "nodes": 1,
+                "runtime": "0-08:00",
+                "partition": "shared",
+                "memory_per_cpu": 1024,
+                "output_file": "logs/dsmc_job_%j.out",
+                "error_file": "logs/dsmc_job_%j.err"
+            },
+            "script": {
+                "julia_script": "RunCells3He.jl",
+                "julia_arguments": [
+                    "--T1",
+                    "1.9900",
+                    "--T2",
+                    "1.9900",
+                    "-l",
+                    "0.0020",
+                    "-L",
+                    "0.0200"
+                ]
+            }
+        }
+    }
+}

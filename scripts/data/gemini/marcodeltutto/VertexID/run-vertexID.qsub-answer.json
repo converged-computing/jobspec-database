@@ -1,0 +1,34 @@
+{
+    "application": "MPI",
+    "details": {
+        "environment": "conda",
+        "conda_environment": "thetagpu-conda-2021-11-20",
+        "modules": [
+            "conda/2021-11-30",
+            "hdf5"
+        ],
+        "framework": "COBALT",
+        "framework_options": {
+            "time": "150",
+            "nodes": "3",
+            "account": "datascience",
+            "queue": "single-gpu"
+        },
+        "runtime": {
+            "mpi": {
+                "ranks_per_node": 8,
+                "hostfile": "$COBALT_NODEFILE"
+            },
+            "script": "bin/exec.py"
+        },
+        "script_parameters": {
+            "run.distributed": "True",
+            "run.minibatch_size": "${MB}",
+            "data.image_mode": "sparse",
+            "run.iterations": "5000",
+            "data.aux_file": "non",
+            "data.downsample": "0",
+            "run.id": "sparse_yolo-real"
+        }
+    }
+}

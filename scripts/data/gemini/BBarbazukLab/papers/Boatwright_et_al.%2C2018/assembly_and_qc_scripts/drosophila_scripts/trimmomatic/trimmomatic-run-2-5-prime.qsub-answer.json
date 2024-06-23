@@ -1,0 +1,33 @@
+{
+    "application": "trimmomatic",
+    "other_software": [
+        "cutadapt",
+        "sed"
+    ],
+    "resource_requirements": {
+        "nodes": 1,
+        "ppn": 1,
+        "walltime": "10:00:00",
+        "pmem": "5gb",
+        "queue": "bio"
+    },
+    "modules": [
+        "trimmomatic"
+    ],
+    "libraries": [
+        "trimmomatic.jar"
+    ],
+    "input_files": [
+        "dros_biorep_list.csv",
+        "{LINE}_{MV}_{REP}_{LANE1}_adapter_trimmed_run_2_5_prime.fq",
+        "{LINE}_{MV}_{REP}_{LANE2}_adapter_trimmed_run_2_5_prime.fq"
+    ],
+    "output_files": [
+        "{LINE}_{MV}_{REP}_{LANE1}_${LANE2}_Drosophila_trimmomatic_run2_5_prime.log",
+        "{LINE}_{MV}_{REP}_{LANE1}_trimmomatic_run_2_5_prime_paired.fq",
+        "{LINE}_{MV}_{REP}_{LANE1}_trimmomatic_run_2_5_prime_unpaired.fq",
+        "{LINE}_{MV}_{REP}_{LANE2}_trimmomatic_run_2_5_prime_paired.fq",
+        "{LINE}_{MV}_{REP}_{LANE2}_trimmomatic_run_2_5_prime_unpaired.fq"
+    ],
+    "command": "java -classpath $HPC_TRIMMOMATIC_LIB/trimmomatic.jar org.usadellab.trimmomatic.TrimmomaticPE -phred64 -threads 3 -trimlog $TRIMOLOG $READS1 $READS2 $TRIM1 $TRIM2 $TRIM3 $TRIM4 HEADCROP:10 LEADING:3 TRAILING:3 SLIDINGWINDOW:4:15 MINLEN:60"
+}

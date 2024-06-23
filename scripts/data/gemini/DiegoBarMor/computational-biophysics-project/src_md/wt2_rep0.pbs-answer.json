@@ -1,0 +1,22 @@
+{
+    "application": "GROMACS",
+    "details": {
+        "version": "2021.4",
+        "resources": {
+            "nodes": 1,
+            "cpus": 64,
+            "mpi_processes": 64,
+            "memory": "10GB",
+            "walltime": "05:00:00",
+            "queue": "short_cpuQ",
+            "OMP_NUM_THREADS": 1
+        },
+        "script_description": "This script runs a molecular dynamics simulation using GROMACS. It uses 64 MPI processes and 1 thread per process. The simulation is run for 5 hours with a memory limit of 10GB. The script is submitted to the 'short_cpuQ' queue. The output is written to 'logs/wt2_rep0_out' and errors are written to 'logs/wt2_rep0_err'.",
+        "script_commands": [
+            "module load gromacs-2021.4",
+            "export OMP_NUM_THREADS=1",
+            "cd $PBS_O_WORKDIR/../wt2_rep0/4_MD",
+            "mpirun -np 64 gmx_mpi mdrun -cpi md_plain -v -deffnm md_plain"
+        ]
+    }
+}

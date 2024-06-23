@@ -1,0 +1,36 @@
+{
+    "application": "Singularity",
+    "details": {
+        "resource_requirements": {
+            "nodes": 1,
+            "tasks": 1,
+            "time": "02:00:00",
+            "partition": "bii-gpu",
+            "account": "bii_dsc_community",
+            "gpu": "v100:1",
+            "memory": "32G"
+        },
+        "software_requirements": {
+            "modules": [
+                "singularity",
+                "tensorflow/2.10.0",
+                "gcc",
+                "openmpi",
+                "python"
+            ],
+            "python_packages": [
+                "requirements-rivanna.txt"
+            ],
+            "container": "cloudmesh-nvidia.sif"
+        },
+        "commands": [
+            "nvidia-smi",
+            "source $PROJECT_DIR/ENV3/bin/activate",
+            "pip install -r $RUN_DIR/requirements-rivanna.txt",
+            "which python",
+            "cms gpu watch --gpu=0 --delay=0.5 --dense > $SLURM_JOBID.gpu.log &",
+            "cd $MODEL_DIR",
+            "singularity exec --nv $RUN_DIR/$NAME.sif python train.py small_lstm"
+        ]
+    }
+}

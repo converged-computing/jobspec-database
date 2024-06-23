@@ -1,0 +1,49 @@
+{
+    "application": "Slurm",
+    "details": {
+        "job_name": "flan_t5_finetuning",
+        "account": "ec30",
+        "partition": "accel",
+        "gpus": 2,
+        "time": "9:00:00",
+        "nodes": 1,
+        "mem_per_cpu": "8G",
+        "cpus_per_task": 8,
+        "modules": [
+            "nlpl-datasets/2.3.2-foss-2021a-Python-3.9.5",
+            "nlpl-accelerate/0.13.2-foss-2021a-Python-3.9.5",
+            "nlpl-sentencepiece/0.1.96-foss-2021a-Python-3.9.5",
+            "nlpl-nlptools/2022.01-foss-2021a-Python-3.9.5",
+            "nlpl-transformers/4.24.0-foss-2021a-Python-3.9.5"
+        ],
+        "python_script": "finetune_flan.py",
+        "arguments": [
+            "--model_name_or_path",
+            "${MODEL}",
+            "--do_train",
+            "--do_eval",
+            "--train_file",
+            "${TRAIN_DATASET}",
+            "--validation_file",
+            "${VAL_DATASET}",
+            "--output_dir",
+            "${SAVE}",
+            "--overwrite_output_dir",
+            "--evaluation_strategy=epoch",
+            "--logging_strategy=epoch",
+            "--per_device_train_batch_size=16",
+            "--per_device_eval_batch_size=16",
+            "--predict_with_generate",
+            "--save_total_limit=5",
+            "--max_source_length=192",
+            "--max_target_length=128",
+            "--bf16=False",
+            "--num_train_epochs=20",
+            "--save_strategy=epoch",
+            "--load_best_model_at_end=True",
+            "--metric_for_best_model=eval_rouge1",
+            "--ddp_find_unused_parameters=False",
+            "--optim=adafactor"
+        ]
+    }
+}

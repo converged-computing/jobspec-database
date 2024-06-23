@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"LSF\",\n  \"details\": {\n    \"queue\": \"{{ job['queue'] }}\",\n    \"num_cores\": \"{{ job['num_cores'] + job['num_nodes'] }}\",\n    \"runtime\": \"96:00\",\n    \"memory\": \"300000\",\n    \"cores_per_node\": \"{{ job['cores_per_node'] + 1 }}\",\n    \"max_memory\": \"2000000\",\n    \"docker_image\": \"registry.gsc.wustl.edu/sleong/base-engineering-gcc\",\n    \"job_name\": \"E2 run\",\n    \"job_group\": \"/$USER/E2\",\n    \"email\": \"liam.bindle@wustl.edu\",\n    \"output_file\": \"lsf-run-%J-output.txt\",\n    \"runtime_environment\": {\n      \"print_commands\": true,\n      \"exit_on_error\": true,\n      \"coredumpsize\": 0,\n      \"memorylocked\": \"unlimited\",\n      \"maxproc\": 50000,\n      \"vmemoryuse\": \"unlimited\",\n      \"stacksize\": \"unlimited\"\n    },\n    \"simulation_directory\": \"{{ paths['run_directory'] }}\",\n    \"executable\": \"geos\",\n    \"run_config_script\": \"runConfig.sh\",\n    \"mpirun_args\": \"-x LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH -np {{ job['num_cores'] }}\"\n  }\n}\n```\n\n**Explanation:**\n\n* **LSF (Load Sharing Facility):** The script is written to run under LSF, a workload management system that handles resource allocation, scheduling, and execution of jobs on a cluster.\n* **Details:** The script provides details about the job's configuration and environment:\n    * **Queue:** Specifies the LSF queue where the job will be submitted.\n    * **Num_cores:** The total number of cores requested for the job.\n    * **Runtime:** The maximum runtime allowed for the job (96 hours).\n    * **Memory:** The minimum memory required per core (300000).\n    * **Cores_per_node:** The number of cores per node to be allocated.\n    * **Max_memory:** The maximum memory allowed per node (2000000).\n    * **Docker image:** Specifies the Docker image to be used for running the job.\n    * **Job name:** A user-defined name for the job.\n    * **Job group:** A group name for the job.\n    * **Email:** The email address to receive job notifications.\n    * **Output file:** The name of the file where job output will be written.\n    * **Runtime environment:** Sets up environment variables and resource limits for the job.\n    * **Simulation directory:** The directory where the simulation will be executed.\n    * **Executable:** The name of the executable file to be run (geos).\n    * **Run config script:** The script used to configure the simulation.\n    * **Mpirun args:** Arguments passed to mpirun for parallel execution.\n\nThe script also includes commands to set up the runtime environment, execute the simulation, and clean up resources after completion.\n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 429,
+        "candidates_token_count": 746,
+        "total_token_count": 1175,
+        "cached_content_token_count": 0
+    }
+}

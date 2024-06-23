@@ -1,0 +1,25 @@
+{
+    "application": "LSF",
+    "details": {
+        "scheduler": "LSF",
+        "queue": "gpuqueue",
+        "resources": {
+            "nodes": 1,
+            "memory": "256M",
+            "gpu": {
+                "count": 1,
+                "mode": "shared",
+                "exclusive": true
+            },
+            "walltime": "35:59"
+        },
+        "environment": {
+            "OPENMM_CPU_THREADS": 1,
+            "conda_environment": "espaloma-fix"
+        },
+        "script": {
+            "language": "bash",
+            "command": "python train.py --epochs 1500 --batch_size 128 --layer SAGEConv --units 512 --activation relu --config \"512 relu 0.1 512 relu 0.1 512 relu 0.1\" --janossy_config \"512 relu 0.1 512 relu 0.1 512 relu 0.1 512 relu 0.1\" --learning_rate 1e-4 --input_prefix \"../../merge-data/openff-2.0.0_filtered\" --datasets \"gen2 gen2-torsion pepconf-dlc protein-torsion spice-pubchem spice-dipeptide spice-des-monomers rna-nucleoside rna-diverse\" --output_prefix \"checkpoints\" --n_max_confs 50 --force_weight 1.0"
+        }
+    }
+}

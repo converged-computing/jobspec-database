@@ -1,0 +1,41 @@
+{
+    "application": "LSF",
+    "details": {
+        "resource_manager": "LSF",
+        "queue": "CSC308",
+        "wall_time": "8 hours",
+        "nodes": 1,
+        "job_name": "Test",
+        "output_file": "Testo.%J",
+        "error_file": "Teste.%J",
+        "modules": [
+            "pgi/18.4",
+            "cuda/9.0.69"
+        ],
+        "environment_variables": {
+            "OMP_NUM_THREADS": 1,
+            "EXE": "main3d.pgi.CUDA.ex",
+            "JSRUN": "jsrun -n 1 -a 1 -g 1 -c 1 --bind=packed:${omp} ",
+            "rundir": "${LSB_JOBNAME}-${LSB_JOBID}"
+        },
+        "commands": [
+            "module load pgi/18.4",
+            "module load cuda/9.0.69",
+            "module list",
+            "mkdir $rundir",
+            "cp $EXE $rundir",
+            "cp inputs $rundir",
+            "cp TREECOOL_middle $rundir",
+            "cp inputs_atomic $rundir",
+            "cd $rundir",
+            "${JSRUN} --smpiargs=\"-gpu\" ./${EXE} inputs"
+        ],
+        "performance_tools": [
+            "nvprof",
+            "cuda-memcheck"
+        ],
+        "libraries": [
+            "MPICH"
+        ]
+    }
+}

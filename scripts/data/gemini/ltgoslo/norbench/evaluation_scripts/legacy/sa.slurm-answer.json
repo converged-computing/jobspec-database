@@ -1,0 +1,42 @@
+{
+    "application": "SLURM",
+    "details": {
+        "job_name": "norbench",
+        "account": "project_465000144",
+        "time": "10:00:00",
+        "memory_per_cpu": "7G",
+        "nodes": "1",
+        "tasks_per_node": "1",
+        "cpus_per_task": "8",
+        "gpus_per_node": "1",
+        "partition": "standard-g",
+        "modules": [
+            "LUMI/22.08",
+            "cray-python/3.9.12.1",
+            "rocm/5.2.3"
+        ],
+        "environment_variables": [
+            "NCCL_SOCKET_IFNAME=hsn",
+            "OMP_NUM_THREADS=$SLURM_CPUS_PER_TASK",
+            "OPENBLAS_VERBOSE=2",
+            "PYTHONUSERBASE='/projappl/project_465000498/.local'",
+            "PATH=$PYTHONUSERBASE/bin:$PATH",
+            "PYTHONPATH=$PYTHONUSERBASE/lib/python3.9/site-packages:$PYTHONPATH"
+        ],
+        "script": "norbench_run.py",
+        "script_arguments": [
+            "--path_to_model",
+            "${MODEL}",
+            "--task",
+            "sentiment",
+            "--task_specific_info",
+            "sentence",
+            "--model_name",
+            "${IDENTIFIER}",
+            "--batch_size",
+            "16",
+            "--max_length",
+            "512"
+        ]
+    }
+}

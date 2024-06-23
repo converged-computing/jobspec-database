@@ -1,0 +1,42 @@
+{
+    "application": "GROMACS",
+    "details": {
+        "environment": {
+            "EASYBUILD_PREFIX": "/users/revans/programs/gromacs",
+            "OMP_NUM_THREADS": "$SLURM_CPUS_PER_TASK",
+            "CRAY_CUDA_MPS": "1",
+            "GMX": "gmx"
+        },
+        "modules": [
+            "daint-gpu",
+            "GROMACS"
+        ],
+        "script_purpose": "Molecular Dynamics simulation using GROMACS",
+        "input_files": [
+            "md.mdp",
+            "NPT2ed.gro",
+            "$FN.top",
+            "NPT2.cpt",
+            "i.ndx",
+            "posre_*.itp",
+            "${FN}_Protein*.itp"
+        ],
+        "output_files": [
+            "md.tpr",
+            "md.cpt",
+            "md_1.cpt",
+            "md_1_prev.cpt"
+        ],
+        "resources": {
+            "scheduler": "SLURM",
+            "nodes": 4,
+            "tasks_per_core": 1,
+            "tasks_per_node": 12,
+            "cpus_per_task": 1,
+            "partition": "normal",
+            "constraints": "gpu",
+            "account": "pr49",
+            "walltime": "24:00:00"
+        }
+    }
+}

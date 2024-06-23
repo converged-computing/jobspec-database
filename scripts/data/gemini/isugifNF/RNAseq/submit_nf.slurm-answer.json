@@ -1,0 +1,42 @@
+{
+    "application": "Nextflow",
+    "details": {
+        "software": [
+            "Nextflow",
+            "Singularity",
+            "fastqc",
+            "python",
+            "salmon",
+            "kallisto",
+            "hisat2",
+            "gmap_gsnap",
+            "samtools",
+            "subread"
+        ],
+        "resource_requirements": {
+            "hpc": "SLURM",
+            "nodes": 1,
+            "tasks_per_node": 4,
+            "time": "24:00:00",
+            "job_name": "NF_RNASeq",
+            "output": "R-%x.%J.out",
+            "error": "R-%x.%J.err",
+            "mail_user": "username@email.com",
+            "mail_type": "begin, end",
+            "account": "project_name"
+        },
+        "conda_environment": "rnaseq_env",
+        "working_directory": "${SLURM_SUBMIT_DIR}",
+        "input": {
+            "reads": "00_Raw-Data/*{1,2}.fastq.gz",
+            "genome": "00_Raw-Data/*_genomic.fna.gz",
+            "genome_gff": "00_Raw-Data/*.gff.gz",
+            "genome_cdna": "00_Raw-Data/*_rna.fna.gz"
+        },
+        "parameters": {
+            "queueSize": 25,
+            "profile": "slurm",
+            "resume": true
+        }
+    }
+}

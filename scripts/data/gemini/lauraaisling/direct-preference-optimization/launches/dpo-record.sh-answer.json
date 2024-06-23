@@ -1,0 +1,26 @@
+{
+    "application": "SLURM",
+    "details": {
+        "resource_requests": {
+            "account": "eleuther",
+            "job_name": "pythia",
+            "output": "slurm_%x_dpo-base-2.8b_%j.out",
+            "partition": "a40x",
+            "gpus": 8,
+            "cpus_per_gpu": 8,
+            "nodes": 1,
+            "mail_type": "ALL"
+        },
+        "modules": [
+            "cuda/12.1"
+        ],
+        "environment_variables": {
+            "HYDRA_FULL_ERROR": 1,
+            "HF_HOME": "/admin/home-laura/.cache/huggingface/hub",
+            "HF_DATASETS_CACHE": "/admin/home-laura/.cache/huggingface/datasets"
+        },
+        "virtual_environment": "/admin/home-laura/venvs/venv-direct-preference-optimization310/bin/activate",
+        "python_script": "train.py",
+        "python_arguments": "loss.beta=0.1 n_epochs=3 model=pythia28-sft-3-epochs seed=0 exp_name=pythia2.8b_sfted1_dpo3_seed0 batch_size=32 gradient_accumulation_steps=2 revision=epoch1-6000"
+    }
+}

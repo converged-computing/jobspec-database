@@ -1,0 +1,31 @@
+{
+    "application": "SLURM",
+    "details": {
+        "modules": [
+            "architecture/AMD",
+            "mkl",
+            "openBLAS/0.3.21-omp"
+        ],
+        "environment_variables": [
+            "code=/u/dssc/ccurab00/scratch/Foundations_of_HPC_2022/Assignment/exercise2",
+            "OMP_PLACES=sockets",
+            "OMP_PROC_BIND=true"
+        ],
+        "commands": [
+            "make clean",
+            "make cpu",
+            "gcc -fopenmp 00_where_I_am.c -o 00_where_I_am.x",
+            "rm where_I_am.csv",
+            "srun -n 1 --cpu-bind=cores --cpus-per-task=$i ./00_where_I_am.x >> where_I_am.csv",
+            "srun -n 1 --cpu-bind=cores --cpus-per-task=$i ./gemm_mkl.x $size $size $size >> 6_float_mkl_EPYC_cpus.csv",
+            "srun -n 1 --cpu-bind=cores --cpus-per-task=$i ./gemm_oblas.x $size $size $size >> 6_float_oblas_EPYC_cpus.csv",
+            "./gemm_blis.x $size $size $size >> 1_float_blis_64.csv"
+        ],
+        "resources": [
+            "EPYC partition",
+            "1 node",
+            "exclusive access",
+            "45 minutes run time"
+        ]
+    }
+}

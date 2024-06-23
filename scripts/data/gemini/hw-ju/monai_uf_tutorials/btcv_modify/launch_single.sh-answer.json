@@ -1,0 +1,42 @@
+{
+    "application": "Singularity",
+    "details": {
+        "resource_requirements": {
+            "nodes": 1,
+            "tasks": 1,
+            "cpus_per_task": 8,
+            "memory_per_cpu": "64gb",
+            "gpu": "a100:1",
+            "time": "2:00:00"
+        },
+        "software": {
+            "singularity": "module load singularity",
+            "python": "python3",
+            "torch": "import torch"
+        },
+        "container": {
+            "image": "/blue/vendor-nvidia/hju/monaicore0.9.1",
+            "bind_mount": "/blue/vendor-nvidia/hju/data/BTCV:/mnt"
+        },
+        "scripts": {
+            "training": "main.py",
+            "evaluation": "test.py"
+        },
+        "data": {
+            "data_dir": "/mnt",
+            "json_list": "dataset_0.json"
+        },
+        "parameters": {
+            "roi_x": 96,
+            "roi_y": 96,
+            "roi_z": 96,
+            "feature_size": 48,
+            "batch_size": 1,
+            "val_every": 1,
+            "max_epochs": 2,
+            "infer_overlap": 0.6,
+            "pretrained_dir": "/mnt/runs",
+            "pretrained_model_name": "model.pt"
+        }
+    }
+}

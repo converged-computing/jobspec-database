@@ -1,0 +1,55 @@
+{
+    "application": "PIConGPU",
+    "details": {
+        "batch_system": "joker PBS PRO",
+        "language": "bash",
+        "libraries": [
+            "boost",
+            "cupti",
+            "papi/4.2.0",
+            "cuda/5.0.35",
+            "gdb",
+            "pngwriter",
+            "cmake",
+            "hdf5/1.8.5-threadsafe",
+            "gcc/4.6.2",
+            "openmpi/1.6.2-gnu",
+            "vampirtrace/gpu-gnu-cuda5.0"
+        ],
+        "environment_variables": [
+            "MODULES_NO_OUTPUT",
+            "VT_MPI_IGNORE_FILTER",
+            "VT_PFORM_GDIR",
+            "VT_FILE_PREFIX",
+            "VT_BUFFER_SIZE",
+            "VT_MAX_FLUSHES",
+            "VT_GNU_DEMANGLE",
+            "VT_PTHREAD_REUSE",
+            "VT_FILTER_SPEC",
+            "VT_UNIFY",
+            "VT_GPUTRACE",
+            "VT_VERBOSE",
+            "VT_CUPTI_METRICS",
+            "VT_CUDATRACE_BUFFER_SIZE",
+            "MPI_ROOT"
+        ],
+        "resource_requirements": {
+            "gpu_type": "tesla",
+            "queue": "workq",
+            "nodes": "calculated based on TBG_tasks and TBG_gpusPerNode",
+            "gpus_per_node": "4 if TBG_tasks > 4, otherwise same as TBG_tasks",
+            "cores_per_node": "same as TBG_gpusPerNode",
+            "walltime": "!TBG_wallTime",
+            "job_name": "!TBG_jobNameShort",
+            "mail_settings": "!TBG_mailSettings",
+            "mail_address": "!TBG_mailAddress",
+            "output_path": "!TBG_dstPath/stdout",
+            "error_path": "!TBG_dstPath/stderr"
+        },
+        "execution_flow": [
+            "Run cuda_memtest.sh",
+            "Run picongpu with specified options and environment variables",
+            "Redirect output to output file"
+        ]
+    }
+}

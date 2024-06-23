@@ -1,0 +1,43 @@
+{
+    "application": "LSF",
+    "details": {
+        "queue": "gpuv100",
+        "job_name": "laplace_sub[1-5]",
+        "cores": 4,
+        "gpu": "1 (exclusive_process)",
+        "walltime": "4:00",
+        "memory": "6GB",
+        "modules": [
+            "python3/3.9.11",
+            "cuda/11.7"
+        ],
+        "environment": {
+            "PYTHONPATH": [
+                "~/PartialNLP/",
+                "~/PartialNLP/scratch/s184400/cloned_repos/"
+            ]
+        },
+        "script_language": "python",
+        "script_file": "SentimentAnalysis/ExperimentsLaplace.py",
+        "script_arguments": [
+            "--output_path",
+            "scratch/s184400/SA_results/laplace/${dataset}/${experiment}/run_${run}",
+            "--data_path",
+            "scratch/s184400/SA_results/Init/${dataset}_dataset/run_${run}",
+            "--experiment",
+            "sublayer_predefined",
+            "--dataset_name",
+            "sst2",
+            "--run_number",
+            "${runs[$LSB_JOBINDEX - 1]}",
+            "--uninformed_prior",
+            "False",
+            "--train_batch_size",
+            "16",
+            "--eval_batch_size",
+            "1",
+            "--module_names_path",
+            "scratch/s184400/SA_results/laplace/${dataset}/operator_norm_ramping"
+        ]
+    }
+}

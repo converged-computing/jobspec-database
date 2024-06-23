@@ -1,0 +1,34 @@
+{
+    "application": "SLURM",
+    "details": {
+        "job_name": "JP_JOB",
+        "account": "project_2003593",
+        "partition": "gpu",
+        "time": "2-23:59:00",
+        "cpus_per_task": 10,
+        "mem_per_cpu": "16000",
+        "gres": "gpu:v100:4",
+        "nodes": 1,
+        "mail_type": "END",
+        "mail_user": "juanpablo.lagosbenitez@tuni.fi",
+        "modules": [
+            "CUDA/9.0",
+            "pynoptorch"
+        ],
+        "environment_variables": [
+            "NCCL_DEBUG",
+            "NCCL_DEBUG_SUBSYS",
+            "MASTER_ADDR"
+        ],
+        "python_script": "train.py",
+        "arguments": [
+            "--model_name=$MODEL_NAME",
+            "--batch_size=$BATCH_SIZE",
+            "--checkpoint=$CHECKPOINT",
+            "--nodes=1",
+            "--ngpus=1",
+            "--ip_adress $ip1",
+            "$SLURM_TASK_ARRAY_ID"
+        ]
+    }
+}

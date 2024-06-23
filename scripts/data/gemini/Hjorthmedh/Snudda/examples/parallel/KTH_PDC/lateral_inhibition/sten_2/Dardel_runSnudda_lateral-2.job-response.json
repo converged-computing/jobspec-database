@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"Slurm\",\n  \"details\": {\n    \"partition\": \"main\",\n    \"output_file\": \"log/runSnudda-%j-output.txt\",\n    \"error_file\": \"log/runSnudda-%j-error.txt\",\n    \"time_limit\": \"0:59:00\",\n    \"job_name\": \"Snudda\",\n    \"account\": \"naiss2023-5-231\",\n    \"nodes\": 1,\n    \"tasks_per_node\": 128,\n    \"cpus_per_task\": 2,\n    \"memory_per_cpu\": \"930M\",\n    \"mail_type\": \"ALL\",\n    \"modules\": \"snic-env\",\n    \"environment_variables\": {\n      \"OMP_STACKSIZE\": \"128G\",\n      \"IPNWORKERS\": \"40\",\n      \"IPYTHONDIR\": \"/cfs/klemming/scratch/${USER:0:1}/$USER/.ipython\",\n      \"IPYTHON_PROFILE\": \"default\",\n      \"FI_CXI_DEFAULT_VNI\": \"(generated from /dev/urandom)\",\n      \"CONTROLLERIP\": \"(read from controller_ip.txt)\"\n    },\n    \"software_dependencies\": {\n      \"ipython\": \"installed from $HOME/Snudda/snudda_env/bin/activate\",\n      \"ipcontroller_new.sh\": \"./../../ipcontroller_new.sh\",\n      \"ipengine\": \"installed from $HOME/Snudda/snudda_env/bin/activate\",\n      \"Dardel_runSnudda_lateral-2.sh\": \"./Dardel_runSnudda_lateral-2.sh\"\n    },\n    \"resource_requirements\": {\n      \"memory\": \"unlimited\",\n      \"mpi\": \"mpi4py\"\n    },\n    \"commands\": {\n      \"start_controller\": \"srun -n 1 -N 1 -c 2 --exact --overlap --mem=0 ./../../ipcontroller_new.sh &\",\n      \"start_engines\": \"srun -n ${IPNWORKERS} -c 2 -N ${SLURM_JOB_NUM_NODES} --exact --overlap --mem=0 ipengine --location=${CONTROLLERIP} --profile=${IPYTHON_PROFILE} --mpi --ipython-dir=${IPYTHONDIR}  --timeout=30.0 c.EngineFactory.max_heartbeat_misses=10  c.MPI.use='mpi4py' 1> ipe_${SLURM_JOBID}.out 2> ipe_${SLURM_JOBID}.err &\",\n      \"run_application\": \"srun -n 1 -N 1 --exact --overlap --mem=0 ./Dardel_runSnudda_lateral-2.sh\"\n    }\n  }\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 2,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 1084,
+        "candidates_token_count": 678,
+        "total_token_count": 1762,
+        "cached_content_token_count": 0
+    }
+}

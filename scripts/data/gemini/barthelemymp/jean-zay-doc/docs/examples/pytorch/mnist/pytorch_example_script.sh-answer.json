@@ -1,0 +1,27 @@
+{
+    "application": "Slurm",
+    "details": {
+        "job_name": "pytorch_mnist",
+        "mpi_tasks": 4,
+        "mpi_tasks_per_node": 4,
+        "gpus_per_node": 4,
+        "cores_per_task": 10,
+        "execution_time": "3:00:00",
+        "output_file": "pytorch_mnist%j.out",
+        "error_file": "pytorch_mnist%j.err",
+        "array_tasks": [
+            4,
+            6,
+            8
+        ],
+        "environment": {
+            "conda_env": "/gpfswork/rech/mdb/urz96ze/miniconda3/envs/Barth",
+            "pytorch_version": "1.11.0",
+            "wandb_mode": "offline"
+        },
+        "script": "mnist_example.py",
+        "script_parameters": {
+            "batch_size": "${SLURM_ARRAY_TASK_ID}"
+        }
+    }
+}

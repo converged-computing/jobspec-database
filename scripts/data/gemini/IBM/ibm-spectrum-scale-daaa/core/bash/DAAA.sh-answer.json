@@ -1,0 +1,77 @@
+{
+    "application": "LSF",
+    "details": {
+        "description": "The script uses LSF (Load Sharing Facility) for job scheduling and management. It defines a series of LSF jobs, each dependent on the successful completion of the previous one, to manage the workflow of data processing.",
+        "jobs": [
+            "searchDiscover",
+            "recallDataIn",
+            "cacheDataIn",
+            "runAnalytics",
+            "searchDiscoverC",
+            "evictDataOut",
+            "migrateDataOut",
+            "cleanup"
+        ],
+        "dependencies": {
+            "searchDiscover": [],
+            "recallDataIn": [
+                "searchDiscover"
+            ],
+            "cacheDataIn": [
+                "recallDataIn"
+            ],
+            "runAnalytics": [
+                "cacheDataIn"
+            ],
+            "searchDiscoverC": [
+                "runAnalytics"
+            ],
+            "evictDataOut": [
+                "searchDiscoverC"
+            ],
+            "migrateDataOut": [
+                "evictDataOut"
+            ],
+            "cleanup": [
+                "migrateDataOut"
+            ]
+        },
+        "commands": [
+            "bsub",
+            "source",
+            "date",
+            "cd",
+            "env",
+            "egrep",
+            "awk",
+            "unset",
+            "sleep"
+        ],
+        "resources": {
+            "files": [
+                "searchDiscover.sh",
+                "recallArchive.sh",
+                "cacheDataIn.sh",
+                "runAnalytics.sh",
+                "runAnalyticsDummy.sh",
+                "runAnalyticsWr.sh",
+                "searchDiscover.sh",
+                "evictDataOut.sh",
+                "migrateArchive.sh",
+                "cleanup.sh"
+            ],
+            "environment_variables": [
+                "LSF_ENVDIR",
+                "SCRIPT_PATH",
+                "UNIQUE",
+                "args",
+                "ELEMENTS",
+                "LSF_ARGS"
+            ],
+            "directories": [
+                "/shared/lsf/conf",
+                "${SCRIPT_PATH}"
+            ]
+        }
+    }
+}

@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"SLURM\",\n  \"details\": {\n    \"job_name\": \"SVM_Array\",\n    \"nodes\": 2,\n    \"tasks_per_node\": 2,\n    \"cpus_per_task\": 2,\n    \"time\": \"96:00:00\",\n    \"memory\": \"20GB\",\n    \"array\": \"0-5\",\n    \"modules\": \"purge\",\n    \"models\": [\"LogisticRegression\", \"RandomForest\", \"Poly_SVC\", \"RBF_SVC\", \"Linear_SVC\"],\n    \"singularity_image\": \"/scratch/work/public/singularity/cuda11.6.124-cudnn8.4.0.27-devel-ubuntu20.04.4.sif\",\n    \"overlay\": \"/scratch/jjb509/GeneExpression_Bakeoff/src/my_overlay.ext3:ro\",\n    \"python_script\": \"monte_carlo.py\",\n    \"drug\": \"erlotinib\",\n    \"niter\": 100\n  }\n}\n```\n\n**Explanation:**\n\n* **SLURM:** The script uses the SLURM batch system to manage and run the job. The script contains directives for defining job parameters such as the number of nodes, tasks per node, cpus per task, runtime, memory, and array of jobs.\n* **Singularity:** This script leverages Singularity to create a containerized environment for the Python script. \n  *  It uses the specified image `/scratch/work/public/singularity/cuda11.6.124-cudnn8.4.0.27-devel-ubuntu20.04.4.sif`.\n  *  It mounts an overlay `/scratch/jjb509/GeneExpression_Bakeoff/src/my_overlay.ext3:ro` for read-only access.\n* **Python Script:** The script executes the Python script `monte_carlo.py` within the Singularity container. It passes in arguments for the drug (`erlotinib`) and the model based on the array task ID (`${models[$SLURM_ARRAY_TASK_ID]}`). It also sets the number of iterations (`--niter 100`).\n\n**Key Points:**\n\n* The script is designed to run a series of jobs (array) using different machine learning models (`models` array).\n* The environment is set up with the Singularity container and its associated overlay.\n* The Python script `monte_carlo.py` is executed within this controlled environment. \n* The job uses resources like multiple nodes, tasks, cpus, and memory allocated through SLURM. \n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 2,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 285,
+        "candidates_token_count": 604,
+        "total_token_count": 889,
+        "cached_content_token_count": 0
+    }
+}

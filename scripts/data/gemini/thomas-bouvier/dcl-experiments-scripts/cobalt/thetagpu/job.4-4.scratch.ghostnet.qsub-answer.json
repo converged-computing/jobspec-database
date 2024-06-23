@@ -1,0 +1,62 @@
+{
+    "application": "COBALT",
+    "details": {
+        "resource_requirements": {
+            "nodes": 16,
+            "time": "1:15:00",
+            "queue": "full-node",
+            "filesystem": "home",
+            "mode": "script",
+            "email": "thomas.bouvier@inria.fr"
+        },
+        "environment_variables": [
+            {
+                "name": "FI_MR_CACHE_MAX_COUNT",
+                "value": "0"
+            },
+            {
+                "name": "FI_OFI_RXM_USE_SRX",
+                "value": "1"
+            },
+            {
+                "name": "WANDB_MODE",
+                "value": "offline"
+            },
+            {
+                "name": "LD_LIBRARY_PATH",
+                "value": "/home/tbouvier/view/thetagpu/lib;/home/tbouvier/view/thetagpu/lib64;/home/tbouvier/view/thetagpu/lib/python3.10/site-packages/torch/lib;/lus/theta-fs0/software/thetagpu/openmpi/openmpi-4.1.4_ucx-1.14.0_gcc-9.4.0_cuda-11.4/lib;/usr/local/cuda-11/lib64"
+            },
+            {
+                "name": "PATH",
+                "value": "unknown - set by spack env activate"
+            },
+            {
+                "name": "NCCL_DEBUG",
+                "value": "INFO"
+            }
+        ],
+        "software": {
+            "spack": "spack-thetagpu",
+            "spack_env": "/home/tbouvier/git/spack-envs/thetagpu",
+            "mpiexec": "openmpi-4.1.4_ucx-1.14.0_gcc-9.4.0_cuda-11.4",
+            "python": "3.10",
+            "pytorch": "unknown"
+        },
+        "script": {
+            "main_file": "main.py",
+            "config_file": "experiments_thetagpu.yaml",
+            "config_section": "baseline_scratch_ghostnet_scale"
+        },
+        "other": {
+            "job_execution": {
+                "nodes": 128,
+                "processes_per_node": 8,
+                "hostfile": "$COBALT_NODEFILE"
+            },
+            "binding": {
+                "mode": "none",
+                "mapping": "slot"
+            }
+        }
+    }
+}

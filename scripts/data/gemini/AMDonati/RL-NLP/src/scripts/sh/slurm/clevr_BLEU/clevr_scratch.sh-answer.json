@@ -1,0 +1,49 @@
+{
+    "application": "SLURM",
+    "details": {
+        "job_name": "C-scratch-B",
+        "queue": "qos_gpu-t3",
+        "tasks": 1,
+        "gpus": 3,
+        "array_tasks": 5,
+        "cpus_per_task": 16,
+        "memory_per_cpu": "8g",
+        "output_file": "slurm_out/clevr/scratch-%j.out",
+        "error_file": "slurm_out/clevr/scratch-%j.err",
+        "time_limit": "20:00:00",
+        "environment_variables": {
+            "TMPDIR": "$JOBSCRATCH",
+            "PYTHONPATH": "src:${PYTHONPATH}"
+        },
+        "modules": [
+            "pytorch-gpu/py3/1.7.1",
+            "conda"
+        ],
+        "conda_environment": "rl-nlp-2",
+        "script": "src/scripts/run.py",
+        "arguments": {
+            "env": "clevr",
+            "max_len": 20,
+            "data_path": "data",
+            "out_path": "output/RL/CLEVR_lm/${SLURM_ARRAY_TASK_ID}",
+            "model": "lstm",
+            "update_every": 128,
+            "agent": "PPO",
+            "K_epochs": 20,
+            "eps_clip": 0.02,
+            "lr": 0.001,
+            "word_emb_size": 32,
+            "hidden_size": 64,
+            "num_episodes_train": 50000,
+            "lm_path": "output/lm_model/model.pt",
+            "reward": "bleu",
+            "num_episodes_test": 5000,
+            "mask_answers": 1,
+            "condition_answer": "after_fusion",
+            "debug": "0,20000",
+            "reward_vocab": "data/closure_vocab.json",
+            "reward_path": "output/vqa_model_film/model.pt",
+            "grad_clip": 1
+        }
+    }
+}

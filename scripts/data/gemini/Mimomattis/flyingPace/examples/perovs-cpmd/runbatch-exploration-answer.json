@@ -1,0 +1,34 @@
+{
+    "application": "LAMMPS",
+    "software_requirements": [
+        "openmpi/intel/4.1.2-2021.4.0.3422-hpcx2.10",
+        "ucx/2.10",
+        "hcoll/2.10",
+        "compiler-rt/latest",
+        "tbb/latest"
+    ],
+    "resource_requirements": {
+        "nodes": 1,
+        "tasks_per_node": 72,
+        "cpus_per_task": 1,
+        "partition": "batch3",
+        "time": "23:59:00",
+        "distribution": "block:block:block"
+    },
+    "environment_variables": [
+        "ppn",
+        "LAMMPS",
+        "PAR_RUN",
+        "OMP_NUM_THREADS",
+        "OMPI_MCA_hwloc_base_report_bindings",
+        "submitdir"
+    ],
+    "workdir": "/dev/shm/${SLURM_JOB_ID}",
+    "input_file": "INP-lammps",
+    "output_file": "OUT",
+    "output_format": "stdout",
+    "execution_details": {
+        "command": "$PAR_RUN $LAMMPS -var submitdir \"${SLURM_SUBMIT_DIR}\" -in ${input} > ${output}",
+        "execution_environment": "SLURM"
+    }
+}

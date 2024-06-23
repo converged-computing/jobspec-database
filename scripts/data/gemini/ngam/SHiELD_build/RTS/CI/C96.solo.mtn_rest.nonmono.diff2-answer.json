@@ -1,0 +1,51 @@
+{
+    "application": "SHiELD",
+    "software_details": {
+        "compiler": "intel",
+        "executable": "SOLO_${TYPE}.${COMP}.${MODE}.${COMPILER}.x",
+        "mpi": "pmi2",
+        "launch_method": "srun",
+        "container": "--mpi=pmi2 singularity exec -B <file directory> <container>",
+        "hyperthreading": "on/off",
+        "openmp_stacksize": "256m"
+    },
+    "resource_requirements": {
+        "tasks": 24,
+        "cpu_bind": "verbose",
+        "npes": "${layout_x} * ${layout_y} * 6",
+        "nthreads": "${nthreads}",
+        "skip": "${nthreads} / ${div}",
+        "scratch_dir": "${SCRATCHDIR:-${BUILDDIR}}/CI/BATCH-CI/${GRID}.${MEMO}/"
+    },
+    "test_case": {
+        "name": "solo.mtn_rest.nonmono.diff2",
+        "type": "nh/hydro",
+        "mode": "64bit/32bit",
+        "grid": "C${res}",
+        "resolution": "${res}",
+        "days": "${days}",
+        "hours": "${hours}",
+        "minutes": "${minutes}",
+        "seconds": "${seconds}",
+        "dt_atmos": "${dt_atmos}",
+        "npx": "${npx}",
+        "npy": "${npy}",
+        "npz": "${npz}",
+        "layout_x": "${layout_x}",
+        "layout_y": "${layout_y}",
+        "io_layout": "${io_layout}",
+        "ecmwf_ic": "${ecmwf_ic}",
+        "mountain": "${mountain}",
+        "external_ic": "${external_ic}",
+        "warm_start": "${warm_start}",
+        "na_init": "${na_init}",
+        "curr_date": "${curr_date}",
+        "make_nh": "${make_nh}",
+        "hydrostatic": "${hydrostatic}",
+        "phys_hydrostatic": "${phys_hydrostatic}",
+        "use_hydro_pressure": "${use_hydro_pressure}",
+        "consv_te": "${consv_te}",
+        "hyperthread": "${hyperthread}",
+        "div": "${div}"
+    }
+}

@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"OpenFOAM\",\n  \"software_requirements\": [\n    \"gcc/10.2.0\",\n    \"openmpi\",\n    \"cmake\",\n    \"boost\",\n    \"vtk\",\n    \"nvhpc\",\n    \"cuda\",\n    \"conda\",\n    \"OpenFOAM\",\n    \"nsys\"\n  ],\n  \"resource_requirements\": {\n    \"account\": \"bddir15\",\n    \"time\": \"2:0:0\",\n    \"partition\": \"gpu\",\n    \"nodes\": 1,\n    \"gres\": \"gpu:2\",\n    \"email\": \"<your.email>@brunel.ac.uk\"\n  },\n  \"other_details\": {\n    \"run_functions\": \"source $WM_PROJECT_DIR/bin/tools/RunFunctions\",\n    \"parallel_execution\": \"foamDictionary system/decomposeParDict -entry numberOfSubdomains -set 16\",\n    \"hierarchical_decomposition\": \"foamDictionary system/decomposeParDict -entry hierarchicalCoeffs/n -set \\\"( 4 4 1 )\\\"\",\n    \"blockMeshDict_modification\": \"sed -i 's/(400 400 1)/(4000 4000 1)/g' system/blockMeshDict\",\n    \"nvidia_smi_log\": \"nvidia-smi > log.nvidia-smi\",\n    \"pre_processing\": \"./Allrun.pre\",\n    \"profiling\": \"nsys profile -t nvtx,cuda -o report_cpu -f true --stats=true /nobackup/projects/bddir15/hpc_sdk/Linux_ppc64le/23.1/comm_libs/mpi/bin/mpirun -n $nProcs $FOAM_USER_APPBIN/$application -parallel > log.$application 2>&1\",\n    \"reconstruction\": \"runApplication reconstructPar\",\n    \"post_processing\": \"./Allpost\"\n  }\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 596,
+        "candidates_token_count": 462,
+        "total_token_count": 1058,
+        "cached_content_token_count": 0
+    }
+}

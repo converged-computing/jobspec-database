@@ -1,0 +1,50 @@
+{
+    "application": "SLURM",
+    "details": {
+        "partition": "gpu",
+        "gpus": "rtx:4",
+        "memory_per_gpu": "40G",
+        "output_file": "logs/slurm-%x-%j-%N.out",
+        "singularity_image": "/home/software/singularity/pytorch.simg:2024-03-11",
+        "environment_variables": {
+            "PYTHONPATH": "hep_tfds",
+            "KERAS_BACKEND": "torch"
+        },
+        "python_version": "3.10",
+        "script": "mlpf/pyg_pipeline.py",
+        "datasets": [
+            "delphes",
+            "clic",
+            "clic_hits",
+            "cms"
+        ],
+        "data_directory": "/scratch/persistent/joosep/tensorflow_datasets",
+        "config_files": [
+            "parameters/pytorch/pyg-delphes.yaml",
+            "parameters/pytorch/pyg-clic.yaml",
+            "parameters/pytorch/pyg-clic-hits.yaml",
+            "parameters/pytorch/pyg-cms.yaml"
+        ],
+        "modes": [
+            "train",
+            "test",
+            "make-plots"
+        ],
+        "conv_type": "attention",
+        "gpu_batch_multipliers": [
+            1,
+            10,
+            1,
+            1
+        ],
+        "num_workers": 1,
+        "prefetch_factor": 10,
+        "attention_types": [
+            "efficient",
+            "math",
+            "efficient",
+            "efficient"
+        ],
+        "dtype": "float32"
+    }
+}

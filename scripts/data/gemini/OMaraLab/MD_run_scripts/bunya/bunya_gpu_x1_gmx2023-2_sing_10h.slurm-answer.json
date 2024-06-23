@@ -1,0 +1,44 @@
+{
+    "application": "GROMACS",
+    "software": [
+        "GROMACS 2023",
+        "Singularity",
+        "Perl",
+        "Sed"
+    ],
+    "resources": {
+        "nodes": 1,
+        "tasks_per_node": 1,
+        "cpus_per_task": 48,
+        "memory": "256G",
+        "partition": "gpu",
+        "time": "10:00:00",
+        "gres": "gpu:a100:1",
+        "account": "a_omara",
+        "tmpdir": "/scratch/user/uqadaqu1/tmp/"
+    },
+    "dependencies": [
+        "gromacs_2023.sif"
+    ],
+    "input_files": [
+        "${SLURM_JOB_NAME}.mdp",
+        "${SLURM_JOB_NAME}_start.gro",
+        "${SLURM_JOB_NAME}.top",
+        "${SLURM_JOB_NAME}.ndx"
+    ],
+    "output_files": [
+        "${SLURM_JOB_NAME}.tpr",
+        "${SLURM_JOB_NAME}.cpt",
+        "${SLURM_JOB_NAME}.log",
+        "${SLURM_JOB_NAME}_grompp_${SLURM_JOB_ID}.txt",
+        "slurm-${SLURM_JOB_ID}.out"
+    ],
+    "commands": [
+        "gmx grompp",
+        "gmx mdrun",
+        "perl",
+        "sed",
+        "sbatch"
+    ],
+    "description": "This script runs GROMACS simulations on the Bunya GPU cluster using a singularity container. It handles checkpointing and resubmission for long simulations."
+}

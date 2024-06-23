@@ -1,0 +1,32 @@
+{
+    "application": "MPI",
+    "details": {
+        "resource_requirements": {
+            "walltime": "0:10:00",
+            "queue": "workq",
+            "filesystems": "home:tegu",
+            "account": "datascience",
+            "nodes": 2
+        },
+        "software_requirements": {
+            "libraries": [
+                "aws-ofi-nccl (v1.9.1-aws)",
+                "hwloc"
+            ],
+            "modules": [
+                "conda"
+            ],
+            "environment": {
+                "NCCL_NET": "AWS Libfabric",
+                "NCCL_DEBUG": "INFO",
+                "OUTPUT": "logs3/$(date +\"%Y-%m-%d-%H-%M-%S\")"
+            }
+        },
+        "commands": [
+            "mpiexec -np 4 --ppn 4 --cpu-bind depth -d 16 ./launcher.sh python torch_nccl.py",
+            "mpiexec -np 2 --ppn 1 --cpu-bind depth -d 16 ./launcher.sh python torch_nccl.py",
+            "mpiexec -np 4 --ppn 2 --cpu-bind depth -d 16 ./launcher.sh python torch_nccl.py",
+            "mpiexec -np 8 --ppn 4 --cpu-bind depth -d 16 ./launcher.sh python torch_nccl.py"
+        ]
+    }
+}

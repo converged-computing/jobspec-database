@@ -1,0 +1,47 @@
+{
+    "application": "DeepSpeed",
+    "software": [
+        "DeepSpeed",
+        "T5",
+        "NVIDIA SMI",
+        "WandB",
+        "SLURM"
+    ],
+    "resource_requirements": {
+        "nodes": 1,
+        "gpus": 2,
+        "cpus_per_task": 32,
+        "memory": null,
+        "virtual_environment": ".depth/bin/activate"
+    },
+    "environment_variables": [
+        "DS_SKIP_CUDA_CHECK=1",
+        "OMP_NUM_THREADS=$SLURM_CPUS_PER_TASK"
+    ],
+    "data": {
+        "dataset": "GLUE - STSB",
+        "training_examples": 5750,
+        "validation_examples": 1500,
+        "max_sequence_length": 512
+    },
+    "model": {
+        "model_implementation": "hf_t5",
+        "compile": false,
+        "input_length": 512,
+        "target_length": 8
+    },
+    "training_parameters": {
+        "precision": "bf16",
+        "optimizer": "adamw_torch",
+        "base_learning_rate": "1e-4",
+        "batch_size": 16,
+        "total_steps": 3000,
+        "warmup_steps": 100,
+        "gradient_accumulation_steps": 1,
+        "learning_rate_scheduler": "linear",
+        "checkpoint_frequency": 500,
+        "checkpoint_limit": 3,
+        "logging_frequency": 10,
+        "evaluation_frequency": 100
+    }
+}

@@ -1,0 +1,63 @@
+{
+    "application": "CHARMM",
+    "other_software": [
+        "NAMD",
+        "VMD",
+        "python"
+    ],
+    "resource_requirements": [
+        "SLURM",
+        "beegfs",
+        "charmm_toppar",
+        "module compiler/gnu/6.2.0",
+        "path /home/limn1/bin",
+        "path /beegfs/DATA/mobley/limvt/local/vmd"
+    ],
+    "script_details": {
+        "purpose": "Perform PBEQ calculations in CHARMM for a system with different tautomers.",
+        "input_files": [
+            "18629-19_R211S.psf",
+            "18629-19_R211S.fep",
+            "noGBI_R211S.psf",
+            "noGBI_R211S.fep",
+            "19415-13-c1_R211S.psf",
+            "19415-13-c1_R211S.fep",
+            "alchemy${window}.dcd",
+            "02_gencharmm-t1.inp",
+            "03_pbeq-t1.inp",
+            "02_gencharmm-t0.inp",
+            "03_pbeq-t0.inp",
+            "02_gencharmm-t2.inp",
+            "03_pbeq-t2.inp",
+            "01_dcd-crd.tcl",
+            "04_gendummy.inp",
+            "05_dum-pbeq.inp",
+            "06_ana-corr.py"
+        ],
+        "output_files": [
+            "${i}.crd",
+            "${i}.psf",
+            "${i}_chgd.crd",
+            "${i}_chgd.psf",
+            "${i}.avg"
+        ],
+        "workflow": [
+            "prepare NAMD trajectory for CHARMM",
+            "generate CHARMM input files",
+            "run CHARMM PBEQ calculation",
+            "generate dummy system",
+            "run CHARMM PBEQ calculation for dummy system",
+            "cleanup temporary files",
+            "analyze results (optional)"
+        ],
+        "arguments": {
+            "refsys": "'taut_0, taut_1, taut_2'",
+            "window": "'01', '40'",
+            "fep_resname": "'ARG', 'SER'",
+            "fep_resid": "211",
+            "framenum": "250",
+            "epsw": "97",
+            "ref": "'lig', 'env'"
+        }
+    }
+}

@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"LSF\",\n  \"details\": {\n    \"queue\": \"hpc\",\n    \"job_name\": \"SA_datarun[1-5]\",\n    \"cores\": 4,\n    \"gpu\": \"1 (exclusive process mode)\",\n    \"walltime\": \"4:00\",\n    \"memory\": \"2GB\",\n    \"python_version\": \"3.9.11\",\n    \"cuda_version\": \"11.7\",\n    \"python_environment\": \"~/PartialNLP/scratch/s184400/partial_venv\",\n    \"python_path\": \"~/PartialNLP/:~/\",\n    \"script_name\": \"SentimentClassifier.py\"\n  }\n}\n```\n\nThe script utilizes the **LSF (Load Sharing Facility)** job scheduler to run a Python script for sentiment analysis. Here's a breakdown of the script and its requirements:\n\n**LSF Settings:**\n\n* **Queue:** `hpc` - Specifies the queue to submit the job to.\n* **Job Name:** `SA_datarun[1-5]` - Defines the job name and indicates an array of jobs (1-5).\n* **Cores:** `4` - Requests 4 CPU cores for the job.\n* **GPU:** `num=1:mode=exclusive_process` - Requires 1 GPU in exclusive process mode.\n* **Walltime:** `4:00` - Sets the maximum execution time to 4 hours.\n* **Memory:** `2GB` - Requests 2GB of memory per job.\n* **Email Notifications:** Allows for email notifications when the job starts and finishes.\n* **Output and Error Files:** `out/gpu_%J.out` and `out/gpu_%J.err` specify the output and error file locations, using the job ID (`%J`).\n\n**Software and Resource Requirements:**\n\n* **Python Environment:**  \n    * Loads the `python3/3.9.11` module using `module load python3/3.9.11`.\n    * Activates the virtual environment located at `~/PartialNLP/scratch/s184400/partial_venv`.\n    * Sets the `PYTHONPATH` environment variable.\n* **CUDA:** \n    * Loads the `cuda/11.7` module using `module load cuda/11.7`.\n    * Runs the `deviceQuery` sample from the CUDA toolkit to test GPU access. \n* **Script:**\n    * The script runs a Python script named `SentimentClassifier.py`, likely responsible for training a sentiment analysis model. \n\n**Script Logic:**\n\n* The script iterates over a range of runs (0-4) defined in the `runs` array.\n* It uses `LSB_JOBINDEX` to determine which run the current job array task should execute.\n* The script sets up an output directory (`dir_outpath`) based on the dataset and run number.\n* It runs the `SentimentClassifier.py` script with various parameters, including:\n    * Output path: `dir_outpath`\n    * Training batch size: `32`\n    * Evaluation batch size: `32`\n    * Dataset name: `imdb`\n    * Seed: `42` (for reproducibility)\n    * Training flag: `True`\n    * Learning rate: `5e-05` \n    * Device batch size: `32` \n    * Training size: `1.0`\n    * Laplace smoothing: `False`\n    * CUDA usage: `False` (despite the `gpu` flag in the LSF options)\n    * Save strategy: \"epoch\"\n    * Evaluation strategy: \"epoch\"\n    * Load best model at end: `False`\n    * Data ramping: `False`\n\nThe script checks the exit code of the Python script to determine success or failure. \n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 899,
+        "candidates_token_count": 866,
+        "total_token_count": 1765,
+        "cached_content_token_count": 0
+    }
+}

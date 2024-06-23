@@ -1,0 +1,43 @@
+{
+    "application": "SLURM",
+    "details": {
+        "account": "six@gpu",
+        "job_name": "vi_oscar_all",
+        "nodes": 1,
+        "partition": "prepost",
+        "tasks_per_node": 1,
+        "cpus_per_task": 10,
+        "gres": "gpu:4",
+        "time": "20:00:00",
+        "output": "vi_oscar_all_%x-%j.stdout",
+        "error": "vi_oscar_all_%x-%j.stderr",
+        "environment_variables": [
+            "HF_DATASETS_OFFLINE=1",
+            "TRANSFORMERS_OFFLINE=1"
+        ],
+        "modules": "pytorch-gpu/py3/1.7.0",
+        "python_script": "process.py",
+        "python_script_arguments": [
+            "-hfdataset",
+            "TurkuNLP/register_oscar,vi",
+            "-src_lang",
+            "vi",
+            "-do_trans",
+            "0",
+            "-outfile",
+            "vi_oscar_all",
+            "-do_hf_ner",
+            "1",
+            "-do_spacy",
+            "1",
+            "-do_regex",
+            "1",
+            "-do_kenlm",
+            "1",
+            "-do_anonymization",
+            "1",
+            "-num_workers",
+            "4"
+        ]
+    }
+}

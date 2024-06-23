@@ -1,0 +1,29 @@
+{
+    "application": "Slurm",
+    "details": {
+        "job_name": "met_resnet50",
+        "output_file": "output/standard%A_%a.out",
+        "error_file": "output/standard%A_%a.err",
+        "memory": "4000 MB",
+        "time": "4 hours",
+        "gpu": "1",
+        "array_task_ids": "0-399",
+        "constraint": "high-capacity",
+        "excluded_node": "node093",
+        "partition": "normal",
+        "modules": [
+            "openmind/miniconda/2020-01-29-py3.7",
+            "openmind/cudnn/9.1-7.0.5",
+            "openmind/cuda/9.1"
+        ],
+        "conda_environment": "/om4/group/mcdermott/user/jfeather/conda_envs_files/pytorch",
+        "script": "make_metamers_imagenet_16_category_val_400_only_save_metamer_layers.py",
+        "arguments": [
+            "$SLURM_ARRAY_TASK_ID",
+            "-I",
+            "3000",
+            "-N",
+            "8"
+        ]
+    }
+}

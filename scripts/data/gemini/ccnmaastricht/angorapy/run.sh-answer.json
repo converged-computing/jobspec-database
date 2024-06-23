@@ -1,0 +1,29 @@
+{
+    "application": "Slurm",
+    "details": {
+        "job_name": "angorapy",
+        "account": "ich020",
+        "time": "24:00:00",
+        "nodes": 32,
+        "tasks_per_core": 1,
+        "tasks_per_node": 12,
+        "cpus_per_task": 1,
+        "partition": "normal",
+        "constraint": "gpu&startx",
+        "hint": "nomultithread",
+        "environment_variables": {
+            "OMP_NUM_THREADS": "$SLURM_CPUS_PER_TASK",
+            "CRAY_CUDA_MPS": "1",
+            "DISPLAY": ":0"
+        },
+        "modules": [
+            "daint-gpu",
+            "cudatoolkit",
+            "/apps/daint/UES/6.0.UP04/sandboxes/sarafael/modules/all",
+            "cuDNN/8.0.3.33"
+        ],
+        "virtual_environment": "${HOME}/robovenv",
+        "python_script": "train.py",
+        "python_arguments": "HumanoidManipulateBlockDiscreteAsynchronous-v0 --pcon manipulate_discrete --rcon manipulate.penalized_force --model lstm --architecture shadow --save-every 300"
+    }
+}

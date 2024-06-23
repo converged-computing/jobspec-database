@@ -1,0 +1,42 @@
+{
+    "application": "LSF",
+    "details": {
+        "job_name": "omni3d_example_run",
+        "output_file": "hpc_logs/%J.out",
+        "error_file": "hpc_logs/%J.err",
+        "num_nodes": 4,
+        "queue": "gpua100",
+        "gpu_mode": "shared",
+        "walltime": "4:00",
+        "memory": "5GB",
+        "host_count": 1,
+        "environment": {
+            "conda_env": "/work3/s194369/3dod_hpc_env",
+            "pythonpath": "/work3/s194369/3dod"
+        },
+        "commands": [
+            {
+                "command": "python tools/eval_boxes.py",
+                "arguments": [
+                    "--eval-only",
+                    "--config-file configs/BoxNet.yaml",
+                    "PLOT.EVAL AP",
+                    "PLOT.MODE2D PRED",
+                    "PLOT.PROPOSAL_FUNC propose",
+                    "MODEL.WEIGHTS output/Baseline_sgd/model_final.pth",
+                    "OUTPUT_DIR output/propose"
+                ],
+                "gpu": 0
+            },
+            {
+                "command": "python tools/train_net.py",
+                "arguments": [
+                    "--config-file configs/Base_Omni3D.yaml",
+                    "OUTPUT_DIR output/Baseline_trial"
+                ],
+                "gpu": 0,
+                "comment": "commented out"
+            }
+        ]
+    }
+}

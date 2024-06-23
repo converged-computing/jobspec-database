@@ -1,0 +1,35 @@
+{
+    "application": "LSF",
+    "details": {
+        "resources": {
+            "cores": 2,
+            "queue": "general",
+            "group": "compute-crponce",
+            "gpu": {
+                "model": "TeslaV100_SXM2_32GB",
+                "number": 1,
+                "mode": "exclusive_process"
+            },
+            "memory": {
+                "min": "16G",
+                "max": "16G",
+                "requested": "16G"
+            }
+        },
+        "docker": {
+            "image": "pytorchlightning/pytorch_lightning:base-cuda-py3.9-torch1.9",
+            "volumes": {
+                "$HOME": "$HOME",
+                "$SCRATCH1": "$SCRATCH1",
+                "$STORAGE1": "$STORAGE1"
+            }
+        },
+        "environment": {
+            "TORCH_HOME": "/scratch1/fs1/crponce/torch"
+        },
+        "script": {
+            "command": "python cma_noise_control.py  $unit_name",
+            "directory": "~/ActMax-Optimizer-Dev"
+        }
+    }
+}

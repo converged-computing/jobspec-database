@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"Slurm\",\n  \"details\": {\n    \"nodes\": 1,\n    \"tasks_per_node\": 1,\n    \"cpus_per_task\": 16,\n    \"time\": \"24:00:00\",\n    \"memory\": \"50GB\",\n    \"gpu\": 1,\n    \"job_name\": \"lp_1M_blur\",\n    \"output_file\": \"/scratch/mr6744/pytorch/outputs_slurm/%j.out\",\n    \"singularity_image\": \"/scratch/work/public/singularity/cuda11.6.124-cudnn8.4.0.27-devel-ubuntu20.04.4.sif\",\n    \"overlay_files\": [\n      \"/scratch/mr6744/pytorch/overlay-25GB-500K.ext3:ro\",\n      \"/vast/work/public/ml-datasets/imagenet/imagenet-train.sqf:ro\",\n      \"/vast/work/public/ml-datasets/imagenet/imagenet-val.sqf:ro\"\n    ],\n    \"python_script\": \"main_linprobe.py\",\n    \"script_arguments\": [\n      \"--model\",\n      \"vit_small_patch16\",\n      \"--cls_token\",\n      \"--finetune\",\n      \"/vast/mr6744/pretrained_models2/1M_blur/run5/checkpoint-500.pth\",\n      \"--batch_size\",\n      \"128\",\n      \"--epochs\",\n      \"100\",\n      \"--num_workers\",\n      \"16\",\n      \"--output_dir\",\n      \"/vast/mr6744/linear_evaluation/1M_blur_ckpt_500/fract1\",\n      \"--log_dir\",\n      \"/vast/mr6744/linear_evaluation/1M_blur_ckpt_500/fract1\",\n      \"--blr\",\n      \"0.1\",\n      \"--weight_decay\",\n      \"0.0\",\n      \"--nb_classes\",\n      \"1000\",\n      \"--data_path\",\n      \"/imagenet\",\n      \"--frac_retained\",\n      \"0.010147\"\n    ],\n    \"environment_file\": \"/ext3/env.sh\"\n  }\n}\n```\n\n**Explanation:**\n\n* **Slurm:** The script uses Slurm, a workload manager and job scheduler, to manage the resources and execution of the task.\n* **Singularity:** The script utilizes Singularity, a container technology, to execute the Python script and its dependencies within an isolated environment.\n* **Python Script:** The script runs a Python script named `main_linprobe.py`, which performs a linear probing evaluation on a pre-trained model.\n* **Resources:** The script requests a single node with one task, 16 CPU cores, 50GB of RAM, one GPU, and a 24-hour runtime. It also sets up a specific output directory.\n* **Overlays:** The script uses overlay files for both the training and validation datasets, as well as an external environment file.\n* **Environment:** The script sets environment variables such as `MASTER_PORT`, `WORLD_SIZE`, and `MASTER_ADDR` for distributed training.\n* **Command:** The script uses `srun` to execute the Singularity container with the Python script and its arguments. \n* **Arguments:** The script provides a set of arguments to the Python script, including model name, finetuning checkpoint, batch size, epochs, number of workers, output directories, learning rate, weight decay, number of classes, data path, and fraction of retained data.\n\nThis JSON output provides a comprehensive overview of the application and its resource requirements as defined in the script. \n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 632,
+        "candidates_token_count": 875,
+        "total_token_count": 1507,
+        "cached_content_token_count": 0
+    }
+}

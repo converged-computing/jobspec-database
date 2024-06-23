@@ -1,0 +1,37 @@
+{
+    "application": "SLURM",
+    "details": {
+        "partition": "a100q",
+        "time_limit": "0-15:00",
+        "output_file": "slurm.%N.%j.out",
+        "error_file": "slurm.%N.%j.err",
+        "gpus_per_node": 1,
+        "environment_variables": {
+            "PATH": "$PATH:/usr/local/cuda/bin"
+        },
+        "commands": [
+            "nvidia-smi",
+            "nvcc --version",
+            "make",
+            "srun ncu -k spmv_1D -c 1 --metrics dram__bytes.sum ./rows_per_thread \"path_to_input_matrix\"",
+            "gunzip -c \"path_to_input_matrix\" > \"path_to_decompressed_matrix\"",
+            "rm \"path_to_decompressed_matrix\""
+        ],
+        "software_dependencies": [
+            "SLURM",
+            "CUDA",
+            "GNU make",
+            "ncu",
+            "gzip",
+            "rows_per_thread"
+        ],
+        "resource_requirements": {
+            "partition": "a100q",
+            "gpu": "1",
+            "time_limit": "15 minutes",
+            "storage": {
+                "temporary": "/work/$USER/tmp8"
+            }
+        }
+    }
+}

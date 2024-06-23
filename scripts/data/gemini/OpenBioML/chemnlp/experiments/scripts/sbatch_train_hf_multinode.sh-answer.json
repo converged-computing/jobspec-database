@@ -1,0 +1,36 @@
+{
+    "application": "SLURM",
+    "details": {
+        "job_name": "llchem-multinode",
+        "nodes": 4,
+        "tasks_per_node": 1,
+        "cpus_per_task": 12,
+        "output_file": "/fsx/proj-chemnlp/experiments/logs/training_%j.out",
+        "error_file": "/fsx/proj-chemnlp/experiments/logs/training_%j.err",
+        "open_mode": "append",
+        "account": "topchem",
+        "partition": "g40x",
+        "exclusive": true,
+        "environment": {
+            "CHEMNLP_PATH": "/fsx/proj-chemnlp/$2/chemnlp",
+            "TOKENIZERS_PARALLELISM": "false",
+            "WANDB_BASE_URL": "https://stability.wandb.io",
+            "NCCL_DEBUG": "INFO",
+            "NCCL_ASYNC_ERROR_HANDLING": "1",
+            "LOGLEVEL": "INFO"
+        },
+        "commands": [
+            "source $CHEMNLP_PATH/experiments/scripts/env_creation_hf.sh $1 $2",
+            "srun torchrun --nnodes $SLURM_NNODES --nproc_per_node 8 \\ --rdzv_id $RANDOM \\ --rdzv_backend c10d \\ --rdzv_endpoint $head_node_ip:29500 \\ experiments/scripts/run_tune.py  experiments/configs/hugging-face/$3 --config_overrides $overrides"
+        ],
+        "other_requirements": [
+            "Python",
+            "PyTorch",
+            "Hugging Face Transformers",
+            "NCCL",
+            "WandB",
+            "SLURM",
+            "Bash"
+        ]
+    }
+}

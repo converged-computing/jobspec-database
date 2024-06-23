@@ -1,0 +1,38 @@
+{
+    "application": "Slurm",
+    "details": {
+        "account": "imi@a100",
+        "partition": "a100",
+        "job name": "sft3b",
+        "nodes": 1,
+        "tasks per node": 1,
+        "GPUs per node": 2,
+        "CPUs per task": 16,
+        "multithreading": "disabled",
+        "time limit": "20:00:00",
+        "array tasks": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+        ],
+        "output file": "./out/out_finetune_llama3b-%A_%a.out",
+        "error file": "./out/out_finetune_llama3b-%A_%a.out",
+        "modules": [
+            "cpuarch/amd",
+            "pytorch-gpu/py3/2.0.1"
+        ],
+        "working directory": "$SCRATCH/evaluate_model",
+        "python script": "extract_feat.py",
+        "script arguments": [
+            "-z",
+            "$SCRATCH/evaluate_model/",
+            "-m",
+            "${SLURM_ARRAY_TASK_ID}",
+            "-f",
+            "full"
+        ]
+    }
+}

@@ -1,0 +1,41 @@
+{
+    "application": "phenoscanner",
+    "details": {
+        "slurm_scheduler": true,
+        "resources": {
+            "account": "CARDIO-SL0-CPU",
+            "tasks": 1,
+            "job_name": "_ps",
+            "time": "8:00:00",
+            "cpus_per_task": 1,
+            "partition": "cardio",
+            "memory": "12880",
+            "array": "1-162",
+            "output_file": "/home/jhz22/INF/ps/slurm/_ps_%A_%a.out",
+            "error_file": "/home/jhz22/INF/ps/slurm/_ps_%A_%a.err"
+        },
+        "environment": {
+            "module_loading": ". /etc/profile.d/modules.sh",
+            "variables": [
+                "nth=${SLURM_ARRAY_TASK_ID}",
+                "rsid=$(awk 'NR==ENVIRON[\"nth\"]' ${INF}/ps/INF1_ref_rsid.txt)"
+            ],
+            "phenoscanner_arguments": {
+                "snp": "${rsid}",
+                "catalogue": "GWAS",
+                "pvalue": "5e-8",
+                "proxies": "EUR",
+                "r2": "0.8",
+                "build": "37",
+                "wd": "${INF}/ps/slurm",
+                "out": "${rsid}"
+            }
+        },
+        "functions": [
+            {
+                "name": "summary",
+                "description": "Concatenates output files from phenoscanner runs into single files"
+            }
+        ]
+    }
+}

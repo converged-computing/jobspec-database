@@ -1,0 +1,35 @@
+{
+    "application": "LAMMPS",
+    "details": {
+        "scheduler": "SLURM",
+        "environment": {
+            "PATH": "/work/c01/c01/rwelch/anaconda3/bin:\u00a3PATH",
+            "OMP_NUM_THREADS": "1"
+        },
+        "resources": {
+            "nodes": "$nodes",
+            "time": "02:00:00",
+            "job_name": "$jobname",
+            "tasks_per_node": "$ntasks",
+            "cpus_per_task": "1",
+            "partition": "standard",
+            "qos": "standard",
+            "account": "c01-bio"
+        },
+        "run_command": "srun --cpu-freq=2250000 --unbuffered --cpu-bind=cores --distribution=block:block --hint=nomultithread /work/c01/c01/rwelch/software/lammps-2Aug2023/build/lmp -in benchmark.in",
+        "output": {
+            "sysinfo": "sysinfo.json",
+            "cpulog": "cpulog.json",
+            "accounting": "accounting.json",
+            "run": "run.json",
+            "slurm": "slurm.json",
+            "meta": "meta.json",
+            "benchout": "$benchout"
+        },
+        "tools": {
+            "hpcbench": "Used for logging and collating data",
+            "sacct": "Used for retrieving accounting information",
+            "lmplog": "Used for parsing LAMMPS output"
+        }
+    }
+}

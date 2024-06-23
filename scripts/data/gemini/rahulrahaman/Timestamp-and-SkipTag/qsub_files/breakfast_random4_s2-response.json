@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n\"application\": \"PBS\",\n\"details\": {\n\"queue\": \"volta_gpu\",\n\"nodes\": 1,\n\"cpus\": 10,\n\"memory\": \"40gb\",\n\"gpus\": 1,\n\"mpi_processes\": 1,\n\"walltime\": \"24:00:00\",\n\"singularity_image\": \"/app1/common/singularity-img/3.0.0/pytorch_1.4_cuda10.0-cudnn7-devel-ubuntu18.04-py36.simg\",\n\"python_path\": \"/home/svu/e0367435/em-less-frame-supervision/:/home/svu/e0367435/.local/lib/python3.6/site-packages/\",\n\"wandb_mode\": \"offline\",\n\"python_script\": \"runcodes/run_em_generalized.py\",\n\"arguments\": \"--split 2 --select_f data/breakfast_random4frame_selection.pkl --init_epoch 30 --sample_rate 1 --use_mse --use_conf --cudad 0 --base_dir /hpctmp/e0367435/video_segmentation/breakfast/ --lr 0.0005 --epochs 90 --batch_size 8 --train_batch_size 20 --postprocess\"\n}\n}\n```\n\nThis script runs a Python script `runcodes/run_em_generalized.py` with specific arguments using the PBS (Portable Batch System) for resource management and Singularity for containerization. \n\nHere's a breakdown of the script and its components:\n\n**PBS:**\n\n* **#PBS -P volta_pilot:** Specifies the project (volta_pilot) under which the job will run.\n* **#PBS -j oe:** Sets job dependencies, indicating that the job should be queued and executed only after its dependencies have completed.\n* **#PBS -N bf_gen4_s2:** Assigns a name (bf_gen4_s2) to the job.\n* **#PBS -q volta_gpu:** Submits the job to the `volta_gpu` queue.\n* **#PBS -l select=1:ncpus=10:mem=40gb:ngpus=1:mpiprocs=1:** Requests resources for the job: 1 node, 10 CPUs, 40GB of memory, 1 GPU, and 1 MPI process.\n* **#PBS -l walltime=24:00:00:** Sets the maximum runtime for the job to 24 hours.\n\n**Singularity:**\n\n* **image=\"/app1/common/singularity-img/3.0.0/pytorch_1.4_cuda10.0-cudnn7-devel-ubuntu18.04-py36.simg\":** Defines the Singularity image to be used, containing PyTorch 1.4, CUDA 10.0, cuDNN 7, and other dependencies for running the Python script.\n* **singularity exec $image bash << EOF... EOF:** Executes a Bash shell within the Singularity container defined by the image.\n\n**Python Script:**\n\n* **export PYTHONPATH...:** Modifies the `PYTHONPATH` environment variable to include the necessary paths for Python modules used by the script.\n* **export WANDB_MODE=offline:** Configures the Weights & Biases (WandB) library to run in offline mode, meaning it won't log data to WandB servers.\n* **cd ../:** Navigates the script to the parent directory.\n* **python runcodes/run_em_generalized.py...:** Executes the Python script with the specified arguments.\n\nThe script's primary goal is to run the `run_em_generalized.py` script within the specified Singularity container on a GPU-enabled node with allocated resources managed by PBS. The script's specific purpose and functionality are further determined by the Python script's implementation and the arguments provided.\n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 428,
+        "candidates_token_count": 910,
+        "total_token_count": 1338,
+        "cached_content_token_count": 0
+    }
+}

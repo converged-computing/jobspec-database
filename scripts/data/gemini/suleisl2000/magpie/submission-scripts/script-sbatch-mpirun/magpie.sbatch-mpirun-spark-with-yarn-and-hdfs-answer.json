@@ -1,0 +1,100 @@
+{
+    "application": "Magpie",
+    "software": [
+        {
+            "name": "Hadoop",
+            "version": "2.7.3",
+            "setup_type": [
+                "MR",
+                "YARN",
+                "HDFS"
+            ],
+            "filesystem_mode": [
+                "hdfs",
+                "hdfsoverlustre",
+                "hdfsovernetworkfs",
+                "rawnetworkfs"
+            ],
+            "daemon_heap_max": "1000",
+            "namenode_daemon_heap_max": "2000",
+            "environment_extra_path": "${HOME}/hadoop-my-environment",
+            "terasort_size": "50000000",
+            "terasort_map_count": "4",
+            "terasort_reducer_count": "4",
+            "terasort_clear_cache": "yes",
+            "terasort_output_replication": "1",
+            "terasort_run_terachecksum": "no",
+            "terasort_run_teravalidate": "no",
+            "decommission_hdfs_node_size": "8",
+            "local_filesystem_blocksize": "33554432",
+            "hdfs_replication": "3",
+            "hdfs_blocksize": "134217728",
+            "hdfs_path": "/ssd/${USER}/hdfs",
+            "hdfs_path_clear": "yes",
+            "hdfs_over_lustre_path": "/lustre/${USER}/hdfsoverlustre/",
+            "hdfs_over_lustre_remove_locks": "yes",
+            "hdfs_over_networkfs_path": "/networkfs/${USER}/hdfsovernetworkfs/",
+            "hdfs_over_networkfs_remove_locks": "yes",
+            "rawnetworkfs_path": "/lustre/${USER}/rawnetworkfs/",
+            "localstore": "/ssd/${USER}/localstore/",
+            "localstore_clear": "yes"
+        },
+        {
+            "name": "Spark",
+            "version": "2.4.3-bin-hadoop2.7",
+            "setup_type": [
+                "STANDALONE",
+                "YARN"
+            ],
+            "worker_cores_per_node": "8",
+            "worker_memory_per_node": "16000",
+            "worker_directory": "/tmp/${USER}/spark/work",
+            "job_memory": "2048",
+            "driver_memory": "2048",
+            "daemon_heap_max": "1000",
+            "environment_extra_path": "${HOME}/spark-my-environment",
+            "default_parallelism": "8",
+            "memory_fraction": "0.6",
+            "memory_storage_fraction": "0.5",
+            "storage_memory_fraction": "0.6",
+            "shuffle_memory_fraction": "0.2",
+            "rdd_compress": "true",
+            "io_compression_codec": "lz4",
+            "deploy_spreadout": "true",
+            "job_classpath": "",
+            "job_library_path": "",
+            "job_java_opts": "",
+            "local_scratch_dir": "/lustre/${USER}/sparkscratch/",
+            "local_scratch_dir_clear": "yes",
+            "network_timeout": "120",
+            "yarn_staging_dir": "file:///lustre/${USER}/sparkStaging/",
+            "sparkpi_slices": "4",
+            "sparkwordcount_file": "/mywordcountfile",
+            "sparkwordcount_copy_in_file": "/mywordcountfile"
+        },
+        {
+            "name": "SLURM",
+            "options": [
+                "--nodes",
+                "--output",
+                "--time",
+                "--job-name",
+                "--partition"
+            ]
+        },
+        {
+            "name": "Python",
+            "path": "/usr/bin/python"
+        },
+        {
+            "name": "Java",
+            "path": "/usr/lib/jvm/jre-1.8.0/"
+        }
+    ],
+    "resource_requirements": [
+        "NFS mount for scripts",
+        "Local scratch space",
+        "Passwordless remote shell",
+        "MPIRUN"
+    ]
+}

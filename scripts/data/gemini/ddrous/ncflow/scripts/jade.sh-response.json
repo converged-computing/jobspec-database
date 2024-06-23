@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"SLURM\",\n  \"details\": {\n    \"resources\": {\n      \"nodes\": 1,\n      \"wallclock_time\": \"01:00:00\",\n      \"job_name\": \"nodepint\",\n      \"gpus\": 1,\n      \"output_folder\": \"./graphpint/tests/data\"\n    },\n    \"software\": {\n      \"jax_version\": \"0.4.7\",\n      \"cudnn\": \"11.2\",\n      \"tensorflow\": \"2.9.1\",\n      \"cuda\": \"11.1-gcc-9.1.0\",\n      \"python\": \"anaconda3\",\n      \"conda_env\": \"jaxenv\"\n    },\n    \"commands\": [\n      \"sbatch scripts/jade.sh\",\n      \"sacct -u rrn27-wwp02\",\n      \"srun --job-name \\\"GraphPinT\\\" --gres=gpu:1 --time 0:30:00 --pty bash -i\",\n      \"/jmain02/apps/docker/tensorflow -c\",\n      \"source /etc/profile.d/modules.sh\",\n      \"module load tensorflow/2.9.1\",\n      \"module load cuda/11.1-gcc-9.1.0\",\n      \"module load python/anaconda3\",\n      \"source activate base\",\n      \"conda activate jaxenv\",\n      \"srun --job-name \\\"NodeBias\\\" --gres=gpu:1 --time 7:30:00 --pty bash -i\",\n      \"module load cuda/11.1-gcc-9.1.0\",\n      \"nohup python main.py > tmp/nohup.log 2>&1 &\",\n      \"python3 ./scripts/jax_test.py\",\n      \"nvidia-smi\",\n      \"python3 graphpint/tests/jax_test.py\"\n    ]\n  }\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 579,
+        "candidates_token_count": 464,
+        "total_token_count": 1043,
+        "cached_content_token_count": 0
+    }
+}

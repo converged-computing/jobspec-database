@@ -1,0 +1,35 @@
+{
+    "application": "LAMMPS",
+    "details": {
+        "modules": [
+            "PrgEnv-cray",
+            "cray-mpich",
+            "perftools-base",
+            "perftools"
+        ],
+        "resources": {
+            "partition": "iv24",
+            "nodes": 154,
+            "cpus_per_task": 1,
+            "mem_per_cpu": 1024,
+            "job_time": "06:00:00",
+            "gpcnet_ppn": 10,
+            "lammps_ppn": 4
+        },
+        "input_files": [
+            "/home/users/msrinivasa/develop/lammps/examples/DIFFUSE/in.msd.2d"
+        ],
+        "output_files": [
+            "stdout/gpc_lammps.001.%J.out",
+            "stdout/gpc_lammps.001.%J.err",
+            "gpc.out",
+            "lammps.out"
+        ],
+        "commands": [
+            "srun --exclusive -N 77 -n 770 /home/users/msrinivasa/develop/GPCNET/network_load_test > gpc.out &",
+            "sleep 10",
+            "srun --exclusive -N 77 -n 308 /home/users/msrinivasa/develop/lammps/build/lmp+trace -i /home/users/msrinivasa/develop/lammps/examples/DIFFUSE/in.msd.2d > lammps.out",
+            "wait"
+        ]
+    }
+}

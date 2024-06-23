@@ -1,0 +1,59 @@
+{
+    "application": "deepspeed",
+    "details": {
+        "software": [
+            "deepspeed",
+            "python",
+            "torch",
+            "llama2",
+            "pbs",
+            "conda",
+            "tensorboard",
+            "dolma"
+        ],
+        "resources": {
+            "walltime": "06:00:00",
+            "nodes": "48",
+            "filesystems": "eagle:home",
+            "environment": "conda",
+            "launcher": "deepspeed",
+            "output_log": "${OUTPUT_LOG}",
+            "data_file_list": "${DATA_FILE_LIST}",
+            "data_cache_path": "${data_cache_path}",
+            "checkpoint_dir": "${CKPT_DIR}",
+            "tensorboard_dir": "${TBDIR}"
+        },
+        "arguments": {
+            "dtype": "--${DTYPE}",
+            "optimizer": "--optimizer ${OPT}",
+            "lr": "--lr ${LR}",
+            "seq_length": "--seq-length ${SEQ}",
+            "num_layers": "--num-layers ${NLAYERS}",
+            "hidden_size": "--hidden-size ${HIDDEN}",
+            "train_iters": "--train-iters ${TRAIN_ITER}",
+            "eval_iters": "--eval-iters ${EVAL_ITERS}",
+            "distributed_backend": "--distributed-backend ${BE}",
+            "num_attention_heads": "--num-attention-heads ${HEADS}",
+            "save_interval": "--save-interval ${SAVE_INTERVAL}",
+            "eval_interval": "--eval-interval ${EVAL_INTERVAL}",
+            "max_position_embeddings": "--max-position-embeddings ${SEQ}",
+            "micro_batch_size": "--micro-batch-size ${MICRO_BATCH}",
+            "tensor_model_parallel_size": "--tensor-model-parallel-size ${TP}",
+            "global_batch_size": "--global-batch-size ${GLOBAL_BATCH}",
+            "pipeline_model_parallel_size": "--pipeline-model-parallel-size ${PP}",
+            "num_key_value_heads": "--num-key-value-heads ${NUM_KV_HEAD}",
+            "ffn_hidden_size": "--ffn-hidden-size ${FFN_HIDDEN_SIZE}",
+            "tokenizer_model": "--tokenizer-model ${TOKENIZER_MODEL}",
+            "timing_log_level": "--timing-log-level ${TIMING_LOG_LEVEL}",
+            "llama_args": "${LLAMA_ARGS}",
+            "deepspeed_args": "$ds_args",
+            "gpt_args": "${gpt_args[*]}",
+            "custom_args": "$custom_args"
+        },
+        "configuration": {
+            "deepspeed_config": "deepspeed_config.json",
+            "hostfile": "${HOSTFILE}",
+            "env_vars": ".deepspeed_env"
+        }
+    }
+}

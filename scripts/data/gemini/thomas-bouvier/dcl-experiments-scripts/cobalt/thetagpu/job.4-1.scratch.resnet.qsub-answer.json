@@ -1,0 +1,45 @@
+{
+    "application": "COBALT",
+    "details": {
+        "scheduler": "COBALT",
+        "nodes": 2,
+        "time": "3:15:00",
+        "mode": "script",
+        "queue": "full-node",
+        "filesystems": "home",
+        "email": "thomas.bouvier@inria.fr",
+        "environment": {
+            "FI_MR_CACHE_MAX_COUNT": "0",
+            "FI_OFI_RXM_USE_SRX": "1",
+            "WANDB_MODE": "offline",
+            "LD_LIBRARY_PATH": "/home/tbouvier/view/thetagpu/lib;/home/tbouvier/view/thetagpu/lib64;/home/tbouvier/view/thetagpu/lib/python3.10/site-packages/torch/lib;/lus/theta-fs0/software/thetagpu/openmpi/openmpi-4.1.4_ucx-1.14.0_gcc-9.4.0_cuda-11.4/lib;/usr/local/cuda-11/lib64"
+        },
+        "spack": {
+            "setup_env": "${HOME}/git/spack-thetagpu/share/spack/setup-env.sh",
+            "env": "/home/tbouvier/git/spack-envs/thetagpu"
+        },
+        "mpiexec": {
+            "processes": 16,
+            "processes_per_node": 8,
+            "hostfile": "$COBALT_NODEFILE",
+            "binding": "none",
+            "mapping": "slot",
+            "environment_variables": {
+                "NCCL_DEBUG": "INFO",
+                "LD_LIBRARY_PATH": null,
+                "WANDB_MODE": null,
+                "PATH": null
+            },
+            "executable": "python",
+            "arguments": [
+                "../../main.py",
+                "--yaml-config",
+                "experiments_thetagpu.yaml",
+                "--config",
+                "baseline_scratch_resnet_scale",
+                "--log-level",
+                "info"
+            ]
+        }
+    }
+}

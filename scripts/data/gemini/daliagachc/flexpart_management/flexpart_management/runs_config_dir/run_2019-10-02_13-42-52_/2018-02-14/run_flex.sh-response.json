@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"FLEXPART\",\n  \"details\": {\n    \"environment\": {\n      \"NETCDF\": \"/appl/opt/netcdf4/gcc-7.3.0/intelmpi-18.0.2/4.6.1/\",\n      \"modules\": [\"gcc/7.3.0\", \"intelmpi/18.0.2\", \"hdf5-par/1.8.20\", \"netcdf4/4.6.1\"],\n      \"WRFIO_NCD_LARGE_FILE_SUPPORT\": \"1\"\n    },\n    \"executable\": \"flexwrf33_gnu_serial\",\n    \"input_data\": \"/homeappl/home/aliagadi/wrk/DONOTREMOVE/flexpart_management_data/runs/run_2019-10-02_13-42-52_/2018-02-14/flx_input\",\n    \"runtime\": \"24 hours\",\n    \"memory\": \"16GB per CPU\",\n    \"nodes\": \"1\",\n    \"queue\": \"serial\",\n    \"output\": \"./output%j.txt\",\n    \"error\": \"./error%j.txt\",\n    \"mail\": {\n      \"type\": \"END\",\n      \"user\": \"diego.aliaga@helsinki.fi\"\n    }\n  }\n}\n```\n\n**Explanation of the script:**\n\nThe script is using SLURM (Simple Linux Utility for Resource Management) to run a FLEXPART simulation on a cluster. \n\n* **SLURM commands:**\n    * `#SBATCH -e ./error%j.txt`: Sets the error output file.\n    * `#SBATCH -o ./output%j.txt`: Sets the standard output file.\n    * `#SBATCH -J flex`: Sets the job name.\n    * `#SBATCH -n 1`: Requests one node for the job.\n    * `#SBATCH -t 24:00:00`: Sets the walltime limit to 24 hours.\n    * `#SBATCH -p serial`: Specifies the serial queue for the job.\n    * `#SBATCH --mem-per-cpu=16000`: Requests 16GB of memory per CPU.\n    * `#SBATCH --mail-type=END`: Sends an email when the job ends.\n    * `#SBATCH --mail-user=diego.aliaga@helsinki.fi`: Sets the email address for notifications.\n\n* **FLEXPART setup:**\n    * The script sets up the environment by loading required modules and defining the path to the NetCDF library.\n    * It defines the directory containing the FLEXPART executable and input data.\n    * The script chooses the FLEXPART executable (`flexwrf33_gnu_serial`) and the input data directory.\n    * Finally, it uses `srun` to execute the FLEXPART executable with the specified input data.\n\n**The script is running a FLEXPART simulation using the serial version of the executable (`flexwrf33_gnu_serial`). It requires specific libraries like NetCDF, HDF5, and Intel MPI, and is configured to run on a single node with 16GB of memory per CPU. The job will run for 24 hours and will send an email notification to the specified address upon completion.**"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 472,
+        "candidates_token_count": 747,
+        "total_token_count": 1219,
+        "cached_content_token_count": 0
+    }
+}

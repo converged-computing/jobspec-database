@@ -1,0 +1,34 @@
+{
+    "application": "SLURM",
+    "details": {
+        "resource_allocation": {
+            "nodes": 2,
+            "tasks": 16,
+            "tasks_per_node": 8,
+            "gpus": 16,
+            "gpus_per_task": 1,
+            "cpus_per_task": 4,
+            "memory": "96gb",
+            "partition": "hpg-ai",
+            "time": "48:00:00"
+        },
+        "software": {
+            "container_runtime": "Singularity",
+            "container_image": "pyt21.07",
+            "python_path": "singularity exec --nv pyt21.07 python3",
+            "training_script": "unet_training_workflows_slurm.py"
+        },
+        "libraries": {
+            "pytorch": "installed within the Singularity container",
+            "nccl": "implicitly used through Singularity container"
+        },
+        "other": {
+            "launch_utilities": [
+                "pt_multinode_helper_funcs.sh",
+                "run_on_node.sh"
+            ],
+            "launch_method": "torch.distributed.launch or manual",
+            "environment_variable": "NCCL_DEBUG=INFO"
+        }
+    }
+}

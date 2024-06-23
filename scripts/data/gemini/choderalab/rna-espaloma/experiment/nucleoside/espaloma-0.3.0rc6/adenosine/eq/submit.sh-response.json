@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"LSF\",\n  \"details\": {\n    \"scheduler\": \"LSF\",\n    \"queue\": \"gpuqueue\",\n    \"resources\": {\n      \"nodes\": 1,\n      \"cores\": 1,\n      \"memory\": \"8 GB\",\n      \"gpu\": {\n        \"type\": \"NVIDIA\",\n        \"count\": 1,\n        \"mode\": \"shared\",\n        \"exclusive\": true\n      },\n      \"walltime\": \"3 hours\"\n    },\n    \"environment\": {\n      \"OPENMM_CPU_THREADS\": 1,\n      \"conda_environment\": \"openmm\"\n    },\n    \"script_language\": \"Bash\",\n    \"libraries\": [\n      \"OpenMM\",\n      \"OpenEye\"\n    ],\n    \"commands\": [\n      \"conda activate openmm\",\n      \"python ${script_path}/openmm_eq.py -i state.pdb --restart_prefix ${restart_prefix} --output_prefix .\"\n    ]\n  }\n}\n```\n\n**Explanation:**\n\n* **Application:** The script uses LSF (Load Sharing Facility) as the job scheduler. \n* **Details:**\n    * **Scheduler:** LSF \n    * **Queue:**  `gpuqueue`\n    * **Resources:** The script requests 1 node, 1 core, 8 GB of memory, 1 shared exclusive GPU, and a walltime of 3 hours. \n    * **Environment:** The script sets the environment variable `OPENMM_CPU_THREADS` to 1 and activates the `openmm` conda environment. \n    * **Script Language:** The script is written in Bash.\n    * **Libraries:** The script uses OpenMM and OpenEye libraries.\n    * **Commands:** The script runs the `openmm_eq.py` script with specified parameters.\n\nThe script also uses various LSF directives for job management, including:\n\n* `#BSUB -P \"eq\"`: Project name.\n* `#BSUB -J \"a\"`: Job name.\n* `#BSUB -n 1`: Number of processors.\n* `#BSUB -R rusage[mem=8]`: Memory request.\n* `#BSUB -R span[hosts=1]`:  Run on a single node.\n* `#BSUB -q gpuqueue`: Queue to run the job.\n* `#BSUB -sp 1`: Job priority (lower number means higher priority).\n* `#BSUB -gpu num=1:j_exclusive=yes:mode=shared`: GPU resource request.\n* `#BSUB -W 3:00`: Walltime request.\n* `#BSUB -m \"ld-gpu lj-gpu ll-gpu ln-gpu lv-gpu\"`: Nodes to run on.\n* `#BSUB -o out_%J_%I.stdout`: Output file for standard output.\n* `#BSUB -eo out_%J_%I.stderr`: Output file for standard error. \n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 530,
+        "candidates_token_count": 675,
+        "total_token_count": 1205,
+        "cached_content_token_count": 0
+    }
+}

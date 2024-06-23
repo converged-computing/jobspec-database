@@ -1,0 +1,28 @@
+{
+    "application": "SLURM",
+    "details": {
+        "resource_requirements": {
+            "time": "2-23:00:00",
+            "job_name": "trainExample",
+            "output": "/results/reformer-tts/trainExample.out",
+            "error": "/results/reformer-tts/trainExample.err",
+            "nodelist": "asusgpu1,sylvester,arnold",
+            "qos": "2gpu3d",
+            "partition": "common",
+            "gres": "gpu:1",
+            "export": "ALL,PATH=\"/scidatalg/reformer-tts/miniconda3/bin:${PATH}\"",
+            "signal": "SIGUSR1@90"
+        },
+        "environment_setup": {
+            "conda_environment": "reformer-tts",
+            "conda_environment_file": "environment.yml",
+            "python_package": "reformer_tts",
+            "python_package_install_method": "pip install -e ."
+        },
+        "debugging_flags": {
+            "NCCL_DEBUG": "INFO",
+            "PYTHONFAULTHANDLER": "1"
+        },
+        "command": "python -O -m reformer_tts.cli --config /scidatalg/reformer-tts/reformer-tts/config/entrpy-reformer-lj.yml train-tts --resume '/results/reformer-tts/reformer-tts_ljtc2_double-loss_entropy/epoch=10-val_loss=0.32.ckpt'"
+    }
+}

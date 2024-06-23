@@ -1,0 +1,33 @@
+{
+    "application": "dask",
+    "details": {
+        "software": [
+            "dask-scheduler",
+            "dask-worker",
+            "python",
+            "ssh"
+        ],
+        "resource_requirements": {
+            "nodes": 16,
+            "tasks": 33,
+            "memory": "16GB per worker",
+            "wallclock_time": "23:59:59",
+            "environment": {
+                "module purge": true,
+                "pythonpath": "ARL",
+                "dask_scheduler": "scheduler:8786"
+            },
+            "files": {
+                "hostfile": "hostfile.$JOBID",
+                "pointing_simulation.log": "pointing_simulation.log",
+                "pointing_simulation_distributed.py": "pointing_simulation_distributed.py",
+                "shared": "../../../shared"
+            }
+        },
+        "execution_method": {
+            "scheduler_launch": "ssh $host dask-scheduler --port=8786",
+            "worker_launch": "ssh $host dask-worker --host ${host} --nprocs 2 --nthreads 1 --memory-limit 16GB --local-directory /mnt/storage-ssd/tim/dask-workspace/${host} $scheduler:8786",
+            "application_launch": "python ../../../pointing_simulation_distributed.py --context s3sky --frequency 0.765e9 --rmax 1e5 --flux_limit 0.003 --show True --seed 18051955  --pbtype MID_FEKO_B1 --memory 32  --integration_time 10 --use_agg True --time_series wind --time_chunk 180 --time_range -0.05 0.05 --shared_directory ../../../shared | tee pointing_simulation.log"
+        }
+    }
+}

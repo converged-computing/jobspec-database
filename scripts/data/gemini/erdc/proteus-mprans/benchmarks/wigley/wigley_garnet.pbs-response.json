@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"proteus\",\n  \"details\": {\n    \"queue\": \"standard\",\n    \"walltime\": \"72 hours\",\n    \"ncpus\": 4096,\n    \"jobname\": \"wigley\",\n    \"modules\": [\n      \"proteus\",\n      \"garnet\"\n    ],\n    \"environment_variables\": [\n      \"MPICH_RANK_REORDER_METHOD\",\n      \"WORKDIR\"\n    ],\n    \"executable\": \"parun\",\n    \"script\": \"wigley_so.py\",\n    \"arguments\": [\n      \"-l\",\n      \"7\",\n      \"-v\",\n      \"-m\",\n      \"-O\",\n      \"../inputTemplates/petsc.options.schur_upper_a11_asm_boomeramg\",\n      \"-D\",\n      \"$WORKDIR/wigley.$PBS_JOBID\"\n    ],\n    \"resource_constraints\": {\n      \"memory_per_node\": \"62 GB\",\n      \"memory_per_process\": \"3.75 GB\"\n    }\n  }\n}\n```\n\nThis script is running the **proteus** application. It utilizes a PBS (Portable Batch System) environment to submit and manage the job execution. Here's a breakdown of the other software and resource requirements:\n\n**Software:**\n\n* **PBS (Portable Batch System):**  Used to submit, schedule, and manage the job on the cluster.\n* **Modules:** The script sources the `modules` environment to load necessary software components. It specifically loads the `proteus` and `garnet` modules, indicating the use of these specific software packages.\n* **Proteus:** This is the primary application the script runs. Proteus is likely a scientific simulation or modeling software.\n* **Garnet:** A specific environment configuration used by proteus.\n* **aprun:** A command from the MPI (Message Passing Interface) library used to launch and run parallel programs.\n* **parun:**  Likely a command associated with the `proteus` application, responsible for running the simulation itself.\n\n**Resource Requirements:**\n\n* **Queue:** The job is submitted to the \"standard\" queue.\n* **Walltime:** The job is allotted 72 hours to complete its execution.\n* **NCPUs:** The job requests 4096 processor cores to run in parallel.\n* **Memory:** The script highlights that each node of the cluster has around 62 GB of usable memory, and it uses the `-M` flag to specify a memory limit for individual processes.  \n\nThe script also includes comments indicating the number of processes (`-n`) and nodes (`-N`) to use with `aprun`, as well as the `-S` flag (probably for specifying the number of sockets per node).  These are all parameters related to efficiently running parallel computations.\n\nThe `-O` flag likely specifies the path to a file containing options for a solver or library used by the `wigley_so.py` script. \n\nThe `-D` flag sets a directory to store output from the simulation or other relevant data.\n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 433,
+        "candidates_token_count": 689,
+        "total_token_count": 1122,
+        "cached_content_token_count": 0
+    }
+}

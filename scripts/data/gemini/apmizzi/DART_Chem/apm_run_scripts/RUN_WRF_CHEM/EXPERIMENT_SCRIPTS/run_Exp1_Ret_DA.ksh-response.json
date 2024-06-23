@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n\"application\": \"WRF-Chem\",\n\"software\": [\n\"DART\",\n\"WRF-Chem\",\n\"WRF\",\n\"WRFDA\",\n\"advance_model.ksh\",\n\"da_run_hold.ksh\",\n\"advance_time\",\n\"pert_wrf_bc\",\n\"update_wrf_bc\",\n\"dart_to_wrf\",\n\"wrf_to_dart\",\n\"filter\",\n\"restart_file_tool\",\n\"wrf.exe\",\n\"da_wrfvar.exe\",\n\"be.dat\",\n\"hist_io_flds\",\n\"dart_create_input.nml.ksh\",\n\"wrfchem_create_namelist.input.ksh\"\n],\n\"resources\": [\n\"geyser\",\n\"caldera\",\n\"HSI\"\n]\n}\n```\n\nThis script is designed to run a series of WRF-Chem simulations within the DART framework, using the `advance_model.ksh` script. \n\nHere's a breakdown of the script's functionality:\n\n**1. Setting Up the Environment**\n\n* The script starts by defining numerous environment variables that control the experiment parameters (e.g., start date, end date, number of ensemble members, cycling period, domain, etc.).\n* It also defines directories for the project, scratch space, and archived data, as well as paths for various executables and input data.\n* A `CENTRALDIR` is created within the `RUN_DIR` to store DART-related files and executables.\n* Several directories are created for WRF-Chem runs, WRF boundary conditions, and DART.\n\n**2.  Setting Up DART and WRF-Chem Namelists**\n\n*  The script checks if it needs to create the necessary namelist files. If so, it generates `input.nml` for DART and `namelist.input` for WRF-Chem. \n* The namelists are populated with various parameters controlling aspects such as:\n    * **Filtering:** outlier thresholds, ensemble size, restart options.\n    * **Assimilation:** cutoff values, localization options.\n    * **Model:** state variables, output options, time stepping.\n    * **WRF-Chem:** time control, physics options, dynamics, boundary conditions, chemical options.\n\n**3. Running the Initial WRF-Chem Simulation**\n\n* The script checks if an initial run is required. If so, it performs the following steps:\n    * Copies DART and WRF-Chem executables to the initial run directory.\n    * Retrieves WRF input (wrfinput_d<DOMAIN>) and WRF boundary files (wrfbdy_d<DOMAIN>) from a designated data directory for each ensemble member.\n    * Converts the WRF input files to DART's format using `wrf_to_dart` and `restart_file_tool`.\n    * Copies necessary WRF-Chem static and time-dependent chemistry data to the `WRFCHEM_RUN` directory for each member.\n    * Creates a job script (`job.ksh`) for each ensemble member to run `advance_model.ksh`, which executes the WRF-Chem simulation.\n    * Submits the jobs to the LSF (Load Sharing Facility) cluster, using `bsub`.\n    * Waits for the initial WRF-Chem simulations to complete using `da_run_hold.ksh`.\n    * Archives the initial WRF-Chem forecasts to the `HSI_SAVE_DIR` (using HSI).\n\n**4. Running the Cycling Simulation**\n\n* The script checks if a cycling simulation is required. If so, it enters a loop to run WRF-Chem for each cycle, executing the following steps:\n    * Updates the date and time variables for the current cycle.\n    * If warm starting is enabled (`RUN_WARM`), the script:\n        * Copies the necessary files from the previous cycle to the current cycle directory.\n        * Runs the DART filter to assimilate observations, generating posterior analyses for each ensemble member.\n        * Copies the filtered output files to the `CENTRALDIR` and uses them as input for the next WRF-Chem cycle.\n    * If warm starting is not enabled, the script performs a cold start:\n        * Copies the initial WRF input and boundary data to the current cycle directory.\n        * Converts the WRF input files to DART format for the cold start.\n        * Executes the WRF-Chem simulation using `advance_model.ksh`.\n    * The script also handles the possibility of WRF-Chem simulation failures by attempting a warm start using a previous successful run if the cold start fails.\n    * After each cycle, the script archives the WRF-Chem forecasts to the `HSI_SAVE_DIR`.\n\n**5. Ending the Script**\n\n* The script exits after completing the cycling simulation.\n\n**Summary**\n\nThis script provides a robust framework for running WRF-Chem simulations within DART, including initial setup, cycling, filtering, and archiving. The script makes use of LSF for job submission and HSI (High-Performance Storage Infrastructure) for data storage and retrieval, allowing for efficient execution on a high-performance computing cluster. \n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 30357,
+        "candidates_token_count": 1135,
+        "total_token_count": 31492,
+        "cached_content_token_count": 0
+    }
+}

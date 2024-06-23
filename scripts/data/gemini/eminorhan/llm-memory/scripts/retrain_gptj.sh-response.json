@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"SLURM\",\n  \"details\": {\n    \"resource_requirements\": {\n      \"gpu\": \"4x A100\",\n      \"cpus\": \"16\",\n      \"memory\": \"364GB\",\n      \"time\": \"48 hours\",\n      \"job_name\": \"retrain_gptj\",\n      \"output_file\": \"retrain_gptj_%A_%a.out\",\n      \"array_size\": \"16\"\n    },\n    \"software_requirements\": {\n      \"modules\": [\n        \"cuda/11.6.2\"\n      ],\n      \"python_packages\": [\n        \"accelerate\",\n        \"transformers\"\n      ]\n    },\n    \"commands\": [\n      \"module purge\",\n      \"module load cuda/11.6.2\",\n      \"accelerate launch --config_file /scratch/eo41/llm-memory/accelerate_config.yaml --num_cpu_threads_per_process 4 /scratch/eo41/llm-memory/train.py \\\\\",\n      \"--model_name_or_path \\\"${MODEL_ROOT_DIR}/${EX}/gpt_j_seen_${DATA}\\\" \\\\\",\n      \"--train_file \\\"data/cnn_dailymail.json\\\" \\\\\",\n      \"--per_device_train_batch_size 4 \\\\\",\n      \"--learning_rate 0.00001 \\\\\",\n      \"--output_dir \\\"${OUTPUT_DIR}/gptj_${EX}_shot3_${DATA}\\\" \\\\\",\n      \"--block_size 128 \\\\\",\n      \"--num_train_epochs 10 \\\\\",\n      \"--checkpointing_steps 100000 \\\\\",\n      \"--max_train_steps 100001 \\\\\",\n      \"--overwrite_cache\"\n    ]\n  }\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 630,
+        "candidates_token_count": 436,
+        "total_token_count": 1066,
+        "cached_content_token_count": 0
+    }
+}

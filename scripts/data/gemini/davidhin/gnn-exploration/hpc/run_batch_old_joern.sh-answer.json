@@ -1,0 +1,25 @@
+{
+    "application": "Singularity",
+    "details": {
+        "environment": {
+            "modules": [
+                "Singularity",
+                "CUDA/10.2.89"
+            ]
+        },
+        "resources": {
+            "partition": "batch",
+            "nodes": 1,
+            "tasks": 1,
+            "time": "00:10:00",
+            "memory": "4GB",
+            "array_size": 200,
+            "error_log": "hpc/logs/batch_joern_%a.err",
+            "output_log": "hpc/logs/batch_joern_%a.out",
+            "job_name": "batch_joern"
+        },
+        "script": {
+            "command": "singularity run main.simg -p gnnproject/analysis/run_batch_old_joern.py -a $SLURM_ARRAY_TASK_ID"
+        }
+    }
+}

@@ -1,0 +1,20 @@
+{
+    "application": "Slurm",
+    "details": {
+        "account": "project_2005718",
+        "partition": "small",
+        "job_name": "{{ job_name }}",
+        "log_file": "{{ log_file | worker-%A_%a.out }}",
+        "memory": "{{ memory | 8192 }}",
+        "array": "1-{{ n_jobs }}",
+        "cores": "{{ cores | 1 }}",
+        "ntasks": 1,
+        "time": "{{ time | 1:00:00 }}",
+        "temp_space": "{{ temp_space | 10 }}",
+        "auth": "{{ auth }}",
+        "local_scratch": "$LOCAL_SCRATCH",
+        "singularity_bind": "$(realpath ${LOCAL_SCRATCH}):$(pwd)/userdir",
+        "path": "/projappl/project_2005718/OptimOTU_v2/bin",
+        "r_command": "clustermq:::worker(\"{{ master }}\")"
+    }
+}

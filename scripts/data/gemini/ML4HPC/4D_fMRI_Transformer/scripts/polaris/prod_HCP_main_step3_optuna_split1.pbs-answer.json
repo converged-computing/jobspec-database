@@ -1,0 +1,33 @@
+{
+    "application": "MPI",
+    "software": [
+        "mpiexec",
+        "conda",
+        "python",
+        "nvidia-smi",
+        "set_affinity_gpu_polaris.sh"
+    ],
+    "resources": [
+        "Polaris cluster",
+        "GPUs",
+        "10 nodes",
+        "home filesystem",
+        "grand filesystem"
+    ],
+    "libraries": [
+        "3DCNN conda environment",
+        "OpenMP",
+        "NCCL",
+        "MPICH"
+    ],
+    "parameters": {
+        "walltime": "2 hours",
+        "queue": "prod",
+        "account": "STlearn",
+        "nodes": 10,
+        "ranks_per_node": "determined by nvidia-smi -L",
+        "depth": 16,
+        "OMP_NUM_THREADS": "not explicitly set, but controlled by depth"
+    },
+    "command": "python main.py --step 3  --use_optuna --exp_name prod_from_scratch_optuna_lrwd --image_path /lus/grand/projects/STlearn/HCP_MNI_to_TRs --dataset_split_num 1"
+}

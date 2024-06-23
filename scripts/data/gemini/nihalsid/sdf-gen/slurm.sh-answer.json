@@ -1,0 +1,37 @@
+{
+    "application": "Slurm",
+    "details": {
+        "job_name": "voxelize",
+        "nodes": 1,
+        "tasks": 1,
+        "cpus_per_task": 1,
+        "gpus_per_task": 0,
+        "memory_per_cpu": "12G",
+        "excluded_nodes": [
+            "moria",
+            "char",
+            "tarsonis"
+        ],
+        "script": "process_meshes.py",
+        "arguments": [
+            "--mesh_dir",
+            "/cluster/gondor/ysiddiqui/3DFrontCeilingMeshes/",
+            "--df_lowres_dir",
+            "/cluster/gondor/ysiddiqui/3DFrontCeilingDistanceFields/complete_lowres",
+            "--df_highres_dir",
+            "/cluster/gondor/ysiddiqui/3DFrontCeilingDistanceFields/complete_highres",
+            "--df_if_dir",
+            "/cluster/gondor/ysiddiqui/3DFrontCeilingDistanceFields/complete_semantics",
+            "--chunk_lowres_dir",
+            "/cluster/gondor/ysiddiqui/3DFrontCeilingDistanceFields/chunk_lowres",
+            "--chunk_highres_dir",
+            "/cluster/gondor/ysiddiqui/3DFrontCeilingDistanceFields/chunk_highres",
+            "--chunk_if_dir",
+            "/cluster/gondor/ysiddiqui/3DFrontCeilingDistanceFields/chunk_semantics",
+            "--num_proc",
+            "$SLURM_ARRAY_TASK_COUNT",
+            "--proc",
+            "$SLURM_ARRAY_TASK_ID"
+        ]
+    }
+}

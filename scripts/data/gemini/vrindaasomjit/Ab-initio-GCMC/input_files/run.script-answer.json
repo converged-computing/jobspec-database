@@ -1,0 +1,31 @@
+{
+    "application": "LAMMPS",
+    "details": {
+        "modules": [
+            "intel/18.0.2",
+            "impi/18.0.2",
+            "python2/2.7.15",
+            "vasp/5.4.4"
+        ],
+        "environment_variables": {
+            "LAMMPS_DIR": "/home1/04770/tg840694/help_TACC_lammps/stable_3Mar2020_clean/",
+            "PATH": "${PATH}:${LAMMPS_DIR}/bin",
+            "PYTHONPATH": "${PYTHONPATH}:${LAMMPS_DIR}/lib/message/cslib/src",
+            "LD_LIBRARY_PATH": "${LD_LIBRARY_PATH}:${LAMMPS_DIR}/lib/message/cslib/src"
+        },
+        "slurm_job_parameters": {
+            "job_name": "gcmc",
+            "output_file": "gcmc.o%j",
+            "error_file": "gcmc.e%j",
+            "nodes": 4,
+            "tasks_per_node": 45.5,
+            "queue": "skx-dev",
+            "time": "2:00:00"
+        },
+        "commands": [
+            "ibrun -n 1 -o 0 lmp_stampede -restart2data gcmc.restart.1353 remap data.intf",
+            "ibrun -n 1 -o 0 lmp_stampede -v mode file < in.client.intf",
+            "python vasp_wrap_gcmc.py file POSCARintf"
+        ]
+    }
+}

@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"Slurm\",\n  \"details\": {\n    \"partition\": \"main\",\n    \"output_file\": \"log/runSnudda-%j-output.txt\",\n    \"error_file\": \"log/runSnudda-%j-error.txt\",\n    \"time_limit\": \"0:59:00\",\n    \"job_name\": \"Snudda\",\n    \"account\": \"naiss2023-5-231\",\n    \"nodes\": 1,\n    \"tasks\": 128,\n    \"cpus_per_task\": 2,\n    \"memory_per_cpu\": \"930M\",\n    \"mail_type\": \"ALL\",\n    \"modules\": \"snic-env\",\n    \"environment_variables\": {\n      \"OMP_STACKSIZE\": \"128G\",\n      \"IPNWORKERS\": \"40\",\n      \"IPYTHONDIR\": \"/cfs/klemming/scratch/${USER:0:1}/$USER/.ipython\",\n      \"IPYTHON_PROFILE\": \"default\",\n      \"FI_CXI_DEFAULT_VNI\": \"random value from /dev/urandom\",\n      \"CONTROLLERIP\": \"value from controller_ip.txt\"\n    },\n    \"commands\": [\n      \"rm -r $IPYTHONDIR\",\n      \"source $HOME/Snudda/snudda_env/bin/activate\",\n      \"./../../ipcontroller_new.sh &\",\n      \"sleep 60\",\n      \"ipengine --location=${CONTROLLERIP} --profile=${IPYTHON_PROFILE} --mpi --ipython-dir=${IPYTHONDIR}  --timeout=30.0 c.EngineFactory.max_heartbeat_misses=10  c.MPI.use='mpi4py' 1> ipe_${SLURM_JOBID}.out 2> ipe_${SLURM_JOBID}.err &\",\n      \"sleep 30\",\n      \"./Dardel_runSnudda_lateral-correlated.sh\"\n    ]\n  }\n}\n```\n\nThis script uses Slurm as the job scheduler and runs the following:\n\n1. **ipcontroller_new.sh:** Starts the IPython controller.\n2. **ipengine:** Starts IPython engines (40 in this case) for distributed computing.\n3. **Dardel_runSnudda_lateral-correlated.sh:** Runs the main application script. \n\n**Key resources and requirements:**\n\n* **Slurm**: The script uses Slurm for job scheduling and resource allocation.\n* **IPython**: It utilizes IPython for parallel computing with multiple engines.\n* **MPI**: It likely uses MPI for message passing between the engines.\n* **Valgrind**: The script uses Valgrind to detect memory leaks.\n* **Snudda**: The script seems to be using Snudda, a tool for scientific computing, but its specific function isn't clear. \n\nThe script sets up a distributed computing environment, starts IPython engines, and then runs the main application script. It also uses Valgrind to check for memory leaks."
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 1084,
+        "candidates_token_count": 711,
+        "total_token_count": 1795,
+        "cached_content_token_count": 0
+    }
+}

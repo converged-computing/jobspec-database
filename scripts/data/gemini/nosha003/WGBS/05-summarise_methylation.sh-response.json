@@ -1,0 +1,122 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"BSMAP\",\n  \"software_dependencies\": [\n    \"python2\",\n    \"bedtools\",\n    \"samtools\"\n  ],\n  \"resources\": {\n    \"walltime\": \"24:00:00\",\n    \"nodes\": \"1\",\n    \"ppn\": \"6\",\n    \"memory\": \"80gb\"\n  },\n  \"input_files\": [\n    \"bsmapped_filtered/${ID}_sorted_MarkDup.bam\",\n    \"LIST\",\n    \"genome_reference\",\n    \"intersect_regions_ref\"\n  ],\n  \"output_files\": [\n    \"BSMAPratio/${ID}_methratio.txt\",\n    \"BSMAPratio/${ID}_BSMAP_out.txt\",\n    \"BSMAPratio/${ID}_BSMAP_out_CG.bedGraph\",\n    \"BSMAPratio/${ID}_BSMAP_out_CHG.bedGraph\",\n    \"BSMAPratio/${ID}_BSMAP_out_CHH.bedGraph\",\n    \"BSMAPratio/${ID}_BSMAP_out_CG.bigWig\",\n    \"BSMAPratio/${ID}_BSMAP_out_CHG.bigWig\",\n    \"BSMAPratio/${ID}_BSMAP_out_CHH.bigWig\",\n    \"ConversionRate/${ID}_conversion_rate.txt\",\n    \"ConversionRate/${ID}_conversion_rate_eff_C.txt\",\n    \"TempOut/${ID}_specific_region_pairs_clipOverlap.txt\",\n    \"OnTargetCoverage/${ID}_specific_region_count_pairs_clipOverlap.txt\",\n    \"TempOut/${ID}_BSMAP_out_ontarget.txt\",\n    \"OnTargetCoverage/${ID}_BSMAP_out_ontarget_mC.txt\",\n    \"OnTargetCoverage/${ID}_BSMAP_out_ontarget_mCeff.txt\"\n  ],\n  \"commands\": [\n    \"module load python2\",\n    \"module load bedtools\",\n    \"module load samtools\",\n    \"mkdir -p BSMAPratio\",\n    \"mkdir -p TempOut\",\n    \"mkdir -p OnTargetCoverage\",\n    \"mkdir -p ConversionRate\",\n    \"python /home/springer/nosha003/software/bsmap-2.74/methratio.py -o BSMAPratio/${ID}_methratio.txt -d ${genome_reference} -u -z -r bsmapped_filtered/${ID}_sorted_MarkDup.bam\",\n    \"awk '(NR>1){if(($3==\"-\" && $4~/^.CG../ ) || ($3==\"+\" &&  $4~/^..CG./)) print $1\"\\t\"$2-1\"\\t\"$2\"\\t\"$3\"\\t\"\"CG\"\"\\t\"$5\"\\t\"$6\"\\t\"$7\"\\t\"$8\"\\t\"$9\"\\t\"$10\"\\t\"$11\"\\t\"$12; else if(($3==\"-\" && $4~/^C[AGT]G../ ) || ($3==\"+\" &&  $4~/^..C[ACT]G/)) print $1\"\\t\"$2-1\"\\t\"$2\"\\t\"$3\"\\t\"\"CHG\"\"\\t\"$5\"\\t\"$6\"\\t\"$7\"\\t\"$8\"\\t\"$9\"\\t\"$10\"\\t\"$11\"\\t\"$12; else if(($3==\"-\" && $4~/^[AGT][AGT]G../ ) || ($3==\"+\" &&  $4~/^..C[ACT][ACT]/)) print $1\"\\t\"$2-1\"\\t\"$2\"\\t\"$3\"\\t\"\"CHH\"\"\\t\"$5\"\\t\"$6\"\\t\"$7\"\\t\"$8\"\\t\"$9\"\\t\"$10\"\\t\"$11\"\\t\"$12; else print $1\"\\t\"$2-1\"\\t\"$2\"\\t\"$3\"\\t\"\"CNN\"\"\\t\"$5\"\\t\"$6\"\\t\"$7\"\\t\"$8\"\\t\"$9\"\\t\"$10\"\\t\"$11\"\\t\"$12}' BSMAPratio/${ID}.txt > BSMAPratio/${ID}_BSMAP_out.txt\",\n    \"awk -F$\"\\\\t\" \"$awk_make_bed\" \"BSMAPratio/${ID}_methratio.txt\" > \"BSMAPratio/${ID}_BSMAP_out.txt\",\n    \"awk -F$\"\\\\t\" \"$awk_make_bedGraph\" \"BSMAPratio/${ID}_BSMAP_out.txt\" | awk -F$\"\\\\t\" -v ID=$ID \"$awk_make_bedGraph_context\" -\",\n    \"/home/springer/nosha003/software/kentUtils/bin/bedGraphToBigWig \\\"BSMAPratio/${ID}_BSMAP_out_CG.bedGraph\\\" /home/springer/nosha003/database/B73v4/B73v4_chr_size.txt \\\"BSMAPratio/${ID}_BSMAP_out_CG.bigWig\\\"\",\n    \"/home/springer/nosha003/software/kentUtils/bin/bedGraphToBigWig \\\"BSMAPratio/${ID}_BSMAP_out_CHG.bedGraph\\\" /home/springer/nosha003/database/B73v4/B73v4_chr_size.txt \\\"BSMAPratio/${ID}_BSMAP_out_CHG.bigWig\\\"\",\n    \"/home/springer/nosha003/software/kentUtils/bin/bedGraphToBigWig \\\"BSMAPratio/${ID}_BSMAP_out_CHH.bedGraph\\\" /home/springer/nosha003/database/B73v4/B73v4_chr_size.txt \\\"BSMAPratio/${ID}_BSMAP_out_CHH.bigWig\\\"\",\n    \"awk -F$\"\\\\t\" 'BEGIN {OFS = FS} {if($1==\"Pt\" && $5==\"CHH\") print}' BSMAPratio/${ID}_BSMAP_out.txt |wc -l\",\n    \"awk -F$\"\\\\t\" 'BEGIN {OFS = FS} {if($1==\"Pt\" && $5==\"CHH\" && $8 != 0) print}' BSMAPratio/${ID}_BSMAP_out.txt | awk '{sum1 += $9; sum2 +=$8} END {print sum1, sum2 , 100-((sum2/sum1)*100)}' > ConversionRate/${ID}_conversion_rate.txt\",\n    \"awk -F$\"\\\\t\" 'BEGIN {OFS = FS} {if($1==\"Pt\" && $5==\"CHH\" && $8 != 0) print}' BSMAPratio/${ID}_BSMAP_out.txt | awk '{sum1 += $7; sum2 +=$8} END {print sum1, sum2 , 100-((sum2/sum1)*100)}' > ConversionRate/${ID}_conversion_rate_eff_C.txt\",\n    \"bedtools intersect -abam bsmapped_filtered/${ID}_sorted_MarkDup_pairs_clipOverlap.bam -b ${intersect_regions_ref} -bed -wa -wb > TempOut/${ID}_specific_region_pairs_clipOverlap.txt\",\n    \"awk -F$\"\\\\t\" 'BEGIN {OFS = FS} {sum[$16]++} END {for (i in sum) print i, sum[i]}' TempOut/${ID}_specific_region_pairs_clipOverlap.txt | sort -k1 -n > OnTargetCoverage/${ID}_specific_region_count_pairs_clipOverlap.txt\",\n    \"bedtools intersect -a BSMAPratio/${ID}_BSMAP_out.txt -b ${intersect_regions_ref} -wa -wb > TempOut/${ID}_BSMAP_out_ontarget.txt\",\n    \"awk -F$\"\\\\t\" 'BEGIN {OFS = FS} {mC[$14\"\\\\t\"$15\"\\\\t\"$16\"\\\\t\"$5] += $8; CT[$14\"\\\\t\"$15\"\\\\t\"$16\"\\\\t\"$5] += $9; n[$14\"\\\\t\"$15\"\\\\t\"$16\"\\\\t\"$5]++} END {for (j in mC) print j, n[j], mC[j], CT[j]}' TempOut/${ID}_BSMAP_out_ontarget.txt > OnTargetCoverage/${ID}_BSMAP_out_ontarget_mC.txt\",\n    \"awk -F$\"\\\\t\" 'BEGIN {OFS = FS} {mC[$14\"\\\\t\"$15\"\\\\t\"$16\"\\\\t\"$5] += $8; CT[$14\"\\\\t\"$15\"\\\\t\"$16\"\\\\t\"$5] += $7; n[$14\"\\\\t\"$15\"\\\\t\"$16\"\\\\t\"$5]++} END {for (j in mC) print j, n[j], mC[j], CT[j]}' TempOut/${ID}_BSMAP_out_ontarget.txt > OnTargetCoverage/${ID}_BSMAP_out_ontarget_mCeff.txt\"\n  ]\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "citation_metadata": {
+                "citation_sources": [
+                    {
+                        "start_index": 1346,
+                        "end_index": 1527,
+                        "uri": "https://github.com/nosha003/WGBS",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 1526,
+                        "end_index": 2127,
+                        "uri": "",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 1961,
+                        "end_index": 2166,
+                        "uri": "https://github.com/nosha003/WGBS",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 2409,
+                        "end_index": 2542,
+                        "uri": "https://github.com/nosha003/WGBS",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 2560,
+                        "end_index": 2755,
+                        "uri": "https://github.com/nosha003/WGBS",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 2774,
+                        "end_index": 2970,
+                        "uri": "https://github.com/nosha003/WGBS",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 2851,
+                        "end_index": 3033,
+                        "uri": "https://github.com/nosha003/WGBS",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 3162,
+                        "end_index": 3390,
+                        "uri": "https://github.com/nosha003/WGBS",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 3399,
+                        "end_index": 3627,
+                        "uri": "https://github.com/nosha003/WGBS",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 3642,
+                        "end_index": 4044,
+                        "uri": "https://github.com/nosha003/WGBS",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 4178,
+                        "end_index": 4474,
+                        "uri": "https://github.com/nosha003/WGBS",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 4474,
+                        "end_index": 4754,
+                        "uri": "https://github.com/nosha003/WGBS",
+                        "license_": ""
+                    }
+                ]
+            },
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 4093,
+        "candidates_token_count": 2079,
+        "total_token_count": 6172,
+        "cached_content_token_count": 0
+    }
+}

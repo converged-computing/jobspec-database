@@ -1,0 +1,52 @@
+{
+    "application": "psc_frontend",
+    "details": {
+        "resource_requirements": {
+            "time": "02:30:00",
+            "nodes": 2,
+            "tasks_per_node": 24,
+            "cpus_per_task": 1,
+            "partition": "haswell",
+            "memory_per_cpu": "600M",
+            "job_name": "READEX_kripke",
+            "account": "p_readex",
+            "exclusive": true,
+            "comment": "cpufreqchown",
+            "mail_type": "ALL"
+        },
+        "environment_variables": {
+            "LD_LIBRARY_PATH": "$LD_LIBRARY_PATH:/usr/local/lib",
+            "SCOREP_SUBSTRATE_PLUGINS": "rrl",
+            "SCOREP_RRL_PLUGINS": "cpu_freq_plugin,uncore_freq_plugin",
+            "SCOREP_RRL_VERBOSE": "WARN",
+            "SCOREP_METRIC_PLUGINS": "hdeem_sync_plugin",
+            "SCOREP_METRIC_PLUGINS_SEP": ";",
+            "SCOREP_METRIC_HDEEM_SYNC_PLUGIN": "*/E",
+            "SCOREP_METRIC_HDEEM_SYNC_PLUGIN_CONNECTION": "INBAND",
+            "SCOREP_METRIC_HDEEM_SYNC_PLUGIN_VERBOSE": "WARN",
+            "SCOREP_METRIC_HDEEM_SYNC_PLUGIN_STATS_TIMEOUT_MS": 1000,
+            "SCOREP_MPI_ENABLE_GROUPS": "ENV",
+            "KRIPKE_COMMAND": "unknown"
+        },
+        "application_arguments": {
+            "apprun": "../build/kripke $KRIPKE_COMMAND",
+            "mpinumprocs": 24,
+            "ompnumthreads": 1,
+            "phase": "Loop",
+            "info": 9,
+            "config-file": "readex_config_extended.xml",
+            "tune": "readex_intraphase",
+            "force-localhost": true,
+            "selective-info": "AutotunePlugins,FrontendStateMachines"
+        },
+        "output_files": {
+            "log_file": "log_JOB.txt",
+            "rts_xml": "rts.xml",
+            "tuning_model_json": "tuning_model.json"
+        },
+        "other_software": {
+            "scorep": "Used for performance analysis and tuning",
+            "hdeem": "Used for hardware performance monitoring"
+        }
+    }
+}

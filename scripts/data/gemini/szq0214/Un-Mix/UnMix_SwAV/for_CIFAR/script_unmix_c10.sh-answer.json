@@ -1,0 +1,50 @@
+{
+    "application": "Slurm",
+    "details": {
+        "scheduler": "Slurm",
+        "nodes": 1,
+        "gpus": 1,
+        "tasks_per_node": 1,
+        "cpus_per_task": 2,
+        "partition": "default",
+        "job_name": "c10",
+        "time": "12:00:00",
+        "memory": "50G",
+        "python_package": "torch.distributed",
+        "python_module": "main_swav_unmix.py",
+        "python_module_evaluation": "eval_linear.py",
+        "framework": "PyTorch",
+        "dataset": "CIFAR10",
+        "model": "ResNet18",
+        "training_parameters": {
+            "epochs": 400,
+            "batch_size": 128,
+            "learning_rate": {
+                "start": 0.6,
+                "end": 0.0006
+            },
+            "warmup_epochs": 5,
+            "crop_size": 32,
+            "number_of_crops": 2,
+            "minimum_scale_of_crops": 0.14,
+            "maximum_scale_of_crops": 1.0,
+            "number_of_prototypes": 100,
+            "queue_length": 120,
+            "epoch_queue_starts": 15,
+            "use_fp16": true,
+            "freeze_prototypes_iterations": 5005,
+            "hidden_mlp_size": 512,
+            "temperature": 0.1,
+            "epsilon": 0.05,
+            "workers": 2
+        },
+        "evaluation_parameters": {
+            "number_of_labels": 10,
+            "crop_size": 32,
+            "workers": 2,
+            "pretrained_model_path": "${EXPERIMENT_PATH}/checkpoint.pth.tar"
+        },
+        "experiment_path": "./experiments/unmix_swav_cifar${EXP_SUFFIX}",
+        "evaluation_path": "${EXPERIMENT_PATH}_linear_eval"
+    }
+}

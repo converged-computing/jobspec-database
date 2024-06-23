@@ -1,0 +1,30 @@
+{
+    "application": "SLURM",
+    "details": {
+        "job_name": "lm_eval_falcon-40b_mgsm-mt",
+        "cpus": 8,
+        "nodes": 1,
+        "tasks_per_node": 1,
+        "time": "0",
+        "memory": "50GB",
+        "gpus": 2,
+        "output": "../.slurm/lm_eval_falcon-40b_mgsm-mt.out",
+        "error": "../.slurm/lm_eval_falcon-40b_mgsm-mt.err",
+        "virtual_environment": "/gaueko0/users/jetxaniz007/phd/venv2/bin/activate",
+        "transformers_cache": "/gaueko0/transformers_cache/",
+        "models": [
+            "tiiuae/falcon-40b"
+        ],
+        "tasks": [
+            "mgsm-mt"
+        ],
+        "fewshot": 8,
+        "python_script": "../../lm-evaluation-harness/main.py",
+        "model_type": "hf-causal-experimental",
+        "model_args": "pretrained=$model_name,use_accelerate=True,trust_remote_code=True,dtype=bfloat16",
+        "device": "cuda",
+        "output_path": "../../results/falcon/${model_name:7}/${model_name:7}_${group_name}_${num_fewshot}-shot.json",
+        "batch_size": 6,
+        "cache": false
+    }
+}

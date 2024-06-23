@@ -1,0 +1,27 @@
+{
+    "application": "Gromacs",
+    "details": {
+        "version": "4.6.7",
+        "resource_requirements": {
+            "nodes": 12,
+            "tasks_per_node": 32,
+            "cpus_per_task": 1,
+            "memory_per_cpu": "1024M",
+            "time": "05-00:00",
+            "job_name": "RREMD-stage3",
+            "mail_user": "hsueh@phas.ubc.ca",
+            "mail_type": "ALL"
+        },
+        "modules": [
+            "gromacs/4.6.7"
+        ],
+        "environment_variables": {
+            "GMXLIB": "/project/projects/def-plotkin/shared_projects:/cvmfs/soft.computecanada.ca/easybuild/software/2017/avx2/MPI/intel2016.4/openmpi2.1/gromacs/4.6.7/share/gromacs/top",
+            "GMXRC": "/home/cttm4a1/gromacs-4.6.7-RREMD/bin/GMXRC"
+        },
+        "commands": [
+            "grompp -f md.mdp -c prot-solv-ion-em-nvt-npt.gro -t state.cpt -p topol.top -o md.tpr",
+            "mdrun_mpi -s md.tpr -o md.trr -c prot-solv-ion-em-nvt-npt-md.gro -g md.log -e md.edr -v -multidir sim{1..32} -replex 500 -reservoir element{1..10000}.cpt"
+        ]
+    }
+}

@@ -1,0 +1,35 @@
+{
+    "application": "SLURM",
+    "details": {
+        "job_name": "ovon-dgen",
+        "output": "slurm_logs/dataset-%j.out",
+        "error": "slurm_logs/dataset-%j.err",
+        "gpus": 1,
+        "nodes": 1,
+        "cpus_per_task": 6,
+        "ntasks_per_node": 1,
+        "constraint": "a40|rtx_6000|2080_ti",
+        "partition": "short",
+        "exclude": "calculon,alexa,cortana,bmo,c3po,ripl-s1,t1000,hal,irona,fiona",
+        "signal": "USR1@100",
+        "requeue": true,
+        "environment_variables": {
+            "GLOGB_minloglevel": 2,
+            "HABITAT_SIM_LOG": "quiet",
+            "MAGNUM_LOG": "quiet",
+            "MAIN_ADDR": "scontrol show hostnames ${SLURM_JOB_NODELIST} | head -n 1"
+        },
+        "conda_environment": "ovon",
+        "python_script": "ovon/dataset/objectnav_generator.py",
+        "script_arguments": {
+            "scene": "$scene",
+            "split": "$split",
+            "num_scenes": "$num_scenes",
+            "tasks_per_gpu": "$num_tasks",
+            "output_path": "$output_path",
+            "start_poses_per_object": "$start_poses_per_object",
+            "episodes_per_object": "$episodes_per_object",
+            "disable_euc_geo_ratio_check": true
+        }
+    }
+}

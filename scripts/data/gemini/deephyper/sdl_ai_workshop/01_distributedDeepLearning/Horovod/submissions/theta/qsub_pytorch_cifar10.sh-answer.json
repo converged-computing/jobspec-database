@@ -1,0 +1,35 @@
+{
+    "application": "pytorch",
+    "details": {
+        "framework": "pytorch",
+        "version": "1.7",
+        "cluster_manager": "COBALT",
+        "nodes": 4,
+        "runtime": "1 hour",
+        "queue": "theta-knl",
+        "memory_type": "mcdram",
+        "memory_configuration": "cache:numa=quad",
+        "account": "SDL_Workshop",
+        "output_directory": "results/theta",
+        "output_file": "pytorch_cifar10.out",
+        "processes_per_node": 4,
+        "parallelism": "MPI",
+        "mpi_implementation": "aprun",
+        "mpi_options": {
+            "processes": "COBALT_JOBSIZE * PROC_PER_NODE",
+            "nodes": "PROC_PER_NODE",
+            "threads_per_process": 2,
+            "process_affinity": "depth",
+            "environment_variables": {
+                "OMP_NUM_THREADS": 32,
+                "KMP_BLOCKTIME": 0
+            }
+        },
+        "python_script": "pytorch_cifar10.py",
+        "script_arguments": {
+            "num_threads": 32,
+            "device": "cpu",
+            "epochs": 128
+        }
+    }
+}

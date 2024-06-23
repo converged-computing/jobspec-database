@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n\"application\": \"SLURM\",\n\"details\": {\n\"software\": \"SBATCH\",\n\"resources\": {\n\"partition\": \"binf\",\n\"cpus\": 32,\n\"gpus\": 2,\n\"nodes\": 1,\n\"tasks_per_node\": 1,\n\"time\": \"$3\",\n\"job_name\": \"$1\",\n\"output\": \"$1_%j.out\",\n\"modules\": \"cuda10.2\",\n\"environment_variables\": {\n\"ALG_DIR\": \"$1\",\n\"ALG_FILE\": \"$2\",\n\"SLURM_OUT\": \"$SLURM_SUBMIT_DIR/$1_$SLURM_JOB_ID.out\",\n\"BASE_DIR\": \"my-path/pipenn\",\n\"MODEL_DIR\": \"$BASE_DIR/models\",\n\"LOG_DIR\": \"$BASE_DIR/logs\"\n},\n\"signals\": {\n\"TERM\": {\n\"time_before_end\": 120,\n\"function\": \"save_last_model\"\n}\n},\n\"commands\": {\n\"do_computation\": {\n\"command\": \"python $ALG_FILE\",\n\"working_directory\": \"$BASE_DIR/$ALG_DIR\",\n\"pre_commands\": [\n\"rm -f \\$LOG_DIR/$ALG_DIR.log\",\n\"cd \\$BASE_DIR/$ALG_DIR\",\n\"pwd\"\n],\n\"post_commands\": [\n\"cp \\$LOG_DIR/$ALG_DIR.log \\$MODEL_DIR/$ALG_DIR/.\"\n]\n}\n}\n}\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 478,
+        "candidates_token_count": 365,
+        "total_token_count": 843,
+        "cached_content_token_count": 0
+    }
+}

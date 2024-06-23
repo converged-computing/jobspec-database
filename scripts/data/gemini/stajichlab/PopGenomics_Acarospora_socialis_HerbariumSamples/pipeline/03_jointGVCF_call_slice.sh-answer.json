@@ -1,0 +1,52 @@
+{
+    "application": "GATK",
+    "details": {
+        "dependencies": [
+            "samtools",
+            "picard",
+            "gatk/4",
+            "bcftools",
+            "parallel",
+            "yq",
+            "workspace/scratch"
+        ],
+        "modules": [
+            "R",
+            "java",
+            "samtools",
+            "picard",
+            "gatk/4",
+            "bcftools",
+            "parallel",
+            "yq",
+            "workspace/scratch"
+        ],
+        "resources": {
+            "memory": "24G",
+            "nodes": "1",
+            "tasks": "2",
+            "partition": "intel",
+            "scratch_directory": "$SCRATCH"
+        },
+        "config_file": "config.txt",
+        "environment_variables": {
+            "MEM": "24g",
+            "N": "SLURM_ARRAY_TASK_ID",
+            "CPU": "SLURM_CPUS_ON_NODE"
+        },
+        "commands": [
+            "samtools faidx",
+            "perl",
+            "wc",
+            "awk",
+            "bgzip",
+            "tabix",
+            "yq",
+            "mkdir",
+            "gatk GenomicsDBImport",
+            "gatk GenotypeGVCFs",
+            "gatk SelectVariants",
+            "gatk VariantFiltration"
+        ]
+    }
+}

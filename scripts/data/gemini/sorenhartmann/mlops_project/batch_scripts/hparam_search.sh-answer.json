@@ -1,0 +1,36 @@
+{
+    "application": "LSF",
+    "software": [
+        "python3/3.8.9",
+        "cuda/8.0",
+        "cudnn/v7.0-prod-cuda8"
+    ],
+    "resources": {
+        "gpu": {
+            "type": "gpuv100",
+            "num": 1,
+            "mode": "exclusive_process",
+            "memory": "32GB"
+        },
+        "cpu": {
+            "cores": 8,
+            "memory": "4GB"
+        },
+        "time": "24:00",
+        "storage": {
+            "type": "shared",
+            "size": "unspecified"
+        },
+        "other": {
+            "queue": "gpuv100",
+            "job_name": "ConvBERT-hparams",
+            "output_logs": "logs/%J.out",
+            "error_logs": "logs/%J.err"
+        }
+    },
+    "script_details": {
+        "script_language": "bash",
+        "script_path": "src/models/search_hparams.py",
+        "script_arguments": "--max_epochs=50 --gpus=1"
+    }
+}

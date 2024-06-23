@@ -1,0 +1,24 @@
+{
+    "application": "Singularity",
+    "details": {
+        "environment": {
+            "image": "/mnt/ceph/users/wzhou/images/gencad.sif",
+            "output_directory": "/mnt/ceph/users/wzhou/projects/gencad/train/primitives_raw_shuffle/${SLURM_ARRAY_JOB_ID}_replicates/$SLURM_ARRAY_TASK_ID"
+        },
+        "resources": {
+            "compute_nodes": 1,
+            "cores_per_node": 32,
+            "memory": "200GB",
+            "gpus": 4,
+            "gpu_type": "v100-32gb",
+            "time_limit": "6:00:00"
+        },
+        "software": {
+            "python_packages": [
+                "img2cad"
+            ],
+            "python_module": "img2cad.train_primitives_raw",
+            "python_arguments": "+cluster=rusty +compute=4xv100 +ablation=primitives_shuffle batch_size=4096 hydra.run.dir=$OUTPUT_DIR"
+        }
+    }
+}

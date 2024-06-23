@@ -1,0 +1,42 @@
+{
+    "application": "MPI",
+    "details": {
+        "environment": {
+            "shell": "bash",
+            "script_path": "/etc/profile.d/master-bin.sh",
+            "LD_LIBRARY_PATH": "$LD_LIBRARY_PATH:$HOME/sources/petsc/arch-linux2-c-opt/lib",
+            "PYTHONPATH": "$HOME/.local/lib/python.7/site-packages/:$PYTHONPATH"
+        },
+        "resources": {
+            "nodes": 16,
+            "tasks_per_node": 4,
+            "email": "talnikar@mit.edu",
+            "email_type": "ALL"
+        },
+        "software": {
+            "primary": "adFVM",
+            "additional": [
+                "petsc",
+                "python"
+            ]
+        },
+        "executables": {
+            "problem.py": "primal",
+            "adjoint.py": "adjoint"
+        },
+        "output_files": {
+            "primal": [
+                "primal_output.log",
+                "primal_error.log"
+            ],
+            "adjoint": [
+                "adjoint_output.log",
+                "adjoint_error.log"
+            ]
+        },
+        "execution_flow": {
+            "primal": "single run",
+            "adjoint": "loop for 40 iterations"
+        }
+    }
+}

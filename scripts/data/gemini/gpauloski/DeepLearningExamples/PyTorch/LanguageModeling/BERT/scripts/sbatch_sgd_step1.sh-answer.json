@@ -1,0 +1,35 @@
+{
+    "application": "Slurm",
+    "details": {
+        "job_name": "bertsgd",
+        "output_file": "sbatch_logs/bertsgd.o%j",
+        "nodes": 16,
+        "mpi_tasks": 32,
+        "runtime": "48:00:00",
+        "email": "jgpauloski@utexas.edu",
+        "email_type": "end",
+        "partition": "v100",
+        "allocation": "Deep-Learning-at-Sca",
+        "modules": [
+            "conda",
+            "gcc/7.3.0",
+            "mvapich2-gdr/2.3.4"
+        ],
+        "conda_environment": "pytorch",
+        "environment_variables": [
+            "MV2_USE_CUDA=1",
+            "MV2_ENABLE_AFFINITY=1",
+            "MV2_THREADS_PER_PROCESS=2",
+            "MV2_SHOW_CPU_BINDING=1",
+            "MV2_CPU_BINDING_POLICY=hybrid",
+            "MV2_HYBRID_BINDING_POLICY=spread",
+            "MV2_USE_RDMA_CM=0",
+            "MV2_SUPPORT_DL=1"
+        ],
+        "hostfile": "hostfile",
+        "master_rank": "head -n 1 $HOSTFILE",
+        "nodes_count": "< $HOSTFILE wc -l",
+        "processes_per_node": 2,
+        "command": "mpirun_rsh --export-all -np $NODES -hostfile $HOSTFILE bash run_step1.sh  --ngpus $PROC_PER_NODE --nnodes $NODES --master $MASTER_RANK --output results_sgd --kfac false --resume false --mvapich"
+    }
+}

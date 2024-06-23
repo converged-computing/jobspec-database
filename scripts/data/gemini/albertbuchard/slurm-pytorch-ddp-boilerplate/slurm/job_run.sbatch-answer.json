@@ -1,0 +1,26 @@
+{
+    "application": "SLURM",
+    "details": {
+        "software": [
+            "Python 3.10.4",
+            "GCCcore 11.3.0",
+            "CUDA 11.7",
+            "NCCL 2.12.12-CUDA-11.7.0"
+        ],
+        "resource_requirements": {
+            "nodes": 2,
+            "tasks_per_node": 2,
+            "cpus_per_task": 6,
+            "memory_per_cpu": "4G",
+            "gpus_per_node": 2,
+            "partition": "shared-gpu"
+        },
+        "environment": {
+            "VENV_PATH": "$HOME/venv/slurm-pytorch-ddp-boilerplate",
+            "MASTER_PORT": "10000 + SLURM_JOBID (last 4 digits)",
+            "MASTER_ADDR": "First hostname in SLURM_JOB_NODELIST",
+            "WORLD_SIZE": "SLURM_NTASKS_PER_NODE * SLURM_NNODES",
+            "nproc_per_node": "SLURM_NTASKS_PER_NODE"
+        }
+    }
+}

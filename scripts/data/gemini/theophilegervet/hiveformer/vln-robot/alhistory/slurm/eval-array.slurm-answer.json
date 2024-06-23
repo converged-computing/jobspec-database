@@ -1,0 +1,49 @@
+{
+    "application": "SLURM",
+    "details": {
+        "job_name": "dataset",
+        "tasks": 1,
+        "cpus_per_task": 10,
+        "gpu": 1,
+        "nodes": 1,
+        "queue": "gpu_p13",
+        "account": "vuo@v100",
+        "time": "20:00:00",
+        "output": "logs/%A_%a.out",
+        "error": "logs/%A_%a.out",
+        "modules": [
+            "singularity"
+        ],
+        "environment_variables": {
+            "PYTHONPATH": "/opt/YARR/",
+            "XDG_RUNTIME_DIR": "$SCRATCH/tmp/runtime-$SLURM_JOBID",
+            "SINGULARITY_ALLOWED_DIR": "not specified"
+        },
+        "singularity_image": "$SINGULARITY_ALLOWED_DIR/vln-robot.sif",
+        "executable": "/usr/bin/python3.9",
+        "script": "$HOME/src/vln-robot/alhistory/eval.py",
+        "arguments": [
+            "--seed",
+            "$seed",
+            "--checkpoint",
+            "$checkpoint",
+            "--name",
+            "$prefix$name",
+            "--num_episodes",
+            "$num_episodes",
+            "--headless",
+            "$args"
+        ],
+        "bind_mounts": [
+            "$WORK:$WORK",
+            "$SCRATCH:$SCRATCH",
+            "$STORE:$STORE",
+            "/gpfslocalsup:/gpfslocalsup/",
+            "/gpfslocalsys:/gpfslocalsys",
+            "/gpfs7kw:/gpfs7kw",
+            "/gpfsssd:/gpfsssd",
+            "/gpfsdsmnt:/gpfsdsmnt",
+            "/gpfsdsstore:/gpfsdsstore"
+        ]
+    }
+}

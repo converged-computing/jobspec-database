@@ -1,0 +1,55 @@
+{
+    "application": "PyTorch",
+    "details": {
+        "framework": "PyTorch",
+        "library": "deepspeed",
+        "resources": {
+            "nodes": 1,
+            "tasks_per_node": 8,
+            "cpus_per_task": 30,
+            "gpus_per_node": 8
+        },
+        "environment_variables": {
+            "CPATH": "/usr/local/cuda/include:$CPATH",
+            "LD_LIBRARY_PATH": "/usr/local/cuda/lib64:$LD_LIBRARY_PATH",
+            "PATH": "/usr/local/cuda/bin:$PATH",
+            "NCCL_P2P_LEVEL": "NVL",
+            "NCCL_IB_DISABLE": 1,
+            "PL_DEEPSPEED_CONFIG_PATH": "$MODEL_ROOT_DIR/${MODEL_NAME}.ds_config.json",
+            "CC": "gcc",
+            "CXX": "g++"
+        },
+        "data_source": {
+            "base_urls": [
+                "/data_share/zhaomingjun/data_cleaning/character_tar_simple_with_bg_exampler_randpos_multifont/{00000..00010}.tar",
+                "/public_data/zmj/data_font_filtered_2/laion_zh_webdataset/{00000..00013}.tar",
+                "/public_data/zmj/data_font_filtered_2/wukong_webdataset/{00000..00026}.tar",
+                "/public_data/zmj/data_font_filtered_2/querydata_total_dedup_len_72/{00000..00014}.tar",
+                "/public_data/zmj/data_font_filtered_2/query_data_zhutici_total_len_72_224+/{00000..00015}.tar",
+                "/public_data/zmj/data_font_filtered_2/zero23M_len_72/{00000..00010}.tar"
+            ],
+            "num_workers": 2,
+            "batch_size": 50,
+            "shard_width": 5,
+            "hr_size": 512,
+            "train_split": 1.0,
+            "val_split": 0.0,
+            "test_split": 0.0
+        },
+        "model": {
+            "name": "stablediffusion_lgp_zh",
+            "path": "/public_data/ma/stable_models/model_base",
+            "clip_path": "/public_data/text2img_code/models_stable_diffusion_c/text_encoder_400M",
+            "learning_rate": 0.0001,
+            "warmup_steps": 100
+        },
+        "training": {
+            "max_epoch": 30,
+            "accelerator": "gpu",
+            "strategy": "deepspeed_stage_1",
+            "log_every_n_steps": 100,
+            "precision": 16,
+            "default_root_dir": "$MODEL_ROOT_DIR"
+        }
+    }
+}

@@ -1,0 +1,37 @@
+{
+    "application": "SLURM",
+    "details": {
+        "partition": "p100,t4v1,t4v2",
+        "gres": "gpu:1",
+        "qos": "normal",
+        "cpus": 6,
+        "memory": "32G",
+        "time": "700:00:00",
+        "array": "0-10%11",
+        "output": "logs_new/wrn50_cf100/%a-%N-%j",
+        "job_name": "wrn50_cf100",
+        "environment": "conda",
+        "environment_path": "~/venvs/combinact",
+        "python_packages": [
+            "torch",
+            "scipy",
+            "sklearn",
+            "matplotlib"
+        ],
+        "python_script": "engine.py",
+        "script_arguments": {
+            "seed": "$SEED",
+            "save_path": "$SAVE_PATH",
+            "check_path": "$CHECK_PATH",
+            "model": "resnet",
+            "batch_size": 128,
+            "actfun_idx": "$ACTFUN_IDX",
+            "optim": "onecycle",
+            "num_epochs": 100,
+            "dataset": "cifar100",
+            "aug": true,
+            "mix_pre_apex": true,
+            "bs_factor": 0.75
+        }
+    }
+}

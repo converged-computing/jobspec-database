@@ -1,0 +1,44 @@
+{
+    "application": "RStudio Server",
+    "details": {
+        "scheduler": "SLURM",
+        "resource_requests": {
+            "time": "8 hours",
+            "tasks": 1,
+            "cpus_per_task": 40
+        },
+        "output_file": "/home/%u/rstudio-server.job.%j",
+        "image": "Singularity Image",
+        "environment_variables": {
+            "RSTUDIO_SESSION_TIMEOUT": "0",
+            "PASSWORD": "randomly generated",
+            "SINGULARITY_HOME": "${WORKINGDIR}"
+        },
+        "mount_points": [
+            {
+                "source": "$MOUNT_PROJECT",
+                "target": "$PROJECT",
+                "mode": "read-only"
+            },
+            {
+                "source": "$MOUNT_DATA",
+                "target": "$DATA",
+                "mode": "read-only"
+            },
+            {
+                "source": "$WORKINGDIR",
+                "target": "$R_HOME",
+                "mode": "read-write"
+            },
+            {
+                "source": "$MOUNT_TMP",
+                "target": "$TMP",
+                "mode": "read-write"
+            }
+        ],
+        "r_environment": {
+            "R_HOME": "/r_home",
+            "R_LIBS_USER": "${R_HOME}/R/%p-library/%v"
+        }
+    }
+}

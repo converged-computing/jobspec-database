@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"CMake\",\n  \"details\": {\n    \"environment\": {\n      \"modules\": [\n        \"PrgEnv-intel\",\n        \"daint-gpu\",\n        \"cudatoolkit\",\n        \"CMake/3.14.5\",\n        \"gcc\"\n      ],\n      \"system\": \"CrayLinuxEnvironment\",\n      \"build_tag\": \"${BUILD_TAG}\",\n      \"scratch_dir\": \"${SCRATCH}\",\n      \"workspace\": \"${WORKSPACE}\",\n      \"stage_name\": \"${STAGE_NAME}\"\n    },\n    \"resources\": {\n      \"nodes\": 1,\n      \"tasks_per_node\": 4,\n      \"cpus_per_task\": 3,\n      \"tasks_per_core\": 1\n    },\n    \"libraries\": {\n      \"blas\": \"-lsci_intel_mpi_mp\",\n      \"lapack\": \"-lsci_intel_mpi_mp\"\n    },\n    \"build_options\": {\n      \"cuda\": true,\n      \"gpu\": \"P100\",\n      \"mpi_ranks\": \"${SLURM_NTASKS}\",\n      \"omp_threads\": \"${SLURM_CPUS_PER_TASK}\",\n      \"verbose\": true\n    }\n  }\n}\n```\n\nThis script runs CMake to build a project. The script leverages a number of resources and modules:\n\n* **Environment:** The script sets up the environment with specific modules: \n    * `PrgEnv-intel`: Provides Intel compilers and libraries.\n    * `daint-gpu`: Enables access to GPUs on the Daint supercomputer.\n    * `cudatoolkit`: Installs the CUDA toolkit, necessary for GPU programming.\n    * `CMake/3.14.5`: Loads a specific version of CMake.\n    * `gcc`: Loads a recent GCC compiler.\n* **Resources:** The script requests one node, four tasks per node, and three CPUs per task. It sets `ntasks_per_core` to 1, indicating that it wants to avoid using hyperthreading.\n* **Libraries:** It specifies the libraries used for BLAS and LAPACK.\n* **Build Options:** The script configures CMake to build with CUDA enabled, targeting P100 GPUs. It also defines the number of MPI ranks and OpenMP threads based on the allocated resources. \n* **Output:** The script directs output to `\"${STAGE_NAME}.out\"`, including CMake output and build logs. \n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 515,
+        "candidates_token_count": 558,
+        "total_token_count": 1073,
+        "cached_content_token_count": 0
+    }
+}

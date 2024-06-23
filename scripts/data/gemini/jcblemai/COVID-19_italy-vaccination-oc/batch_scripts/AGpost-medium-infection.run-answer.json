@@ -1,0 +1,43 @@
+{
+    "application": "SLURM",
+    "details": {
+        "resource_requirements": {
+            "nodes": 1,
+            "tasks_per_node": 1,
+            "cpus_per_task": 36,
+            "memory": "180G",
+            "time": "12-0",
+            "qos": "fortnight"
+        },
+        "software_requirements": {
+            "modules": [
+                "COVID_OCP"
+            ],
+            "python_environment": {
+                "venv": "$HOME/venvs/$SYS_TYPE/bin/activate",
+                "libraries": {
+                    "hsl": "$HOME/src/hsl/20190503_${SYS_TYPE}/lib"
+                }
+            },
+            "other": {
+                "MKLROOT": {
+                    "library": "libmkl_rt.so"
+                }
+            }
+        },
+        "execution": {
+            "command": "python -u main-agpost.py",
+            "arguments": [
+                "-s ${SLURM_ARRAY_TASK_ID}",
+                "-t $MDL_DAYS",
+                "-n $MDL_NNODES",
+                "-f $F_PREFIX",
+                "-d $F_DIR",
+                "--use_matlab False",
+                "--optimize True",
+                "--objective $OBJ"
+            ],
+            "output_file": "${F_DIR}out${SLURM_ARRAY_TASK_ID}.txt"
+        }
+    }
+}

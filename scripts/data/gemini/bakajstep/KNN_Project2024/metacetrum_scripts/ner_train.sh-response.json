@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"PBS\",\n  \"details\": {\n    \"job_name\": \"batch_job_knn\",\n    \"queue\": \"gpu\",\n    \"resources\": {\n      \"nodes\": 1,\n      \"cpus\": 2,\n      \"gpus\": 1,\n      \"gpu_type\": \"cuda80\",\n      \"gpu_memory\": \"20gb\",\n      \"memory\": \"20gb\",\n      \"scratch_ssd\": \"20gb\",\n      \"cluster\": \"galdor\"\n    },\n    \"walltime\": \"1:00:00\",\n    \"output\": \"merged with standard error\",\n    \"email\": \"on abort and termination\",\n    \"software\": [\n      \"git\",\n      \"python\",\n      \"pip\",\n      \"torch\",\n      \"venv\"\n    ],\n    \"libraries\": [\n      \"torch==2.0.0\",\n      \"requirements.txt\"\n    ],\n    \"dependencies\": [\n      \"cvmfs/software.metacentrum.cz/modulefiles/5.1.0/loadmodules\"\n    ]\n  }\n}\n```\n\nThis script is a PBS (Portable Batch System) script designed for running a machine learning job. Here's a breakdown of its components:\n\n**1. PBS Directives:**\n\n* `#PBS -N batch_job_knn`: Sets the job name to \"batch_job_knn\".\n* `#PBS -q gpu`: Specifies the \"gpu\" queue, indicating a request for a GPU resource.\n* `#PBS -l select=1:ncpus=2:ngpus=1:gpu_cap=cuda80:gpu_mem=20gb:mem=20gb:scratch_ssd=20gb:cluster=galdor`: Defines resource requirements:\n    * `select=1`: Requests one node.\n    * `ncpus=2`: Requests 2 CPUs on the node.\n    * `ngpus=1`: Requests 1 GPU.\n    * `gpu_cap=cuda80`: Specifies the CUDA compute capability of the GPU.\n    * `gpu_mem=20gb`: Requests 20 GB of GPU memory.\n    * `mem=20gb`: Requests 20 GB of RAM on the node.\n    * `scratch_ssd=20gb`: Requests 20 GB of temporary storage on an SSD.\n    * `cluster=galdor`: Specifies the cluster to submit the job to.\n* `#PBS -l walltime=1:00:00`: Sets the maximum wall clock time for the job to 1 hour.\n* `#PBS -j oe`: Merges the standard error and standard output streams of the job.\n* `#PBS -m ae`: Sends email notifications when the job aborts or terminates.\n\n**2. Script Logic:**\n\n* **Environment Setup:**\n    * `HOMEPATH`, `DATAPATH`, `RESPATH`, and `HOSTNAME` variables are defined to store paths and the hostname of the machine.\n    * The script prints information about the job.\n    * The `SCRATCHDIR` environment variable is used to access the temporary scratch space provided by PBS.\n    * The `clean_scratch` function is defined to clean the scratch directory.\n    * The repository is cloned from GitHub.\n    * The `env` virtual environment is created and activated.\n    * The required Python packages are installed using `pip`.\n* **Experiment Setup:**\n    * The `config` variable is used to define the configuration file(s) for the experiments.\n    * A list of configuration files (`config_list`) is generated based on the value of `config`.\n    * Directories for storing results and datasets are created.\n    * The datasets are copied from the storage directory to the local directory.\n* **Training Loop:**\n    * The script iterates over the `config_list`, running the training script (`cnec2_ner_trainer.py`) for each configuration.\n    * The results of each experiment are saved to a separate directory.\n    * The script also logs information about each experiment to a file.\n* **Cleanup:**\n    * The datasets are copied back to the storage directory.\n    * The scratch directory is cleaned.\n\n**3. Software and Resource Requirements:**\n\n* **Software:**\n    * **PBS:** The Portable Batch System is used to submit and manage the job.\n    * **Git:** Used to clone the repository.\n    * **Python:** The scripting language used for the training process.\n    * **pip:** The package installer used to install Python dependencies.\n    * **venv:** Used to create a virtual environment for isolating Python packages.\n    * **Torch:** A popular machine learning library for PyTorch.\n* **Resource Requirements:**\n    * **GPU:** The job requires a GPU with CUDA compute capability 8.0 or higher.\n    * **CPU:** The job requires 2 CPUs.\n    * **Memory:** The job requires 20 GB of RAM.\n    * **Storage:** The job requires 20 GB of scratch storage on an SSD.\n    * **Walltime:** The job is allotted 1 hour of wall clock time.\n\n**In summary, this PBS script uses the PBS system to manage a machine learning job. It uses Python, PyTorch, and other libraries for training a neural network model. It defines specific resource requirements for the job, including GPU, CPU, memory, storage, and wall time. The script iterates over a list of configurations, runs the training script for each configuration, and stores the results for further analysis.**\n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 1595,
+        "candidates_token_count": 1241,
+        "total_token_count": 2836,
+        "cached_content_token_count": 0
+    }
+}

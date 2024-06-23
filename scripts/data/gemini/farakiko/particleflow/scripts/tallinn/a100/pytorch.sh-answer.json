@@ -1,0 +1,33 @@
+{
+    "application": "Singularity",
+    "details": {
+        "container_image": "/home/software/singularity/pytorch.simg:2024-03-11",
+        "working_directory": "~/particleflow",
+        "environment_variables": [
+            "PYTHONPATH=hep_tfds",
+            "KERAS_BACKEND=torch"
+        ],
+        "python_version": "3.10",
+        "script": "mlpf/pyg_pipeline.py",
+        "arguments": [
+            "--dataset cms",
+            "--gpus 1",
+            "--data-dir /scratch/persistent/joosep/tensorflow_datasets",
+            "--config parameters/pytorch/pyg-cms.yaml",
+            "--train",
+            "--conv-type attention",
+            "--num-epochs 100",
+            "--gpu-batch-multiplier 20",
+            "--num-workers 4",
+            "--prefetch-factor 50",
+            "--checkpoint-freq 1",
+            "--comet"
+        ],
+        "resource_requirements": {
+            "partition": "gpu",
+            "gpu_type": "a100",
+            "gpu_count": 1,
+            "memory_per_gpu": "80G"
+        }
+    }
+}

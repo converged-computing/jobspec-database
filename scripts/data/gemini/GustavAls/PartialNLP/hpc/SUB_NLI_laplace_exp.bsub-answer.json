@@ -1,0 +1,36 @@
+{
+    "application": "LSF",
+    "details": {
+        "queue": "gpuv100",
+        "jobName": "laplace_attn[1-5]",
+        "cores": 4,
+        "gpu": "1 (exclusive_process)",
+        "walltime": "8:00",
+        "memory": "6GB",
+        "gpu_memory": "32GB",
+        "python_version": "3.9.11",
+        "cuda_version": "11.7",
+        "modules": [
+            "python3/3.9.11",
+            "cuda/11.7"
+        ],
+        "environment": {
+            "PYTHONPATH": [
+                "~/PartialNLP/",
+                "~/PartialNLP/scratch/s184400/cloned_repos/"
+            ]
+        },
+        "script": "SentimentAnalysis/ExperimentsLaplace.py",
+        "arguments": {
+            "output_path": "scratch/s184400/NLI_results/laplace/${dataset}/${experiment}${suffix}/run_${run}",
+            "data_path": "scratch/s184400/NLI_results/Init/${dataset}_dataset/run_${run}",
+            "experiment": "nli_operator_norm_ramping",
+            "dataset_name": "rte",
+            "run_number": "${runs[$LSB_JOBINDEX - 1]}",
+            "uninformed_prior": "False",
+            "train_batch_size": 16,
+            "eval_batch_size": 1,
+            "subclass": "attn"
+        }
+    }
+}

@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"SLURM\",\n  \"details\": {\n    \"job_name\": \"clear_wandb_cache\",\n    \"project\": \"MLMI-tw581-SL2-CPU\",\n    \"nodes\": 1,\n    \"wallclock_time\": \"01:00:00\",\n    \"mail_type\": \"NONE\",\n    \"partition\": \"skylake\",\n    \"environment\": {\n      \"LOGDIR\": \"logs/\",\n      \"DIRPATH_EXP\": \"logs/clear_wandb_cache/\",\n      \"LOG\": \"logs/clear_wandb_cache/$SLURM_JOB_ID.log\",\n      \"ERR\": \"logs/clear_wandb_cache/$SLURM_JOB_ID.err\"\n    },\n    \"commands\": [\n      \"mkdir -p logs/clear_wandb_cache/\",\n      \"echo -e \\\"JobID: $SLURM_JOB_ID\\\\n=====\\\" > logs/clear_wandb_cache/$SLURM_JOB_ID.log\",\n      \"echo \\\"Time: `date`\\\" >> logs/clear_wandb_cache/$SLURM_JOB_ID.log\",\n      \"echo \\\"Running on master node: `hostname`\\\" >> logs/clear_wandb_cache/$SLURM_JOB_ID.log\",\n      \"echo \\\"python `which python`\\\": >> logs/clear_wandb_cache/$SLURM_JOB_ID.log\",\n      \"rm -rf /home/tw581/.local/share/wandb/artifacts\",\n      \"echo \\\"Time: `date`\\\" >> logs/clear_wandb_cache/$SLURM_JOB_ID.log\"\n    ]\n  }\n}\n```\n\n**Explanation:**\n\n* **SLURM:** This script utilizes the **SLURM workload manager** to run a job. \n* **SBATCH directives:** The script uses various `#SBATCH` directives to specify job parameters like:\n    * **-J:** Job name (`clear_wandb_cache`)\n    * **-A:** Project account (`MLMI-tw581-SL2-CPU`)\n    * **--nodes:** Number of nodes (1)\n    * **--time:** Wallclock time (1 hour)\n    * **--mail-type:** Email notification type (NONE)\n    * **-p:** Partition (`skylake`, indicating CPU-only) \n* **Environment variables:**  The script sets several environment variables to store paths and filenames:\n    * `LOGDIR`:  Logs directory (\"logs/\")\n    * `DIRPATH_EXP`:  Experiment directory (\"logs/clear_wandb_cache/\")\n    * `LOG`:  Log file (\"logs/clear_wandb_cache/$SLURM_JOB_ID.log\")\n    * `ERR`: Error file (\"logs/clear_wandb_cache/$SLURM_JOB_ID.err\")\n* **Commands:** The script executes the following actions:\n    * Creates the experiment directory using `mkdir -p`.\n    * Writes job information to the log file using `echo`.\n    * Removes the WandB artifacts directory (`/home/tw581/.local/share/wandb/artifacts`)\n    * Appends the execution time to the log file. \n\nThis script demonstrates a simple SLURM job to clear the WandB artifacts directory on a specific user account. It highlights the use of `#SBATCH` directives for resource allocation and job management, as well as environment variables for organizing files and logging. \n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 512,
+        "candidates_token_count": 799,
+        "total_token_count": 1311,
+        "cached_content_token_count": 0
+    }
+}

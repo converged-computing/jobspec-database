@@ -1,0 +1,99 @@
+{
+    "application": "GEOS-Chem",
+    "details": {
+        "description": "Runs integration tests on the various GEOS-Chem Classic run directories.",
+        "calling_sequence": "./integrationTest.sh -d root-dir -e env-file [-h] [-p partition] [-q] [-s scheduler]",
+        "arguments": [
+            {
+                "name": "-d root-dir",
+                "description": "Specify the root folder for integration tests"
+            },
+            {
+                "name": "-e env-file",
+                "description": "Specitify the environment file (w/ module loads)"
+            },
+            {
+                "name": "-h help",
+                "description": "Display a help message"
+            },
+            {
+                "name": "-p partition",
+                "description": "Select partition for SLURM or LSF schedulers"
+            },
+            {
+                "name": "-q",
+                "description": "Run a quick set of integration tests (for testing)"
+            },
+            {
+                "name": "-s scheduler",
+                "description": "Specify the scheduler (SLURM or LSF)"
+            }
+        ],
+        "long_name_options": [
+            {
+                "name": "--directory root-dir",
+                "description": "Specify the root folder for integration tests"
+            },
+            {
+                "name": "--env-file env-file",
+                "description": "Specitify the environment file (w/ module loads)"
+            },
+            {
+                "name": "--help",
+                "description": "Display a help message"
+            },
+            {
+                "name": "--partition partition",
+                "description": "Select partition for SLURM or LSF schedulers"
+            },
+            {
+                "name": "--quick",
+                "description": "Run a quick set of integration tests (for testing)"
+            },
+            {
+                "name": "--scheduler scheduler",
+                "description": "Specify the scheduler (SLURM or LSF)"
+            }
+        ],
+        "dependencies": [
+            "commonFunctionsForTests.sh",
+            "integrationTestCreate.sh",
+            "integrationTestCompile.sh",
+            "integrationTestExecute.sh"
+        ],
+        "resource_requirements": {
+            "SLURM": {
+                "compilation": {
+                    "cores": 8,
+                    "nodes": 1,
+                    "time": "0-00:30",
+                    "partition": "REQUESTED_PARTITION",
+                    "memory": 8000
+                },
+                "execution": {
+                    "cores": 24,
+                    "nodes": 1,
+                    "time": "0-2:00",
+                    "partition": "REQUESTED_PARTITION",
+                    "memory": 90000
+                }
+            },
+            "LSF": {
+                "compilation": {
+                    "cores": 8,
+                    "time": "00:30",
+                    "partition": "REQUESTED_PARTITION",
+                    "memory": "8GB",
+                    "docker": "registry.gsc.wustl.edu/sleong/esm:intel-2021.1.2"
+                },
+                "execution": {
+                    "cores": 24,
+                    "time": "2:00",
+                    "partition": "REQUESTED_PARTITION",
+                    "memory": "90GB",
+                    "docker": "registry.gsc.wustl.edu/sleong/esm:intel-2021.1.2"
+                }
+            }
+        }
+    }
+}

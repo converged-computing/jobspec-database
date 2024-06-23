@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n\"application\": \"Slurm\",\n\"details\": {\n\"scheduler\": \"slurm\",\n\"job_name\": \"gsl@2.7\",\n\"account\": \"use300\",\n\"partition\": \"ind-gpu-shared\",\n\"nodes\": 1,\n\"tasks_per_node\": 1,\n\"cpus_per_task\": 10,\n\"memory\": \"93G\",\n\"gpus\": 1,\n\"time\": \"00:30:00\",\n\"output\": \"%x.o%j.%N\",\n\"system_name\": \"expanse\",\n\"spack_version\": \"0.17.3\",\n\"spack_instance_name\": \"gpu\",\n\"spack_instance_dir\": \"${HOME}/cm/shared/apps/spack/${SPACK_VERSION}/${SPACK_INSTANCE_NAME}\",\n\"spack_package\": \"gsl@2.7\",\n\"spack_compiler\": \"gcc@10.2.0\",\n\"spack_variants\": \"~external-cblas\",\n\"spack_dependencies\": \"\",\n\"spack_spec\": \"${SPACK_PACKAGE} % ${SPACK_COMPILER} ${SPACK_VARIANTS} ${SPACK_DEPENDENCIES}\"\n}\n}\n```\n\n**Explanation:**\n\n* **Slurm:** This script is designed to be run within the Slurm workload manager. It uses Slurm's job submission features to allocate resources and run the script.\n* **Spack:** The script utilizes Spack, a package manager, to install and manage the GSL library (GNU Scientific Library) with the specified version, compiler, and variants.\n* **Dependencies:** The script indicates a dependency on the FFTW library (Fast Fourier Transform in the West) version 3.3.10, which is assumed to be installed and managed by a separate script named \"fftw@3.3.10.sh\". \n* **Modules:** The script loads the \"slurm\" module and uses Spack's environment setup script to configure the environment for the GSL installation. \n* **Environment Variables:** Various environment variables are defined for tracking job information, system details, and Spack configuration.\n* **Installation:** The script uses Spack to install the GSL library using specified installation options, including job parallelism and failure handling. \n* **Module Refresh:** After installation, the script refreshes the Lmod environment to ensure that the newly installed GSL library is available to other applications.\n* **Dependency Management:** The script submits a follow-up job (\"fftw@3.3.10.sh\") to be run after the current job completes successfully (using `sbatch --dependency=\"afterok:${SLURM_JOB_ID}\"`). \n* **Sleep:** A 60-second pause is introduced at the end of the script, likely for debugging or allowing some post-installation tasks to complete. \n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 765,
+        "candidates_token_count": 647,
+        "total_token_count": 1412,
+        "cached_content_token_count": 0
+    }
+}

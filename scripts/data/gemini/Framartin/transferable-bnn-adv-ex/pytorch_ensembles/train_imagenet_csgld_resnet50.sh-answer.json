@@ -1,0 +1,36 @@
+{
+    "application": "SLURM",
+    "details": {
+        "runtime": "9 days",
+        "queue": "long",
+        "partition": "gpu",
+        "job_name": "cSGLDImageNet",
+        "nodes": 1,
+        "tasks": 1,
+        "cores_per_task": 16,
+        "gpus_per_task": 4,
+        "gpu_type": "volta",
+        "log_file": "log/run_train_imagenet_csgld_short_%j.log",
+        "mail_type": "end,fail",
+        "software": {
+            "python": "lang/Python",
+            "cuda": "system/CUDA"
+        },
+        "virtual_environment": "../venv/bin/activate",
+        "data_path": "/work/projects/bigdata_sets/ImageNet/ILSVRC2012/raw-data/",
+        "torchfilestore": "${SCRATCH}tmp/torchfilestore",
+        "learning_rate": 0.1,
+        "cycles": 5,
+        "samples_per_cycle": 3,
+        "batch_size": 256,
+        "workers": 16,
+        "print_frequency": 400,
+        "model_directory": "../models/ImageNet/resnet50/cSGLD_cycles${CYCLES}_samples${SAMPLES_PER_CYCLE}_bs${BATCH_SIZE}",
+        "training_script": "train_imagenet_csgld.py",
+        "architecture": "resnet50",
+        "world_size": 1,
+        "rank": 0,
+        "cycle_epochs": 45,
+        "noise_epochs": 3
+    }
+}

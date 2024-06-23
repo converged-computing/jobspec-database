@@ -1,0 +1,86 @@
+{
+    "application": "SLURM",
+    "details": {
+        "environment": {
+            "tensorflow": "gpu-2.2.0-py37",
+            "PROFILER": "cupy",
+            "enable_xla": "noxla",
+            "XLA_FLAGS": "--xla_gpu_cuda_data_dir=${CUDA_HOME}",
+            "CUDA_DIR": "${CUDA_HOME}",
+            "rankspernode": 1,
+            "OMP_NUM_THREADS": "40 / ${rankspernode}",
+            "OMP_PLACES": "threads",
+            "OMP_PROC_BIND": "spread"
+        },
+        "job_parameters": {
+            "job_name": "rnn1d-tf2-noxla",
+            "gpu_resources": "gpu:1",
+            "exclusive_execution": true,
+            "queue": "special",
+            "account": "m1759",
+            "time_limit": "4:00:00"
+        },
+        "script": {
+            "language": "python",
+            "name": "rnn1d_tf2.py",
+            "path": "../python/rnn1d_tf2.py",
+            "copy_to": "tf_cnn_kernels_nsight/rnn1d-tf2-noxla/$SLURM_JOBID/"
+        },
+        "profiler": {
+            "tool": "nv-nsight-cu-cli",
+            "metrics": [
+                "sm__cycles_elapsed.avg.per_second",
+                "sm__cycles_elapsed.avg",
+                "sm__inst_executed_pipe_tensor.sum",
+                "sm__sass_thread_inst_executed_op_fadd_pred_on.sum",
+                "sm__sass_thread_inst_executed_op_ffma_pred_on.sum",
+                "sm__sass_thread_inst_executed_op_fmul_pred_on.sum",
+                "sm__sass_thread_inst_executed_op_hadd_pred_on.sum",
+                "sm__sass_thread_inst_executed_op_hfma_pred_on.sum",
+                "sm__sass_thread_inst_executed_op_hmul_pred_on.sum",
+                "dram__bytes.sum",
+                "l1tex__t_sectors_pipe_lsu_mem_local_op_ld.sum",
+                "l1tex__t_sectors_pipe_lsu_mem_local_op_st.sum",
+                "l1tex__data_pipe_lsu_wavefronts_mem_shared_op_ld.sum",
+                "l1tex__data_pipe_lsu_wavefronts_mem_shared_op_st.sum",
+                "l1tex__t_sectors_pipe_lsu_mem_global_op_ld.sum",
+                "l1tex__t_sectors_pipe_lsu_mem_global_op_st.sum",
+                "l1tex__t_set_accesses_pipe_lsu_mem_global_op_atom.sum",
+                "l1tex__t_set_accesses_pipe_lsu_mem_global_op_red.sum",
+                "l1tex__t_set_accesses_pipe_tex_mem_surface_op_atom.sum",
+                "l1tex__t_set_accesses_pipe_tex_mem_surface_op_red.sum",
+                "lts__t_sectors_op_read.sum",
+                "lts__t_sectors_op_write.sum",
+                "lts__t_sectors_op_atom.sum",
+                "lts__t_sectors_op_red.sum"
+            ]
+        },
+        "framework": "TensorFlow",
+        "model": "RNN (LSTM)",
+        "parameters": {
+            "cells": [
+                "lstm"
+            ],
+            "precisions": [
+                "16",
+                "32"
+            ],
+            "network_parameters": [
+                "16,16,32,16",
+                "32,16,32,16",
+                "64,16,32,16",
+                "128,16,32,16",
+                "16,32,32,16",
+                "16,64,32,16",
+                "16,128,32,16",
+                "16,16,64,16",
+                "16,16,128,16",
+                "16,16,32,32",
+                "16,16,32,64",
+                "16,16,32,128"
+            ],
+            "num_warmups": 5,
+            "num_iterations": 1
+        }
+    }
+}

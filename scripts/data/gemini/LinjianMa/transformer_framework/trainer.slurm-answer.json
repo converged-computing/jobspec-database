@@ -1,0 +1,32 @@
+{
+    "application": "SLURM",
+    "details": {
+        "job name": "transformer-trainer",
+        "tasks": 2,
+        "nodes": 2,
+        "GPUs per task": 8,
+        "CPUs per task": 96,
+        "libraries": [
+            "/opt/amazon/efa/lib",
+            "/usr/local/lib"
+        ],
+        "environment variables": [
+            "LOGLEVEL=INFO",
+            "FI_PROVIDER=efa",
+            "NCCL_P2P_DISABLE=1",
+            "NCCL_IB_DISABLE=1",
+            "NCCL_DEBUG=WARN",
+            "NCCL_DEBUG_SUBSYS=WARN",
+            "PYTHONFAULTHANDLER=1",
+            "CUDA_LAUNCH_BLOCKING=0",
+            "NCCL_SOCKET_IFNAME=\"eth0,en,eth,em,bond\"",
+            "DCGMI profile --pause",
+            "DCGMI profile --resume"
+        ],
+        "commands": [
+            "scontrol show hostnames $SLURM_JOB_NODELIST",
+            "srun --nodes=1 --ntasks=1 -w \"$head_node\" hostname --ip-address",
+            "torchrun --nnodes 2 --nproc_per_node 8 --rdzv_id 101 --rdzv_backend c10d --rdzv_endpoint \"$head_node_ip:29500\" ./main_training.py"
+        ]
+    }
+}

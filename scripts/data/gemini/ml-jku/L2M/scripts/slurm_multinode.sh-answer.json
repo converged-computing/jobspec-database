@@ -1,0 +1,40 @@
+{
+    "application": "SLURM",
+    "details": {
+        "account": "X",
+        "qos": "X",
+        "partition": "X",
+        "nodes": 2,
+        "tasks_per_node": 1,
+        "gpus": 2,
+        "output_path": "OUTPUT_PATH",
+        "conda_environment": "mddt",
+        "python_script": "main.py",
+        "hydra_config": {
+            "launcher": {
+                "type": "torchrun",
+                "nnodes": 2,
+                "nproc_per_node": 2,
+                "max_nodes": 2,
+                "rdzv_id": 84210,
+                "rdzv_backend": "c10d",
+                "rdzv_endpoint": "${head_node_ip}:29501"
+            },
+            "ddp": true,
+            "experiment_name": "mddt_pretrain",
+            "seed": 42,
+            "env_params": "multi_domain_mtdmc",
+            "agent_params": {
+                "kind": "MDDT",
+                "model_kwargs": "multi_domain_mtdmc",
+                "data_paths": "mt40v2_dmc10",
+                "replay_buffer_kwargs": "multi_domain_mtdmc",
+                "accumulation_steps": 2,
+                "use_amp": true,
+                "batch_size": 256
+            },
+            "run_params": "pretrain",
+            "eval_params": "pretrain_disc"
+        }
+    }
+}

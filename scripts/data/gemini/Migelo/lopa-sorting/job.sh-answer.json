@@ -1,0 +1,33 @@
+{
+    "application": "fioss_do2",
+    "details": {
+        "scheduler": "PBS",
+        "queue": "atlasq",
+        "job_name": "nessy1",
+        "email": "cernetic@mps.mpg.de",
+        "nodes": 1,
+        "cores_per_node": 48,
+        "walltime": "1:00:00",
+        "modules": [
+            "mvapich2_pgi",
+            "intel"
+        ],
+        "environment_variables": {
+            "PSM_SHAREDCONTEXTS_MAX": "((($PPN+3))/4)",
+            "TERM": "xterm",
+            "COSI_BIN": "/scratch/cernetic/nessyH1/scripts/",
+            "MAX_PROC": "48"
+        },
+        "commands": [
+            "sed -i \"${index}s/.*/${subBinsFile}/\" ../COSI_new/cosi/inibl0.for",
+            "make 64 -C ../COSI_new/cosi/",
+            "cp ../COSI_new/out-intel-x86_64/fioss8.exe ./",
+            "fioss_do2 1010 10 8980 > nohup"
+        ],
+        "post_processing": [
+            "python /home/cernetic/Documents/sorting/lopa-sorting/mergeMdisp.py mdisp/ /home/cernetic/Desktop/$spectraFilename",
+            "rm -rf ctrl-* JOB-* freq*log mdisp* lopa*",
+            "python /home/cernetic/Documents/sorting/lopa-sorting/mdispCompare.py /home/cernetic/Documents/sorting/lopa-sorting/bins /home/cernetic/Desktop/$spectraFilename /home/cernetic/Desktop/spectra"
+        ]
+    }
+}

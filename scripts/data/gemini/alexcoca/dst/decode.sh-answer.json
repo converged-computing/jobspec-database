@@ -1,0 +1,30 @@
+{
+    "application": "python",
+    "details": {
+        "environment": {
+            "modules": [
+                "rhel8/default-amp",
+                "python/3.8",
+                "miniconda/3"
+            ],
+            "conda_env": "/home/zxc22/.conda/envs/dst"
+        },
+        "slurm_directives": {
+            "job_name": "decode",
+            "account": "BYRNE-SL3-GPU",
+            "nodes": 1,
+            "tasks": 4,
+            "gpus_per_node": 4,
+            "walltime": "12:00:00",
+            "mail_type": "NONE",
+            "array_range": "0-4",
+            "partition": "ampere"
+        },
+        "application_settings": {
+            "executable": "python -u -m scripts.decode",
+            "options": "-t data/preprocessed/sgd-x/${STEP}/experiment-11/test.json -a configs/decode_arguments.yaml -c models/experiment-11-1/model.2560000 -hyp decode/sgd-x/${STEP} -vv",
+            "work_directory": "$SLURM_SUBMIT_DIR",
+            "openmp_threads": 1
+        }
+    }
+}

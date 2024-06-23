@@ -1,0 +1,39 @@
+{
+    "application": "SLURM",
+    "details": {
+        "partition": "deeplearn",
+        "nodes": 1,
+        "job_name": "7b-instruct-codereview",
+        "account": "punim2247",
+        "ntasks": 1,
+        "cpus_per_task": 8,
+        "gres": "gpu:1",
+        "qos": "gpgpudeeplearn",
+        "constraint": "dlg5",
+        "memory": "64G",
+        "mail_user": "mukhammad.karimov@student.unimelb.edu.au",
+        "mail_type": [
+            "FAIL",
+            "BEGIN",
+            "END"
+        ],
+        "time": "1-00:0:00",
+        "output_log": "logs/7b-instruct-codereview.log",
+        "modules": [
+            "foss/2022a",
+            "CUDA/12.2.0",
+            "NCCL/2.19.4-CUDA-12.2.0",
+            "UCX-CUDA/1.14.1-CUDA-12.2.0",
+            "cuDNN/8.9.3.28-CUDA-12.2.0",
+            "GCCcore/11.3.0",
+            "Python/3.10.4"
+        ],
+        "virtual_environment": "codellama",
+        "command": "torchrun --nproc_per_node 1 code_review_instructions.py --ckpt_dir ./ckpt/CodeLlama-7b-Instruct/ --tokenizer_path ./ckpt/CodeLlama-7b-Instruct/tokenizer.model --conf_path ../config/codellama-7b-instruct-codereview.json --temperature 0.0 --top_p 0.95 --max_seq_len 4096 --max_batch_size 50 --debug True",
+        "monitoring_commands": [
+            "my-job-stats -c -n -s",
+            "my-job-stats -a -n -s",
+            "nvidia-smi"
+        ]
+    }
+}

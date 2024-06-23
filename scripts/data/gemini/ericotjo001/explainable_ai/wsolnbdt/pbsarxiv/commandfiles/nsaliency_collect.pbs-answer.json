@@ -1,0 +1,36 @@
+{
+    "application": "PBS",
+    "details": {
+        "resource_requirements": {
+            "nodes": 1,
+            "cpus": 5,
+            "gpus": 1,
+            "memory": "16gb",
+            "walltime": "24:00:00",
+            "queue": "gpu",
+            "project": "12001577"
+        },
+        "software_requirements": {
+            "cuda": "10.1",
+            "singularity": "latest"
+        },
+        "script_execution": {
+            "command": "python /mnt/xquickruns_resnet50.py",
+            "arguments": {
+                "--scoremap_root": "xresearchlog/resnet50_saliency_NBDT",
+                "--NBDT": 1,
+                "--scoremap_mode": "saliency",
+                "--scoremap_submode": [
+                    "input",
+                    "layer1",
+                    "layer2",
+                    "layer3"
+                ],
+                "--ROOT_DIR": "wsolevaluation-master",
+                "--debug_toggles": "000000"
+            },
+            "container": "USandbox",
+            "bind_mount": "wsolevaluation-master/:/mnt"
+        }
+    }
+}

@@ -1,0 +1,28 @@
+{
+    "application": "aprun",
+    "details": {
+        "modules": [
+            "bwpy/0.3.0",
+            "tensorflow"
+        ],
+        "resources": {
+            "nodes": 16,
+            "cores_per_node": 1,
+            "wall_time": "02:00:00",
+            "job_name": "BuildImageNetTFRecords"
+        },
+        "commands": [
+            "python build_imagenet_data.py",
+            "aprun -b -n 16 -N 1 -- do_bb.sh",
+            "aprun -b -n 16 -N 1 -- do_tf.sh"
+        ],
+        "other_requirements": {
+            "input_files": [
+                "imagenet_metadata.txt",
+                "train_files.txt",
+                "validation_files.txt"
+            ],
+            "output_directory": "logs/build_imagenet_data_<PBS_JOBID>"
+        }
+    }
+}

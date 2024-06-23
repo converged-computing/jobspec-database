@@ -1,0 +1,41 @@
+{
+    "application": "DeepSpeed",
+    "software": [
+        "Python",
+        "torch.distributed.run",
+        "DeepSpeed",
+        "Megatron-DeepSpeed",
+        "finetune_t0.py",
+        "transformers",
+        "datasets"
+    ],
+    "resources": {
+        "compute": {
+            "nodes": 8,
+            "cpus_per_task": 64,
+            "gpus_per_node": 8,
+            "gpu_type": "a100",
+            "partition": "gpu_p5",
+            "reservation": "hug"
+        },
+        "storage": {
+            "output_path": "$six_ALL_CCFRSCRATCH/checkpoints/tr13f-6B3-ml-t0",
+            "checkpoint_path": "$DATA_OUTPUT_PATH/checkpoints/$variant",
+            "repo_path": "$DATA_OUTPUT_PATH/tr13f-6B3-ml-t0-logs",
+            "tensorboard_path": "$REPO_PATH/tensorboard/$variant",
+            "logs_path": "$REPO_PATH/logs/$variant",
+            "train_data_path": "$six_ALL_CCFRWORK/code/tr13f-6B3-ml-t0/Megatron-DeepSpeed/data/xp3capmixnotrunc_train.txt",
+            "valid_data_path": "$six_ALL_CCFRWORK/code/tr13f-6B3-ml-t0/Megatron-DeepSpeed/data/xp3capmixnotrunc_validation.txt",
+            "tokenizer_name_or_path": "bigscience/tokenizer",
+            "transformers_cache": "$six_ALL_CCFRWORK/models",
+            "hf_datasets_cache": "$six_ALL_CCFRWORK/datasets",
+            "hf_modules_cache": "$six_ALL_CCFRWORK/modules",
+            "hf_metrics_cache": "$six_ALL_CCFRWORK/metrics",
+            "meg_deep_repo": "/gpfswork/rech/six/commun/code/tr13f-6B3-ml-t0/megdslossseqnew2/Megatron-DeepSpeed",
+            "kill_switch_path": "$MEGATRON_DEEPSPEED_REPO/kill-switch-tr13f-6B3-mtf"
+        },
+        "time": "100:00:00",
+        "qos": "qos_gpu-gc",
+        "account": "six@a100"
+    }
+}

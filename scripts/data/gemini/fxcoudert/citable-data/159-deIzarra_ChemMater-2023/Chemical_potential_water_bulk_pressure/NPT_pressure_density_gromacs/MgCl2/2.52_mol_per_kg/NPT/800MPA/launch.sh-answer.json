@@ -1,0 +1,23 @@
+{
+    "application": "Gromacs",
+    "details": {
+        "modules": [
+            "gcc/8.4.1",
+            "cuda/11.2",
+            "openmpi/4.1.1-cuda",
+            "gromacs/2022.2-mpi-cuda"
+        ],
+        "resources": {
+            "nodes": 1,
+            "mpi_tasks": 4,
+            "openmp_threads_per_task": 8,
+            "runtime": "02:00:00"
+        },
+        "commands": [
+            "gmx_mpi grompp -f eql2.mdp -c ../../NVT/eql.gro -p ../../prepare_system/topol.top -o eql2.tpr -pp eql2.top -po eql2.mdp",
+            "srun gmx_mpi mdrun -s eql2.tpr -o eql2.trr -x eql2.xtc -c eql2.gro -e eql2.edr -g eql2.log -ntomp ${SLURM_CPUS_PER_TASK}",
+            "gmx_mpi grompp -f prd.mdp -c eql2.gro -p ../../prepare_system/topol.top -o prd.tpr -pp prd.top -po prd.mdp",
+            "srun gmx_mpi mdrun -s prd.tpr -o prd.trr -x prd.xtc -c prd.gro -e prd.edr -g prd.log -ntomp ${SLURM_CPUS_PER_TASK}"
+        ]
+    }
+}

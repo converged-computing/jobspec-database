@@ -1,0 +1,31 @@
+{
+    "application": "Slurm",
+    "details": {
+        "job_name": "psana_legion",
+        "dependency": "singleton",
+        "nodes": 129,
+        "time": "01:00:00",
+        "qos": "regular",
+        "constraint": "knl,quad,cache",
+        "core_spec": 4,
+        "image": "docker:stanfordlegion/psana-mpi:latest",
+        "exclusive": true,
+        "mail_type": "ALL",
+        "account": "m2859",
+        "environment_variables": {
+            "HOST_PSANA_DIR": "$HOME/psana_legion/psana-legion",
+            "HOST_DATA_DIR": "$SCRATCH/noepics_c24_s1_data/reg",
+            "SIT_PSDM_DATA": "$HOST_DATA_DIR/d/psdm",
+            "EAGER": 1,
+            "KERNEL_KIND": "memory_bound_native"
+        },
+        "scripts": [
+            "make_nodelist.py",
+            "psana_legion/scripts/psana_mpi.sh",
+            "psana_legion/mpi_rax.py"
+        ],
+        "commands": [
+            "srun"
+        ]
+    }
+}

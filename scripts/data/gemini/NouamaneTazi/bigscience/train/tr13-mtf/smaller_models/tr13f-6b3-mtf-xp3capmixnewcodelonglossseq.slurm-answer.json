@@ -1,0 +1,59 @@
+{
+    "application": "DeepSpeed",
+    "software": [
+        "DeepSpeed",
+        "Megatron-LM",
+        "Python",
+        "Torch",
+        "SLURM"
+    ],
+    "resource_requirements": {
+        "nodes": 8,
+        "gpus": 8,
+        "cpus_per_task": 64,
+        "time": "100:00:00",
+        "partition": "gpu_p5",
+        "constraint": "a100",
+        "reservation": "hug",
+        "qos": "qos_gpu-gc",
+        "account": "six@a100"
+    },
+    "data": {
+        "training_data": "$six_ALL_CCFRWORK/code/tr13f-6B3-ml-t0/Megatron-DeepSpeed/data/xp3capmixnewcodelong_train.txt",
+        "validation_data": "$six_ALL_CCFRWORK/code/tr13f-6B3-ml-t0/Megatron-DeepSpeed/data/xp3capmixnewcodelong_validation.txt",
+        "tokenizer": "bigscience/tokenizer",
+        "checkpoint_path": "$DATA_OUTPUT_PATH/checkpoints/$variant"
+    },
+    "model": {
+        "model_type": "GPT",
+        "num_layers": 30,
+        "hidden_size": 4096,
+        "num_attention_heads": 32,
+        "seq_length": 2048,
+        "max_position_embeddings": 2048
+    },
+    "training_parameters": {
+        "optimizer": "adam",
+        "learning_rate": 2e-05,
+        "batch_size": 2048,
+        "micro_batch_size": 4,
+        "gradient_clipping": 1.0,
+        "weight_decay": 0.0001,
+        "fp16": true,
+        "zero_optimization_stage": 1,
+        "save_interval": 2,
+        "eval_interval": 125,
+        "eval_iters": 10,
+        "exit_duration_in_mins": 5990
+    },
+    "environment_variables": {
+        "TRANSFORMERS_CACHE": "$six_ALL_CCFRWORK/models",
+        "HF_DATASETS_CACHE": "$six_ALL_CCFRWORK/datasets",
+        "HF_MODULES_CACHE": "$six_ALL_CCFRWORK/modules",
+        "HF_METRICS_CACHE": "$six_ALL_CCFRWORK/metrics",
+        "HF_DATASETS_OFFLINE": 1,
+        "TRANSFORMERS_OFFLINE": 1,
+        "CUDA_LAUNCH_BLOCKING": 1,
+        "TORCHELASTIC_ERROR_FILE": "/tmp/torch-elastic-error.json"
+    }
+}

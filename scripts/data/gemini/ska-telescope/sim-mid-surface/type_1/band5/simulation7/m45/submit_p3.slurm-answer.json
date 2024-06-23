@@ -1,0 +1,27 @@
+{
+    "application": "Dask",
+    "details": {
+        "environment": {
+            "modules": "purge all modules",
+            "python": "Alaska-venv",
+            "pythonpath": "$ARL",
+            "dask_scheduler": "specified in hostfile"
+        },
+        "resources": {
+            "nodes": 12,
+            "tasks": 29,
+            "memory": "50GB per worker",
+            "wallclock": "23:59:59",
+            "queue": "compute",
+            "project": "SKA-SDP",
+            "hostfile": "hostfile.$JOBID"
+        },
+        "launch": {
+            "scheduler": "dask-scheduler --port=8786",
+            "worker": "dask-worker --interface ib0 --nprocs 2 --nthreads 4 --memory-limit 50GB --local-directory /mnt/storage-ssd/tim/dask-workspace/${host} $scheduler:8786"
+        },
+        "script": {
+            "command": "python ../../../surface_simulation_elevation.py --context s3sky --rmax 1e5 --flux_limit 0.003 --show True --elevation_sampling 1.0 --declination -45 --seed 18051955 --band Ku --pbtype MID_FEKO_Ku --memory 32 --integration_time 30 --use_agg True --time_chunk 30 --time_range -0.05 0.05 --shared_directory /mnt/storage-ssd/tim/Code/sim-mid-surface/shared --vp_directory /mnt/storage-ssd/tim/Code/sim-mid-surface/beams/interpolated/"
+        }
+    }
+}

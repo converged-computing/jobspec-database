@@ -1,0 +1,56 @@
+{
+    "application": "SLURM",
+    "details": {
+        "resource_requirements": {
+            "nodes": 1,
+            "gpus": 1,
+            "tasks_per_node": 1,
+            "cpus_per_task": 2,
+            "partition": "default",
+            "job_name": "c100",
+            "time": "12:00:00",
+            "memory": "50G"
+        },
+        "software_requirements": {
+            "python": "3.x",
+            "torch": "1.x",
+            "torchvision": "0.x",
+            "numpy": "1.x",
+            "scipy": "1.x",
+            "pillow": "x.x",
+            "matplotlib": "3.x",
+            "tensorboard": "2.x",
+            "tqdm": "4.x"
+        },
+        "other": {
+            "experiment_parameters": {
+                "arch": "resnet18",
+                "hidden_mlp": 512,
+                "arch_name": "resnet18",
+                "dataset_path": "cifar100"
+            },
+            "augmentation_parameters": {
+                "min_scale_crops": 0.14,
+                "max_scale_crops": 1.0
+            },
+            "training_parameters": {
+                "nepochs": 400,
+                "bs": 128,
+                "lr_start": 0.6,
+                "lr_end": 0.0006,
+                "warmup_epochs": 5,
+                "size_crops": 32,
+                "nmb_crops": 2,
+                "nmb_prototypes": 100,
+                "queue_length": 120,
+                "epoch_queue_starts": 15,
+                "use_fp16": true,
+                "freeze_prototypes_niters": 5005,
+                "run_swav": false,
+                "workers": 2
+            },
+            "experiment_path": "./experiments/unmix_swav_cifar${EXP_SUFFIX}",
+            "dist_url": "tcp://localhost:10001"
+        }
+    }
+}

@@ -1,0 +1,38 @@
+{
+    "application": "SLURM",
+    "details": {
+        "resources": {
+            "nodes": 2,
+            "gpus_per_node": 8,
+            "cpus_per_task": 16
+        },
+        "software": {
+            "container_image": "/apps/mosaicml-stable-diffusion.sqsh",
+            "python_version": "3",
+            "libraries": [
+                "NCCL",
+                "WANDB"
+            ],
+            "framework": "MosaicML Composer"
+        },
+        "environment_variables": {
+            "APPS_PATH": "/apps",
+            "DATA_PATH": "/fsx",
+            "FSX_MOUNT": "/fsx:/fsx",
+            "FI_EFA_USE_DEVICE_RDMA": "1",
+            "FI_EFA_FORK_SAFE": "1",
+            "FI_LOG_LEVEL": "1",
+            "FI_PROVIDER": "efa",
+            "FI_EFA_ENABLE_SHM_TRANSFER": "1",
+            "NCCL_DEBUG": "INFO",
+            "WANDB_MODE": "offline",
+            "LD_LIBRARY_PATH": "/usr/local/lib/:$LD_LIBRARY_PATH"
+        },
+        "script_arguments": [
+            "--container-image",
+            "/apps/mosaicml-stable-diffusion.sqsh",
+            "--container-mounts",
+            "/fsx:/fsx"
+        ]
+    }
+}

@@ -1,0 +1,35 @@
+{
+    "application": "SLURM",
+    "details": {
+        "job_name": "cutlass_bench",
+        "partition": "g40",
+        "memory_per_cpu": "16GB",
+        "nodes": 1,
+        "tasks_per_node": 8,
+        "cores_per_task": 6,
+        "gpus": 8,
+        "output_directory": "%x_%j.out",
+        "error_directory": "%x_%j.out",
+        "account": "stablegpt",
+        "environment_setup_script": "/fsx/quentin/jacob/gpt-neox-stuff/setup.sh",
+        "python_script": "cutlass_bmm.py",
+        "hostfile_script": "/fsx/quentin/jacob/write_hostfile.sh",
+        "hostfile_location": "/fsx/quentin/jacob/hostfiles/hosts_$SLURM_JOBID"
+    },
+    "software_requirements": [
+        "SLURM",
+        "Python",
+        "cutlass",
+        "NCCL",
+        "OpenMPI",
+        "TorchElastic"
+    ],
+    "resource_requirements": {
+        "memory": "16GB per CPU",
+        "nodes": 1,
+        "tasks": 8,
+        "cores": 6,
+        "gpus": 8,
+        "network": "Infiniband"
+    }
+}

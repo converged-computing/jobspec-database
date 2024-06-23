@@ -1,0 +1,29 @@
+{
+    "application": "Slurm",
+    "details": {
+        "job_name": "apogee-expand",
+        "output_file": "logs/expand.o%j",
+        "error_file": "logs/expand.e%j",
+        "nodes": 4,
+        "time": "12:00:00",
+        "partition": "cca",
+        "constraints": "skylake",
+        "environment_setup": [
+            "source ~/.bash_profile",
+            "init_conda",
+            "conda activate hq"
+        ],
+        "executable": "python3 expand_samples.py",
+        "arguments": [
+            "--name",
+            "$HQ_RUN",
+            "-v",
+            "--mpi"
+        ],
+        "mpi_command": "mpirun -n $SLURM_NTASKS",
+        "working_directory": "/mnt/ceph/users/apricewhelan/projects/hq/scripts",
+        "output_archive": "samples.tar.gz",
+        "archive_directory": "/mnt/ceph/users/apricewhelan/projects/hq/cache/$HQ_RUN",
+        "archive_contents": "samples/"
+    }
+}

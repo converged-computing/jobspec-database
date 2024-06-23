@@ -1,0 +1,31 @@
+{
+    "application": "Jupyter",
+    "details": {
+        "resource_requirements": {
+            "nodes": 1,
+            "cpus_per_task": 2,
+            "memory": "2GB",
+            "time": "04:00:00",
+            "gpu": "enabled"
+        },
+        "software_dependencies": [
+            "singularity",
+            "tensorflow 2.3.0",
+            "jupyter notebook",
+            "ssh",
+            "shuf"
+        ],
+        "environment_variables": {
+            "SLURM_JOBTMP": "used to set XDG_RUNTIME_DIR",
+            "XDG_RUNTIME_DIR": "set to SLURM_JOBTMP if available"
+        },
+        "script_functions": {
+            "module purge": "clears all loaded modules",
+            "shuf -i 10000-65500 -n 1": "generates a random port number between 10000 and 65500",
+            "ssh -N -f -R $port:localhost:$port log-1": "establishes an SSH tunnel for forwarding port $port from the local machine to port $port on the remote machine 'log-1'",
+            "cat<<EOF ... EOF": "prints a multi-line string to the console, including instructions on how to connect to the Jupyter server",
+            "unset XDG_RUNTIME_DIR": "unsets the XDG_RUNTIME_DIR environment variable",
+            "singularity exec --nv ... /bin/bash -c \" ... \"": "runs a Jupyter notebook server within a singularity container"
+        }
+    }
+}

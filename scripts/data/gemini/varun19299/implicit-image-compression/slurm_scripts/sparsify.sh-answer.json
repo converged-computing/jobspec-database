@@ -1,0 +1,33 @@
+{
+    "application": "SLURM",
+    "details": {
+        "job_name": "masking",
+        "partition": "batch_default",
+        "nodes": 1,
+        "tasks": 1,
+        "cpus_per_task": 4,
+        "memory_per_cpu": "4G",
+        "time_limit": "6:00:00",
+        "gpu": "gtx1080",
+        "gpu_count": 1,
+        "mail_type": "BEGIN,END,FAIL",
+        "mail_user": "vsundar4@wisc.edu",
+        "output": "slurm_outputs/log-%x.%A_%a.out",
+        "conda_environment": "torch1.7_py38",
+        "modules": [
+            "cuda/10.2",
+            "anaconda/wml"
+        ],
+        "python_script": "main.py",
+        "python_arguments": [
+            "exp_name='${img.name}_${masking.name}_${masking.density}_train_${train.multiplier}x_saved_weight'",
+            "img=flower_16bit",
+            "+masking=${1}",
+            "masking.density=0.05",
+            "wandb.project=sparsify",
+            "train.multiplier=5",
+            "train.save_weights=True",
+            "-m"
+        ]
+    }
+}

@@ -1,0 +1,40 @@
+{
+    "application": "SCOREP",
+    "details": {
+        "runtime": "30 minutes",
+        "nodes": 1,
+        "tasks_per_node": 1,
+        "cpus_per_task": 24,
+        "memory": "62GB",
+        "environment": {
+            "readex_env/set_env_rdd.source": "Readex environment setup",
+            "scripts_$READEX_MACHINE/environment.sh": "Machine-specific environment settings"
+        },
+        "compilation": {
+            "compiler": "scorep",
+            "compiler_flags": {
+                "online-access": "Enable online access to instrumentation data",
+                "user": "Use user-level instrumentation",
+                "mpp=mpi": "Enable MPI instrumentation",
+                "thread=none": "Disable thread-level instrumentation",
+                "nomemory": "Disable memory instrumentation",
+                "FILTER_GCC": "Filter for GCC instrumentation",
+                "FILTER_ICC": "Filter for Intel compiler instrumentation"
+            }
+        },
+        "execution": {
+            "command": "srun -n 24 ./kripke --procs 2,2,6 --niter 20 --nest GZD --zones 4,4,4 --groups 200",
+            "or": "srun -n 24 ./kripke --procs 2,2,6 --niter 10 --nest GZD --zones 32,32,32 --legendre 8 --dset 32"
+        },
+        "profiling": {
+            "options": {
+                "USE_MERIC": "Use MERIC profiling",
+                "USE_SCOREP": "Use SCOREP profiling"
+            },
+            "code_regions": {
+                "src/kripke.cpp": "Main region",
+                "src/Kripke/Sweep_Solver.cpp": "Compute regions"
+            }
+        }
+    }
+}

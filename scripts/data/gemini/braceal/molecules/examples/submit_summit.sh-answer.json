@@ -1,0 +1,31 @@
+{
+    "application": "LSF",
+    "details": {
+        "resource_requirements": {
+            "walltime": "120",
+            "project": "MED110",
+            "job_name": "spike_train",
+            "alloc_flags": "NVME",
+            "modules": [
+                "gcc/7.4.0",
+                "python/3.6.6-anaconda3-5.3.0",
+                "cuda/10.1.243",
+                "hdf5/1.10.4"
+            ],
+            "environment": "/ccs/home/tkurth/project/pytorch/pytorch-1.6.0_cudnn-8.0.2.39_nccl-2.7.8-1_py-3.6_static_mlperf",
+            "run_command": "./run_vae_dist_summit.sh ${wandb_token} ${run_tag}",
+            "jsrun_arguments": {
+                "nodes": "${nnodes}",
+                "ranks_per_node": "1",
+                "groups_per_node": "6",
+                "tasks_per_group": "3",
+                "cpus_per_task": "42",
+                "distribution": "packed"
+            }
+        },
+        "other_software": [
+            "wandb",
+            "jsrun"
+        ]
+    }
+}

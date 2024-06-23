@@ -1,0 +1,62 @@
+{
+    "application": "SLURM",
+    "details": {
+        "resource_requirements": {
+            "partition": "GPUQ",
+            "account": "share-ie-idi",
+            "time": "24:00:00",
+            "nodes": 1,
+            "gres": "gpu:a100:1",
+            "constraint": "gpu80g|gpu40g",
+            "ntasks_per_node": 1,
+            "cpus_per_task": 12,
+            "mem": "80G",
+            "job_name": "20k",
+            "output": "/cluster/home/erlingfo/autodeeplab/out/20k.out",
+            "mail_user": "erlingfo@stud.ntnu.no",
+            "mail_type": "ALL"
+        },
+        "software_requirements": {
+            "modules": [
+                "CUDA/11.3.1",
+                "Anaconda3/2022.05"
+            ],
+            "conda_environment": "autodl",
+            "python_script": "../train_autodeeplab.py",
+            "python_arguments": [
+                "--batch_size",
+                "24",
+                "--dataset",
+                "solis",
+                "--checkname",
+                "no_bb_20k",
+                "--alpha_epoch",
+                "20",
+                "--filter_multiplier",
+                "8",
+                "--resize",
+                "224",
+                "--crop_size",
+                "224",
+                "--workers",
+                "12",
+                "--num_bands",
+                "12",
+                "--epochs",
+                "40",
+                "--num_images",
+                "20000",
+                "--loss-type",
+                "ce",
+                "--use_ab",
+                "true",
+                "--resume",
+                "/cluster/home/erlingfo/autodeeplab/run/solis/no_bb_20k/experiment_3/checkpoint.pth.tar"
+            ]
+        },
+        "monitoring": {
+            "gpu_usage_log": "/cluster/home/erlingfo/autodeeplab/out/20k_gpu_usage.log",
+            "cpu_usage_log": "/cluster/home/erlingfo/autodeeplab/out/20k_cpu_usage.log"
+        }
+    }
+}

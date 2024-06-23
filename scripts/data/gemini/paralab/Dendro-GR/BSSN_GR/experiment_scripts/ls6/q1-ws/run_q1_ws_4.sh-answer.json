@@ -1,0 +1,28 @@
+{
+    "application": "Slurm",
+    "details": {
+        "description": "This is a Slurm job script designed to run MPI codes on TACC's Lonestar6 cluster, specifically on AMD Milan nodes.",
+        "queue": "gpu-a100",
+        "nodes": 2,
+        "tasks": 4,
+        "runtime": "01:30:00",
+        "email_notifications": "all",
+        "other_commands": [
+            "module list",
+            "pwd",
+            "date",
+            "make bssnWSTestCUDA -j4",
+            "ibrun ./BSSN_GR/bssnWSTestCUDA q1_ws.par.json 1"
+        ],
+        "resources": {
+            "compute_nodes": "AMD Milan",
+            "memory": "Not explicitly defined in the script",
+            "storage": "Not explicitly defined in the script"
+        },
+        "software": {
+            "MPI": "ibrun (TACC specific, not mpirun or mpiexec)",
+            "compiler": "gcc (inferred from the 'make' command)",
+            "code": "BSSN_GR/bssnWSTestCUDA"
+        }
+    }
+}

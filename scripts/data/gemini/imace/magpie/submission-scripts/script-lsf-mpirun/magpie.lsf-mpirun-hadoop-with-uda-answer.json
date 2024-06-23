@@ -1,0 +1,43 @@
+{
+    "application": "Magpie",
+    "details": {
+        "description": "Magpie is a set of scripts used for running Hadoop on traditional HPC systems. It provides a way to launch Hadoop daemons, manage HDFS, submit and run Hadoop jobs, and interact with the Hadoop cluster interactively.",
+        "resource_requirements": {
+            "node_count": "BSUB -n <my node count>",
+            "time_limit": "BSUB -W <my time in hours:minutes>",
+            "queue": "BSUB -q <my queue>",
+            "job_name": "BSUB -J <my job name>"
+        },
+        "software_requirements": {
+            "hadoop": {
+                "version": "2.7.1",
+                "home": "${HOME}/hadoop-${HADOOP_VERSION}",
+                "setup_type": "MR2",
+                "filesystem_mode": "hdfsoverlustre",
+                "uda_setup": "no"
+            },
+            "java": {
+                "home": "/usr/lib/jvm/jre-1.7.0-oracle.x86_64/"
+            },
+            "mpi": {
+                "mpirun_options": "$MPIRUN_OPTIONS"
+            }
+        },
+        "script_paths": {
+            "magpie_scripts_home": "${HOME}/magpie",
+            "hadoop_script_path": "${HOME}/my-job-script",
+            "magpie_pre_job_run": "${HOME}/magpie-my-pre-job-script",
+            "magpie_post_job_run": "${HOME}/magpie-my-post-job-script",
+            "magpie_environment_variable_script": "${HOME}/my-job-env"
+        },
+        "data_paths": {
+            "magpie_local_dir": "/tmp/${USER}/magpie",
+            "hadoop_local_dir": "/tmp/${USER}/hadoop",
+            "hadoop_hdfs_path": "/ssd/${USER}/hdfs",
+            "hadoop_hdfs_over_lustre_path": "/lustre/${USER}/hdfsoverlustre/",
+            "hadoop_hdfs_over_networkfs_path": "/networkfs/${USER}/hdfsovernetworkfs/",
+            "hadoop_raw_networkfs_path": "/lustre/${USER}/rawnetworkfs/",
+            "hadoop_localstore": "/ssd/${USER}/localstore/"
+        }
+    }
+}

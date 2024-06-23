@@ -1,0 +1,46 @@
+{
+    "application": "Geospatial Processing",
+    "software": [
+        "gdalbuildvrt",
+        "gdal_translate",
+        "gdalwarp"
+    ],
+    "resources": {
+        "environment_variables": {
+            "DIR": "/project/fas/sbsc/ga254/dataproces/NHDplus",
+            "MERIT": "/gpfs/scratch60/fas/sbsc/ga254/dataproces/RIVER_NETWORK_MERIT"
+        },
+        "slurm_job_submission": {
+            "partition": "day",
+            "nodes": 1,
+            "tasks_per_node": 2,
+            "time": "24:00:00",
+            "output_file": "/gpfs/scratch60/fas/sbsc/ga254/stdout/sc31_reproject_stream_basin.sh.%J.out",
+            "error_file": "/gpfs/scratch60/fas/sbsc/ga254/stderr/sc31_reproject_stream_basin.sh.%J.err",
+            "mail_user": "email",
+            "job_name": "sc31_reproject_stream_basin.sh",
+            "memory": 10000
+        },
+        "data_files": {
+            "input": [
+                "/project/fas/sbsc/ga254/dataproces/NHDplus/tif_merge/NHDplus_90m.tif",
+                "/gpfs/scratch60/fas/sbsc/ga254/dataproces/RIVER_NETWORK_MERIT/{${VAR}_h04v02.tif,${VAR}_h06v02.tif,${VAR}_h08v02.tif,${VAR}_h10v02.tif,${VAR}_h04v04.tif,${VAR}_h06v04.tif,${VAR}_h08v04.tif,${VAR}_h10v04.tif}"
+            ],
+            "output": [
+                "/project/fas/sbsc/ga254/dataproces/NHDplus/tif_streambasin/${VAR}.vrt",
+                "/project/fas/sbsc/ga254/dataproces/NHDplus/tif_streambasin/${VAR}.tif",
+                "/project/fas/sbsc/ga254/dataproces/NHDplus/tif_streambasin_NAD83m/${VAR}_NAD83m_tmp.tif",
+                "/project/fas/sbsc/ga254/dataproces/NHDplus/tif_streambasin_NAD83m/${VAR}_NAD83m.tif"
+            ]
+        },
+        "processing_parameters": {
+            "parallelism": {
+                "processes": 2
+            },
+            "gdalwarp": {
+                "threads": 4,
+                "cache_max": 4000
+            }
+        }
+    }
+}

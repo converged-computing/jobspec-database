@@ -1,0 +1,42 @@
+{
+    "application": "PBS",
+    "details": {
+        "job_name": "compile_intel_MBX",
+        "queue": "condo",
+        "walltime": "01:00:00",
+        "nodes": "1",
+        "ppn": "16",
+        "error_file": "stderr",
+        "output_file": "stdout",
+        "email": "your_email_address",
+        "email_options": "abe",
+        "environment_variables": {
+            "MBX_HOME": "$HOME/software/MBX",
+            "PATH": "$FFTWHOME/lib:$FFTWHOME/include:$PATH"
+        },
+        "modules": [
+            "gsl",
+            "openmpi_ib",
+            "fftw"
+        ],
+        "compiler": "icc/icpc",
+        "cmake_options": {
+            "CMAKE_BUILD_TYPE": "Debug",
+            "USE_OPENMP": "True",
+            "CMAKE_CXX_FLAGS": "-fPIC -O2 -Wall -L$FFTWHOME/lib -I$FFTWHOME/include",
+            "CMAKE_CXX_COMPILER": "icpc",
+            "CMAKE_C_COMPILER": "icc"
+        },
+        "make_options": {
+            "jobs": "8",
+            "CXX": "icpc",
+            "CC": "icc"
+        },
+        "target_directory": "build",
+        "install_directory": "install",
+        "driver_compilation": {
+            "target_directory": "plugins/i-pi/src/main",
+            "makefile": "Makefile_tscc_intel"
+        }
+    }
+}

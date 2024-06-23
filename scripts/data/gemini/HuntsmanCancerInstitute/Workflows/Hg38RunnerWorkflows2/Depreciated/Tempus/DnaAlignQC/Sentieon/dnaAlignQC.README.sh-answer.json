@@ -1,0 +1,43 @@
+{
+    "application": "Snakemake",
+    "details": {
+        "modules": [
+            "sentieon/201911.00",
+            "snakemake/5.6.0",
+            "samtools/1.10"
+        ],
+        "resources": {
+            "dataBundle": "/uufs/chpc.utah.edu/common/PE/hci-bioinformatics1/TNRunner",
+            "regionsForReadCoverage": "dataBundle/Bed/AllExonHg38Bed8April2020/hg38AllGeneExonsPad175bp.bed.gz",
+            "regionsForOnTarget": "dataBundle/Bed/AllExonHg38Bed8April2020/hg38AllGeneExonsPad175bp.bed.gz",
+            "indexFasta": "dataBundle/Indexes/B38IndexForBwa-0.7.17/hs38DH.fa",
+            "dbsnp": "dataBundle/Vcfs/dbsnp_146.hg38.vcf.gz",
+            "gSnp": "dataBundle/Vcfs/1000G_phase1.snps.high_confidence.hg38.vcf.gz",
+            "gIndel": "dataBundle/Vcfs/Mills_and_1000G_gold_standard.indels.hg38.vcf.gz",
+            "useq": "dataBundle/BioApps/USeq/Apps",
+            "ucsc": "dataBundle/BioApps/UCSC/"
+        },
+        "parameters": {
+            "useqSamAlignmentExtractor": "-q 20 -a 0.65 -d -f -u",
+            "useqSam2USeq": "-v Hg38 -x 5000 -r -w sam2USeq.config.txt"
+        },
+        "workflow": {
+            "description": "This is a standard BWA mem alignment to Hg38/GRCh38 followed by quality filtering, deduping, indel realignment, base score recalibration, haplotype calling, and various QC calculations.",
+            "steps": [
+                "BWA mem alignment",
+                "Quality filtering",
+                "Deduping",
+                "Indel realignment",
+                "Base score recalibration",
+                "Haplotype calling",
+                "QC calculations"
+            ],
+            "tools": [
+                "BWA",
+                "Sentieon",
+                "Samtools",
+                "USeq"
+            ]
+        }
+    }
+}

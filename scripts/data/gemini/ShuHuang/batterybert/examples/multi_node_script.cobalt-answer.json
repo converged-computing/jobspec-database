@@ -1,0 +1,38 @@
+{
+    "application": "PyTorch",
+    "details": {
+        "environment": {
+            "conda_env": "bert-pytorch",
+            "python_executable": "/lus/theta-fs0/projects/SolarWindowsADSP/conda/envs/bert-pytorch/bin/python",
+            "preloaded_env_vars": [
+                "OMP_NUM_THREADS=8"
+            ]
+        },
+        "resources": {
+            "compute_nodes": "2",
+            "queue": "full-node",
+            "account": "SolarWindowsADSP",
+            "walltime": "10 minutes",
+            "gpu_type": "NVIDIA",
+            "gpu_per_node": "8",
+            "training_data_root": "$TRAIN_ROOT",
+            "validation_data_root": "$TEST_ROOT",
+            "checkpoint_path": "$CHECKPOINT",
+            "output_directory": "$SAVE_ROOT"
+        },
+        "script": {
+            "name": "run_class.py",
+            "launch_method": "torch.distributed.launch",
+            "parameters": [
+                "--train_root",
+                "$TRAIN_ROOT",
+                "--eval_root",
+                "$TEST_ROOT",
+                "--output_dir",
+                "$SAVE_ROOT",
+                "--model_name_or_path",
+                "$CHECKPOINT"
+            ]
+        }
+    }
+}

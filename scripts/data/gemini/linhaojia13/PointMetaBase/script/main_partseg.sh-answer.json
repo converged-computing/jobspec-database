@@ -1,0 +1,26 @@
+{
+    "application": "SLURM",
+    "details": {
+        "scheduler": "SLURM",
+        "job_name": "partseg",
+        "nodes": 1,
+        "array_index": 0,
+        "output_file": "slurm_logs/%x.%3a.%A.out",
+        "error_file": "slurm_logs/%x.%3a.%A.err",
+        "runtime": "24:00:00",
+        "gpu_request": "1 v100",
+        "cpus_per_gpu": 6,
+        "memory": "30G",
+        "modules": [
+            "cuda/11.1.1",
+            "gcc"
+        ],
+        "conda_environment": "openpoints",
+        "python_script": "examples/shapenetpart/main.py",
+        "python_arguments": "cfg=$1 ${@:2}",
+        "gpu_check": "nvidia-smi",
+        "cuda_version_check": "nvcc --version",
+        "hostname_check": "hostname",
+        "gpu_availability_check": "nvidia-smi --query-gpu=name --format=csv,noheader | wc -l"
+    }
+}

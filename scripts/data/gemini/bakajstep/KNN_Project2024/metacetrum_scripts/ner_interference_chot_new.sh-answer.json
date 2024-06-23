@@ -1,0 +1,61 @@
+{
+    "application": "PBS",
+    "details": {
+        "job_name": "batch_job_knn",
+        "queue": "gpu",
+        "resources": {
+            "nodes": 1,
+            "cpus": 1,
+            "gpus": 1,
+            "gpu_memory": "20gb",
+            "memory": "40gb",
+            "scratch_ssd": "20gb"
+        },
+        "walltime": "1:00:00",
+        "job_output": "merged with standard error",
+        "mail_notifications": "on abort or termination",
+        "source_code": {
+            "source": "GitHub",
+            "link": "https://github.com/roman-janik/diploma_thesis_program/blob/main/ner/train_ner_model.sh",
+            "author": "Roman Jan\u00edk (https://github.com/roman-janik)"
+        },
+        "software": {
+            "python": "2.0.0",
+            "torch": "2.0.0",
+            "pip": "latest",
+            "requirements": {
+                "source": "requirements.txt",
+                "location": "program/KNN_Project2024"
+            }
+        },
+        "script_functionality": {
+            "clone_repository": {
+                "repository": "git@github.com:bakajstep/KNN_Project2024.git",
+                "branch": "specified by script variable $branch"
+            },
+            "prepare_directories": {
+                "results_directory": "$HOMEPATH/program/results/",
+                "datasets_directory": "$DATAPATH",
+                "local_results_directory": "program/results"
+            },
+            "copy_data": {
+                "datasets": "$DATAPATH to program",
+                "models": "$MODELPATH to program"
+            },
+            "run_training": {
+                "script": "chain_of_trust_eval.py",
+                "configurations": {
+                    "source": "configs/*.yaml",
+                    "selection": "all, individual, or a list"
+                },
+                "results_saving": {
+                    "format": {
+                        "text": "all_experiment_results_$curr_date.txt",
+                        "csv": "all_experiment_results_$curr_date.csv"
+                    },
+                    "location": "$RESPATH"
+                }
+            }
+        }
+    }
+}

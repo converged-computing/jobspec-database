@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n\"application\": \"Slurm\",\n\"details\": {\n\"resource_requirements\": {\n\"nodes\": 1,\n\"tasks_per_node\": 4,\n\"memory_per_cpu\": \"24Gb\",\n\"walltime\": \"72:00:00\",\n\"partition\": \"plgrid\",\n\"account\": \"plgjonizacja5\"\n},\n\"software_requirements\": {\n\"cmake\": \"plgrid/tools/cmake\",\n\"fftw\": \"plgrid/libs/fftw/3.3.9\",\n\"mkl\": \"plgrid/libs/mkl/2021.3.0\",\n\"intel\": \"plgrid/tools/intel/2021.3.0\"\n},\n\"executable\": \"./qsf-${prj}-3e-im\",\n\"parameters\": \"PARAMS -r\"\n}\n}\n```\n\nThis script runs under the **Slurm** workload manager.  Here is a breakdown of its contents and resource requirements:\n\n* **Slurm directives:**  The script starts with several `#SBATCH` lines that define resources and parameters for the job within the Slurm environment. These include:\n    * `-J`:  Job name\n    * `-N`: Number of nodes\n    * `--ntasks-per-node`:  Number of tasks per node (cores)\n    * `--mem-per-cpu`:  Memory allocated per CPU core\n    * `--time`:  Maximum runtime\n    * `-A`:  Account name for resource billing\n    * `-p`:  Partition (resource allocation pool)\n    * `--output`, `--error`:  Output file and error file for the job\n\n* **Software Loading:** \n    * `module load ...`:  This line loads required software modules from the PL-Grid environment.  This includes:\n        * `cmake` (build system)\n        * `fftw` (Fast Fourier Transform library)\n        * `mkl` (Math Kernel Library)\n        * `intel` (Intel compiler tools)\n\n* **Executable and Parameters:**\n    * `cd $SLURM_SUBMIT_DIR`:  Changes to the directory where the job was submitted.\n    * `prj=`:  Gets the name of the project directory from the current working directory (presumably for use in the executable name).\n    * `mpiexec ./qsf-${prj}-3e-im PARAMS -r`:  This line launches the main executable `qsf-${prj}-3e-im` using the `mpiexec` command (for parallel execution). It is passed the arguments \"PARAMS\" and \"-r\". The script likely assumes this executable is compiled and located in the current directory.\n\n**Overall, the script is a standard example of how to submit a job to a Slurm cluster using the `sbatch` command. It requests resources and specific software modules, then runs a parallel executable using the `mpiexec` command. The job will likely be performing some sort of computation that relies on the libraries loaded and the executable provided.** \n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 387,
+        "candidates_token_count": 673,
+        "total_token_count": 1060,
+        "cached_content_token_count": 0
+    }
+}

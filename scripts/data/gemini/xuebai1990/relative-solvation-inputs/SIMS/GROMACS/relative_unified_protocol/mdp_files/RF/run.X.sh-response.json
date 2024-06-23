@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"SLURM\",\n  \"details\": {\n    \"software\": [\n      \"GROMACS\",\n      \"Intel compiler\"\n    ],\n    \"resources\": {\n      \"nodes\": 1,\n      \"tasks_per_node\": 1,\n      \"cpus_per_task\": 2,\n      \"memory_per_cpu\": \"1400mb\",\n      \"time\": \"4-10:00:00\",\n      \"partition\": \"mf_ilg2.3,mf_nes2.8\",\n      \"distribution\": \"block:cyclic\"\n    },\n    \"environment_variables\": [\n      \"GMX_MAXBACKUP\",\n      \"PATH\",\n      \"GMXRC\",\n      \"GMXLIB\",\n      \"GROMPP\",\n      \"MDRUN\",\n      \"LAMBDANR\",\n      \"OMP_NUM_THREADS\"\n    ],\n    \"file_dependencies\": [\n      \"minimize.${LAMBDANR}.mdp\",\n      \"morph.gro\",\n      \"index.ndx\",\n      \"morph.top\",\n      \"equil_nvt.${LAMBDANR}.mdp\",\n      \"equil_npt.${LAMBDANR}.mdp\",\n      \"equil_npt2.${LAMBDANR}.mdp\",\n      \"prod.${LAMBDANR}.mdp\"\n    ],\n    \"output_files\": [\n      \"minimize.${LAMBDANR}.tpr\",\n      \"minimize.${LAMBDANR}.edr\",\n      \"minimize.${LAMBDANR}.trr\",\n      \"minimize.${LAMBDANR}.log\",\n      \"equil_nvt.${LAMBDANR}.tpr\",\n      \"equil_nvt.${LAMBDANR}.edr\",\n      \"equil_nvt.${LAMBDANR}.trr\",\n      \"equil_nvt.${LAMBDANR}.log\",\n      \"equil_npt.${LAMBDANR}.tpr\",\n      \"equil_npt.${LAMBDANR}.edr\",\n      \"equil_npt.${LAMBDANR}.trr\",\n      \"equil_npt.${LAMBDANR}.log\",\n      \"equil_npt2.${LAMBDANR}.tpr\",\n      \"equil_npt2.${LAMBDANR}.edr\",\n      \"equil_npt2.${LAMBDANR}.trr\",\n      \"equil_npt2.${LAMBDANR}.log\",\n      \"prod.${LAMBDANR}.tpr\",\n      \"prod.${LAMBDANR}.edr\",\n      \"prod.${LAMBDANR}.trr\",\n      \"prod.${LAMBDANR}.log\"\n    ]\n  }\n}\n```\n\nThis script is designed to run on SLURM, a workload manager that distributes jobs across a cluster of computers.  \n\nThe script uses several other software packages including: \n\n* **GROMACS:** A molecular dynamics simulation package used for the actual calculation.\n* **Intel compiler:** A compiler for compiling GROMACS. \n\nThe script requests the following resources:\n\n* **Nodes:** 1 node\n* **Tasks per node:** 1 task\n* **CPUs per task:** 2 CPUs\n* **Memory per CPU:** 1400mb\n* **Time:** 4 days, 10 hours\n* **Partition:** mf_ilg2.3, mf_nes2.8 (specifies the type of compute node)\n* **Distribution:** block:cyclic (specifies the distribution of tasks across the nodes)\n\nThe script also sets several environment variables to configure GROMACS.  It defines a number of variables related to the location of the GROMACS executables and libraries, and sets the `GMX_MAXBACKUP` variable to `-1` to disable backups.\n\nThe script also sets the `LAMBDANR` variable to 0, indicating that no lambda dynamics is used.\n\nThe actual calculation is done in the `slurm_startjob()` function. This function performs a series of steps, including energy minimization, constant volume equilibration, and constant pressure equilibration, before performing a production run.\n\nThe script includes a mechanism for copying the input files to a local work directory on the compute node, performing the calculations, and then copying the output files back to the submission directory. This is done to make the job more efficient by avoiding the overhead of transferring files over the network.\n\nOverall, this script is a well-written and comprehensive SLURM job script that utilizes GROMACS to perform a series of molecular dynamics simulations. \n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 2807,
+        "candidates_token_count": 1039,
+        "total_token_count": 3846,
+        "cached_content_token_count": 0
+    }
+}

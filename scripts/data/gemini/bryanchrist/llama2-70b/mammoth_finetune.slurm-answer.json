@@ -1,0 +1,40 @@
+{
+    "application": "SLURM",
+    "details": {
+        "resource_manager": "SLURM",
+        "queue": "gpu",
+        "gres": "2x A100 GPUs",
+        "cpus_per_task": 10,
+        "memory": "500 GB",
+        "walltime": "3 days",
+        "job_name": "mammoth_finetune",
+        "output_file": "mammoth_training-%A.out",
+        "error_file": "mammoth_training-%A.err",
+        "modules": [
+            "anaconda",
+            "cuda/11.4.2",
+            "falcon_40B"
+        ],
+        "packages": [
+            "python-dotenv",
+            "cudatoolkit"
+        ],
+        "conda_environment": "falcon_40B",
+        "python_package_requirements": "requirements.txt",
+        "python_script": "qlora_mammoth.py",
+        "model_name": "TIGER-Lab/MAmmoTH-70B",
+        "output_directory": "./mammoth_finetuned",
+        "data_file": "data/mathwell_final_qa.json",
+        "source_max_length": 16,
+        "target_max_length": 512,
+        "training_batch_size": 1,
+        "gradient_accumulation_steps": 16,
+        "max_steps": 5000,
+        "learning_rate": 0.0001,
+        "adam_beta2": 0.999,
+        "max_grad_norm": 0.3,
+        "lora_dropout": 0.05,
+        "weight_decay": 0.0,
+        "seed": 0
+    }
+}

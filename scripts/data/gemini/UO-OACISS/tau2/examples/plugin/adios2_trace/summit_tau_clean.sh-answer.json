@@ -1,0 +1,45 @@
+{
+    "application": "matmult-clean",
+    "details": {
+        "environment": {
+            "modules": {
+                "darshan-runtime": "unloaded",
+                "gcc": "6.4.0",
+                "python": "3.7.0-anaconda3-5.3.0"
+            },
+            "variables": {
+                "TAU_ADIOS2_PERIODIC": "1",
+                "TAU_ADIOS2_PERIOD": "5000000",
+                "TAU_ADIOS2_ONE_FILE": "0",
+                "TAU_ADIOS2_ENGINE": "BP",
+                "TAU_PLUGINS": "libTAU-adios2-trace-plugin.so",
+                "TAU_PLUGINS_PATH": "${MEMBERWORK}/gen010/tau2_install/ibm64linux/lib/shared-gnu-mpi-pthread-pdt-adios2",
+                "ADIOS_PATH": "${MEMBERWORK}/gen010/adios2_install",
+                "PYTHONPATH": "${ADIOS_PATH}/lib64/python3.7/site-packages:${PYTHONPATH}",
+                "LD_LIBRARY_PATH": "${ADIOS_PATH}/lib64:${LD_LIBRARY_PATH}",
+                "TAU_PROFILE_FORMAT": "merged",
+                "NSETS": "1",
+                "NMPIS": "20",
+                "NCORES": "40",
+                "NSETSNODE": "1"
+            }
+        },
+        "resource_requirements": {
+            "scheduler": "LSF",
+            "job_name": "adios2-tau-test",
+            "nodes": "1",
+            "wall_time": "10 minutes",
+            "queue": "GEN010TOOLS",
+            "runtime_environment": {
+                "jsrun": {
+                    "nodes": "${NSETS}",
+                    "tasks_per_node": "${NMPIS}",
+                    "cores_per_task": "${NCORES}",
+                    "group": "0",
+                    "rank": "${NSETSNODE}",
+                    "binding": "none"
+                }
+            }
+        }
+    }
+}

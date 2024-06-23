@@ -1,0 +1,29 @@
+{
+    "application": "GROMACS",
+    "details": {
+        "environment": "Nix shell with cuda.nix configuration",
+        "resource_requirements": {
+            "cores": 24,
+            "threads_per_task": 1,
+            "gpus": 4,
+            "gpu_type": "a100",
+            "partition": "ampere",
+            "time_limit": "2 days"
+        },
+        "parallelism": {
+            "MPI": true,
+            "OMP": true,
+            "ntomp_value": "SLURM_CPUS_PER_TASK (or 1 if not set)",
+            "OMP_NUM_THREADS": "equal to ntomp"
+        },
+        "execution_modes": {
+            "single_task": "gmx mdrun -ntomp $ntomp -deffnm em",
+            "multi_task": "mpirun gmx_mpi mdrun -ntomp $ntomp -deffnm $1"
+        },
+        "notes": [
+            "Adjust the path to cuda.nix in line 2",
+            "Optimal load is 6 tasks per GPU",
+            "Total number of cores per node: 48 (2 x 24 per GPU)"
+        ]
+    }
+}

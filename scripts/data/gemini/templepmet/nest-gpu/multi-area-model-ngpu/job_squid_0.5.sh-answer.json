@@ -1,0 +1,33 @@
+{
+    "application": "PBS",
+    "details": {
+        "queue": "SQUID",
+        "group": "${GROUP_NAME}",
+        "runtime": "01:00:00",
+        "output": "./log/job_%s_out.txt",
+        "error": "./log/job_%s_err.txt",
+        "nodes": 4,
+        "cores_per_node": 76,
+        "gpus_per_node": 8,
+        "omp_threads": 8,
+        "mpi_module": "BaseGPU/2022",
+        "singularity_image": "../singularity/nestgpu_sandbox",
+        "python_scripts": [
+            "run_theory.py",
+            "run_simulation.py",
+            "analysis/each_proc/time.py",
+            "analysis/each_proc/time_overlap.py",
+            "analysis/each_proc/time_each_label_sum.py",
+            "analysis/each_proc/memory.py",
+            "analysis/each_proc/neuron.py",
+            "analysis/each_proc/spike.py",
+            "analysis/each_proc/synapse.py",
+            "analysis/distributions/delay_connection.py",
+            "analysis/distributions/delay_spike.py",
+            "analysis/distributions/comm_spike.py"
+        ],
+        "other_scripts": [
+            "wrap_cuda.sh"
+        ]
+    }
+}

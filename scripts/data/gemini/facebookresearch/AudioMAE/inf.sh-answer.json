@@ -1,0 +1,40 @@
+{
+    "application": "Slurm",
+    "details": {
+        "job_name": "aud-ft",
+        "partition": "learnfair",
+        "nodes": 1,
+        "gpus_per_node": 8,
+        "ntasks_per_node": 8,
+        "cpus_per_task": 10,
+        "time": "24:00:00",
+        "mem": "480GB",
+        "signal": "USR1@120",
+        "output": "/checkpoint/%u/jobs/%A.out",
+        "error": "/checkpoint/%u/jobs/%A.err",
+        "software": [
+            "python",
+            "torch.distributed.launch",
+            "main_finetune_as.py"
+        ],
+        "resources": [
+            "audioset_train_json",
+            "audioset_train_all_json",
+            "audioset_eval_json",
+            "audioset_label",
+            "ckpt"
+        ],
+        "arguments": [
+            "--log_dir /checkpoint/berniehuang/mae/as_exp/$SLURM_JOB_ID",
+            "--output_dir /checkpoint/berniehuang/mae/as_exp/$SLURM_JOB_ID",
+            "--model vit_base_patch16",
+            "--dataset audioset",
+            "--data_train /checkpoint/berniehuang/ast/egs/audioset/data/datafiles/train.json",
+            "--data_eval /checkpoint/berniehuang/ast/egs/audioset/data/datafiles/eval_19k.json",
+            "--label_csv /checkpoint/berniehuang/ast/egs/audioset/data/class_labels_indices.csv",
+            "--finetune $ckpt",
+            "--batch_size 16",
+            "--eval"
+        ]
+    }
+}

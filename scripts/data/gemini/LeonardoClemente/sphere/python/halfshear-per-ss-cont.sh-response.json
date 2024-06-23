@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"PBS\",\n  \"details\": {\n    \"job_name\": \"hs-per-ss\",\n    \"nodes\": \"1\",\n    \"cores_per_node\": \"3\",\n    \"walltime\": \"48:00:00\",\n    \"queue\": \"qfermi\",\n    \"email\": \"adc@geo.au.dk\",\n    \"email_options\": \"abe\",\n    \"software\": {\n      \"gcc\": \"4.6.4\",\n      \"cuda\": \"5.5.22\",\n      \"python\": \"2.7.6\",\n      \"python_modules\": [\n        \"Manually installed Python modules\"\n      ]\n    },\n    \"resources\": {\n      \"workdir\": \"/home/adc/code/sphere\",\n      \"scratch_dir\": \"/scratch/$PBS_JOBID\"\n    },\n    \"commands\": [\n      \"nvidia-smi\",\n      \"cmake . && make\",\n      \"python continue_sim.py halfshear-darcy-sigma0=20000.0-k_c=3.5e-13-mu=1.797e-06-ss=10000.0-shear 1 0 &\",\n      \"python continue_sim.py halfshear-darcy-sigma0=20000.0-k_c=3.5e-13-mu=1.797e-06-ss=12500.0-shear 1 1 &\",\n      \"python continue_sim.py halfshear-darcy-sigma0=20000.0-k_c=3.5e-13-mu=1.797e-06-ss=15000.0-shear 1 2 &\",\n      \"wait\",\n      \"cp $WORKDIR/output/* $ORIGDIR/output/\"\n    ]\n  }\n}\n```\n\n**Explanation:**\n\n- **Application:** The script is running under PBS (Portable Batch System), a workload manager used for submitting, queuing, and executing jobs on a cluster.\n- **Details:**\n    - **Job Name:** `hs-per-ss`\n    - **Resources:** The script requests 1 node with 3 processors per node and a walltime of 48 hours. It also specifies the queue `qfermi`, email address for notifications, and email notification options.\n    - **Software:** \n        - The script sets up the environment for GCC version 4.6.4, CUDA version 5.5.22, and Python 2.7.6.\n        - It also includes paths for manually installed Python modules and a manually installed Python version (commented out).\n    - **Resources:** The script defines the original directory (`ORIGDIR`) and a work directory (`WORKDIR`) which could be either the original directory or a scratch directory depending on the environment setup.\n    - **Commands:** The script includes commands to run `nvidia-smi` (to check GPU status), compile the code using `cmake` and `make`, and execute Python scripts for simulations (`continue_sim.py`) with different parameters. It uses `&` to run these Python scripts in the background and `wait` to ensure they finish before proceeding. Finally, it copies the output files to the original directory. \n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 602,
+        "candidates_token_count": 757,
+        "total_token_count": 1359,
+        "cached_content_token_count": 0
+    }
+}

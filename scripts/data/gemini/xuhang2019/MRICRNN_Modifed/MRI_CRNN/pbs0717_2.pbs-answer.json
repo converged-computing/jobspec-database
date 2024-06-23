@@ -1,0 +1,29 @@
+{
+    "application": "PBS",
+    "details": {
+        "resource_requirements": {
+            "nodes": 1,
+            "cpus": 4,
+            "memory": "40gb",
+            "gpus": 1,
+            "gpu_type": "RTX6000",
+            "walltime": "24:00:00"
+        },
+        "software_requirements": {
+            "anaconda3": "personal",
+            "python": "3.8",
+            "nvidia-smi": "installed"
+        },
+        "script_execution": {
+            "working_directory": "$PBS_O_WORKDIR",
+            "commands": [
+                "python /rds/general/user/xc2322/home/git_projects/RED-CNN-Baseline/main.py --mode='train' --exp_code='chest_fedavg_adapter_1' --yaml_path='adapter.yaml' --peft=1 --pretrained_ckpt='save/pretrain/REDCNN_100epoch_fed_avg.ckpt' --lr=1e-6",
+                "python /rds/general/user/xc2322/home/git_projects/RED-CNN-Baseline/main.py --mode='train' --exp_code='chest_fedavg_adapter_2' --yaml_path='adapter.yaml' --peft=2 --pretrained_ckpt='save/pretrain/REDCNN_100epoch_fed_avg.ckpt' --lr=1e-6",
+                "python /rds/general/user/xc2322/home/git_projects/RED-CNN-Baseline/main.py --mode='train' --exp_code='chest_fedavg_halfft' --yaml_path='adapter.yaml' --half_ft --pretrained_ckpt='save/pretrain/REDCNN_100epoch_fed_avg.ckpt' --lr=1e-6",
+                "python /rds/general/user/xc2322/home/git_projects/RED-CNN-Baseline/main.py --mode='test' --exp_code='chest_fedavg_adapter_1' --test_code='1' --yaml_path='adapter.yaml' --fig_suffix='chest_fedavg_adapter_1' --result_fig --peft=1",
+                "python /rds/general/user/xc2322/home/git_projects/RED-CNN-Baseline/main.py --mode='test' --exp_code='chest_fedavg_adapter_2' --test_code='1' --yaml_path='adapter.yaml' --fig_suffix='chest_fedavg_adapter_2' --result_fig --peft=2",
+                "python /rds/general/user/xc2322/home/git_projects/RED-CNN-Baseline/main.py --mode='test' --exp_code='chest_fedavg_halfft' --test_code='1' --yaml_path='adapter.yaml' --fig_suffix='chest_fedavg_halfft' --result_fig "
+            ]
+        }
+    }
+}

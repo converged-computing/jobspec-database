@@ -1,0 +1,35 @@
+{
+    "application": "SLURM",
+    "details": {
+        "job_name": "mlm_cont",
+        "constraint": "v100-32g",
+        "ntasks": 128,
+        "ntasks_per_node": 4,
+        "gres": "gpu:4",
+        "cpus_per_task": 10,
+        "hint": "nomultithread",
+        "time": "20:00:00",
+        "output": "mlm_test%j.out",
+        "error": "mlm_test%j.out",
+        "mail_type": "begin,fail,abort,end",
+        "modules": [
+            "pytorch-gpu/py3/1.12.1"
+        ],
+        "environment_variables": [
+            "OMP_NUM_THREADS=10",
+            "CUDA_LAUNCH_BLOCKING=1",
+            "NCCL_ASYNC_ERROR_HANDLING=1"
+        ],
+        "command": "python -u run_training.py --model_name_or_path='../data/camembert_base_hf' --tokenizer_name='../data/camembert_base_hf' --path_load_dataset='../data/tokenized_dataset' --output_dir='./Model_out/' --logging_dir='./Model_out/logs/' --per_device_train_batch_size=32 --do_train --warmup_steps=10000 --overwrite_output_dir --max_seq_length=512 --logging_steps=500 --report_to='tensorboard' --save_strategy='epoch' --skip_memory_metrics='False' --log_level='info' --logging_first_step='True' --num_train_epochs=400 --fp16 --save_total_limit=400 --ddp_timeout=600 --ddp_find_unused_parameters='False'",
+        "software": [
+            "python",
+            "pytorch-gpu/py3/1.12.1",
+            "run_training.py"
+        ],
+        "resources": [
+            "GPU: v100-32g",
+            "CPU: 128 cores",
+            "memory: 32 GB per GPU"
+        ]
+    }
+}

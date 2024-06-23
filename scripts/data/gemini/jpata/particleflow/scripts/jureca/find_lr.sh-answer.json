@@ -1,0 +1,32 @@
+{
+    "application": "slurm",
+    "details": {
+        "resource_requirements": {
+            "account": "raise-ctp2",
+            "partition": "dc-gpu-devel",
+            "time": "0:30:00",
+            "nodes": 1,
+            "tasks_per_node": 1,
+            "gres": "gpu:4",
+            "modules": [
+                "GCCcore/.11.2.0",
+                "CMake",
+                "NCCL",
+                "CUDA",
+                "cuDNN",
+                "OpenMPI"
+            ],
+            "conda_environment": "tf2",
+            "python_version": "3",
+            "visible_gpus": "0,1,2,3"
+        },
+        "script_execution": {
+            "command": "python3 mlpf/pipeline.py find-lr -c $1",
+            "script_arguments": "$1"
+        },
+        "logging": {
+            "output_file": "logs_slurm/log_%x_%j.out",
+            "error_file": "logs_slurm/log_%x_%j.err"
+        }
+    }
+}

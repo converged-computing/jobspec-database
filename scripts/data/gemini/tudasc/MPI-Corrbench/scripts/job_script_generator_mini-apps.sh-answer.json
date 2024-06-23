@@ -1,0 +1,21 @@
+{
+    "application": "Slurm",
+    "details": {
+        "language": "Bash",
+        "purpose": "Generates a Slurm job array to execute a mini-app with all mutations.",
+        "input": "Requires environment variables: MPI_CORRECTNESS_BM_DIR, MPI_CORRECTNESS_BM_EXPERIMENT_DIR. Takes two arguments: TOOL (e.g., 'MUST', 'MPI-Checker', 'PARCOACH'), APP (e.g., 'kripke', 'amg2013', 'lulesh')",
+        "output": "Creates a Slurm job script at $SCRIPTS_DIR/$TOOL/$APP.sh",
+        "dependencies": [
+            "SLURM",
+            "find",
+            "wc",
+            "mkdir",
+            "cp",
+            "cat"
+        ],
+        "resources": {
+            "tasks": "8 + 1 (for MUST) or 1 (for MPI-Checker and PARCOACH)",
+            "storage": "Requires the following directories to exist: $MPI_CORRECTNESS_BM_DIR, $MPI_CORRECTNESS_BM_EXPERIMENT_DIR, $SCRIPTS_DIR/$TOOL, $SRC_DIR/2-level/patches/$APP/mutations/"
+        }
+    }
+}

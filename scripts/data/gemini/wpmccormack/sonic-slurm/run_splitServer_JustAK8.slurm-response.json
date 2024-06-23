@@ -1,0 +1,98 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"Slurm\",\n  \"details\": {\n    \"job_name\": \"run_splitServer_JustAK8\",\n    \"nodes\": 1,\n    \"ntasks\": 1,\n    \"cpus_per_task\": 4,\n    \"time_limit\": \"05:00:00\",\n    \"output\": \"splitServer_JustAK8_arrays/out_%A_%a.log\",\n    \"environment\": {\n      \"SCRAM_ARCH\": \"slc7_amd64_gcc900\",\n      \"CMS_PATH\": \"~/cms_path\",\n      \"CMSSW_VERSION\": \"CMSSW_11_3_0\",\n      \"CMSSW_CODE\": {\n        \"sonic-workflows\": \"CMSSW_12_0_0_pre5/src/sonic-workflows\",\n        \"Configuration/ProcessModifiers/python/allSonicTriton_cff.py\": \"../Configuration/ProcessModifiers/python/allSonicTriton_cff.py\",\n        \"RecoBTag/ONNXRuntime/python/pfParticleNetAK4_cff.py\": \"../RecoBTag/ONNXRuntime/python/pfParticleNetAK4_cff.py\",\n        \"run_files_splitServer.py\": \"./run_files_splitServer.py\",\n        \"step2_PAT_files.py\": \"./step2_PAT_files.py\",\n        \"file_of_files_2.txt\": \"./file_of_files.txt\"\n      }\n    },\n    \"commands\": [\n      \"hostname\",\n      \"echo $1\",\n      \"echo $2\",\n      \"mkdir /tmp/dir_${SLURM_JOB_ID}_${SLURM_PROCID}\",\n      \"cd /tmp/dir_${SLURM_JOB_ID}_${SLURM_PROCID}\",\n      \"pwd\",\n      \"current_epoch=$(date +%s)\",\n      \"echo $current_epoch\",\n      \"target_epoch=$(date -d \\\"$3\\\" +%s)\",\n      \"echo $target_epoch\",\n      \"sleep_seconds=$(( $target_epoch - $current_epoch ))\",\n      \"echo $sleep_seconds\",\n      \"sleep $sleep_seconds\",\n      \"export SCRAM_ARCH=slc7_amd64_gcc900\",\n      \"source /cvmfs/cms.cern.ch/cmsset_default.sh\",\n      \"CMS_PATH=~/cms_path\",\n      \"ll $CMS_PATH/SITECONF/local/JobConfig/site-local-config.xml\",\n      \"scram p CMSSW_11_3_0\",\n      \"cd CMSSW_11_3_0\",\n      \"eval `scramv1 runtime -sh`\",\n      \"cd ../\",\n      \"mkdir test_REAL\",\n      \"cd test_REAL\",\n      \"pwd\",\n      \"cp ~/CMSSW_12_0_0_pre5_ttbar_splitServer.tgz .\",\n      \"tar -xf CMSSW_12_0_0_pre5_ttbar_splitServer.tgz\",\n      \"cd CMSSW_12_0_0_pre5/src/sonic-workflows\",\n      \"cp ~/allSonicTriton_cff_JustAK4.py ../Configuration/ProcessModifiers/python/allSonicTriton_cff.py\",\n      \"cp ~/pfParticleNetAK4_NOAK4_cff.py ../RecoBTag/ONNXRuntime/python/pfParticleNetAK4_cff.py\",\n      \"scramv1 b -r ProjectRename\",\n      \"eval `scramv1 runtime -sh`\",\n      \"ln -s /home/wmccorma_mit_edu/local_files/*.root .\",\n      \"cp ~/run_files_splitServer.py .\",\n      \"cp ~/step2_PAT_files.py .\",\n      \"cp ~/file_of_files_2.txt ./file_of_files.txt\",\n      \"cmsRun run_files_splitServer.py address=$1 port=$2 tmi=True threads=4 maxEvents=8\",\n      \"current_epoch2=$(date +%s)\",\n      \"echo $current_epoch2\",\n      \"target_epoch2=$(date -d \\\"$3\\\" +%s)\",\n      \"extrasecs=100\",\n      \"target_epoch2=$(( $target_epoch2 + $extrasecs ))\",\n      \"echo $target_epoch2\",\n      \"sleep_seconds2=$(( $target_epoch2 - $current_epoch2 ))\",\n      \"echo $sleep_seconds2\",\n      \"sleep $sleep_seconds2\",\n      \"cmsRun run_files_splitServer.py address=$1 port=$2 tmi=True  threads=4 maxEvents=1000 &> outThroughput.txt\",\n      \"python3.6 ~/throughputFinderTimeDiff.py outThroughput.txt ~/splitServer_JustAK8_arrays/Synchro${SLURM_ARRAY_JOB_ID}.txt\",\n      \"cd /tmp\",\n      \"cd /tmp\",\n      \"rm -rf dir_${SLURM_JOB_ID}_${SLURM_PROCID}\"\n    ],\n    \"resources\": {\n      \"software\": [\n        \"Slurm\",\n        \"CMSSW\",\n        \"sonic-workflows\",\n        \"python3.6\"\n      ],\n      \"files\": [\n        \"~/cms_path/SITECONF/local/JobConfig/site-local-config.xml\",\n        \"~/CMSSW_12_0_0_pre5_ttbar_splitServer.tgz\",\n        \"~/allSonicTriton_cff_JustAK4.py\",\n        \"~/pfParticleNetAK4_NOAK4_cff.py\",\n        \"~/run_files_splitServer.py\",\n        \"~/step2_PAT_files.py\",\n        \"~/file_of_files_2.txt\",\n        \"~/throughputFinderTimeDiff.py\",\n        \"/home/wmccorma_mit_edu/local_files/*.root\"\n      ]\n    }\n  }\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "citation_metadata": {
+                "citation_sources": [
+                    {
+                        "start_index": 933,
+                        "end_index": 1751,
+                        "uri": "https://github.com/wpmccormack/sonic-slurm",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 1565,
+                        "end_index": 1907,
+                        "uri": "https://github.com/wpmccormack/sonic-slurm",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 1870,
+                        "end_index": 2109,
+                        "uri": "https://github.com/wpmccormack/sonic-slurm",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 2131,
+                        "end_index": 2392,
+                        "uri": "https://github.com/wpmccormack/sonic-slurm",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 2385,
+                        "end_index": 2563,
+                        "uri": "https://github.com/wpmccormack/sonic-slurm",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 2581,
+                        "end_index": 2809,
+                        "uri": "https://github.com/wpmccormack/sonic-slurm",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 2822,
+                        "end_index": 2962,
+                        "uri": "https://github.com/wpmccormack/sonic-slurm",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 2896,
+                        "end_index": 3108,
+                        "uri": "https://github.com/wpmccormack/sonic-slurm",
+                        "license_": ""
+                    }
+                ]
+            },
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 1254,
+        "candidates_token_count": 1433,
+        "total_token_count": 2687,
+        "cached_content_token_count": 0
+    }
+}

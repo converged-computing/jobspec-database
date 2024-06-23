@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"Slurm\",\n  \"details\": {\n    \"software\": [\n      \"Python\",\n      \"MATLAB (optional)\",\n      \"Intel MKL\",\n      \"HSL\"\n    ],\n    \"resource_requirements\": {\n      \"nodes\": 1,\n      \"tasks_per_node\": 1,\n      \"cpus_per_task\": 36,\n      \"memory\": \"180G\",\n      \"time\": \"15 hours\",\n      \"qos\": \"fortnight\",\n      \"modules\": \"COVID_OCP\",\n      \"environment_variables\": {\n        \"MDL_DAYS\": 150,\n        \"MDL_NNODES\": 107,\n        \"F_DIR\": \"date-format-${MDL_NNODES}_${MDL_DAYS}/\",\n        \"F_PREFIX\": \"week\",\n        \"OMP_NUM_THREADS\": \"$SLURM_CPUS_PER_TASK\",\n        \"LD_LIBRARY_PATH\": \"$LD_LIBRARY_PATH:$HOME/src/hsl/20190503_${SYS_TYPE}/lib\",\n        \"LD_PRELOAD\": \"$MKLROOT/lib/intel64/libmkl_rt.so\"\n      }\n    },\n    \"script_details\": {\n      \"script_type\": \"Bash\",\n      \"array_jobs\": true,\n      \"array_range\": \"0-11\",\n      \"output_files\": \"${F_DIR}out${SLURM_ARRAY_TASK_ID}.txt\"\n    }\n  }\n}\n```\n\nThis script uses **Slurm** to manage the job execution and resource allocation. It runs a Python script named `main.py` that utilizes:\n\n- **Python:** For the core program logic.\n- **MATLAB (optional):**  The script has the option to utilize MATLAB, but it's set to `False` by default.\n- **Intel MKL:**  Used for optimized mathematical operations.\n- **HSL:** A library for solving linear programming and quadratic programming problems, likely used within the `main.py` script.\n\nThe script uses specific **Slurm settings** for resource allocation, including:\n\n- **1 node** per job.\n- **1 task** per node (MPI sense).\n- **36 CPUs** per task.\n- **180 GB** of memory per node.\n- A maximum runtime of **15 hours**.\n- The **\"fortnight\" QoS** for longer running jobs.\n- **Array job support**, running the script with multiple tasks indexed from 0 to 11.\n\nThe environment variables and resource settings are crucial for running the `main.py` script successfully within this Slurm environment. \n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 750,
+        "candidates_token_count": 615,
+        "total_token_count": 1365,
+        "cached_content_token_count": 0
+    }
+}

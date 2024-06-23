@@ -1,0 +1,23 @@
+{
+    "application": "Slurm",
+    "details": {
+        "resource_requirements": {
+            "nodes": 1,
+            "wallclock_time": "12:00:00",
+            "gpu": 1
+        },
+        "software_requirements": {
+            "modules": "%modules",
+            "container": "sciml-bench_cu11.sif",
+            "container_command": "sciml-bench run em_denoise --output_dir=./output_$job_id --dataset_dir=/scratch_mount/em_graphene_sim"
+        },
+        "job_parameters": {
+            "job_id": "$job_id",
+            "scratch_host": "%scratch_host",
+            "scratch": "$scratch_host/$job_id",
+            "inputs": "datasets/em_graphene_sim",
+            "outputs": "output_$job_id"
+        },
+        "monitoring_tools": "nvidia-smi dmon"
+    }
+}

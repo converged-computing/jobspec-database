@@ -1,0 +1,52 @@
+{
+    "application": "Slurm",
+    "details": {
+        "software": [
+            "deepspeed",
+            "nvidia-smi",
+            "train_encoder_decoder.py",
+            "wandb"
+        ],
+        "resources": {
+            "nodes": 1,
+            "gpus": 2,
+            "cpus": 32,
+            "virtual_environment": ".depth/bin/activate",
+            "environment_variables": [
+                "DS_SKIP_CUDA_CHECK=1",
+                "OMP_NUM_THREADS=$SLURM_CPUS_PER_TASK"
+            ],
+            "storage": [
+                "fine_tuning_runs/slurm_%N_%j_out.txt",
+                "fine_tuning_runs/slurm_%N_%j_err.txt",
+                "checkpoints/pre_train/from_scratch/hf_t5/c4_en/lr_0_0001_inverse_sqrt_bsz_200_shuffle_p_0_5/2024-03-18_21-25/checkpoint-1000000"
+            ]
+        },
+        "other": [
+            "master_port=11502",
+            "precision=bf16",
+            "model.model_implementation=hf_t5",
+            "model.compile=false",
+            "data.input_length=512",
+            "data.target_length=16",
+            "data.num_workers=32",
+            "data.data_collator=custom_t5",
+            "downstream.benchmark_constants=glue",
+            "downstream.benchmark_dataset=cola",
+            "dataset.streaming=false",
+            "optim.name=adamw_torch",
+            "optim.base_lr=1e-5",
+            "optim.batch_size=16",
+            "optim.total_steps=3_000",
+            "optim.warmup_steps=300",
+            "optim.grad_acc=1",
+            "optim.lr_scheduler=constant_with_warmup",
+            "checkpoint.resume=false",
+            "checkpoint.every_steps=4_000",
+            "checkpoint.save_total_limit=3",
+            "logging.every_steps=10",
+            "logging.wandb=true",
+            "evaluate.every_steps=100"
+        ]
+    }
+}

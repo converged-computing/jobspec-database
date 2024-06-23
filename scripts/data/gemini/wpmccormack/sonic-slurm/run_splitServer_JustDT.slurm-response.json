@@ -1,0 +1,62 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"cmsRun\",\n  \"details\": {\n    \"software\": [\n      \"CMSSW_11_3_0\",\n      \"CMSSW_12_0_0_pre5\",\n      \"sonic-workflows\",\n      \"python3.6\",\n      \"throughputFinderTimeDiff.py\"\n    ],\n    \"resource_requirements\": {\n      \"nodes\": 1,\n      \"tasks\": 1,\n      \"cpus\": 4,\n      \"time\": \"05:00:00\",\n      \"memory\": \"1gb\",\n      \"environment_variables\": {\n        \"SCRAM_ARCH\": \"slc7_amd64_gcc900\",\n        \"CMS_PATH\": \"~/cms_path\"\n      },\n      \"files\": {\n        \"input_files\": [\n          \"~/CMSSW_12_0_0_pre5_ttbar_splitServer.tgz\",\n          \"~/allSonicTriton_cff_JustDT.py\",\n          \"~/local_files/*.root\",\n          \"~/file_of_files.txt\",\n          \"~/run_files_splitServer.py\",\n          \"~/throughputFinderTimeDiff.py\"\n        ],\n        \"output_files\": [\n          \"outThroughput.txt\",\n          \"~/splitServer_JustDT_arrays/Synchro${SLURM_ARRAY_JOB_ID}.txt\"\n        ]\n      }\n    },\n    \"dependencies\": [\n      \"cmsset_default.sh\",\n      \"site-local-config.xml\"\n    ],\n    \"commands\": [\n      \"scram p CMSSW_11_3_0\",\n      \"scramv1 b -r ProjectRename\",\n      \"scramv1 runtime -sh\",\n      \"cmsRun run_files_splitServer.py address=$1 port=$2 tmi=True threads=4 maxEvents=8\",\n      \"cmsRun run_files_splitServer.py address=$1 port=$2 tmi=True threads=4 maxEvents=1000 &> outThroughput.txt\",\n      \"python3.6 ~/throughputFinderTimeDiff.py outThroughput.txt ~/splitServer_JustDT_arrays/Synchro${SLURM_ARRAY_JOB_ID}.txt\"\n    ]\n  }\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "citation_metadata": {
+                "citation_sources": [
+                    {
+                        "start_index": 1210,
+                        "end_index": 1353,
+                        "uri": "https://github.com/wpmccormack/sonic-slurm",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 1239,
+                        "end_index": 1378,
+                        "uri": "https://github.com/wpmccormack/sonic-slurm",
+                        "license_": ""
+                    }
+                ]
+            },
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 1193,
+        "candidates_token_count": 544,
+        "total_token_count": 1737,
+        "cached_content_token_count": 0
+    }
+}

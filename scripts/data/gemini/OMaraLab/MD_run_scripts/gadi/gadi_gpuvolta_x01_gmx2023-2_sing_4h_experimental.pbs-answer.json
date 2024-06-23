@@ -1,0 +1,44 @@
+{
+    "application": "GROMACS",
+    "software": [
+        "singularity",
+        "gromacs/2021.4-gpuvolta",
+        "perl"
+    ],
+    "resources": [
+        {
+            "name": "walltime",
+            "value": "04:00:00"
+        },
+        {
+            "name": "memory",
+            "value": "32GB"
+        },
+        {
+            "name": "jobfs",
+            "value": "16000MB"
+        },
+        {
+            "name": "GPUs",
+            "value": 1
+        },
+        {
+            "name": "CPUs",
+            "value": 12
+        },
+        {
+            "name": "MPI",
+            "value": "hyperthread"
+        },
+        {
+            "name": "storage",
+            "value": "scratch/q95+gdata/q95"
+        }
+    ],
+    "other": [
+        "module load singularity",
+        "module load gromacs/2021.4-gpuvolta",
+        "export OMP_NUM_THREADS=12",
+        "export CUDA_VISIBLE_DEVICES=$(seq 0 $(( $PBS_NGPUS-1 )) | tr  '\r\n' ',')"
+    ]
+}

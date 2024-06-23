@@ -1,0 +1,34 @@
+{
+    "application": "Slurm",
+    "details": {
+        "resource_requirements": [
+            {
+                "name": "cpus-per-task",
+                "value": "{{.Cpus}}",
+                "conditional": "if ne .Cpus 0"
+            },
+            {
+                "name": "mem",
+                "value": "{{.RamGb}}GB",
+                "conditional": "if ne .RamGb 0.0"
+            },
+            {
+                "name": "tmp",
+                "value": "{{.DiskGb}}GB",
+                "conditional": "if ne .DiskGb 0.0"
+            }
+        ],
+        "other_software": [
+            {
+                "name": "Executable",
+                "command": "worker run",
+                "arguments": [
+                    "--config",
+                    "{{.Config}}",
+                    "--task-id",
+                    "{{.TaskId}}"
+                ]
+            }
+        ]
+    }
+}

@@ -1,0 +1,28 @@
+{
+    "application": "Singularity",
+    "details": {
+        "container": "lumi-pytorch-rocm-5.6.1-python-3.10-pytorch-v2.1.0.sif",
+        "slurm": {
+            "job_name": "dpoExample",
+            "account": "project_id",
+            "time": "01:00:00",
+            "exclusive": true,
+            "nodes": 1,
+            "cpus_per_gpu": 7,
+            "gpus_per_node": 8,
+            "mem": "480G",
+            "partition": "standard-g",
+            "output": "dpo.out"
+        },
+        "environment": {
+            "WITH_CONDA": "conda activate env_dpo",
+            "PYTHONPATH": "/workdir/env_dpo/lib/python3.10/site-packages",
+            "HF_HOME": "/workdir/",
+            "HF_TOKEN": "yourtoken",
+            "TRANSFORMERS_OFFLINE": 1,
+            "HF_DATASETS_OFFLINE": 1
+        },
+        "script": "/workdir/run-me.sh",
+        "command": "python /workdir/rlhf_dpo_multi_gpu.py"
+    }
+}

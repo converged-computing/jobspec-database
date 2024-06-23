@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"Spack\",\n  \"details\": {\n    \"scheduler\": \"Slurm\",\n    \"spack_version\": \"0.17.3\",\n    \"spack_instance_name\": \"cpu\",\n    \"spack_instance_dir\": \"/home/user/cm/shared/apps/spack/0.17.3/cpu\",\n    \"spack_package\": \"py-slepc4py@3.16.0\",\n    \"spack_compiler\": \"gcc@10.2.0\",\n    \"spack_variants\": \"\",\n    \"spack_dependencies\": \"^py-petsc4py@3.16.1/$(spack find --format '{hash:7}' py-petsc4py@3.16.1 % ${SPACK_COMPILER} +mpi ^openmpi@4.1.3) ^slepc@3.16.0/$(spack find --format '{hash:7}' slepc@3.16.0 % ${SPACK_COMPILER} ^petsc@3.16.1 ~complex +mpi ^openmpi@4.1.3)\",\n    \"spack_spec\": \"py-slepc4py@3.16.0 % gcc@10.2.0  ^py-petsc4py@3.16.1/$(spack find --format '{hash:7}' py-petsc4py@3.16.1 % gcc@10.2.0 +mpi ^openmpi@4.1.3) ^slepc@3.16.0/$(spack find --format '{hash:7}' slepc@3.16.0 % gcc@10.2.0 ^petsc@3.16.1 ~complex +mpi ^openmpi@4.1.3)\",\n    \"slurm_job_name\": \"py-slepc4py@3.16.0\",\n    \"slurm_account\": \"sdsc\",\n    \"slurm_partition\": \"hotel\",\n    \"slurm_nodes\": 1,\n    \"slurm_ntasks_per_node\": 1,\n    \"slurm_cpus_per_task\": 16,\n    \"slurm_mem\": \"32G\",\n    \"slurm_time\": \"00:30:00\",\n    \"slurm_output\": \"%x.o%j.%N\",\n    \"system_name\": \"expanse\"\n  }\n}\n```\n\nThis script uses **Spack** to install the `py-slepc4py` package, along with its dependencies, on a Slurm cluster. Here is a breakdown of the script's actions and resource requirements:\n\n* **Resource Allocation:**\n    * The script utilizes Slurm to request resources for running the installation.\n    * It requests one node with 16 cores and 32 GB of memory for a maximum of 30 minutes.\n* **Spack Configuration:**\n    * The script sets up the environment for using Spack by loading the necessary modules.\n    * It defines the Spack package to be installed, the compiler to use, and the dependencies.\n* **Package Installation:**\n    * The script utilizes Spack to install the specified package and its dependencies.\n    * It leverages Spack's capabilities for concretization and installation.\n    * The `spack install` command is configured to use all available cores on the node (`--jobs ${SLURM_CPUS_PER_TASK}`).\n* **Dependencies:**\n    * The script ensures that the `py-slepc4py` package is installed with its required dependencies. These dependencies include:\n        * `py-petsc4py@3.16.1` with OpenMPI as the MPI implementation\n        * `slepc@3.16.0` with PETSc and OpenMPI as dependencies\n* **Post-Installation:**\n    * The script refreshes the Lmod module tree to include the newly installed packages.\n* **Subsequent Job Submission:**\n    * After the package installation is complete, the script submits another job using `sbatch` that depends on the current job's successful completion. This allows for chaining dependent tasks.\n\nThis script is designed to manage the installation of the `py-slepc4py` package within a specific Spack environment and on a Slurm cluster. It carefully configures the dependencies, resource requirements, and installation process to ensure successful and efficient execution.\n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 874,
+        "candidates_token_count": 1007,
+        "total_token_count": 1881,
+        "cached_content_token_count": 0
+    }
+}

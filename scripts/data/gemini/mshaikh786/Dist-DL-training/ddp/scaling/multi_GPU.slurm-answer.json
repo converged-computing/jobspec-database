@@ -1,0 +1,33 @@
+{
+    "application": "PyTorch",
+    "details": {
+        "framework": "PyTorch",
+        "resource_requirements": {
+            "gpus": 4,
+            "cpus": 40,
+            "nodes": 1,
+            "time": "10:00:00",
+            "constraint": "a100",
+            "reservation": "A100"
+        },
+        "environment": {
+            "conda_environment": "dist-pytorch",
+            "data_directory": "/ibex/ai/reference/CV/ILSVR/classification-localization/data/jpeg",
+            "network_interface": "ib0",
+            "openmp_threads": 1
+        },
+        "script": "multi_GPU.py",
+        "script_arguments": {
+            "epochs": 10,
+            "learning_rate": 0.001,
+            "num_workers": 10
+        },
+        "distributed_training": true,
+        "slurm_configuration": {
+            "slurm_jobid": "$SLURM_JOBID",
+            "slurm_nnodes": "$SLURM_NNODES",
+            "slurm_cpus_per_task": "$SLURM_CPUS_PER_TASK",
+            "slurm_gpus_per_node": "$SLURM_GPUS_PER_NODE"
+        }
+    }
+}

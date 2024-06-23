@@ -1,0 +1,39 @@
+{
+    "application": "LSF",
+    "details": {
+        "scheduler": "LSF",
+        "resources": {
+            "nodes": 1,
+            "cores_per_node": 42,
+            "queue": "batch",
+            "walltime": "02:00",
+            "modules": [
+                "ibm-wml-ce",
+                "gcc/7.4.0"
+            ],
+            "environment_variables": {
+                "HOROVOD_GPU_ALLREDUCE": "NCCL",
+                "HOROVOD_NCCL_HOME": "$conda_dir",
+                "HOROVOD_CUDA_HOME": "$conda_dir",
+                "PYTHONPATH": "$(pwd)/lib/python3.6/site-packages:$PYTHONPATH",
+                "TF_CPP_MIN_LOG_LEVEL": "'3'"
+            },
+            "software": {
+                "python": "3.6",
+                "horovod": "0.16.4",
+                "jsrun": "1.0"
+            },
+            "data_files": [
+                "360proj_36KF_train.h5",
+                "360proj_36KF_test.h5",
+                "540proj_1acc_train.h5",
+                "540proj_1acc_test.h5",
+                "2880proj_20acc_train.h5",
+                "2880proj_20acc_test.h5"
+            ],
+            "data_directory": "/gpfs/alpine/scratch/junqi/stf011/lbpm/TomoGAN/TomoGAN/dataset/shuffled/grayscale",
+            "execution_script": "main-gan.py",
+            "experiment_name": "ryan540hvd"
+        }
+    }
+}

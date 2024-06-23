@@ -1,0 +1,33 @@
+{
+    "application": "LSF",
+    "details": {
+        "resource_requirements": {
+            "queue": "TRN008",
+            "walltime": "00:50",
+            "nodes": 1,
+            "gpu_allocation": "gpumps",
+            "job_name": "NMF-nondebug",
+            "output_file": "NMF.out.%J",
+            "error_file": "NMF.err.%J"
+        },
+        "software_requirements": {
+            "modules": [
+                "DefApps",
+                "gcc/7.5.0",
+                "cuda/11.0.3",
+                "python"
+            ],
+            "conda_environment": "/gpfs/wolf/trn008/proj-shared/teammesirov/conda_envs/cupyenv",
+            "python_script": "__path_to_consensus.py",
+            "gpu_program": "${BIONMFGPUPATH}/bin/nmf_mgpu_fun.py"
+        },
+        "other_settings": {
+            "working_directory": "__path_to_working_dir__",
+            "gpu_program_path": "__path_to_repo__/bin/nmf_mgpu_fun.py",
+            "cupy_cache_dir": "/gpfs/wolf/trn008/scratch/${USER}/.cupy/kernel_cache",
+            "num_tasks": 1,
+            "cuda_visible_devices": "0"
+        },
+        "command": "${CONSENSUSPY} --verbose --gpuprogrampath=${GPUPROGRAMPATH} --jobdir=${WORKINGDIR}/jobdir.${LSB_JOBID} --inputfile=${WORKINGDIR}/ALL_AML_data.gct --mink=2 --maxk=2 --startseed=1 --seeds=10 --consecutive=40 --maxiterations=2000 --outputfileprefix=ALL_AML_data --interval=10 --keepintermediatefiles --numtasks=${NUMTASKS}"
+    }
+}

@@ -1,0 +1,20 @@
+{
+    "application": "LSF",
+    "details": {
+        "job_name_pattern": "ml4pion[1-112]",
+        "nodes": 1,
+        "wall_time": "90 minutes",
+        "group": "hizphys",
+        "output_file_pattern": "outfiles/concat_nearest_crossval_run_%I.out",
+        "queue": "pbatch",
+        "environment_setup": "~/.profile.coral",
+        "python_script": "train_nearest_concat_crossvall.py",
+        "config_files": [
+            "configs/nearest_configs/nearest_config_$((LSB_JOBINDEX - 1))_fold_0.yaml",
+            "configs/nearest_configs/nearest_config_$((LSB_JOBINDEX - 1))_fold_1.yaml",
+            "configs/nearest_configs/nearest_config_$((LSB_JOBINDEX - 1))_fold_2.yaml",
+            "configs/nearest_configs/nearest_config_$((LSB_JOBINDEX - 1))_fold_3.yaml"
+        ],
+        "parallel_execution": "Each config file is run in a separate process, with a 2-minute delay between each process to allow for resource allocation."
+    }
+}

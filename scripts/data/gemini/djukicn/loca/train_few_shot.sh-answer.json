@@ -1,0 +1,56 @@
+{
+    "application": "SLURM",
+    "details": {
+        "job_name": "loca_few_shot",
+        "output": "loca_few_shot_out.txt",
+        "error": "loca_few_shot_err.txt",
+        "nodes": 1,
+        "tasks_per_node": 2,
+        "cpus_per_task": 12,
+        "partition": "gpu",
+        "gpus": 2,
+        "time": "1-00:00:00",
+        "environment": {
+            "conda_environments": [
+                "pytorch"
+            ],
+            "python_script": "train.py",
+            "python_module": "pytorch",
+            "environment_variables": {
+                "MASTER_ADDR": "scontrol show hostnames \"$SLURM_JOB_NODELIST\" | head -n 1",
+                "MASTER_PORT": 50188,
+                "NCCL_P2P_DISABLE": 1,
+                "NCCL_IB_DISABLE": 1,
+                "NCCL_BLOCKING_WAIT": 1,
+                "NCCL_DEBUG": "INFO"
+            }
+        },
+        "script_parameters": {
+            "model_name": "loca_few_shot",
+            "data_path": "/d/hpc/projects/FRI/nd1776/data/fsc147",
+            "model_path": "/d/hpc/projects/FRI/nd1776/pretrained",
+            "backbone": "resnet50",
+            "swav_backbone": true,
+            "reduction": 8,
+            "image_size": 512,
+            "num_enc_layers": 3,
+            "num_ope_iterative_steps": 3,
+            "emb_dim": 256,
+            "num_heads": 8,
+            "kernel_dim": 3,
+            "num_objects": 3,
+            "epochs": 200,
+            "lr": 0.0001,
+            "backbone_lr": 0,
+            "lr_drop": 300,
+            "weight_decay": 0.0001,
+            "batch_size": 4,
+            "dropout": 0.1,
+            "num_workers": 8,
+            "max_grad_norm": 0.1,
+            "aux_weight": 0.3,
+            "tiling_p": 0.5,
+            "pre_norm": true
+        }
+    }
+}

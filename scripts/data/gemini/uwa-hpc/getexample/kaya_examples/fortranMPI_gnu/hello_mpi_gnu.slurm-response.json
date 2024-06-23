@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"Slurm\",\n  \"details\": {\n    \"job_name\": \"GE-fortranMPI_gnu\",\n    \"partition\": \"test\",\n    \"nodes\": 2,\n    \"tasks\": 20,\n    \"tasks_per_node\": 10,\n    \"cpus_per_task\": 1,\n    \"time\": \"00:01:00\",\n    \"account\": \"ea007\",\n    \"modules\": [\n      \"gcc\",\n      \"openmpi\"\n    ],\n    \"executable\": \"hello_mpi_gnu\",\n    \"scratch_directory\": \"$MYSCRATCH/run_fortranMPI_gnu/$SLURM_JOBID\",\n    \"results_directory\": \"$MYGROUP/mpifortran_gnu_results/$SLURM_JOBID\",\n    \"output_file\": \"fortranMPI_gnu.log\",\n    \"environment_variables\": {\n      \"OMP_NUM_THREADS\": \"${SLURM_CPUS_PER_TASK}\"\n    }\n  }\n}\n```\n\nThis script is running on a **Slurm** workload manager. \n\nHere's a breakdown of the script's functionality:\n\n* **Slurm Job Submission:** The script uses `#!/bin/bash -l` to specify Bash as the shell and `#SBATCH` directives to control Slurm job parameters.\n* **Resource Allocation:** The script requests two nodes with a total of 20 tasks (10 per node) and 1 CPU per task. It sets a runtime limit of 1 minute and assigns the job to the \"test\" partition.\n* **Module Loading:** It loads the `gcc` and `openmpi` modules for using the GNU toolchain and the OpenMPI library.\n* **Environment Variables:** The script defines variables for the executable name, scratch directory, results directory, and the output file. It also sets `OMP_NUM_THREADS` to the number of CPUs per task for OpenMP parallelization.\n* **Directory Creation:** It creates unique directories in the scratch and results areas for this specific job.\n* **File Copying and Execution:** The script copies the executable to the scratch directory, changes to that directory, and then uses `srun` to run the executable with OpenMPI.\n* **Result Handling:** It moves the output file to the results directory.\n* **Cleanup:** After completion, the script removes the temporary scratch directory.\n\nThis script shows a common pattern for running MPI applications on a Slurm cluster. The script leverages Slurm's features for resource allocation, job management, and environment setup, making it efficient for running parallel programs. \n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 570,
+        "candidates_token_count": 584,
+        "total_token_count": 1154,
+        "cached_content_token_count": 0
+    }
+}

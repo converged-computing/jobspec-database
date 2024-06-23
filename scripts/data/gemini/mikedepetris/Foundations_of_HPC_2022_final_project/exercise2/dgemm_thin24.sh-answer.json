@@ -1,0 +1,39 @@
+{
+    "application": "SLURM",
+    "details": {
+        "scheduler": "SLURM",
+        "partition": "THIN",
+        "nodes": 1,
+        "exclusive": true,
+        "tasks_per_node": 24,
+        "memory": "490G",
+        "time": "02:00:00",
+        "output": "dgemm_thin_job_%j.out",
+        "modules": [
+            "mkl",
+            "openBLAS/0.3.23-omp"
+        ],
+        "environment_variables": {
+            "OMP_PLACES": "cores",
+            "OMP_PROC_BIND": "spread",
+            "OMP_NUM_THREADS": 24,
+            "BLIS_NUM_THREADS": 24,
+            "LD_LIBRARY_PATH": "/u/dssc/mdepet00/assignment/exercise2/blis/lib:$LD_LIBRARY_PATH"
+        },
+        "executable": "./dgemm_$LIB.x",
+        "libraries": [
+            "oblas_optimized",
+            "oblas",
+            "mkl_optimized",
+            "mkl",
+            "blis_optimized",
+            "blis"
+        ],
+        "matrix_sizes": {
+            "start": 30000,
+            "end": 2000,
+            "increment": 500
+        },
+        "repetitions": 10
+    }
+}

@@ -1,0 +1,37 @@
+{
+    "application": "SLURM",
+    "details": {
+        "resource_requirements": {
+            "nodes": 1,
+            "gpus": "A6000:4",
+            "memory": "100GB",
+            "cpus_per_task": 5,
+            "time": "0"
+        },
+        "software_requirements": {
+            "conda_environment": "tride",
+            "python_script": "examples/pytorch/t0-zero-shot/run_t0.py",
+            "python_libraries": [
+                "transformers",
+                "datasets",
+                "metrics"
+            ]
+        },
+        "other_configuration": {
+            "output_directory": "checkpoints/${dataset}/${DATE}/${exp_name}",
+            "wandb_project": "gaogao",
+            "wandb_mode": "offline",
+            "transformers_offline": "1"
+        },
+        "data": {
+            "dataset": "super_glue",
+            "subset": "cb",
+            "testset_name": "validation",
+            "batch_size": 1
+        },
+        "model": {
+            "model_name": "bigscience/T0pp",
+            "test_mode": "t0"
+        }
+    }
+}

@@ -1,0 +1,74 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"SLURM\",\n  \"details\": {\n    \"job_name\": \"pretrain_dist_bert_nonaug\",\n    \"output\": \"/home/eecs/paras/slurm/coderep/%j_pretrain_bert_nonaug.log\",\n    \"tasks\": 1,\n    \"memory\": \"400000\",\n    \"time\": \"125:00:00\",\n    \"excluded_nodes\": \"atlas,blaze,r16\",\n    \"environment_variables\": [\n      \"PATH=/data/paras/miniconda3/bin:$PATH\",\n      \"DATA_CACHE=/data/paras/data_cache\",\n      \"FREE_PORT=$(python -c 'import socket; s=socket.socket(); s.bind((\"\", 0)); print(s.getsockname()[1])')\",\n      \"BATCHSIZE=${BATCHSIZE:-64}\",\n      \"LR=${LR:-\\\"4e-4\\\"}\",\n      \"RUNNAME\",\n      \"CUDA_VISIBLE_DEVICES\",\n      \"CUDA_DEVICE_ORDER\",\n      \"SLURM_JOB_ID\",\n      \"N_ENCODER_LAYERS\",\n      \"D_MODEL\",\n      \"N_HEAD\"\n    ],\n    \"software\": [\n      \"python\",\n      \"rsync\",\n      \"gunzip\",\n      \"pip\",\n      \"npm\"\n    ],\n    \"data_files\": [\n      \"/work/paras/code/contracode/data/codesearchnet_javascript\",\n      \"/work/paras/code/contracode/data/codesearchnet_javascript/javascript_augmented.pickle\",\n      \"/work/paras/code/contracode/data/codesearchnet_javascript/javascript_nonaugmented_train.pickle\",\n      \"/work/paras/code/contracode/data/codesearchnet_javascript/csnjs_8k_9995p_unigram_url.model\"\n    ],\n    \"script\": \"representjs/pretrain_distributed.py\",\n    \"arguments\": [\n      \"$RUNNAME\",\n      \"--num_epochs=200\",\n      \"--batch_size=$BATCHSIZE\",\n      \"--lr=$LR\",\n      \"--num_workers=8\",\n      \"--subword_regularization_alpha 0.\",\n      \"--program_mode identity\",\n      \"--loss_mode mlm\",\n      \"--save_every 5000\",\n      \"--train_filepath=\\\"$DATA_CACHE/codesearchnet_javascript/javascript_nonaugmented_train.pickle\\\"\",\n      \"--spm_filepath=\\\"$DATA_CACHE/codesearchnet_javascript/csnjs_8k_9995p_unigram_url.model\\\"\",\n      \"--min_alternatives 1\",\n      \"--dist_url \\\"tcp://localhost:$FREE_PORT\\\"\",\n      \"--rank 0\",\n      \"--n_encoder_layers $N_ENCODER_LAYERS\",\n      \"--d_model $D_MODEL\",\n      \"--n_head $N_HEAD\"\n    ],\n    \"resource_usage\": [\n      \"free -mh\",\n      \"df -h\",\n      \"gpustat -cup\",\n      \"nvidia-smi\",\n      \"free -m | awk 'NR==2{printf \\\"Memory Usage: %s/%sMB (%.2f%%)\\n\\\", $3,$2,$3*100/$2 }'\",\n      \"df -h | awk '$NF==\"/\"{printf \\\"Disk Usage: %d/%dGB (%s)\\n\\\", $3,$2,$5}'\",\n      \"top -bn1 | grep load | awk '{printf \\\"CPU Load: %.2f\\n\\\", $(NF-2)}'\"\n    ]\n  }\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 2,
+                    "blocked": false
+                }
+            ],
+            "citation_metadata": {
+                "citation_sources": [
+                    {
+                        "start_index": 1304,
+                        "end_index": 1791,
+                        "uri": "https://github.com/anonymousCLAW/anonymous-codebase",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 1637,
+                        "end_index": 1940,
+                        "uri": "https://github.com/parasj/contracode",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 1982,
+                        "end_index": 2246,
+                        "uri": "https://github.com/parasj/contracode",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 2057,
+                        "end_index": 2294,
+                        "uri": "https://stackoverflow.com/questions/55493078/run-a-script-on-remote-server-and-save-output",
+                        "license_": ""
+                    }
+                ]
+            },
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 1015,
+        "candidates_token_count": 864,
+        "total_token_count": 1879,
+        "cached_content_token_count": 0
+    }
+}

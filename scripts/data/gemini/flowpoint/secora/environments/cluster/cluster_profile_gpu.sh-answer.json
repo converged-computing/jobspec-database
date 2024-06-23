@@ -1,0 +1,29 @@
+{
+    "application": "SLURM",
+    "details": {
+        "partition": "gpu",
+        "nodes": 1,
+        "tasks_per_node": 8,
+        "memory": "24G",
+        "runtime": "20:00",
+        "output_file": "slurm_logs/slurm_profile.%j.out",
+        "error_file": "slurm_logs/slurm_profile.%j.err",
+        "modules": [
+            "gcc/8.2.0",
+            "cmake",
+            "cuda/11.2",
+            "python3"
+        ],
+        "environment_variables": [
+            "HF_HOME=/scratch/fhoels2s/huggingface",
+            "MASTER_ADDR=localhost",
+            "MASTER_PORT=$((15000 + $RANDOM % 5000))",
+            "TOKENIZERS_PARALLELISM=false"
+        ],
+        "script_execution": [
+            "pipenv run python secora/profiling.py configs/cluster.yml --modes train --name profile_cluster_train --batch_size 64",
+            "pipenv run python secora/profiling.py configs/cluster.yml --modes embedding --name profile_cluster_embedding --batch_size 64",
+            "pipenv run python secora/profiling.py configs/cluster.yml --modes validation --name profile_cluster_validation --batch_size 64"
+        ]
+    }
+}

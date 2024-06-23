@@ -1,0 +1,29 @@
+{
+    "application": "Slurm",
+    "details": {
+        "job_name": "quantest",
+        "partition": "ais-gpu",
+        "mail_type": "ALL",
+        "mail_user": "d.osin@skoltech.ru",
+        "output": "output_9.txt",
+        "time": "6-00",
+        "memory": "32G",
+        "nodes": 1,
+        "cores": 16,
+        "gpus": 2,
+        "container": "quantnas.sif",
+        "commands": [
+            "cd /home/QuanToaster",
+            "nvidia-smi",
+            "python batch_exp.py -v 0 -d entropy_8_debug_esa -g 0 -c entropy_8_debug.yaml &",
+            "python batch_exp.py -v 1e-6 -d entropy_8_debug_esa -g 0 -c entropy_8_debug.yaml &",
+            "python batch_exp.py -v 1e-5 -d entropy_8_debug_esa -g 1 -c entropy_8_debug.yaml &",
+            "python batch_exp.py -v 1e-4 -d entropy_8_debug_esa -g 1 -c entropy_8_debug.yaml &",
+            "wait"
+        ],
+        "bind_mounts": [
+            "/home/d.osin/:/home",
+            "/gpfs/gpfs0/d.osin/data_main:/home/dev/data_main"
+        ]
+    }
+}

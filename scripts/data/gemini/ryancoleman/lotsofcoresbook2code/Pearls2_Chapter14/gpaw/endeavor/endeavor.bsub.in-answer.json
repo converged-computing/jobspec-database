@@ -1,0 +1,42 @@
+{
+    "application": "GPAW",
+    "details": {
+        "scheduler": "LSF",
+        "compiler": "icpc",
+        "mpi_runtime": "mpirun",
+        "offload_target": "MIC",
+        "python_libraries": [
+            "pymic",
+            "GPAW",
+            "ase"
+        ],
+        "libraries": [
+            "libxc"
+        ],
+        "resource_requirements": {
+            "nodes": "@@nmpi@@",
+            "cores_per_node": "@@ppn@@",
+            "queue": "@@queue@@"
+        },
+        "environment_variables": {
+            "PYMIC_BASE": "/home/mklemm/projects/gpaw/pymic",
+            "MIC_ENV_PREFIX": "PYMIC",
+            "PYMIC_LD_LIBRARY_PATH": "$PYMIC_LD_LIBRARY_PATH",
+            "PYMIC_LIBRARY_PATH": "$PYMIC_LIBRARY_PATH:$GPAW_BASE/gpaw/mic",
+            "MIC_LD_LIBRARY_PATH": "$MIC_LD_LIBRARY_PATH:$PYMIC_BASE/pymic",
+            "PYTHONPATH": "$GPAW_BASE:$PYTHONPATH",
+            "GPAW_BASE": "/home/mklemm/projects/gpaw/gpaw",
+            "LIBXCDIR": "$GPAW_BASE/libxc-2.0.2/install",
+            "LD_LIBRARY_PATH": "$LD_LIBRARY_PATH:$GPAW_BASE/libxc-2.0.2/install/lib",
+            "PATH": "$GPAW_BASE/build/bin.linux-x86_64-intel64-2.6:$GPAW_BASE/tools/:$PATH",
+            "GPAW_SETUP_PATH": "$GPAW_BASE/gpaw-setups-0.9.9672",
+            "I_MPI_HYDRA_BOOTSTRAP": "ssh",
+            "I_MPI_DEBUG": "5",
+            "I_MPI_PIN": "1",
+            "I_MPI_DAPL_PROVIDER": "ofa-v2-mlx4_0-1",
+            "I_MPI_FABRICS": "shm:dapl",
+            "PYMIC_DEBUG": "5"
+        },
+        "run_directory": "/lfs/lfs08/mklemm/gpaw/@@fullname@@-$LSB_JOBID"
+    }
+}

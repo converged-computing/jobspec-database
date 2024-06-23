@@ -1,0 +1,54 @@
+{
+    "application": "LSF",
+    "details": {
+        "resource_manager": "LSF (Load Sharing Facility)",
+        "directives": [
+            {
+                "name": "BSUB -P",
+                "description": "Specifies the project to which the job belongs."
+            },
+            {
+                "name": "BSUB -W",
+                "description": "Sets the wall clock time limit for the job (0:15 = 15 minutes)."
+            },
+            {
+                "name": "BSUB -nnodes",
+                "description": "Requests 1 node for the job."
+            },
+            {
+                "name": "BSUB -J",
+                "description": "Assigns a job name 'prof'."
+            },
+            {
+                "name": "BSUB -o",
+                "description": "Specifies the output file name ('out.%J', where %J is the job ID)."
+            },
+            {
+                "name": "BSUB -e",
+                "description": "Specifies the error file name ('out.%J', where %J is the job ID)."
+            }
+        ],
+        "modules": [
+            "julia",
+            "cuda/9.2.148",
+            "git",
+            "spectrum-mpi"
+        ],
+        "julia_precompilation": "using Pkg; Pkg.API.precompile()",
+        "cuda_runtime_loading": "using CUDAnative; CUDAnative.load_runtime.(CUDAnative.target_support)",
+        "mpi_libraries": [
+            "MPI",
+            "CUDAdrv",
+            "CuArrays"
+        ],
+        "jsrun_options": {
+            "nodes": 2,
+            "ranks_per_node": 2,
+            "processes_per_rank": 1,
+            "gangs": 1,
+            "cores_per_gang": 7,
+            "smpiargs": "-gpu -x PAMI_DISABLE_IPC=1"
+        },
+        "julia_command": "julia -e 'using InteractiveUtils; versioninfo()'"
+    }
+}

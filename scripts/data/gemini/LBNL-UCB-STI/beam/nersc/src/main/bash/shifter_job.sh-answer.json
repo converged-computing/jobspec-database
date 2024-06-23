@@ -1,0 +1,36 @@
+{
+    "application": "Shifter",
+    "details": {
+        "resource_requirements": {
+            "nodes": 1,
+            "cpus_per_task": 64,
+            "qos": "regular",
+            "constraint": "haswell",
+            "time": "48:00:00"
+        },
+        "environment_variables": [
+            "BEAM_BRANCH_NAME",
+            "BEAM_COMMIT_SHA",
+            "BEAM_CONFIG",
+            "MAXRAM",
+            "GOOGLE_API_KEY",
+            "AWS_SECRET_ACCESS_KEY",
+            "AWS_ACCESS_KEY_ID",
+            "S3_PUBLISH",
+            "S3_REGION"
+        ],
+        "volumes": [
+            {
+                "source": "$MOUNTED_DIR",
+                "target": "/app/sources"
+            }
+        ],
+        "image": "$DOCKER_IMAGE",
+        "entrypoint": "/app/entrypoint.sh",
+        "openmp_settings": {
+            "OMP_NUM_THREADS": 64,
+            "OMP_PLACES": "threads",
+            "OMP_PROC_BIND": "spread"
+        }
+    }
+}

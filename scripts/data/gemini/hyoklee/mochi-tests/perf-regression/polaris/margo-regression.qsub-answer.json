@@ -1,0 +1,33 @@
+{
+    "application": "PBS",
+    "details": {
+        "resource_requirements": {
+            "nodes": 2,
+            "system": "polaris",
+            "placement": "scatter",
+            "walltime": "10:00",
+            "filesystems": [
+                "home",
+                "grand"
+            ],
+            "queue": "debug",
+            "account": "CSC250STDM12"
+        },
+        "software_requirements": {
+            "modules": [
+                "cudatoolkit-standalone",
+                "cray-mpich/8.1.16"
+            ],
+            "environment_variables": {
+                "PREFIX": "/home/hyoklee",
+                "LD_LIBRARY_PATH": "/home/hyoklee/install/lib:/home/hyoklee/install/lib64:$LD_LIBRARY_PATH"
+            }
+        },
+        "commands": [
+            "mpiexec -n 1 -ppn 1 cat $PBS_NODEFILE >& $PREFIX/nodes.txt",
+            "mpiexec  -n 2 -ppn 1 $PREFIX/bin/gpu-margo-p2p-bw -x 4096 -n \"ofi+verbs://\" -c 1 -D 10",
+            "mpiexec  -n 2 -ppn 1 $PREFIX/bin/gpu-margo-p2p-bw -x 4096 -n \"ofi+verbs://\" -c 1 -D 10 -j",
+            "mpiexec  -n 2 -ppn 1 $PREFIX/bin/gpu-margo-p2p-bw -x 4096 -n \"ofi+verbs://\" -c 1 -D 10 -k"
+        ]
+    }
+}

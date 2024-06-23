@@ -1,0 +1,23 @@
+{
+    "application": "Singularity",
+    "details": {
+        "image": "georgepachitariu/robustness",
+        "dockerfile": "parent folder",
+        "resources": {
+            "gpu": "1",
+            "partition": "gpu-2080ti-preemptable"
+        },
+        "binds": [
+            "/scratch_local",
+            "$IMAGENET_C_PATH:/ImageNet-C:ro",
+            "$CHECKPOINT_PATH:/checkpoints:ro",
+            ".:/batchnorm",
+            "..:/deps"
+        ],
+        "command": "bash /batchnorm/scripts/paper/table1.sh $row",
+        "slurm_options": {
+            "job_name": "robustness",
+            "output": "logs/logs-%A_%a.out"
+        }
+    }
+}

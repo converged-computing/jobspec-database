@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"Horovod\",\n  \"details\": {\n    \"resource_requirements\": {\n      \"nodes\": 2,\n      \"cores_per_node\": 42,\n      \"walltime\": \"01:00\",\n      \"project\": \"BIE108\",\n      \"output_file\": \"/ccs/home/pstjohn/job_output/%J.out\",\n      \"error_file\": \"/ccs/home/pstjohn/job_output/%J.err\"\n    },\n    \"software_requirements\": {\n      \"modules\": [\n        \"ibm-wml-ce/1.7.0-3\"\n      ],\n      \"conda_environment\": \"tf21-ibm\",\n      \"python_path\": \"$HOME/uniparc_modeling:$PYTHONPATH\",\n      \"environment_variables\": {\n        \"NCCL_DEBUG\": \"INFO\",\n        \"TF_ENABLE_AUTO_MIXED_PRECISION\": 1,\n        \"OMP_NUM_THREADS\": 4,\n        \"HOROVOD_HIERARCHICAL_ALLGATHER\": 0,\n        \"HOROVOD_HIERARCHICAL_ALLREDUCE\": 0,\n        \"HOROVOD_GROUPED_ALLREDUCES\": 1,\n        \"HOROVOD_CYCLE_TIME\": 1,\n        \"HOROVOD_FUSION_THRESHOLD\": 8388608,\n        \"HOROVOD_TIMELINE\": \"$MEMBERWORK/bie108/uniparc_checkpoints/$LSB_JOBNAME.$LSB_JOBID.hvdtimeline.json\"\n      }\n    },\n    \"script_execution\": {\n      \"command\": \"jsrun -n ${NODES} -g 6 -c 42 -r1 -a6 python3 run_model_horovod.py\",\n      \"arguments\": [\n        \"--modelName=$LSB_JOBNAME.$LSB_JOBID\",\n        \"--scratchDir=\\\"$MEMBERWORK/bie108/uniparc_checkpoints\\\"\",\n        \"--dataDir=\\\"$PROJWORK/bie108/split_uniref100\\\"\",\n        \"--batchSize=24\",\n        \"--warmup=10\",\n        \"--totalSteps=100\",\n        \"--stepsPerEpoch=10\",\n        \"--validationSteps=10\",\n        \"--lr=1E-4\",\n        \"--maskingFreq=0.15\",\n        \"--sequenceLength=512\",\n        \"--modelDimension=768\",\n        \"--numberXformerLayers=12\",\n        \"--initialEpoch=0\"\n      ]\n    }\n  }\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 666,
+        "candidates_token_count": 608,
+        "total_token_count": 1274,
+        "cached_content_token_count": 0
+    }
+}

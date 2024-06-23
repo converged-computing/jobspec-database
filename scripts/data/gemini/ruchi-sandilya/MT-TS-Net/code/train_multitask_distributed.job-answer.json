@@ -1,0 +1,75 @@
+{
+    "application": "SLURM",
+    "details": {
+        "resource_requirements": {
+            "partition": "gpu",
+            "nodes": 1,
+            "mail_user": "abhishek1015@gmail.com",
+            "mail_type": "ALL",
+            "cpus_per_task": 40,
+            "ntasks_per_core": 1
+        },
+        "software_requirements": {
+            "modules": [
+                "cuDNN/7.6.5/CUDA-10.2",
+                "jq"
+            ],
+            "conda_environments": [
+                "/data/Jiang_Lab/Data/MT-TS-Net-condaenv/mt-ts-net"
+            ],
+            "python_version": "3"
+        },
+        "script_execution": {
+            "command": "python3 -m torch.distributed.launch --nproc_per_node=4 train_multitask_distributed.py",
+            "arguments": [
+                "--dataset_csv",
+                "/data/Jiang_Lab/Data/MT-TS-Net/code/data/tcga-brca/casewise_linked_data.csv",
+                "--seg_dir",
+                "/data/Jiang_Lab/Data/tcga-brca-segmentations/",
+                "--output_dir",
+                "/data/Jiang_Lab/Data/MT-TS-Net-output/",
+                "--checkpoint_dir",
+                "/data/Jiang_Lab/Data/MT-TS-Net-checkpoint/",
+                "--save_model_freq",
+                "10",
+                "--batch_size",
+                "$batch_size",
+                "--patch_size",
+                "$patch_size",
+                "--num_patch",
+                "$num_patch",
+                "--num_workers",
+                "25",
+                "--recon_size",
+                "$recon_size",
+                "--dropout_rate",
+                "$dropout",
+                "--stat_norm_scheme",
+                "$stat_norm_scheme",
+                "--color_norm",
+                "--warmup_k",
+                "$warmup_k",
+                "--model_args_file",
+                "$model_json",
+                "--use_img_network",
+                "--multitask",
+                "--num_ge",
+                "93",
+                "--kl_coeff",
+                "$kl_coeff",
+                "--fetchge",
+                "--learning_rate",
+                "$learning_rate",
+                "--optimizer",
+                "Adam",
+                "--latent_dim",
+                "$latent_dim",
+                "--distributed",
+                "--reference_patch",
+                "$reference_patch",
+                "--norecon_loss"
+            ],
+            "working_directory": "/data/Jiang_Lab/Data/MT-TS-Net/code/"
+        }
+    }
+}

@@ -1,0 +1,43 @@
+{
+    "application": "CoreNEURON",
+    "details": {
+        "software": [
+            "CoreNEURON",
+            "Spack",
+            "Caliper",
+            "MPI"
+        ],
+        "resources": [
+            "GPU (volta)",
+            "SLURM (job scheduler)",
+            "GPFS (filesystem)",
+            "module system"
+        ],
+        "requirements": {
+            "SLURM": {
+                "account": "proj16",
+                "ntasks": 16,
+                "partition": "prod",
+                "time": "8:00:00",
+                "cpus-per-task": 2,
+                "constraint": "volta",
+                "exclusive": true,
+                "mem": 0,
+                "nodes": 2,
+                "exclude": "ldir01u01"
+            },
+            "module": {
+                "spack_prefix": "/gpfs/bbp.cscs.ch/project/proj16/NEURONFrontiers2021/hippocampus"
+            },
+            "olfactory_version": "olfactory-bulb-3d/0.1.20211014"
+        },
+        "variables": {
+            "module_suffix": "argument from command line",
+            "acc_sync": "argument from command line",
+            "num_gpus": "argument from command line",
+            "olfactory_prefix": "$(pwd)/..",
+            "cnrn_input_data": "${olfactory_prefix}/generate_coreneuron_input/coredat_${SLURM_NTASKS}/coredat",
+            "working_dir": "${olfactory_prefix}/run_coreneuron_simulation/${SLURM_JOBID}-gpu${module_suffix}-${acc_sync}"
+        }
+    }
+}

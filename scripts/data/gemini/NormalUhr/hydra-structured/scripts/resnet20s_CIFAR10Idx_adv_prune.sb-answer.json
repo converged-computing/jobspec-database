@@ -1,0 +1,27 @@
+{
+    "application": "Slurm",
+    "details": {
+        "resource_requests": {
+            "wall_time": "1:20:00",
+            "nodes": 1,
+            "tasks": 1,
+            "cpus_per_task": 4,
+            "memory_per_cpu": "2G",
+            "gpu": "v100:1"
+        },
+        "software_requirements": {
+            "modules": [
+                "GCC/6.4.0-2.28",
+                "OpenMPI/2.1.2",
+                "CUDA/10.0.130",
+                "cuDNN/7.5.0.56-CUDA-10.0.130",
+                "Python/3.8.5"
+            ],
+            "conda_environment": "biprune"
+        },
+        "script_execution": {
+            "command": "python3 train.py --arch resnet20s --dataset CIFAR10Idx --dataset-idx ${idx} --k ${k} --exp-mode prune --dataset-idx-method wrn --exp-name resnet20s_idx${idx}_wrn_ratio${k}_adv --trainer adv --val-method adv --source-net results/pretrained/resnet20s_adv_pretrain.pth.tar --scaled-score-init --result-dir results",
+            "working_directory": "~/hydra-structured"
+        }
+    }
+}

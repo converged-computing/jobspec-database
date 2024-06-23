@@ -1,0 +1,46 @@
+{
+    "application": "megatron-lm",
+    "software": [
+        "python",
+        "torch",
+        "torch.distributed",
+        "slurm",
+        "nvidia-smi",
+        "perl"
+    ],
+    "resources": {
+        "gpu": {
+            "type": "v100-32g",
+            "count": 4,
+            "nodes": 4
+        },
+        "cpu": {
+            "cores_per_task": 40,
+            "tasks_per_node": 1
+        },
+        "memory": "32GB",
+        "time": "00:10:00"
+    },
+    "libraries": [
+        "megatron-lm",
+        "torch.distributed"
+    ],
+    "datasets": [
+        "openwebtext-10k"
+    ],
+    "configuration": {
+        "model_size": "18B",
+        "hidden_size": 6144,
+        "num_layers": 40,
+        "num_attention_heads": 32,
+        "seq_length": 1024,
+        "vocab_size": 50257,
+        "micro_batch_size": 6,
+        "global_batch_size": 768,
+        "tensor_parallel_size": 4,
+        "pipeline_parallel_size": 8,
+        "data_path": "/path/to/datasets-custom/openwebtext-10k/meg-gpt2_text_document",
+        "checkpoint_path": "/path/to/models-custom/megatron-gpt2/megatron_lm_345m_v0.0/release",
+        "save_checkpoint_path": "/path/to/checkpoints/gpt2-1-node"
+    }
+}

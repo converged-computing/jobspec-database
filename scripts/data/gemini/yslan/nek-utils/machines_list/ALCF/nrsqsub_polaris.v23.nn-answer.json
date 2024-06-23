@@ -1,0 +1,43 @@
+{
+    "application": "NekRS",
+    "software": [
+        "Nek5000",
+        "OpenMPI",
+        "CUDA",
+        "Cray PE-X86 Milan",
+        "Cray PE-Accel Nvidia 80",
+        "NVIDIA HPC SDK",
+        "libFabirc",
+        "PrgEnv-gnu",
+        "Spack"
+    ],
+    "resource": {
+        "nodes": 1,
+        "cores": 8,
+        "gpu": 4,
+        "queue": "prod",
+        "walltime": "hh:mm:ss"
+    },
+    "libraries": [
+        "libfabric",
+        "cmake",
+        "libstdc++",
+        "MPICH",
+        "CUDA"
+    ],
+    "environment": {
+        "NEKRS_HOME": "/path/to/NekRS",
+        "NEKRS_GPU_MPI": 1,
+        "NEKRS_CACHE_BCAST": 1,
+        "NEKRS_LOCAL_TMP_DIR": "/local/scratch",
+        "MPICH_MPIIO_HINTS": "*:striping_unit=16777216:striping_factor=64:romio_cb_write=enable:romio_ds_write=disable:romio_no_indep_rw=true",
+        "MPICH_MPIIO_STATS": 1,
+        "MPICH_GPU_SUPPORT_ENABLED": 1,
+        "MPICH_OFI_NIC_POLICY": "NUMA",
+        "FI_OFI_RXM_RX_SIZE": 32768,
+        "LD_PRELOAD": "/opt/cray/pe/gcc/12.2.0/snos/lib64/libstdc++.so.6",
+        "CUDA_VISIBLE_DEVICES": "gpu_id",
+        "PROJ_ID": "project_id"
+    },
+    "usage": "[PROJ_ID] [QUEUE] $0 <casename> <number of compute nodes> <hh:mm:ss>"
+}

@@ -1,0 +1,55 @@
+{
+    "application": "Bake",
+    "details": {
+        "resource_requirements": {
+            "nodes": 2,
+            "tasks_per_node": 1,
+            "wall_time": "15:00",
+            "partition": "bdwall",
+            "account": "startup-carns"
+        },
+        "software": {
+            "spack": {
+                "environment": "spack/share/spack/setup-env.sh",
+                "loaded_package": "mochi-bake"
+            },
+            "mpi": "PSM2",
+            "libfabric": "PSM2"
+        },
+        "environment_variables": {
+            "HOME": "$SANDBOX",
+            "PSM2_MULTI_EP": 1
+        },
+        "benchmark_parameters": {
+            "numactl": {
+                "socket": 0
+            },
+            "bake_mkpool": {
+                "size": "60G",
+                "path": "/dev/shm/foo.dat"
+            },
+            "bake_p2p_bw": {
+                "transfer_size": "16777216",
+                "message_size": "34359738368",
+                "network": "psm2://",
+                "path": "/dev/shm/foo.dat",
+                "concurrency": {
+                    "values": [
+                        1,
+                        8
+                    ]
+                },
+                "rpc_engines": {
+                    "values": [
+                        12
+                    ]
+                },
+                "pipelining": {
+                    "values": [
+                        "-i"
+                    ]
+                }
+            }
+        }
+    }
+}

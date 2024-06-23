@@ -1,0 +1,83 @@
+{
+    "application": "PETSc",
+    "details": {
+        "environment": {
+            "runtime": "Cray",
+            "modules": [
+                "PrgEnv-gnu/8.3.2",
+                "craype-x86-rome",
+                "craype-accel-nvidia80",
+                "libfabric",
+                "cray-pals",
+                "cpe-cuda"
+            ],
+            "temp_dir": "/glade/gust/scratch/${USER}/tmp"
+        },
+        "resources": {
+            "nodes": 2,
+            "cpus_per_node": 8,
+            "mpi_processes_per_node": 8,
+            "omp_threads_per_cpu": 1,
+            "gpus_per_node": 4,
+            "walltime": "00:30:00"
+        },
+        "libraries": {
+            "petsc": "${PETSC_DIR}/src/snes/tutorials",
+            "mpi": "mpiexec"
+        },
+        "tests": {
+            "intra_node": {
+                "cpu": {
+                    "processes": [
+                        2,
+                        4
+                    ],
+                    "options": [
+                        "-da_refine 3",
+                        "-snes_monitor",
+                        "-pc_type gamg",
+                        "-pc_gamg_esteig_ksp_max_it 10",
+                        "-ksp_monitor",
+                        "-mg_levels_ksp_max_it 3",
+                        "-log_view"
+                    ]
+                },
+                "gpu": {
+                    "processes": [
+                        2,
+                        4
+                    ],
+                    "options": [
+                        "-da_refine 3",
+                        "-snes_monitor",
+                        "-dm_mat_type mpiaijcusparse",
+                        "-dm_vec_type mpicuda",
+                        "-pc_type gamg",
+                        "-pc_gamg_esteig_ksp_max_it 10",
+                        "-ksp_monitor",
+                        "-mg_levels_ksp_max_it 3",
+                        "-log_view"
+                    ]
+                }
+            },
+            "inter_node": {
+                "gpu": {
+                    "processes": [
+                        8
+                    ],
+                    "options": [
+                        "-da_refine 4",
+                        "-snes_monitor",
+                        "-dm_mat_type mpiaijcusparse",
+                        "-dm_vec_type mpicuda",
+                        "-pc_type gamg",
+                        "-pc_gamg_esteig_ksp_max_it 10",
+                        "-ksp_monitor",
+                        "-mg_levels_ksp_max_it 3",
+                        "-log_view"
+                    ]
+                }
+            }
+        }
+    }
+}

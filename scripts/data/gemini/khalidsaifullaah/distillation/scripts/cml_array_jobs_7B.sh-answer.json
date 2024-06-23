@@ -1,0 +1,61 @@
+{
+    "application": "SLURM",
+    "details": {
+        "scheduler": "SLURM",
+        "job_name": "llm",
+        "array_jobs": 10,
+        "output_log": "logs/opt_llama_%A_%a.log",
+        "error_log": "logs/opt_llama_%A_%a.log",
+        "runtime": "36:00:00",
+        "account": "scavenger",
+        "qos": "scavenger",
+        "gpu": "rtxa5000 (4)",
+        "cpu": "16",
+        "partition": "scavenger",
+        "priority": "0",
+        "excluded_nodes": [
+            "legacygpu00",
+            "legacygpu01",
+            "legacygpu02",
+            "legacygpu03",
+            "legacygpu04",
+            "legacygpu05",
+            "legacygpu06",
+            "legacygpu07"
+        ],
+        "memory": "100gb",
+        "conda_environment": "hug",
+        "training_scripts": [
+            {
+                "model_size": "opt6.7b",
+                "model_path": "/fs/cml-projects/instruction_following/pretrained_models/opt6.7b_sharded",
+                "model_config_path": "/fs/cml-projects/instruction_following/pretrained_models/opt6.7b_hf",
+                "data_path": "data_instruct/alpaca.json",
+                "added_tokens": 0,
+                "lr": "2e-5",
+                "max_steps": 2031,
+                "accumulation_steps": 4,
+                "batch_size": 8,
+                "wrapped_class_name": "OPTDecoderLayer"
+            },
+            {
+                "model_size": "7B",
+                "model_path": "/fs/nexus-scratch/pchiang/llama/7B_sharded",
+                "model_config_path": "/fs/nexus-scratch/pchiang/llama/7B_hf",
+                "data_path": "data_instruct/alpaca.json",
+                "added_tokens": 1,
+                "lr": "2e-5",
+                "max_steps": 2031,
+                "accumulation_steps": 8,
+                "batch_size": 4,
+                "wrapped_class_name": "LlamaDecoderLayer"
+            }
+        ],
+        "other_parameters": {
+            "act_checkpointing": true,
+            "wandb": true,
+            "wb_project": "huggingface",
+            "hack": true
+        }
+    }
+}

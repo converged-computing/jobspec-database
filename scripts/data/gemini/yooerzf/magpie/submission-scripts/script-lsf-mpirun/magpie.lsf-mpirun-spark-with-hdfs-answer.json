@@ -1,0 +1,156 @@
+{
+    "application": "Magpie",
+    "software": [
+        {
+            "name": "Hadoop",
+            "version": "2.7.3",
+            "type": "HDFS",
+            "setup": "yes",
+            "home": "${HOME}/hadoop-${HADOOP_VERSION}",
+            "local_dir": "/tmp/${USER}/hadoop",
+            "conf_files": "${HOME}/myconf",
+            "daemon_heap_max": "2000",
+            "namenode_daemon_heap_max": "2000",
+            "environment_extra_path": "${HOME}/hadoop-my-environment"
+        },
+        {
+            "name": "Spark",
+            "version": "2.4.3-bin-hadoop2.7",
+            "type": "STANDALONE",
+            "setup": "yes",
+            "home": "${HOME}/spark-${SPARK_VERSION}",
+            "local_dir": "/tmp/${USER}/spark",
+            "conf_files": "${HOME}/myconf",
+            "worker_cores_per_node": "8",
+            "worker_memory_per_node": "16000",
+            "worker_directory": "/tmp/${USER}/spark/work",
+            "job_memory": "2048",
+            "driver_memory": "2048",
+            "daemon_heap_max": "2000",
+            "environment_extra_path": "${HOME}/spark-my-environment"
+        },
+        {
+            "name": "Python",
+            "path": "/usr/bin/python"
+        },
+        {
+            "name": "Java",
+            "home": "/usr/lib/jvm/jre-1.8.0/"
+        }
+    ],
+    "resource": [
+        {
+            "type": "node_count",
+            "description": "Node count should include one node for the head/management/master node.  For example, if you want 8 compute nodes to process data, specify 9 nodes below.",
+            "value": "<my_node_count>"
+        },
+        {
+            "type": "time",
+            "description": "Note defaults of MAGPIE_STARTUP_TIME & MAGPIE_SHUTDOWN_TIME, this timelimit should be a fair amount larger than them combined.",
+            "value": "<my_time_in_hours:minutes>"
+        },
+        {
+            "type": "job_name",
+            "description": "Job name.  This will be used in naming directories for the job.",
+            "value": "<my_job_name>"
+        },
+        {
+            "type": "queue",
+            "description": "Queue to launch job in",
+            "value": "<my_queue>"
+        },
+        {
+            "type": "scripts_home",
+            "description": "Directory your launching scripts/files are stored",
+            "value": "${HOME}/magpie"
+        },
+        {
+            "type": "local_dir",
+            "description": "Path to store data local to each cluster node, typically something in /tmp.  This will store local conf files and log files for your job.",
+            "value": "/tmp/${USER}/magpie"
+        },
+        {
+            "type": "startup_time",
+            "description": "Specifies the amount of time to give startup / shutdown activities a chance to succeed before Magpie will give up.",
+            "value": "30"
+        },
+        {
+            "type": "shutdown_time",
+            "description": "Specifies the amount of time to give startup / shutdown activities a chance to succeed before Magpie will give up.",
+            "value": "30"
+        },
+        {
+            "type": "hdfs_path",
+            "description": "Path for HDFS when using local disk",
+            "value": "/ssd/${USER}/hdfs"
+        },
+        {
+            "type": "hdfs_over_lustre_path",
+            "description": "Lustre path to do Hadoop HDFS out of",
+            "value": "/lustre/${USER}/hdfsoverlustre/"
+        },
+        {
+            "type": "hdfs_over_networkfs_path",
+            "description": "Networkfs path to do Hadoop HDFS out of",
+            "value": "/networkfs/${USER}/hdfsovernetworkfs/"
+        },
+        {
+            "type": "raw_networkfs_path",
+            "description": "Path for rawnetworkfs",
+            "value": "/lustre/${USER}/rawnetworkfs/"
+        },
+        {
+            "type": "localstore",
+            "description": "If you have a local SSD or NVRAM, performance may be better to store intermediate data on it rather than Lustre or some other networked filesystem.",
+            "value": "/ssd/${USER}/localstore/"
+        },
+        {
+            "type": "spark_local_scratch_dir",
+            "description": "By default, if Hadoop is setup with a file system, the Spark local scratch directory, where scratch data is placed, will automatically be calculated and configured.",
+            "value": "/lustre/${USER}/sparkscratch/"
+        },
+        {
+            "type": "spark_yarn_staging_dir",
+            "description": "By default, Spark w/ Yarn will use your home directory for staging files for a job.",
+            "value": "file:///lustre/${USER}/sparkStaging/"
+        }
+    ],
+    "requirements": [
+        {
+            "name": "passwordless remote shell",
+            "description": "Magpie requires a passwordless remote shell command to launch necessary daemons across your job allocation."
+        },
+        {
+            "name": "NFS mount",
+            "description": "MAGPIE_SCRIPTS_HOME should normally be an NFS mount, someplace magpie can be reached on all nodes."
+        },
+        {
+            "name": "keys setup",
+            "description": "If using ssh, Magpie requires keys to be setup ahead of time so it can be executed without passwords."
+        },
+        {
+            "name": "HADOOP_HDFS_PATH",
+            "description": "User must set HADOOP_HDFS_PATH if HADOOP_FILESYSTEM_MODE is set to \"hdfs\"."
+        },
+        {
+            "name": "HADOOP_HDFSOVERLUSTRE_PATH",
+            "description": "User must set HADOOP_HDFSOVERLUSTRE_PATH if HADOOP_FILESYSTEM_MODE is set to \"hdfsoverlustre\"."
+        },
+        {
+            "name": "HADOOP_HDFSOVERNETWORKFS_PATH",
+            "description": "User must set HADOOP_HDFSOVERNETWORKFS_PATH if HADOOP_FILESYSTEM_MODE is set to \"hdfsovernetworkfs\"."
+        },
+        {
+            "name": "HADOOP_RAWNETWORKFS_PATH",
+            "description": "User must set HADOOP_RAWNETWORKFS_PATH if HADOOP_FILESYSTEM_MODE is set to \"rawnetworkfs\"."
+        },
+        {
+            "name": "SPARK_SPARKWORDCOUNT_FILE",
+            "description": "Specify the file to do the word count on.  Specify the scheme, such as hdfs:// or file://, appropriately."
+        },
+        {
+            "name": "SPARK_LOCAL_SCRATCH_DIR",
+            "description": "If Hadoop is not setup, SPARK_LOCAL_SCRATCH_DIR must be specified."
+        }
+    ]
+}

@@ -1,0 +1,32 @@
+{
+    "application": "GROMACS",
+    "details": {
+        "version": "gromacs/openmpi/intel/2020.4",
+        "force_field": "CHARMM36",
+        "input_files": [
+            "step3_input.gro",
+            "topol.top",
+            "index.ndx",
+            "step4.0_minimization.mdp",
+            "step4.1_equilibration.mdp",
+            "step5_production.mdp"
+        ],
+        "output_files": [
+            "step4.0_minimization.tpr",
+            "step4.0_minimization.gro",
+            "step4.1_equilibration.tpr",
+            "step4.1_equilibration.gro",
+            "step5_production.tpr",
+            "step5_production.gro"
+        ],
+        "resources": {
+            "nodes": 1,
+            "tasks_per_node": 48,
+            "memory": "8GB",
+            "time": "24:00:00"
+        },
+        "parallelization": "MPI",
+        "command_line": "mpirun -np $NUM_CPU mpirun gmx_mpi mdrun -ntomp 1",
+        "precision": "Single precision, with option for double precision for minimization"
+    }
+}

@@ -1,0 +1,22 @@
+{
+    "application": "Snakemake",
+    "details": {
+        "scheduler": "LSF",
+        "resources": {
+            "cores": 4,
+            "queue": "default",
+            "environment": "workflow/variables.env"
+        },
+        "logging": {
+            "output": "./cluster_logs/lsf-$LSB_JOBNAME-$LSB_JOBID-$HOSTNAME.out",
+            "error": "./cluster_logs/lsf-$LSB_JOBNAME-$LSB_JOBID-$HOSTNAME.err"
+        },
+        "workflow_file": "workflow/process_cohort.smk",
+        "profile": "workflow/profiles/lsf",
+        "locking": {
+            "mechanism": "lockfile",
+            "path": "cohorts/${COHORT}/process_cohort.lock"
+        },
+        "umask": "002"
+    }
+}

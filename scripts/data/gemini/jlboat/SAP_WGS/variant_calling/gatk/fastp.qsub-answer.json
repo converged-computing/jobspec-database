@@ -1,0 +1,29 @@
+{
+    "application": "fastp",
+    "software": "fastp",
+    "container": "singularity_containers/fastp.sif",
+    "resource_requirements": {
+        "cpus": 7,
+        "memory": "7gb",
+        "walltime": "48:00:00",
+        "scratch_dir": "/scratch1"
+    },
+    "input": {
+        "read1": "${BASE_DIR}/data/raw_reads/${ARRAY[0]}_R1_001.fastq.gz",
+        "read2": "${BASE_DIR}/data/raw_reads/${ARRAY[0]}_R2_001.fastq.gz",
+        "design_file": "${BASE_DIR}/doc/fastqs.txt"
+    },
+    "output": {
+        "paired_read1": "${SAMPLE}.R1.trimmed.paired.fq.gz",
+        "paired_read2": "${SAMPLE}.R2.trimmed.paired.fq.gz",
+        "unpaired_read1": "${SAMPLE}.R1.trimmed.unpaired.fq.gz",
+        "unpaired_read2": "${SAMPLE}.R2.trimmed.unpaired.fq.gz",
+        "json_report": "${SAMPLE}.<NUMBER>.json",
+        "html_report": "${SAMPLE}.<NUMBER>.html"
+    },
+    "parameters": {
+        "threads": 4,
+        "length_required": 40,
+        "report_title": "${ARRAY[0]}.<NUMBER>"
+    }
+}

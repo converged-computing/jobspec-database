@@ -1,0 +1,39 @@
+{
+    "application": "Slurm",
+    "details": {
+        "resource_requirements": {
+            "memory": "350G",
+            "cpus": "40",
+            "time": "48:00:00",
+            "nodes": "1"
+        },
+        "software": {
+            "conda": {
+                "environment": "/mnt/common/WASSERMAN_SOFTWARE/AnnotateVariants/opt/AnnotateVariantsEnvironment"
+            },
+            "singularity": {
+                "image": "/mnt/common/Precision/Smoove/smoove_latest.sif",
+                "command": "smoove.sh"
+            },
+            "annotsv": {
+                "path": "/mnt/common/Precision/AnnotSV/"
+            },
+            "bcftools": {
+                "path": "/mnt/common/WASSERMAN_SOFTWARE/AnnotateVariants/"
+            },
+            "bedtools": {
+                "path": "/mnt/common/WASSERMAN_SOFTWARE/AnnotateVariants/"
+            }
+        },
+        "input_files": {
+            "fasta": "/mnt/common/DATABASES/REFERENCES/GRCh38/GENOME/1000G/GRCh38_full_analysis_set_plus_decoy_hla.fa",
+            "ped": "$FAMILY_ID.ped",
+            "gene_list": "$GENELIST"
+        },
+        "output_files": {
+            "smoove": "$WORKING_DIR/results-smoove/${FAMILY_ID}-smoove.genotyped.vcf.gz",
+            "annotsv_with_genes": "${FAMILY_ID}-smoove-annotsv-candidateGenes",
+            "annotsv": "${FAMILY_ID}-smoove-annotsv"
+        }
+    }
+}

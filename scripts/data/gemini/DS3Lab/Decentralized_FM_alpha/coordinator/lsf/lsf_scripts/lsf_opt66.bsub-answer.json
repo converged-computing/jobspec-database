@@ -1,0 +1,40 @@
+{
+    "application": "python",
+    "details": {
+        "script": "dist_inference_runner_w_euler_coordinator.py",
+        "environment": {
+            "modules": [
+                "gcc/6.3.0",
+                "cuda/11.0.3"
+            ],
+            "conda_environment": "pipeline",
+            "working_directory": "/cluster/home/juewang/workspace/GPT-home-private"
+        },
+        "resources": {
+            "cores": 2,
+            "runtime": "3 minutes",
+            "memory": "8 GB per core",
+            "gpus": 1,
+            "gpu_memory": "10 GB",
+            "network": {
+                "NCCL_SOCKET_IFNAME": "access",
+                "GLOO_SOCKET_IFNAME": "access",
+                "NCCL_DEBUG": "INFO",
+                "NCCL_IB_DISABLE": 1,
+                "NCCL_P2P_DISABLE": 1
+            }
+        },
+        "arguments": [
+            "--pp-mode pipe_sync_sample_mask_token_pipe",
+            "--pipeline-group-size 32",
+            "--cuda-id 0",
+            "--model-type opt",
+            "--model-name /nfs/iiscratch-zhang.inf.ethz.ch/export/zhang/export/fm/pretrained_models/opt-66b-new",
+            "--num-iters 99999999999",
+            "--fp16",
+            "--budget 10400",
+            "--num-layers 2",
+            "--coordinator-server-ip 129.132.93.120"
+        ]
+    }
+}

@@ -1,0 +1,68 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n\"application\": \"CDICE\",\n\"details\": {\n\"resources\": {\n\"nodes\": 8,\n\"cores_per_node\": 4,\n\"walltime\": \"40:00:00\",\n\"software\": [\n\"python-2.7.5\",\n\"SALib\",\n\"CDICE\",\n\"mpirun\",\n\"parsing_CDICE.sh\"\n]\n},\n\"input_files\": [\n\"configuration.txt\",\n\"configuration_pol.txt\",\n\"SALib_Input.txt\",\n\"CDICE_input.txt\"\n],\n\"output_files\": [\n\"output.txt\",\n\"CDICE_output.txt\",\n\"Dam.txt\",\n\"Abat.txt\",\n\"Tatm.txt\",\n\"NPV_Dam.txt\",\n\"NPV_Abat.txt\",\n\"NPV_Dam2.txt\",\n\"NPV_Abat2.txt\"\n],\n\"commands\": [\n\"python -c \\\"from config_reader_function import config_reader; config_reader('configuration.txt','configuration.npz')\\\"\",\n\"python -c \\\"from config_reader_function import config_reader; config_reader('configuration_pol.txt','configuration_pol.npz')\\\"\",\n\"python -c \\\"from construct_SALib_input import construct_input; construct_input(1)\\\"\",\n\"python -c \\\"from sobol_bootstrap import sobol_sample; sobol_sample('SALib_Input.txt','CDICE_SAvar.txt',100000)\\\"\",\n\"python  -c \\\"from CDICE_input_maker_function import cdice_input_maker; cdice_input_maker(1,'exp2',2050)\\\"\",\n\"mpirun a.exe \\\"CDICE_input.txt\\\" $(expr $number \\* $d \\* 2 + $number \\* 2)\",\n\"./parsing_CDICE.sh\",\n\"mpirun python -c \\\"from parallel_sobol import parallel_sobol; parallel_sobol('Dam.txt',100,100000,25,'Dam')\\\"\",\n\"mpirun python -c \\\"from parallel_sobol import parallel_sobol; parallel_sobol('Abat.txt',100,100000,25,'Abat')\\\"\",\n\"mpirun python -c \\\"from parallel_sobol import parallel_sobol; parallel_sobol('Tatm.txt',100,100000,25,'Tatm')\\\"\",\n\"python -c \\\"from custom_sobol import custom_sobol; custom_sobol('NPV_Dam.txt',100,27,27,100000,25,'NPV_Dam')\\\"\",\n\"python -c \\\"from custom_sobol import custom_sobol; custom_sobol('NPV_Abat.txt',100,27,27,100000,25,'NPV_Abat')\\\"\",\n\"python -c \\\"from custom_sobol import custom_sobol; custom_sobol('NPV_Dam.txt',100,17,17,100000,25,'NPV_Dam2')\\\"\",\n\"python -c \\\"from custom_sobol import custom_sobol; custom_sobol('NPV_Abat.txt',100,17,17,100000,25,'NPV_Abat2')\\\"\"\n]\n}\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 2,
+                    "blocked": false
+                }
+            ],
+            "citation_metadata": {
+                "citation_sources": [
+                    {
+                        "start_index": 472,
+                        "end_index": 724,
+                        "uri": "https://github.com/JRLamontagne/cdice_sa",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 927,
+                        "end_index": 1118,
+                        "uri": "https://github.com/JRLamontagne/cdice_sa",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 1136,
+                        "end_index": 1932,
+                        "uri": "https://github.com/JRLamontagne/cdice_sa",
+                        "license_": ""
+                    }
+                ]
+            },
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 828,
+        "candidates_token_count": 828,
+        "total_token_count": 1656,
+        "cached_content_token_count": 0
+    }
+}

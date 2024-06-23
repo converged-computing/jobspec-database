@@ -1,0 +1,33 @@
+{
+    "application": "Dask",
+    "details": {
+        "scheduler_file": "Path to the dask scheduler file. This file is passed as the first argument to the script.",
+        "notebook_dir": "Path to the directory containing the Jupyter notebooks. This directory is passed as the second argument to the script.",
+        "slurm": {
+            "account": "pawsey0106",
+            "partition": "work",
+            "ntasks": 8,
+            "cpus_per_task": 4,
+            "time": "01:00:00",
+            "job_name": "dask-worker",
+            "output": "dask-worker-%j.out",
+            "export": "NONE"
+        },
+        "singularity": {
+            "version": "3.11.4-slurm",
+            "image": "docker://mrayson/jupyter_sfoda:20230825",
+            "bind_paths": "/group:/group,/scratch:/scratch,/run:/run,$HOME:$HOME",
+            "environment_variables": {
+                "SINGULARITYENV_PREPEND_PATH": "/srv/conda/envs/notebook/bin:/srv/conda/condabin:/srv/conda/bin",
+                "SINGULARITYENV_XDG_DATA_HOME": "$MYSCRATCH/.local",
+                "OMP_NUM_THREADS": "8",
+                "OMP_PROC_BIND": "close",
+                "OMP_PLACES": "cores"
+            }
+        },
+        "dask_worker_parameters": {
+            "nthreads": "$SLURM_CPUS_PER_TASK",
+            "memory_limit": "${memlim}M"
+        }
+    }
+}

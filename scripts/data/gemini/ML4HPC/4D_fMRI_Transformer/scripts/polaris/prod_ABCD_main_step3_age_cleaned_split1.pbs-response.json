@@ -1,0 +1,62 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n\"application\": \"mpiexec\",\n\"software\": [\n\"conda\",\n\"python\",\n\"nvidia-smi\",\n\"wc\",\n\"hostname\"\n],\n\"resources\": [\n\"PBS\",\n\"polaris\",\n\"grand\",\n\"MPI\",\n\"CUDA\",\n\"OpenMP\"\n],\n\"libraries\": [\n\"mpich\",\n\"nccl\",\n\"torch\"\n],\n\"environment_variables\": [\n\"MPICH_GPU_SUPPORT_ENABLED\",\n\"NCCL_COLLNET_ENABLE\",\n\"NCCL_NET_GDR_LEVEL\",\n\"MASTER_ADDR\",\n\"NNODES\",\n\"NRANKS_PER_NODE\",\n\"NTOTRANKS\",\n\"NDEPTH\",\n\"NTHREADS\",\n\"OMP_NUM_THREADS\",\n\"OMP_PLACES\"\n],\n\"files\": [\n\"main.py\",\n\"set_affinity_gpu_polaris.sh\",\n\"ABCD_cleaned_image_regression_split1\",\n\"/lus/grand/projects/STlearn/4D_fMRI_Transformer\",\n\"/lus/grand/projects/STlearn/7.cleaned_image_MNI_to_TRs\"\n],\n\"commands\": [\n\"module load conda\",\n\"conda activate 3DCNN\",\n\"cd $PBS_O_WORKDIR\",\n\"cd /lus/grand/projects/STlearn/4D_fMRI_Transformer\",\n\"export MASTER_ADDR=`/bin/hostname -s`\",\n\"NNODES=`wc -l < $PBS_NODEFILE`\",\n\"NRANKS_PER_NODE=$(nvidia-smi -L | wc -l)\",\n\"NTOTRANKS=$(( NNODES * NRANKS_PER_NODE ))\",\n\"echo \\\"NUM_OF_NODES= ${NNODES} TOTAL_NUM_RANKS= ${NTOTRANKS} RANKS_PER_NODE= ${NRANKS_PER_NODE}\\\"\",\n\"mpiexec -n ${NTOTRANKS} --ppn ${NRANKS_PER_NODE} --depth=${NDEPTH} --cpu-bind depth  $set_affinity_cmd $Command\"\n]\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "citation_metadata": {
+                "citation_sources": [
+                    {
+                        "start_index": 715,
+                        "end_index": 1034,
+                        "uri": "https://github.com/Transconnectome/4D_fMRI_Transformer",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 888,
+                        "end_index": 1113,
+                        "uri": "https://github.com/deephyper/quickstart",
+                        "license_": ""
+                    }
+                ]
+            },
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 691,
+        "candidates_token_count": 489,
+        "total_token_count": 1180,
+        "cached_content_token_count": 0
+    }
+}

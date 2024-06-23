@@ -1,0 +1,40 @@
+{
+    "application": "SLURM",
+    "details": {
+        "memory": "128 GB",
+        "partition": "gpuA100x4",
+        "account": "bcng-delta-gpu",
+        "job_name": "et_model_inference",
+        "gpus": 1,
+        "tasks": 1,
+        "gpus_per_node": 1,
+        "gpus_per_task": 1,
+        "time": "24:00:00",
+        "constraint": "scratch",
+        "output_file": "/projects/bcng/cs598-DHT/code/logs/slurm-logs/output/et_inference-%j.out",
+        "error_file": "/projects/bcng/cs598-DHT/code/logs/slurm-logs/error/et_inference-%j.err",
+        "modules": [
+            "gcc",
+            "python/3.8.18",
+            "anaconda3_gpu"
+        ],
+        "conda_environment": "teachllms",
+        "python_packages": [
+            "pytorch==1.13.0",
+            "torchvision==0.14.0",
+            "torchaudio==0.13.0",
+            "pytorch-cuda=11.6",
+            "requirements.txt"
+        ],
+        "environment_variables": {
+            "ET_DATA": "/projects/bcng/ukakarla/teach_data",
+            "TEACH_ROOT_DIR": "/projects/bcng/ukakarla/teach",
+            "ET_LOGS": "/projects/bcng/ukakarla/teach_data/et_pretrained_models",
+            "TEACH_SRC_DIR": "/projects/bcng/ukakarla/teach/src",
+            "ET_ROOT": "/projects/bcng/ukakarla/teach/src/teach/modeling/ET",
+            "INFERENCE_OUTPUT_PATH": "/projects/bcng/ukakarla/teach/inference_output",
+            "PYTHONPATH": "/projects/bcng/ukakarla/teach/src:/projects/bcng/ukakarla/teach/src/teach/modeling/ET"
+        },
+        "script": "src/teach/cli/inference.py"
+    }
+}

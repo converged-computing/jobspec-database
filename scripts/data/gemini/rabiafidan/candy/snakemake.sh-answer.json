@@ -1,0 +1,21 @@
+{
+    "application": "Snakemake",
+    "details": {
+        "environment": "Conda environment named 'snakemake'",
+        "resource_requirements": {
+            "partition": "cpu",
+            "tasks": 1,
+            "cpus_per_task": 1,
+            "nodes": 1,
+            "memory": "2G",
+            "time": "3-00:00:00",
+            "output_file": "%j.txt",
+            "error_file": "%j.err"
+        },
+        "cluster_config": {
+            "cluster_type": "SLURM",
+            "cluster_command": "sbatch --ntasks 1 --cpus-per-task {threads} --partition cpu --job-name {rule} --time 5:00:00 -e logs/{rule}/{params.err} -o logs/{rule}/{params.out} --mem {resources.mem_mb} --parsable",
+            "cluster_status_script": "./status-sacct.sh"
+        }
+    }
+}

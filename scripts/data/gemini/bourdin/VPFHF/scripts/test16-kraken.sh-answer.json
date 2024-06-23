@@ -1,0 +1,42 @@
+{
+    "application": "MPIEXEC",
+    "details": {
+        "software": "ValidationTests/test16",
+        "resources": {
+            "nodes": 4,
+            "cores_per_node": 12,
+            "walltime": "12:00:00",
+            "queue": "normal",
+            "email": "bourdin@lsu.edu",
+            "email_options": "be"
+        },
+        "environment_variables": {
+            "JOBID": "${PBS_JOBID}",
+            "WORKDIR": "${PBS_O_WORKDIR}/${JOBID}",
+            "NX": "354",
+            "NY": "2",
+            "NZ": "354",
+            "LX": "8",
+            "LY": ".01",
+            "LZ": "8.",
+            "C0_X": "4.",
+            "C0_Y": ".005",
+            "C0_Z": "4.",
+            "C0_R": ".2",
+            "C0_THETA": "0.",
+            "C0_PHI": "0.",
+            "C0_THICKNESS": ".045",
+            "MINVOL": "0.",
+            "MAXVOL": "0.025",
+            "NUMSTEP": "100",
+            "EPSILON": ".045",
+            "GC": ".8",
+            "ETA": "1e-8",
+            "MODE": "1",
+            "INSITUMIN": "0,0,0,0,0,0",
+            "INSITUMAX": "0,0,0,0,0,0",
+            "EXTRAOPTS": "${EXTRAOPTS}"
+        },
+        "command": "mpiexec ${VFDIR}/ValidationTests/test16 -p ${JOBID} -n ${NX},${NY},${NZ} -l ${LX},${LY},${LZ} -epsilon ${EPSILON} -eta ${ETA} -gc ${GC} -nu 0. -nc 1 -c0_center ${C0_X},${C0_Y},${C0_Z} -c0_R ${C0_R} -c0_theta ${C0_THETA} -c0_phi ${C0_PHI} -c0_thickness ${C0_THICKNESS} -mode ${MODE} -minvol ${MINVOL} -maxvol ${MAXVOL} -maxtimestep ${NUMSTEP} -insitumin ${INSITUMIN} -insitumax ${INSITUMAX} ${EXTRAOPTS} -U_mg_levels_ksp_chebyshev_estimate_eigenvalues 0,0.1,0,1.1 -U_mg_levels_ksp_type chebyshev -U_mg_levels_pc_type sor -U_pc_gamg_agg_nsmooths 1 -U_pc_gamg_threshold 0 -U_pc_gamg_type agg -U_pc_type gamg -V_mg_levels_ksp_chebyshev_estimate_eigenvalues 0,0.1,0,1.1 -V_mg_levels_ksp_type chebyshev -V_mg_levels_pc_type sor -V_pc_gamg_agg_nsmooths 1 -V_pc_gamg_threshold 0 -V_pc_gamg_type agg -V_pc_type gamg -altmintol 1e-4 -altminmaxit 100"
+    }
+}

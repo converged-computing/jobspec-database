@@ -1,0 +1,27 @@
+{
+    "application": "SLURM",
+    "details": {
+        "job_name": "dav_nav",
+        "output": "data/logs/%j.out",
+        "error": "data/logs/%j.err",
+        "gres": "gpu:2",
+        "nodes": 16,
+        "cpus_per_task": 10,
+        "ntasks_per_node": 2,
+        "mem": "250GB",
+        "time": "4320:00",
+        "constraint": "volta32gb",
+        "signal": "USR1@600",
+        "partition": "learnlab,learnfair",
+        "environment_variables": {
+            "GLOG_minloglevel": "2",
+            "MAGNUM_LOG": "quiet",
+            "HABITAT_SIM_LOG": "quiet",
+            "MASTER_ADDR": "srun --ntasks=1 hostname 2>&1 | tail -n1"
+        },
+        "python_script": "ss_baselines.av_nav.run",
+        "config_file": "ss_baselines/av_nav/config/audionav/mp3d/train_telephone/audiogoal_depth_ddppo.yaml",
+        "model_dir": "data/models/ss2/mp3d/dav_nav",
+        "continuous": "True"
+    }
+}

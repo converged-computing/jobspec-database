@@ -1,0 +1,43 @@
+{
+    "application": "Orfeo Toolbox",
+    "details": {
+        "container": "orfeotoolbox.sif",
+        "container_source": "docker://orfeotoolbox/otb",
+        "environment_variables": [
+            "GDAL_CACHEMAX=99999",
+            "OTB_MAX_RAM_HINT=10000"
+        ],
+        "resources": {
+            "memory": "120G",
+            "cpu": "1 core",
+            "ram_hint": "10000 MB",
+            "runtime": "24 hours",
+            "partition": "scavenge",
+            "job_name": "zsc06_sentinel_merge90m_from90m_otb.sh"
+        },
+        "input_files": {
+            "vrt_files": [
+                "/gpfs/gibbs/project/sbsc/ga254/dataproces/ONCHO/input_orig/sentinel/tif_wgs84_90m_tile/??.vrt"
+            ],
+            "tif_files": [
+                "/gpfs/gibbs/project/sbsc/ga254/dataproces/ONCHO/input_orig/sentinel/tif_wgs84_90m_tile/*.tif"
+            ]
+        },
+        "output_files": {
+            "output_directory": "/gpfs/gibbs/project/sbsc/ga254/dataproces/ONCHO/input_orig/sentinel/tif_wgs84_90m_from90m_otb",
+            "output_file_patterns": [
+                "tile_all_90m_otb_slim_harm_*.tif",
+                "tile_all_90m_otb_large_*.tif"
+            ]
+        },
+        "libraries": {
+            "GDAL": "3"
+        },
+        "commands": [
+            "gdalinfo",
+            "gdalbuildvrt",
+            "gdal_translate",
+            "otbcli_Mosaic"
+        ]
+    }
+}

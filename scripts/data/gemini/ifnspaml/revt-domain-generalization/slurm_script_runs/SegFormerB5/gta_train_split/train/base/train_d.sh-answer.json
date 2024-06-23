@@ -1,0 +1,40 @@
+{
+    "application": "slurm",
+    "software": [
+        "gcc 11.2.0",
+        "transformer-domain-generalization",
+        "python"
+    ],
+    "resources": [
+        "gpu",
+        "32 GB memory",
+        "2 CPUs"
+    ],
+    "details": {
+        "slurm": {
+            "partition": "gpu,gpub",
+            "time": "7 days",
+            "exclude": "gpu[04,02]",
+            "job_name": "SegFo_B5_gta-train_base_encoder-soup_d",
+            "output": "train_d-%j.out"
+        },
+        "script_parameters": {
+            "max_iters": 40000,
+            "main_config": "./local_configs/segformer/B5/segformer.b5.512x512.gta2cs.40k.batch2.py",
+            "work_dir_prefix": "./work_dirs/gta_train_split/segformer.b5.512x512.gta2cs.40k.batch2_base",
+            "num_models": 1,
+            "work_dir_start_char": "d",
+            "start_seed": 15,
+            "train_dataset": "gta_train",
+            "test_models": true,
+            "test_cityscapes": true,
+            "test_bdd": false,
+            "test_mapillary": false,
+            "test_acdc": false,
+            "test_kitti": false,
+            "test_synthia": false,
+            "test_gta_val": false,
+            "override": false
+        }
+    }
+}

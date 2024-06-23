@@ -1,0 +1,30 @@
+{
+    "application": "SLURM",
+    "details": {
+        "resource_requirements": {
+            "account": "project0000",
+            "output_file": "%x-%j.out",
+            "error_file": "%x-%j.err",
+            "partition": "nodes",
+            "time_limit": "0-12:00:00",
+            "memory_per_node": "256G",
+            "nodes": 1,
+            "tasks": 2,
+            "cpus_per_task": 32,
+            "tasks_per_node": 2,
+            "threads_per_core": 1
+        },
+        "modules": [
+            "apps/julia",
+            "mpi/openmpi"
+        ],
+        "julia_environment": {
+            "project": "examples",
+            "openmp_threads": 1,
+            "julia_threads": 32
+        },
+        "execution": {
+            "mpiexecjl_command": "bin/mpiexecjl --project=examples -n 2 julia -t 32 --project=examples examples/HPC/MPIRun.jl"
+        }
+    }
+}

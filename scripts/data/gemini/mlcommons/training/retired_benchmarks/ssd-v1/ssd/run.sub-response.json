@@ -1,0 +1,62 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"slurm\",\n  \"details\": {\n    \"environment\": \"slurm\",\n    \"partition\": \"mlperf\",\n    \"nodes\": 1,\n    \"wall_time\": \"12:00:00\",\n    \"job_name\": \"single_stage_detector\",\n    \"memory\": \"all available\",\n    \"tasks_per_node\": 8,\n    \"threads_per_core\": 2,\n    \"cores_per_socket\": 20,\n    \"benchmark\": \"single_stage_detector\",\n    \"benchmark_name\": \"ssd\",\n    \"container\": \"mlperf-nvidia:single_stage_detector\",\n    \"data_dir\": \"/raid/data/coco-2017\",\n    \"log_dir\": \"/raid/results/single_stage_detector\",\n    \"number_of_experiments\": 5,\n    \"dgx_system\": \"DGX1\",\n    \"ib_devices\": \"$DGXIBDEVICES\",\n    \"docker_volumes\": \"-v $DATADIR:/data -v $LOGDIR:/results\",\n    \"nvidia_visible_devices\": \"${NVIDIA_VISIBLE_DEVICES:-$(seq 0 $((${SLURM_NTASKS_PER_NODE:-${DGXNGPU}}-1)) | tr '\\n' ',' | sed 's/,$//')}\",\n    \"docker_exec\": \"env NV_GPU=${NV_GPU} nvidia-docker run --rm --net=host --uts=host --ipc=host --ulimit stack=67108864 --ulimit memlock=-1 --name=cont_${SLURM_JOB_ID} --security-opt seccomp=unconfined $IBDEVICES\",\n    \"master_ip\": \"`getent hosts \\`hostname\\` | cut -d ' ' -f1`\",\n    \"port\": \"4242 + RANDOM%1000\",\n    \"ssh\": \"ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no $hostn\",\n    \"srun\": \"srun -N 1 -n 1 -w $hostn\",\n    \"docker_env\": [\n      \"-e\",\n      \"DGXSYSTEM=$DGXSYSTEM\",\n      \"-e\",\n      \"MULTI_NODE=$MULTI_NODE\",\n      \"-e\",\n      \"SLURM_JOB_ID=$SLURM_JOB_ID\",\n      \"-e\",\n      \"SLURM_NTASKS_PER_NODE=$SLURM_NTASKS_PER_NODE\"\n    ]\n  },\n  \"requirements\": [\n    \"slurm\",\n    \"nvidia-docker\",\n    \"docker\",\n    \"python\",\n    \"torch\",\n    \"mlperf_compliance\"\n  ]\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 2,
+                    "blocked": false
+                }
+            ],
+            "citation_metadata": {
+                "citation_sources": [
+                    {
+                        "start_index": 842,
+                        "end_index": 1034,
+                        "uri": "https://github.com/popperized/popper-experiments",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 1293,
+                        "end_index": 1498,
+                        "uri": "https://github.com/popperized/popper-experiments",
+                        "license_": ""
+                    }
+                ]
+            },
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 1854,
+        "candidates_token_count": 646,
+        "total_token_count": 2500,
+        "cached_content_token_count": 0
+    }
+}

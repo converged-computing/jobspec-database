@@ -1,0 +1,68 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"Docker\",\n  \"software\": [\n    \"Bash\",\n    \"Docker\",\n    \"Python\",\n    \"mlperf_logging\",\n    \"HugeCTR\",\n    \"run_and_time.sh\"\n  ],\n  \"resources\": {\n    \"gpu\": \"all\",\n    \"network\": \"host\",\n    \"uts\": \"host\",\n    \"ipc\": \"host\",\n    \"security_opt\": \"seccomp=unconfined\"\n  },\n  \"environment_variables\": [\n    \"DGXSYSTEM\",\n    \"CONT\",\n    \"NEXP\",\n    \"DATESTAMP\",\n    \"CLEAR_CACHES\",\n    \"MOUNTS\",\n    \"LOGDIR\",\n    \"DATADIR\",\n    \"DATASET_TYPE\"\n  ],\n  \"volumes\": [\n    \"/raid/datasets:/raid/datasets\",\n    \"/gpfs/fs1:/gpfs/fs1\",\n    \"${DATADIR}:/raid/datasets/criteo/mlperf/40m.limit_preshuffled/\",\n    \"${LOGDIR}:${LOGDIR}\",\n    \"$(pwd):/workspace/dlrm\"\n  ],\n  \"commands\": [\n    \"mkdir -p \\\"${LOGDIR}\\\"\",\n    \"source \\\"${_config_file}\\\"\",\n    \"docker run --rm --init --detach --gpus all --net=host --uts=host --ipc=host --security-opt=seccomp=unconfined --name=\\\"${_cont_name}\\\" \\\"${_cont_mounts[@]}\\\" \\\"${CONT}\\\" sleep infinity\",\n    \"docker exec -it \\\"${_cont_name}\\\" true\",\n    \"bash -c \\\"echo -n 'Clearing cache on ' && hostname && sync && sudo /sbin/sysctl vm.drop_caches=3\\\"\",\n    \"docker exec -it \\\"${_cont_name}\\\" python3 -c \\\"from mlperf_logging.mllog import constants; from mlperf_logger.utils import log_event; log_event(key=constants.CACHE_CLEAR, value=True)\\\"\",\n    \"docker exec -it ${_config_env[@]} ${_cont_name} bash ./run_and_time.sh\"\n  ]\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 2,
+                    "blocked": false
+                }
+            ],
+            "citation_metadata": {
+                "citation_sources": [
+                    {
+                        "start_index": 768,
+                        "end_index": 970,
+                        "uri": "https://github.com/mlcommons/training_results_v1.0",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 813,
+                        "end_index": 996,
+                        "uri": "https://github.com/wdykas/mlperf-nvidia",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 1006,
+                        "end_index": 1304,
+                        "uri": "https://github.com/lablup/mlperf",
+                        "license_": ""
+                    }
+                ]
+            },
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 718,
+        "candidates_token_count": 514,
+        "total_token_count": 1232,
+        "cached_content_token_count": 0
+    }
+}

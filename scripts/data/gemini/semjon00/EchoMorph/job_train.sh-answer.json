@@ -1,0 +1,32 @@
+{
+    "application": "slurm",
+    "details": {
+        "job_name": "train_echomorph",
+        "output_file": "logs/slurm-%x.%j.out",
+        "nodes": 1,
+        "tasks_per_node": 1,
+        "walltime": "50:10:00",
+        "memory": "16G",
+        "email": "semjon.00@gmail.com",
+        "partition": "gpu",
+        "gres": "gpu:tesla:1",
+        "excluded_nodes": "falcon2",
+        "python_version": "3.8.3-conda",
+        "conda_environment": "hypatia",
+        "conda_packages": [
+            "pytorch::pytorch-cuda",
+            "pytorch::torchaudio",
+            "conda-forge::einops",
+            "conda-forge::torchinfo",
+            "conda-forge::ffmpeg<7"
+        ],
+        "python_script": "training.py",
+        "script_arguments": {
+            "total_epochs": 2,
+            "batch_size": 32,
+            "learning_rate": 0.0001,
+            "save_time": 3600,
+            "no_random_degradation": true
+        }
+    }
+}

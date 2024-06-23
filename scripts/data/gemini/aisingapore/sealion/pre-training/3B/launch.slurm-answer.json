@@ -1,0 +1,48 @@
+{
+    "application": "SLURM",
+    "details": {
+        "job_name": "mpt-3b-30nodes_final",
+        "nodes": 30,
+        "tasks_per_node": 1,
+        "cpus_per_task": 96,
+        "gpus_per_node": 8,
+        "time": "1440:00:00",
+        "output_file": "log/%x-%j.log",
+        "software": [
+            "CUDA",
+            "EFA",
+            "NCCL",
+            "OpenMPI",
+            "AWS OFI NCCL",
+            "Composer/LLM Foundry",
+            "MosaicML",
+            "Python",
+            "Streaming"
+        ],
+        "resource_requirements": {
+            "AWS": {
+                "S3_BUCKET": "s3://${SLURM_CLUSTER_NAME}-common"
+            },
+            "filesystem": {
+                "TMPDIR": "/fsx/tmp",
+                "SHARED_FS_DIR": "/fsx",
+                "SHARED_OPT_DIR": "/fsx/opt",
+                "COMPOSER_UPLOAD_STAGING_FOLDER": "/fsx/staging",
+                "TRITON_CACHE_DIR": "/fsx/cache/triton"
+            },
+            "environment_variables": {
+                "TZ": "Asia/Singapore",
+                "AWS_OFI_DIR": "/fsx/opt/aws-ofi-nccl",
+                "CUDA_DIR": "/usr/local/cuda-11.8",
+                "EFA_DIR": "/opt/amazon/efa",
+                "NCCL_DIR": "/fsx/opt/nccl",
+                "OPENMPI_DIR": "/opt/amazon/openmpi",
+                "MLFLOW_CONCAT_RUN_ID": "a6eb8d92a8724603978e04177d8d8f64",
+                "LD_LIBRARY_PATH": "${NCCL_DIR}/build/lib:${CUDA_DIR}/lib64:${CUDA_DIR}:${EFA_DIR}/lib:${OPENMPI_DIR}/lib:${AWS_OFI_DIR}/lib${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}",
+                "FI_PROVIDER": "efa",
+                "FI_EFA_USE_DEVICE_RDMA": 1,
+                "NCCL_DEBUG": "INFO"
+            }
+        }
+    }
+}

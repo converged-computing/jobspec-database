@@ -1,0 +1,37 @@
+{
+    "application": "METAL",
+    "details": {
+        "environment": {
+            "system": "RHEL8",
+            "compiler": "Intel Compiler",
+            "samtools": "1.13"
+        },
+        "resources": {
+            "memory": "28800 MB",
+            "time": "12 hours",
+            "partition": "icelake-himem",
+            "account": "PETERS-SL3-CPU"
+        },
+        "script_logic": {
+            "input_files": [
+                "${caprion}/analysis/output/caprion${suffix}.varlist",
+                "${rt}/${phenoname}.metal",
+                "${rt}/${phenoname}-chrX.metal"
+            ],
+            "output_files": [
+                "${rt}/${phenoname}-1.tbl.log",
+                "${rt}/${phenoname}-1.tbl.gz",
+                "${rt}/${phenoname}-chrX-1.tbl.log",
+                "${rt}/${phenoname}-chrX-1.tbl.gz"
+            ],
+            "functions": [
+                "METAL_analysis_old",
+                "METAL_analysis"
+            ],
+            "dependencies": [
+                "bgzip",
+                "tabix"
+            ]
+        }
+    }
+}

@@ -1,0 +1,39 @@
+{
+    "application": "Dedalus",
+    "details": {
+        "slurm": {
+            "nodes": 1,
+            "tasks_per_node": 24,
+            "cpus_per_task": 1,
+            "constraints": "rome,ib",
+            "partition": "ccb",
+            "time": "01:00:00",
+            "job_name": "slurm_dedalus_examplerun1",
+            "output": "slurm_dedalus_examplerun1.log"
+        },
+        "modules": [
+            "modules/2.2-20230808",
+            "gcc/11",
+            "openmpi/4.0.7",
+            "python/3.10.10",
+            "fftw/mpi-3.3.10",
+            "dedalus/3.2302-dev-py3.10.10"
+        ],
+        "environment": {
+            "OMP_NUM_THREADS": "$SLURM_CPUS_PER_TASK"
+        },
+        "system_info": [
+            "lscpu",
+            "nvidia-smi",
+            "numactl -H"
+        ],
+        "execution": {
+            "mpirun": {
+                "map_by": "socket:pe=$OMP_NUM_THREADS",
+                "np": "$SLURM_NTASKS_PER_NODE",
+                "report_bindings": true,
+                "command": "python3 dedalus_examplefiber.py"
+            }
+        }
+    }
+}

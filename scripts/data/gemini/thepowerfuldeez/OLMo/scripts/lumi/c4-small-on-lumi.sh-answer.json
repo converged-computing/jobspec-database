@@ -1,0 +1,48 @@
+{
+    "application": "SLURM",
+    "details": {
+        "job_name": "c4-small",
+        "account": "project_462000229",
+        "output_path": "/pfs/lustref1/flash/project_462000229/logs/%j.log",
+        "nodes": 32,
+        "tasks_per_node": 8,
+        "gpus_per_node": 8,
+        "cpus_per_task": 6,
+        "time": "48:00:00",
+        "memory": "all",
+        "partition": "standard-g",
+        "modules": [
+            "LUMI/22.08",
+            "partition/G"
+        ],
+        "environment_variables": {
+            "OLMO_CONTAINER": "llm-lumi_latest.sif",
+            "OMP_NUM_THREADS": "$SLURM_CPUS_PER_TASK",
+            "MPICH_GPU_SUPPORT_ENABLED": 1,
+            "NCCL_SOCKET_IFNAME": "hsn",
+            "NCCL_NET_GDR_LEVEL": 3,
+            "MIOPEN_USER_DB_PATH": "/tmp/${USER}-miopen-cache-${SLURM_JOB_ID}",
+            "MIOPEN_CUSTOM_CACHE_DIR": "${MIOPEN_USER_DB_PATH}",
+            "CXI_FORK_SAFE": 1,
+            "CXI_FORK_SAFE_HP": 1,
+            "FI_CXI_DISABLE_CQ_HUGETLB": 1,
+            "FI_CXI_DEFAULT_CQ_SIZE": 131072,
+            "PYTHONPATH": ".:${PYTHONPATH}",
+            "ROCM_PATH": "/opt/rocm",
+            "SINGULARITYENV_LD_LIBRARY_PATH": "/usr/local/lib:/opt/cray/libfabric/1.15.2.0/lib64"
+        },
+        "singularity_image": "llm-lumi_latest.sif",
+        "python_script": "scripts/train.py",
+        "config_file": "configs/c4-small.yaml",
+        "run_name": "${SLURM_JOB_ID}",
+        "command_arguments": "${@}",
+        "mounted_volumes": [
+            "$PROJECT_DIR:$PROJECT_DIR",
+            "$SCRATCH_DIR:$SCRATCH_DIR",
+            "$FLASH_DIR:$FLASH_DIR",
+            "/opt/cray:/opt/cray",
+            "/usr/lib64/libcxi.so.1:/usr/lib64/libcxi.so.1",
+            "/usr/lib64/libjson-c.so.3:/usr/lib64/libjson-c.so.3"
+        ]
+    }
+}

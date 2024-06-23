@@ -1,0 +1,38 @@
+{
+    "application": "SLURM",
+    "details": {
+        "resource_requirements": {
+            "nodes": 2,
+            "cpus_per_task": 32,
+            "gpus_per_node": 8,
+            "shm_size": "16g",
+            "ulimit_memlock": "-1"
+        },
+        "environment_variables": {
+            "LOGLEVEL": "INFO",
+            "NVIDIA_VISIBLE_DEVICES": "all",
+            "NCCL_SOCKET_IFNAME": "ibp",
+            "NCCL_IB_HCA": "mlx5",
+            "NCCL_DEBUG": "INFO",
+            "NCCL_DEBUG_SUBSYS": "ALL",
+            "GPUS_PER_NODE": 8,
+            "MASTER_ADDR": "$head_node_ip",
+            "MASTER_PORT": 6000,
+            "NODE_RANK": "$SLURM_PROCID",
+            "NNODES": 2,
+            "CUDA_DEVICE_MAX_CONNECTIONS": 10,
+            "OMP_NUM_THREADS": 10
+        },
+        "docker_image": "registry-intl.cn-hongkong.aliyuncs.com/sixpublic/pytorch:23.10-py3",
+        "docker_command": "bash hkgai/launcher/scripts/pretrain/pretrain.sh",
+        "volumes": [
+            "$PROJECT_ROOT/Megatron-LM:/workspace/megatron",
+            "$PROJECT_ROOT/dataset:/workspace/dataset",
+            "/run/mellanox/drivers:/run/mellanox/drivers:shared",
+            "/etc/network:/etc/network",
+            "/etc:/host/etc",
+            "/lib/udev:/host/lib/udev",
+            "$PROJECT_ROOT/checkpoints:/workspace/checkpoints"
+        ]
+    }
+}

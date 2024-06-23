@@ -1,0 +1,25 @@
+{
+    "application": "SLURM",
+    "details": {
+        "job_script": "Generic job script for all experiments",
+        "resources": {
+            "cores": 2,
+            "memory": "16000 MB",
+            "time": "24 hours",
+            "libraries": [
+                "python/intel/2.7.12",
+                "pytorch/0.2.0_1",
+                "protobuf/intel/3.1.0"
+            ]
+        },
+        "model": {
+            "default": "spinn.models.supervised_classifier",
+            "override": "SPINNMODEL environment variable"
+        },
+        "execution": {
+            "command": "python -m $MODEL --noshow_progress_bar $SUB_FLAGS",
+            "flags": "SPINN_FLAGS environment variable",
+            "loop": "for each flag in SPINN_FLAGS"
+        }
+    }
+}

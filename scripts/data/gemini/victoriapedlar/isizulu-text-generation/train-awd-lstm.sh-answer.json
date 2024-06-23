@@ -1,0 +1,46 @@
+{
+    "application": "SLURM",
+    "details": {
+        "account": "nlpgroup",
+        "partition": "a100",
+        "nodes": 1,
+        "tasks": 4,
+        "gpus": "a100-4g-20gb:1",
+        "time": "48:00:00",
+        "job_name": "awdlstm",
+        "mail_user": "PDLVIC001@myuct.ac.za",
+        "mail_type": "ALL",
+        "modules": [
+            "python/anaconda-python-3.7",
+            "software/TensorFlow-A100-GPU"
+        ],
+        "python_script": "awd_lstm/main.py",
+        "arguments": {
+            "descriptive_name": "awd_lstm_combined",
+            "data": "data/combined/isizulu",
+            "save_history": "logs/awd_lstm/$(date +%Y-%m-%d_%H-%M-%S).txt",
+            "emsize": 800,
+            "nhid": 1150,
+            "nlayers": 3,
+            "lr": 30.0,
+            "clip": 0.25,
+            "epochs": 500,
+            "batch_size": 32,
+            "bptt": 70,
+            "dropout": 0.2,
+            "dropouth": 0.2,
+            "dropouti": 0.2,
+            "dropoute": 0.1,
+            "wdrop": 0.2,
+            "seed": 1882,
+            "patience": 3,
+            "nonmono": 8,
+            "cuda": true,
+            "when": [
+                40,
+                80,
+                120
+            ]
+        }
+    }
+}

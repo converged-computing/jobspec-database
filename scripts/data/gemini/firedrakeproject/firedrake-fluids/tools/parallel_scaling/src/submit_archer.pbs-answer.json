@@ -1,0 +1,42 @@
+{
+    "application": "PBS",
+    "details": {
+        "resource_requirements": {
+            "walltime": "24:00:00",
+            "nodes": "__NODES__",
+            "account": "n01-IC1",
+            "email": "c.jacobs10@imperial.ac.uk"
+        },
+        "software_requirements": {
+            "modules": [
+                "PrgEnv-gnu",
+                "anaconda",
+                "fdrake-build-env",
+                "numpy",
+                "spud"
+            ],
+            "environment_variables": {
+                "FDRAKE_DIR": "/work/y07/y07/fdrake",
+                "FIREDRAKE_FFC_KERNEL_CACHE_DIR": "$WORK/firedrake-cache",
+                "PYOP2_LAZY": 0,
+                "PYOP2_BACKEND_COMPILER": "gnu",
+                "PYOP2_CACHE_DIR": "$WORK/pyop2-cache",
+                "PYOP2_SIMD_ISA": "avx",
+                "HOME": "$WORK",
+                "XDG_CONFIG_HOME": "",
+                "FIREDRAKE_FLUIDS_PATH": "$WORK/firedrake-fluids-bitbucket/",
+                "PYTHONPATH": "$WORK/install_new/lib/python2.7/site-packages/:$PYTHONPATH",
+                "PETSC_ARCH": "cray-gnu-shared",
+                "PETSC_DIR": "$WORK/build_new/petsc",
+                "MPICH_NEMESIS_ASYNC_PROGRESS": "MC",
+                "MPICH_MAX_THREAD_SAFETY": "multiple",
+                "MPICH_CPUMASK_DISPLAY": 1,
+                "PYOP2_PRINT_SUMMARY": 1,
+                "PYOP2_NO_FORK_AVAILABLE": 1
+            }
+        },
+        "script_execution": {
+            "command": "aprun -n __PROCS__ -N __MAXPROCS__ python $FIREDRAKE_FLUIDS_PATH/firedrake_fluids/shallow_water.py $PBS_O_WORKDIR/$PROJECT | tee $LOGFILE"
+        }
+    }
+}

@@ -1,0 +1,42 @@
+{
+    "application": "SLURM",
+    "details": {
+        "resource_requirements": {
+            "nodes": 1,
+            "tasks": 1,
+            "cpus_per_task": 1,
+            "memory": "10G",
+            "gpu": "v100:1",
+            "time": "3:30:00"
+        },
+        "software_requirements": {
+            "modules": [
+                "tensorflow/2.2-hvd"
+            ],
+            "virtual_environments": [
+                "transformers3.4"
+            ],
+            "python_script": "predict_labels.py"
+        },
+        "other": {
+            "account": "Project_2002026",
+            "array_tasks": 4,
+            "output_directory": "output/$4/$5",
+            "log_files": [
+                "logs/current.err",
+                "logs/current.out"
+            ],
+            "model_alias": "xlmR",
+            "model": "jplu/tf-xlm-roberta-large",
+            "batch_size": 7,
+            "background_rate": 1.0,
+            "labels_file": "models/labels.txt",
+            "test_data_directory": "data/$4/$5",
+            "threshold": 0.5,
+            "sequence_length": 512,
+            "epochs": 0,
+            "test_log_file": "$3",
+            "save_predictions_directory": "output/$4/$5"
+        }
+    }
+}

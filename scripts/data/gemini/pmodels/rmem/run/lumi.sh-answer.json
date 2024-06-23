@@ -1,0 +1,52 @@
+{
+    "application": "MPI",
+    "details": {
+        "software": [
+            "libfabric",
+            "PrgEnv-gnu-amd",
+            "Cray PE-Accel AMD GFX90A",
+            "ROCm",
+            "MPI",
+            "libTree",
+            "HIP",
+            "CUDA",
+            "AddressSanitizer",
+            "ThreadSanitizer"
+        ],
+        "resources": {
+            "nodes": 2,
+            "tasks_per_node": 1,
+            "cpus_per_task": 16,
+            "gpus_per_task": 1,
+            "partition": "standard-g",
+            "time": "06:00:00",
+            "account": "project_465000723",
+            "scratch_dir": "/scratch/project_465000723/tgillis/rmem_${TAG}_${SLURM_JOBID}"
+        },
+        "environment_variables": [
+            "HIPCC_COMPILE_FLAGS_APPEND",
+            "HIPCC_LINK_FLAGS_APPEND",
+            "ASAN_OPTIONS",
+            "TSAN_OPTIONS",
+            "FI_HMEM_CUDA_USE_GDRCOPY",
+            "FI_CXI_OPTIMIZED_MRS",
+            "FI_LOG_LEVEL",
+            "FI_CXI_RDZV_THRESHOLD",
+            "HYDRA_TOPO_DEBUG",
+            "PMI_DIR",
+            "OFI_DIR",
+            "OFI_LIB",
+            "FI_CXI_DISABLE_NON_INJECT_MSG_IDC",
+            "USE_HIP",
+            "RMEM_OPT"
+        ],
+        "other": {
+            "mpi_options": "-n 2 -ppn 1 -l --bind-to core:2",
+            "make_targets": [
+                "info asan",
+                "info verbose",
+                "info fast"
+            ]
+        }
+    }
+}

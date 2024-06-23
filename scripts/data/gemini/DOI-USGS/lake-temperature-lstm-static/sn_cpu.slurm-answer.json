@@ -1,0 +1,31 @@
+{
+    "application": "Snakemake",
+    "details": {
+        "environment": {
+            "bashrc": "~/.bashrc",
+            "conda_env": "ltls",
+            "modules": [
+                "analytics cuda11.3/toolkit/11.3.0"
+            ]
+        },
+        "cluster_manager": "SLURM",
+        "resources": {
+            "account": "watertemp",
+            "partition": "cpu",
+            "time": "23:59:59",
+            "nodes": 1,
+            "tasks": 1,
+            "cpus_per_task": 1,
+            "output": "log/sbatch_all_%a_%A.out",
+            "error": "log/sbatch_all_%a_%A.out"
+        },
+        "snakemake_config": {
+            "cluster_config": "sbatch -A watertemp -t 01:59:59 -p cpu -N 1 -n 1 -c 1 --job-name=${data_source}_${run_id}_${model_id} -e ${log_dir}/slurm-%j.out -o ${log_dir}/slurm-%j.out",
+            "printshellcmds": true,
+            "keep_going": true,
+            "cores": "all",
+            "jobs": 8,
+            "rerun_incomplete": true
+        }
+    }
+}

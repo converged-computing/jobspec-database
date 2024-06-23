@@ -1,0 +1,40 @@
+{
+    "application": "Slurm",
+    "details": {
+        "job_name": "countGVCF",
+        "output_file": "/scratch/users/elliea/jazlyn-ellie/grayfox_2023/count.out",
+        "error_file": "/scratch/users/elliea/jazlyn-ellie/grayfox_2023/count.err",
+        "time_limit": "02:00:00",
+        "partition": "normal",
+        "tasks": 1,
+        "cpus_per_task": 1,
+        "memory_per_cpu": "500MB",
+        "mail_type": "END,FAIL",
+        "mail_user": "jaam@stanford.edu",
+        "commands": [
+            "zgrep -v \"#\"  chrom\"$f\"_allFoxes.rg.md.haplotypecaller.all.g.renameChroms.gvcf.gz | wc -l >> numSitesPrefilter.out",
+            "zgrep -v \"#\"  chrom\"$f\"_allFoxes.rg.md.haplotypecaller.all.g.renameChroms.mappabilityFilter.gvcf.gz | wc -l >> numSitesPostfilter.out",
+            "wc -l chrom\"$f\"_multiAllelic.txt >> numSitesMuliAllelicPostfilter.out",
+            "zgrep -v \"#\" chrom\"$f\"_allFoxes.rg.md.haplotypecaller.all.g.renameChroms.mappabilityFilter.AN.QUAL.DP.biallelic.gvcf.gz | wc -l >> numBiallelicSitesPostfilter.out",
+            "echo \"chrom $f\""
+        ],
+        "software": [
+            "zgrep",
+            "wc"
+        ],
+        "resources": {
+            "files": [
+                "chrom$f_allFoxes.rg.md.haplotypecaller.all.g.renameChroms.gvcf.gz",
+                "chrom$f_allFoxes.rg.md.haplotypecaller.all.g.renameChroms.mappabilityFilter.gvcf.gz",
+                "chrom$f_multiAllelic.txt",
+                "chrom$f_allFoxes.rg.md.haplotypecaller.all.g.renameChroms.mappabilityFilter.AN.QUAL.DP.biallelic.gvcf.gz"
+            ],
+            "output_files": [
+                "numSitesPrefilter.out",
+                "numSitesPostfilter.out",
+                "numSitesMuliAllelicPostfilter.out",
+                "numBiallelicSitesPostfilter.out"
+            ]
+        }
+    }
+}

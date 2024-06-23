@@ -1,0 +1,31 @@
+{
+    "application": "SLURM",
+    "details": {
+        "job_name": "train",
+        "partition": "gpu",
+        "qos": "gpu",
+        "nodes": 1,
+        "tasks_per_node": 2,
+        "time": "08:00:00",
+        "modules": [
+            "/sw/BASE/env/2017Q1-gcc-openmpi",
+            "/sw/BASE/env/cuda-8.0.44_system-gcc"
+        ],
+        "environment_variables": {
+            "PARAMETER_SET": 42,
+            "CUDA_VISIBLE_DEVICES": "$SLURM_PROCID",
+            "LD_LIBRARY_PATH": "/sw/compiler/cuda-8.0.44/lib64:$HOME/cuda/lib64/"
+        },
+        "commands": [
+            "nvidia-smi",
+            "echo \"process $SLURM_PROCID \\n(out of $SLURM_NPROCS total) on $(hostname -s) \\nparameter set $PARAMETER_SET\"",
+            "python3 $WORK/VoiceClassification/train.py --steps 100 --samples 3000"
+        ],
+        "libraries": [
+            "python3"
+        ],
+        "files": [
+            "$WORK/VoiceClassification/train.py"
+        ]
+    }
+}

@@ -1,0 +1,37 @@
+{
+    "application": "wandb",
+    "details": {
+        "framework": "docker",
+        "resources": {
+            "cpu": 40,
+            "memory": "400GB",
+            "gpu": 1,
+            "storage": {
+                "data_cache": "/data/$USER/data_cache/cfq",
+                "home": "/home/user/.netrc",
+                "hugepages": "/dev/hugepages"
+            }
+        },
+        "environment": {
+            "pythonpath": "/app",
+            "data_dir": "data/cfq"
+        },
+        "dependencies": {
+            "cfq": "built from local context"
+        },
+        "execution": {
+            "slurm": {
+                "job_name": "cfq_wandb",
+                "output": "/home/eecs/paras/slurm/%j",
+                "time": "125:00:00",
+                "exclude": "atlas,blaze,r16,freddie"
+            },
+            "wandb": {
+                "agent": {
+                    "count": "$NJOBS",
+                    "sweep_id": "$SWEEPID"
+                }
+            }
+        }
+    }
+}

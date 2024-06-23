@@ -1,0 +1,29 @@
+{
+    "application": "SLURM",
+    "details": {
+        "job_name": "lwz_nerf_gpujob",
+        "project": "OZTIRELI-SL3-GPU",
+        "nodes": 1,
+        "tasks": 1,
+        "gpus_per_node": 4,
+        "wallclock_time": "03:00:00",
+        "email_type": "ALL",
+        "queue": "ampere",
+        "environment": {
+            "modules": [
+                "rhel8/default-amp",
+                "cuda/11.1",
+                "miniconda/3",
+                "d2nerf"
+            ],
+            "conda_env": "d2nerf",
+            "OMP_NUM_THREADS": 1
+        },
+        "application_path": "python train.py",
+        "application_options": "--base_folder $LOG_PATH --gin_bindings=\"data_dir='$DATA_PATH'\" --gin_configs $CONFIG_PATH",
+        "work_directory": "/home/wl301/rds/hpc-work/d2nerf",
+        "data_directory": "./data/$DATA/",
+        "log_directory": "log/$DATA/test_stability_v1",
+        "config_path": "configs/decompose/train.gin"
+    }
+}

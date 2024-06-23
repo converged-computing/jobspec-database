@@ -1,0 +1,39 @@
+{
+    "application": "SLURM",
+    "details": {
+        "software": [
+            "Singularity",
+            "Torchrun",
+            "NCCL",
+            "DeepSpeed",
+            "Megatron-LM",
+            "GPT-2",
+            "SentencePiece"
+        ],
+        "resources": {
+            "compute": {
+                "nodes": 2,
+                "cores_per_node": 80,
+                "gpus_per_node": 8,
+                "gpu_type": "H800"
+            },
+            "storage": {
+                "workspace": "/workspace/code/Megatron-DeepSpeed-llama-20230815",
+                "data": [
+                    "/data/hpc/home/guodong.li/workspace:/workspace:rw",
+                    "/workspace/data/gpt2-data/my-gpt2_text_document",
+                    "/workspace/data/gpt2-data/my-gpt2-1_text_document"
+                ],
+                "model": "/workspace/model/llama-tokenizer/tokenizer.model"
+            },
+            "network": {
+                "communication": "Infiniband",
+                "backend": "NCCL"
+            },
+            "other": {
+                "slurm_partition": "h800-ib-2",
+                "deepspeed_config": "./tmp/deepspeed.json"
+            }
+        }
+    }
+}

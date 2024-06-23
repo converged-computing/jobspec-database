@@ -1,0 +1,33 @@
+{
+    "application": "SLURM",
+    "details": {
+        "scheduler": "SLURM",
+        "partition": "skylake",
+        "account": "PLANCK-SL2-CPU",
+        "nodes": "##NUMNODES##",
+        "tasks": "##NUMTASKS##",
+        "walltime": "##WALLTIME##",
+        "mail_type": "FAIL",
+        "cpus_per_task": "##OMP##",
+        "modules": [
+            "rhel7/default-peta4",
+            "intel/bundles/complib/2018.1"
+        ],
+        "optional_modules": [
+            "cfitsio",
+            "python/2.7.14"
+        ],
+        "environment_variables": [
+            "OMP_NUM_THREADS=##OMP##",
+            "I_MPI_PIN=##ONERUN##",
+            "NODEFILE=`generate_pbs_nodefile`",
+            "JOBID=$SLURM_JOB_ID"
+        ],
+        "command": "mpirun --ppn ##MPIPERNODE## -np ##NUMMPI## ##PROGRAM## ##INI## > ./scripts/##INIBASE##.log 2>&1",
+        "default_values": {
+            "qsub": "qsub",
+            "coresPerNode": 16,
+            "chainsPerNode": 4
+        }
+    }
+}

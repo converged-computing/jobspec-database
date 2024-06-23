@@ -1,0 +1,77 @@
+{
+    "application": "Slurm",
+    "details": {
+        "resource_requirements": {
+            "constraint": "volta32gb",
+            "cpus_per_task": 10,
+            "error_file": "/checkpoint/%u/jobs/%j.err",
+            "gres": "gpu:8",
+            "job_name": "GDT-AV",
+            "mem": "450GB",
+            "nodes": 2,
+            "ntasks_per_node": 8,
+            "open_mode": "append",
+            "output_file": "/checkpoint/%u/jobs/%j.out",
+            "partition": "learnfair",
+            "signal": "USR1@120",
+            "time": "72:00:00"
+        },
+        "software_requirements": {
+            "modules": [
+                "anaconda3"
+            ],
+            "conda_environment": "GDT",
+            "python_script": "main_gdt.py"
+        },
+        "network_requirements": {
+            "master_address": "${SLURM_NODELIST:0:9}${SLURM_NODELIST:10:4}",
+            "master_port": "19500",
+            "nccl_debug": "INFO",
+            "python_faulthandler": "1",
+            "nccl_socket_ifname": "^docker0,lo"
+        },
+        "other_parameters": {
+            "hypothesis": "${HYP}",
+            "output_dir": "${SAV_FOLDER}",
+            "dataset": "kinetics",
+            "batch_size": 8,
+            "epochs": 201,
+            "lr": 0.01,
+            "momentum": 0.9,
+            "weight_decay": 1e-05,
+            "use_scheduler": "True",
+            "scheduler_type": "multi_step",
+            "lr_gamma": 0.1,
+            "lr_warmup_epochs": 10,
+            "lr_milestones": "251",
+            "warmup_bn": "False",
+            "sync_bn": "True",
+            "model": "av_gdt",
+            "vid_base_arch": "r2plus1d_18",
+            "aud_base_arch": "resnet9",
+            "pretrained": "False",
+            "mlptype": 0,
+            "augtype": 1,
+            "target_fps": 30,
+            "clip_len": 30,
+            "train_crop_size": 112,
+            "sample_rate": 1,
+            "clips_per_video": 1,
+            "workers": 10,
+            "nce_t": 0.07,
+            "use_mlp": "True",
+            "aug_audio": "True",
+            "headcount": 1,
+            "audio_augtype": "medium",
+            "colorjitter": "False",
+            "num_negatives": -1,
+            "dualdata": "True",
+            "aud_sample_rate": 24000,
+            "aud_spec_type": 1,
+            "use_volume_jittering": "True",
+            "use_temporal_jittering": "False",
+            "num_sec": 1,
+            "z_normalize": "True"
+        }
+    }
+}

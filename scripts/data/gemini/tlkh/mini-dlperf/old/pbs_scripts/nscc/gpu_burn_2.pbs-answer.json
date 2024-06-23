@@ -1,0 +1,31 @@
+{
+    "application": "PBS",
+    "details": {
+        "resource_requirements": {
+            "nodes": 1,
+            "cpus": 10,
+            "gpus": 2,
+            "walltime": "2:00:00",
+            "queue": "dgx"
+        },
+        "software": {
+            "docker_image": "nvcr.io/nvidia/tensorflow:20.02-tf2-py3",
+            "commands": [
+                "nvidia-smi",
+                "git pull",
+                "ls",
+                "bash setup.sh",
+                "python3 gpu_burn.py --num_gpus 2 --stats",
+                "python3 gpu_burn.py --num_gpus 2"
+            ]
+        },
+        "environment_variables": {
+            "HOME": "/home/users/sutd/1002653",
+            "TFDS_DIR": "/scratch/users/sutd/1002653/tensorflow_datasets"
+        },
+        "output_files": {
+            "stdout": "stdout.$PBS_JOBID",
+            "stderr": "stderr.$PBS_JOBID"
+        }
+    }
+}

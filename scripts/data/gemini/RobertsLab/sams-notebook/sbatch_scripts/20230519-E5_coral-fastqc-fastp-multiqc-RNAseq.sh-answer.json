@@ -1,0 +1,42 @@
+{
+    "application": "Slurm",
+    "other_software": [
+        "FastQC",
+        "fastp",
+        "MultiQC",
+        "rsync",
+        "md5sum"
+    ],
+    "resource_requirements": {
+        "nodes": 1,
+        "memory": "120G",
+        "walltime": "2-00:00:00",
+        "partition": "srlab",
+        "account": "srlab",
+        "email_notification": "ALL",
+        "email_address": "samwhite@uw.edu"
+    },
+    "modules": [
+        "intel-python3_2017"
+    ],
+    "input_files": [
+        "*.fastq.gz"
+    ],
+    "output_files": [
+        "trimmed_fastq_checksums.md5",
+        "input_fastq_checksums.md5",
+        "*.fastp-trim*.fastq.gz",
+        "*.fastp-trim*.report.json",
+        "*.fastp-trim*.report.html",
+        "multiqc_config.yaml",
+        "system_path.log",
+        "program_options.log"
+    ],
+    "input_directories": [
+        "/gscratch/srlab/sam/data"
+    ],
+    "output_directories": [
+        "/gscratch/scrubbed/samwhite/outputs/20230519-E5_coral-fastqc-fastp-multiqc-RNAseq"
+    ],
+    "script_description": "This script performs FastQC quality control analysis on raw RNA-seq reads, followed by trimming with fastp, generating a new set of trimmed reads. Finally, it runs FastQC on the trimmed reads and generates a comprehensive MultiQC report for both raw and trimmed data sets. The script takes advantage of Slurm to manage the resources for the task, and utilizes various tools and libraries like FastQC, fastp, MultiQC, and rsync for processing and analyzing the data."
+}

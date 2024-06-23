@@ -1,0 +1,36 @@
+{
+    "application": "SLURM",
+    "details": {
+        "job_name": "TR-for",
+        "partition": "kshdexclu04",
+        "requeue": "disabled",
+        "exclusive": "enabled",
+        "memory": "0",
+        "gpu_type": "dcu",
+        "gpu_count": 4,
+        "node_count": 4,
+        "output_file": "./log/$SLURM_JOB_ID/j.o",
+        "error_file": "./log/$SLURM_JOB_ID/j.e",
+        "conda_env": "TRCV",
+        "compiler": "devtoolset/7.3.1",
+        "mpi": "hpcx/2.11.0/gcc-7.3.1",
+        "rocm": "dtk-23.04",
+        "torchrun_args": {
+            "nnodes": "${SLURM_NNODES}",
+            "nproc_per_node": 4,
+            "node_rank": "$NODE_RANK",
+            "rdzv_id": "$RANDOM",
+            "rdzv_backend": "c10d",
+            "rdzv_endpoint": "$head_node_ip:29500",
+            "script": "main.py",
+            "deepspeed": "enabled",
+            "deepspeed_config": "ds_config.json"
+        },
+        "environment_variables": {
+            "NCCL_IB_HCA": "mlx5_0",
+            "NCCL_SOCKET_IFNAME": "ib0",
+            "HSA_FORCE_FINE_GRAIN_PCIE": 1,
+            "OMP_NUM_THREADS": 1
+        }
+    }
+}

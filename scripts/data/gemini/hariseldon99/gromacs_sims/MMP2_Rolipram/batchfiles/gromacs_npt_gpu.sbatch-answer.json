@@ -1,0 +1,35 @@
+{
+    "application": "Gromacs",
+    "details": {
+        "software": [
+            "Gromacs",
+            "Singularity"
+        ],
+        "resources": {
+            "compute": {
+                "nodes": 1,
+                "cores": 24,
+                "threads_per_core": 2
+            },
+            "gpu": {
+                "type": "GPU",
+                "count": 1
+            },
+            "storage": {
+                "shared_filesystem": true,
+                "scratch_disk": false,
+                "singularity_image": "/${SIFDIR}/gromacs/gromacs-2022.3_20230206.sif"
+            }
+        },
+        "environment": {
+            "variables": {
+                "GMX_IMGDIR": "/${SIFDIR}/gromacs/",
+                "GMX_IMG": "gromacs-2022.3_20230206.sif",
+                "GMX_ENABLE_DIRECT_GPU_COMM": "1",
+                "OMP_NUM_THREADS": "$SLURM_NTASKS",
+                "MPI_NUM_PROCS": "$SLURM_CPUS_PER_TASK",
+                "NVT": "npt"
+            }
+        }
+    }
+}

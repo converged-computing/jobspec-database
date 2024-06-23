@@ -1,0 +1,42 @@
+{
+    "application": "Slurm",
+    "details": {
+        "job_name": "mup_sweep",
+        "tasks": 1,
+        "time": "04:00:00",
+        "memory": "16G",
+        "gpus": "2x rtx8000",
+        "tasks_per_node": 1,
+        "cpus_per_task": 4,
+        "array_size": 21,
+        "output_file": "/network/scratch/n/normandf/mup/logs/slurm-%A_%a.out",
+        "error_file": "/network/scratch/n/normandf/mup/logs/slurm-%A_%a.err",
+        "modules": [
+            "miniconda/3"
+        ],
+        "conda_env": "$SCRATCH/conda/mup",
+        "experiment_name": "gpt2_wikitext103_long_deeper",
+        "sweep_tool": "orion",
+        "sweep_config": "sweep_config.yaml",
+        "sweep_max_broken": 999,
+        "sweep_max_trials": 1000,
+        "sweep_working_dir": "runs/$EXP_NAME",
+        "sweep_idle_timeout": 300,
+        "sweep_reservation_timeout": 300,
+        "training_script": "./train.sh",
+        "training_output_dir": "{exp.working_dir}/{trial.id}",
+        "training_run_name": "{exp.name}-{trial.id}",
+        "dataset_name": "wikitext",
+        "dataset_config_name": "wikitext-103-raw-v1",
+        "train_batch_size": 20,
+        "auto_find_batch_size": false,
+        "learning_rate": "loguniform(1e-4,1e-2,default_value=5e-04)",
+        "embedding_size": "choices(128,256,512,1024,2048,4096)",
+        "attention_heads": 8,
+        "layers": 4,
+        "lr_scheduler": "constant",
+        "epochs": 10,
+        "block_size": 256,
+        "save_steps": 5000
+    }
+}

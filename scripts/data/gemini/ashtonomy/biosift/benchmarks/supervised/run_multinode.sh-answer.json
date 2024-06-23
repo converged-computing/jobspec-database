@@ -1,0 +1,36 @@
+{
+    "application": "Deep Learning",
+    "software": [
+        "CUDA",
+        "NCCL",
+        "OpenMPI",
+        "Anaconda3",
+        "WandB",
+        "BioSift",
+        "Raytune"
+    ],
+    "resources": {
+        "nodes": 2,
+        "cpus_per_node": 30,
+        "gpus_per_node": 2,
+        "gpu_model": "a100",
+        "memory": "200GB",
+        "walltime": "72:00:00"
+    },
+    "environment": {
+        "conda_env": "/scratch/taw2/conda_envs/biosift_env",
+        "dataset": "/scratch/taw2/biosift/dataset/hf_datasets/binary_dataset/",
+        "output_directory": "${PBS_O_WORKDIR}/output/${model_name////_}_${timestamp}"
+    },
+    "framework": "PyTorch",
+    "model": "BERT",
+    "training_parameters": {
+        "batch_size": "calculated based on total processes",
+        "learning_rate": "obtained from hyperparameter tuning",
+        "weight_decay": "obtained from hyperparameter tuning",
+        "epochs": 5,
+        "evaluation_strategy": "epoch",
+        "save_strategy": "epoch",
+        "load_best_model_at_end": true
+    }
+}

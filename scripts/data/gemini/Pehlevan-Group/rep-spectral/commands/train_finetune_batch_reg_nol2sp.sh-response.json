@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n\"application\": \"Slurm\",\n\"software\": [\n\"conda\",\n\"python\",\n\"src/train_reg_finetune.py\",\n\"src/eval_black_box_robustness_finetune.py\"\n],\n\"resources\": {\n\"nodes\": 1,\n\"tasks_per_node\": 1,\n\"gpus_per_node\": 1,\n\"cpus_per_task\": 2,\n\"time\": \"1-12:00\",\n\"memory\": \"320GB\"\n},\n\"environment\": {\n\"conda_env\": \"curvature\"\n},\n\"parameters\": {\n\"model\": \"50\",\n\"batchsize\": 64,\n\"seed\": \"SLURM_ARRAY_TASK_ID % 5 + 400\",\n\"alpha\": 0.1,\n\"lam\": \"0.01 if SLURM_ARRAY_TASK_ID / 5 % 2 == 0 else 0.001\",\n\"reg\": \"bss if SLURM_ARRAY_TASK_ID / 10 % 3 == 0 else spectral if SLURM_ARRAY_TASK_ID / 10 % 3 == 1 else eig-ub\",\n\"tag\": \"transfer_cifar10_resize_custom if SLURM_ARRAY_TASK_ID / 30 % 3 == 0 else transfer_cifar10_resize_custom_reg0.01 if SLURM_ARRAY_TASK_ID / 30 % 3 == 1 else transfer_cifar10_resize_custom_reg0.001\",\n\"data\": \"dog if SLURM_ARRAY_TASK_ID / 5 % 3 == 0 else flower if SLURM_ARRAY_TASK_ID / 5 % 3 == 1 else indoor\",\n\"epochs\": \"50 if SLURM_ARRAY_TASK_ID / 5 % 3 == 0 else 1000 if SLURM_ARRAY_TASK_ID / 5 % 3 == 1 else 100\",\n\"lr\": \"0.005 if SLURM_ARRAY_TASK_ID / 5 % 3 == 0 or SLURM_ARRAY_TASK_ID / 5 % 3 == 1 else 0.01\",\n\"log_epoch\": \"10 if SLURM_ARRAY_TASK_ID / 5 % 3 == 0 or SLURM_ARRAY_TASK_ID / 5 % 3 == 2 else 100\",\n\"log_model\": \"25 if SLURM_ARRAY_TASK_ID / 5 % 3 == 0 or SLURM_ARRAY_TASK_ID / 5 % 3 == 1 else 50\",\n\"burnin\": \"0 if SLURM_ARRAY_TASK_ID / 10 % 3 == 0 else 30\",\n\"train_modifier\": \"reg-freq-update 1 if SLURM_ARRAY_TASK_ID / 10 % 3 == 0 else reg-freq-update 160 --iterative if SLURM_ARRAY_TASK_ID / 10 % 3 == 1 or SLURM_ARRAY_TASK_ID / 10 % 3 == 2\",\n\"model_path\": \"'/n/pehlevan_lab/Users/shengy/geometry/GeomNet/model/pretrain/imagenet1k_m50_bs128_lr0.02_optSGD_wd0.0001_mom0.9_nlReLU_regNone_e120_seed0/model_e120.pt' if SLURM_ARRAY_TASK_ID / 30 % 3 == 0 else '/n/pehlevan_lab/Users/shengy/geometry/GeomNet/model/pretrain/imagenet1k_m50_bs128_lr0.02_optSGD_wd0.0001_mom0.9_nlReLU_lam0.01_reg['eig-ub']_e120_b80_seed0_rf1_ru80/model_e120.pt' if SLURM_ARRAY_TASK_ID / 30 % 3 == 1 else '/n/pehlevan_lab/Users/shengy/geometry/GeomNet/model/pretrain/imagenet1k_m50_bs128_lr0.02_optSGD_wd0.0001_mom0.9_nlReLU_lam0.001_reg['eig-ub']_e120_b80_seed0_rf1_ru80/model_e120.pt'\",\n\"wd\": \"1e-4\",\n\"eval_epoch\": \"epochs\"\n}\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 1599,
+        "candidates_token_count": 1134,
+        "total_token_count": 2733,
+        "cached_content_token_count": 0
+    }
+}

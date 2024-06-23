@@ -1,0 +1,28 @@
+{
+    "application": "Dask",
+    "details": {
+        "environment": {
+            "module purge": "Removes all modules still loaded",
+            "python setup": ". $HOME/alaska-venv/bin/activate",
+            "PYTHONPATH": "export PYTHONPATH=$PYTHONPATH:$ARL",
+            "scheduler location": "export ARL_DASK_SCHEDULER=${scheduler}:8786"
+        },
+        "resources": {
+            "nodes": 12,
+            "tasks": 29,
+            "memory": "50GB per worker",
+            "wallclock time": "23:59:59",
+            "email": {
+                "type": "FAIL,END",
+                "address": "realtimcornwell@gmail.com"
+            },
+            "partition": "compute",
+            "local directory": "/mnt/storage-ssd/tim/dask-workspace/${host}"
+        },
+        "commands": {
+            "dask-scheduler": "dask-scheduler --port=8786",
+            "dask-worker": "dask-worker --interface ib0 --nprocs 2 --nthreads 4 --memory-limit 50GB --local-directory /mnt/storage-ssd/tim/dask-workspace/${host} $scheduler:8786",
+            "python script": "python ../../../surface_simulation_elevation.py --context s3sky --rmax 1e5 --flux_limit 0.003 --show True --elevation_sampling 1.0 --declination -30 --seed 18051955 --band B2 --pbtype MID_FEKO_B2 --memory 32 --integration_time 30 --use_agg True --time_chunk 30 --time_range -6 6 --shared_directory /mnt/storage-ssd/tim/Code/sim-mid-surface/shared --vp_directory /mnt/storage-ssd/tim/Code/sim-mid-surface/beams/interpolated/ | tee surface_simulation.log"
+        }
+    }
+}

@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"Torque\",\n  \"details\": {\n    \"software\": [\n      \"fsl/6.0.2\",\n      \"singularity/3.8.5\",\n      \"python\",\n      \"tedana-single.py\",\n      \"torque-launch\"\n    ],\n    \"resource_requirements\": {\n      \"walltime\": \"12:00:00\",\n      \"nodes\": \"12\",\n      \"ppn\": \"7\",\n      \"memory\": \"unknown\"\n    }\n  }\n}\n```\n\n**Explanation:**\n\n* **Application:** The script utilizes the **Torque** workload manager to submit and manage the execution of the tasks.\n* **Software:** \n    * **fsl/6.0.2:**  The script utilizes the FSL (FMRIB Software Library) version 6.0.2 for neuroimaging processing. \n    * **singularity/3.8.5:** This indicates that Singularity, a containerization tool, version 3.8.5 is used. It's likely that the `tedana-single.py` script runs inside a Singularity container.\n    * **python:** The `tedana-single.py` script is written in Python.\n    * **tedana-single.py:** This is a custom script, likely part of the tedana (Temporal Dynamics Analysis) workflow.\n    * **torque-launch:** This is a command-line tool used to execute tasks within the Torque environment.\n* **Resource Requirements:**\n    * **walltime:** The job is allowed to run for a maximum of 12 hours (12:00:00).\n    * **nodes:** The job requires 12 compute nodes.\n    * **ppn:** Each node is assigned 7 processors (ppn = processors per node).\n    * **memory:**  The script doesn't explicitly specify memory requirements. You might need to check the `tedana-single.py` script or consider setting a memory limit using the `-l mem=` flag in the PBS header.\n\n**Script Breakdown:**\n\nThe script appears to process fMRI data using the tedana workflow. \n\n* It loads the necessary modules (fsl and singularity).\n* It sets up directories for the project and logs.\n* It loops through subjects, tasks, and runs, constructing commands for running `tedana-single.py`.\n* These commands are stored in a file `cmd_tedana_${PBS_JOBID}.txt`.\n* The script then uses `torque-launch` to submit these commands to the Torque system for execution.\n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 546,
+        "candidates_token_count": 576,
+        "total_token_count": 1122,
+        "cached_content_token_count": 0
+    }
+}

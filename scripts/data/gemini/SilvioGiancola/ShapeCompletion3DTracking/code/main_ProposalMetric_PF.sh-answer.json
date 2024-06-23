@@ -1,0 +1,47 @@
+{
+    "application": "SLURM",
+    "details": {
+        "job_name": "Prop_PF",
+        "array_tasks": [
+            1,
+            10,
+            20,
+            40,
+            60,
+            80,
+            100,
+            120,
+            140,
+            160
+        ],
+        "output_file": "%x.%3a.%A.out",
+        "error_file": "%x.%3a.%A.err",
+        "walltime": "100:00:00",
+        "gpu": true,
+        "cpus_per_task": 9,
+        "memory": "40G",
+        "reservation": "IVUL",
+        "conda_environment": "ShapeCompletion3DTracking",
+        "conda_packages": [
+            "python",
+            "tqdm",
+            "numpy",
+            "pandas",
+            "shapely",
+            "matplotlib",
+            "pomegranate",
+            "pytorch=0.4.1",
+            "cuda90",
+            "pyquaternion"
+        ],
+        "python_script": "main.py",
+        "script_arguments": [
+            "--test_model",
+            "--model_name=Ours",
+            "--dataset_path=/ibex/projects/c2006/KITTI/tracking/training/",
+            "--search_space=Particle",
+            "--reference_BB=previous_result",
+            "--number_candidate=$SLURM_ARRAY_TASK_ID"
+        ]
+    }
+}

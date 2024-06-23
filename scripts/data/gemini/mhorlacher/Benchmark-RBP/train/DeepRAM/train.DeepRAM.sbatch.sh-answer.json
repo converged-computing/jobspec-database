@@ -1,0 +1,34 @@
+{
+    "application": "Snakemake",
+    "details": {
+        "environment": "conda",
+        "conda_environment": "deepram",
+        "python_script": "deepRAM/deepRAM.py",
+        "script_arguments": [
+            "--data_type DNA",
+            "--train True",
+            "--train_data $1",
+            "--test_data $2",
+            "--model_path $3",
+            "--word2vec_model $4",
+            "--Embedding True",
+            "--Conv True",
+            "--conv_layers 1",
+            "--RNN True",
+            "--RNN_type BiLSTM"
+        ],
+        "slurm_parameters": {
+            "output_file": "logs/%j.job",
+            "error_file": "logs/%j.job",
+            "job_name": "DeepRAM-snakemake",
+            "excluded_nodes": "supergpu02pxe,supergpu03pxe,supergpu05,supergpu07,supergpu08",
+            "partition": "gpu_p",
+            "gres": "gpu:1",
+            "qos": "gpu",
+            "cpus_per_task": 4,
+            "memory": "15G",
+            "time": "24:00:00",
+            "nice_value": 10000
+        }
+    }
+}

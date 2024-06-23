@@ -1,0 +1,62 @@
+{
+    "application": "PyTorch",
+    "details": {
+        "resource_requirements": {
+            "nodes": 2,
+            "tasks_per_node": 1,
+            "gpus": "volta:1",
+            "cpus_per_task": 12
+        },
+        "modules": {
+            "anaconda": "2021a",
+            "mpi": "openmpi-4.1.1"
+        },
+        "environment_variables": {
+            "MPI_FLAGS": "--tag-output --bind-to socket -map-by core -mca btl ^openib -mca pml ob1 -x PSM2_GPUDIRECT=1 -x NCCL_NET_GDR_LEVEL=5 -x NCCL_P2P_LEVEL=5 -x NCCL_NET_GDR_READ=1",
+            "NCCL_IB_DISABLE": 1,
+            "NCCL_DEBUG": "INFO",
+            "MASTER_ADDR": "hostname -s",
+            "MASTER_PORT": "python -c 'import socket; s=socket.socket(); s.bind((\"\", 0)); print(s.getsockname()[1]); s.close()'"
+        },
+        "script_arguments": {
+            "rank": "0",
+            "nnodes": "2",
+            "port": "52111",
+            "addr": "d-10-10-1",
+            "pretrained": " ss",
+            "num_user": "40",
+            "frac": "0.25",
+            "local_ep": "3",
+            "skew": "0",
+            "total_ep": "100"
+        },
+        "python_script": "src/decentralized_ssl_main.py",
+        "script_arguments_passed_to_python": [
+            "--distributed_training",
+            "--model=resnet",
+            "--dataset=imagenet100ssl",
+            "--gpu=0",
+            "--iid=1",
+            "--batch_size=256",
+            "--local_bs 256",
+            "--local_ep ${local_ep}",
+            "--epochs=${total_ep}",
+            "--log_file_name \"imagenet100_ssl\"",
+            "--average_without_bn",
+            "--lr 0.005",
+            "--optimizer adam",
+            "--full_size",
+            "--backbone resnet18",
+            "--batch_size 256",
+            "--num_users ${num_user}",
+            "--frac ${frac}",
+            "--model_continue_training 1",
+            "--y_partition_skew",
+            "--y_partition_ratio ${skew}",
+            "--log_directory \"imagenet100_scripts\"",
+            "--load_pretrained_path ${pretrained}",
+            "--script_name \"${0} ${1} ${2} ${3} ${4} ${5} ${6} ${7} ${8} ${9} ${10}\"",
+            "--load_dataset_to_memory"
+        ]
+    }
+}

@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n\"application\": \"SLURM\",\n\"details\": {\n\"software\": [\n\"GNU Parallel\",\n\"Singularity\",\n\"wb_command\"\n],\n\"resource_requirements\": {\n\"nodes\": 1,\n\"tasks\": 80,\n\"time\": \"00:30:00\",\n\"environment_variables\": [\n\"BASEDIR\",\n\"SLURM_SUBMIT_DIR\",\n\"parcellation_dir\",\n\"dlabel_file\",\n\"atlas\",\n\"SLURM_TMPDIR\",\n\"BIDS_DIR\",\n\"SING_CONTAINER\",\n\"DERIVED_DIR\",\n\"ciftify_folder\",\n\"ALL_DTSERIES\",\n\"SUB_SIZE\",\n\"SLURM_ARRAY_TASK_ID\",\n\"THESE_DTSERIES\"\n],\n\"output_files\": [\n\"logs/cifti_parcellate_%j.txt\",\n\"parcellated/${atlas}/ptseries/${sub}/${ses}/func/${sub}_${ses_}${task}_${atlas}_desc-cleaneds0_bold.ptseries.nii\",\n\"parcellated/${atlas}/csv/${sub}/${ses}/func/${sub}_${ses_}${task}_${atlas}_desc-cleaneds0_meants.csv\"\n]\n}\n}\n```\n\n**Explanation:**\n\n* **Application:** The script is designed to run on a **SLURM** (Simple Linux Utility for Resource Management) cluster.\n* **Software:** \n    * **GNU Parallel:** Used to parallelize the execution of the `run_parcellation` function across multiple subjects.\n    * **Singularity:** A container technology used to run the `wb_command` tools from the `fmriprep_ciftity` container.\n    * **wb_command:**  A command-line tool from the `Connectome Workbench` software suite, used for working with CIFTI files.\n* **Resource Requirements:**\n    * **Nodes:** 1 (The script requires a single compute node).\n    * **Tasks:** 80 (The script needs 80 parallel tasks).\n    * **Time:** 00:30:00 (The script is allocated 30 minutes of runtime).\n    * **Environment Variables:** The script relies on various environment variables to configure the execution environment, including:\n        * **BASEDIR:** The base directory for the project.\n        * **SLURM_SUBMIT_DIR:** The directory where the script was submitted.\n        * **parcellation_dir:** The directory containing the parcellation atlas.\n        * **dlabel_file:** The path to the dlabel file (parcellation atlas).\n        * **atlas:** The name of the parcellation atlas.\n        * **SLURM_TMPDIR:** The temporary directory on the compute node.\n        * **BIDS_DIR:** The directory containing the BIDS formatted data.\n        * **SING_CONTAINER:** The path to the Singularity container image.\n        * **DERIVED_DIR:** The directory for storing derived data.\n        * **ciftify_folder:** The directory containing the CIFTI files.\n        * **ALL_DTSERIES:** A list of all the dtseries files.\n        * **SUB_SIZE:** The number of subjects to run per task.\n        * **SLURM_ARRAY_TASK_ID:** The index of the current task in the array.\n        * **THESE_DTSERIES:** A subset of `ALL_DTSERIES` for the current task.\n    * **Output Files:** The script generates output files in the following locations:\n        * **logs/cifti_parcellate_%j.txt:** Standard output and error logs for each task.\n        * **parcellated/${atlas}/ptseries/${sub}/${ses}/func/${sub}_${ses_}${task}_${atlas}_desc-cleaneds0_bold.ptseries.nii:**  Parcellated PTSERIES files for each subject and task.\n        * **parcellated/${atlas}/csv/${sub}/${ses}/func/${sub}_${ses_}${task}_${atlas}_desc-cleaneds0_meants.csv:** CSV files containing the mean values for each parcel for each subject and task. \n\nThis script performs a parcellation analysis on CIFTI files using the `wb_command` tool within a Singularity container. The process is parallelized using GNU Parallel and managed by the SLURM resource manager. \n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 1284,
+        "candidates_token_count": 975,
+        "total_token_count": 2259,
+        "cached_content_token_count": 0
+    }
+}

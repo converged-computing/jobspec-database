@@ -1,0 +1,35 @@
+{
+    "application": "Slurm",
+    "details": {
+        "job_name": "buildgpu",
+        "partition": "gpu",
+        "gpus": 4,
+        "nodes": 1,
+        "tasks_per_node": 128,
+        "memory": "30G",
+        "time": "00:05:00",
+        "mail_user": "clara.bayley@mpimet.mpg.de",
+        "mail_type": "FAIL",
+        "account": "mh1126",
+        "output_file": "./build/bin/buildgpu_out.%j.out",
+        "error_file": "./build/bin/buildgpu_err.%j.out",
+        "modules": [
+            "gcc/11.2.0-gcc-11.2.0",
+            "nvhpc/23.9-gcc-11.2.0",
+            "cmake@3.23.1%gcc"
+        ],
+        "conda_env": "/work/mh1126/m300950/cleoenv",
+        "CLEO_path": "${HOME}/CLEO/",
+        "build_path": "$1",
+        "gxx": "/sw/spack-levante/gcc-11.2.0-bcn7mb/bin/g++",
+        "gcc": "/sw/spack-levante/gcc-11.2.0-bcn7mb/bin/gcc",
+        "CC": "${gcc}",
+        "CXX": "${gxx}",
+        "CMAKE_CXX_FLAGS": "-Werror -Wall -pedantic -O3",
+        "CUDA_ROOT": "/sw/spack-levante/nvhpc-23.9-xpxqeo/Linux_x86_64/23.9/cuda/",
+        "NVCC_WRAPPER_DEFAULT_COMPILER": "${gxx}",
+        "kokkosflags": "-DKokkos_ARCH_NATIVE=ON -DKokkos_ARCH_AMPERE80=ON -DKokkos_ENABLE_SERIAL=ON",
+        "kokkoshost": "-DKokkos_ENABLE_OPENMP=ON",
+        "kokkosdevice": "-DKokkos_ENABLE_CUDA=ON -DKokkos_ENABLE_CUDA_LAMBDA=ON -DKokkos_ENABLE_CUDA_CONSTEXPR=ON -DKokkos_ENABLE_CUDA_RELOCATABLE_DEVICE_CODE=ON -DCUDA_ROOT=${CUDA_ROOT} -DNVCC_WRAPPER_DEFAULT_COMPILER=${CXX}"
+    }
+}

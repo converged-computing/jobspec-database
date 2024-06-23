@@ -1,0 +1,45 @@
+{
+    "application": "pytorch",
+    "details": {
+        "slurm": {
+            "job_name": "baseline_pretrained_2",
+            "account": "def-ssanner",
+            "nodes": 1,
+            "gpus_per_node": "v100l:4",
+            "mem_per_gpu": "24G",
+            "time": "01-00:00:00",
+            "cpus_per_task": 16
+        },
+        "environment": {
+            "conda": "diff_env",
+            "modules": [
+                "gcc/9.3.0",
+                "arrow",
+                "cuda/11"
+            ],
+            "omp_num_threads": 16
+        },
+        "script": {
+            "command": "torchrun --nproc_per_node=4 run_train.py",
+            "arguments": {
+                "data_dir": "/home/gfloto/scratch/datasets/detox",
+                "folder_name": "/home/gfloto/scratch/diffusion_models",
+                "resume_checkpoint": "/home/gfloto/scratch/diffusion_models/qqp/model000999.pt",
+                "diff_steps": 2000,
+                "lr": 0.0001,
+                "learning_steps": 100000,
+                "save_interval": 1000,
+                "seed": 102,
+                "noise_schedule": "sqrt",
+                "hidden_dim": 128,
+                "bsz": 2048,
+                "microbatch": 256,
+                "dataset": "detox",
+                "vocab": "bert",
+                "seq_len": 64,
+                "schedule_sampler": "lossaware",
+                "notes": "detox"
+            }
+        }
+    }
+}

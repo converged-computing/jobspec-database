@@ -1,0 +1,27 @@
+{
+    "application": "SLURM",
+    "details": {
+        "resource_requirements": {
+            "nodes": 1,
+            "tasks_per_node": 1,
+            "cpus_per_task": 1,
+            "time": "1-00:00:00",
+            "memory": "8gb"
+        },
+        "job_array": {
+            "start": 0,
+            "end": 999
+        },
+        "job_name": "pump_range_Nmc",
+        "output_file": "pump_range_Nmc-%j.out",
+        "error_file": "pump_range_Nmc-%j.err"
+    },
+    "environment_variables": {
+        "OMP_NUM_THREADS": "${SLURM_CPUS_PER_TASK}",
+        "MKL_NUM_THREADS": "${SLURM_CPUS_PER_TASK}",
+        "HOME": "~"
+    },
+    "command": "srun julia run/JUSTUS_draft_run/run_parallel_justus_pump.jl ${SLURM_ARRAY_TASK_ID}",
+    "julia_processes": "${SLURM_CPUS_PER_TASK}",
+    "julia_arguments": "${SLURM_CPUS_PER_TASK} ${SLURM_ARRAY_TASK_ID}"
+}

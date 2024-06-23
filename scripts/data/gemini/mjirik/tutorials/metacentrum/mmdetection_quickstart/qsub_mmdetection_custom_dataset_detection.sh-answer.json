@@ -1,0 +1,40 @@
+{
+    "application": "mmdetection_custom_dataset_detection.py",
+    "software": [
+        "singularity",
+        "python",
+        "mmdetection",
+        "conda",
+        "wget"
+    ],
+    "resource_requirements": {
+        "cpu": 1,
+        "gpu": 1,
+        "memory": "10gb",
+        "scratch_local": "10gb",
+        "gpu_cap": "cuda70",
+        "cl_adan": true,
+        "walltime": "01:00:00",
+        "queue": "gpu"
+    },
+    "environment_setup": [
+        "module add cuda-10.1",
+        "module add conda-modules-py37",
+        "module add gcc-8.3.0",
+        "conda activate drawnUI-conda"
+    ],
+    "data_processing": [
+        "mkdir -p $SCRATCHDIR/data/orig",
+        "mkdir -p $SCRATCHDIR/data/processed/",
+        "mkdir -p $OUTPUTDIR",
+        "cp -r $DATADIR/* $SCRATCHDIR/data/orig/"
+    ],
+    "checkpoint_download": [
+        "mkdir -p $SCRATCHDIR/checkpoints",
+        "wget --progress=bar:force:noscroll -c https://download.openmmlab.com/mmdetection/v2.0/faster_rcnn/faster_rcnn_r50_caffe_fpn_mstrain_3x_coco/$CHECKPOINT_PTH -O $SCRATCHDIR/checkpoints/$CHECKPOINT_PTH"
+    ],
+    "output_processing": [
+        "cp -r $SCRATCHDIR/data/processed/* $OUTPUTDIR",
+        "find $OUTPUTDIR"
+    ]
+}

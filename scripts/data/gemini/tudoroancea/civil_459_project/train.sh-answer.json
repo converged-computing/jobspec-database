@@ -1,0 +1,39 @@
+{
+    "application": "SLURM",
+    "details": {
+        "resource_requirements": {
+            "account": "civil-459-2023",
+            "partition": "gpu",
+            "gpus": 2,
+            "cpus": 20,
+            "memory": "64G",
+            "time": "15:00:00",
+            "job_name": "mtr"
+        },
+        "software_requirements": {
+            "modules": [
+                "git",
+                "gcc",
+                "python/3.7.7",
+                "cuda/11.6.2"
+            ],
+            "virtual_environment": "MTR"
+        },
+        "training_script": {
+            "command": "torchrun",
+            "arguments": [
+                "--nproc_per_node=2",
+                "--rdzv_endpoint=localhost:$PORT",
+                "MTR/tools/train.py",
+                "--launcher",
+                "pytorch",
+                "--cfg_file",
+                "MTR/tools/cfgs/waymo/dlav_without_dynamic_queries.yaml",
+                "--extra_tag",
+                "dlav_without_dynamic_queries",
+                "--workers",
+                "1"
+            ]
+        }
+    }
+}

@@ -1,0 +1,46 @@
+{
+    "application": "SLURM",
+    "details": {
+        "resource_requirements": {
+            "nodes": 1,
+            "time": "00:10:00",
+            "qos": "normal",
+            "partition": "shas",
+            "tasks": 1
+        },
+        "job_name": "spinup",
+        "output_file": "./sbatch_out_files/%x.%j.out",
+        "email_settings": {
+            "type": "ALL",
+            "user": "someuser@someaddress.edu"
+        },
+        "array": "1-1",
+        "alternative_system": "PBS",
+        "pbs_details": {
+            "shell": "/bin/bash",
+            "job_name": "spinup",
+            "account": "PXXXXXXXX",
+            "walltime": "0:10:00",
+            "queue": "regular",
+            "output_stderr": "oe",
+            "email_settings": {
+                "type": "abe",
+                "user": "someuser@someaddress.edu"
+            },
+            "nodes": "1:ncpus=1:mpiprocs=0",
+            "array": "1-1"
+        },
+        "execution_logic": {
+            "job_array_check": {
+                "slurm_variable": "SLURM_ARRAY_TASK_ID",
+                "pbs_variable": "PBS_ARRAY_INDEX",
+                "command_source": "to_exec.lst"
+            },
+            "execution": {
+                "job_array_mode": "eval ${command1}",
+                "other_cases": "bash to_exec.lst"
+            },
+            "finished_jobs_log": "finished.lst"
+        }
+    }
+}

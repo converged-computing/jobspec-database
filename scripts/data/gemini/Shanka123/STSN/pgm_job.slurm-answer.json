@@ -1,0 +1,27 @@
+{
+    "application": "Slurm",
+    "details": {
+        "resource_requirements": {
+            "nodes": 2,
+            "tasks_per_node": 3,
+            "cpus_per_task": 8,
+            "gpus_per_node": 3,
+            "time_limit": "144:00:00"
+        },
+        "environment_variables": {
+            "MASTER_PORT": "10000 + last 4 digits of SLURM_JOBID",
+            "WORLD_SIZE": "SLURM_NNODES * SLURM_NTASKS_PER_NODE",
+            "MASTER_ADDR": "first hostname in SLURM_JOB_NODELIST",
+            "NCCL_DEBUG": "INFO"
+        },
+        "script": "train_slot_transformer_pgm_multigpu.py",
+        "script_arguments": {
+            "img_size": 80,
+            "batch_size": 16,
+            "depth": 24,
+            "learning_rate": 8e-05,
+            "run": 1,
+            "num_epochs": 160
+        }
+    }
+}

@@ -1,0 +1,43 @@
+{
+    "application": "Gromacs",
+    "details": {
+        "software": "Gromacs 2023.1 (thread version)",
+        "resource_requirements": {
+            "partition": "ampere",
+            "tasks": 1,
+            "cpus_per_task": 24,
+            "memory": "16G",
+            "time": "5-00:00:00",
+            "environment_variables": {
+                "OMP_NUM_THREADS": "SLURM_CPUS_PER_TASK",
+                "NTMPI": "SLURM_NTASKS"
+            },
+            "libraries": "OpenMP",
+            "accelerators": "GPU"
+        },
+        "input_files": {
+            "MDP": "MDP",
+            "TOPOL": "TOPOL",
+            "CHECKPOINT": "CHECKPOINT",
+            "nvt.gro": "nvt.gro"
+        },
+        "output_files": {
+            "md.tpr": "md.tpr",
+            "md_next.tpr": "md_next.tpr",
+            "md.gro": "md.gro",
+            "md.edr": "md.edr",
+            "md.trr": "md.trr",
+            "md.xtc": "md.xtc",
+            "md.log": "md.log"
+        },
+        "execution": {
+            "options": "-s $tpr -pme gpu -pmefft gpu -nb gpu -bonded gpu -pin on -pinstride 1"
+        },
+        "script_arguments": {
+            "-o": "WORK_DIR",
+            "-f": "MDP",
+            "-p": "TOPOL",
+            "-g": "CHECKPOINT"
+        }
+    }
+}

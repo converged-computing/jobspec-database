@@ -1,0 +1,30 @@
+{
+    "application": "SLURM",
+    "details": {
+        "resource_requirements": {
+            "memory": "32GB",
+            "time": "2 hours",
+            "output_file": "logs/%A_%a_%x.txt",
+            "job_name": "pkl_cfr_env",
+            "array_tasks": [
+                0,
+                1,
+                2,
+                3,
+                4
+            ],
+            "gpus": [
+                "rtx8000"
+            ],
+            "gpu_count": 1,
+            "node_list": "*gr*",
+            "cpus_per_task": 1
+        },
+        "software_requirements": {
+            "singularity_image": "/scratch/work/public/singularity/cuda11.3.0-cudnn8-devel-ubuntu20.04.sif",
+            "conda_environment": "spiel",
+            "python_script": "cfr_env.py",
+            "python_arguments": "--model rnn --traj trajectories/traj-${num}-*.pkl --env_ckpt runs/env/rnn/${num}/model_epoch_025* --label ${num}"
+        }
+    }
+}

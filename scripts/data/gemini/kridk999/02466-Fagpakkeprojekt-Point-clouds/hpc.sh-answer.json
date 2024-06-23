@@ -1,0 +1,32 @@
+{
+    "application": "LSF",
+    "details": {
+        "queue": "gpuv100",
+        "job_name": "HPC_RUN_SPHERE_lamb",
+        "cores": 7,
+        "gpu": "1 (exclusive process mode)",
+        "walltime": "23:59",
+        "memory": "6GB",
+        "modules": [
+            "python3/3.10.11",
+            "cuda/11.4",
+            "cudnn/v8.2.2.26-prod-cuda-11.4"
+        ],
+        "environment": "Fag_env",
+        "script": "train.py",
+        "script_arguments": [
+            "--dataset teeth",
+            "--x_train /work3/ziruoye/data/publication_v2.0.0_train_small",
+            "--x_test /work3/ziruoye/data/publication_v2.0.0_test_small",
+            "--batch_size 128",
+            "--num_epochs 15000",
+            "--num_workers 16",
+            "--exp_name 512_latent_encoder_dim_fix_large_std",
+            "--model vae",
+            "--feat_dims 1024",
+            "--resume_from /work3/ziruoye/vfnet/runs/b6adb79/512_latent_encoder_dim_fix_large_std/epoch_5000.pth.tar"
+        ],
+        "output_file": "logs/gpu_%J_sphere_lamb.out",
+        "error_file": "logs/gpu_%J_sphere_lamb.err"
+    }
+}

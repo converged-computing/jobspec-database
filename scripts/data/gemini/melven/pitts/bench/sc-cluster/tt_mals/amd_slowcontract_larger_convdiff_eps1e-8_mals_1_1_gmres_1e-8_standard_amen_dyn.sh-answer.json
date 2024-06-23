@@ -1,0 +1,39 @@
+{
+    "application": "Slurm",
+    "details": {
+        "nodes": 1,
+        "tasks": 1,
+        "cores": 64,
+        "threads_per_core": 1,
+        "partition": "amd",
+        "memory": "200G",
+        "time": "3000",
+        "output": "%x-%j.out",
+        "modules": "PrgEnv/gcc13-openmpi-python",
+        "environment": {
+            "PYTHONPATH": "$PYTHONPATH:~/pitts/build_gcc_amd_slowcontract/src/:~/pitts/examples/",
+            "PYTHONUNBUFFERED": "1",
+            "ulimit": "unlimited",
+            "OMP_STACKSIZE": "100M"
+        },
+        "program": "python tt_mals.py",
+        "arguments": [
+            "-L 1",
+            "-C 10",
+            "-n 50",
+            "-d 10",
+            "--eps 1.e-8",
+            "--nSweeps 200",
+            "--nMALS 1",
+            "--nAMEnEnrichment 5",
+            "--gmresRelTol 1.e-8",
+            "--rhs_type rhs_random",
+            "--rhs_random_rank 5",
+            "--maxRank 500",
+            "--nonsimplifiedAMEn"
+        ],
+        "likwid_pin": {
+            "cores": "0-63"
+        }
+    }
+}

@@ -1,0 +1,50 @@
+{
+    "application": "DeepSpeed",
+    "details": {
+        "software": [
+            "SLURM",
+            "Python",
+            "torch.distributed.run",
+            "DeepSpeed",
+            "wandb"
+        ],
+        "resources": {
+            "partition": "partition",
+            "nodes": 1,
+            "gpu": 1,
+            "cpus_per_task": 16,
+            "memory_per_cpu": "4G",
+            "time": "72:00:00",
+            "output_file": "logs/train/llama7b-lora-r32-redteam100.out"
+        },
+        "model": "llama2_7b_chat",
+        "training_data": "datas/train/redteam_100.json",
+        "checkpoint_dir": "llama7b-lora-r32-redteam100",
+        "training_parameters": {
+            "lora_enable": true,
+            "lora_r": 32,
+            "lora_alpha": 64,
+            "deepspeed_config": "scripts/zero3.json",
+            "prompt_type": "llama2_harm",
+            "bf16": true,
+            "num_train_epochs": 10,
+            "per_device_train_batch_size": 10,
+            "per_device_eval_batch_size": 10,
+            "gradient_accumulation_steps": 1,
+            "evaluation_strategy": "no",
+            "save_strategy": "steps",
+            "save_steps": 100,
+            "save_total_limit": 1,
+            "learning_rate": 0.001,
+            "weight_decay": 0,
+            "warmup_ratio": 0.03,
+            "lr_scheduler_type": "cosine",
+            "logging_steps": 1,
+            "tf32": true,
+            "model_max_length": 3072,
+            "gradient_checkpointing": true,
+            "dataloader_num_workers": 6,
+            "lazy_preprocess": true
+        }
+    }
+}

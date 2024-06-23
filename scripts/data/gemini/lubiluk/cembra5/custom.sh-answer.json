@@ -1,0 +1,33 @@
+{
+    "application": "Ray",
+    "details": {
+        "framework": "Ray",
+        "cluster_type": "SLURM",
+        "head_node": {
+            "resource_allocation": {
+                "cpus": "${SLURM_CPUS_PER_TASK}",
+                "memory": "${SLURM_MEM_PER_CPU}GB",
+                "temp_dir": "${SCRATCH}/tmp-ray"
+            },
+            "config": {
+                "port": "6379",
+                "ip_address": "$head_node_ip"
+            }
+        },
+        "worker_nodes": {
+            "resource_allocation": {
+                "cpus": "${SLURM_CPUS_PER_TASK}",
+                "memory": "${SLURM_MEM_PER_CPU}GB",
+                "temp_dir": "${SCRATCH}/tmp-ray"
+            },
+            "config": {
+                "address": "$ip_head"
+            }
+        },
+        "environment": {
+            "python_version": "3.9",
+            "virtual_environment": "venv"
+        },
+        "script": "custom.py"
+    }
+}

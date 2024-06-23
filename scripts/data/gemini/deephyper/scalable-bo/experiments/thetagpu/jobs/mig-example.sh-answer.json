@@ -1,0 +1,32 @@
+{
+    "application": "GPU Management",
+    "details": {
+        "framework": "COBALT",
+        "resources": {
+            "nodes": 1,
+            "time": 10,
+            "queue": "full-node",
+            "account": "datascience",
+            "gpu": "A100-SXM4-40GB",
+            "mig_mode": "True"
+        },
+        "libraries": [
+            "nvidia-smi"
+        ],
+        "commands": [
+            "touch nvidia-smi-mig-lgip.txt",
+            "nvidia-smi mig -lgip > nvidia-smi-mig-lgip.txt",
+            "touch nvidia-smi-mig-i0-lgip.txt",
+            "nvidia-smi mig -i 0 -lgip > nvidia-smi-mig-i0-lgip.txt",
+            "nvidia-smi mig -i $device_id -cgi 9,9",
+            "nvidia-smi mig -i $device_id -gi 1 -cci 0",
+            "nvidia-smi mig -i $device_id -gi 2 -cci 0",
+            "touch nvidia-smi-L.txt",
+            "nvidia-smi -L > nvidia-smi-L.txt"
+        ],
+        "applications_running": [
+            "myapp1.py",
+            "myapp2.py"
+        ]
+    }
+}

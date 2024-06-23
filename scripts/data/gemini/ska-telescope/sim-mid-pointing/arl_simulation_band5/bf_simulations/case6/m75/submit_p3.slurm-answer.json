@@ -1,0 +1,28 @@
+{
+    "application": "Dask",
+    "details": {
+        "scheduler": "dask-scheduler",
+        "workers": "dask-worker",
+        "language": "Python",
+        "environment": {
+            "modules": "module purge",
+            "virtual_environment": "alaska-venv",
+            "python_path": "export PYTHONPATH=$PYTHONPATH:$ARL"
+        },
+        "resource_requirements": {
+            "nodes": 16,
+            "tasks": 33,
+            "memory": "16GB per worker",
+            "wallclock_time": "23:59:59",
+            "project": "SKA-SDP",
+            "queue": "compute",
+            "shared_directory": "../../../../shared",
+            "local_directory": "/mnt/storage-ssd/tim/dask-workspace/${host}"
+        },
+        "script_execution": {
+            "script": "pointing_simulation_distributed.py",
+            "arguments": "--context s3sky --frequency 12.179e9 --rmax 1e5 --flux_limit 0.003 --show True --seed 18051955  --pbtype MID_FEKO_Ku --memory 32  --integration_time 30 --use_agg True --time_series wind --time_chunk 1800",
+            "output_file": "pointing_simulation.log"
+        }
+    }
+}

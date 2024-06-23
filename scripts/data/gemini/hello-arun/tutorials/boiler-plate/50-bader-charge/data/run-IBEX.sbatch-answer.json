@@ -1,0 +1,27 @@
+{
+    "application": "VASP",
+    "details": {
+        "scheduler": "Slurm",
+        "partition": "batch",
+        "constraint": "amd",
+        "nodes": 1,
+        "tasks_per_node": 20,
+        "walltime": "2:30:00",
+        "modules": [
+            "intel/2016",
+            "openmpi/4.0.3_intel",
+            "perl"
+        ],
+        "environment_variables": [
+            "VASP_HOME=/ibex/scratch/jangira/vasp/sw/vasp.5.4.4/bin",
+            "OMP_NUM_THREADS=1",
+            "SLURM_NTASKS=$((SLURM_NNODES*SLURM_NTASKS_PER_NODE))"
+        ],
+        "execution_command": "mpirun -np ${SLURM_NTASKS} ${VASP_HOME}/vasp_std",
+        "post_processing": [
+            "perl chgsum.pl AECCAR0 AECCAR2",
+            "chmod +x ./bader",
+            "./bader CHGCAR -ref CHGCAR_sum"
+        ]
+    }
+}

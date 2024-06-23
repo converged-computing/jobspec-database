@@ -1,0 +1,37 @@
+{
+    "application": "Slurm",
+    "details": {
+        "resource_allocation": {
+            "account": "nlpgroup",
+            "partition": "a100",
+            "nodes": 1,
+            "tasks": 6,
+            "gpus": "a100-2g-10gb:1",
+            "job_name": "lstm-train",
+            "mail_user": "nrmyas001@cs.uct.ac.za",
+            "mail_type": "ALL",
+            "time": "01:00:00"
+        },
+        "software": {
+            "modules": "TensorFlow-A100-GPU",
+            "environment_variables": {
+                "CUDA_VISIBLE_DEVICES": "ncvd",
+                "WANDB_DIR": "/scratch/nrmyas001/wandb"
+            },
+            "python_script": "src.clinical_longformer.model.lstm",
+            "datasets": "/scratch/nrmyas001/datasets/discharge/-1",
+            "vectors_root": "/scratch/nrmyas001/data",
+            "default_root_dir": "/scratch/nrmyas001/data/model/LSTM",
+            "max_epochs": 10,
+            "dropout": [
+                0.1,
+                0.2,
+                0.3
+            ],
+            "num_workers": 6,
+            "precision": 16,
+            "gpus": 1
+        },
+        "logs": "/scratch/nrmyas001/logs/lstm-train/$(hostname)$(openssl rand -hex 4).out"
+    }
+}

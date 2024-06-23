@@ -1,0 +1,30 @@
+{
+    "application": "SLURM",
+    "details": {
+        "resource_requirements": {
+            "time": "03-12:00:00",
+            "nodes": 1,
+            "gpus_per_node": "a100:4",
+            "tasks_per_node": 4,
+            "cpus_per_task": 12,
+            "memory_per_node": "498G"
+        },
+        "environment": {
+            "virtual_env": "ssl_env",
+            "OMP_NUM_THREADS": "$SLURM_CPUS_PER_TASK"
+        },
+        "scripts": {
+            "get_socket": "./slurm/get_socket.sh",
+            "copy_and_extract_data": "./slurm/copy_and_extract_data.sh",
+            "main": "./solo_learn_train-bentho.py"
+        },
+        "config_files": {
+            "ssl_cfg": "mocov3.cfg",
+            "aug_stack_cfg": "simclr_aug_stack.cfg"
+        },
+        "parameters": {
+            "method": "mocov3",
+            "name": "mocov3-100e"
+        }
+    }
+}

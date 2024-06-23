@@ -1,0 +1,17 @@
+{
+    "application": "bsub",
+    "details": {
+        "queue": "lowpriority",
+        "gpu_count": 1,
+        "gpu_mode": "exclusive_process",
+        "container_image": "docker.optum.com/dhanley2/bert:cgan_build",
+        "nodes": 1,
+        "partition": "span[ptile=4]",
+        "output_file": "log_train_%J",
+        "command": "cd /share/dhanley2/recursion/scripts/$WDIR && python3 train.py --nbags 5 --epochs 80 --fold $FOLD --lr 0.0001 --batchsize 64 --workpath scripts/$WDIR --cutmix_prob 1.0 --beta 1.0 --imgpath data/mount/256X256X6/ --weightsname weights/pytorch_model_densenet$FOLD.bin",
+        "python_script": "train.py",
+        "script_arguments": "--nbags 5 --epochs 80 --fold $FOLD --lr 0.0001 --batchsize 64 --workpath scripts/$WDIR --cutmix_prob 1.0 --beta 1.0 --imgpath data/mount/256X256X6/ --weightsname weights/pytorch_model_densenet$FOLD.bin",
+        "data_path": "data/mount/256X256X6/",
+        "model_weights_path": "weights/pytorch_model_densenet$FOLD.bin"
+    }
+}

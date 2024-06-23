@@ -1,0 +1,52 @@
+{
+    "application": "SLURM",
+    "details": {
+        "resource_requirements": {
+            "partition": "long",
+            "gpu": "a100",
+            "gpu_count": 1,
+            "reservation": "DGXA100",
+            "memory": "16GB",
+            "time": "6:00:00",
+            "cpus_per_gpu": 4
+        },
+        "software_requirements": {
+            "environment": "/etc/profile",
+            "module": "anaconda/3",
+            "conda_environment": "ffcv"
+        },
+        "script_details": {
+            "python_script": "scripts/train_model.py",
+            "config_file": "configs/cc_barlow_twins.yaml",
+            "config_file_classifier": "configs/cc_classifier.yaml",
+            "hyperparameters": {
+                "lamda": 0.001,
+                "proj": 1024,
+                "lr_arr": [
+                    0.0001,
+                    0.0002,
+                    0.0004,
+                    0.001,
+                    0.002,
+                    0.004,
+                    0.01
+                ],
+                "wd_arr": [
+                    1e-08,
+                    1e-06,
+                    0.0001
+                ],
+                "dataset": [
+                    "stl10",
+                    "cifar10"
+                ],
+                "batch_size": 256,
+                "ckpt_dir": "checkpoints_opt_hparams_stl10",
+                "seed": [
+                    1,
+                    2
+                ]
+            }
+        }
+    }
+}

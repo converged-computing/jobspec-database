@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"Jupyter Notebook\",\n  \"software\": [\n    \"Singularity\",\n    \"Jupyter Notebook\",\n    \"Python\",\n    \"Conda\",\n    \"OpenMP\"\n  ],\n  \"resource_requirements\": {\n    \"slurm\": {\n      \"account\": \"pawsey0106\",\n      \"partition\": \"work\",\n      \"ntasks\": 1,\n      \"ntasks_per_node\": 1,\n      \"cpus_per_task\": 8,\n      \"time\": \"08:00:00\",\n      \"job_name\": \"jupyter_notebook\"\n    },\n    \"environment_variables\": {\n      \"SINGULARITY_BINDPATH\": \"${MYSOFTWARE}:${MYSOFTWARE},${MYSCRATCH}:${MYSCRATCH},/run:/run,$HOME:$HOME\",\n      \"SINGULARITYENV_PREPEND_PATH\": \"/srv/conda/envs/notebook/bin:/srv/conda/condabin:/srv/conda/bin\",\n      \"SINGULARITYENV_XDG_DATA_HOME\": \"${MYSCRATCH}/.local\",\n      \"SINGULARITYENV_OMP_NUM_THREADS\": 8,\n      \"SINGULARITYENV_OMP_PROC_BIND\": \"close\",\n      \"SINGULARITYENV_OMP_PLACES\": \"cores\"\n    },\n    \"docker_image\": \"docker://mrayson/jupyter_sfoda:latest\"\n  }\n}\n``` \n\nThis script runs a Jupyter Notebook server within a Singularity container. Here's a breakdown of the script and the JSON output:\n\n**Script Breakdown:**\n\n* **SLURM Resource Allocation:** This script uses SLURM (Simple Linux Utility for Resource Management) to allocate resources on a compute cluster. It requests one task (1 CPU core), 8 CPUs per task, and a walltime of 8 hours.\n* **Environment Variables:**\n    * **SINGULARITY_BINDPATH:** This defines the paths that should be mounted into the Singularity container. \n    * **SINGULARITYENV_PREPEND_PATH:** Specifies the location of the Conda environment, ensuring the container uses the correct Python and library versions.\n    * **SINGULARITYENV_XDG_DATA_HOME:** Sets the path for the container's XDG data, likely needed by user-specific settings.\n    * **SINGULARITYENV_OMP_NUM_THREADS, SINGULARITYENV_OMP_PROC_BIND, SINGULARITYENV_OMP_PLACES:** These environment variables configure OpenMP, a multithreading library used to optimize performance for parallel processing.\n* **Docker Image:**  The script uses the \"docker://mrayson/jupyter_sfoda:latest\" Docker image, which presumably contains a pre-configured Jupyter Notebook environment for scientific computing and the sfoda library.\n* **Singularity Execution:** The script uses `singularity pull` to download the Docker image into a Singularity image file. Then it uses `singularity exec` to run the Jupyter Notebook server inside the container.\n* **Directory Mounting:**  The script mounts the user's specified directory (presumably a directory on the cluster's shared file system) to `/home/joyvan` within the container, allowing the user to work with their data.\n* **SSH Tunnel:** The script establishes an SSH tunnel from the user's local machine to the Jupyter Notebook server running on the cluster, allowing the user to access the Jupyter Notebook interface remotely.\n* **Error Handling:** The script includes a `kill_server` function to gracefully shut down the server if needed.\n\n**JSON Output:**\n\n* **application:** \"Jupyter Notebook\" - This is the main application being run.\n* **software:** A list of the software used, including Singularity, Jupyter Notebook, Python, Conda, and OpenMP.\n* **resource_requirements:**\n    * **slurm:**  Details about the resources requested from SLURM.\n    * **environment_variables:**  A list of the environment variables set by the script.\n    * **docker_image:** The Docker image used to create the Singularity container.\n\nThis JSON output provides a concise and structured summary of the script's functionality and resource usage. \n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 2371,
+        "candidates_token_count": 927,
+        "total_token_count": 3298,
+        "cached_content_token_count": 0
+    }
+}

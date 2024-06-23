@@ -1,0 +1,92 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n\"application\": \"Slurm\",\n\"details\": {\n\"slurm_params\": {\n\"job_name\": \"hybrid\",\n\"nodes\": 2,\n\"ntasks_per_node\": 2,\n\"exclusive\": true,\n\"export\": \"ALL\",\n\"time\": \"02:00:00\",\n\"partition\": \"standard\",\n\"mem\": 0\n},\n\"modules\": {\n\"apptainer\": \"apptainer-1.1.8-gcc-12.1.0-tbna3nr\",\n\"tcl\": \"/nopt/nrel/apps/timstests/042723_a/tcl/linux-rhel8-icelake\"\n},\n\"environment_variables\": {\n\"FI_PROVIDER\": \"tcp\",\n\"MPIR_CVAR_DEBUG_SUMMARY\": 1,\n\"OMP_NUM_THREADS\": 1\n},\n\"mpi_implementations\": [\n{\n\"name\": \"OpenMPI\",\n\"sif_name\": \"openmpi.sif\",\n\"commands\": [\n\"ompi_info --all\",\n\"/opt/examples/affinity/tds/phostone -F\",\n\"/opt/examples/affinity/tds/ppong\"\n],\n\"dockerfile\": {\n\"bootstrap\": \"docker\",\n\"from\": \"ubuntu:latest\",\n\"environment\": [\n\"LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/cray/pe/lib64\",\n\"LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/cray/libfabric/1.15.2.0/lib64\",\n\"OPENMPI_DIR=/opt/openmpi\",\n\"PATH=$OPENMPI_DIR/bin:$PATH\",\n\"LD_LIBRARY_PATH=$OPENMPI_DIR/lib:$LD_LIBRARY_PATH\",\n\"MANPATH=$OPENMPI_DIR/share/man:$MANPATH\",\n\"LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/cray/pe/lib64\"\n],\n\"post\": [\n\"echo \\\"Installing required packages...\\\"\",\n\"export DEBIAN_FRONTEND=noninteractive\",\n\"apt-get update && apt-get install -y wget git bash gcc gfortran g++ make python3\",\n\"apt install -y git\",\n\"apt install -y curl\",\n\"curl https://download.open-mpi.org/release/open-mpi/v4.1/openmpi-4.1.5.tar.gz --output openmpi-4.1.5.tar.gz\",\n\"mkdir -p /opt/openmpi/src\",\n\"tar -xzf openmpi-4.1.5.tar.gz -C /opt/openmpi/src\",\n\"echo \\\"Installing OPENMPI...\\\"\",\n\"cd /opt/openmpi/src/* && ./configure --prefix=/opt/openmpi --disable-mpi-fortran --enable-orterun-prefix-by-default && make install\",\n\"export PATH=/opt/openmpi/bin:$PATH\",\n\"export LD_LIBRARY_PATH=/opt/openmpi/lib:$LD_LIBRARY_PATH\",\n\"echo \\\"Compiling the MPI application...\\\"\",\n\"echo \\\"Compiling the MPI application...\\\"\",\n\"cd /opt && git clone https://github.com/timkphd/examples.git\",\n\"cd /opt/examples/affinity/tds && mpicc -fopenmp phostone.c -o phostone\"\n]\n},\n\"binds\": [\n\"/var/spool/slurmd\",\n\"/usr/bin\",\n\"/nopt/slurm/current/lib\",\n\"/nopt/xalt/xalt/lib64\",\n\"/nopt/slurm/current/bin\"\n]\n},\n{\n\"name\": \"MPICH-CH4\",\n\"sif_name\": \"mpich_ch4.sif\",\n\"commands\": [\n\"/opt/examples/affinity/tds/phostone -F\",\n\"/opt/examples/affinity/tds/ppong\"\n],\n\"dockerfile\": {\n\"bootstrap\": \"docker\",\n\"from\": \"ubuntu:latest\",\n\"environment\": [\n\"MPICH_VERSION=4.1.2\",\n\"MPICH_DIR=/opt/mpich\",\n\"PATH=$MPICH_DIR/bin:$PATH\",\n\"LD_LIBRARY_PATH=$MPICH_DIR/lib:$LD_LIBRARY_PATH\",\n\"MANPATH=$MPICH_DIR/share/man:$MANPATH\"\n],\n\"post\": [\n\"echo \\\"Installing required packages...\\\"\",\n\"export DEBIAN_FRONTEND=noninteractive\",\n\"apt-get update && apt-get install -y wget git bash gcc gfortran g++ make python3\",\n\"apt install -y git\",\n\"export MPICH_VERSION=4.1.2\",\n\"export MPICH_URL=\\\"http://www.mpich.org/static/downloads/$MPICH_VERSION/mpich-$MPICH_VERSION.tar.gz\\\"\",\n\"echo \\\"Installing MPICH...\\\"\",\n\"mkdir -p /opt/build\",\n\"mkdir -p /opt\",\n\"cd /opt/build && wget -O mpich-$MPICH_VERSION.tar.gz $MPICH_URL && tar xzf mpich-$MPICH_VERSION.tar.gz\",\n\"cd /opt/build/mpich-$MPICH_VERSION && ./configure --prefix=/opt/mpich --with-device=ch3:nemesis && make install\",\n\"export PATH=/opt/mpich/bin:$PATH\",\n\"export LD_LIBRARY_PATH=/opt/mpich/lib:$LD_LIBRARY_PATH\",\n\"echo \\\"Compiling the MPI application...\\\"\",\n\"cd /opt && git clone https://github.com/timkphd/examples.git\",\n\"cd /opt/examples/affinity/tds && mpicc -fopenmp phostone.c -o phostone\"\n]\n},\n\"binds\": [\n\"/var/spool/slurmd\",\n\"/usr/bin\",\n\"/nopt/slurm/current/lib\",\n\"/nopt/xalt/xalt/lib64\",\n\"/nopt/slurm/current/bin\"\n]\n},\n{\n\"name\": \"MPICH-CH4b\",\n\"sif_name\": \"mpich_ch4b.sif\",\n\"commands\": [\n\"/opt/examples/affinity/tds/phostone -F\",\n\"/opt/examples/affinity/tds/ppong\"\n],\n\"dockerfile\": {\n\"bootstrap\": \"docker\",\n\"from\": \"ubuntu:latest\",\n\"environment\": [\n\"MPICH_VERSION=4.1.2\",\n\"MPICH_DIR=/opt/mpich\",\n\"PATH=$MPICH_DIR/bin:$PATH\",\n\"LD_LIBRARY_PATH=$MPICH_DIR/lib:$LD_LIBRARY_PATH\",\n\"MANPATH=$MPICH_DIR/share/man:$MANPATH\"\n],\n\"post\": [\n\"echo \\\"Installing required packages...\\\"\",\n\"export DEBIAN_FRONTEND=noninteractive\",\n\"apt-get update && apt-get install -y wget git bash gcc gfortran g++ make python3\",\n\"apt install -y git\",\n\"export MPICH_VERSION=4.1.2\",\n\"export MPICH_URL=\\\"http://www.mpich.org/static/downloads/$MPICH_VERSION/mpich-$MPICH_VERSION.tar.gz\\\"\",\n\"echo \\\"Installing MPICH...\\\"\",\n\"mkdir -p /opt/build\",\n\"mkdir -p /opt\",\n\"cd /opt/build && wget -O mpich-$MPICH_VERSION.tar.gz $MPICH_URL && tar xzf mpich-$MPICH_VERSION.tar.gz\",\n\"cd /opt/build/mpich-$MPICH_VERSION && ./configure --prefix=/opt/mpich --with-device=ch3:nemesis && make install\",\n\"export PATH=/opt/mpich/bin:$PATH\",\n\"export LD_LIBRARY_PATH=/opt/mpich/lib:$LD_LIBRARY_PATH\",\n\"echo \\\"Compiling the MPI application...\\\"\",\n\"cd /opt && git clone https://github.com/timkphd/examples.git\",\n\"cd /opt/examples/affinity/tds && mpicc -fopenmp phostone.c -o phostone\"\n]\n},\n\"binds\": [\n\"/var/spool/slurmd\",\n\"/usr/bin\",\n\"/nopt/slurm/current/lib\",\n\"/nopt/xalt/xalt/lib64\",\n\"/nopt/slurm/current/bin\"\n]\n},\n{\n\"name\": \"MPICH-CH3\",\n\"sif_name\": \"mpich_ch3.sif\",\n\"commands\": [\n\"/opt/examples/affinity/tds/phostone -F\",\n\"/opt/examples/affinity/tds/ppong\"\n],\n\"dockerfile\": {\n\"bootstrap\": \"docker\",\n\"from\": \"ubuntu:latest\",\n\"environment\": [\n\"MPICH_VERSION=4.1.2\",\n\"MPICH_DIR=/opt/mpich\",\n\"PATH=$MPICH_DIR/bin:$PATH\",\n\"LD_LIBRARY_PATH=$MPICH_DIR/lib:$LD_LIBRARY_PATH\",\n\"MANPATH=$MPICH_DIR/share/man:$MANPATH\"\n],\n\"post\": [\n\"echo \\\"Installing required packages...\\\"\",\n\"export DEBIAN_FRONTEND=noninteractive\",\n\"apt-get update && apt-get install -y wget git bash gcc gfortran g++ make python3\",\n\"apt install -y git\",\n\"export MPICH_VERSION=4.1.2\",\n\"export MPICH_URL=\\\"http://www.mpich.org/static/downloads/$MPICH_VERSION/mpich-$MPICH_VERSION.tar.gz\\\"\",\n\"echo \\\"Installing MPICH...\\\"\",\n\"mkdir -p /opt/build\",\n\"mkdir -p /opt\",\n\"cd /opt/build && wget -O mpich-$MPICH_VERSION.tar.gz $MPICH_URL && tar xzf mpich-$MPICH_VERSION.tar.gz\",\n\"cd /opt/build/mpich-$MPICH_VERSION && ./configure --prefix=/opt/mpich --with-device=ch3:nemesis && make install\",\n\"export PATH=/opt/mpich/bin:$PATH\",\n\"export LD_LIBRARY_PATH=/opt/mpich/lib:$LD_LIBRARY_PATH\",\n\"echo \\\"Compiling the MPI application...\\\"\",\n\"cd /opt && git clone https://github.com/timkphd/examples.git\",\n\"cd /opt/examples/affinity/tds && mpicc -fopenmp phostone.c -o phostone\"\n]\n},\n\"binds\": [\n\"/var/spool/slurmd\",\n\"/usr/bin\",\n\"/nopt/slurm/current/lib\",\n\"/nopt/xalt/xalt/lib64\",\n\"/nopt/slurm/current/bin\"\n]\n}\n]\n}\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "citation_metadata": {
+                "citation_sources": [
+                    {
+                        "start_index": 1058,
+                        "end_index": 1232,
+                        "uri": "https://github.com/sylabs/singularity-userdocs/blob/main/mpi.rst",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 2455,
+                        "end_index": 2672,
+                        "uri": "https://github.com/sylabs/singularity-userdocs/blob/main/mpi.rst",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 2729,
+                        "end_index": 2870,
+                        "uri": "https://github.com/mustafaarif/singularity4hpc",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 3891,
+                        "end_index": 4108,
+                        "uri": "https://github.com/sylabs/singularity-userdocs/blob/main/mpi.rst",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 4165,
+                        "end_index": 4306,
+                        "uri": "https://github.com/mustafaarif/singularity4hpc",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 5325,
+                        "end_index": 5542,
+                        "uri": "https://github.com/sylabs/singularity-userdocs/blob/main/mpi.rst",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 5599,
+                        "end_index": 5740,
+                        "uri": "https://github.com/mustafaarif/singularity4hpc",
+                        "license_": ""
+                    }
+                ]
+            },
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 2268,
+        "candidates_token_count": 2547,
+        "total_token_count": 4815,
+        "cached_content_token_count": 0
+    }
+}

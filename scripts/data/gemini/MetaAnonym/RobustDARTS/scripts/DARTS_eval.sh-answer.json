@@ -1,0 +1,34 @@
+{
+    "application": "SLURM",
+    "details": {
+        "queue": "1080Ti",
+        "gpu_count": 1,
+        "array_tasks": 3,
+        "job_name": "DARTS_grid_eval",
+        "working_directory": ".",
+        "output_file": "./logs_eval/%A_%a.o",
+        "error_file": "./logs_eval/%A_%a.e",
+        "conda_environment": "pytorch-0.3.1-cu8-py36",
+        "python_script": "src/evaluation/train.py",
+        "script_arguments": [
+            "--cutout",
+            "--auxiliary",
+            "--job_id",
+            "$SLURM_ARRAY_JOB_ID",
+            "--task_id",
+            "1",
+            "--seed",
+            "1",
+            "--space",
+            "$1",
+            "--dataset",
+            "$2",
+            "--search_dp",
+            "$3",
+            "--search_wd",
+            "$4",
+            "--search_task_id",
+            "$SLURM_ARRAY_TASK_ID"
+        ]
+    }
+}

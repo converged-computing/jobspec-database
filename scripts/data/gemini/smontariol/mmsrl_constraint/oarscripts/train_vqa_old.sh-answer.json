@@ -1,0 +1,41 @@
+{
+    "application": "MMSRL",
+    "software": [
+        "python",
+        "conda",
+        "pytorch",
+        "cuda",
+        "cudnn",
+        "gcc"
+    ],
+    "resource_requirements": [
+        "GPU",
+        "memory (80GB or more)",
+        "walltime (20 hours)"
+    ],
+    "modules": [
+        "conda",
+        "pytorch",
+        "cuda/10.2",
+        "gcc/7.3.0",
+        "cudnn/7.6-cuda-10.2"
+    ],
+    "commands": [
+        "module purge",
+        "module load conda",
+        "source activate pytorch",
+        "module load cuda/10.2",
+        "module load gcc/7.3.0",
+        "module load cudnn/7.6-cuda-10.2",
+        "python -m mmsrl.train configs/ofa_old_best.py --output_val=outputs/ofa_vqa_old_max35_lr5_val.pkl --output_test=outputs/ofa_vqa_old_max35_lr5_test.pkl --save_model=models/ofa_vqa_old.bin"
+    ],
+    "job_submission_tool": "oarsub",
+    "job_submission_options": [
+        "gpu='YES'",
+        "mem>80000",
+        "host='nefgpu39.inria.fr'",
+        "gpunum=1",
+        "walltime=20:00:00",
+        "t besteffort"
+    ]
+}

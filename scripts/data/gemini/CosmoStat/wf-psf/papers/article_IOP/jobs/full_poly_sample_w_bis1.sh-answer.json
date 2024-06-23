@@ -1,0 +1,45 @@
+{
+    "application": "Slurm",
+    "details": {
+        "job_name": "poly_sample_w_bis1_",
+        "partition": "gpu_p2",
+        "ntasks": 1,
+        "ntasks_per_node": 1,
+        "gres": "gpu:1",
+        "cpus_per_task": 10,
+        "compute_nodes": "v100-32g",
+        "hyperthreading": "disabled",
+        "time": "20:00:00",
+        "output": "poly_sample_w_bis1_%j.out",
+        "error": "poly_sample_w_bis1_%j.err",
+        "project": "ynx@gpu",
+        "queue": "qos_gpu-dev",
+        "array": "0-3",
+        "modules": [
+            "tensorflow-gpu/py3/2.4.1"
+        ],
+        "command": "python -u ./train_eval_plot_script_click.py",
+        "arguments": [
+            "--model poly",
+            "--d_max_nonparam 5",
+            "--l_rate_param 0.01 0.004",
+            "--l_rate_non_param 0.1 0.06",
+            "--saved_model_type checkpoint",
+            "--saved_cycle cycle2",
+            "--total_cycles 2",
+            "--use_sample_weights True",
+            "--l2_param 0.",
+            "--base_id_name _sample_w_bis1_",
+            "--suffix_id_name 2c",
+            "--suffix_id_name 5c",
+            "--suffix_id_name 1k",
+            "--suffix_id_name 2k",
+            "--star_numbers 200",
+            "--star_numbers 500",
+            "--star_numbers 1000",
+            "--star_numbers 2000",
+            "--plots_folder plots/poly_sample_w_bis1/",
+            "${opt[$SLURM_ARRAY_TASK_ID]}"
+        ]
+    }
+}

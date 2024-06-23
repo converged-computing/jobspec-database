@@ -1,0 +1,45 @@
+{
+    "application": "fairseq",
+    "software": [
+        "fairseq",
+        "conda",
+        "jsrun",
+        "ibm-wml-ce"
+    ],
+    "resource_requirements": {
+        "queue": "batch-hm",
+        "nodes": 24,
+        "walltime": "24:00",
+        "allocation_flags": "NVME",
+        "modules": [
+            "ibm-wml-ce/1.7.1.a0-0"
+        ],
+        "conda_environment": "fairseq_1.7.1",
+        "environment_variables": {
+            "OMP_NUM_THREADS": "4",
+            "NCCL_DEBUG": "INFO"
+        },
+        "data_dir": "/gpfs/alpine/bie108/proj-shared/split_bin/",
+        "save_dir": "$MEMBERWORK/bie108/fairseq-uniparc/$LSB_JOBNAME",
+        "training_parameters": {
+            "total_updates": 500000,
+            "warmup_updates": 24000,
+            "peak_lr": 0.0007,
+            "tokens_per_sample": 1024,
+            "max_positions": 1024,
+            "max_sentences": 8,
+            "update_freq": 7
+        },
+        "model_architecture": "roberta_base",
+        "optimizer": "adam",
+        "learning_rate_scheduler": "polynomial_decay",
+        "dropout": 0.1,
+        "attention_dropout": 0.1,
+        "weight_decay": 0.01,
+        "batch_size": 8,
+        "save_interval": 1,
+        "max_update": 500000,
+        "log_format": "simple",
+        "log_interval": 1
+    }
+}

@@ -1,0 +1,85 @@
+{
+    "application": "LSF",
+    "details": {
+        "scheduler": "LSF",
+        "queue": "BIP189",
+        "walltime": "01:50",
+        "nodes": 1,
+        "job_name": "WTTHF_ana",
+        "output_file": "outdir/anaout.%J",
+        "error_file": "outdir/anaerr.%J",
+        "modules": [
+            "caascade/1.1.beta",
+            ".gcc/6.4.0",
+            "spectrum-mpi/10.3.1.2-20200121",
+            "gcc/6.4.0",
+            "spectrum-mpi/10.3.1.2-20200121",
+            "gromacs/2020.2-rdtscp_off"
+        ],
+        "environment_variables": {
+            "GMX_MAXBACKUP": "-1",
+            "OMP_NUM_THREADS": "7"
+        },
+        "analysis_tools": [
+            "gmx_mpi select",
+            "gmx_mpi rdf",
+            "gmx_mpi sasa",
+            "gmx_mpi mindist",
+            "gmx_mpi gyrate",
+            "gmx_mpi hbond"
+        ],
+        "analysis_data": [
+            "traj_nvt_high.trr",
+            "nvt_high.tpr"
+        ],
+        "output_files": [
+            "nneigh_inp.ndx",
+            "nneigh_inp.txt",
+            "rg_inp.ndx",
+            "rg_inp.txt",
+            "hbinp.ndx",
+            "hbinp.txt",
+            "rdfout1.xvg",
+            "rdfout2.xvg",
+            "sasa.xvg",
+            "bO4_solv_water.xvg",
+            "genmindist.out",
+            "rg_chain.xvg",
+            "wat_hbnum.xvg",
+            "wat_hbdist.xvg",
+            "sol_hbnum.xvg",
+            "sol_hbdist.xvg"
+        ],
+        "parallel_execution": {
+            "jsrun": {
+                "nodes": 1,
+                "cores": {
+                    "rdf": 14,
+                    "sasa": 7,
+                    "mindist": 7,
+                    "gyrate": 7,
+                    "hbond": 7,
+                    "select": 1
+                },
+                "tasks": {
+                    "rdf": 2,
+                    "sasa": 1,
+                    "mindist": 1,
+                    "gyrate": 1,
+                    "hbond": 1,
+                    "select": 1
+                },
+                "groups": {
+                    "rdf": 2,
+                    "sasa": 1,
+                    "mindist": 1,
+                    "gyrate": 1,
+                    "hbond": 1,
+                    "select": 1
+                },
+                "distribution": "plane",
+                "packing": "packed"
+            }
+        }
+    }
+}

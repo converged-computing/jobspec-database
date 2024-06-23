@@ -1,0 +1,27 @@
+{
+    "application": "SLURM",
+    "details": {
+        "resource_requirements": {
+            "account": "SNIC2021-7-104",
+            "nodes": 1,
+            "gpus": "V100:1",
+            "time": "7-00:00:00",
+            "job_name": "fuse-unet"
+        },
+        "software": {
+            "singularity_image": "/cephyr/users/puzhao/Alvis/PyTorch_v1.7.0-py3.sif",
+            "python_script": "main_s1s2_fuse_unet_V1.py"
+        },
+        "other": {
+            "command_line_arguments": "model.cross_domain_coef=$CFG",
+            "array_task_id_variable": "SLURM_ARRAY_TASK_ID",
+            "array_task_id_values": [
+                0,
+                0.01,
+                0.1,
+                1
+            ],
+            "output_directory": "$TMPDIR/temporal-consistency/outputs"
+        }
+    }
+}

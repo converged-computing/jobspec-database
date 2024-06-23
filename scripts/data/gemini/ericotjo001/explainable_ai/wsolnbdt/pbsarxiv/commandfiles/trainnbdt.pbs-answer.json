@@ -1,0 +1,47 @@
+{
+    "application": "Singularity",
+    "details": {
+        "resource_requirements": {
+            "nodes": 1,
+            "cpus": 40,
+            "gpus": 8,
+            "walltime": "48:00:00",
+            "queue": "dgx",
+            "project": "12001577"
+        },
+        "modules": [
+            "cuda/10.1",
+            "singularity"
+        ],
+        "python_script": "/mnt/x_nbdt_main.py",
+        "arguments": [
+            "--mode",
+            "train",
+            "--arch",
+            "ResNet50CAM",
+            "--hierarchy",
+            "induced-ResNet50CAM",
+            "--epochs",
+            "12",
+            "--batch-size",
+            "256",
+            "--ROOT_DIR",
+            "wsolevaluation-master",
+            "--debug_toggles",
+            "000000",
+            "--resume",
+            "1",
+            "--eval",
+            "0",
+            "--lr",
+            "0.001",
+            "--loss",
+            "SoftTreeSupLoss"
+        ],
+        "singularity_image": "USandbox",
+        "bind_mount": {
+            "source": "wsolevaluation-master/",
+            "target": "/mnt"
+        }
+    }
+}

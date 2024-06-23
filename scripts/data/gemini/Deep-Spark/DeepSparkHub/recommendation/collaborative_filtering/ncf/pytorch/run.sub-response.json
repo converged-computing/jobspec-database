@@ -1,0 +1,62 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"SLURM\",\n  \"details\": {\n    \"partition\": \"mlperf\",\n    \"nodes\": 1,\n    \"wall_time\": \"12:00:00\",\n    \"job_name\": \"recommendation\",\n    \"exclusive_node_access\": true,\n    \"memory\": \"all available\",\n    \"email_type\": \"FAIL\",\n    \"tasks_per_node\": 8,\n    \"threads_per_core\": 2,\n    \"cores_per_socket\": 20,\n    \"benchmark\": \"recommendation\",\n    \"benchmark_name\": \"ncf\",\n    \"container\": \"mlperf-nvidia:recommendation\",\n    \"data_dir\": \"/raid/data\",\n    \"log_dir\": \"/raid/results/recommendation\",\n    \"num_experiments\": 100,\n    \"preprocess\": 0,\n    \"system\": \"DGX1\",\n    \"ib_devices\": \"$DGXIBDEVICES\",\n    \"docker_volumes\": \"-v $DATADIR:/data -v $LOGDIR:/results\",\n    \"nvidia_visible_devices\": \"$NVIDIA_VISIBLE_DEVICES\",\n    \"docker_exec\": \"env NV_GPU=${NV_GPU} nvidia-docker run --rm --net=host --uts=host --ipc=host --ulimit stack=67108864 --ulimit memlock=-1 --name=cont_${SLURM_JOB_ID} --security-opt seccomp=unconfined $IBDEVICES\",\n    \"master_ip\": \"`getent hosts \\`hostname\\` | cut -d ' ' -f1`\",\n    \"port\": 4242,\n    \"ssh\": \"ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no $hostn\",\n    \"srun\": \"srun -N 1 -n 1 -w $hostn\",\n    \"log_file_base\": \"${LOGDIR}/${DATESTAMP}\",\n    \"dockerenv\": [\n      \"-e\",\n      \"DGXSYSTEM=$DGXSYSTEM\",\n      \"-e\",\n      \"SEED=$SEED\",\n      \"-e\",\n      \"MULTI_NODE=$MULTI_NODE\",\n      \"-e\",\n      \"SLURM_JOB_ID=$SLURM_JOB_ID\",\n      \"-e\",\n      \"SLURM_NTASKS_PER_NODE=$SLURM_NTASKS_PER_NODE\"\n    ]\n  }\n}\n```\n\nThis script is designed to run a recommendation benchmark using the **SLURM** workload manager. The script defines various parameters and configurations for the benchmark, including the **partition**, **number of nodes**, **wall time**, **job name**, **memory allocation**, **email notifications**, **tasks per node**, **threads per core**, and **cores per socket**.\n\nHere's a breakdown of the script's components and resources:\n\n- **SLURM:** This is the workload manager used to schedule and execute the benchmark job.\n- **Docker:** The benchmark is run within a Docker container. The script defines the container image, volumes, and execution command.\n- **NVIDIA GPUs:** The benchmark requires access to NVIDIA GPUs, which are specified using the `NVIDIA_VISIBLE_DEVICES` environment variable.\n- **Data:** The benchmark utilizes data stored in the `DATADIR` directory.\n- **Log files:** Results and logs are written to the `LOGDIR` directory.\n- **Python:** The script utilizes Python for pre-processing, cache clearing, and running the benchmark itself. \n- **Multi-node support:** The script is designed to run on multiple nodes, using Slurm's `srun` command and configuring the `MULTI_NODE` environment variable to manage communication between nodes.\n\nThe script includes steps for pre-processing the dataset, clearing cache, and launching the benchmark on multiple nodes. It also sets up the environment variables required by the benchmark and handles communication between nodes.\n\nIn addition to the resources mentioned above, the script requires access to specific libraries and tools, including:\n\n- **SLURM client tools:** To interact with the SLURM workload manager.\n- **Docker client:** To build and run Docker containers.\n- **NVIDIA drivers:** To support NVIDIA GPUs.\n- **Python libraries:** Including the necessary libraries for pre-processing, cache clearing, and running the benchmark. \n- **Network connectivity:** To allow communication between nodes during multi-node runs. \n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "citation_metadata": {
+                "citation_sources": [
+                    {
+                        "start_index": 765,
+                        "end_index": 957,
+                        "uri": "https://github.com/popperized/popper-experiments",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 1224,
+                        "end_index": 1486,
+                        "uri": "https://github.com/mlcommons/training_results_v0.6",
+                        "license_": ""
+                    }
+                ]
+            },
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 2146,
+        "candidates_token_count": 992,
+        "total_token_count": 3138,
+        "cached_content_token_count": 0
+    }
+}

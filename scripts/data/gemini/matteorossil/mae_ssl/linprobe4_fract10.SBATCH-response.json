@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"Slurm\",\n  \"details\": {\n    \"nodes\": 1,\n    \"tasks_per_node\": 1,\n    \"cpus_per_task\": 16,\n    \"time\": \"24:00:00\",\n    \"memory\": \"50GB\",\n    \"gpu\": 1,\n    \"job_name\": \"10_lp_200K_deblur_new\",\n    \"output_file\": \"/scratch/mr6744/pytorch/outputs_slurm/%j.out\",\n    \"environment\": {\n      \"MASTER_PORT\": \"random port between 10000 and 65500\",\n      \"WORLD_SIZE\": \"number of nodes * tasks per node\",\n      \"MASTER_ADDR\": \"hostname of the compute node\",\n      \"modules\": \"purged before running the command\"\n    },\n    \"singularity_image\": \"/scratch/work/public/singularity/cuda11.6.124-cudnn8.4.0.27-devel-ubuntu20.04.4.sif\",\n    \"overlay_filesystems\": [\n      \"/scratch/mr6744/pytorch/overlay-25GB-500K.ext3:ro\",\n      \"/vast/work/public/ml-datasets/imagenet/imagenet-train.sqf:ro\",\n      \"/vast/work/public/ml-datasets/imagenet/imagenet-val.sqf:ro\"\n    ],\n    \"command\": \"python -u main_linprobe.py --model vit_small_patch16 --cls_token --finetune /vast/mr6744/pretrained_models2/200K_deblur/run3/checkpoint-999.pth --batch_size 128 --epochs 100 --num_workers 16 --output_dir /vast/mr6744/linear_evaluation/200K_deblur/fract10 --log_dir /vast/mr6744/linear_evaluation/200K_deblur/fract10 --blr 0.1 --weight_decay 0.0 --nb_classes 1000 --data_path /imagenet --frac_retained 0.1\"\n  }\n}\n```\n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 634,
+        "candidates_token_count": 545,
+        "total_token_count": 1179,
+        "cached_content_token_count": 0
+    }
+}

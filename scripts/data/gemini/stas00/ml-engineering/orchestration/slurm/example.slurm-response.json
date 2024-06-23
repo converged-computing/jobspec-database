@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"Slurm\",\n  \"details\": {\n    \"job_name\": \"example-job\",\n    \"nodes\": 2,\n    \"tasks_per_node\": 1,\n    \"cpus_per_task\": 96,\n    \"gpus_per_node\": 8,\n    \"time\": \"0:10:00\",\n    \"partition\": \"xyz-cluster\",\n    \"launcher\": \"python -u -m torch.distributed.run\",\n    \"script\": \"torch-distributed-gpu-test.py\",\n    \"log_path\": \"main_log.txt\",\n    \"conda_env\": \"stas-xxx\",\n    \"startup_script\": \"/path/to/start-xxx-user\",\n    \"srun_args\": \"--wait=60 --kill-on-bad-exit=1\"\n  }\n}\n```\n\n**Explanation:**\n\n* **Slurm:** This script is designed to run on a Slurm cluster. Slurm is a workload manager used to manage and schedule jobs on a cluster.\n* **Job Submission:** The script starts by defining various Slurm directives using `#SBATCH`. These define:\n    * `--job-name`: The name of the job.\n    * `--nodes`: The number of nodes to request (2 in this case).\n    * `--ntasks-per-node`: The number of tasks to launch per node (1 in this case, each task is a distributed process).\n    * `--cpus-per-task`: The number of CPUs to allocate per task (96 in this case).\n    * `--gres=gpu:8`: The number of GPUs to allocate per node (8 in this case).\n    * `--time`: The maximum runtime of the job.\n    * `--exclusive`:  Request exclusive access to the nodes.\n    * `--partition`: The partition of the cluster to submit the job to.\n    * `--output`: Where to write the output of the job.\n* **Conda Environment:** The script assumes a conda environment named `stas-xxx` is used. It also allows for a custom start-up script.\n* **Distributed Training:** The script leverages `torch.distributed.run` to run distributed training with PyTorch. It uses:\n    * `nproc_per_node`: Sets the number of processes per node (equal to the number of GPUs).\n    * `nnodes`: Number of nodes used in the distributed training.\n    * `rdzv_endpoint`: The address and port for the rendezvous server to coordinate the distributed processes.\n    * `rdzv_backend`: The backend used for rendezvous (c10d is a common choice).\n    * `max_restarts`: The maximum number of restarts allowed.\n    * `role`: A tag used to identify the role of each process.\n* **Script Execution:** The script runs the `torch-distributed-gpu-test.py` script, which is assumed to be a PyTorch script for distributed training. \n* **Srun:** The script uses `srun` (Slurm's run command) to execute the training script on the cluster nodes.\n* **Error Handling:** The script implements error handling and logging mechanisms using Slurm's features and setting environment variables for PyTorch.\n* **Logging:** The output of the script is logged to `main_log.txt`.\n\nThis script is an example of how to run a distributed training job on a Slurm cluster with PyTorch. \n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 806,
+        "candidates_token_count": 773,
+        "total_token_count": 1579,
+        "cached_content_token_count": 0
+    }
+}

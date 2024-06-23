@@ -1,0 +1,56 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"ParaView\",\n  \"details\": {\n    \"software\": [\n      \"sarus\",\n      \"daint-gpu\",\n      \"ParaView\",\n      \"pyfr\"\n    ],\n    \"resources\": {\n      \"slurm\": {\n        \"job_name\": \"{{ jobName }}\",\n        \"account\": \"{{ account }}\",\n        \"time\": \"00:05:00\",\n        \"nodes\": \"{{ ntasks }}\",\n        \"ntasks_per_node\": 1,\n        \"partition\": \"{{ partition }}\",\n        \"constraint\": \"{{ constraint }}\",\n        \"reservation\": \"{{ reservation }}\"\n      },\n      \"environment_variables\": {\n        \"workdir\": \"{{ jobDir }}\",\n        \"final_output_dir\": \"{{ jobDir }}\"\n      },\n      \"modules\": [\n        \"sarus\",\n        \"daint-gpu\",\n        \"ParaView\"\n      ]\n    },\n    \"commands\": [\n      \"cd {{ jobDir }}\",\n      \"sarus run --mount=type=bind,src=$(pwd),dst=/pyfr --workdir=/pyfr ethcscs/pyfr:1.12.0-cuda11.3-mpich3.1.4-ubuntu20.04 pyfr export inc-cylinder.pyfrm $a ${name}.vtu\",\n      \"srun pvbatch post_proc.py ${workdir}\",\n      \"convert  -delay 50 $(ls -v1 ${workdir}/imag*.png) ${final_output_dir}/imag.gif\"\n    ]\n  }\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "citation_metadata": {
+                "citation_sources": [
+                    {
+                        "start_index": 739,
+                        "end_index": 878,
+                        "uri": "https://github.com/eth-cscs/firecrest-training-2023",
+                        "license_": ""
+                    }
+                ]
+            },
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 434,
+        "candidates_token_count": 375,
+        "total_token_count": 809,
+        "cached_content_token_count": 0
+    }
+}

@@ -1,0 +1,38 @@
+{
+    "application": "SLURM",
+    "details": {
+        "resource_requirements": {
+            "nodes": 32,
+            "tasks": 32,
+            "tasks_per_node": 1,
+            "cpus_per_task": 12,
+            "gpu": true,
+            "partition": "normal",
+            "time": "01:20:00"
+        },
+        "software_requirements": {
+            "modules": [
+                "daint-gpu"
+            ],
+            "conda_env": "py38_oktopk",
+            "python_version": "python"
+        },
+        "script_arguments": {
+            "dnn": "lstman4",
+            "density": 0.02,
+            "compressor": "oktopk",
+            "nworkers": 32,
+            "nwpernode": 1,
+            "sigmascale": 2.5,
+            "PY": "python",
+            "max_epochs": 10,
+            "batch_size": "$batch_size",
+            "data_dir": "$data_dir",
+            "lr": "$lr",
+            "nstepsupdate": "$nstepsupdate"
+        },
+        "script_execution": {
+            "command": "srun $PY -m mpi4py main_trainer.py --dnn $dnn --dataset $dataset --max-epochs 10 --batch-size $batch_size --nworkers $nworkers --data-dir $data_dir --lr $lr --nwpernode $nwpernode --nsteps-update $nstepsupdate --compression --sigma-scale $sigmascale --density $density --compressor $compressor"
+        }
+    }
+}

@@ -1,0 +1,38 @@
+{
+    "application": "SLURM",
+    "software": [
+        "python",
+        "conda",
+        "transformers"
+    ],
+    "resources": [
+        "CPU",
+        "GPU",
+        "memory",
+        "storage"
+    ],
+    "environment": {
+        "partition": "gpu_p5",
+        "nodes": 1,
+        "tasks_per_node": 1,
+        "GPUs": 1,
+        "CPUs": 10,
+        "time": "4:00:00",
+        "modules": [
+            "cpuarch/amd",
+            "python",
+            "conda"
+        ],
+        "environment_variables": {
+            "TRANSFORMERS_OFFLINE": 1
+        }
+    },
+    "script": {
+        "name": "annotate",
+        "file": "annotate_grammaticality_nn.py",
+        "arguments": {
+            "model": "lightning_logs/version_408635",
+            "data_dir": "data/manual_annotation/all/"
+        }
+    }
+}

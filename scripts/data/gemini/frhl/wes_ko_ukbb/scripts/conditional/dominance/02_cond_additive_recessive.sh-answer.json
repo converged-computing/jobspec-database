@@ -1,0 +1,56 @@
+{
+    "application": "SLURM",
+    "details": {
+        "script_language": "Bash",
+        "software_dependencies": [
+            "saige",
+            "plink",
+            "R",
+            "Spark"
+        ],
+        "resource_requirements": {
+            "cluster": "lindgren.prj",
+            "account": "lindgren.prj",
+            "job_name": "cond_additive_recessive",
+            "working_directory": "/well/lindgren-ukbb/projects/ukbb-11867/flassen/projects/KO/wes_ko_ukbb",
+            "output_file": "logs/cond_additive_recessive.log",
+            "error_file": "logs/cond_additive_recessive.errors.log",
+            "partition": "short",
+            "cpus_per_task": 1,
+            "array_tasks": "11-331",
+            "open_mode": "append"
+        },
+        "input_data": {
+            "vcf_dir": "data/conditional/dominance/combine_encodings",
+            "pheno_dir": "data/phenotypes",
+            "spark_dir": "data/tmp/spark",
+            "grm_dir": "data/saige/grm/input/dnanexus",
+            "grm_mtx": "data/saige/grm/input/dnanexus/ukb_eur_200k_grm_fitted_relatednessCutoff_0.05_2000_randomMarkersUsed.sparseGRM.mtx",
+            "grm_sam": "data/saige/grm/input/dnanexus/ukb_eur_200k_grm_fitted_relatednessCutoff_0.05_2000_randomMarkersUsed.sparseGRM.mtx.sampleIDs.txt",
+            "plink_file": "data/saige/grm/input/dnanexus/ukb_eur_200k_grm_grch38_rv_merged",
+            "sig_genes_dir": "data/conditional/combined/sig_genes",
+            "sig_genes": "data/conditional/combined/sig_genes/sig_genes_after_sig_prs_176k.txt.gz",
+            "cond_additive_dir": "data/conditional/dominance/combine_encodings",
+            "cond_additive_file": "data/conditional/dominance/combine_encodings/ukb_eur_wes_200k_chrCHR_pLoF_damaging_missense.additive.txt",
+            "cond_common_dir": "data/conditional/common/combined",
+            "cond_common_file": "data/conditional/common/combined/ukb_eur_wes_200k_chrCHR_pLoF_damaging_missense_w_common_markers.txt"
+        },
+        "output_data": {
+            "step1_dir": "data/saige/output/{trait}/step1",
+            "step2_dir": "data/saige/output/{trait}/step2_dominance/min_mac{min_mac}"
+        },
+        "parameters": {
+            "use_prs": "1",
+            "min_mac": "4",
+            "tasks": "1-22",
+            "project": "lindgren.prj"
+        },
+        "functions": [
+            "submit_spa_binary_with_csqs",
+            "submit_spa_cts_with_csqs",
+            "submit_spa_with_csqs",
+            "submit_spa_job",
+            "submit_merge_job"
+        ]
+    }
+}

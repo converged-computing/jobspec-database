@@ -1,0 +1,50 @@
+{
+    "application": "Slurm",
+    "details": {
+        "partition": "alpha",
+        "walltime": "23:59:59",
+        "nodes": 1,
+        "ntasks": 1,
+        "cpus-per-task": 8,
+        "account": "p_ml_il",
+        "gres": "gpu:1",
+        "mail-user": "julius.gonsior@tu-dresden.de",
+        "mem": "120GB",
+        "output": "/scratch/ws/1/s5968580-btw/out-%A_%a.txt",
+        "error": "/scratch/ws/1/s5968580-btw/error-%A_%a.txt",
+        "array": "0-200",
+        "modules": [
+            "modenv/hiera",
+            "GCC/10.2.0",
+            "CUDA/11.1.1",
+            "OpenMPI/4.0.5",
+            "PyTorch/1.10.0"
+        ],
+        "environment_variables": [
+            "OMP_NUM_THREADS=$SLURM_CPUS_ON_NODE",
+            "HF_MODULE_CACHE='./hf-cache'",
+            "TRANSFORMERS_CACHE=\"./hf-cache\"",
+            "HF_DATASETS_CACHE=\"./hf-cache\""
+        ],
+        "python_packages": [
+            "dill",
+            "scikit-learn",
+            "tqdm",
+            "matplotlib",
+            "seaborn",
+            "torchtext",
+            "transformers",
+            "datasets"
+        ],
+        "python_script": "/scratch/ws/1/s5968580-btw/code/run_experiment.py",
+        "script_arguments": [
+            "--taurus",
+            "--workload",
+            "passive",
+            "--n_array_jobs",
+            "201",
+            "--array_job_id",
+            "$SLURM_ARRAY_TASK_ID"
+        ]
+    }
+}

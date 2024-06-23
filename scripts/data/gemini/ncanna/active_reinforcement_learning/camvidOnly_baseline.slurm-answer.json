@@ -1,0 +1,62 @@
+{
+    "application": "Singularity",
+    "details": {
+        "environment": {
+            "module": "anaconda/2019.10-py3.7",
+            "singularity": "3.5.2"
+        },
+        "resource": {
+            "gpu": "p100",
+            "gpu_count": 4,
+            "partition": "gpu",
+            "account": "gutintelligencelab",
+            "job_name": "Baseline_Ralis_CAMVID_Only",
+            "time": "72:00:00",
+            "tasks": 1
+        },
+        "script": {
+            "data_path": "/home/pm2kb/RL_proj/SegNet",
+            "ckpt_path": "/scratch/pm2kb/ckpt_seg",
+            "model": "ralis-master/run.py",
+            "singularity_image": "~/pytorch-1.4.0-py37.sif",
+            "load_weights": "camvid_pretrained_dt",
+            "dataset": "camvid",
+            "al_algorithms": [
+                "random",
+                "entropy",
+                "bald"
+            ],
+            "budgets": [
+                480,
+                720,
+                960,
+                1200,
+                1440,
+                1920
+            ],
+            "seeds": [
+                20,
+                50,
+                234,
+                4560,
+                12
+            ],
+            "input_size": [
+                224,
+                224
+            ],
+            "train_batch_size": 32,
+            "val_batch_size": 4,
+            "patience": 150,
+            "region_size": [
+                80,
+                90
+            ],
+            "num_each_iter": 24,
+            "rl_pool": [
+                50,
+                10
+            ]
+        }
+    }
+}

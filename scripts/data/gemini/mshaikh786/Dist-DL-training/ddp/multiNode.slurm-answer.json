@@ -1,0 +1,33 @@
+{
+    "application": "PyTorch",
+    "details": {
+        "framework": "PyTorch",
+        "resource_requirements": {
+            "gpus": 4,
+            "gpus_per_node": 2,
+            "tasks": 4,
+            "tasks_per_node": 2,
+            "cpus_per_task": 8,
+            "time": "00:10:00",
+            "constraint": "a100",
+            "reservation": "DS-TRAINING"
+        },
+        "modules": [
+            "dl",
+            "pytorch"
+        ],
+        "environment_variables": {
+            "NCCL_DEBUG": "INFO",
+            "PYTHONFAULTHANDLER": "1",
+            "DATA_DIR": "/ibex/ai/reference/CV/tinyimagenet",
+            "OMP_NUM_THREADS": "1"
+        },
+        "script": "ddp.py",
+        "parameters": {
+            "epochs": 10,
+            "lr": 0.001,
+            "num-workers": 8,
+            "batch-size": 256
+        }
+    }
+}

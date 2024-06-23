@@ -1,0 +1,14 @@
+{
+    "application": "PBS",
+    "details": {
+        "project": "12001458",
+        "job_type": "oe",
+        "queue": "dgx",
+        "nodes": 1,
+        "cpus": 10,
+        "gpus": 1,
+        "walltime": "6:00:00",
+        "output_file": "/home/projects/12001458/yufei/espnet/egs2/librispeech/asr1/exp/downmodel/asr_train_asr_conformer6_n_fft512_hop_length256_raw_en_bpe5000_scheduler_confwarmup_steps40000_optim_conflr0.0025_sp_ilme_share_tfb/qsub.log",
+        "command": "nvidia-smi\ncd /home/projects/12001458/yufei\nsource /home/projects/12001458/yufei/path-dgx.sh\ncd /home/projects/12001458/yufei/espnet/egs2/librispeech/asr1\n. ./path.sh\nset -e\nset -u\nset -x\nset -o pipefail\nexp_dir=/home/projects/12001458/yufei/espnet/egs2/librispeech/asr1/exp/downmodel/asr_train_asr_conformer6_n_fft512_hop_length256_raw_en_bpe5000_scheduler_confwarmup_steps40000_optim_conflr0.0025_sp_ilme_share_tfb\npython3 -m espnet2.bin.asr_train_ilme \\\n--ngpu 1 \\\n--use_preprocessor true \\\n--bpemodel data/en_token_list/bpe_unigram5000/bpe.model \\\n--token_type bpe \\\n--token_list data/en_token_list/bpe_unigram5000/tokens.txt \\\n--non_linguistic_symbols none \\\n--cleaner none \\\n--g2p none \\\n--valid_data_path_and_name_and_type dump/raw/dev/wav.scp,speech,sound \\\n--valid_data_path_and_name_and_type dump/raw/dev/text,text,text \\\n--valid_shape_file exp/asr_stats_raw_en_bpe5000_sp/valid/speech_shape \\\n--valid_shape_file exp/asr_stats_raw_en_bpe5000_sp/valid/text_shape.bpe \\\n--resume true \\\n--ignore_init_mismatch false \\\n--fold_length 80000 \\\n--fold_length 150 \\\n--output_dir $exp_dir \\\n--config conf/tuning/train_asr_conformer6_n_fft512_hop_length256_ilme_share.yaml \\\n--frontend_conf fs=16k \\\n--normalize=global_mvn \\\n--normalize_conf stats_file=exp/asr_stats_raw_en_bpe5000_sp/train/feats_stats.npz \\\n--train_data_path_and_name_and_type dump/raw/train_960_sp/wav.scp,speech,sound \\\n--train_data_path_and_name_and_type dump/raw/train_960_sp/text,text,text \\\n--train_shape_file exp/asr_stats_raw_en_bpe5000_sp/train/speech_shape \\\n--train_shape_file exp/asr_stats_raw_en_bpe5000_sp/train/text_shape.bpe"
+    }
+}

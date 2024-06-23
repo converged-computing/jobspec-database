@@ -1,0 +1,36 @@
+{
+    "application": "Slurm",
+    "details": {
+        "language": "Bash",
+        "libraries": [
+            "Slurm",
+            "HPX",
+            "MPI",
+            "Libfabric",
+            "CUDA"
+        ],
+        "resources": {
+            "nodes": "2^N (configurable)",
+            "time": "00:45:00 (configurable)",
+            "queue": "Normal or large (depending on node count)",
+            "constraint": "GPU",
+            "partition": "Normal or large (configurable)",
+            "account": "D69 (optional)"
+        },
+        "job_submission": {
+            "job_name": "octotiger-N%04d-L%05d-t%02d-%s",
+            "output_file": "slurm.out",
+            "error_file": "slurm.err",
+            "distribution": "Cyclic",
+            "executable": "octotiger"
+        },
+        "program_params": [
+            "MPI_ENABLE",
+            "FAB_ENABLE",
+            "--hpx:threads=${THREADS_PERTASK}",
+            "${HPX_ARGS}",
+            "${PROGRAM_ARGS}"
+        ],
+        "file_copy": "v1309.ini agas-pfx-counters.cfg"
+    }
+}

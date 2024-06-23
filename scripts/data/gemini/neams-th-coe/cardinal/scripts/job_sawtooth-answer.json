@@ -1,0 +1,39 @@
+{
+    "application": "PBS",
+    "details": {
+        "resource_requirements": {
+            "nodes": 1,
+            "cpus": 48,
+            "mpi_processes": 24,
+            "omp_threads": 2,
+            "walltime": "5:00"
+        },
+        "modules": [
+            "use.moose",
+            "moose-tools",
+            "openmpi/4.1.5_ucx1.14.1",
+            "cmake/3.27.7-gcc-12.3.0-5cfk"
+        ],
+        "environment_variables": {
+            "CARDINAL_DIR": "$HOME/cardinal",
+            "OMP_PROC_BIND": "true"
+        },
+        "executables": [
+            "cardinal-opt"
+        ],
+        "simulations": [
+            {
+                "name": "OpenMC",
+                "input_file": "openmc_master.i",
+                "directory": "$CARDINAL_DIR/test/tests/neutronics/feedback/lattice",
+                "output_file": "logfile"
+            },
+            {
+                "name": "NekRS",
+                "input_file": "nek_master.i",
+                "directory": "$CARDINAL_DIR/test/tests/cht/sfr_pincell",
+                "output_file": "logfile"
+            }
+        ]
+    }
+}

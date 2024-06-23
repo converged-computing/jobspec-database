@@ -1,0 +1,41 @@
+{
+    "application": "SLURM",
+    "details": {
+        "resources": {
+            "nodes": 1,
+            "tasks_per_node": 1,
+            "cpus_per_task": 1,
+            "time": "10:00:00",
+            "memory": "64GB",
+            "gpu": 1
+        },
+        "software": {
+            "cuda": "9.0.176",
+            "cudnn": "9.0v7.0.5",
+            "gcc": "6.3.0",
+            "python": "3.6.3",
+            "pytorch": "0.3.0_4"
+        },
+        "libraries": {
+            "corenlp": "$SCRATCH/data/corenlp/*"
+        },
+        "script": {
+            "name": "train.py",
+            "path": "$SRCDIR/train.py",
+            "arguments": {
+                "model_dir": "$SCRATCH/DrQA/models",
+                "rnn_type": "tcn",
+                "concat_rnn_layers": "False",
+                "bidirectional": "True",
+                "tcn_filter_size": 2,
+                "doc_layers": 5,
+                "question_layers": 9,
+                "num_epochs": 60,
+                "batch_size": 128,
+                "dropout_rnn": 0.1,
+                "norm": "group",
+                "affine": "False"
+            }
+        }
+    }
+}

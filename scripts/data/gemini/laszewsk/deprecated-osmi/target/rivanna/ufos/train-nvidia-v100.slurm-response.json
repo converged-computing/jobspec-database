@@ -1,0 +1,56 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"Singularity\",\n  \"details\": {\n    \"resource_requirements\": {\n      \"nodes\": 1,\n      \"tasks\": 1,\n      \"time\": \"02:00:00\",\n      \"partition\": \"bii-gpu\",\n      \"account\": \"bii_dsc_community\",\n      \"gpu\": \"v100:1\",\n      \"memory\": \"32G\"\n    },\n    \"software_requirements\": {\n      \"modules\": [\n        \"singularity\",\n        \"tensorflow/2.10.0\",\n        \"gcc\",\n        \"openmpi\",\n        \"python\"\n      ],\n      \"python_packages\": [\n        \"requirements-rivanna.txt\"\n      ],\n      \"container\": \"cloudmesh-nvidia.sif\"\n    },\n    \"commands\": [\n      \"nvidia-smi\",\n      \"source $PROJECT_DIR/ENV3/bin/activate\",\n      \"pip install -r $RUN_DIR/requirements-rivanna.txt\",\n      \"which python\",\n      \"cms gpu watch --gpu=0 --delay=0.5 --dense > $SLURM_JOBID.gpu.log &\",\n      \"cd $MODEL_DIR\",\n      \"singularity exec --nv $RUN_DIR/$NAME.sif python train.py small_lstm\"\n    ]\n  }\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "citation_metadata": {
+                "citation_sources": [
+                    {
+                        "start_index": 577,
+                        "end_index": 886,
+                        "uri": "https://github.com/laszewsk/osmi",
+                        "license_": ""
+                    }
+                ]
+            },
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 472,
+        "candidates_token_count": 323,
+        "total_token_count": 795,
+        "cached_content_token_count": 0
+    }
+}

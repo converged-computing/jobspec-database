@@ -1,0 +1,46 @@
+{
+    "application": "MPI",
+    "details": {
+        "environment": {
+            "conda_environment": "3DCNN",
+            "modules": [
+                "conda"
+            ],
+            "variables": {
+                "MPICH_GPU_SUPPORT_ENABLED": "1",
+                "NCCL_COLLNET_ENABLE": "1",
+                "NCCL_NET_GDR_LEVEL": "PHB",
+                "MASTER_ADDR": "`/bin/hostname -s`",
+                "NNODES": "`wc -l < $PBS_NODEFILE`",
+                "NRANKS_PER_NODE": "`nvidia-smi -L | wc -l`",
+                "NTOTRANKS": "`(( NNODES * NRANKS_PER_NODE ))`",
+                "NDEPTH": "16",
+                "set_affinity_cmd": "./scripts/polaris/set_affinity_gpu_polaris.sh",
+                "Command": "python main.py --dataset_name ABCD --fine_tune_task binary_classification --target ADHD --num_workers 16 --dataset_split_num 1 --step 3 --nEpochs_phase3 10  --exp_name from_scratch_cleaned_image_split1_optuna --image_path /lus/grand/projects/STlearn/7.cleaned_image_MNI_to_TRs",
+                "Optuna_CMD": " --use_optuna --optim_phase3 AdamW --hyp_lr_init --hyp_lr_gamma --hyp_weight_decay --hyp_dropout"
+            }
+        },
+        "resources": {
+            "cluster": "polaris",
+            "queue": "prod",
+            "account": "STlearn",
+            "nodes": 10,
+            "walltime": "2:00:00",
+            "filesystems": [
+                "home",
+                "grand"
+            ],
+            "placement": "scatter",
+            "mpi_ranks": {
+                "total": "${NTOTRANKS}",
+                "per_node": "${NRANKS_PER_NODE}",
+                "depth": "${NDEPTH}",
+                "binding": "depth"
+            },
+            "openmp_threads": {
+                "per_rank": "8",
+                "placement": "threads"
+            }
+        }
+    }
+}

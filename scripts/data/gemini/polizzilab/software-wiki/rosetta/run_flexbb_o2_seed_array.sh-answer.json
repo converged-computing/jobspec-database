@@ -1,0 +1,47 @@
+{
+    "application": "Rosetta",
+    "details": {
+        "software": [
+            "Rosetta 3.13",
+            "gcc 4.8.5"
+        ],
+        "resources": {
+            "partition": "short",
+            "time": "0-1",
+            "cores": 1,
+            "memory": "2G",
+            "database": "/n/app/rosetta/3.13/database/"
+        },
+        "input_files": [
+            "ABCD.pdb",
+            "LIG.params",
+            "flexbb.xml",
+            "resfile.txt"
+        ],
+        "output_files": [
+            "slurm.%x.%A.%a.out",
+            "slurm.%x.%A.%a.err"
+        ],
+        "options": [
+            "-nstruct 1",
+            "-run:constant_seed",
+            "-run:jran ${SLURM_ARRAY_TASK_ID}",
+            "-extra_res_fa $LIG_PARAMS",
+            "-parser:protocol $XML_SCRIPT",
+            "-packing:resfile $RESFILE",
+            "-packing:multi_cool_annealer 10",
+            "-packing:linmem_ig 10",
+            "-out:path:all $OUTDIR",
+            "-out:pdb",
+            "-overwrite",
+            "-ignore_waters false",
+            "-beta",
+            "-water_hybrid_sf"
+        ],
+        "comments": [
+            "if using water vdMs:",
+            "rename all waters to TP5",
+            "use the last 3 options above"
+        ]
+    }
+}

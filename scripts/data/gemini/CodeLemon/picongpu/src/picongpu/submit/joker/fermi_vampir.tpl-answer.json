@@ -1,0 +1,42 @@
+{
+    "application": "PIConGPU",
+    "details": {
+        "software": [
+            "boost",
+            "cupti",
+            "papi/4.2.0",
+            "cuda/5.0.35",
+            "gdb",
+            "pngwriter",
+            "cmake",
+            "hdf5/1.8.5-threadsafe",
+            "gcc/4.6.2",
+            "openmpi/1.6.2-gnu",
+            "vampirtrace/gpu-gnu-cuda5.0"
+        ],
+        "resource_requirements": {
+            "gpu_arch": "fermi",
+            "queue": "workq",
+            "mail_settings": "bea",
+            "mail_address": "someone@example.com",
+            "gpus_per_node": "4 if TBG_tasks > 4, else TBG_tasks",
+            "cores_per_node": "same as gpus_per_node",
+            "nodes": "calculated using ceil((TBG_tasks + gpus_per_node - 1) / gpus_per_node)"
+        },
+        "environment_variables": {
+            "VT_MPI_IGNORE_FILTER": "yes",
+            "VT_PFORM_GDIR": "traces",
+            "VT_FILE_PREFIX": "trace",
+            "VT_BUFFER_SIZE": "3G",
+            "VT_MAX_FLUSHES": "3",
+            "VT_GNU_DEMANGLE": "yes",
+            "VT_PTHREAD_REUSE": "yes",
+            "VT_FILTER_SPEC": "!TBG_dstPath/tbg/cuda.filter",
+            "VT_UNIFY": "yes",
+            "VT_GPUTRACE": "yes,cupti,idle,memusage,concurrent",
+            "VT_VERBOSE": "1",
+            "VT_CUPTI_METRICS": "",
+            "VT_CUDATRACE_BUFFER_SIZE": "200M"
+        }
+    }
+}

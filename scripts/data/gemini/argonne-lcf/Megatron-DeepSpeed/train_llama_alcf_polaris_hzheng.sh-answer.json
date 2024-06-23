@@ -1,0 +1,38 @@
+{
+    "application": "DeepSpeed",
+    "details": {
+        "framework": "PyTorch",
+        "model": "LLAMA_7B",
+        "resources": {
+            "nodes": 2,
+            "cores_per_node": 4,
+            "walltime": "0:30:00",
+            "queue": "debug-scaling",
+            "file_systems": [
+                "eagle",
+                "grand",
+                "home"
+            ],
+            "conda_environment": "/eagle/argonne_tpc/soft/conda.sh"
+        },
+        "parameters": {
+            "hidden_size": 4096,
+            "num_layers": 32,
+            "seq_length": 2048,
+            "embeddings": 2048,
+            "train_iters": 10,
+            "zero_stage": 2,
+            "data_file_list": "/eagle/datasets//dolma/data_file_list_reweighted.txt",
+            "output_prefix": "${MODEL}_z${ZERO_STAGE}_seqlen_mp${MP}_pp${PP}_sp${SP}_nl${NUM_LAYERS}_hs${HIDDEN_SIZE}_gb${BS}_mb${MBS}",
+            "launcher": "//eagle/argonne_tpc/soft/Megatron-DeepSpeed/..//conda/2024-03-11/lib/python3.10/site-packages/deepspeed/launcher/launcher_helper.py --launcher mpich ",
+            "deepspeed_config": "${MD}/ds_config-gpt.json",
+            "data_path": "${DATA_PATH}",
+            "vocab_file": "${MD}/dataset/gpt2-vocab.json",
+            "merge_file": "${MD}/dataset/gpt2-merges.txt"
+        },
+        "libraries": [
+            "deepspeed",
+            "mpich"
+        ]
+    }
+}

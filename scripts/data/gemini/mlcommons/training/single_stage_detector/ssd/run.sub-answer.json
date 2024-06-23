@@ -1,0 +1,30 @@
+{
+    "application": "MLPerf",
+    "details": {
+        "benchmark": "single_stage_detector",
+        "benchmark_name": "ssd",
+        "container": "mlperf-nvidia:single_stage_detector",
+        "data_directory": "/raid/datasets",
+        "log_directory": "/raid/results/single_stage_detector",
+        "number_of_experiments": 5,
+        "docker_volumes": "-v /raid/datasets:/data -v /raid/results:/results",
+        "docker_execution_command": "docker run --rm --gpus=all --net=host --uts=host --ipc=host --ulimit stack=67108864 --ulimit memlock=-1 --name=cont_${SLURM_JOB_ID} --security-opt seccomp=unconfined $IBDEVICES",
+        "slurm_environment_variables": [
+            "SLURM_JOB_ID",
+            "SLURM_NNODES",
+            "SLURM_NTASKS_PER_NODE"
+        ],
+        "resource_requirements": {
+            "gpu": "all",
+            "network": "host",
+            "storage": "/raid"
+        },
+        "other_software": [
+            "docker",
+            "ssh",
+            "srun",
+            "python",
+            "torch"
+        ]
+    }
+}

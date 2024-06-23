@@ -1,0 +1,37 @@
+{
+    "application": "Jupyter",
+    "details": {
+        "software": [
+            "Dask",
+            "matplotlib",
+            "dask-jobqueue",
+            "graphviz",
+            "xgboost",
+            "jupyter",
+            "jupyter-server-proxy",
+            "ipykernel"
+        ],
+        "resources": {
+            "slurm": {
+                "partition": "batch",
+                "job_name": "DASK_JUPYTER",
+                "nodes": 2,
+                "tasks_per_node": 10,
+                "cores_per_task": 1,
+                "time_limit": "00:30:00"
+            },
+            "environment": {
+                "venv": "$HOME/.envs/jupyter_dask_${ULHPC_CLUSTER}",
+                "jupyter_config_dir": "$HOME/jupyter/$SLURM_JOBID/",
+                "jupyter_path": "$VENV/share/jupyter:$HOME/jupyter_sing/$SLURM_JOBID/jupyter_path",
+                "jupyter_data_dir": "$HOME/jupyter/$SLURM_JOBID/jupyter_data",
+                "jupyter_runtime_dir": "$HOME/jupyter/$SLURM_JOBID/jupyter_runtime",
+                "dask_config": "${HOME}/.dask",
+                "dask_job_config": "${DASK_CONFIG}/job_${SLURM_JOB_ID}",
+                "scheduler_file": "${DASK_JOB_CONFIG}/scheduler.json",
+                "ip_address": "$(hostname -I | awk '{print $1}')",
+                "xdg_runtime_dir": ""
+            }
+        }
+    }
+}

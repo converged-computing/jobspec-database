@@ -1,0 +1,28 @@
+{
+    "application": "Docker",
+    "details": {
+        "container": "dlrm_hugectr",
+        "image": "${CONT}",
+        "mounts": [
+            "/raid/datasets:/raid/datasets",
+            "/gpfs/fs1:/gpfs/fs1",
+            "${DATADIR}:/raid/datasets/criteo/mlperf/40m.limit_preshuffled/",
+            "${LOGDIR}:${LOGDIR}"
+        ],
+        "env_vars": [
+            "DATADIR",
+            "DATASET_TYPE",
+            "DGXSYSTEM",
+            "${_config_env[@]}"
+        ],
+        "runtime_requirements": {
+            "nvidia-docker": true,
+            "python3": true,
+            "mlperf_logging": true,
+            "mlperf_logger": true
+        },
+        "scripts": [
+            "run_and_time.sh"
+        ]
+    }
+}

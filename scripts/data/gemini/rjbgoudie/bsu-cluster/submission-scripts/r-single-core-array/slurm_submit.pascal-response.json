@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"R\",\n  \"details\": {\n    \"resource_requirements\": {\n      \"nodes\": 1,\n      \"tasks\": 4,\n      \"gres\": \"gpu:4\",\n      \"time\": \"01:00:00\",\n      \"project\": \"mrc-bsu-sl3-gpu\",\n      \"partition\": \"pascal\",\n      \"OMP_NUM_THREADS\": 1\n    },\n    \"software\": {\n      \"environment\": {\n        \"module_load\": {\n          \"rhel7/default-gpu\": \"REQUIRED - loads the basic environment\",\n          \"r-3.4.1-gcc-5.4.0-jubrpyn\": \"Optional module for R version 3.4.1\"\n        }\n      },\n      \"application_executable\": \"R\",\n      \"run_options\": \"CMD BATCH --no-save --no-restore\",\n      \"mpi_implementation\": \"OpenMPI (optional)\"\n    },\n    \"work_directory\": \"SLURM_SUBMIT_DIR\"\n  }\n}\n```\n\nThe script is running an R script named \"$1\" which is passed as an argument when submitting the job. It uses SLURM to manage the job and allocate resources, including a single node with 4 GPUs. The script also sets up an environment for the R application by loading necessary modules. The script uses OpenMPI (optional) to run the R script on multiple cores across the allocated nodes. \n\nHere is a breakdown of the script and its functionalities:\n\n* **SBATCH directives:** These directives define how the job should be managed by SLURM. They specify the job name, the project to charge, the number of nodes and tasks, the number of GPUs per node, the wallclock time, and the email notifications.\n* **Environment setup:** The script loads the necessary modules for R and other required software. It also sets the `OMP_NUM_THREADS` variable for OpenMP parallel execution.\n* **Application execution:** The script defines the command to execute the R script, with options for batch mode, saving and restoring the environment. It uses `mpirun` to launch the application with multiple MPI tasks if OpenMPI is used.\n* **Work directory:** The script sets the work directory to the directory where the sbatch command was executed.\n* **Node and job information:** The script prints information about the allocated nodes, tasks, job ID, and other details.\n* **Machine file:** If nodes are allocated, the script creates a machine file containing the list of nodes for the job.\n\nThis script is designed to run R scripts on a cluster managed by SLURM. It provides a template for setting up the environment, managing resources, and executing the application. \n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 1442,
+        "candidates_token_count": 602,
+        "total_token_count": 2044,
+        "cached_content_token_count": 0
+    }
+}

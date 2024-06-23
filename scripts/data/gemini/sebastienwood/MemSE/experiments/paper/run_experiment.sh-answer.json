@@ -1,0 +1,41 @@
+{
+    "application": "Slurm",
+    "details": {
+        "resource_requests": {
+            "gpu": 1,
+            "cpus": 12,
+            "memory": "120G",
+            "time": "3-12:00",
+            "account": "def-franlp"
+        },
+        "environment": {
+            "modules": [
+                "StdEnv/2020",
+                "python/3.9",
+                "cuda",
+                "cudnn"
+            ],
+            "user": "sebwood",
+            "source_dir": "~/projects/def-franlp/sebwood/MemSE",
+            "data_path": "$SLURM_TMPDIR/data"
+        },
+        "python_dependencies": [
+            "torch",
+            "pip",
+            "setuptools"
+        ],
+        "commands": [
+            "nvidia-smi",
+            "python -m torch.utils.collect_env",
+            "python -m venv $SLURM_TMPDIR/env",
+            "source $SLURM_TMPDIR/env/bin/activate",
+            "python -m pip install --no-index --upgrade pip setuptools",
+            "python -m pip install --no-index -r $SOURCEDIR/requirements.txt",
+            "mkdir $datapath",
+            "cp ~/projects/def-franlp/$u/data/cifar-10-python.tar.gz $datapath",
+            "tar xzf $datapath/cifar-10-python.tar.gz -C $datapath",
+            "sed -n \"$line_to_read\"p \"$SOURCEDIR/experiments/paper/experiments.dat\"",
+            "eval \"${SED_RES} --datapath ${datapath}\""
+        ]
+    }
+}

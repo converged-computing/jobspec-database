@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"MITgcm\",\n  \"software\": [\n    \"intel/2021.4.0_rhel8\",\n    \"openmpi/3.1.6\",\n    \"intel/2017.0.1\",\n    \"openmpi\"\n  ],\n  \"resource_requirements\": {\n    \"queue\": \"_QUEUE_\",\n    \"time\": \"48:00:00\",\n    \"memory_per_cpu\": \"4000\",\n    \"number_of_cpus\": \"_NCPUS_\",\n    \"exclusive\": true,\n    \"requeue\": false\n  }\n}\n```\n\n**Explanation:**\n\n* **Application:** The script primarily utilizes the MITgcm (Massachusetts Institute of Technology General Circulation Model) for climate simulations.\n* **Software:**  The script identifies the software requirements based on the job's partition. \n    * **hdr partition:**  Uses Intel compiler version 2021.4.0 and OpenMPI version 3.1.6.\n    * **fdr or edr partition:** Utilizes Intel compiler version 2017.0.1 and OpenMPI (without a specific version).\n* **Resource Requirements:** The script uses the `#SBATCH` directives to define the resource requirements for running the simulation using a batch scheduler like SLURM:\n    * **-J _BRIEFNAME_**: Job name.\n    * **-p _QUEUE_**: The partition to run the job on.\n    * **-t 48:00:00**: Runtime for the job (48 hours).\n    * **--mem-per-cpu 4000**: Memory allocated per CPU core (4000 MB).\n    * **-n _NCPUS_**: Total number of CPUs to use.\n    * **--exclusive**: Ensures the job gets exclusive access to the allocated resources.\n    * **-e error.%j**: File for error output (named after the job ID).\n    * **-o stdout.%j**: File for standard output (named after the job ID).\n    * **--no-requeue**: Prevent the job from being requeued automatically.\n\n**Additional Notes:**\n\n* **Customizations:** The script assumes certain configurations and file names, and you'll need to customize these based on your specific environment and MITgcm setup.\n* **SLURM Dependencies:** This script is designed to run under SLURM. If you're using a different batch scheduler, you'll need to adjust the directives accordingly.\n* **Input/Output:** The script manages input and output files, including checkpoints and data files, in a structured way. \n* **Post-Processing:** It performs post-processing steps, including renaming and moving files to a separate directory.\n* **Iteration Management:** The script handles multiple iterations of the MITgcm simulation and submits new jobs as needed.\n* **Error Handling:** Basic checks are implemented to determine if the run was successful and to exit gracefully if issues arise. \n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 1539,
+        "candidates_token_count": 662,
+        "total_token_count": 2201,
+        "cached_content_token_count": 0
+    }
+}

@@ -1,0 +1,47 @@
+{
+    "application": "rmg-gpu",
+    "software_requirements": [
+        "gcc/7.4.0",
+        "boost",
+        "openblas/0.3.9-omp",
+        "cuda",
+        "fftw",
+        "hdf5",
+        "jsrun"
+    ],
+    "resource_requirements": {
+        "lsf": {
+            "project": [
+                "CHP107",
+                "MAT151"
+            ],
+            "job_name": "N72",
+            "output_file": "tst.o%J",
+            "walltime": "0:59",
+            "nodes": 36,
+            "alloc_flags": "smt4"
+        },
+        "environment_variables": {
+            "OMP_NUM_THREADS": "6",
+            "RMG_NUM_THREADS": "6",
+            "OMP_DYNAMIC": "FALSE",
+            "OMP_WAIT_POLICY": "passive",
+            "PAMI_IBV_ENABLE_DCT": "1",
+            "PAMI_ENABLE_STRIPING": "0",
+            "PAMI_IBV_ADAPTER_AFFINITY": "1",
+            "PAMI_IBV_DEVICE_NAME": "mlx5_0:1",
+            "PAMI_IBV_DEVICE_NAME_1": "mlx5_3:1"
+        },
+        "jsrun_parameters": {
+            "tasks": 216,
+            "processes_per_node": 1,
+            "groups": 1,
+            "ranks_per_node": 6,
+            "cores_per_rank": 7,
+            "bind": "none",
+            "latency_priority": "cpu-memory",
+            "smpiargs": "-gpu"
+        }
+    },
+    "input_file": "input"
+}

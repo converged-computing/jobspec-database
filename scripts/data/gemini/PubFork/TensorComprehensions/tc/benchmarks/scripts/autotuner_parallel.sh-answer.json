@@ -1,0 +1,26 @@
+{
+    "application": "Slurm",
+    "details": {
+        "job_name": "TensorComprehensions",
+        "cores": 8,
+        "memory": "40000 MB",
+        "execution_time": "2 hours",
+        "gpus": 2,
+        "partition": "priority,uninterrupted,learnfair,scavenge",
+        "environment_variables": {
+            "TUNER_THREADS": "20",
+            "TUNER_DEVICES": "0,1",
+            "DEVICE_NAME": "output of nvidia-smi",
+            "TC_PREFIX": "output of git rev-parse --show-toplevel",
+            "PREFIX": "tc/benchmarks/results_(date)/DEVICE_NAME",
+            "LOG_DIR": "tc/benchmarks/results_(date)/DEVICE_NAME/logs/SLURM_ARRAY_JOB_ID-SLURM_ARRAY_TASK_ID"
+        },
+        "commands": [
+            "mkdir -p ${LOG_DIR}",
+            "chmod -R 777 ${LOG_DIR}",
+            "cat ${TC_PREFIX}/tc/benchmarks/scripts/AUTOTUNER_COMMANDS | grep -v \"#\" | head -n ${SLURM_ARRAY_TASK_ID} | tail -n 1 | xargs -i echo {} > ${LOG_DIR}/COMMAND",
+            "cat ${TC_PREFIX}/tc/benchmarks/scripts/AUTOTUNER_COMMANDS | grep -v \"#\" | head -n ${SLURM_ARRAY_TASK_ID} | tail -n 1 | xargs -i bash -c \"{}\""
+        ],
+        "execution_method": "sbatch --array=1-40 -C volta ./tc/benchmarks/scripts/autotuner_parallel.sh"
+    }
+}

@@ -1,0 +1,92 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n\"application\": \"DeepSpeed\",\n\"other_software\": \"Megatron-DeepSpeed\",\n\"resource_requirements\": {\n\"nodes\": 16,\n\"tasks_per_node\": 1,\n\"cpus_per_task\": 40,\n\"gpus\": 4,\n\"time\": \"20:00:00\",\n\"account\": \"six@gpu\",\n\"data_path\": \"$six_ALL_CCFRSCRATCH/datasets-custom/c4_preprocessing/c4_en_train_text_document\",\n\"output_path\": \"$six_ALL_CCFRSCRATCH/checkpoints/tr4-1B3-rotary\",\n\"megatron_deepspeed_repo\": \"$OUTPUT_PATH/code/Megatron-DeepSpeed\",\n\"gpus_per_node\": 4,\n\"n_nodes\": 16,\n\"pp_size\": 4,\n\"tp_size\": 4,\n\"dp_size\": \"((NNODES*GPUS_PER_NODE/(PP_SIZE*TP_SIZE)))\",\n\"micro_batch_size\": 8,\n\"global_batch_size\": 512,\n\"train_iter\": \"73_242_187\",\n\"nlayers\": 24,\n\"nhidden\": 2048,\n\"nheads\": 16,\n\"ffn_hidden_size\": 8192,\n\"seq_len\": 2048,\n\"exit_interval\": 100,\n\"save_interval\": 1500,\n\"optimizer_args\": \" --optimizer adam  --adam-beta1 0.9  --adam-beta2 0.999  --adam-eps 1e-8  --lr 2e-4  --min-lr 1e-5  --lr-decay-style cosine  --lr-decay-samples 73_242_187  --lr-warmup-samples 183_105  --clip-grad 1.0  --weight-decay 1e-1 \",\n\"exit_opts\": \" --exit-duration-in-mins 1190 \",\n\"gpt_args\": \" --num-layers $NLAYERS  --hidden-size $NHIDDEN  --num-attention-heads $NHEADS  --ffn-hidden-size $FFN_HIDDEN_SIZE  --seq-length $SEQ_LEN  --micro-batch-size $MICRO_BATCH_SIZE  --global-batch-size $GLOBAL_BATCH_SIZE  --rampup-batch-size 32 32 2_000_000  --train-samples $TRAIN_ITER  --tokenizer-type PretrainedFromHF  --tokenizer-name-or-path t5-small  --loss-scale 12  --clip-grad 1.0  --fp16  --checkpoint-activations  --position-embedding-type rotary  $OPTIMIZER_ARGS  $EXIT_OPTS \",\n\"output_args\": \" --log-interval 200  --save-interval $SAVE_INTERVAL  --eval-interval 1000  --eval-iters 100  --tensorboard-dir $OUTPUT_PATH/tensorboard  --tensorboard-queue-size 5  --log-timers-to-tensorboard  --log-batch-size-to-tensorboard  --log-validation-ppl-to-tensorboard \",\n\"zero_stage\": 1,\n\"config_json\": \"./ds_config.$SLURM_JOBID.json\",\n\"deepspeed_args\": \" --deepspeed  --deepspeed_config ${config_json}  --zero-stage ${ZERO_STAGE}  --deepspeed-activation-checkpointing \",\n\"launcher\": \"python -u -m torch.distributed.launch  --nproc_per_node $GPUS_PER_NODE  --nnodes $NNODES  --master_addr $MASTER_ADDR  --master_port $MASTER_PORT \",\n\"cmd\": \" `pwd`/pretrain_gpt.py  --tensor-model-parallel-size $TP_SIZE  --pipeline-model-parallel-size $PP_SIZE  $GPT_ARGS  $OUTPUT_ARGS  --save $OUTPUT_PATH/checkpoints  --load $OUTPUT_PATH/checkpoints  --data-path $DATA_PATH  --data-impl mmap  --split 949,50,1  --distributed-backend nccl  $DEEPSPEED_ARGS \"\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "citation_metadata": {
+                "citation_sources": [
+                    {
+                        "start_index": 563,
+                        "end_index": 721,
+                        "uri": "https://github.com/rct-ai/rct-bigmodel-train",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 750,
+                        "end_index": 1008,
+                        "uri": "https://github.com/briancabbott/ChatNow",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 882,
+                        "end_index": 1201,
+                        "uri": "https://github.com/rct-ai/rct-bigmodel-train",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 1079,
+                        "end_index": 1828,
+                        "uri": "https://github.com/rct-ai/rct-bigmodel-train",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 1755,
+                        "end_index": 1917,
+                        "uri": "https://github.com/rct-ai/rct-bigmodel-train",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 2045,
+                        "end_index": 2206,
+                        "uri": "https://github.com/TurkuNLP/finngen-tools",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 2215,
+                        "end_index": 2501,
+                        "uri": "https://github.com/rct-ai/rct-bigmodel-train",
+                        "license_": ""
+                    }
+                ]
+            },
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 1838,
+        "candidates_token_count": 1048,
+        "total_token_count": 2886,
+        "cached_content_token_count": 0
+    }
+}

@@ -1,0 +1,32 @@
+{
+    "application": "amr-wind",
+    "details": {
+        "software_requirements": [
+            "AMD ROCm 5.4.3",
+            "Cray PE-Accel AMD GFX90A",
+            "PrgEnv-amd",
+            "Cray MPICH"
+        ],
+        "resource_requirements": {
+            "nodes": "%NODES%",
+            "ranks": "%RANKS%",
+            "ranks_per_node": "%RANKS_PER_NODE%",
+            "gpu_per_node": "%RANKS_PER_NODE%",
+            "walltime": "00:20:00",
+            "partition": "batch",
+            "account": "CFD116",
+            "exclusive": true
+        },
+        "environment_variables": [
+            "rocm_version=5.4.3",
+            "LD_LIBRARY_PATH=/opt/rocm-${rocm_version}/llvm/lib/:$LD_LIBRARY_PATH",
+            "HIP_LAUNCH_BLOCKING=1",
+            "FI_MR_CACHE_MONITOR=memhooks",
+            "FI_CXI_RX_MATCH_MODE=software",
+            "amrw=/autofs/nccs-svm1_home1/mullowne/SM/spack-manager/spack/opt/spack/linux-sles15-zen3/clang-15.0.0/amr-wind-main-u3riz6tomvv2umbvc5zjrqzo6qmy7zpw/bin/amr_wind"
+        ],
+        "input_file": "nrel5mw_amr.inp",
+        "output_file": "amrw-abl_gpu_%AMRW_RANKS%.o%j",
+        "output_directory": "run_${SLURM_JOBID}"
+    }
+}

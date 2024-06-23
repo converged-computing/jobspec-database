@@ -1,0 +1,48 @@
+{
+    "application": "MPI",
+    "details": {
+        "resource_requirements": {
+            "nodes": 2,
+            "cores_per_node": 128,
+            "partition": "EPYC",
+            "walltime": "02:00:00",
+            "exclusive_access": true
+        },
+        "software": {
+            "modules": [
+                "architecture/AMD",
+                "openMPI/4.1.4/gnu/12.2.1"
+            ],
+            "compiler": "gnu",
+            "compiler_version": "12.2.1",
+            "openmpi_version": "4.1.4"
+        },
+        "parallelism": {
+            "threading": {
+                "threads_per_socket": 64,
+                "affinity_policy": "close",
+                "placement": "cores"
+            },
+            "mpi": {
+                "mapping": "socket"
+            }
+        },
+        "execution": {
+            "executable": "parallel_gol.x",
+            "input_generation": {
+                "command": "mpirun -np 4 -N 2 --map-by socket parallel_gol.x -i -m $mat_size -k $mat_size"
+            },
+            "simulation": {
+                "command": "mpirun -np $n_procs -N 2 --map-by socket parallel_gol.x -r -e $evolution_type -n $n_gen -s 0",
+                "evolution_types": [
+                    "0",
+                    "1",
+                    "2"
+                ]
+            },
+            "data_collection": {
+                "csv_file": "data.csv"
+            }
+        }
+    }
+}

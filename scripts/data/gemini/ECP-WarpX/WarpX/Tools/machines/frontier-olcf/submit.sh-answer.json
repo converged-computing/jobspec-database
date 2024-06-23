@@ -1,0 +1,31 @@
+{
+    "application": "warpx",
+    "software": [
+        "SLURM",
+        "MPICH",
+        "Libfabric",
+        "rocFFT",
+        "OpenMP",
+        "AMD EPYC 7A53 CPU",
+        "AMD MI250X GPU",
+        "ROCm",
+        "Cray Libraries"
+    ],
+    "resources": {
+        "nodes": 20,
+        "cores_per_node": 56,
+        "gpus_per_node": 4,
+        "memory_per_node": "512 GB",
+        "mpi_processes_per_node": 8
+    },
+    "environment_variables": {
+        "LD_LIBRARY_PATH": "${CRAY_LD_LIBRARY_PATH}:${LD_LIBRARY_PATH}",
+        "FI_MR_CACHE_MONITOR": "memhooks",
+        "MPICH_SMP_SINGLE_COPY_MODE": "NONE",
+        "FI_CXI_RX_MATCH_MODE": "software",
+        "ROCFFT_RTC_CACHE_PATH": "/dev/null",
+        "OMP_NUM_THREADS": "1",
+        "WARPX_NMPI_PER_NODE": "8",
+        "TOTAL_NMPI": "${SLURM_JOB_NUM_NODES} * ${WARPX_NMPI_PER_NODE}"
+    }
+}

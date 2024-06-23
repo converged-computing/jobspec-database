@@ -1,0 +1,43 @@
+{
+    "application": "Slurm",
+    "details": {
+        "job_name": "merqury_hybrid_hprc_int_asm_k31",
+        "cpus_per_task": 8,
+        "ntasks": 1,
+        "nodes": 1,
+        "partition": "high_priority",
+        "mail_user": "mmastora@ucsc.edu",
+        "mail_type": "FAIL,END",
+        "mem": "300gb",
+        "threads_per_core": 1,
+        "output": "merqury_hybrid_k31_submit_logs/merqury_hybrid_k31_submit_%x_%j_%A_%a.log",
+        "time": "24:00:00",
+        "array": "1-2%1",
+        "software": [
+            "awk",
+            "tar",
+            "docker",
+            "merqury"
+        ],
+        "resource_requirements": {
+            "storage": "/private/groups",
+            "input_files": [
+                "{BASE}/{sample_id}/meryl_hybrid_outputs/{sample_id}.hybrid.meryl.tar.gz",
+                "/private/groups/hprc/assembly/batch2/{sample_id}/analysis/assembly/{sample_id}.pat.fa.gz",
+                "/private/groups/hprc/assembly/batch2/{sample_id}/analysis/assembly/{sample_id}.mat.fa.gz",
+                "/private/groups/hprc/polishing/batch3/apply_GQ_filter/{sample_id}/applyPolish_pat_outputs/{sample_id}_hap1.polished.fasta",
+                "/private/groups/hprc/polishing/batch3/apply_GQ_filter/{sample_id}/applyPolish_mat_outputs/{sample_id}_hap2.polished.fasta",
+                "/private/groups/hprc/polishing/batch3/apply_GQ_filter/hprc_polishing_QC_k31/{sample_id}/hprc_polishing_QC_outputs/Raw.hap1.insideConf.subBed.fasta",
+                "/private/groups/hprc/polishing/batch3/apply_GQ_filter/hprc_polishing_QC_k31/{sample_id}/hprc_polishing_QC_outputs/Raw.hap2.insideConf.subBed.fasta",
+                "/private/groups/hprc/polishing/batch3/apply_GQ_filter/hprc_polishing_QC_k31/{sample_id}/hprc_polishing_QC_outputs/Polished.hap1.insideConf.subBed.fasta",
+                "/private/groups/hprc/polishing/batch3/apply_GQ_filter/hprc_polishing_QC_k31/{sample_id}/hprc_polishing_QC_outputs/Polished.hap2.insideConf.subBed.fasta"
+            ],
+            "output_files": [
+                "{RAW_WG_OUTDIR}/{sample_id}_raw_merqury_hybrid_k31_wg",
+                "{POL_WG_OUTDIR}/{sample_id}_polished_merqury_hybrid_k31_wg",
+                "{RAW_CONF_OUTDIR}/{sample_id}_raw_merqury_hybrid_k31_conf",
+                "{POL_CONF_OUTDIR}/{sample_id}_polished_merqury_hybrid_k31_conf"
+            ]
+        }
+    }
+}

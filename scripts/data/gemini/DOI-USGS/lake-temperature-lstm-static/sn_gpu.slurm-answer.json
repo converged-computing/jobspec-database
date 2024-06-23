@@ -1,0 +1,41 @@
+{
+    "application": "Snakemake",
+    "details": {
+        "environment": {
+            "shell": "bash",
+            "conda_environment": "ltls",
+            "modules": [
+                "analytics",
+                "cuda11.3/toolkit/11.3.0"
+            ]
+        },
+        "job_scheduler": "Slurm",
+        "job_name": "snakemake",
+        "time_limit": "1:59:59",
+        "nodes": 1,
+        "tasks": 1,
+        "cpus_per_task": 1,
+        "output_file": "log/sbatch_all_%a_%A.out",
+        "error_file": "log/sbatch_all_%a_%A.out",
+        "cluster_config": {
+            "account": "watertemp",
+            "partition": "cpu",
+            "time_limit": "00:20:00",
+            "nodes": 1,
+            "tasks": 1,
+            "cpus_per_task": 1,
+            "gres": "gpu:1",
+            "job_name": "${run_id}_${model_id}",
+            "output_file": "${log_dir}/slurm-%j.out",
+            "error_file": "${log_dir}/slurm-%j.out"
+        },
+        "snakemake_options": {
+            "printshellcmds": true,
+            "keep_going": true,
+            "cores": "all",
+            "jobs": 8,
+            "rerun_incomplete": true,
+            "target": "3_train/out/mntoha/${run_id}/${model_id}_weights.pt"
+        }
+    }
+}

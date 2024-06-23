@@ -1,0 +1,31 @@
+{
+    "application": "Slurm",
+    "details": {
+        "language": "Bash",
+        "purpose": "Submits CUDA-compiled application scenarios to a Slurm cluster for execution",
+        "resource_requirements": {
+            "partition": "partition (e.g., 'debug', 'gpu')",
+            "nodes": "1",
+            "cpus_per_task": "1",
+            "gpus_per_task": "NUM_GPUS (varies per scenario)",
+            "memory": "4G per CPU",
+            "time": "14:00:00"
+        },
+        "software_requirements": {
+            "modules": [
+                "CUDA/11.7.0",
+                "OpenMPI/4.1.4-GCC-11.3.0",
+                "NCCL/2.12.12-GCCcore-11.3.0-CUDA-11.7.0"
+            ],
+            "libraries": [
+                "libnccl.so"
+            ],
+            "compiler": "nvcc",
+            "compiler_flags": "-rdc=true -O3 -lm"
+        },
+        "application_specific_details": {
+            "scenarios": "Each scenario is defined by a set of parameters (width, height, iterations, GPU count, compare flag, overlap flag, test flag)",
+            "execution": "The script compiles and runs the application for each scenario with the specified parameters and outputs the results to separate files"
+        }
+    }
+}

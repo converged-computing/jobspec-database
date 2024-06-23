@@ -1,0 +1,42 @@
+{
+    "application": "Dask",
+    "details": {
+        "scheduler": "SLURM",
+        "resource_requirements": {
+            "nodes": 4,
+            "cores_per_task": 1,
+            "memory_per_cpu": "3G",
+            "time": "00:10:00",
+            "module_load": "cesga/2020 gcc/system openmpi/4.0.5_ft3_cuda dask/2022.2.0",
+            "python_library": "dask_cluster.py",
+            "lustre_scratch": "LUSTRE_SCRATCH",
+            "scheduler_file": "scheduler_info.json",
+            "preload_script": "PreLoad.py"
+        },
+        "other_information": {
+            "srun_command": {
+                "flags": [
+                    "-n",
+                    "-c",
+                    "--mem",
+                    "--resv-ports",
+                    "-l"
+                ],
+                "arguments": {
+                    "nodes": "$SLURM_NTASKS",
+                    "cores_per_task": "$SLURM_CPUS_PER_TASK",
+                    "memory": "$MEMORY_PER_TASK",
+                    "ports": "$SLURM_NTASKS",
+                    "script": "./dask_cluster.py"
+                }
+            },
+            "python_arguments": {
+                "local": "$LUSTRE_SCRATCH",
+                "worker": true,
+                "scheduler_file": "$SCHED_FILE",
+                "ib": true,
+                "preload": "./PreLoad.py"
+            }
+        }
+    }
+}

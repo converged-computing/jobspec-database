@@ -1,0 +1,35 @@
+{
+    "application": "Slurm",
+    "details": {
+        "job_name": "poly_new_lr",
+        "partition": "gpu_p2",
+        "ntasks": 1,
+        "ntasks_per_node": 1,
+        "gres": "gpu:1",
+        "cpus_per_task": 10,
+        "compute_node_type": "v100-32g",
+        "hyperthreading": "disabled",
+        "time_limit": "20:00:00",
+        "output_file": "poly_new_lr%j.out",
+        "error_file": "poly_new_lr%j.err",
+        "project": "xdy@gpu",
+        "queue": "qos_gpu-dev",
+        "array_range": "0-3",
+        "modules": [
+            "tensorflow-gpu/py3/2.4.1"
+        ],
+        "python_script": "./../../long-runs/alternative_train_eval_script.py",
+        "script_arguments": [
+            "--model poly",
+            "--n_epochs_param 20 20",
+            "--n_epochs_non_param 100 150",
+            "--l_rate_param 0.01 0.001",
+            "--l_rate_non_param 0.1 0.02",
+            "--d_max_nonparam 5",
+            "--saved_model_type checkpoint",
+            "--saved_cycle cycle2",
+            "--total_cycles 2",
+            "{opt[$SLURM_ARRAY_TASK_ID]}"
+        ]
+    }
+}

@@ -1,0 +1,48 @@
+{
+    "application": "LSF",
+    "details": {
+        "job_scheduler": "LSF",
+        "queue": "dev",
+        "walltime": "5:30",
+        "memory": "3000",
+        "project": "NWPS-T2O",
+        "nodes": 2,
+        "modules": [
+            "prod_envir",
+            "prod_util",
+            "grib_util/1.0.5",
+            "PrgEnv-intel",
+            "iobuf",
+            "python/3.6.3",
+            "cfp-intel-sandybridge"
+        ],
+        "environment_variables": {
+            "IOBUF_PARAMS": "*:count=4:size=32M:prefetch=1:preflush=1",
+            "FORT_BUFFERED": "true",
+            "NWPSplatform": "DEVWCOSS",
+            "MP_PGMMODEL": "mpmd",
+            "MP_CSS_INTERRUPT": "yes",
+            "WFO": "%WFO%",
+            "siteid": "${WFO}",
+            "SITEID": "${WFO^^}",
+            "N": "n",
+            "KEEPDATA": "YES",
+            "model": "nwps",
+            "MODEL": "${model^^}",
+            "envir": "para",
+            "DEVWCOSS_USER": "$(whoami)",
+            "COMROOT": "/gpfs/hps3/ptmp/${DEVWCOSS_USER}/data/retro/com",
+            "job": "pnwps_${WFO}_fc_cgn_ret",
+            "jobid": "pnwps_${WFO}_fc_cgn_ret.$$",
+            "jlogfile": "${COMROOT}/logs/${envir}/jlogfile.${job}",
+            "WCOSS_SYSTEM": "$( echo $COMROOTp1 | cut -c7 )d1",
+            "WCOSS_SYSTEM_COM": "$( echo $COMROOTp1 | cut -c7-9 )",
+            "NWROOT": "${NWPSdir}"
+        },
+        "script_execution": {
+            "script_path": "${NWROOT}/dev/jobs/J${MODEL}_FORECAST_RET",
+            "script_name": "J${MODEL}_FORECAST_RET",
+            "upstream_dependency": "pnwps_%WFO%_pd_cg0_ret"
+        }
+    }
+}

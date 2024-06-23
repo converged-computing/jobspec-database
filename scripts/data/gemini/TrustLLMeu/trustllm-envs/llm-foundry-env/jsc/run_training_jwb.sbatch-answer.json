@@ -1,0 +1,37 @@
+{
+    "application": "SLURM",
+    "details": {
+        "scheduler": "SLURM",
+        "nodes": 1,
+        "tasks_per_node": 1,
+        "cpus_per_task": 48,
+        "gpus_per_node": 4,
+        "runtime": "00:20:00",
+        "account": "trustllm-eu",
+        "partition": "develbooster",
+        "environment_variables": {
+            "SRUN_CPUS_PER_TASK": "$SLURM_CPUS_PER_TASK",
+            "MASTER_ADDR": "$(scontrol show hostnames \"$SLURM_JOB_NODELIST\" | head -n 1)i",
+            "MASTER_PORT": "54123",
+            "DEVICES_PER_NODE": 4,
+            "TRAIN_NUM_WORKERS": 8,
+            "EVAL_NUM_WORKERS": 3,
+            "TRAIN_CONFIG_YAML_FILE": "train/yamls/pretrain/mpt-125m.yaml",
+            "INPUT_DATA_ROOT_DIR": "$data_dir/my-tiny-c4-gpt2-tok",
+            "TOKENIZER_DIR": "/p/scratch/trustllm-eu/example-data/gpt2-tokenizer",
+            "MODEL_CHECKPOINT_DIR": "$checkpoint_dir/mpt-125m",
+            "WORLD_SIZE": "$((SLURM_JOB_NUM_NODES * DEVICES_PER_NODE))",
+            "NODE_RANK": "$SLURM_NODEID"
+        },
+        "scripts": [
+            "global-scripts/get_curr_file.sh",
+            "configuration.sh",
+            "container_run.sh",
+            "training_script"
+        ],
+        "resource_requirements": {
+            "cpus": 48,
+            "gpus": 4
+        }
+    }
+}

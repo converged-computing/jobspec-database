@@ -1,0 +1,30 @@
+{
+    "application": "Jupyter Notebook",
+    "software": [
+        "Singularity",
+        "Jupyter Notebook",
+        "Python",
+        "Conda",
+        "OpenMP"
+    ],
+    "resource_requirements": {
+        "slurm": {
+            "account": "pawsey0106",
+            "partition": "work",
+            "ntasks": 1,
+            "ntasks_per_node": 1,
+            "cpus_per_task": 8,
+            "time": "08:00:00",
+            "job_name": "jupyter_notebook"
+        },
+        "environment_variables": {
+            "SINGULARITY_BINDPATH": "${MYSOFTWARE}:${MYSOFTWARE},${MYSCRATCH}:${MYSCRATCH},/run:/run,$HOME:$HOME",
+            "SINGULARITYENV_PREPEND_PATH": "/srv/conda/envs/notebook/bin:/srv/conda/condabin:/srv/conda/bin",
+            "SINGULARITYENV_XDG_DATA_HOME": "${MYSCRATCH}/.local",
+            "SINGULARITYENV_OMP_NUM_THREADS": 8,
+            "SINGULARITYENV_OMP_PROC_BIND": "close",
+            "SINGULARITYENV_OMP_PLACES": "cores"
+        },
+        "docker_image": "docker://mrayson/jupyter_sfoda:latest"
+    }
+}

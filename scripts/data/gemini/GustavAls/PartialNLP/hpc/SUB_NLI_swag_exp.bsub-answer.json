@@ -1,0 +1,30 @@
+{
+    "application": "LSF",
+    "details": {
+        "queue": "gpuv100",
+        "job_name": "swag_attn[1-5]",
+        "cores": 4,
+        "gpu": "1 (exclusive process mode)",
+        "walltime": "6:00",
+        "memory": "6GB",
+        "gpu_memory": "32GB",
+        "python_version": "3.9.11",
+        "cuda_version": "11.7",
+        "environment": "PartialNLP",
+        "libraries": [
+            "nvidia-smi",
+            "deviceQuery"
+        ],
+        "script": "SentimentAnalysis/ExperimentsSWAG.py",
+        "parameters": {
+            "output_path": "scratch/s184400/NLI_results/swag/${dataset}/${experiment}${suffix}/run_${run}",
+            "data_path": "scratch/s184400/NLI_results/Init/${dataset}_dataset/run_${run}",
+            "experiment": "nli_operator_norm_ramping",
+            "dataset_name": "rte",
+            "run_number": "${runs[$LSB_JOBINDEX - 1]}",
+            "batch_size": 16,
+            "mc_samples": 50,
+            "subclass": "attn"
+        }
+    }
+}

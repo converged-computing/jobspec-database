@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"Bert pretraining\",\n  \"software\": [\n    \"PaddlePaddle\",\n    \"Docker\",\n    \"Slurm\",\n    \"LDDL\",\n    \"Dask\",\n    \"Jemalloc\"\n  ],\n  \"resources\": {\n    \"cpu\": \"Multiple CPU cores (depending on DASK_TASKS_PER_NODE)\",\n    \"memory\": \"0 (overcommitted)\",\n    \"gpu\": \"8 per node\",\n    \"storage\": [\n      \"Dataset stored in /home/${USER}/datasets\",\n      \"Parquet shards stored in /home/${USER}/datasets/pretrain\",\n      \"Pretrained checkpoints stored in $PWD/results/${SLURM_JOB_ID}\"\n    ],\n    \"networking\": \"MPI communication between nodes using PMIx\"\n  },\n  \"other\": {\n    \"image\": \"bert:${IMAGE_VERSION}\",\n    \"mounts\": [\n      \"PWD:/workspace/bert\",\n      \"host_wikipedia_source:/datasets/wikipedia/source\",\n      \"host_pretrain:/datasets/pretrain\",\n      \"host_output:/results\",\n      \"(optional) dirname(INIT_CHECKPOINT):/checkpoints\"\n    ],\n    \"commands\": [\n      \"preprocess_bert_pretrain\",\n      \"balance_dask_output\",\n      \"python -m paddle.distributed.launch\"\n    ]\n  }\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 3243,
+        "candidates_token_count": 322,
+        "total_token_count": 3565,
+        "cached_content_token_count": 0
+    }
+}

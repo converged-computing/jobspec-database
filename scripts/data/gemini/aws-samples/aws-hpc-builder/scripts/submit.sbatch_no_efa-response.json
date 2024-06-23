@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n\"application\": \"WRF\",\n\"details\": {\n\"resource_requirements\": {\n\"nodes\": 2,\n\"partition\": \"wrfc6gn\",\n\"tasks_per_node\": 64,\n\"cpus_per_task\": 1,\n\"tasks_per_core\": 1,\n\"environment_variables\": {\n\"WRF_VERSION\": \"3.9.1\",\n\"JOB_DIR\": \"/fsx/spooler/run\",\n\"HPC_MPI\": \"openmpi\",\n\"WARCH\": \"intelmpi\",\n\"WRF_COMPILER\": \"intel\"\n}\n},\n\"software_requirements\": {\n\"compiler\": {\n\"options\": [\n\"intel\",\n\"gnu/gcc\",\n\"gnu/clang\",\n\"amd/clang\",\n\"arm/gcc\",\n\"arm/clang\"\n],\n\"default\": \"intel\"\n},\n\"mpi\": {\n\"options\": [\n\"openmpi\",\n\"mpich\",\n\"intelmpi\"\n],\n\"default\": \"openmpi\"\n}\n},\n\"script_details\": {\n\"slurm_directives\": [\n\"wait-all-nodes=1\",\n\"ntasks-per-node=64\",\n\"cpus-per-task=1\",\n\"ntasks-per-core=1\",\n\"export=ALL\",\n\"exclusive\",\n\"output=/fsx/slurm.out\",\n\"nodes=2\",\n\"partition=wrfc6gn\"\n],\n\"environment_setup\": {\n\"source\": \"/fsx/scripts/env.sh 0 0\",\n\"ulimit\": \"-s unlimited\"\n},\n\"execution\": {\n\"command\": \"mpirun --mca pml cm --mca mtl ofi --mca pml_base_verbose 10 --mca mtl_base_verbose 10 ./wrf.exe\",\n\"output_file\": \"mpirun_${WARCH}_${WRF_COMPILER}_${HPC_MPI}_debug.log\"\n},\n\"logging\": {\n\"timing_file\": \"wrf_$(arch).times\"\n}\n}\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 2,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 1019,
+        "candidates_token_count": 494,
+        "total_token_count": 1513,
+        "cached_content_token_count": 0
+    }
+}

@@ -1,0 +1,43 @@
+{
+    "application": "MPI",
+    "details": {
+        "software": [
+            "Python",
+            "mpiexec",
+            "conda",
+            "nvidia-smi",
+            "set_affinity_cmd"
+        ],
+        "resources": {
+            "cluster": "polaris",
+            "queue": "prod",
+            "nodes": 10,
+            "walltime": "1:00:00",
+            "filesystems": [
+                "home",
+                "grand"
+            ],
+            "environment_variables": [
+                "MPICH_GPU_SUPPORT_ENABLED",
+                "NCCL_COLLNET_ENABLE",
+                "NCCL_NET_GDR_LEVEL",
+                "MASTER_ADDR",
+                "NNODES",
+                "NRANKS_PER_NODE",
+                "NTOTRANKS",
+                "NDEPTH",
+                "OMP_NUM_THREADS",
+                "OMP_PLACES"
+            ],
+            "libraries": [
+                "3DCNN"
+            ],
+            "commands": [
+                "conda activate 3DCNN",
+                "cd /lus/grand/projects/STlearn/4D_fMRI_Transformer/",
+                "python main.py --step 2 --lr_init_phase2 1e5 --dataset_name ABCD --batch_size_phase2 1 --exp_name mask_loss  --image_path /lus/grand/projects/STlearn/8.masked_image_MNI_to_TRs --use_mask_loss True --dataset_split_num 1",
+                "./scripts/polaris/set_affinity_gpu_polaris.sh"
+            ]
+        }
+    }
+}

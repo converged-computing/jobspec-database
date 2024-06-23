@@ -1,0 +1,30 @@
+{
+    "application": "Slurm",
+    "details": {
+        "resources": {
+            "time": "12 hours",
+            "nodes": "1",
+            "tasks": "1",
+            "cpus": "1 per task",
+            "memory": "8 GB per CPU"
+        },
+        "modules": [
+            "intel",
+            "GCCcore/9.3.0",
+            "FFmpeg/4.2.2"
+        ],
+        "software": [
+            "ifort",
+            "matlab",
+            "ffmpeg"
+        ],
+        "commands": [
+            "ifort -o kalle_anka.x ins.f90 -mkl",
+            "./kalle_anka.x",
+            "matlab -nodisplay -r \"pl\"",
+            "ffmpeg -r 10 -i frame%05d.jpg -vf \"crop=trunc(iw/2)*2:trunc(ih/2)*2\" Gauss_N100_nu0.005.mp4",
+            "scontrol show job $SLURM_JOB_ID",
+            "js -j $SLURM_JOB_ID"
+        ]
+    }
+}

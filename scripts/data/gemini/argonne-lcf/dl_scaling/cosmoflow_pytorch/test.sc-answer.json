@@ -1,0 +1,29 @@
+{
+    "application": "PBS",
+    "details": {
+        "resource_requirements": {
+            "walltime": "4:00:00",
+            "nodes": "64:ppn=4",
+            "filesystems": "home:grand:eagle"
+        },
+        "environment_variables": {
+            "nodes": "obtained from $PBS_NODEFILE",
+            "setup.sh": "sourced from current working directory",
+            "http_proxy_polaris": "sourced from $HOME/datascience_grand/"
+        },
+        "execution": {
+            "command": "aprun -n 256 -N 4 python ./main.py +mpi.local_size=4 ++data.stage=/local/scratch/ +log.timestamp=ms_${nodes} +log.experiment_id=${PBS_JOBID} --config-name test_128x4x1_tfr",
+            "arguments": {
+                "+mpi.local_size": 4,
+                "++data.stage": "/local/scratch/",
+                "+log.timestamp": "ms_${nodes}",
+                "+log.experiment_id": "${PBS_JOBID}",
+                "--config-name": "test_128x4x1_tfr"
+            }
+        },
+        "other_software": {
+            "python": "used to execute ./main.py",
+            "aprun": "used for parallel execution"
+        }
+    }
+}

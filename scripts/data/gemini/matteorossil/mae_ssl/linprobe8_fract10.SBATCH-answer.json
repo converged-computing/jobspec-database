@@ -1,0 +1,27 @@
+{
+    "application": "SLURM",
+    "software": [
+        "singularity",
+        "python",
+        "vit_small_patch16"
+    ],
+    "resources": {
+        "nodes": 1,
+        "tasks_per_node": 1,
+        "cpus_per_task": 16,
+        "time": "24:00:00",
+        "memory": "50GB",
+        "gpu": 1,
+        "overlay": [
+            "/scratch/mr6744/pytorch/overlay-25GB-500K.ext3:ro",
+            "/vast/work/public/ml-datasets/imagenet/imagenet-train.sqf:ro",
+            "/vast/work/public/ml-datasets/imagenet/imagenet-val.sqf:ro"
+        ],
+        "singularity_image": "/scratch/work/public/singularity/cuda11.6.124-cudnn8.4.0.27-devel-ubuntu20.04.4.sif",
+        "environment_script": "/ext3/env.sh",
+        "python_script": "main_linprobe.py",
+        "data_path": "/imagenet",
+        "output_dir": "/vast/mr6744/linear_evaluation/200K_blur_deblur_full/fract10",
+        "log_dir": "/vast/mr6744/linear_evaluation/200K_blur_deblur_full/fract10"
+    }
+}

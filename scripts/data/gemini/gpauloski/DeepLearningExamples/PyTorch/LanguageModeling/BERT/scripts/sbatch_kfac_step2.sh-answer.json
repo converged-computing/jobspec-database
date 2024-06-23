@@ -1,0 +1,35 @@
+{
+    "application": "Slurm",
+    "details": {
+        "job_name": "bertkfc",
+        "output_file": "sbatch_logs/bertkfc.o%j",
+        "nodes": 16,
+        "mpi_tasks": 32,
+        "run_time": "48:00:00",
+        "email": "jgpauloski@utexas.edu",
+        "email_type": "end",
+        "partition": "v100",
+        "allocation": "Deep-Learning-at-Sca",
+        "modules": [
+            "conda",
+            "gcc/7.3.0",
+            "mvapich2-gdr/2.3.4"
+        ],
+        "conda_environment": "pytorch",
+        "mpi_environment_variables": [
+            "MV2_USE_CUDA=1",
+            "MV2_ENABLE_AFFINITY=1",
+            "MV2_THREADS_PER_PROCESS=2",
+            "MV2_SHOW_CPU_BINDING=1",
+            "MV2_CPU_BINDING_POLICY=hybrid",
+            "MV2_HYBRID_BINDING_POLICY=spread",
+            "MV2_USE_RDMA_CM=0",
+            "MV2_SUPPORT_DL=1"
+        ],
+        "hostfile": "hostfile",
+        "mpirun_command": "mpirun_rsh --export-all -np $NODES -hostfile $HOSTFILE",
+        "script": "scripts/run_step2.sh",
+        "arguments": "--ngpus $PROC_PER_NODE --nnodes $NODES --master $MASTER_RANK --output results/kfac_step2 --kfac true --resume true --mvapich",
+        "processes_per_node": 2
+    }
+}

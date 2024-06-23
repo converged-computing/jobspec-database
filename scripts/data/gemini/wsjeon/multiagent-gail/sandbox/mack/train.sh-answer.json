@@ -1,0 +1,31 @@
+{
+    "application": "SLURM",
+    "details": {
+        "resource_requirements": {
+            "account": "rpp-bengioy",
+            "cpus": 6,
+            "gpu": 1,
+            "memory": "10G",
+            "time": "20:00:00",
+            "mail_type": "ARRAY_TASKS,ALL,TIME_LIMIT_50,TIME_LIMIT_80,TIME_LIMIT_90,TIME_LIMIT",
+            "mail_user": "jeonwons@mila.quebec"
+        },
+        "software": {
+            "singularity": "module load singularity",
+            "python": "python -u $PROJECT_DIR/sandbox/mack/train_with_taskid.py --slurm_task_id=$SLURM_ARRAY_TASK_ID",
+            "rsync": "rsync -avz $SCRATCH/singularity-images/$CONTAINER_NAME $SLURM_TMPDIR",
+            "rsync_2": "rsync -avz $HOME/ray_results $SCRATCH/ray_results"
+        },
+        "container": {
+            "name": "wsjeon-marl-dev-setting-master-zsh.simg",
+            "location": "$SCRATCH/singularity-images/$CONTAINER_NAME",
+            "mount_points": {
+                "home": "/home",
+                "dataset": "/dataset/",
+                "tmp_log": "/tmp_log/",
+                "final_log": "/final_log/"
+            }
+        },
+        "project_dir": "PycharmProjects/multiagent-gail"
+    }
+}

@@ -1,0 +1,48 @@
+{
+    "application": "SLURM",
+    "software": [
+        "Python",
+        "GCCcore",
+        "Stages",
+        "srun"
+    ],
+    "resources": [
+        "GPU",
+        "CPU",
+        "memory",
+        "storage"
+    ],
+    "details": {
+        "slurm_options": [
+            "--nodes=1",
+            "--ntasks=4",
+            "--ntasks-per-node=4",
+            "--output=srun_outputs/classification/SEN12MS_BE_B3_moco_LC_rn50_100_%j.out",
+            "--error=srun_outputs/classification/SEN12MS_BE_B3_moco_LC_rn50_100_%j.err",
+            "--time=04:00:00",
+            "--job-name=BE_LC_moco",
+            "--gres=gpu:4",
+            "--cpus-per-task=10",
+            "--partition=booster"
+        ],
+        "modules": [
+            "Stages/2022",
+            "GCCcore/.11.2.0",
+            "Python"
+        ],
+        "virtual_environment": "/p/project/hai_dm4eo/wang_yi/env2/bin/activate",
+        "gpus": "0,1,2,3",
+        "python_script": "linear_BE_moco.py",
+        "lmdb_dir": "/p/project/hai_dm4eo/wang_yi/data/BigEarthNet/",
+        "checkpoints_dir": "/p/project/hai_ssl4eo/wang_yi/SSL4EO-S12/src/benchmark/transfer_classification/checkpoints/SEN12MS_BE_lc_B3_moco_rn50_100",
+        "backbone": "resnet50",
+        "train_frac": "1",
+        "batchsize": "256",
+        "lr": "8.0",
+        "schedule": "20 40",
+        "epochs": "50",
+        "num_workers": "10",
+        "seed": "42",
+        "pretrained": "/p/project/hai_ssl4eo/wang_yi/SSL4EO-S12/src/benchmark/pretrain_ssl/checkpoints/moco/SEN12MS_B3_rn50_224/checkpoint_0099.pth.tar"
+    }
+}

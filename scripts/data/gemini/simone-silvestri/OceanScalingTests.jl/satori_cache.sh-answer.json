@@ -1,0 +1,40 @@
+{
+    "application": "Julia",
+    "details": {
+        "software": {
+            "julia": "1.9",
+            "openmpi": "3.1.6-cuda-pmi-ucx-slurm-jhklron",
+            "cuda": "11.4",
+            "spack": "unknown version"
+        },
+        "resources": {
+            "cpu": {
+                "cores": 16,
+                "tasks": 1
+            },
+            "memory": "100GB",
+            "gpu": 1,
+            "time": "24:00:00",
+            "partition": "reservation7",
+            "reservation": "gpu-aware-mpi-testing",
+            "qos": "reservation7"
+        },
+        "environment": {
+            "julia_load_path": "${JULIA_LOAD_PATH}:$(pwd)/satori",
+            "julia_cuda_memory_pool": "none",
+            "common": "/nobackup/users/ssilvest/perlmutter-test",
+            "julia_depot_path": "${COMMON}/depot",
+            "julia_num_threads": "${SLURM_CPUS_PER_TASK:=1}",
+            "julia_nvtx_callbacks": "gc",
+            "ompi_mca_pml": "^ucx",
+            "ompi_mca_osc": "^ucx",
+            "ompi_mca_btl_openib_allow_ib": "true"
+        },
+        "execution": {
+            "script": "experiments/run.jl",
+            "check_bounds": "no",
+            "project": "true",
+            "precompile": "true"
+        }
+    }
+}

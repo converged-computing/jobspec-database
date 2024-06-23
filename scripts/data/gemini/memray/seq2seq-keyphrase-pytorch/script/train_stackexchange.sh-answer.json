@@ -1,0 +1,43 @@
+{
+    "application": "Slurm",
+    "details": {
+        "cluster": "gpu",
+        "gpu_count": 1,
+        "partition": [
+            "gtx1080",
+            "titanx"
+        ],
+        "job_name": "rnn.stackexchange.multi_test.general",
+        "output_file": "slurm_output/train.rnn.stackexchange.multi_test.general.out",
+        "nodes": 1,
+        "tasks_per_node": 1,
+        "cpus_per_task": 1,
+        "memory": "64GB",
+        "walltime": "6-00:00:00",
+        "qos": "long",
+        "modules": "restore",
+        "python_script": "train.py",
+        "data_path_prefix": "data/$DATA_NAME/$DATA_NAME",
+        "vocab_path": "data/$DATA_NAME/$DATA_NAME.vocab.pt",
+        "exp": "$DATA_NAME",
+        "exp_path": "$ROOT_PATH/exp/$EXP_NAME/%s.%s",
+        "batch_size": 128,
+        "bidirectional": true,
+        "run_valid_every": 2000,
+        "save_model_every": 2000,
+        "copy_attention": true,
+        "attention_mode": "$ATTENTION",
+        "copy_mode": "$ATTENTION",
+        "beam_size": 32,
+        "beam_search_batch_size": 1,
+        "train_ml": true,
+        "must_teacher_forcing": true,
+        "must_appear_in_src": true,
+        "environment_variables": {
+            "ATTENTION": "general",
+            "EXP_NAME": "rnn.stackexchange.multi_test.$ATTENTION",
+            "ROOT_PATH": "/zfs1/pbrusilovsky/rum20/seq2seq-keyphrase-pytorch",
+            "DATA_NAME": "stackexchange"
+        }
+    }
+}

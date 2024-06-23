@@ -1,0 +1,37 @@
+{
+    "application": "Legion",
+    "software_requirements": [
+        "gcc/7.3.1",
+        "cmake/3.14.5",
+        "cuda/11.7.0"
+    ],
+    "resource_requirements": {
+        "nodes": "calculated based on $LSB_DJOB_NUMPROC",
+        "gpus_per_node": 4,
+        "job_scheduler": "LSF",
+        "job_submission_script": "bsub_stencil.lsf",
+        "runtime_environment": "jsrun"
+    },
+    "other_details": {
+        "application_executable": "stencil",
+        "data_directory": "stencil_mappings",
+        "output_files": {
+            "ori": {
+                "wrapper": "oriwrapper_${numnodes}_${numgpus}_%.wrapper",
+                "prof": "oriprof_stencil_${numnodes}_${numgpus}_%.gz"
+            },
+            "dsl": {
+                "wrapper": "dslwrapper_${numnodes}_${numgpus}_%.wrapper",
+                "prof": "dslprof_stencil_${numnodes}_${numgpus}_%.gz"
+            }
+        },
+        "execution_modes": {
+            "ori": "oricmd",
+            "dsl": "dslcmd"
+        },
+        "experiment_parameters": {
+            "repeat": 5,
+            "tile": 15000
+        }
+    }
+}

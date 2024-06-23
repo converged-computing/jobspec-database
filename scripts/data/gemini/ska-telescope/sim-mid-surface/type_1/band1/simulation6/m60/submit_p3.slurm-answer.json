@@ -1,0 +1,34 @@
+{
+    "application": "Dask",
+    "software": [
+        "Dask",
+        "Python",
+        "SSH",
+        "scontrol",
+        "SBATCH",
+        "surface_simulation_elevation.py"
+    ],
+    "resource_requirements": {
+        "nodes": 12,
+        "tasks": 29,
+        "memory": "50GB per worker",
+        "wallclock_time": "23:59:59",
+        "email_type": "FAIL,END",
+        "email_address": "realtimcornwell@gmail.com",
+        "queue": "compute",
+        "environment": {
+            "PYTHONPATH": "$PYTHONPATH:$ARL",
+            "ARL_DASK_SCHEDULER": "${scheduler}:8786"
+        },
+        "files": {
+            "hostfile": "hostfile.$JOBID",
+            "shared_directory": "/mnt/storage-ssd/tim/Code/sim-mid-surface/shared",
+            "vp_directory": "/mnt/storage-ssd/tim/Code/sim-mid-surface/beams/interpolated/"
+        },
+        "commands": [
+            "dask-scheduler",
+            "dask-worker",
+            "python ../../../surface_simulation_elevation.py"
+        ]
+    }
+}

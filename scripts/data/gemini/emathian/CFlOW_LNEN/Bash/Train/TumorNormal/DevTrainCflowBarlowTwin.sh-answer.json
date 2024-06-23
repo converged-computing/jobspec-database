@@ -1,0 +1,47 @@
+{
+    "application": "SLURM",
+    "details": {
+        "job_name": "CFlowBT",
+        "queue": "qos_gpu-dev",
+        "nodes": 1,
+        "partition": "gpu_p2",
+        "tasks_per_node": 1,
+        "cpus_per_task": 3,
+        "gpus": 1,
+        "time_limit": "00:30:00",
+        "output_file": "CFlowBarlowTwinWresnet50_Dev.out",
+        "error_file": "CFlowBarlowTwinWresnet50_Dev.error",
+        "account": "uli@v100",
+        "modules": [
+            "pytorch-gpu/py3/1.9.0"
+        ],
+        "python_environment": "/gpfswork/rech/uli/ueu39kt/.local_base_timm",
+        "script": "/linkhome/rech/genkmw01/ueu39kt/cflow-ad/main_cflow.py",
+        "arguments": [
+            "--gpu",
+            "0",
+            "-inp",
+            "384",
+            "--dataset",
+            "TCAC",
+            "--root-data-path",
+            "/gpfsscratch/rech/uli/ueu39kt/Tiles_HE_all_samples_384_384_Vahadane_2",
+            "--weights-dir",
+            "/gpfsscratch/rech/ohv/ueu39kt/CFLOW/weights/DevCflowBarlowTwin",
+            "--list-file-train",
+            "infer_tiles_2711.txt",
+            "--list-file-test",
+            "infer_tiles_2711.txt",
+            "--meta-epochs",
+            "25",
+            "--sub-epochs",
+            "8",
+            "--parallel",
+            "--lr",
+            "2e-4",
+            "--enc-arch",
+            "wide_resnet50_barlowtwin_LNEN"
+        ],
+        "working_directory": "/gpfsscratch/rech/uli/ueu39kt/CFLOW/weights/DevCflowBarlowTwin"
+    }
+}

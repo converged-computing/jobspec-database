@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "Slurm\n\n```json\n{\n  \"application\": \"Slurm\",\n  \"resources\": {\n    \"nodes\": 1,\n    \"tasks_per_node\": 4,\n    \"cpus_per_task\": 16,\n    \"memory\": \"256GB\",\n    \"gpus\": 4,\n    \"modules\": [\n      \"rocm-5.4.2\",\n      \"ucx-1.13.1\",\n      \"ompi/4.1.4\"\n    ],\n    \"software\": [\n      \"gromacs_2022.3.amd1_161\",\n      \"singularity\"\n    ]\n  }\n}\n```\n\nThis script uses the Slurm workload manager to submit a job that runs on a single node with four tasks, each with 16 CPUs and 256 GB of memory.  It uses four GPUs, loading the ROCm 5.4.2, UCX 1.13.1, and Open MPI 4.1.4 modules. The script uses the Singularity container runtime to run the Gromacs 2022.3.amd1_161 software. The script runs an example MPI benchmark called STMV, using the `gmx_mpi` executable from Gromacs.  The `mdrun` command performs a molecular dynamics simulation. The script also uses `mpirun` to run the simulation across multiple processes.  The `-pin on` flag specifies that the processes should be pinned to the CPUs. The `-ntomp 16` flag specifies that each process should use 16 threads. The `-nb gpu` flag specifies that non-bonded interactions should be calculated on the GPU. The `-bonded cpu` flag specifies that bonded interactions should be calculated on the CPU. The `-pme gpu` flag specifies that the Particle Mesh Ewald (PME) method for long-range electrostatic interactions should be calculated on the GPU. The `-gpu_id 0123` flag specifies the IDs of the GPUs to use.  The `-s` flag specifies the topology file, the `-g` flag specifies the log file, the `-e` flag specifies the energy file, and the `-cpo` flag specifies the checkpoint file.  The script uses `cp` to copy the results of the simulation to the current directory, and then cleans up the temporary files."
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 1351,
+        "candidates_token_count": 527,
+        "total_token_count": 1878,
+        "cached_content_token_count": 0
+    }
+}

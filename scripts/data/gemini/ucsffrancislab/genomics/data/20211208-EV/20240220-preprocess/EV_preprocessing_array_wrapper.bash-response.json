@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n\"application\": \"RNA-seq\",\n\"other_software\": [\n\"samtools\",\n\"star\",\n\"picard\",\n\"htslib\",\n\"cutadapt\",\n\"gatk\",\n\"bamtofastq\"\n],\n\"resource_requirements\": {\n\"memory\": \"30000M\",\n\"threads\": \"4\",\n\"slurm_job_id\": \"SLURM_JOBID\",\n\"array_file\": \"array_file\",\n\"output_directory\": \"OUT\"\n}\n}\n```\n\nThis script is designed for RNA-seq analysis. It uses a combination of tools to perform the following steps:\n\n* **Quality Control:** The script checks for the existence and write permissions of output files to prevent overwriting and ensures the script exits if any command fails.\n* **UMI Handling:**  It extracts the UMI from the reads, adds it to the read name, and then uses `gatk UmiAwareMarkDuplicatesWithMateCigar` to handle duplicates while considering the UMI. \n* **Alignment:**  The script aligns reads to a reference genome using `STAR` with specified parameters for two-pass mapping.\n* **Read Filtering:** It filters aligned reads based on flags to ensure that only paired reads with at least one alignment are included in the final output.\n* **Duplicate Marking:**  The script uses `gatk UmiAwareMarkDuplicatesWithMateCigar` to mark PCR or optical duplicates, considering the UMI.\n* **Output:** The script generates several output files, including aligned BAM files, filtered fastq files, and various metrics files.\n\nThe script utilizes Slurm for job submission and resource management. It defines resource requirements such as memory (SLURM_MEM_PER_NODE), threads (SLURM_NTASKS), and scratch space. The script also uses environment variables such as `SLURM_JOBID` and `SLURM_ARRAY_TASK_ID` to manage array jobs.\n\nThe script can be run as a single job or as an array job. In array mode, it processes a list of input files defined in an array file. The resource requirements are automatically adjusted based on the number of threads defined for the array job.\n\nThe output format is in raw JSON."
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 8080,
+        "candidates_token_count": 490,
+        "total_token_count": 8570,
+        "cached_content_token_count": 0
+    }
+}

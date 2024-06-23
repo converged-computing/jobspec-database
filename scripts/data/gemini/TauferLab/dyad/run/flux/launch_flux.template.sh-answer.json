@@ -1,0 +1,57 @@
+{
+    "application": "flux",
+    "details": {
+        "requirements": {
+            "system_types": [
+                "toss",
+                "blueos"
+            ],
+            "mpi": {
+                "toss": {
+                    "enabled": true,
+                    "binding": "none",
+                    "nodes": "@NODES@",
+                    "processes_per_node": "@NODES@"
+                },
+                "blueos": {
+                    "enabled": true,
+                    "binding": "none",
+                    "nodes": "@NODES@",
+                    "processes_per_node": "ALL_CPUS",
+                    "gpu_hooks": "disabled"
+                }
+            },
+            "flux_start_opts": {
+                "default": "-o,--k-ary=@NODES@,-S,log-filename=flux_log-separate_steps.out",
+                "other_options": [
+                    "-o,-S,log-filename=flux_log-separate_steps.out",
+                    "-o,--k-ary=@NODES@",
+                    "-o,--k-ary=@NODES@,-Srundir=."
+                ]
+            },
+            "environment_variables": [
+                "SYS_TYPE",
+                "PMIX_MCA_gds"
+            ]
+        },
+        "launchers": {
+            "toss": "srun",
+            "blueos": "jsrun"
+        },
+        "resource_allocation": {
+            "nodes": "@NODES@",
+            "processes": {
+                "toss": "@NODES@",
+                "blueos": "@NODES@"
+            }
+        },
+        "logging": {
+            "filename": "flux_log-separate_steps.out",
+            "separate_steps": true
+        },
+        "other": {
+            "pty": true,
+            "gpu_support": "possible (depends on system type)"
+        }
+    }
+}

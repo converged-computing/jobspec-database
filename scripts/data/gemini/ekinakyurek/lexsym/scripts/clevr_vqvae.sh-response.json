@@ -1,0 +1,56 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"SLURM\",\n  \"details\": {\n    \"job_name\": \"clevr\",\n    \"time\": \"58:00:00\",\n    \"cpus_per_task\": 10,\n    \"ntasks_per_node\": 2,\n    \"nodes\": 2,\n    \"qos\": \"high\",\n    \"constrain\": \"xeon-g6\",\n    \"gres\": \"gpu:volta:2\",\n    \"modules\": [\n      \"cuda/11.1\",\n      \"mpi/openmpi-4.1.1\",\n      \"nccl/2.8.3-cuda11.1\"\n    ],\n    \"environment_variables\": {\n      \"MPI_FLAGS\": \"--tag-output --bind-to socket -map-by core -mca btl ^openib -mca pml ob1 -x PSM2_GPUDIRECT=1 -x NCCL_NET_GDR_LEVEL=5 -x NCCL_P2P_LEVEL=5 -x NCCL_NET_GDR_READ=1\",\n      \"MASTER_ADDR\": \"hostname -s\",\n      \"MASTER_PORT\": \"python -c 'import socket; s=socket.socket(); s.bind((\"\", 0)); print(s.getsockname()[1]); s.close()'\",\n      \"PYTHONHASHSEED\": 2,\n      \"LLSUB_RANK\": \"${SLURM_PROCID}\"\n    },\n    \"conda_environment\": \"generative\",\n    \"python_script\": \"vae_train.py\",\n    \"arguments\": {\n      \"seed\": 2,\n      \"n_batch\": 512,\n      \"n_latent\": 64,\n      \"n_codes\": 32,\n      \"n_iter\": 100000,\n      \"h_dim\": 128,\n      \"imgsize\": \"128,128\",\n      \"modeltype\": \"VQVAE\",\n      \"datatype\": \"clevr\",\n      \"lr\": 0.0003,\n      \"n_workers\": 16,\n      \"vis_root\": \"vis_test_seed_2\",\n      \"dataroot\": \"data/clevr\",\n      \"world_size\": 4,\n      \"dist_backend\": \"nccl\",\n      \"visualize_every\": 10000\n    },\n    \"ulimit\": {\n      \"n\": 10000,\n      \"x\": \"unlimited\"\n    }\n  }\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "citation_metadata": {
+                "citation_sources": [
+                    {
+                        "start_index": 377,
+                        "end_index": 548,
+                        "uri": "https://github.com/ekinakyurek/lexsym",
+                        "license_": ""
+                    }
+                ]
+            },
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 896,
+        "candidates_token_count": 602,
+        "total_token_count": 1498,
+        "cached_content_token_count": 0
+    }
+}

@@ -1,0 +1,45 @@
+{
+    "application": "SLURM",
+    "details": {
+        "scheduler": "SLURM",
+        "partition": "gpu",
+        "gpus": 1,
+        "cpus-per-gpu": 4,
+        "modules": [
+            "Anaconda3",
+            "dassl"
+        ],
+        "python": "python3",
+        "environment": {
+            "DATA": "~/Code_causal_neural_style_transfer/Dataset",
+            "DASSL": "~/Code_causal_neural_style_transfer/Code-CausalStyleTransfer/Dassl.pytorch"
+        },
+        "script": "train.py",
+        "arguments": {
+            "root": "${DATA}",
+            "seed": "${SEED}",
+            "trainer": "CausalFD",
+            "source-domains": "${S1} ${S2} ${S3}",
+            "target-domains": "${T}",
+            "dataset-config-file": "${DASSL}/configs/datasets/dg/${DATASET}.yaml",
+            "config-file": "configs/trainers/mixstyle/${DATASET}_causal_${MIX}.yaml",
+            "output-dir": "all_output/${DATASET}/${T}/${TRAINER}/${MIX}/FAGT/${NET}/seed${SEED}",
+            "MODEL.BACKBONE.NAME": "${NET}"
+        },
+        "datasets": [
+            "pacs",
+            "office_home_dg",
+            "digits_dg",
+            "vlcs",
+            "mini_domainnet"
+        ],
+        "trainers": [
+            "CausalFD"
+        ],
+        "networks": [
+            "resnet18_ms_l123",
+            "resnet18_ms_l12"
+        ],
+        "mix": "${MIX}"
+    }
+}

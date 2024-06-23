@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"SLURM\",\n  \"details\": {\n    \"job_name\": \"ovon-dgen\",\n    \"output\": \"slurm_logs/dataset-%j.out\",\n    \"error\": \"slurm_logs/dataset-%j.err\",\n    \"gpus\": 1,\n    \"nodes\": 1,\n    \"cpus_per_task\": 6,\n    \"ntasks_per_node\": 1,\n    \"constraint\": \"a40|rtx_6000|2080_ti\",\n    \"partition\": \"short\",\n    \"exclude\": \"calculon,alexa,cortana,bmo,c3po,ripl-s1,t1000,hal,irona,fiona\",\n    \"signal\": \"USR1@100\",\n    \"requeue\": true,\n    \"environment_variables\": {\n      \"GLOGB_minloglevel\": 2,\n      \"HABITAT_SIM_LOG\": \"quiet\",\n      \"MAGNUM_LOG\": \"quiet\",\n      \"MAIN_ADDR\": \"scontrol show hostnames ${SLURM_JOB_NODELIST} | head -n 1\"\n    },\n    \"conda_environment\": \"ovon\",\n    \"python_script\": \"ovon/dataset/objectnav_generator.py\",\n    \"script_arguments\": {\n      \"scene\": \"$scene\",\n      \"split\": \"$split\",\n      \"num_scenes\": \"$num_scenes\",\n      \"tasks_per_gpu\": \"$num_tasks\",\n      \"output_path\": \"$output_path\",\n      \"start_poses_per_object\": \"$start_poses_per_object\",\n      \"episodes_per_object\": \"$episodes_per_object\",\n      \"disable_euc_geo_ratio_check\": true\n    }\n  }\n}\n```\n\nThis script is running on the SLURM workload manager. It defines a job with specific resources and constraints, including:\n\n* **Job Name:** ovon-dgen\n* **Output and Error Logs:** Logs are saved to slurm_logs/dataset-%j.out and slurm_logs/dataset-%j.err respectively\n* **GPU Requirement:** 1 GPU\n* **Node Requirement:** 1 Node\n* **CPU Allocation:** 6 CPUs per task\n* **Tasks per Node:** 1\n* **GPU Constraints:**  a40, rtx_6000, or 2080_ti\n* **Partition:** short\n* **Excluded Nodes:** calculon, alexa, cortana, bmo, c3po, ripl-s1, t1000, hal, irona, fiona\n* **Signal:** USR1@100\n* **Requeue:** Enabled\n\nThe script also sets environment variables for logging levels and sets up a conda environment named \"ovon\". Finally, it runs a Python script named \"objectnav_generator.py\" within the \"ovon\" environment, passing various arguments. \n\nThe script appears to be generating some kind of dataset related to object navigation. \n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 463,
+        "candidates_token_count": 697,
+        "total_token_count": 1160,
+        "cached_content_token_count": 0
+    }
+}

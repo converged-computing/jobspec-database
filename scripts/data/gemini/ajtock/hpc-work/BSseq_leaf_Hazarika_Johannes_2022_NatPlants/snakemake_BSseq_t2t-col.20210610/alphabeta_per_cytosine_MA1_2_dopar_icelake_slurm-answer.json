@@ -1,0 +1,35 @@
+{
+    "application": "R",
+    "details": {
+        "environment": {
+            "module": [
+                "rhel8/default-icl",
+                "conda activate R-4.1.2"
+            ]
+        },
+        "resource": {
+            "slurm": {
+                "job_name": "AB_MA1_2_CpG_Chr2",
+                "project": "HENDERSON-SL3-CPU",
+                "partition": "icelake-himem",
+                "nodes": 6,
+                "tasks": 444,
+                "tasks_per_node": 74,
+                "time": "12:00:00",
+                "output": "logs/alphabeta_per_cytosine_MA1_2_CpG_Chr2.out",
+                "error": "logs/alphabeta_per_cytosine_MA1_2_CpG_Chr2.err"
+            },
+            "mpi": {
+                "pinning": {
+                    "domain": "omp:compact",
+                    "order": "scatter"
+                },
+                "mpirun": "mpirun -npernode $mpi_tasks_per_node"
+            },
+            "openmp": {
+                "threads": 1
+            }
+        },
+        "command": "mpirun -npernode $mpi_tasks_per_node ./alphabeta_per_cytosine_MA1_2_dopar.R $REFBASE $CONTEXT $BINSIZE $STEPSIZE $CHR $CORES"
+    }
+}

@@ -1,0 +1,45 @@
+{
+    "application": "Cobalt",
+    "details": {
+        "resource_requirements": {
+            "nodes": 1,
+            "time": "1:00:00",
+            "queue": "training-gpu",
+            "account": "SDL_Workshop",
+            "attributes": "pubnet"
+        },
+        "software_requirements": {
+            "conda_environment": "tensorflow",
+            "python_packages": [
+                "nvidia-pyindex",
+                "nvidia-dlprof"
+            ]
+        },
+        "profilers": {
+            "nsight": {
+                "commands": [
+                    "nsys profile --stats=true --output nsys.out python tensorflow2_cifar10.py --device gpu --epochs 5 > nsys-profile.log 2>&1"
+                ],
+                "visualization": {
+                    "method1": "ssh -XL to enable GUI",
+                    "method2": "copy nsys.out.qdrep to local machine with Nvidia Nsight UI installed"
+                }
+            },
+            "dlprof": {
+                "commands": [
+                    "mkdir ./results",
+                    "dlprof --reports=all --mode=simple --nsys_opts=\"-t cuda,nvtx --force-overwrite true\" --output_path=./results/  python tensorflow2_cifar10.py --epochs 1 --device gpu"
+                ]
+            }
+        },
+        "script_arguments": {
+            "profiler": {
+                "options": [
+                    "nsight",
+                    "dlprof"
+                ],
+                "description": "The profiler to use for performance analysis"
+            }
+        }
+    }
+}

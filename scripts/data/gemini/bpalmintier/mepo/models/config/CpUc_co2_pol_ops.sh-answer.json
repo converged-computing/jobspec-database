@@ -1,0 +1,29 @@
+{
+    "application": "GAMS",
+    "details": {
+        "model": "UnitCommit",
+        "configuration_directory": "${MODEL_DIR_BASE}/config",
+        "model_directory": "${MODEL_DIR_BASE}/ops",
+        "output_directory": "${HOME}/projects/advpower/results/gams/CpUc_co2_policy/",
+        "gams_options": {
+            "common_io_options": " -errmsg=1 -lo=2  -inputdir=${MODEL_DIR} --out_dir=${OUT_DIR} ",
+            "all_run_options": " --sys=thesis_sys.inc --min_gen_size=0.2 ",
+            "this_file_options": " ${ALL_RUN_OPT} --adj_rsrv_for_nse=on --demand=ercot2007_dem_yr_as_52wk.inc ",
+            "long_options": " --max_solve_time=82800 ",
+            "parallel_options": " --par_threads=${PBS_NP} --lp_method=6 --par_mode=-1 --probe=2 "
+        },
+        "pbs_queue": "long",
+        "pbs_nodes": "1:nehalem",
+        "pbs_memory": "5gb",
+        "pbs_walltime": "62:00:00",
+        "pbs_array_tasks": "1-6,15-20,27,29-33",
+        "script_purpose": "Thesis Ch4: OPS RUNS for CO2 Policy Comparision",
+        "script_details": "ERCOT 2007, min 200MW gen, Year as 52 weeks. No B&B priority, No cheat, No cap limit helper"
+    },
+    "resource_requirements": {
+        "gams_license": "required",
+        "pbs_queue": "required",
+        "processors": "${PBS_NP}",
+        "memory": "5gb"
+    }
+}

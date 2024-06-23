@@ -1,0 +1,36 @@
+{
+    "application": "Docker",
+    "details": {
+        "slurm_resource_requirements": {
+            "job_name": "docker_iclr23",
+            "array_tasks": "1-9",
+            "nodes": "1",
+            "cores_per_node": "1",
+            "memory_per_cpu": "6000MB",
+            "gpus": "1",
+            "partition": "rtx2",
+            "time": "72:00:00"
+        },
+        "docker_image": "value_expansion:latest",
+        "docker_run_options": {
+            "rm": true,
+            "gpus": "all",
+            "environment_variables": {
+                "WANDB_API_KEY": "[TODO YOUR KEY]",
+                "WANDB_ENTITY": "[TODO YOUR ENTITY]"
+            }
+        },
+        "python_script": "run_experiment.py",
+        "python_script_arguments": [
+            "-env $ENV",
+            "-algo $ALGO",
+            "-model_type $MODEL",
+            "-H $HORIZON",
+            "-gpu $GPU",
+            "-seed $SLURM_ARRAY_TASK_ID",
+            "-wandb_mode \"online\"",
+            "-wandb_entity $WANDB_ENTITY",
+            "-wandb_project \"iclr23_value_expansion\""
+        ]
+    }
+}

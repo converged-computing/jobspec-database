@@ -1,0 +1,46 @@
+{
+    "application": "snakemake",
+    "details": {
+        "environment": {
+            "python_version": "3.6.6",
+            "virtual_environment": "env",
+            "requirements": "config/requirements.txt",
+            "additional_packages": "pandas"
+        },
+        "workflows": [
+            {
+                "name": "RNApipeCore",
+                "snakefile": "workflows/RNApipeCore.snakefile",
+                "config": "config/RNAconfig.yaml",
+                "cluster_config": "config/cluster.yaml",
+                "cluster_status": "./workflows/utils/status.py"
+            },
+            {
+                "name": "mergeSignal",
+                "snakefile": "workflows/mergeSignal.snakefile",
+                "config": "config/RNAconfig.yaml",
+                "cluster_config": "config/cluster.yaml",
+                "cluster_status": "./workflows/utils/status.py"
+            }
+        ],
+        "slurm_parameters": {
+            "job_name": "RNApipeCore",
+            "time": "4320",
+            "nodes": 1,
+            "tasks": 1,
+            "cpus_per_task": 1,
+            "partition": "general",
+            "memory": "2gb",
+            "output": "%x-%j.out",
+            "logs_directory": "output/logs_slurm"
+        },
+        "snakemake_parameters": {
+            "parallelism": 100,
+            "max_jobs_per_second": 5,
+            "max_status_checks_per_second": 0.5,
+            "rerun_incomplete": true,
+            "print_dag": true,
+            "latency_wait": 500
+        }
+    }
+}

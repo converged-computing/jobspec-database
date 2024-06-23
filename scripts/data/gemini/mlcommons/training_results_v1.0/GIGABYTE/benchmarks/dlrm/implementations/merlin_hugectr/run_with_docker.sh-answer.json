@@ -1,0 +1,33 @@
+{
+    "application": "Docker",
+    "details": {
+        "docker_image": "${CONT}",
+        "container_name": "dlrm_hugectr",
+        "mounts": [
+            "/raid/datasets:/raid/datasets",
+            "/gpfs/fs1:/gpfs/fs1",
+            "${DATADIR}:/raid/datasets/criteo/mlperf/40m.limit_preshuffled/",
+            "${LOGDIR}:${LOGDIR}",
+            "$(pwd):/workspace/rnnt"
+        ],
+        "environment_variables": [
+            "DGXSYSTEM",
+            "CONT",
+            "NEXP",
+            "DATESTAMP",
+            "CLEAR_CACHES",
+            "MOUNTS",
+            "LOGDIR",
+            "DATADIR",
+            "DATASET_TYPE"
+        ],
+        "script": "run_and_time.sh",
+        "python_module": "mlperf_logging.mllog",
+        "python_function": "log_event"
+    },
+    "resource_requirements": {
+        "time_limit": "00:30:00",
+        "job_name": "dlrm.hugectr",
+        "gpu": "1"
+    }
+}

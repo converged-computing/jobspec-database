@@ -1,0 +1,63 @@
+{
+    "application": "SLURM",
+    "details": {
+        "environment": {
+            "conda": "thomas_code_evaluation",
+            "python": "3.8",
+            "pytorch": "1.11",
+            "transformers": "offline",
+            "datasets": "offline"
+        },
+        "resources": {
+            "gpu": "a100",
+            "gpu_count": 1,
+            "cpu": "8 cores per task",
+            "memory": "not specified",
+            "storage": {
+                "model": "/gpfsscratch/rech/six/commun/experiments/muennighoff/bloomckpt/6b3t0/tr13f-6b3-ml-t0-lmtoks341b-t0toks13b-xp3capmix",
+                "working_directory": "/gpfsscratch/rech/six/commun/commun/experiments/muennighoff/bloom-code-evaluation",
+                "output": "/gpfswork/rech/six/uty16tp/logs/%x-%j.out",
+                "generations": "/gpfswork/rech/six/commun/code_generations_tr13f-6b3-ml-t0-lmtoks341b-t0toks13b-xp3capmix"
+            },
+            "libraries": {
+                "transformers": "/$six_ALL_CCFRWORK/models",
+                "datasets": "/$six_ALL_CCFRWORK/datasets_code_eval",
+                "modules": "/$six_ALL_CCFRWORK/modules",
+                "metrics": "/$six_ALL_CCFRWORK/metrics"
+            }
+        },
+        "script": {
+            "name": "bs-code-generation-bloom-7b1-xp3capmix",
+            "partition": "gpu_p5",
+            "reservation": "hug",
+            "nodes": 1,
+            "tasks_per_node": 1,
+            "time": "20:00:00",
+            "account": "six@a100",
+            "command": "python code_eval.py"
+        },
+        "job_type": "code_generation",
+        "model": "bloom-7b1",
+        "tasks": {
+            "total": 164,
+            "per_job": 1
+        },
+        "output_files": [
+            "/gpfswork/rech/six/commun/code_generations_tr13f-6b3-ml-t0-lmtoks341b-t0toks13b-xp3capmix/task_${TASK_START}_${TASK_END}/output_1",
+            "/gpfswork/rech/six/commun/code_generations_tr13f-6b3-ml-t0-lmtoks341b-t0toks13b-xp3capmix/task_${TASK_START}_${TASK_END}/output_2",
+            "/gpfswork/rech/six/commun/code_generations_tr13f-6b3-ml-t0-lmtoks341b-t0toks13b-xp3capmix/task_${TASK_START}_${TASK_END}/output_3"
+        ],
+        "parameters": {
+            "batch_size": 1,
+            "do_sample": true,
+            "temperature": [
+                0.2,
+                0.6,
+                0.8
+            ],
+            "top_p": 0.95,
+            "n_samples": 200,
+            "dtype": "float16"
+        }
+    }
+}

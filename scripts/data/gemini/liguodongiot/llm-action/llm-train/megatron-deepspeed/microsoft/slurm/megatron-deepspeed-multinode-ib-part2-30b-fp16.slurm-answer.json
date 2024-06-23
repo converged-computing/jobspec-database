@@ -1,0 +1,43 @@
+{
+    "application": "Megatron-DeepSpeed",
+    "details": {
+        "framework": "PyTorch",
+        "libraries": [
+            "NCCL",
+            "DeepSpeed",
+            "Singularity"
+        ],
+        "resources": {
+            "compute": {
+                "nodes": 4,
+                "cores_per_node": 80,
+                "gpus_per_node": 8
+            },
+            "storage": {
+                "workspace_mount": "/workspace/code/Megatron-DeepSpeed-llama-20230815",
+                "data_mount": "/data/hpc/home/guodong.li/workspace"
+            },
+            "communication": {
+                "backend": "NCCL",
+                "protocol": "Infiniband"
+            }
+        },
+        "model": {
+            "name": "Llama-30B",
+            "parameters": {
+                "num_layers": 60,
+                "hidden_size": 6656,
+                "ffn_hidden_size": 17920,
+                "num_attention_heads": 52,
+                "max_position_embeddings": 2048
+            },
+            "training": {
+                "batch_size": 8,
+                "sequence_length": 2048,
+                "optimizer": "Adam",
+                "learning_rate": 0.0003,
+                "fp16": true
+            }
+        }
+    }
+}

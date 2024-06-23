@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"SLURM\",\n  \"details\": {\n    \"software\": [\n      \"python\",\n      \"deep\u3053\u3068\u304c\"\n    ],\n    \"libraries\": [\n      \"deepspeed\",\n      \"NCCL\"\n    ],\n    \"resources\": {\n      \"compute\": {\n        \"nodes\": 2,\n        \"cpus_per_task\": 4,\n        \"ntasks\": 2,\n        \"gpus\": 2,\n        \"gpus_per_node\": 1\n      },\n      \"network\": {\n        \"interface\": \"Infiniband\",\n        \"socket_ifname\": \"ib0\",\n        \"net_gdr_level\": 4\n      }\n    },\n    \"environment_variables\": [\n      \"NCCL_DEBUG\",\n      \"NCCL_TREE_THRESHOLD\",\n      \"NCCL_SOCKET_IFNAME\",\n      \"NCCL_NET_GDR_LEVEL\",\n      \"MAX_JOBS\",\n      \"master_ip\",\n      \"MASTER_PORT\",\n      \"HF\"\n    ],\n    \"commands\": [\n      \"nvidia-smi -L\",\n      \"nvidia-smi topo -m\",\n      \"ibv_devinfo\",\n      \"module load dl\",\n      \"module load deepspeed/0.8.3\",\n      \"module list\",\n      \"srun -n 1 -N 1 --gpus=1 -w ${nodes_array[0]} /bin/hostname -I | cut -d \\\" \\\" -f 2\",\n      \"python -c 'import socket; s=socket.socket(); s.bind((\\\"\\\", 0)); print(s.getsockname()[1]); s.close()'\",\n      \"srun -n ${SLURM_NTASKS} -N ${SLURM_NNODES} python train_bert_ds.py --checkpoint_dir $PWD --num_layers 2 --hidden_dim 512\"\n    ],\n    \"files\": [\n      \"train_bert_ds.py\",\n      \"hostfile\"\n    ]\n  }\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 581,
+        "candidates_token_count": 490,
+        "total_token_count": 1071,
+        "cached_content_token_count": 0
+    }
+}

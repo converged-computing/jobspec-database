@@ -1,0 +1,44 @@
+{
+    "application": "ElmerSolver",
+    "software_dependencies": [
+        "intel-oneapi-mpi@2021.5.0%intel@2021.5.0",
+        "intel-oneapi-compilers@2022.0.1",
+        "intel-oneapi-mkl@2022.0.1%gcc@11.2.0",
+        "metis@5.1.0%intel@2021.5.0"
+    ],
+    "resource_requirements": {
+        "slurm_options": {
+            "job_name": "Interpolate",
+            "output": "Logs/SLURM_job.%j.%N.out",
+            "error": "Logs/SLURM_job.%j.%N.err",
+            "working_directory": ".",
+            "account": "bm1164",
+            "mail_user": "clara.henry@mpimet.mpg.de",
+            "tasks": 220,
+            "time": "00:15:00",
+            "partition": "compute"
+        },
+        "environment_variables": {
+            "OMPI_MCA_pml": "ucx",
+            "OMPI_MCA_btl": "self",
+            "OMPI_MCA_osc": "pt2pt",
+            "UCX_IB_ADDR_TYPE": "ib_global",
+            "OMPI_MCA_coll": "^ml,hcoll",
+            "OMPI_MCA_coll_hcoll_enable": "0",
+            "HCOLL_ENABLE_MCAST_ALL": "0",
+            "HCOLL_MAIN_IB": "mlx5_0:1",
+            "UCX_NET_DEVICES": "mlx5_0:1",
+            "UCX_TLS": "mm,knem,cma,dc_mlx5,dc_x,self",
+            "UCX_UNIFIED_MODE": "y",
+            "HDF5_USE_FILE_LOCKING": "FALSE",
+            "OMPI_MCA_io": "romio321",
+            "UCX_HANDLE_ERRORS": "bt",
+            "I_MPI_PMI_LIBRARY": "/usr/lib64/libpmi2.so"
+        },
+        "ulimits": {
+            "stack_size": 102400,
+            "core_file_size": 0
+        },
+        "execution_command": "srun -l --mpi=pmi2 --export=ALL --cpu_bind=cores --distribution=block:cyclic -n 220 ElmerSolver_mpi Forward.sif"
+    }
+}

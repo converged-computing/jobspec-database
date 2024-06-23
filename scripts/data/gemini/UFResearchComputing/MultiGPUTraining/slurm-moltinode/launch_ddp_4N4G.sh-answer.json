@@ -1,0 +1,30 @@
+{
+    "application": "SLURM",
+    "details": {
+        "description": "This is a SLURM script to launch a multi-node multi-GPU pytorch DDP training on UF HiPerGator's AI partition.",
+        "resources": {
+            "nodes": 4,
+            "tasks": 4,
+            "tasks_per_node": 1,
+            "gpus_per_task": 1,
+            "cpus_per_task": 4,
+            "memory": "24gb",
+            "partition": "hpg-ai",
+            "time": "48:00:00",
+            "output": "%x.%j.out"
+        },
+        "software": {
+            "pytorch": "1.10",
+            "conda": "conda activate your_env_name"
+        },
+        "script": "multigpu_torchrun.py",
+        "arguments": "50 10",
+        "parameters": {
+            "nnodes": 4,
+            "nproc_per_node": 1,
+            "rdzv_id": "$RANDOM",
+            "rdzv_backend": "c10d",
+            "rdzv_endpoint": "$head_node_ip:$head_node_port"
+        }
+    }
+}

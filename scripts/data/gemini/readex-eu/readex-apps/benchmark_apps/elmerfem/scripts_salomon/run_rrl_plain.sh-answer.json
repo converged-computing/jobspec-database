@@ -1,0 +1,80 @@
+{
+    "application": "Elmer",
+    "details": {
+        "environment": {
+            "PBS": {
+                "account": "OPEN-12-63",
+                "queue": "qprod",
+                "name": "ELMER_compare",
+                "nodes": {
+                    "count": 4,
+                    "cpus_per_node": 24,
+                    "mpi_procs_per_node": 24,
+                    "accelerator": false,
+                    "x86_adapt": true
+                },
+                "walltime": "01:00:00",
+                "mail": "be"
+            },
+            "modules": [
+                "mkl",
+                "CMake/3.9.1"
+            ],
+            "other": {
+                "readex_env": [
+                    "set_env_rrl.source",
+                    "set_env_ptf_rapl.source"
+                ],
+                "paths": "paths.source"
+            }
+        },
+        "problem": {
+            "path": "${ELMER_ROOT}/build/fem/tests/WinkelPoissonPartitionUniform/",
+            "input_files": {
+                "tuning_model": "tuning_model.json",
+                "meric_opts": "meric.opts"
+            },
+            "output_file": "elmer_rrl_plain.tmp"
+        },
+        "benchmark": {
+            "metrics": [
+                "Runtime",
+                "CPUs energy",
+                "Nodes energy"
+            ],
+            "repeats": 2,
+            "modes": [
+                "PLAIN",
+                "RRL"
+            ],
+            "commands": {
+                "compile_plain": "./compile_for_plain.sh",
+                "compile_ptf": "./compile_for_ptf.sh",
+                "generate_problem": "${ELMER_ROOT}/gen_problem.sh",
+                "run_plain": "mpirun -n 96 ElmerSolver_mpi",
+                "run_tuned": "mpirun -n 96 ElmerSolver_mpi",
+                "measure_start": "$MERIC_ROOT/tools/staticMERICtool/multiNodeStaticMeasureStart.sh --rapl",
+                "measure_stop": "$MERIC_ROOT/tools/staticMERICtool/multiNodeStaticMeasureStop.sh --rapl"
+            }
+        },
+        "libraries": [
+            "ElmerSolver_mpi",
+            "MERIC_ROOT/tools/staticMERICtool"
+        ],
+        "tools": {
+            "scorep": {
+                "enable_profiling": false,
+                "enable_tracing": false,
+                "substrate_plugins": "rrl",
+                "rrl_plugins": [
+                    "cpu_freq_plugin",
+                    "uncore_freq_plugin",
+                    "OpenMPTP"
+                ],
+                "rrl_tmm_path": "tuning_model.json",
+                "mpi_enable_groups": "ENV",
+                "rrl_check_if_reset": "reset"
+            }
+        }
+    }
+}

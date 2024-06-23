@@ -1,0 +1,32 @@
+{
+    "application": "Slurm",
+    "details": {
+        "resource_requirements": {
+            "nodes": 1,
+            "gpus_per_node": 2,
+            "gpu_memory": "32G",
+            "cpus_per_task": 10,
+            "memory_per_cpu": "10G",
+            "time": "01:00:00"
+        },
+        "software_requirements": {
+            "modules": [
+                "eth_proxy",
+                "gcc/11.4.0",
+                "python/3.11.6",
+                "cuda/12.1.1"
+            ],
+            "virtual_environment": ".venv_llama",
+            "python_script": "src/scripts/save_models_locally.py"
+        },
+        "environment_variables": {
+            "CONSUL_HTTP_ADDR": "",
+            "WANDB__SERVICE_WAIT": 300,
+            "TRANSFORMERS_CACHE": "/cluster/scratch/oovcharenko/dsl_hate_speech/cache/"
+        },
+        "other_commands": [
+            "mkdir -p logs",
+            "nvidia-smi"
+        ]
+    }
+}

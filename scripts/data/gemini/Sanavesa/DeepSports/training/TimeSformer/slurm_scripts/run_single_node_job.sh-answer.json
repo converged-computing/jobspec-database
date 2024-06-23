@@ -1,0 +1,30 @@
+{
+    "application": "SLURM",
+    "details": {
+        "job_name": "timesformer",
+        "mail_type": "END,FAIL,REQUEUE",
+        "mail_user": "name@domain.com",
+        "output_path": "/path/to/output/logs/slog-%A-%a.out",
+        "error_path": "/path/to/error/logs/slog-%A-%a.err",
+        "array": 1,
+        "partition": "partition_of_your_choice",
+        "nodes": 1,
+        "compute_nodes": "volta32gb",
+        "tasks_per_node": 1,
+        "gpus_per_node": 8,
+        "cpus_per_task": 80,
+        "memory": "480GB",
+        "signal": "USR1@600",
+        "time": "72:00:00",
+        "open_mode": "append",
+        "modules": [
+            "cuda/10.0",
+            "NCCL/2.4.7-1-cuda.10.0",
+            "cudnn/v7.4-cuda.10.0"
+        ],
+        "conda_env": "timesformer",
+        "working_directory": "/path/to/TimeSformer",
+        "python_executable": "/path/to/python",
+        "command": "${CURPYTHON} ${WORKINGDIR}/tools/run_net.py --cfg ${WORKINGDIR}/configs/Kinetics/TimeSformer_divST_8x32_224.yaml NUM_GPUS 8 TRAIN.BATCH_SIZE 8"
+    }
+}

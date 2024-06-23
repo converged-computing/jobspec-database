@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n\"application\": \"GATK\",\n\"other_software\": [\n\"picard\",\n\"bcftools\",\n\"bgzip\",\n\"tabix\"\n],\n\"resource_requirements\": {\n\"memory\": \"32GB\",\n\"cpu\": \"16 cores\",\n\"time\": \"48 hours\",\n\"queue\": \"intel\",\n\"output_directory\": \"logs\",\n\"input_files\": [\n\"samples.csv\",\n\"config.txt\",\n\"REFGENOME\",\n\"ALNFOLDER/*.bam\"\n],\n\"output_files\": [\n\"logs/make_gvcf.%a.log\",\n\"$GVCFFOLDER/*.g.vcf.gz\"\n]\n}\n}\n```\n\n**Explanation of the script:**\n\nThis script utilizes the Genome Analysis Toolkit (GATK) to generate genotype likelihoods in the form of gVCF files. \n\n**Key Software:**\n\n* **GATK:** The primary software used for variant calling and analysis.\n* **Picard:** Used to create a sequence dictionary from the reference genome.\n* **bcftools:** Used to compress and index the output gVCF files.\n* **bgzip:** Used for compression of the gVCF files.\n* **tabix:** Used for indexing the compressed gVCF files for efficient querying.\n\n**Resource Requirements:**\n\n* **Memory:** 32 GB of RAM is allocated for the GATK process.\n* **CPU:** The script utilizes 16 CPU cores (as specified by the `-n 16` SLURM option).\n* **Time:** The script is set to run for a maximum of 48 hours (`--time 48:00:00`).\n* **Queue:** The script is submitted to the \"intel\" queue for execution.\n* **Output Directory:** The script outputs log files to the \"logs\" directory.\n* **Input Files:** The script requires a samples file (\"samples.csv\"), a configuration file (\"config.txt\"), a reference genome file (\"REFGENOME\"), and aligned BAM files from the \"ALNFOLDER\" directory.\n* **Output Files:** The script outputs gVCF files to the \"GVCFFOLDER\" directory.\n\n**Workflow:**\n\nThe script first checks if a \"config.txt\" file exists, and if so, it sources the file to obtain relevant variables. It then creates a sequence dictionary for the reference genome using Picard. Next, the script loops through the samples in the \"samples.csv\" file, generating gVCF files for each sample using the GATK HaplotypeCaller. Finally, the script compresses and indexes the generated gVCF files.\n\n**Project Specific Parts:**\n\nThe lines marked with \"BEGIN THIS PART IS PROJECT SPECIFIC LIKELY\" and \"END THIS PART IS PROJECT SPECIFIC LIKELY\" represent parts of the script that are likely to be specific to the particular project. These parts might involve specific file naming conventions, filtering steps, or other project-related tasks.\n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 598,
+        "candidates_token_count": 647,
+        "total_token_count": 1245,
+        "cached_content_token_count": 0
+    }
+}

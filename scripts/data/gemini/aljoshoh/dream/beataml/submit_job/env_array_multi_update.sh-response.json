@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"Slurm\",\n  \"details\": {\n    \"software\": [\n      \"Bash\",\n      \"Docker\",\n      \"Rscript\"\n    ],\n    \"resource_requirements\": {\n      \"memory_per_cpu\": \"3G\",\n      \"partition\": \"icb_cpu\",\n      \"time\": \"2-00:00:00\",\n      \"cpus_per_task\": 1,\n      \"local_scratch_space\": \"Used for Docker image and Rscript execution\",\n      \"shared_storage\": \"Used for data files and Rscript input/output\"\n    }\n  }\n}\n```\n\n**Explanation:**\n\n* **Application:** The script is designed to be run under the **Slurm** workload manager, which is evident from the `#SBATCH` directives at the beginning. \n* **Software:** The script uses various software tools:\n    * **Bash:** As the scripting language, responsible for the overall flow and execution of commands.\n    * **Docker:** The script utilizes a Docker image for running the Rscript code within a containerized environment. The `DOCKER` variable holds the name or path to the Docker image.\n    * **Rscript:** The script executes an R script specified in the `FILE` variable. The Rscript code is run within the Docker container.\n* **Resource Requirements:**  The script utilizes several Slurm resources:\n    * **Memory per CPU:**  Each CPU is allocated 3 GB of RAM (`--mem-per-cpu=3G`).\n    * **Partition:** The job runs on the 'icb_cpu' partition, presumably a set of compute nodes dedicated for CPU-intensive tasks.\n    * **Time:** The job has a time limit of 2 hours (`-t 2-00:00:00`).\n    * **CPUs per Task:**  Each task runs on a single CPU (`--cpus-per-task 1`).\n    * **Local Scratch Space:** The script creates a directory in the local scratch space (`/localscratch/$USER`) for each node. This space is used to store the Docker image and the Rscript working directory.\n    * **Shared Storage:**  The script accesses data files and Rscript input/output from a shared storage location (`/storage/groups/`). \n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 984,
+        "candidates_token_count": 509,
+        "total_token_count": 1493,
+        "cached_content_token_count": 0
+    }
+}

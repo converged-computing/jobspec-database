@@ -1,0 +1,41 @@
+{
+    "application": "OAR",
+    "details": {
+        "scheduler": "OAR",
+        "resources": {
+            "nodes": 14,
+            "walltime": "8:00:00",
+            "project": "hifimagnet",
+            "mail": "user_email"
+        },
+        "environment": {
+            "nix_path": "nixpkgs=$HOME/.nix-defexpr/channels/nixpkgs",
+            "nix_profile": "nur-openmpi4",
+            "singularity_image": "/bettik/$USER/singularity/hifimagnet-thermobox-debianpack.sif",
+            "output_directory": "/bettik/$USER/HL-31/full",
+            "configuration_file": "/bettik/$USER/HL-31/M19061901-full.cfg",
+            "log_file": "/bettik/$USER/HL-31/M19061901-full.log"
+        },
+        "program": {
+            "executable": "feelpp_hfm_coupledcartmodel_3DP1N1",
+            "arguments": "--config-file ${CFG}"
+        },
+        "execution": {
+            "mpi": {
+                "mpirun": "mpirun",
+                "np": "${njobs}",
+                "machinefile": "$OAR_NODEFILE",
+                "mca": {
+                    "plm_rsh_agent": "oarsh",
+                    "btl_openib_allow_ib": "true"
+                },
+                "prefix": "$HOME/.nix-profile"
+            },
+            "singularity": {
+                "command": "singularity exec",
+                "options": "-H ${OAR_WORKDIR} -B $OUTDIR:/feel",
+                "image": "$HIFIMAGNET"
+            }
+        }
+    }
+}

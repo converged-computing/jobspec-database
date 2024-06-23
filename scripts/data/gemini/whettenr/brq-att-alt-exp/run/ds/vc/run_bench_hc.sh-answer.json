@@ -1,0 +1,51 @@
+{
+    "application": "SLURM",
+    "details": {
+        "job_name": "vc_hc",
+        "account": "dha@v100",
+        "gpu": "1",
+        "cpus_per_task": 8,
+        "qos": "qos_gpu-t4",
+        "time": "72:00:00",
+        "output": "log/hc_vc_%j.log",
+        "modules": [
+            "pytorch-gpu/py3/2.1.1"
+        ],
+        "conda_environment": "aa",
+        "working_directory": "/gpfswork/rech/nkp/uaj64gk/attention_alt/brq-att-alt-exp",
+        "script_language": "Python",
+        "script_path": "/gpfswork/rech/nkp/uaj64gk/attention_alt/benchmarks/benchmarks/MP3S/{task}/{downstream}/train.py",
+        "script_arguments": [
+            "/gpfswork/rech/nkp/uaj64gk/attention_alt/benchmarks/benchmarks/MP3S/{task}/{downstream}/hparams/ssl_brq.yaml",
+            "--num_layers_ssl",
+            "{num_layers}",
+            "--ssl_hub",
+            "{hub}",
+            "--encoder_dim",
+            "{encoder_dim}",
+            "--output_folder",
+            "{output_folder}/{task}/{downstream}",
+            "--data_folder",
+            "{dataset_folder}",
+            "--debug",
+            "--attention_type",
+            "{attention_type}",
+            "--encoder_module",
+            "{encoder_module}",
+            "--csv_location",
+            "{csv_location}"
+        ],
+        "datasets": [
+            "/gpfsscratch/rech/nkp/uaj64gk/corpus/voxceleb2",
+            "/gpfsscratch/rech/nkp/uaj64gk/corpus/voxceleb2"
+        ],
+        "tasks": [
+            "VoxCeleb1",
+            "VoxCeleb1"
+        ],
+        "downstreams": [
+            "ecapa_tdnn",
+            "Xvectors"
+        ]
+    }
+}

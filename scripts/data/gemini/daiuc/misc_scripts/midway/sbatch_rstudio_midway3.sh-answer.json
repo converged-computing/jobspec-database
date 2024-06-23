@@ -1,0 +1,36 @@
+{
+    "application": "RStudio",
+    "details": {
+        "software": [
+            "singularity",
+            "conda",
+            "jupyter lab",
+            "code-server",
+            "rstudio-server"
+        ],
+        "resources": [
+            "SBATCH --time 35:59:00",
+            "SBATCH -p caslake",
+            "SBATCH -c 6",
+            "SBATCH --mem 30g",
+            "SBATCH --job-name=rstudio",
+            "SBATCH --account=pi-yangili1",
+            "SBATCH --account=pi-jstaley",
+            "SBATCH --output=logs/sbatchLogRstudioContainer.log",
+            "JPORT=9798",
+            "RPORT=8282",
+            "SIF=\"/scratch/midway3/chaodai/singularity/rstudio_2022_12.sif\"",
+            "RSTUDIO_TMP=\"/scratch/midway3/chaodai/singularity/rstudio-tmp\"",
+            "CONDA_PREFIX=\"/scratch/midway3/chaodai/miniconda3/envs/smk\"",
+            "R_BIN=\"$CONDA_PREFIX/bin/R\"",
+            "PY_BIN=\"$CONDA_PREFIX/bin/python\""
+        ],
+        "notes": [
+            "The script uses singularity containers for RStudio server.",
+            "It requires a specific version of singularity (3.9.2).",
+            "The script uses a conda environment named 'smk'.",
+            "It launches jupyter lab and code-server in the background.",
+            "RStudio server is launched using the singularity exec command with specific bind mounts and environment variables."
+        ]
+    }
+}

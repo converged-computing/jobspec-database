@@ -1,0 +1,56 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"Jupyter Notebook\",\n  \"software\": [\n    \"Singularity\",\n    \"Jupyter Lab\",\n    \"SLURM\",\n    \"CUDA\",\n    \"SSH\"\n  ],\n  \"resources\": [\n    \"DGX node\",\n    \"GPU\",\n    \"MIG instance\",\n    \"Lustre filesystem\",\n    \"workspace directory\",\n    \"SSH access\"\n  ],\n  \"details\": {\n    \"environment\": {\n      \"SLURM partition\": \"bc-mig\",\n      \"SLURM nodes\": 1,\n      \"SLURM tasks\": 1,\n      \"SLURM time limit\": \"8:00:00\",\n      \"SLURM CPUs per task\": 4,\n      \"SLURM GPUs per task\": 1\n    },\n    \"configuration\": {\n      \"workspace directory\": \"/workspaces/$USER\",\n      \"notebook directory\": \"/workspaces/$USER/workspace-monailabel-labs\",\n      \"singularity image\": \"/lustre/shared/bootcamps/monailabel/monai-x1.simg\",\n      \"jupyter lab port\": \"$PORT_JU\",\n      \"jupyter lab IP\": \"0.0.0.0\"\n    },\n    \"commands\": {\n      \"port forwarding\": \"ssh -L localhost:8888:${SERVER}:${PORT_JU} -L localhost:9999:${SERVER}:${PORT_AA} ssh.axisapps.io -l ${HASHNUMBER}\",\n      \"jupyter lab launch\": \"singularity run --nv --bind /lustre/workspaces /lustre/shared/bootcamps/monailabel/monai-x1.simg jupyter lab --notebook-dir=/lustre/workspaces/$USER/workspace-monailabel-labs --port=$PORT_JU --ip=0.0.0.0 --no-browser --NotebookApp.token=\\\"\\\"\"\n    },\n    \"notes\": {\n      \"This script launches a Jupyter Notebook server on a DGX node with access to a GPU, using Singularity for containerization. It sets up port forwarding for remote access to the server, and creates a workspace directory if it doesn't exist. The script also handles job submission through SLURM, ensuring only one job is active at a time.\"\n    }\n  }\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "citation_metadata": {
+                "citation_sources": [
+                    {
+                        "start_index": 1002,
+                        "end_index": 1232,
+                        "uri": "https://github.com/nemodleo/Yonsei-Monai",
+                        "license_": ""
+                    }
+                ]
+            },
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 959,
+        "candidates_token_count": 530,
+        "total_token_count": 1489,
+        "cached_content_token_count": 0
+    }
+}

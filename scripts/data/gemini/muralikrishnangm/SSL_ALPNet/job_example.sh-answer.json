@@ -1,0 +1,38 @@
+{
+    "application": "SLURM",
+    "details": {
+        "resource_requirements": {
+            "partition": "batch",
+            "queue": "debug",
+            "nodes": 1,
+            "time": "2:00:00",
+            "job_name": "test_SSL"
+        },
+        "software": {
+            "modules": [
+                "cray-python",
+                "PrgEnv-gnu",
+                "amd-mixed/5.4.3",
+                "craype-accel-amd-gfx90a"
+            ],
+            "conda_environment": "/lustre/orion/stf006/proj-shared/muraligm/ML/SSL_ALPNet/SSL_ALPNet_frontier39"
+        },
+        "environment_variables": {
+            "MIOPEN_USER_DB_PATH": "/tmp/my-miopen-cache",
+            "MIOPEN_CUSTOM_CACHE_DIR": "/tmp/my-miopen-cache",
+            "PROJWORK": "Not specified in script, but likely set outside the script."
+        },
+        "commands": [
+            "rm -rf ${MIOPEN_USER_DB_PATH}",
+            "mkdir -p ${MIOPEN_USER_DB_PATH}",
+            "source $PROJWORK/stf006/muraligm/software/miniconda3-frontier/bin/activate",
+            "conda activate /lustre/orion/stf006/proj-shared/muraligm/ML/SSL_ALPNet/SSL_ALPNet_frontier39",
+            "date",
+            "./examples/train_ssl_abdominal_mri.sh",
+            "date"
+        ],
+        "comments": {
+            "potentially_unused": "OMP_NUM_THREADS=1 srun -u --gpus-per-task=1 --gpu-bind=closest -N1 -n1 -c1 ./examples/train_ssl_abdominal_mri.sh"
+        }
+    }
+}

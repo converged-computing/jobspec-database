@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"SLURM\",\n  \"details\": {\n    \"job_name\": \"special_permitl\",\n    \"partition\": \"amd\",\n    \"runtime\": \"8-00:00:00\",\n    \"cpus_per_task\": 2,\n    \"memory\": \"10G\",\n    \"array_tasks\": 9,\n    \"concurrent_jobs\": 3,\n    \"python_version\": \"3.8.3\",\n    \"conda_environment\": \"lstm-caise23\",\n    \"script_commands\": [\n      \"python ./dg_training.py -f PermitLog_filtered_preprocessed.csv -m lstm -e 50 -o rand_hpc\"\n    ]\n  }\n}\n```\n\n**Explanation:**\n\n* **SLURM** is the job scheduler used to run the script.\n* **SBATCH** directives specify the job resources:\n    * **-J**: Job name (special_permitl)\n    * **--partition**: Partition to run the job on (amd)\n    * **-t**: Runtime limit (8 hours)\n    * **--cpus-per-task**: Number of CPUs per job (2)\n    * **--mem**: Memory requirement (10GB)\n    * **--array**: Create an array of tasks and limit concurrent jobs (9 tasks, 3 concurrent)\n* **module load any/python/3.8.3-conda**: Loads Python 3.8.3 using conda\n* **conda activate lstm-caise23**: Activates a conda environment named \"lstm-caise23\"\n* **commands array**: Contains the commands to execute, in this case, it's running a script called \"dg_training.py\" with various arguments.\n* **${commands[$SLURM_ARRAY_TASK_ID]}**: This line executes the command from the \"commands\" array based on the current task ID within the array. \n\nThe script is primarily focused on running a python script called \"dg_training.py\" which is likely a machine learning training script using an LSTM model. The script utilizes SLURM for resource allocation and utilizes a conda environment for managing dependencies. \n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 391,
+        "candidates_token_count": 494,
+        "total_token_count": 885,
+        "cached_content_token_count": 0
+    }
+}

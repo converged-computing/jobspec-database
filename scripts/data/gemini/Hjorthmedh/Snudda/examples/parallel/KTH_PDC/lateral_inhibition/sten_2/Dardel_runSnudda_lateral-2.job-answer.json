@@ -1,0 +1,40 @@
+{
+    "application": "Slurm",
+    "details": {
+        "partition": "main",
+        "output_file": "log/runSnudda-%j-output.txt",
+        "error_file": "log/runSnudda-%j-error.txt",
+        "time_limit": "0:59:00",
+        "job_name": "Snudda",
+        "account": "naiss2023-5-231",
+        "nodes": 1,
+        "tasks_per_node": 128,
+        "cpus_per_task": 2,
+        "memory_per_cpu": "930M",
+        "mail_type": "ALL",
+        "modules": "snic-env",
+        "environment_variables": {
+            "OMP_STACKSIZE": "128G",
+            "IPNWORKERS": "40",
+            "IPYTHONDIR": "/cfs/klemming/scratch/${USER:0:1}/$USER/.ipython",
+            "IPYTHON_PROFILE": "default",
+            "FI_CXI_DEFAULT_VNI": "(generated from /dev/urandom)",
+            "CONTROLLERIP": "(read from controller_ip.txt)"
+        },
+        "software_dependencies": {
+            "ipython": "installed from $HOME/Snudda/snudda_env/bin/activate",
+            "ipcontroller_new.sh": "./../../ipcontroller_new.sh",
+            "ipengine": "installed from $HOME/Snudda/snudda_env/bin/activate",
+            "Dardel_runSnudda_lateral-2.sh": "./Dardel_runSnudda_lateral-2.sh"
+        },
+        "resource_requirements": {
+            "memory": "unlimited",
+            "mpi": "mpi4py"
+        },
+        "commands": {
+            "start_controller": "srun -n 1 -N 1 -c 2 --exact --overlap --mem=0 ./../../ipcontroller_new.sh &",
+            "start_engines": "srun -n ${IPNWORKERS} -c 2 -N ${SLURM_JOB_NUM_NODES} --exact --overlap --mem=0 ipengine --location=${CONTROLLERIP} --profile=${IPYTHON_PROFILE} --mpi --ipython-dir=${IPYTHONDIR}  --timeout=30.0 c.EngineFactory.max_heartbeat_misses=10  c.MPI.use='mpi4py' 1> ipe_${SLURM_JOBID}.out 2> ipe_${SLURM_JOBID}.err &",
+            "run_application": "srun -n 1 -N 1 --exact --overlap --mem=0 ./Dardel_runSnudda_lateral-2.sh"
+        }
+    }
+}

@@ -1,0 +1,37 @@
+{
+    "application": "Singularity",
+    "details": {
+        "image": "/cluster/project/cvg/labelmaker/labelmaker.simg",
+        "command": "bash -c \"cd /LabelMaker && export PATH=/miniconda3/condabin:$PATH && bash ./scripts/replica_pipeline.sh /source /target\"",
+        "binds": [
+            "/cluster/project/cvg/labelmaker/checkpoints:/LabelMaker/checkpoints",
+            "$LABELMAKER_REPO/env_v2:/LabelMaker/env_v2",
+            "$LABELMAKER_REPO/labelmaker:/LabelMaker/labelmaker",
+            "$LABELMAKER_REPO/testing:/LabelMaker/testing",
+            "$LABELMAKER_REPO/models:/LabelMaker/models",
+            "$LABELMAKER_REPO/scripts:/LabelMaker/scripts",
+            "$LABELMAKER_REPO/.gitmodules:/LabelMaker/.gitmodules",
+            "$TMPDIR/.cache:$HOME/.cache",
+            "$source_dir:/source",
+            "$target_dir:/target"
+        ],
+        "environment_variables": [
+            "WANDB_ENTITY=labelmaker-sdfstudio",
+            "WANDB_API_KEY=6b447b1218e7f042525c176c16b0cd32d3e58956"
+        ],
+        "modules": [
+            "gcc/11.4.0",
+            "cuda/12.1.1",
+            "eth_proxy"
+        ],
+        "slurm_options": {
+            "job_name": "labelmaker",
+            "output": "%j.out",
+            "time": "12:00:00",
+            "ntasks": 1,
+            "mem_per_cpu": "64G",
+            "tmp": "32G",
+            "gpus": "rtx_3090:1"
+        }
+    }
+}

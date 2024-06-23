@@ -1,0 +1,24 @@
+{
+    "application": "spack",
+    "details": {
+        "scheduler": "slurm",
+        "spack_version": "0.17.3",
+        "spack_instance_name": "gpu",
+        "spack_instance_dir": "/cm/shared/apps/spack/0.17.3/gpu",
+        "package": "hypre@2.23.0",
+        "compiler": "gcc@8.5.0",
+        "variants": "~complex +cuda cuda_arch=60,75,80,86 ~debug +fortran ~int64 ~internal-superlu ~mixedint +mpi ~openmp +shared +superlu-dist ~unified-memory",
+        "dependencies": [
+            "openblas@0.3.17/$(spack find --format '{hash:7}' openblas@0.3.17 % ${SPACK_COMPILER} ~ilp64 threads=none)",
+            "superlu-dist@7.1.1/$(spack find --format '{hash:7}' superlu-dist@7.1.1 % ${SPACK_COMPILER}",
+            "intel-mpi@2019.10.317"
+        ],
+        "resource_requirements": {
+            "nodes": 1,
+            "tasks_per_node": 1,
+            "cpus_per_task": 8,
+            "time": "00:30:00",
+            "gpu": "gpu1"
+        }
+    }
+}

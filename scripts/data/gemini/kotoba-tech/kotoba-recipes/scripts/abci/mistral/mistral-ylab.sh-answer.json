@@ -1,0 +1,50 @@
+{
+    "application": "SLURM",
+    "details": {
+        "resources": {
+            "gpu": "RTX 6000 (Ada)",
+            "time": "2 hours",
+            "output_directory": "outputs/pretrain",
+            "error_directory": "errors/pretrain"
+        },
+        "modules": {
+            "cuda": "11.8",
+            "cudnn": "8.9.0 (cuda-11.x)",
+            "nccl": "2.14.3 (cuda-11.7)",
+            "openmpi": "4.0.5"
+        },
+        "environment": {
+            "virtual_env": ".env",
+            "master_address": "obtained from system IP",
+            "master_port": "dynamically assigned based on job ID",
+            "num_nodes": 1,
+            "num_gpus_per_node": 4,
+            "node_type": "a100"
+        },
+        "training_config": {
+            "sequence_length": 4096,
+            "data_parallel_size": 4,
+            "micro_batch_size": 4,
+            "global_batch_size": 1024,
+            "training_steps": 25000
+        },
+        "optimizer_config": {
+            "learning_rate": 0.0001,
+            "min_learning_rate": 3.3e-06,
+            "learning_rate_warmup_steps": 1000,
+            "learning_rate_decay_steps": 25000,
+            "weight_decay": 0.1,
+            "gradient_clip": 1
+        },
+        "checkpoint_config": {
+            "tokenizer_model": "/home/kazuki/hf_checkpoints/Mistral-7B-v0.1/tokenizer.model",
+            "checkpoint_dir": "/home/kazuki/hf_checkpoints/Mistral-7B-v0.1",
+            "checkpoint_save_dir": "/home/kazuki/checkpoints/Mistral-7b/pretrain"
+        },
+        "data_config": {
+            "dataset_dir": "/home/kazuki/datasets/pretrain",
+            "data_path": "/home/kazuki/datasets/pretrain/train_ja_wiki_text_document"
+        },
+        "script": "examples/finetuning.py"
+    }
+}

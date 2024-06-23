@@ -1,0 +1,34 @@
+{
+    "application": "SLURM",
+    "details": {
+        "job_name": "bert",
+        "nodes": 2,
+        "gres": "gpu:4",
+        "cpus_per_task": 8,
+        "mem": "400GB",
+        "time": "0-01:30:00",
+        "ntasks_per_node": 4,
+        "partition": "boost_usr_prod",
+        "qos": "normal",
+        "account": "EUHPC_D07_027",
+        "output": "logs/sbatch-%J.log",
+        "modules": [
+            "cuda/12.1",
+            "cudnn/8.9.7.29-12--gcc--12.2.0-cuda-12.1"
+        ],
+        "environment_variables": [
+            "MASTER_ADDR",
+            "NPROC_PER_NODE",
+            "NCCL_DEBUG",
+            "PYTHONFAULTHANDLER",
+            "HYDRA_FULL_ERROR",
+            "CHECKPOINT_DIR",
+            "CONFIG_DIR",
+            "CONTAINER_PATH",
+            "LEONARDO_WORK",
+            "LOGGING"
+        ],
+        "container": "/leonardo_work/EUHPC_D07_027/containers/nemo_2306.sif",
+        "command": "singularity exec --nv -B $LEONARDO_WORK $CONTAINER_PATH bash $PROJECT/$TRAIN_SCRIPT"
+    }
+}

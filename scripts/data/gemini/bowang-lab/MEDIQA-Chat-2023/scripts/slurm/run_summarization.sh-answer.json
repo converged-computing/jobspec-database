@@ -1,0 +1,45 @@
+{
+    "application": "SLURM",
+    "details": {
+        "resource_requirements": {
+            "memory": "16G",
+            "cpus": "1",
+            "gpu": "a100:1"
+        },
+        "time": "1:00:00",
+        "job_name": "baseline",
+        "account": "def-gbader",
+        "email": "johnmgiorgi@gmail.com",
+        "email_type": "FAIL",
+        "interactive_run_commands": [
+            "salloc --mem=16G --cpus-per-task=1 --gres=gpu:a100:1 --time=3:00:00 --account=def-wanglab-ab_gpu",
+            "salloc --mem=16G --cpus-per-task=1 --gres=gpu:a100:1 --time=3:00:00 --account=def-gbader"
+        ],
+        "usage_notes": [
+            "The amount of time needed will depend on the batch size, model and number of GPUs requested.",
+            "Flan-T5 base takes only a few minutes per epoch on a single A100 GPU with a batch size of 8."
+        ],
+        "environment": {
+            "wandb_key": "export WANDB_API_KEY=\"\"",
+            "wandb_sync_command": "wandb sync -p mediqa-2023 -e wang-lab --sync-all",
+            "modules": [
+                "python/3.10",
+                "StdEnv/2020",
+                "gcc/9.3.0",
+                "arrow/7.0.0"
+            ],
+            "project_name": "mediqa",
+            "account_name": "def-wanglab-ab",
+            "virtual_environment": "source \"$HOME/$PROJECT_NAME/bin/activate\"",
+            "working_directory": "$HOME/projects/$ACCOUNT_NAME/$USER/$PROJECT_NAME-chat-tasks-acl-2023"
+        },
+        "script_arguments": [
+            "CONFIG_FILEPATH",
+            "OUTPUT_DIR"
+        ],
+        "job_details": "This calls a modified version of the example summarization script from HF (with Trainer). For details, see: https://github.com/huggingface/transformers/tree/main/examples/pytorch/summarization#with-trainer",
+        "cache_location": "$SCRATCH/.cache/huggingface",
+        "script_command": "python ./scripts/run_summarization.py \"./conf/base.yml\" \"$CONFIG_FILEPATH\" output_dir=\"$OUTPUT_DIR\" cache_dir=\"$SCRATCH/.cache/huggingface\" overwrite_output_dir=true bleurt_checkpoint=null"
+    },
+    "script_type": "SLURM"
+}

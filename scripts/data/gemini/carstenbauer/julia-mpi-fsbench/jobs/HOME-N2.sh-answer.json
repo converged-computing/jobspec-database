@@ -1,0 +1,42 @@
+{
+    "application": "Julia",
+    "details": {
+        "runtime": "Bash",
+        "scheduler": "Slurm",
+        "resources": {
+            "time": "10 minutes",
+            "nodes": 2,
+            "cores": 128,
+            "threads_per_core": 2,
+            "account": "pc2-mitarbeiter",
+            "partition": "normal",
+            "queue": "cont",
+            "output_file": "HOME-N2.out",
+            "julia_depot_path": "/upb/departments/pc2/users/b/bauerc/.julia_fsbench",
+            "julia_mpi_binary": "system",
+            "project_directory": "/scratch/pc2-mitarbeiter/bauerc/devel/julia-mpi-fsbench/jobs"
+        },
+        "libraries": {
+            "julia": "MPI",
+            "OpenMP": "Threads"
+        },
+        "environment": {
+            "OMP_NUM_THREADS": 1,
+            "OMP_PLACES": "threads",
+            "OMP_PROC_BIND": "spread",
+            "OMPI_MCA_hwloc_base_report_bindings": "false"
+        },
+        "commands": {
+            "srun": {
+                "cpu_bind": "cores",
+                "julia": {
+                    "project": "../bench.jl"
+                }
+            }
+        },
+        "actions": [
+            "run 5 trials of a Julia script named 'bench.jl'",
+            "sleep for 10 seconds between each trial"
+        ]
+    }
+}

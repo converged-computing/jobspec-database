@@ -1,0 +1,31 @@
+{
+    "application": "Singularity",
+    "details": {
+        "resource_requirements": {
+            "cpus": 4,
+            "gpus": 1,
+            "memory": "16G per cpu",
+            "gpu_memory": "23G",
+            "time": "23:59:59",
+            "tmp": "4G"
+        },
+        "environment_variables": {
+            "CMD": "train",
+            "CMD_EXEC": "/msnovelist/train.sh",
+            "OPTS": "--nv",
+            "DATA_LOC": "path to data directory",
+            "CODE_LOC": "path to code directory",
+            "SIF_LOC": "path to singularity image file",
+            "TMPDIR": "path to temporary directory"
+        },
+        "commands": {
+            "source": ".env",
+            "copy": "DATA_LOC/*.db to TMPDIR",
+            "run_singularity": "singularity run OPTS --bind TMPDIR:/HOME --bind TMPDIR:/sirius6_db --bind DATA_LOC:/target --bind CODE_LOC:/msnovelist --bind DATA_LOC:/data --bind DATA_LOC:/msnovelist-data SIF_LOC CMD_EXEC"
+        },
+        "other_software": {
+            "bash": "Used for scripting",
+            "python": "Used for running the training script (training_subclass.py)"
+        }
+    }
+}

@@ -1,0 +1,56 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"Slurm\",\n  \"details\": {\n    \"resource_requirements\": {\n      \"qos\": \"%qos\",\n      \"partition\": \"%partition\",\n      \"nodes\": 1,\n      \"wallclock_time\": \"3-00:00:00\",\n      \"gpus\": 1\n    },\n    \"modules\": \"%modules\",\n    \"scratch_host\": \"%scratch_host\",\n    \"inputs\": [\n      \"celeba_cropped\",\n      \"config_celeba_cropped.json\"\n    ],\n    \"outputs\": \"output_networks/celeba_cropped_$job_id\",\n    \"container\": \"pytorch_GAN_zoo.sif\",\n    \"container_command\": \"train.py PGAN -c config_celeba_cropped.json --restart --no_vis -n celeba_cropped_$job_id\",\n    \"run_command\": \"singularity exec\\n  --nv\\n  --bind $scratch:/scratch_mount\\n  --pwd /scratch_mount\\n  $container\\n  $container_command\"\n  }\n}\n```\n\n**Explanation:**\n\n* **Application:**  The script is primarily designed to run within the **Slurm** workload manager. \n* **Details:** \n    * **Resource Requirements:** The script specifies resource requests for the job, including QoS, partition, number of nodes, wallclock time, and GPUs. \n    * **Modules:** The `module load %modules` line suggests that the script depends on specific software modules defined by the `%modules` variable. \n    * **Scratch Host:** The script uses a scratch directory on a specified host (`%scratch_host`). \n    * **Inputs:** The script defines a set of input files or directories that need to be copied to the scratch space before execution. \n    * **Outputs:** The script indicates output files or directories that are copied back from the scratch space after execution. \n    * **Container:** The script uses a Singularity container (`pytorch_GAN_zoo.sif`) to encapsulate the necessary software environment and dependencies. \n    * **Container Command:** The script defines a command to execute within the Singularity container, which likely involves training a Generative Adversarial Network (GAN) using the PyTorch framework.\n    * **Run Command:** The script constructs the final execution command that runs the Singularity container with specific bindings and options. \n\n**Key Points:**\n\n* **Slurm:** The script heavily relies on Slurm variables (`$SLURM_ARRAY_JOB_ID`, `$SLURM_ARRAY_TASK_ID`, `$SLURM_JOB_ID`) and commands (`sbatch`).\n* **Singularity:**  The script utilizes Singularity for containerization, ensuring a consistent and reproducible software environment. \n* **GPU Monitoring:** The script monitors GPU usage using `nvidia-smi` and records the data to a file.\n* **Job Management:** The script provides a structured approach to managing job execution, including copying inputs, running the job, monitoring, copying outputs, and cleaning up. \n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "citation_metadata": {
+                "citation_sources": [
+                    {
+                        "start_index": 284,
+                        "end_index": 580,
+                        "uri": "https://github.com/alan-turing-institute/AI-workflows",
+                        "license_": ""
+                    }
+                ]
+            },
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 705,
+        "candidates_token_count": 680,
+        "total_token_count": 1385,
+        "cached_content_token_count": 0
+    }
+}

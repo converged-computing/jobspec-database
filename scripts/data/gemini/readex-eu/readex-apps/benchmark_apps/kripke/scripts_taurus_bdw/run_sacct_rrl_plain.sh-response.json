@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"Slurm\",\n  \"details\": {\n    \"runtime\": \"1 hour\",\n    \"nodes\": 1,\n    \"tasks_per_node\": 28,\n    \"cpus_per_task\": 1,\n    \"partition\": \"broadwell\",\n    \"memory_per_cpu\": \"2200M\",\n    \"job_name\": \"kripke_sacct\",\n    \"account\": \"p_readex\",\n    \"reservation\": \"p_readex_56\",\n    \"environment\": {\n      \"SCOREP_ENABLE_PROFILING\": \"false\",\n      \"SCOREP_ENABLE_TRACING\": \"false\",\n      \"SCOREP_SUBSTRATE_PLUGINS\": [\"rrl\"],\n      \"SCOREP_RRL_PLUGINS\": [\"cpu_freq_plugin\", \"uncore_freq_plugin\", \"OpenMPTP\"],\n      \"SCOREP_RRL_TMM_PATH\": \"tuning_model.json\",\n      \"SCOREP_MPI_ENABLE_GROUPS\": \"ENV\",\n      \"SCOREP_RRL_CHECK_IF_RESET\": \"reset\"\n    },\n    \"commands\": [\n      \"measure-rapl ./kripke $KRIPKE_COMMAND\",\n      \"sacct -j $SLURM_JOBID.$i --format=\\\"JobID,CPUTimeRAW,ConsumedEnergyRaw\\\"\",\n      \"tail -1 $file | awk -F'[ ,]' '{print int($1) \\\" \\\" int($2)}'\"\n    ],\n    \"libraries\": [\"Score-P\", \"OpenMPI\"],\n    \"tools\": [\"sacct\"]\n  }\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 1478,
+        "candidates_token_count": 383,
+        "total_token_count": 1861,
+        "cached_content_token_count": 0
+    }
+}

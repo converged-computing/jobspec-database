@@ -1,0 +1,104 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n\"application\": \"LSF\",\n\"software\": [\n\"bash\",\n\"nvidia-smi\",\n\"cuda/11.6\",\n\"python3\"\n],\n\"resources\": {\n\"queue\": \"gpuv100\",\n\"cores\": 4,\n\"gpu\": \"num=1:mode=exclusive_process\",\n\"walltime\": \"4:00\",\n\"memory\": \"10GB\",\n\"email\": \"leiyo@dtu.dk\"\n},\n\"dependencies\": [\n\"main.py\",\n\"configs/resnet20_optimal_transport.yaml\",\n\"configs/resnet20_woodfisher.yaml\",\n\"checkpoints/resnet20.ckpt\",\n\"datasets\",\n\"prob_regressor_results\"\n],\n\"commands\": [\n\"nvidia-smi\",\n\"module load cuda/11.6\",\n\"mkdir -p ${LOG_DIR}\",\n\"mkdir -p ${CSV_DIR}\",\n\"CUDA_VISIBLE_DEVICES=${GPUS[$((${ID} % ${#GPUS[@]}))]} python3 ${ROOT_DIR}/main.py --exp_name=${SWEEP_NAME}  --dset=cifar10 --dset_path=${DATA_DIR} --arch=resnet20 --config_path=${ROOT_DIR}/configs/resnet20_optimal_transport.yaml --workers=1 --batch_size=64 --logging_level debug --gpus=0 --from_checkpoint_path=${CKP_PATH} --batched-test --not-oldfashioned --disable-log-soft --use-model-config --sweep-id ${ID} --fisher-damp ${FISHER_DAMP} --prune-modules ${MODULE} --fisher-subsample-size ${FISHER_SUBSAMPLE_SIZE} --fisher-mini-bsz ${FISHER_MINIBSZ} --update-config --prune-class ${PRUNER} --target-sparsity ${TARGET_SPARSITY} --result-file ${CSV_DIR}/prune_module-woodfisher-based_all_epoch_end-${EPOCH_END}.csv --seed ${SEED} --deterministic --full-subsample ${JOINT_FLAG} --epochs ${EPOCH_END} --fisher-optimized --fisher-parts 5 --offload-grads --offload-inv $extra_cmd \",\n\"CUDA_VISIBLE_DEVICES=${GPUS[$((${ID} % ${#GPUS[@]}))]} python3 ${ROOT_DIR}/main.py --exp_name=${SWEEP_NAME}  --dset=cifar10 --dset_path=${DATA_DIR} --arch=resnet20 --config_path=${ROOT_DIR}/configs/resnet20_woodfisher.yaml --workers=1 --batch_size=64 --logging_level debug --gpus=0 --from_checkpoint_path=${CKP_PATH} --batched-test --not-oldfashioned --disable-log-soft --use-model-config --sweep-id ${ID} --fisher-damp ${FISHER_DAMP} --prune-modules ${MODULE} --fisher-subsample-size ${FISHER_SUBSAMPLE_SIZE} --fisher-mini-bsz ${FISHER_MINIBSZ} --update-config --prune-class ${PRUNER} --target-sparsity ${TARGET_SPARSITY} --prune-end ${EPOCH_END} --prune-freq ${EPOCH_END} --result-file ${CSV_DIR}/prune_module-woodfisher-based_all_epoch_end-${EPOCH_END}.csv --seed ${SEED} --deterministic --full-subsample ${JOINT_FLAG} --fisher-optimized --fisher-parts 5 --offload-grads --offload-inv $extra_cmd &> ${LOG_DIR}/${PRUNER}_proper-1_joint-${JOINT}_module-all_target_sp-${TARGET_SPARSITY}_epoch_end-${EPOCH_END}_samples-${FISHER_SUBSAMPLE_SIZE}_${FISHER_MINIBSZ}_damp-${FISHER_DAMP}_seed-${SEED}.txt\"\n]\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "citation_metadata": {
+                "citation_sources": [
+                    {
+                        "start_index": 587,
+                        "end_index": 728,
+                        "uri": "https://github.com/IST-DASLab/WoodFisher",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 747,
+                        "end_index": 1068,
+                        "uri": "https://github.com/yuxwind/CBS",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 992,
+                        "end_index": 1148,
+                        "uri": "https://github.com/yuxwind/CBS",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 1154,
+                        "end_index": 1298,
+                        "uri": "https://github.com/yuxwind/CBS",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 1488,
+                        "end_index": 1747,
+                        "uri": "https://github.com/yuxwind/CBS",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 1621,
+                        "end_index": 1942,
+                        "uri": "https://github.com/yuxwind/CBS",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 1805,
+                        "end_index": 1996,
+                        "uri": "https://github.com/yuxwind/CBS",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 1866,
+                        "end_index": 2289,
+                        "uri": "https://github.com/yuxwind/CBS",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 2307,
+                        "end_index": 2499,
+                        "uri": "https://github.com/yuxwind/CBS",
+                        "license_": ""
+                    }
+                ]
+            },
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 2176,
+        "candidates_token_count": 924,
+        "total_token_count": 3100,
+        "cached_content_token_count": 0
+    }
+}

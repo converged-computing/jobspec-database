@@ -1,0 +1,38 @@
+{
+    "application": "Slurm",
+    "details": {
+        "software": [
+            "python/3.6.5",
+            "intel",
+            "impi",
+            "R/3.5.0",
+            "mpirun",
+            "OpenMP",
+            "Rscript"
+        ],
+        "resources": [
+            "nodes: 2",
+            "tasks-per-node: 4",
+            "tasks: 8",
+            "time: 00:10:00"
+        ],
+        "commands": [
+            "ls",
+            "cd $SLURM_SUBMIT_DIR",
+            "mpirun -n 8 ./hellof > hellof.out",
+            "mpirun -n 8 ./helloc > helloc.out",
+            "export OMP_NUM_THREADS=2",
+            "mpirun -n 8 ./phostone -F > phostone.out",
+            "export OMP_NUM_THREADS=4",
+            "./invertf > invertf.out",
+            "export OMP_NUM_THREADS=4",
+            "./invertc > invertc.out",
+            "./tymer timefile \"**** running our R example\"",
+            "Rscript invert.R",
+            "./tymer timefile \"end R\"",
+            "./tymer timefile \"**** running our python example\"",
+            "python3 invert.py",
+            "./tymer timefile \"end python\""
+        ]
+    }
+}

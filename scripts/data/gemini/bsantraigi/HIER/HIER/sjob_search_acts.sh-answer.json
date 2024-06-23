@@ -1,0 +1,35 @@
+{
+    "application": "SLURM",
+    "details": {
+        "job_name": "hier_search",
+        "output_file": "logs/slurm_%j.log",
+        "error_file": "logs/slurm_%j.log",
+        "queue": "gpu",
+        "mpi_tasks": 1,
+        "threads": 1,
+        "memory": "23000 MB",
+        "email": "bishal.santra@iitkgp.ac.in",
+        "mail_type": "ALL",
+        "time_limit": "2-0",
+        "modules": [
+            "compiler/intel-mpi/mpi-2019-v5",
+            "compiler/cuda/10.1"
+        ],
+        "environment_variables": {
+            "CUDA_VISIBLE_DEVICES": "0,1"
+        },
+        "commands": [
+            "nvidia-smi",
+            "mpirun -bootstrap slurm which python",
+            "mpirun -bootstrap slurm nvcc --version",
+            "mpirun -bootstrap slurm python search_params_acts.py -e 5 -model HIER++",
+            "mpirun -bootstrap slurm python search_params_acts.py -e 5 -model SET++"
+        ],
+        "resources": {
+            "gpu": true,
+            "mpi": true,
+            "python": true,
+            "nvidia_driver": true
+        }
+    }
+}

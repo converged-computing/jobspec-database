@@ -1,0 +1,26 @@
+{
+    "application": "Slurm",
+    "details": {
+        "resource_requirements": {
+            "nodes": 1,
+            "tasks_per_node": 1,
+            "wall_time": "15:00:00",
+            "job_name": "tfrec_1gpu",
+            "output_file": "outputs/tfrec_1gpu-%J.o",
+            "error_file": "outputs/tfrec_1gpu-%J.o",
+            "partition": "gpuq",
+            "features": "c4140,m,32gb,v100",
+            "modules": [
+                "cuda10.0/toolkit/10.0.130",
+                "gcc/7.2.0"
+            ],
+            "conda_env": "docker_pip2"
+        },
+        "environment_variables": {
+            "LD_LIBRARY_PATH": "$HOME/cuda:$HOME/cuda/include:$HOME/cuda/lib64:$HOME/modules/openmpi-4.0.0-flags-ucx/bin:$HOME/modules/openmpi-4.0.0-flags-ucx/include:$LD_LIBRARY_PATH",
+            "PATH": "$HOME/cuda:$HOME/cuda/include:$HOME/cuda/lib64:$HOME/modules/openmpi-4.0.0-flags-ucx/bin:$HOME/modules/openmpi-4.0.0-flags-ucx/include:$PATH",
+            "OMPI_MCA_btl_openib_allow_ib": "1"
+        },
+        "execution_command": "mpirun -np 1 --map-by socket  python chexnet_densenet_tfrec.py --batch_size=64  --epochs=10 --skip_eval=1 --write_weights=0"
+    }
+}

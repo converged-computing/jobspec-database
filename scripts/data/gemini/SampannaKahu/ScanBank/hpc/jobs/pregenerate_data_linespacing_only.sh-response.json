@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"Slurm\",\n  \"software\": [\n    \"Python\",\n    \"training_data_generator.py\"\n  ],\n  \"resources\": {\n    \"nodes\": 1,\n    \"cores\": 32,\n    \"memory\": \"128 GB\",\n    \"gpus\": 0,\n    \"queue\": \"normal_q\",\n    \"walltime\": \"80:00:00\"\n  },\n  \"storage\": {\n    \"home\": \"/home/sampanna\",\n    \"work\": \"/work/cascades/sampanna\",\n    \"scratch\": \"/scratch-local\"\n  },\n  \"environment\": {\n    \"conda_env\": \"deepfigures\"\n  },\n  \"commands\": [\n    \"module purge\",\n    \"cd \\\"$WORK\\\"/deepfigures-results || exit\",\n    \"mkdir -p \\\"$ARXIV_DATA_TEMP\\\"\",\n    \"mkdir -p \\\"$DOWNLOAD_CACHE\\\"\",\n    \"mkdir -p \\\"$ARXIV_DATA_OUTPUT\\\"\",\n    \"mkdir -p \\\"$ZIP_SAVE_DIR\\\"\",\n    \"mkdir -p \\\"$ZIP_DEST_DIR\\\"\",\n    \"cat ~/deepfigures-open/hpc/files_random_40/files_\\\"$i\\\".json | grep tar | awk -F '/' '{print $3_\\\"$4_\\\"$5}' | awk -F '\\\"' '{print \\\"/work/cascades/sampanna/deepfigures-results/download_cache/\\\"$1}' | xargs cp -t \\\"$DOWNLOAD_CACHE\\\"\",\n    \"/home/sampanna/.conda/envs/deepfigures/bin/python /home/sampanna/deepfigures-open/deepfigures/data_generation/training_data_generator.py --file_list_json /home/sampanna/deepfigures-open/hpc/files_random_40/files_\\\"$i\\\".json --images_per_zip=500 --zip_save_dir=\\\"$ZIP_SAVE_DIR\\\" --zip_dest_dir=\\\"$ZIP_DEST_DIR\\\" --n_cpu=$NUM_CPUS_TIMES_2 --work_dir_prefix \\\"$WORK_DIR_PREFIX\\\" --arxiv_tmp_dir \\\"$ARXIV_DATA_TEMP\\\" --arxiv_cache_dir \\\"$DOWNLOAD_CACHE\\\" --arxiv_data_output_dir \\\"$ARXIV_DATA_OUTPUT\\\" --delete_tar_after_extracting True --augment_line_spacing_1_5 True\"\n  ]\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 2,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 1702,
+        "candidates_token_count": 580,
+        "total_token_count": 2282,
+        "cached_content_token_count": 0
+    }
+}

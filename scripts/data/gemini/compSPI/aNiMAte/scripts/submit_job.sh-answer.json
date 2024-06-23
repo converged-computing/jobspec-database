@@ -1,0 +1,31 @@
+{
+    "application": "SLURM",
+    "details": {
+        "resource_requirements": {
+            "partition": "ml",
+            "job_name": "aNiMAte-train",
+            "output_file": "output-%j.txt",
+            "error_file": "output-%j.txt",
+            "tasks_per_node": 1,
+            "memory": "128GB"
+        },
+        "software": {
+            "singularity_image": "/sdf/group/ml/CryoNet/singularity_images/animate_latest.sif",
+            "python": "3.x"
+        },
+        "libraries": [
+            "torch",
+            "nCCL"
+        ],
+        "other": {
+            "environment_variables": [
+                "CUDA_VISIBLE_DEVICES",
+                "NCCL_DEBUG",
+                "NCCL_SOCKET_IFNAME",
+                "CUDA_LAUNCH_BLOCKING",
+                "PYTORCH_CUDA_ALLOC_CONF"
+            ],
+            "script": "src/experiment_scripts/main.py"
+        }
+    }
+}

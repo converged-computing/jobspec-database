@@ -1,0 +1,68 @@
+{
+    "application": "PBS",
+    "details": {
+        "job_name": "hs-d-r-n",
+        "nodes": 1,
+        "processors_per_node": 3,
+        "walltime": "48:00:00",
+        "queue": "qfermi",
+        "email": "adc@geo.au.dk",
+        "email_options": "abe",
+        "software": [
+            {
+                "name": "Grendel CUDA",
+                "version": "5.5.22",
+                "path": "/com/cuda/5.5.22"
+            },
+            {
+                "name": "Python",
+                "version": "2.7.6",
+                "path": "/com/python/2.7.6"
+            },
+            {
+                "name": "CMake",
+                "version": "unknown",
+                "path": "unknown"
+            }
+        ],
+        "resources": [
+            {
+                "name": "Nvidia GPU",
+                "description": "Used for running CUDA code"
+            },
+            {
+                "name": "PBS",
+                "description": "Used for job scheduling and resource allocation"
+            },
+            {
+                "name": "Scratch Disk",
+                "description": "Used for temporary storage"
+            }
+        ],
+        "script_commands": [
+            "source /com/gcc/4.6.4/load.sh",
+            "export PATH=$HOME/bin:$PATH",
+            "export PATH=$CUDAPATH/bin:$PATH",
+            "export LD_LIBRARY_PATH=$CUDAPATH/lib64:$CUDAPATH/lib:$LD_LIBRARY_PATH",
+            "export PYTHONPATH=$HOME/.local/lib/python:$PYTHONPATH",
+            "export PYTHONPATH=$HOME/.local/lib64/python:$PYTHONPATH",
+            "export PATH=/home/adc/.local/bin:$PATH",
+            "export PYTHONPATH=$PYTHON/lib:$PYTHONPATH",
+            "export PATH=$PYTHON/bin:$PATH",
+            "echo \"`whoami`@`hostname`\"",
+            "echo \"Start at `date`\"",
+            "ORIGDIR=/home/adc/code/sphere",
+            "WORKDIR=$ORIGDIR",
+            "cd $WORKDIR",
+            "nvidia-smi",
+            "rm CMakeCache.txt",
+            "cmake . && make",
+            "cd python",
+            "python halfshear-darcy-starter-neumann.py 0 1 1.0 3.5e-15 20000.0 1.797e-6 1.0 &",
+            "python halfshear-darcy-starter-neumann.py 1 1 1.0 3.5e-15 20000.0 1.797e-7 1.0 &",
+            "python halfshear-darcy-starter-neumann.py 2 1 1.0 3.5e-15 20000.0 1.797e-8 1.0 &",
+            "wait",
+            "echo \"End at `date`\""
+        ]
+    }
+}

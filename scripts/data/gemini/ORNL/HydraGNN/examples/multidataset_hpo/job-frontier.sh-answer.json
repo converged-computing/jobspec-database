@@ -1,0 +1,47 @@
+{
+    "application": "DeepHyper",
+    "details": {
+        "framework": "DeepHyper",
+        "resources": {
+            "nodes": 2048,
+            "gpus_per_node": 8,
+            "total_gpus": 16384,
+            "threads_per_rank": 4,
+            "scheduler": "SLURM",
+            "runtime": "2:00:00",
+            "queue": "batch",
+            "account": "CPH161"
+        },
+        "libraries": {
+            "python": "python",
+            "pytorch": "pytorch",
+            "rocm": "/opt/rocm-5.4.2",
+            "redis": "redis",
+            "transformers": "transformers",
+            "deepspeed": "deepspeed"
+        },
+        "environment_variables": {
+            "MIOPEN_DISABLE_CACHE": "1",
+            "HSA_DISABLE_CACHE": "1",
+            "TRANSFORMERS_OFFLINE": "1",
+            "HF_DATASETS_OFFLINE": "1",
+            "NCCL_DEBUG": "INFO",
+            "DEEPHYPER_LOG_DIR": "deephyper-experiment-$SLURM_JOB_ID",
+            "DEEPHYPER_DB_HOST": "$HOST",
+            "REDIS_CONF": "redis.conf",
+            "OMP_NUM_THREADS": "4",
+            "NNODES": "$SLURM_JOB_NUM_NODES",
+            "NNODES_PER_TRIAL": "256",
+            "NUM_CONCURRENT_TRIALS": "($NNODES / $NNODES_PER_TRIAL)",
+            "NTOTGPUS": "($NNODES * 8)",
+            "NGPUS_PER_TRIAL": "(8 * $NNODES_PER_TRIAL)",
+            "NTOT_DEEPHYPER_RANKS": "($NTOTGPUS / $NGPUS_PER_TRIAL)",
+            "CUDA_DEVICE_MAX_CONNECTIONS": "1",
+            "CUDA_VISIBLE_DEVICES": "0,1,2,3,4,5,6,7"
+        },
+        "scripts": {
+            "qm9_deephyper_multi.py": "python qm9_deephyper_multi.py",
+            "gfm_deephyper_multi.py": "python gfm_deephyper_multi.py"
+        }
+    }
+}

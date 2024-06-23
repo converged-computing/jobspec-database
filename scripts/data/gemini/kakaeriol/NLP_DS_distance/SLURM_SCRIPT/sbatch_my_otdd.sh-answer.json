@@ -1,0 +1,37 @@
+{
+    "application": "SLURM",
+    "details": {
+        "resource_requirements": {
+            "nodes": 1,
+            "partition": "long",
+            "time": "3-00:00:00",
+            "memory": "50GB",
+            "excluded_nodes": [
+                "amdgpu1",
+                "amdgpu2",
+                "xcna0",
+                "xgpd9"
+            ],
+            "cpus_per_task": 4
+        },
+        "script_execution": {
+            "command": "./script.sh",
+            "arguments": "${SLURM_ARRAY_TASK_ID}",
+            "ulimit_settings": {
+                "stack_size": "10240",
+                "process_limit": "100000"
+            },
+            "srun_parameters": {
+                "nodes": 1,
+                "tasks_per_node": 1
+            }
+        },
+        "logging": {
+            "output_file": "/home/n/nguyenpk/CS6220/project/NLP_DS_distance/SLURM_SCRIPT/log/%A_%a.log",
+            "error_file": "/home/n/nguyenpk/CS6220/project/NLP_DS_distance/SLURM_SCRIPT/err/err.%A_%a"
+        },
+        "array_tasks": {
+            "range": "0-10"
+        }
+    }
+}

@@ -1,0 +1,27 @@
+{
+    "application": "Snakemake",
+    "details": {
+        "scheduler": "Slurm",
+        "resources": {
+            "partition": "short",
+            "time": "12:00:00",
+            "memory_per_cpu": "400M",
+            "cores": 8,
+            "error_file": "snakemake.err",
+            "output_file": "snakemake.log",
+            "job_name": "NET_RNAseq-snakemake"
+        },
+        "snakemake_options": {
+            "parallel": true,
+            "rerun_incomplete": true,
+            "latency_wait": 300,
+            "cluster_config": "cluster.yaml",
+            "use_conda": true,
+            "conda_prefix": "../conda",
+            "jobs": 9999,
+            "restart_times": 1,
+            "cluster_command": "sbatch -p {cluster.queue} -c {cluster.n} -t {cluster.time} --mem-per-cpu={cluster.mem} -J {cluster.name} -e {cluster.err} -o {cluster.log} --parsable",
+            "cluster_status_command": "bash slurm_status.sh"
+        }
+    }
+}

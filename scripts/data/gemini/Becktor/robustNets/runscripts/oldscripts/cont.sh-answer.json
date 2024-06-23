@@ -1,0 +1,36 @@
+{
+    "application": "LSF",
+    "details": {
+        "queue": "gpuv100",
+        "job_name": "reweight",
+        "cores": 2,
+        "gpu": {
+            "num": 1,
+            "mode": "exclusive_process"
+        },
+        "walltime": "24:00",
+        "memory": "16GB",
+        "gpu_memory": "32GB",
+        "email": "jbibe@elektro.dtu.dk",
+        "notifications": {
+            "start": true,
+            "completion": true
+        },
+        "output_file": "reweight_%J.out",
+        "error_file": "reweight_%J.err",
+        "modules": [
+            "python3/3.6.7",
+            "cudnn/v7.6.5.32-prod-cuda-10.0"
+        ],
+        "virtual_environment": "/work1/jbibe/venv",
+        "script": "train.py",
+        "arguments": {
+            "csv_train": "/work1/jbibe/100k_annot95_auto5_hpc.csv",
+            "csv_classes": "classes.csv",
+            "csv_val": "/work1/jbibe/mmdet/fix_annotations_rgb_val.csv",
+            "csv_weight": "/work1/jbibe/weightset_hpc2.csv",
+            "batch_size": 16,
+            "continue_training": "/work1/jbibe/git/robustNets/trained_models/gentle-plasma-210_ioodhje1"
+        }
+    }
+}

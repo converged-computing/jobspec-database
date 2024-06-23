@@ -1,0 +1,43 @@
+{
+    "application": "SLURM",
+    "details": {
+        "partition": "amdgpulong",
+        "time": "72:00:00",
+        "gres": "gpu:1",
+        "tasks_per_node": 1,
+        "mem_per_gpu": "32000",
+        "job_name": "LoRA_Q_bnn_E2E",
+        "error_file": "LoRA_Q_bnn_E2E.err",
+        "output_file": "LoRA_Q_bnn_E2E.out",
+        "mail_user": "kangchen@fel.cvut.cz",
+        "mail_type": "ALL",
+        "software": [
+            "PyTorch/1.9.0-fosscuda-2020b",
+            "OpenMPI"
+        ],
+        "commands": [
+            "hostname",
+            "pwd",
+            "python improved-diffusion/scripts/run_train.py",
+            "python improved-diffusion/scripts/batch_decode.py",
+            "python metrics_text.py",
+            "python train_run.py",
+            "python improved-diffusion/scripts/infill.py",
+            "python metrics_text.py"
+        ],
+        "libraries": [
+            "PyTorch",
+            "OpenMPI"
+        ],
+        "environment": [
+            "OMP_MCA_mpi_warn_on_fork",
+            "quant_m",
+            "weight_i_width",
+            "weight_f_width"
+        ],
+        "resources": [
+            "GPU",
+            "CPU"
+        ]
+    }
+}

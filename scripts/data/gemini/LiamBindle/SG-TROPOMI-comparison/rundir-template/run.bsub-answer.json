@@ -1,0 +1,33 @@
+{
+    "application": "LSF",
+    "details": {
+        "queue": "{{ job['queue'] }}",
+        "cores": "{{ job['num_cores'] }}",
+        "nodes": "{{ job['num_nodes'] }}",
+        "walltime": "336:00",
+        "memory": "300000",
+        "cores_per_node": "{{ job['cores_per_node'] }}",
+        "max_memory": "2000000",
+        "docker_image": "registry.gsc.wustl.edu/sleong/base-engineering-gcc",
+        "job_name": "E2 run",
+        "group": "/$USER/E2",
+        "email": "liam.bindle@wustl.edu",
+        "output_file": "lsf-run-%J-output.txt",
+        "runtime_environment": {
+            "print_executed_commands": true,
+            "exit_on_failure": true,
+            "coredumpsize": 0,
+            "memorylocked": "unlimited",
+            "maxproc": 50000,
+            "vmemoryuse": "unlimited",
+            "stacksize": "unlimited"
+        },
+        "simulation_execution": {
+            "run_directory": "{{ paths['run_directory'] }}",
+            "executable": "./geos",
+            "mpi_command": "mpirun",
+            "mpi_options": "-x LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH",
+            "mpi_processes": "{{ job['num_cores'] }}"
+        }
+    }
+}

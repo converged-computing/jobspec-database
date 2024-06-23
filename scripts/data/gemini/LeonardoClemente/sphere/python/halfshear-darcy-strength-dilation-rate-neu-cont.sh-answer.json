@@ -1,0 +1,41 @@
+{
+    "application": "PBS",
+    "details": {
+        "job_name": "hs-d-r-n",
+        "nodes": 1,
+        "ppn": 3,
+        "walltime": "48:00:00",
+        "queue": "qfermi",
+        "email": "adc@geo.au.dk",
+        "email_options": "abe",
+        "software": [
+            {
+                "name": "Grendel CUDA",
+                "version": "5.5.22",
+                "path": "/com/cuda/5.5.22"
+            },
+            {
+                "name": "Python",
+                "version": "2.7.6",
+                "path": "/com/python/2.7.6"
+            },
+            {
+                "name": "CMake",
+                "version": "unknown",
+                "path": "unknown"
+            }
+        ],
+        "resource_requirements": {
+            "scratch_space": "/scratch/$PBS_JOBID",
+            "working_directory": "/home/adc/code/sphere"
+        },
+        "commands": [
+            "nvidia-smi",
+            "cmake . && make",
+            "python continue_sim.py halfshear-darcy-sigma0=20000.0-k_c=3.5e-15-mu=1.797e-06-velfac=1.0-shear-neu 1 0 &",
+            "python continue_sim.py halfshear-darcy-sigma0=20000.0-k_c=3.5e-15-mu=1.797e-07-velfac=1.0-shear-neu 1 1 &",
+            "python continue_sim.py halfshear-darcy-sigma0=20000.0-k_c=3.5e-15-mu=1.797e-08-velfac=1.0-shear-neu 1 2 &",
+            "wait"
+        ]
+    }
+}

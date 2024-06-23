@@ -1,0 +1,25 @@
+{
+    "application": "SLURM",
+    "details": {
+        "software": [
+            "GCC/6.4.0-2.28",
+            "OpenMPI/2.1.2",
+            "CUDA/10.0.130",
+            "cuDNN/7.5.0.56-CUDA-10.0.130",
+            "Python/3.8.5",
+            "anaconda3",
+            "biprune",
+            "hydra-structured"
+        ],
+        "resources": {
+            "time": "1:50:00",
+            "nodes": 1,
+            "tasks": 1,
+            "cpus_per_task": 4,
+            "memory_per_cpu": "2G",
+            "gpu": "v100:1"
+        },
+        "command": "python3 train.py --arch resnet18 --dataset CIFAR10 --k ${k} --exp-mode finetune --exp-name resnet18_ratio${k}_std_auto --trainer base --val-method base --resume results/resnet18/resnet18_ratio${k}_std_auto/finetune/latest_exp/checkpoint/checkpoint.pth.tar --result-dir results --use_trainable_router --router_arch resnet18",
+        "output_file": "log/slurm/resnet18_CIFAR10_separate_seed.out"
+    }
+}

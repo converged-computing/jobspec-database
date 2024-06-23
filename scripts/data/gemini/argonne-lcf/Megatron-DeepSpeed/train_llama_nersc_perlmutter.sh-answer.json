@@ -1,0 +1,36 @@
+{
+    "application": "Deepspeed",
+    "details": {
+        "framework": "PyTorch",
+        "model": "GPT",
+        "accelerator": "GPU",
+        "distribution": "Distributed",
+        "runtime": {
+            "slurm": {
+                "partition": "regular",
+                "nodes": 128,
+                "gpus_per_node": 512,
+                "time": "00:30:00",
+                "account": "m4388_g"
+            },
+            "deepspeed": {
+                "launcher": "srun",
+                "configuration": {
+                    "optimizer": "adam",
+                    "flash_attention": "v2",
+                    "tensorboard": true,
+                    "lr_scheduler": "cosine",
+                    "gradient_accumulation_fusion": false,
+                    "masked_softmax_fusion": false,
+                    "checkpoint_optimizer_params": true
+                }
+            }
+        },
+        "dependencies": [
+            "python3",
+            "deepspeed",
+            "torch",
+            "nvidia-smi"
+        ]
+    }
+}

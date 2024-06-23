@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"VASP\",\n  \"details\": {\n    \"scheduler\": \"Slurm\",\n    \"partition\": \"batch\",\n    \"constraint\": \"amd\",\n    \"nodes\": 1,\n    \"tasks_per_node\": 20,\n    \"walltime\": \"2:30:00\",\n    \"modules\": [\n      \"intel/2016\",\n      \"openmpi/4.0.3_intel\",\n      \"perl\"\n    ],\n    \"environment_variables\": [\n      \"VASP_HOME=/ibex/scratch/jangira/vasp/sw/vasp.5.4.4/bin\",\n      \"OMP_NUM_THREADS=1\",\n      \"SLURM_NTASKS=$((SLURM_NNODES*SLURM_NTASKS_PER_NODE))\"\n    ],\n    \"execution_command\": \"mpirun -np ${SLURM_NTASKS} ${VASP_HOME}/vasp_std\",\n    \"post_processing\": [\n      \"perl chgsum.pl AECCAR0 AECCAR2\",\n      \"chmod +x ./bader\",\n      \"./bader CHGCAR -ref CHGCAR_sum\"\n    ]\n  }\n}\n```\n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 587,
+        "candidates_token_count": 296,
+        "total_token_count": 883,
+        "cached_content_token_count": 0
+    }
+}

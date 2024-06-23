@@ -1,0 +1,32 @@
+{
+    "application": "SLURM",
+    "details": {
+        "resource_requirements": {
+            "nodes": 1,
+            "cpus_per_node": 1,
+            "tasks": 1,
+            "gpus": 1,
+            "cpus_per_task": 8,
+            "walltime": "256:00:00",
+            "memory": "40GB",
+            "partition": "lianglab,research",
+            "exclude_nodes": "euler[01-09],euler[11-12],euler[14],euler[24-27]"
+        },
+        "software_requirements": {
+            "python": "3.x",
+            "torch": "1.x",
+            "cuda": "11.x"
+        },
+        "script_functionality": {
+            "job_name": "ada_vit",
+            "job_array_size": 12,
+            "input_file": "input_files_jobarray/input_file_skip_block.txt",
+            "python_script": "tools/eval_baseline.py",
+            "script_arguments": {
+                "limit": 5000,
+                "model": "vit",
+                "skip_block": "from input_file"
+            }
+        }
+    }
+}

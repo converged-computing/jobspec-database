@@ -1,0 +1,43 @@
+{
+    "application": "SLURM",
+    "details": {
+        "job_name": "alm",
+        "output_file": "./log/%j_alm.txt",
+        "queue": "regular",
+        "gpu_count": 4,
+        "nodes": 1,
+        "partition": "a6",
+        "tasks_per_node": 32,
+        "memory": 470000,
+        "exclusive": true,
+        "environment_variables": {
+            "TRANSFORMERS_CACHE": "./hf_cache/",
+            "HF_DATASETS_CACHE": "./hf_cache/"
+        },
+        "output_directory": "../exp/stage4_all_mix",
+        "torchrun_arguments": {
+            "nproc_per_node": 4,
+            "master_port": 1234
+        },
+        "finetune_arguments": {
+            "base_model": "/data/sls/scratch/yuangong/ltu/src/ltu/exp/stage3_all_close/checkpoint-6000/pytorch_model.bin",
+            "data_path": "../../../openaqa/openaqa_5.6M.json",
+            "output_dir": "../exp/stage4_all_mix",
+            "batch_size": 256,
+            "micro_batch_size": 4,
+            "num_epochs": 1,
+            "learning_rate": 0.0001,
+            "cutoff_len": 108,
+            "val_set_size": 0,
+            "lora_r": 8,
+            "lora_alpha": 16,
+            "lora_dropout": 0.05,
+            "lora_target_modules": "[q_proj,v_proj]",
+            "train_on_inputs": true,
+            "group_by_length": true,
+            "wandb_run_name": "${output_dir}",
+            "save_steps": 2000,
+            "trainable_params": "all"
+        }
+    }
+}

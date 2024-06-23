@@ -1,0 +1,58 @@
+{
+    "application": "LSF",
+    "details": {
+        "queue": "gpuv100",
+        "job_name": "imagenet-ot",
+        "cores": 8,
+        "gpu": "num=1:mode=exclusive_process",
+        "walltime": "23:59",
+        "memory": "10GB",
+        "machine": "XeonGold6242",
+        "modules": [
+            "cuda/11.6"
+        ],
+        "python_version": "3",
+        "software": [
+            "nvidia-smi",
+            "main.py"
+        ],
+        "datasets": [
+            "imagenet"
+        ],
+        "models": [
+            "mobilenet"
+        ],
+        "configs": [
+            "mobilenetv1_optimal_transport.yaml"
+        ],
+        "pruners": [
+            "optimal_transport"
+        ],
+        "other": {
+            "data_path": "/work3/leiyo/imagenet",
+            "code_dir": "./",
+            "root_dir": "./",
+            "data_dir": "./../datasets",
+            "weight_dir": "./prob_regressor_data/",
+            "exp_dir": "./prob_regressor_results/",
+            "bsz": 256,
+            "epochs": 5,
+            "fittable": 10000,
+            "fisher_subsample_size": 1000,
+            "fisher_mini_bsz": 1,
+            "max_mini_bsz": 1,
+            "load_from": "./checkpoints/MobileNetV1-Dense-STR.pth",
+            "scale_prune_update": 0.9,
+            "target_sparsities": [
+                0.6,
+                0.5,
+                0.4,
+                0.3
+            ],
+            "seed": 0,
+            "gpu": [
+                0
+            ]
+        }
+    }
+}

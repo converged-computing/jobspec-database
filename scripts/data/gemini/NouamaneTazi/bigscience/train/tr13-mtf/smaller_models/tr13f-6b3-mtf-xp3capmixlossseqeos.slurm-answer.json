@@ -1,0 +1,32 @@
+{
+    "application": "DeepSpeed",
+    "details": {
+        "framework": "PyTorch",
+        "model": "GPT-3",
+        "training_data": "tr13f-6B3-ml-t0",
+        "resources": {
+            "nodes": 8,
+            "gpus_per_node": 8,
+            "cpus_per_task": 64,
+            "partition": "gpu_p5",
+            "constraint": "a100",
+            "reservation": "hug",
+            "qos": "qos_gpu-gc",
+            "account": "six@a100"
+        },
+        "training_parameters": {
+            "learning_rate": 2e-05,
+            "optimizer": "Adam",
+            "batch_size": 2048,
+            "sequence_length": 2048,
+            "layers": 30,
+            "hidden_size": 4096,
+            "heads": 32,
+            "zero_stage": 1,
+            "deepspeed_config": "ds_config.$SLURM_JOBID.json",
+            "checkpoint_path": "$DATA_OUTPUT_PATH/checkpoints/$variant",
+            "tensorboard_path": "$TENSORBOARD_PATH",
+            "log_path": "$LOGS_PATH/main_log.txt"
+        }
+    }
+}

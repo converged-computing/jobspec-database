@@ -1,0 +1,32 @@
+{
+    "application": "Horovod",
+    "details": {
+        "framework": "TensorFlow",
+        "model": "BERT",
+        "task": "text classification (pair)",
+        "dataset": "cMedQA2",
+        "resources": {
+            "nodes": 4,
+            "tasks_per_node": 4,
+            "cpus_per_task": 8,
+            "gpus_per_node": 4,
+            "accelerator": "AMD Radeon Instinct MI250"
+        },
+        "libraries": [
+            "Horovod",
+            "UCX",
+            "MIOPEN",
+            "python"
+        ],
+        "environment_variables": {
+            "MIOPEN_USER_DB_PATH": "/tmp/tensorflow-miopen-${USER}-2.8",
+            "MIOPEN_DEBUG_DISABLE_FIND_DB": 1,
+            "HOROVOD_HIERARCHICAL_ALLREDUCE": 1
+        },
+        "slurm_options": {
+            "partition": "normal",
+            "job_name": "cmedaq_base",
+            "output_file": "cMedQA2_base.out"
+        }
+    }
+}

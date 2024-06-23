@@ -1,0 +1,22 @@
+{
+    "application": "Slurm",
+    "details": {
+        "scheduler": "Slurm",
+        "job_name": "slow_man_prop_rts",
+        "output_file": "./output/%j.%x.out",
+        "environment": "user environment",
+        "cluster": "cm2_tiny",
+        "partition": "cm2_tiny",
+        "exported_variables": "NONE",
+        "nodes": 2,
+        "tasks_per_node": 28,
+        "time_limit": "04:00:00",
+        "modules": [
+            "slurm_setup",
+            "julia/1.8.2"
+        ],
+        "executable": "mpiexec",
+        "arguments": "-n 56 julia --project=\".\" -- ./scripts/main.jl ../input/cluster/slow_manifold_prop_voting_rts.jl",
+        "post_processing": "sacct -j $SLURM_JOB_ID --format=jobid,start,end,CPUTime,Elapsed,ExitCode,MaxRSS"
+    }
+}

@@ -1,0 +1,20 @@
+{
+    "application": "SLURM",
+    "details": {
+        "job_name": "hpo-cifar-cnn",
+        "nodes": 8,
+        "partition": "debug",
+        "time": "30",
+        "modules": [
+            "tensorflow/intel-1.13.1-py36",
+            "cray-hpo"
+        ],
+        "environment_variables": {
+            "KMP_BLOCKTIME": "0",
+            "KMP_AFFINITY": "granularity=fine,compact,1,0"
+        },
+        "script": "hpo_train.py",
+        "arguments": "-N ${SLURM_JOB_NUM_NODES} --verbose",
+        "dataset_download": "python -c \"import keras; keras.datasets.cifar10.load_data()\""
+    }
+}

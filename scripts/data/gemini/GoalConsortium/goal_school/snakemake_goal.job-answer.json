@@ -1,0 +1,43 @@
+{
+    "application": "snakemake",
+    "details": {
+        "software": [
+            "Singularity",
+            "snakemake"
+        ],
+        "resources": {
+            "slurm": {
+                "partition": "short",
+                "job_name": "goal_pipeline",
+                "ntasks": 1,
+                "cpus_per_task": 16,
+                "time": "8:00:00",
+                "mem": 65536
+            },
+            "singularity": {
+                "env_vars": {
+                    "SLURM_CPUS_ON_NODE": "$SLURM_CPUS_ON_NODE"
+                },
+                "prefix": "/data/user/$USER/GOAL/.snakemake",
+                "args": "-B $panelFolder:/panel,$refs:/refs --cleanenv -c"
+            },
+            "snakemake": {
+                "options": "-r --cores all --use-singularity",
+                "configfile": "snakemake_goalConfig.json",
+                "config": {
+                    "sample": "$sample",
+                    "fq1": "$fq1_file",
+                    "fq2": "$fq2_file"
+                },
+                "latency_wait": 30,
+                "directory": "$working_directory"
+            },
+            "reference_files": {
+                "path": "/data/user/$USER/GOAL/genome/GOAL_GRCh38"
+            },
+            "working_directory": {
+                "path": "/data/user/$USER/GOAL/OUTPUT/GRCh38/$sample"
+            }
+        }
+    }
+}

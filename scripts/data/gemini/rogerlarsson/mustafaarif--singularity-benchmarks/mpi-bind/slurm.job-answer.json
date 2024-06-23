@@ -1,0 +1,28 @@
+{
+    "application": "SLURM",
+    "details": {
+        "script_purpose": "Running a MPI application called 'mpi_bandwidth' using Singularity containers.",
+        "resource_requirements": {
+            "job_name": "mpi_test",
+            "partition": "main",
+            "reservation": "sing",
+            "time": "00:05:00",
+            "nodes": 2,
+            "account": "pdc.staff",
+            "tasks_per_node": 128,
+            "output_file": "slurm-%j.out",
+            "error_file": "slurm-%j.err"
+        },
+        "environment_variables": {
+            "LD_LIBRARY_PATH": "modified to include Cray and system libraries",
+            "SINGULARITYENV_LD_LIBRARY_PATH": "set to the modified LD_LIBRARY_PATH",
+            "libibverbs.d": "mounted read-only",
+            "var/spool": "mounted",
+            "usr/lib64": "mounted read-only",
+            "opt": "mounted read-only",
+            "var/opt": "mounted read-only"
+        },
+        "mpi_app_location": "/mpiapp/mpi_bandwidth",
+        "container_image": "./mpi-bw-bind.sif"
+    }
+}

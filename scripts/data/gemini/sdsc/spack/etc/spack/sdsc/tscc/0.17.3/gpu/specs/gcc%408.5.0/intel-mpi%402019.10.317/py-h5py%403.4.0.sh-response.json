@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n\"application\": \"Spack\",\n\"other_software\": [\n\"Slurm\",\n\"Lmod\",\n\"gcc@8.5.0\",\n\"py-numpy@1.20.3\",\n\"openblas@0.3.17\",\n\"hdf5@1.10.7\",\n\"intel-mpi@2019.10.317\",\n\"py-netcdf4@1.5.3\"\n],\n\"resource_requirements\": {\n\"compute_nodes\": 1,\n\"cpus_per_task\": 8,\n\"time\": \"00:30:00\",\n\"partition\": \"hotel-gpu\",\n\"account\": \"sys200\",\n\"gpu\": \"gpu1\"\n}\n}\n```\n\nThis script uses Spack to install and manage the Python h5py library, along with its dependencies. Here is a breakdown of the code:\n\n* **Slurm** is the workload manager used to submit the job.\n* **Lmod** is the module system used to manage the environment and load necessary software packages.\n* **gcc@8.5.0** is the compiler used to build the packages.\n* **py-numpy@1.20.3**, **openblas@0.3.17**, **hdf5@1.10.7**, and **intel-mpi@2019.10.317** are the dependencies for the h5py package.\n* **py-netcdf4@1.5.3** is another package that is run as a separate job after h5py installation.\n\nThe script defines the following resource requirements:\n\n* **1 node** is requested for the job.\n* **8 CPUs per task** are allocated.\n* **30 minutes** is the maximum runtime for the job.\n* **hotel-gpu** partition is used for running the job.\n* **sys200** account is used for job submission.\n* **gpu1** GPU is requested for the job. \n\nThe script uses various commands to install and manage the packages:\n\n* **module purge**: Removes any previously loaded modules.\n* **module load**: Loads the required modules, including the Slurm module for job scheduling.\n* **. \"${SPACK_INSTANCE_DIR}/share/spack/setup-env.sh\"**: Sources the Spack setup script to configure the environment.\n* **spack spec**: Checks for dependencies and generates a package specification.\n* **spack install**: Installs the specified package and its dependencies.\n* **spack module lmod refresh**: Refreshes the Lmod module environment after installation.\n* **sbatch**: Submits a new job to run the `py-netcdf4@1.5.3.sh` script.\n\nThe script also includes some environment variables to keep track of important information, such as the job ID, job script MD5 checksum, and system name.\n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 897,
+        "candidates_token_count": 652,
+        "total_token_count": 1549,
+        "cached_content_token_count": 0
+    }
+}

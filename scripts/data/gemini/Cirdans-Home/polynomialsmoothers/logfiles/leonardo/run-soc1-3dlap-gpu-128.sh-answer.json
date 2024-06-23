@@ -1,0 +1,28 @@
+{
+    "application": "SLURM",
+    "details": {
+        "software": [
+            "openmpi/4.1.6--gcc--12.2.0",
+            "openblas/0.3.24--gcc--12.2.0",
+            "gcc/12.2.0",
+            "cuda/12.1"
+        ],
+        "resources": {
+            "nodes": 32,
+            "gpus": 4,
+            "tasks": 128,
+            "tasks_per_node": 4,
+            "time": "01:00:00",
+            "partition": "boost_usr_prod"
+        },
+        "other_requirements": [
+            "export=NONE",
+            "LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/leonardo/home/userexternal/pdambra0/polynomialsmoothers/install/lib",
+            "cd ${HOME}/polynomialsmoothers/logfiles/leonardo",
+            "mpirun -n ${psize}  ./3dlaplacian >> 3dlap/soc1/${degiter}/log_cheby4_svbm_l1jac_${idim}_task_${psize}_thr_1.txt 2>&1",
+            "mpirun -n ${psize}  ./3dlaplacian >> 3dlap/soc1/${degiter}/log_optcheby4_svbm_l1jac_${idim}_task_${psize}_thr_1.txt 2>&1",
+            "mpirun -n ${psize}  ./3dlaplacian >> 3dlap/soc1/${degiter}/log_optcheby1_svbm_l1jac_${idim}_task_${psize}_thr_1.txt 2>&1",
+            "mpirun -np ${psize}  ./3dlaplacian >> 3dlap/soc1/${degiter}/log_l1jac_svbm_l1jac_${idim}_task_${psize}_thr_1.txt 2>&1"
+        ]
+    }
+}

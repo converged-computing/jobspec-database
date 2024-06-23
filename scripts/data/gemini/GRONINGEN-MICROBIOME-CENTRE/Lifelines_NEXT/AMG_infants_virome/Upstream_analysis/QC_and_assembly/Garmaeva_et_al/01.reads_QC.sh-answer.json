@@ -1,0 +1,43 @@
+{
+    "application": "SLURM",
+    "details": {
+        "resources": {
+            "memory": "64GB",
+            "time": "08:59:00",
+            "cpus": 2
+        },
+        "software": [
+            "BBMap",
+            "Anaconda3/2022.05",
+            "conda environment: /scratch/hb-tifn/condas/conda_biobakery3",
+            "kneaddata",
+            "trimmomatic-0.39-2",
+            "fastqc",
+            "reformat.sh",
+            "pigz",
+            "md5sum"
+        ],
+        "dependencies": [
+            "adapters_UPD_IDT.fa",
+            "GRCh38p13",
+            "runAllSamples_02.bash"
+        ],
+        "script_purpose": "Quality control and filtering of sequencing reads for a sample",
+        "workflow": [
+            "Copy raw reads to temporary directory",
+            "Trim adapters using bbduk.sh",
+            "Remove raw reads",
+            "Check pairedness after adapter trimming",
+            "Load Anaconda3 and conda environment",
+            "Filter human reads and low quality reads using kneaddata",
+            "Remove kneaddata byproducts and adapter-trimmed fastqs",
+            "Check pairedness of kneaddata-filtered reads",
+            "Move clean reads to scratch",
+            "Concatenate unmatched reads",
+            "Compress all fastqs",
+            "Generate MD5sums",
+            "Check quality of clean reads using FastQC",
+            "Launch assembly using runAllSamples_02.bash"
+        ]
+    }
+}

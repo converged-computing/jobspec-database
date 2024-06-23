@@ -1,0 +1,44 @@
+{
+    "application": "SLURM",
+    "details": {
+        "nodes": 1,
+        "tasks_per_node": 8,
+        "cores_per_task": 1,
+        "gpus_per_node": 1,
+        "run_time": "1:00:00",
+        "memory": "52GB",
+        "partition": "boost_usr_prod",
+        "account": "tra23_ELLIS",
+        "reservation": "s_tra_Ellis1809",
+        "modules": [
+            "deeplrn",
+            "av cineca-ai"
+        ],
+        "environment_variables": {
+            "OMP_PROC_BIND": "true"
+        },
+        "python_script": "run_watermarking.py",
+        "python_script_arguments": {
+            "model_name": "facebook/opt-1.3b",
+            "dataset_name": "c4",
+            "dataset_config_name": "realnewslike",
+            "max_new_tokens": 200,
+            "min_prompt_tokens": 50,
+            "limit_indices": 500,
+            "input_truncation_strategy": "completion_length",
+            "input_filtering_strategy": "prompt_and_completion_length",
+            "output_filtering_strategy": "max_new_tokens",
+            "dynamic_seed": "markov_1",
+            "bl_proportion": 0.5,
+            "bl_logit_bias": 2.0,
+            "bl_type": "soft",
+            "store_spike_ents": "True",
+            "num_beams": 1,
+            "use_sampling": "True",
+            "sampling_temp": 0.7,
+            "oracle_model_name": "facebook/opt-2.7b",
+            "run_name": "example_run",
+            "output_dir": "./all_runs"
+        }
+    }
+}

@@ -1,0 +1,27 @@
+{
+    "application": "SLURM",
+    "details": {
+        "environment": "paccmann_predict",
+        "python_script": "/nas/longleaf/home/qhz/paccmann_predictor/examples/IC50/train_paccmann.py",
+        "input_files": [
+            "gdsc_old/mask_drug/maskdrug_train_${SLURM_ARRAY_TASK_ID}.csv",
+            "gdsc_old/mask_drug/maskdrug_test_${SLURM_ARRAY_TASK_ID}.csv",
+            "gdsc_old/gdsc_gene_exp.csv",
+            "gdsc_old/gdsc_smile.smi",
+            "data/2128_genes.pkl",
+            "single_pytorch_model/smiles_language",
+            "single_pytorch_model/model_params_50.json"
+        ],
+        "output_file": "gdsc1_maskdrug_${SLURM_ARRAY_TASK_ID}",
+        "resources": {
+            "partition": "general",
+            "nodes": 1,
+            "memory": "51200",
+            "cpus": 1,
+            "time": "200:00:00",
+            "email": "qhz@email.unc.edu",
+            "email_type": "end",
+            "array_tasks": "1-10"
+        }
+    }
+}

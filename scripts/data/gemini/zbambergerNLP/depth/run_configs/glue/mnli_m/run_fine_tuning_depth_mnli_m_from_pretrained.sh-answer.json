@@ -1,0 +1,62 @@
+{
+    "application": "DeepSpeed",
+    "details": {
+        "software": [
+            "DeepSpeed",
+            "train_encoder_decoder.py",
+            "nvidia-smi",
+            "wandb"
+        ],
+        "resources": {
+            "compute": {
+                "nodes": 1,
+                "cpus_per_task": 32,
+                "gpus": 2
+            },
+            "storage": {
+                "checkpoint_path": "checkpoints/pre_train/from_pretrained/depth/allenai_c4_en/lr_0_0001_linear_bsz_200_shuffle_p_0_5/2024-04-09_19-16/checkpoint-256000"
+            },
+            "environment": {
+                "virtual_environment": ".depth/bin/activate",
+                "environment_variables": {
+                    "DS_SKIP_CUDA_CHECK": "1",
+                    "OMP_NUM_THREADS": "$SLURM_CPUS_PER_TASK"
+                }
+            },
+            "network": {
+                "master_port": "32057"
+            }
+        },
+        "data": {
+            "dataset": "MNLI Matched",
+            "data_collator": "depth",
+            "streaming": false,
+            "input_length": 512,
+            "target_length": 8,
+            "num_workers": 32
+        },
+        "training": {
+            "mode": "ft",
+            "precision": "bf16",
+            "optimizer": "adamw_torch",
+            "batch_size": 256,
+            "total_steps": "10_000",
+            "warmup_steps": "1_000",
+            "learning_rate": "1e-5",
+            "grad_acc": 2,
+            "lr_scheduler": "linear"
+        },
+        "evaluation": {
+            "every_steps": "500"
+        },
+        "logging": {
+            "every_steps": "100",
+            "wandb": true
+        },
+        "checkpointing": {
+            "every_steps": "10_000",
+            "save_total_limit": 3,
+            "resume": false
+        }
+    }
+}

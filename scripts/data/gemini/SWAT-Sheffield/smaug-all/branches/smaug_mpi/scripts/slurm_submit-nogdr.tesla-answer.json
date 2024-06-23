@@ -1,0 +1,37 @@
+{
+    "application": "SLURM",
+    "details": {
+        "scheduler": "SLURM",
+        "job_name": "smaug_nogdr",
+        "project": "SHEFFIELD-GPU",
+        "nodes": 2,
+        "tasks": 4,
+        "time": "02:00:00",
+        "email_type": "FAIL",
+        "partition": "tesla",
+        "environment": {
+            "modules": [
+                "default-wilkes",
+                "mvapich2-GDR/gnu/2.0-8_cuda-6.5",
+                "cuda/6.5"
+            ],
+            "environment_variables": {
+                "MV2_RAIL_SHARING_POLICY": "FIXED_MAPPING",
+                "MV2_PROCESS_TO_RAIL_MAPPING": "mlx5_0:mlx5_1",
+                "MV2_RAIL_SHARING_LARGE_MSG_THRESHOLD": "1G",
+                "MV2_CPU_BINDING_LEVEL": "SOCKET",
+                "MV2_CPU_BINDING_POLICY": "SCATTER",
+                "MV2_USE_CUDA": "1",
+                "MV2_USE_GPUDIRECT": "1",
+                "CUDA_VISIBLE_DEVICE": "0",
+                "I_MPI_PIN_DOMAIN": "omp:compact",
+                "I_MPI_PIN_ORDER": "scatter",
+                "OMP_NUM_THREADS": "1"
+            }
+        },
+        "executable": "bin/smaug",
+        "arguments": "-genvall",
+        "run_command": "mpirun -ppn 2 -np 4  -genvall bin/smaug a",
+        "work_directory": "$SLURM_SUBMIT_DIR"
+    }
+}

@@ -1,0 +1,54 @@
+{
+    "application": "PyTorch",
+    "details": {
+        "framework": "PyTorch",
+        "resources": {
+            "nodes": 8,
+            "gpus": 64,
+            "tasks_per_node": 8,
+            "cpus_per_task": 8,
+            "memory": "450G",
+            "time": "13:00:00"
+        },
+        "script": "main_swav.py",
+        "dataset": "ImageNet",
+        "architecture": "ResNet50",
+        "optimizer": "AdamW",
+        "loss_function": "Contrastive Loss",
+        "training_parameters": {
+            "batch_size": 64,
+            "learning_rate": 4.8,
+            "epochs": 200,
+            "warmup_epochs": 10,
+            "weight_decay": 1e-06
+        },
+        "other_software": [
+            "SLURM"
+        ],
+        "environment_variables": {
+            "SLURM_NODELIST": "Node list from SLURM",
+            "DATASET_PATH": "Path to ImageNet dataset",
+            "EXPERIMENT_PATH": "Path to experiment directory"
+        },
+        "other_parameters": {
+            "data_path": "/path/to/imagenet/train",
+            "nmb_crops": "2, 6",
+            "size_crops": "224, 96",
+            "min_scale_crops": "0.14, 0.05",
+            "max_scale_crops": "1, 0.14",
+            "crops_for_assign": "0, 1",
+            "temperature": 0.1,
+            "epsilon": 0.05,
+            "sinkhorn_iterations": 3,
+            "feat_dim": 128,
+            "nmb_prototypes": 3000,
+            "queue_length": 0,
+            "final_lr": 0.0048,
+            "freeze_prototypes_niters": 313,
+            "dist_url": "tcp://master_node:40000",
+            "use_fp16": true,
+            "sync_bn": "apex",
+            "dump_path": "./experiments/swav_200ep_pretrain"
+        }
+    }
+}

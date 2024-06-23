@@ -1,0 +1,70 @@
+{
+    "application": "SLURM",
+    "details": {
+        "software": [
+            "Python",
+            "Conda",
+            "Fairseq",
+            "SLURM",
+            "NCCL"
+        ],
+        "resources": {
+            "compute": {
+                "partition": "gpu",
+                "constraints": [
+                    "gpu-high",
+                    "gpu-mid"
+                ],
+                "nodes": 1,
+                "cpus_per_task": 8
+            },
+            "time": "48:00:00",
+            "environment": {
+                "conda_env": "cmlm",
+                "python_path": "${PWD}"
+            },
+            "storage": {
+                "data_bin": "${data_bin}",
+                "save_dir": "${save_dir}"
+            }
+        },
+        "flags": {
+            "training": [
+                "--arch bert_transformer_seq2seq",
+                "--masking-strategy ${masking_strategy}",
+                "--smooth-targets",
+                "--all-target-loss",
+                "--share-all-embeddings",
+                "--criterion label_smoothed_length_cross_entropy",
+                "--label-smoothing 0.1",
+                "--fp16",
+                "--lr ${lr}",
+                "--warmup-init-lr 1e-7",
+                "--min-lr 1e-9",
+                "--lr-scheduler inverse_sqrt",
+                "--warmup-updates ${warmup_updates}",
+                "--optimizer adam",
+                "--adam-eps 1e-6",
+                "--task translation_self",
+                "--max-tokens 8192",
+                "--weight-decay 0.01",
+                "--dropout 0.3",
+                "--encoder-layers 6",
+                "--encoder-embed-dim 512",
+                "--decoder-layers 6",
+                "--decoder-embed-dim 512",
+                "--max-source-positions 10000",
+                "--max-target-positions 10000",
+                "--max-update 300000",
+                "--seed 1",
+                "--distributed-no-spawn",
+                "--ddp-backend no_c10d",
+                "--update-freq ${update_freq}"
+            ]
+        },
+        "logging": {
+            "log_interval": 10,
+            "tensorboard_logdir": "${save_dir}"
+        }
+    }
+}

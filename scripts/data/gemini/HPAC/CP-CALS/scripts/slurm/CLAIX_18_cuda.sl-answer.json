@@ -1,0 +1,33 @@
+{
+    "application": "SLURM",
+    "details": {
+        "job_name": "Bench-CU",
+        "nodes": 1,
+        "tasks": 1,
+        "cpus_per_task": 1,
+        "memory": "50G",
+        "output": "output.%J.txt",
+        "time": "02:00:00",
+        "partition": "c18g",
+        "gres": "gpu:volta:2",
+        "exclusive": true,
+        "modules": [
+            "DEVELOP",
+            "gcc/9",
+            "cuda/11.2"
+        ],
+        "environment": "~/.zshrc.local",
+        "working_directory": "${CALS_DIR}",
+        "build_directory": "build_cuda",
+        "compiler": "gcc",
+        "cmake_options": "-DCMAKE_BUILD_TYPE=Release -DWITH_MKL=On -DWITH_EXPERIMENTS=Off -DWITH_DIAGNOSTICS=2 -DWITH_CUBLAS=On",
+        "make_options": "-j 48",
+        "numactl_options": "numactl --cpubind=0,1 --membind=0,1 --",
+        "omp_options": {
+            "OMP_NUM_THREADS": "24",
+            "OMP_THREAD_LIMIT": "24"
+        },
+        "executable": "./src/experiments/experiments_jk",
+        "executable_arguments": "24"
+    }
+}

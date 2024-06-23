@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "SLURM\n```json\n{\n  \"application\": \"SLURM\",\n  \"details\": {\n    \"job_name\": \"pixel2cancer_kidney\",\n    \"nodes\": 1,\n    \"tasks_per_node\": 12,\n    \"gpu_type\": \"a100\",\n    \"gpu_count\": 2,\n    \"memory\": \"150G\",\n    \"partition\": \"general\",\n    \"time\": \"7-00:00:00\",\n    \"queue\": \"public\",\n    \"output_file\": \"%x_slurm_%j.out/kidney\",\n    \"error_file\": \"%xslurm_%j.err\",\n    \"mail_type\": \"ALL\",\n    \"mail_user\": \"zzhou82@asu.edu\"\n  },\n  \"environment\": {\n    \"mamba\": \"latest\",\n    \"conda_env\": \"pixel2cancer\",\n    \"python_packages\": [\n      \"torch==1.11.0+cu113\",\n      \"torchvision==0.12.0+cu113\",\n      \"torchaudio==0.11.0\",\n      \"requirements.txt\"\n    ],\n    \"custom_packages\": [\n      \"surface-distance\",\n      \"Tumor_Synthesis/cellular\"\n    ]\n  },\n  \"script\": {\n    \"command\": \"python -W ignore validation.py\",\n    \"arguments\": {\n      \"model\": [\n        \"unet\",\n        \"swin_unetrv2\"\n      ],\n      \"swin_type\": [\n        \"base\",\n        \"small\",\n        \"tiny\"\n      ],\n      \"val_overlap\": 0.75,\n      \"val_dir\": \"/data/jliang12/zzhou82/datasets/PublicAbdominalData/\",\n      \"json_dir\": \"datafolds/5_fold/kidney/kidney_tumor_[fold_number].json\",\n      \"log_dir\": \"runs_kidney/[dataset_type].kidney.fold[fold_number].[pretrain_status].[model_name]\",\n      \"save_dir\": \"out/kidney\"\n    },\n    \"datasets\": [\n      \"synt.kidney\",\n      \"real.kidney\"\n    ],\n    \"folds\": [\n      0,\n      1,\n      2,\n      3,\n      4\n    ],\n    \"pretrain_status\": [\n      \"no_pretrain\",\n      \"pretrain\"\n    ]\n  }\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 6974,
+        "candidates_token_count": 602,
+        "total_token_count": 7576,
+        "cached_content_token_count": 0
+    }
+}

@@ -1,0 +1,36 @@
+{
+    "application": "SLURM",
+    "details": {
+        "resources": {
+            "time": "20:00:00",
+            "memory_per_cpu": "8G",
+            "gpus_per_node": 1,
+            "memory_per_gpu": "16G"
+        },
+        "modules": [
+            "StdEnv/2020",
+            "gcc/9.3.0",
+            "cuda/11.4",
+            "arrow/8.0.0",
+            "python/3.10"
+        ],
+        "virtual_environment": {
+            "path": "$ENV_PATH",
+            "packages": [
+                "numpy==1.23.5",
+                "requirements.txt",
+                "adapters-0.1.2-py3-none-any.whl"
+            ]
+        },
+        "scripts": [
+            "./bash_utils/env_setup.sh",
+            "./bash_utils/capability_check.sh",
+            "${prog_root}/checkmem.sh"
+        ],
+        "python_script": "${prog_root}/run_summarization_pure.py",
+        "environment_variables": [
+            "HF_EVALUATE_OFFLINE=1",
+            "HF_DATASETS_OFFLINE=1"
+        ]
+    }
+}

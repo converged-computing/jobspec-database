@@ -1,0 +1,33 @@
+{
+    "application": "jsrun",
+    "details": {
+        "software": [
+            "amr_wind",
+            "singularity",
+            "jsrun",
+            "gcc/9.1.0",
+            "MPI",
+            "CUDA"
+        ],
+        "resources": {
+            "nodes": 2,
+            "cpus": 12,
+            "gpus": 12,
+            "memory": "Not specified in the script",
+            "storage": "Not specified in the script"
+        },
+        "environment": {
+            "MPI_HOST": "${MPI_ROOT}",
+            "MPI_CONTAINER": "${MPI_ROOT}",
+            "CUDA_HOST": "/sw/summit/cuda/11.3.1",
+            "CUDA_CONTAINER": "/sw/summit/cuda/11.3.1",
+            "RUNDIR_HOST": "${RUNDIR}",
+            "RUNDIR_CONTAINER": "/rundir",
+            "LD_LIBRARY_PATH": "${MPI_CONTAINER}/lib/pami_port"
+        },
+        "execution": {
+            "command": "amr_wind amr-wind.input amr.n_cell=384 512 512 geometry.prob_hi=300.0 400.0 400.0 time.max_step=10",
+            "working_directory": "/rundir"
+        }
+    }
+}

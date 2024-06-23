@@ -1,0 +1,52 @@
+{
+    "application": "Apptainer",
+    "software": [
+        "Apptainer 1.1.9",
+        "OpenMPI",
+        "Intel MPI",
+        "MPICH-CH4",
+        "MPICH-CH4b",
+        "MPICH-CH3",
+        "PMIX",
+        "PMI2"
+    ],
+    "resource_requirements": [
+        "2 nodes",
+        "2 tasks per node",
+        "exclusive access to nodes",
+        "2 hours runtime",
+        "0 MB memory"
+    ],
+    "environment_variables": [
+        "STARTDIR",
+        "CDIR",
+        "SLURM_JOB_ID",
+        "OMP_NUM_THREADS",
+        "MPI",
+        "PMIX_MCA_gds"
+    ],
+    "files": [
+        "alpine.sif",
+        "openmpi.sif",
+        "intel.sif",
+        "mpich_ch4.sif",
+        "mpich_ch4b.sif",
+        "mpich_ch3.sif",
+        "/opt/examples/affinity/tds/phostone",
+        "/opt/examples/affinity/tds/ppong",
+        "tymer",
+        "warnings",
+        "output",
+        "script",
+        "env"
+    ],
+    "commands": [
+        "module load apptainer",
+        "which apptainer",
+        "hostname",
+        "apptainer exec $CDIR/alpine.sif hostname",
+        "srun -n 1 --nodes=1 apptainer exec $CDIR/alpine.sif cat /etc/os-release",
+        "srun  --mpi=$MPI   apptainer  exec   $CDIR/$v.sif  /opt/examples/affinity/tds/phostone -F",
+        "srun  --mpi=$MPI   apptainer  exec   $CDIR/$v.sif  /opt/examples/affinity/tds/ppong"
+    ]
+}

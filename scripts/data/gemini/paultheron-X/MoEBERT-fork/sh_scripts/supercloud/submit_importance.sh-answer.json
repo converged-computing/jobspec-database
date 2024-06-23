@@ -1,0 +1,34 @@
+{
+    "application": "SLURM",
+    "details": {
+        "resource_requirements": {
+            "nodes": 1,
+            "job_name": "bert_importance_$1",
+            "gpu": "volta:1",
+            "tasks_per_node": 1,
+            "cpus_per_task": 4,
+            "time": "21-00:00",
+            "mail_type": "FAIL",
+            "mail_user": "paulth@mit.edu",
+            "output": "/home/gridsan/ptheron/MoEBERT-fork/logs/experiments_importance_$1_out%j.txt",
+            "error": "/home/gridsan/ptheron/MoEBERT-fork/logs/experiments_importance_$1_err%j.txt"
+        },
+        "software_requirements": {
+            "modules": [
+                "anaconda/2021b",
+                "gurobi/gurobi-903"
+            ],
+            "conda_environment": "MoEBERT",
+            "backend": "pytorch",
+            "huggingface_cache": "/state/partition1/user/$(whoami)/cache/huggingface",
+            "transformers_offline": true,
+            "datasets_offline": true,
+            "wandb_disabled": true,
+            "hdf5_file_locking": false
+        },
+        "script_execution": {
+            "command": "bash sh_scripts/experiments/importance_preprocess.sh $1 $output_dir",
+            "working_directory": "/home/gridsan/$(whoami)/MoEBERT-fork"
+        }
+    }
+}

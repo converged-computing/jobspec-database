@@ -1,0 +1,32 @@
+{
+    "application": "PyTorch",
+    "details": {
+        "framework": "PyTorch",
+        "library": "MUSE",
+        "configuration": "/admin/home/suraj/code/muse-experiments/tr34/config.yaml",
+        "output_directory": "/fsx/suraj/quant-embed-laiona6-f16",
+        "log_file": "/fsx/suraj/quant-embed-laiona6-f16/main_log.txt",
+        "resources": {
+            "nodes": 1,
+            "tasks_per_node": 1,
+            "cpus_per_task": 96,
+            "gpus_per_node": 8,
+            "partition": "production-cluster"
+        },
+        "environment": {
+            "conda_environment": "muse",
+            "cuda_visible_devices": "SLURM_STEP_GPUS or SLURM_JOB_GPUS",
+            "master_address": "scontrol show hostnames $SLURM_JOB_NODELIST | head -n 1",
+            "master_port": 6000,
+            "nccl_proto": "simple",
+            "rdma_fork_safe": 1,
+            "fi_efa_fork_safe": 1,
+            "fi_efa_use_device_rdma": 1,
+            "fi_provider": "efa",
+            "fi_log_level": 1,
+            "nccl_ib_disable": 1,
+            "nccl_socket_ifname": "ens"
+        },
+        "execution_command": "python -u -m torch.distributed.run --nproc_per_node 8 --nnodes 1 --rdzv_endpoint $MASTER_ADDR:$MASTER_PORT --rdzv_backend c10d --max_restarts 0 --tee 3 /admin/home/suraj/code/muse/training/train_muse.py config=/admin/home/suraj/code/muse-experiments/tr34/config.yaml experiment.name=quant-embed-laiona6-f16 experiment.output_dir=/fsx/suraj/quant-embed-laiona6-f16"
+    }
+}

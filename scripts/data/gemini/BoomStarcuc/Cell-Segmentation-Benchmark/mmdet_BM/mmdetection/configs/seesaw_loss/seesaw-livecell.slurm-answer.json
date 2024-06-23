@@ -1,0 +1,31 @@
+{
+    "application": "mmdetection",
+    "details": {
+        "environment": "spack",
+        "packages": [
+            "cuda@11.0.2%gcc@9.3.0/lrd2rcw"
+        ],
+        "resources": {
+            "slurm": {
+                "job_name": "seesaw-livecell-1C",
+                "account": "sada-cnmi",
+                "partition": "tier3",
+                "time": "120:0:0",
+                "error_output": "%x_%j.err",
+                "output": "%x_%j.out",
+                "memory": "200G",
+                "gpus": {
+                    "type": "a100",
+                    "count": 4
+                }
+            },
+            "nvidia": {
+                "command": "nvidia-smi"
+            }
+        },
+        "training_script": "mmdetection/tools/dist_train.sh",
+        "config_file": "mmdetection/configs/seesaw_loss/cascade_mask_rcnn_r101_fpn_random_seesaw_loss_normed_mask_mstrain_2x_lvis_v1_livecell.py",
+        "num_processes": 4,
+        "work_dir": "/shared/rc/spl/mmdet_output/All_to_all/livecell/cascade_mask_rcnn_r101_fpn_random_seesaw_loss_normed_mask_mstrain_2x_lvis_v1_livecell"
+    }
+}

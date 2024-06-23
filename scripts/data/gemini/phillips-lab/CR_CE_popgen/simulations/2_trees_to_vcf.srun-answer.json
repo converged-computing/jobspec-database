@@ -1,0 +1,41 @@
+{
+    "application": "SLURM",
+    "details": {
+        "partition": "phillips",
+        "job_name": "vcf",
+        "walltime": "5:00:00",
+        "nodes": 1,
+        "tasks": 1,
+        "array_index": "0-4999%100",
+        "cpus_per_task": 1,
+        "environment_variable": "OMP_NUM_THREADS=$SLURM_CPUS_PER_TASK",
+        "script_purpose": "Convert tree-sequences to VCF files using tree2vcf_mutrate.py",
+        "software_dependencies": {
+            "tree2vcf_mutrate.py": "/projects/phillipslab/ateterina/slim/worms_snakemake/tree2vcf_mutrate.py",
+            "python3": "Required for running tree2vcf_mutrate.py"
+        },
+        "input_data": {
+            "tree_sequences": "d*/*trees files within each simulation directory",
+            "worms.hapmap": "Used by tree2vcf_mutrate.py (not explicitly shown in the script)"
+        },
+        "output_data": {
+            "VCF files": "Created from corresponding tree-sequences files"
+        },
+        "simulation_directories": [
+            "sim30rep",
+            "sim70rep",
+            "simmut15",
+            "neutral_extra",
+            "balancing",
+            "decay",
+            "decay_balancing",
+            "exponent",
+            "fluctuations"
+        ],
+        "parameters": {
+            "Ne": "Effective population size",
+            "DIFF": "Selection coefficient",
+            "FRAC": "Fraction of the genome under selection"
+        }
+    }
+}

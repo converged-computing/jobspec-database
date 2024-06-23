@@ -1,0 +1,43 @@
+{
+    "application": "JupyterLab",
+    "details": {
+        "software": [
+            "Jupyter Notebook",
+            "Superset",
+            "MySQL",
+            "Redis",
+            "Singularity",
+            "Anaconda"
+        ],
+        "resources": {
+            "SLURM": {
+                "job_name": "cpu_jupyter",
+                "nodes": 1,
+                "cpus_per_task": 20,
+                "memory": "40GB",
+                "time": "26:00:00"
+            },
+            "ports": {
+                "jupyter_lab": "dynamically assigned from 6000-9999",
+                "superset": 8088
+            },
+            "directories": {
+                "jupyter_dir": "/home/$USER/",
+                "scratch_dir": "/scratch/$USER/dashboard",
+                "redis_data": "${PWD}/redis-data",
+                "superset_data": "${PWD}/superset-data",
+                "superset_config": "${PWD}/superset_config.py"
+            },
+            "files": {
+                "latest_hostname": "/home/$USER/internal-dashboard/latest_hostname.txt"
+            },
+            "images": {
+                "redis": "docker://redis:6.2.1",
+                "superset": "docker://apache/superset"
+            },
+            "environment": {
+                "XDG_RUNTIME_DIR": "SLURM_JOBTMP if available, else unset"
+            }
+        }
+    }
+}

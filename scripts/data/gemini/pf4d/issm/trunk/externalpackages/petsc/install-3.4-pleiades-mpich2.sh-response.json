@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"PETSc\",\n  \"details\": {\n    \"version\": \"3.4.2\",\n    \"dependencies\": [\n      \"MPICH\",\n      \"BLAS\",\n      \"LAPACK\",\n      \"ScaLAPACK\",\n      \"METIS\",\n      \"ParMETIS\",\n      \"BLACS\",\n      \"MUMPS\",\n      \"Trilinos\",\n      \"Euclid\",\n      \"Hypre\"\n    ],\n    \"compiler\": \"gcc\",\n    \"build_system\": \"configure.py\",\n    \"resource_requirements\": {\n      \"cpu\": \"corei7-avx\",\n      \"optimization\": \"O3\",\n      \"mpi_implementation\": \"MVAPICH2\"\n    },\n    \"queueing_system\": \"PBS\"\n  }\n}\n```\n\nThe script downloads, compiles, and configures PETSc (Portable, Extensible Toolkit for Scientific Computation) version 3.4.2. \n\nHere's a breakdown of the script's actions:\n\n1. **Initialization and Preparation:**\n   - Removes existing directories (`install`, `src`).\n   - Creates new directories for installation and source files.\n   - Sets the compiler to `gcc` and creates an alias.\n\n2. **Download PETSc:**\n   - Uses the `DownloadExternalPackage.py` script (presumably located in `$ISSM_DIR/scripts`) to download the PETSc tarball from a specific URL.\n\n3. **Extract and Move Source Files:**\n   - Extracts the downloaded tarball.\n   - Moves the contents to the `src` directory.\n   - Removes the original tarball.\n\n4. **Configure PETSc:**\n   - Navigates to the `src` directory.\n   - Runs `configure.py` with several options:\n     - `--prefix`: Sets the installation directory.\n     - `--PETSC_ARCH`: Defines the architecture (likely based on `$ISSM_ARCH`).\n     - `--PETSC_DIR`: Specifies the PETSc source directory.\n     - `--with-batch=1`: Enables batch mode.\n     - `--with-debugging=0`: Disables debugging.\n     - `--with-shared-libraries=1`: Enables shared libraries.\n     - `--with-mpi=1`: Enables MPI support.\n     - `--with-mpi-lib`: Specifies the MPI library path (presumably `libmpich.so` from MPICH).\n     - `--with-mpi-include`: Specifies the MPI include directory (from MPICH).\n     - `--known-mpi-shared-libraries=1`: Indicates that shared MPI libraries are used.\n     - `--download-*`: Downloads and includes additional libraries (BLAS, LAPACK, etc.).\n     - `--COPTFLAGS`, `--FOPTFLAGS`, `--CXXOPTFLAGS`: Sets compiler optimization flags for C, Fortran, and C++ (using `-O3 -march=corei7-avx`).\n\n5. **Prepare Reconfiguration Script:**\n   - Creates a PBS queue script `script.queue` to:\n     - Load necessary modules (MVAPICH2, gcc).\n     - Set environment variables (e.g., `MPI_GROUP_MAX`).\n     - Run a PETSc generated `conftest-linux-gnu-ia64-intel.py` script (for testing).\n\n6. **Instructions for Users:**\n   - Prints instructions to:\n     - Change to the `src` directory.\n     - Submit the PBS script using `qsub`.\n     - Run the reconfiguration script and follow instructions.\n\n**Overall, this script aims to install and configure PETSc with specific dependencies and optimization options using the PBS queueing system. It leverages the provided `$ISSM_DIR` and `$ISSM_ARCH` environment variables for resource and configuration settings.** \n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 796,
+        "candidates_token_count": 850,
+        "total_token_count": 1646,
+        "cached_content_token_count": 0
+    }
+}

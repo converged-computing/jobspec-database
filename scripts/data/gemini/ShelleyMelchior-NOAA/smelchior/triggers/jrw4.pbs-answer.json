@@ -1,0 +1,44 @@
+{
+    "application": "PBS",
+    "details": {
+        "description": "This script is a PBS (Portable Batch System) job submission script that runs a software called 'sfcship' on a HPC (High-Performance Computing) cluster.",
+        "software": {
+            "sfcship": "A software that likely processes weather data. The script uses a specific version ('v1.1') and a package version ('v1.1.0')",
+            "other_modules": [
+                "intel",
+                "libjpeg",
+                "grib_util",
+                "bufr_dump",
+                "envvar",
+                "PrgEnv-intel",
+                "craype",
+                "cray-mpich"
+            ]
+        },
+        "resources": {
+            "walltime": "30 minutes",
+            "account": "OBSPROC-DEV",
+            "queue": "dev_transfer",
+            "nodes": "1 node with 1 CPU and 1GB of memory",
+            "debug": "true"
+        },
+        "environment_variables": {
+            "envir": "prod",
+            "JTYP": "gdas",
+            "DESC": "rw4",
+            "PDY": "The date of the data being processed",
+            "cyc": "The cycle of the data being processed",
+            "userROOT": "/lfs/h2/emc/obsproc/noscrub/$USER",
+            "sfcship_ver_pckg": "v1.1.0",
+            "sfcship_ver": "v1.1",
+            "HOMEsfcship": "$PACKAGEROOT/sfcship.${sfcship_ver_pckg}",
+            "VERSION_FILE": "$HOMEsfcship/versions/run.ver",
+            "MAPHOUR": "$cyc",
+            "job": "${DESC}$cyc",
+            "jobid": "$job.$PBS_JOBID",
+            "DATAROOT": "/lfs/h2/emc/stmp/$USER/raws/sfcship",
+            "COMROOT": "/lfs/h2/emc/stmp/$USER/CRON/sfcship",
+            "KEEPDATA": "YES"
+        }
+    }
+}

@@ -1,0 +1,39 @@
+{
+    "application": "SLURM",
+    "details": {
+        "resource_requirements": {
+            "nodes": 1,
+            "tasks": 1,
+            "time": "1-00:00:00",
+            "gpu": "a100_1"
+        },
+        "modules": [
+            "cuda/11.7",
+            "cudnn/cuda-11.x/8.9.0",
+            "nccl/cuda-11.7/2.14.3",
+            "openmpi/4.0.5"
+        ],
+        "virtual_environment": ".env",
+        "python_script": "tools/generate_samples_gpt.py",
+        "parameters": {
+            "num_layers": 24,
+            "hidden_size": 1024,
+            "num_attention_heads": 16,
+            "micro_batch_size": 64,
+            "global_batch_size": 512,
+            "seq_length": 1024,
+            "max_position_embeddings": 1024,
+            "vocab_file": "dataset/gpt2-vocab.json",
+            "merge_file": "dataset/gpt2-merges.txt",
+            "data_impl": "mmap",
+            "split": "949,50,1",
+            "load": "checkpoints/gpt-fugaku/350m_dp512",
+            "out_seq_length": 1024,
+            "temperature": 1.0,
+            "genfile": "text-generation.json",
+            "num_samples": 2,
+            "top_p": 0.9,
+            "recompute": true
+        }
+    }
+}

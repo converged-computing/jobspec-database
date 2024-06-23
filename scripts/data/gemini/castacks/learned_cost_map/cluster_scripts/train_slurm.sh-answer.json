@@ -1,0 +1,37 @@
+{
+    "application": "SLURM",
+    "details": {
+        "resource_requirements": {
+            "nodes": 1,
+            "time": "1 day",
+            "partition": "dgx",
+            "host": "calculon",
+            "gpus": 1,
+            "memory": "32768 MB",
+            "job_name": "train_10",
+            "output_file": "/home/mguamanc/job_%j.out",
+            "error_file": "/home/mguamanc/job_%j.err",
+            "mail_type": "ALL",
+            "mail_user": "mguamanc@andrew.cmu.edu"
+        },
+        "executable": {
+            "path": "/bin/bash",
+            "script": "/data/datasets/mguamanc/learned_cost_map/cluster_scripts/train.sh"
+        },
+        "docker": {
+            "image": "mguamanc/sara",
+            "options": {
+                "remove": true,
+                "ipc": "host",
+                "environment": {
+                    "CUDA_VISIBLE_DEVICES": "$CUDA_VISIBLE_DEVICES"
+                },
+                "volumes": [
+                    "/data/datasets:/data/datasets",
+                    "/home/$USER:/home/$USER",
+                    "/project:/project"
+                ]
+            }
+        }
+    }
+}

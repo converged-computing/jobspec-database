@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"Score-P\",\n  \"other_software\": [\n    \"OpenMPI\",\n    \"readex_env\"\n  ],\n  \"resource_requirements\": {\n    \"nodes\": 5,\n    \"cpus_per_node\": 24,\n    \"mpi_processes_per_node\": 2,\n    \"omp_threads_per_process\": 12,\n    \"accelerator\": true,\n    \"x86_adapt\": true,\n    \"walltime\": \"24:00:00\"\n  },\n  \"environment_variables\": {\n    \"PBS_ENVIRONMENT\": \"PBS_BATCH\",\n    \"LOC\": \"/path/to/working/directory\",\n    \"PSC_CPU_BIND\": \"$BIND_TO_SOCKETS\",\n    \"LD_LIBRARY_PATH\": \"$LD_LIBRARY_PATH:/usr/local/lib\",\n    \"SCOREP_SUBSTRATE_PLUGINS\": \"rrl\",\n    \"SCOREP_RRL_PLUGINS\": \"cpu_freq_plugin,uncore_freq_plugin,OpenMPTP\",\n    \"SCOREP_RRL_VERBOSE\": \"WARN\",\n    \"SCOREP_METRIC_PLUGINS\": \"x86_energy_sync_plugin\",\n    \"SCOREP_METRIC_X86_ENERGY_SYNC_PLUGIN\": \"*/E\",\n    \"SCOREP_METRIC_PLUGINS_SEP\": \";\",\n    \"SCOREP_METRIC_X86_ENERGY_SYNC_PLUGIN_CONNECTION\": \"INBAND\",\n    \"SCOREP_METRIC_X86_ENERGY_SYNC_PLUGIN_VERBOSE\": \"WARN\",\n    \"SCOREP_METRIC_X86_ENERGY_SYNC_PLUGIN_STATS_TIMEOUT_MS\": \"1000\",\n    \"SCOREP_MPI_ENABLE_GROUPS\": \"ENV\",\n    \"OMP_NUM_THREADS\": \"12\",\n    \"PHASE\": \"main_phase\"\n  },\n  \"commands\": [\n    \"module purge\",\n    \"source ./readex_env/set_env_ptf_rapl.source\",\n    \"psc_frontend --apprun=\\\"./test/amg2013_ptf -P 2 2 2 -r 40 40 40\\\" --mpinumprocs=8 --ompnumthreads=12 --phase=$PHASE --tune=readex_intraphase --config-file=readex_config_ptf.xml --force-localhost --info=2 --selective-info=AutotuneAll,AutotunePlugins 2>&1 | tee -a $TMPFILE\"\n  ]\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 2,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 627,
+        "candidates_token_count": 606,
+        "total_token_count": 1233,
+        "cached_content_token_count": 0
+    }
+}

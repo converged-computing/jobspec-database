@@ -1,0 +1,40 @@
+{
+    "application": "Slurm",
+    "details": {
+        "slurm_options": {
+            "job_name": "anisopb",
+            "account": "DD-23-167",
+            "partition": "qcpu",
+            "time": "01:00:00",
+            "nodes": "@NNODES@"
+        },
+        "modules": [
+            "gcccuda/2022b",
+            "gompi/2022b",
+            "CMake/3.24.3-GCCcore-12.2.0",
+            "OpenBLAS/0.3.21-GCC-12.2.0"
+        ],
+        "executable": "./anisopsblas",
+        "output_files": [
+            "soc1cpu/log_cheby4_svbm_l1jac_${idim}_task_${psize}_thr_1.txt",
+            "soc1cpu/log_optcheby4_svbm_l1jac_${idim}_task_${psize}_thr_1.txt",
+            "soc1cpu/log_optcheby1_svbm_l1jac_${idim}_task_${psize}_thr_1.txt"
+        ],
+        "parameters": {
+            "idim": "@SIZE@",
+            "psize": "@NTASKS@",
+            "theta": 30,
+            "epsilon": 100
+        },
+        "preconditioner_types": [
+            "ML-VSVBM-4CHEB4-30L1JAC",
+            "ML-VSVBM-4OPTCHEB4-30L1JAC",
+            "ML-VSVBM-4OPTCHEB1-30L1JAC"
+        ],
+        "solver_type": "FCG",
+        "smoother_type": "POLY",
+        "aggregation_type": "SMOOTHED",
+        "coarsening_ratio": -1.5,
+        "coarse_solver_type": "L1-JACOBI"
+    }
+}

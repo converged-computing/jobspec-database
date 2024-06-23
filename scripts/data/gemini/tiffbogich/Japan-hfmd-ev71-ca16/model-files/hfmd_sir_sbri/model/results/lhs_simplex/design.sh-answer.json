@@ -1,0 +1,42 @@
+{
+    "application": "PBS",
+    "details": {
+        "software": [
+            "plom",
+            "simul",
+            "simplex"
+        ],
+        "resource_requirements": {
+            "nodes": 1,
+            "ppn": 1,
+            "walltime": "23:30:00",
+            "array_jobs": 500
+        },
+        "file_paths": {
+            "root_path": "/scratch/network/sballest/plom-data/hfmd/hfmd_sir_sbri/model",
+            "theta_file": "results/lhs_simplex/theta.json",
+            "results_path": "results/lhs_simplex/",
+            "design_file": "results/lhs_simplex/design.csv"
+        },
+        "pipeline_steps": [
+            {
+                "description": "Get initial conditions",
+                "commands": [
+                    "plom pipe $path_theta -D $path_design -t $h -I -S e:all:guess:0.0 | ./simul ode -T 100000 -D 1000 --traj --freq W --quiet -p $path_saved -i $h"
+                ]
+            },
+            {
+                "description": "First simplex + rescale reporting rate",
+                "commands": [
+                    "plom pipe $path_theta -D $path_design -t $h -X ${path_read}hat_${h}.csv -r rep | ./simplex -M 10000 --no_trace --prior --quiet -p $path_saved -i $h"
+                ]
+            },
+            {
+                "description": "Chain simplex",
+                "commands": [
+                    "for (( i=0; i < 19; i++ )); do\n    path_saved=${path_results}\n    if [ $i -eq 18 ]; then\n        ##last results of the pipeline are written in in path_results\n        path_saved=$path_results\n    fi\n    \n    \n    if [ $i -gt 0 ]; then\n        let im1=$i-1\n##overwrite path_read within the repeatition loop\n        path_read=${path_results}\n    fi\n\nplom pipe $path_theta -T ${path_read}trace_${h}.csv -u 0.01 | ./simplex -M 10000 --no_trace --prior --quiet -p $path_saved -i $h\n\ndone"
+                ]
+            }
+        ]
+    }
+}

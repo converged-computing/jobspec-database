@@ -1,0 +1,205 @@
+{
+    "application": "Slurm",
+    "details": {
+        "slurm_params": {
+            "job_name": "hybrid",
+            "nodes": 2,
+            "ntasks_per_node": 2,
+            "exclusive": true,
+            "export": "ALL",
+            "time": "02:00:00",
+            "partition": "standard",
+            "mem": 0
+        },
+        "modules": {
+            "apptainer": "apptainer-1.1.8-gcc-12.1.0-tbna3nr",
+            "tcl": "/nopt/nrel/apps/timstests/042723_a/tcl/linux-rhel8-icelake"
+        },
+        "environment_variables": {
+            "FI_PROVIDER": "tcp",
+            "MPIR_CVAR_DEBUG_SUMMARY": 1,
+            "OMP_NUM_THREADS": 1
+        },
+        "mpi_implementations": [
+            {
+                "name": "OpenMPI",
+                "sif_name": "openmpi.sif",
+                "commands": [
+                    "ompi_info --all",
+                    "/opt/examples/affinity/tds/phostone -F",
+                    "/opt/examples/affinity/tds/ppong"
+                ],
+                "dockerfile": {
+                    "bootstrap": "docker",
+                    "from": "ubuntu:latest",
+                    "environment": [
+                        "LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/cray/pe/lib64",
+                        "LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/cray/libfabric/1.15.2.0/lib64",
+                        "OPENMPI_DIR=/opt/openmpi",
+                        "PATH=$OPENMPI_DIR/bin:$PATH",
+                        "LD_LIBRARY_PATH=$OPENMPI_DIR/lib:$LD_LIBRARY_PATH",
+                        "MANPATH=$OPENMPI_DIR/share/man:$MANPATH",
+                        "LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/cray/pe/lib64"
+                    ],
+                    "post": [
+                        "echo \"Installing required packages...\"",
+                        "export DEBIAN_FRONTEND=noninteractive",
+                        "apt-get update && apt-get install -y wget git bash gcc gfortran g++ make python3",
+                        "apt install -y git",
+                        "apt install -y curl",
+                        "curl https://download.open-mpi.org/release/open-mpi/v4.1/openmpi-4.1.5.tar.gz --output openmpi-4.1.5.tar.gz",
+                        "mkdir -p /opt/openmpi/src",
+                        "tar -xzf openmpi-4.1.5.tar.gz -C /opt/openmpi/src",
+                        "echo \"Installing OPENMPI...\"",
+                        "cd /opt/openmpi/src/* && ./configure --prefix=/opt/openmpi --disable-mpi-fortran --enable-orterun-prefix-by-default && make install",
+                        "export PATH=/opt/openmpi/bin:$PATH",
+                        "export LD_LIBRARY_PATH=/opt/openmpi/lib:$LD_LIBRARY_PATH",
+                        "echo \"Compiling the MPI application...\"",
+                        "echo \"Compiling the MPI application...\"",
+                        "cd /opt && git clone https://github.com/timkphd/examples.git",
+                        "cd /opt/examples/affinity/tds && mpicc -fopenmp phostone.c -o phostone"
+                    ]
+                },
+                "binds": [
+                    "/var/spool/slurmd",
+                    "/usr/bin",
+                    "/nopt/slurm/current/lib",
+                    "/nopt/xalt/xalt/lib64",
+                    "/nopt/slurm/current/bin"
+                ]
+            },
+            {
+                "name": "MPICH-CH4",
+                "sif_name": "mpich_ch4.sif",
+                "commands": [
+                    "/opt/examples/affinity/tds/phostone -F",
+                    "/opt/examples/affinity/tds/ppong"
+                ],
+                "dockerfile": {
+                    "bootstrap": "docker",
+                    "from": "ubuntu:latest",
+                    "environment": [
+                        "MPICH_VERSION=4.1.2",
+                        "MPICH_DIR=/opt/mpich",
+                        "PATH=$MPICH_DIR/bin:$PATH",
+                        "LD_LIBRARY_PATH=$MPICH_DIR/lib:$LD_LIBRARY_PATH",
+                        "MANPATH=$MPICH_DIR/share/man:$MANPATH"
+                    ],
+                    "post": [
+                        "echo \"Installing required packages...\"",
+                        "export DEBIAN_FRONTEND=noninteractive",
+                        "apt-get update && apt-get install -y wget git bash gcc gfortran g++ make python3",
+                        "apt install -y git",
+                        "export MPICH_VERSION=4.1.2",
+                        "export MPICH_URL=\"http://www.mpich.org/static/downloads/$MPICH_VERSION/mpich-$MPICH_VERSION.tar.gz\"",
+                        "echo \"Installing MPICH...\"",
+                        "mkdir -p /opt/build",
+                        "mkdir -p /opt",
+                        "cd /opt/build && wget -O mpich-$MPICH_VERSION.tar.gz $MPICH_URL && tar xzf mpich-$MPICH_VERSION.tar.gz",
+                        "cd /opt/build/mpich-$MPICH_VERSION && ./configure --prefix=/opt/mpich --with-device=ch3:nemesis && make install",
+                        "export PATH=/opt/mpich/bin:$PATH",
+                        "export LD_LIBRARY_PATH=/opt/mpich/lib:$LD_LIBRARY_PATH",
+                        "echo \"Compiling the MPI application...\"",
+                        "cd /opt && git clone https://github.com/timkphd/examples.git",
+                        "cd /opt/examples/affinity/tds && mpicc -fopenmp phostone.c -o phostone"
+                    ]
+                },
+                "binds": [
+                    "/var/spool/slurmd",
+                    "/usr/bin",
+                    "/nopt/slurm/current/lib",
+                    "/nopt/xalt/xalt/lib64",
+                    "/nopt/slurm/current/bin"
+                ]
+            },
+            {
+                "name": "MPICH-CH4b",
+                "sif_name": "mpich_ch4b.sif",
+                "commands": [
+                    "/opt/examples/affinity/tds/phostone -F",
+                    "/opt/examples/affinity/tds/ppong"
+                ],
+                "dockerfile": {
+                    "bootstrap": "docker",
+                    "from": "ubuntu:latest",
+                    "environment": [
+                        "MPICH_VERSION=4.1.2",
+                        "MPICH_DIR=/opt/mpich",
+                        "PATH=$MPICH_DIR/bin:$PATH",
+                        "LD_LIBRARY_PATH=$MPICH_DIR/lib:$LD_LIBRARY_PATH",
+                        "MANPATH=$MPICH_DIR/share/man:$MANPATH"
+                    ],
+                    "post": [
+                        "echo \"Installing required packages...\"",
+                        "export DEBIAN_FRONTEND=noninteractive",
+                        "apt-get update && apt-get install -y wget git bash gcc gfortran g++ make python3",
+                        "apt install -y git",
+                        "export MPICH_VERSION=4.1.2",
+                        "export MPICH_URL=\"http://www.mpich.org/static/downloads/$MPICH_VERSION/mpich-$MPICH_VERSION.tar.gz\"",
+                        "echo \"Installing MPICH...\"",
+                        "mkdir -p /opt/build",
+                        "mkdir -p /opt",
+                        "cd /opt/build && wget -O mpich-$MPICH_VERSION.tar.gz $MPICH_URL && tar xzf mpich-$MPICH_VERSION.tar.gz",
+                        "cd /opt/build/mpich-$MPICH_VERSION && ./configure --prefix=/opt/mpich --with-device=ch3:nemesis && make install",
+                        "export PATH=/opt/mpich/bin:$PATH",
+                        "export LD_LIBRARY_PATH=/opt/mpich/lib:$LD_LIBRARY_PATH",
+                        "echo \"Compiling the MPI application...\"",
+                        "cd /opt && git clone https://github.com/timkphd/examples.git",
+                        "cd /opt/examples/affinity/tds && mpicc -fopenmp phostone.c -o phostone"
+                    ]
+                },
+                "binds": [
+                    "/var/spool/slurmd",
+                    "/usr/bin",
+                    "/nopt/slurm/current/lib",
+                    "/nopt/xalt/xalt/lib64",
+                    "/nopt/slurm/current/bin"
+                ]
+            },
+            {
+                "name": "MPICH-CH3",
+                "sif_name": "mpich_ch3.sif",
+                "commands": [
+                    "/opt/examples/affinity/tds/phostone -F",
+                    "/opt/examples/affinity/tds/ppong"
+                ],
+                "dockerfile": {
+                    "bootstrap": "docker",
+                    "from": "ubuntu:latest",
+                    "environment": [
+                        "MPICH_VERSION=4.1.2",
+                        "MPICH_DIR=/opt/mpich",
+                        "PATH=$MPICH_DIR/bin:$PATH",
+                        "LD_LIBRARY_PATH=$MPICH_DIR/lib:$LD_LIBRARY_PATH",
+                        "MANPATH=$MPICH_DIR/share/man:$MANPATH"
+                    ],
+                    "post": [
+                        "echo \"Installing required packages...\"",
+                        "export DEBIAN_FRONTEND=noninteractive",
+                        "apt-get update && apt-get install -y wget git bash gcc gfortran g++ make python3",
+                        "apt install -y git",
+                        "export MPICH_VERSION=4.1.2",
+                        "export MPICH_URL=\"http://www.mpich.org/static/downloads/$MPICH_VERSION/mpich-$MPICH_VERSION.tar.gz\"",
+                        "echo \"Installing MPICH...\"",
+                        "mkdir -p /opt/build",
+                        "mkdir -p /opt",
+                        "cd /opt/build && wget -O mpich-$MPICH_VERSION.tar.gz $MPICH_URL && tar xzf mpich-$MPICH_VERSION.tar.gz",
+                        "cd /opt/build/mpich-$MPICH_VERSION && ./configure --prefix=/opt/mpich --with-device=ch3:nemesis && make install",
+                        "export PATH=/opt/mpich/bin:$PATH",
+                        "export LD_LIBRARY_PATH=/opt/mpich/lib:$LD_LIBRARY_PATH",
+                        "echo \"Compiling the MPI application...\"",
+                        "cd /opt && git clone https://github.com/timkphd/examples.git",
+                        "cd /opt/examples/affinity/tds && mpicc -fopenmp phostone.c -o phostone"
+                    ]
+                },
+                "binds": [
+                    "/var/spool/slurmd",
+                    "/usr/bin",
+                    "/nopt/slurm/current/lib",
+                    "/nopt/xalt/xalt/lib64",
+                    "/nopt/slurm/current/bin"
+                ]
+            }
+        ]
+    }
+}

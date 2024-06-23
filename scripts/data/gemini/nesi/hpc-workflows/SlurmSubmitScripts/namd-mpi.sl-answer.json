@@ -1,0 +1,30 @@
+{
+    "application": "NAMD",
+    "details": {
+        "software": [
+            "Gromacs 4.5.4",
+            "NAMD 2.9"
+        ],
+        "resources": [
+            "Slurm",
+            "MPI"
+        ],
+        "environment_variables": [
+            "SCRATCH_DIR",
+            "HOME",
+            "OMP_NUM_THREADS"
+        ],
+        "files": [
+            "apoa1.namd"
+        ],
+        "commands": [
+            "source /etc/profile",
+            "module load NAMD/2.9",
+            "cp -pr /share/test/NAMD/apoa1/* $SCRATCH_DIR",
+            "cd $SCRATCH_DIR",
+            "export OMP_NUM_THREADS=1",
+            "srun namd2 apoa1.namd",
+            "cp -pr $SCRATCH_DIR $HOME/OUT/namd"
+        ]
+    }
+}

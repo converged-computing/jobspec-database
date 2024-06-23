@@ -1,0 +1,45 @@
+{
+    "application": "SLURM",
+    "details": {
+        "job_name": "dome",
+        "nodes": 1,
+        "cpus_per_task": 8,
+        "memory": "32GB",
+        "gpu": "a100:1",
+        "time": "4:00:00",
+        "software": {
+            "singularity": "/scratch/work/public/singularity/cuda12.1.1-cudnn8.9.0-devel-ubuntu22.04.2.sif",
+            "python": "train_dreambooth_lora_sdxl.py",
+            "model": "stabilityai/stable-diffusion-xl-base-1.0",
+            "vae": "madebyollin/sdxl-vae-fp16-fix"
+        },
+        "environment_variables": {
+            "DATA": "dome",
+            "CLASS": "man",
+            "MODEL_NAME": "stabilityai/stable-diffusion-xl-base-1.0",
+            "INSTANCE_DIR": "/scratch/jy3694/dataset/dreambooth/training/ours/$DATA",
+            "CLASS_DIR": "/scratch/jy3694/dataset/dreambooth/regularization/ours/$CLASS",
+            "VAE_PATH": "madebyollin/sdxl-vae-fp16-fix",
+            "OUTPUT_DIR": "/scratch/jy3694/dreambooth_xl/runs/ours/$DATA",
+            "XDG_RUNTIME_DIR": "$SLURM_JOBTMP"
+        },
+        "training_parameters": {
+            "with_prior_preservation": true,
+            "prior_loss_weight": 1.0,
+            "mixed_precision": "fp16",
+            "instance_prompt": "a photo of sks '$CLASS'",
+            "class_prompt": "a photo of '$CLASS'",
+            "resolution": 1024,
+            "train_batch_size": 1,
+            "gradient_accumulation_steps": 4,
+            "learning_rate": 1e-05,
+            "lr_scheduler": "constant",
+            "lr_warmup_steps": 0,
+            "num_class_images": 200,
+            "max_train_steps": 800,
+            "validation_prompt": "A photo of sks '$CLASS' in a bucket",
+            "validation_epochs": 25,
+            "seed": 0
+        }
+    }
+}

@@ -1,0 +1,26 @@
+{
+    "application": "Slurm",
+    "details": {
+        "resource_requirements": {
+            "partition": "gpu",
+            "nodes": 1,
+            "cores": 32,
+            "memory": "200GB",
+            "gpus": 4,
+            "gpu_type": "v100-32gb",
+            "job_name": "train_primitives_raw",
+            "time": "8:00:00"
+        },
+        "environment": {
+            "image": "/mnt/ceph/users/wzhou/images/gencad.sif",
+            "output_dir": "/mnt/ceph/users/wzhou/projects/gencad/train/primitives_raw/$SLURM_JOB_ID/",
+            "modules": [
+                "singularity"
+            ],
+            "python_packages": [
+                "img2cad"
+            ]
+        },
+        "command": "python -um img2cad.train_primitives_raw +cluster=rusty +compute=4xv100 batch_size=4096 hydra.run.dir=$OUTPUT_DIR"
+    }
+}

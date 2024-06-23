@@ -1,0 +1,38 @@
+{
+    "application": "Dask",
+    "details": {
+        "software": [
+            "Dask",
+            "Python",
+            "OpenMM",
+            "CUDA",
+            "GCC",
+            "Conda"
+        ],
+        "resources": [
+            "Summit supercomputer",
+            "1500 nodes",
+            "NVME storage",
+            "GPUs"
+        ],
+        "environment": {
+            "modules": [
+                "cuda/11.0.3",
+                "gcc/11.1.0"
+            ],
+            "conda_environment": "openmm"
+        },
+        "job_submission_system": "LSF",
+        "job_submission_options": [
+            "BSUB -P YOURACCOUNTHERE",
+            "BSUB -W 0:40",
+            "BSUB -nnodes 1500",
+            "BSUB -alloc_flags \"gpudefault nvme\"",
+            "BSUB -J dask_testing",
+            "BSUB -o omm_md.%J.out",
+            "BSUB -e omm_md.%J.err",
+            "BSUB -N",
+            "BSUB -B"
+        ]
+    }
+}

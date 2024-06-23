@@ -1,0 +1,50 @@
+{
+    "application": "Horovod",
+    "details": {
+        "resource_requirements": {
+            "nodes": 2,
+            "cores_per_node": 42,
+            "walltime": "01:00",
+            "project": "BIE108",
+            "output_file": "/ccs/home/pstjohn/job_output/%J.out",
+            "error_file": "/ccs/home/pstjohn/job_output/%J.err"
+        },
+        "software_requirements": {
+            "modules": [
+                "ibm-wml-ce/1.7.0-3"
+            ],
+            "conda_environment": "tf21-ibm",
+            "python_path": "$HOME/uniparc_modeling:$PYTHONPATH",
+            "environment_variables": {
+                "NCCL_DEBUG": "INFO",
+                "TF_ENABLE_AUTO_MIXED_PRECISION": 1,
+                "OMP_NUM_THREADS": 4,
+                "HOROVOD_HIERARCHICAL_ALLGATHER": 0,
+                "HOROVOD_HIERARCHICAL_ALLREDUCE": 0,
+                "HOROVOD_GROUPED_ALLREDUCES": 1,
+                "HOROVOD_CYCLE_TIME": 1,
+                "HOROVOD_FUSION_THRESHOLD": 8388608,
+                "HOROVOD_TIMELINE": "$MEMBERWORK/bie108/uniparc_checkpoints/$LSB_JOBNAME.$LSB_JOBID.hvdtimeline.json"
+            }
+        },
+        "script_execution": {
+            "command": "jsrun -n ${NODES} -g 6 -c 42 -r1 -a6 python3 run_model_horovod.py",
+            "arguments": [
+                "--modelName=$LSB_JOBNAME.$LSB_JOBID",
+                "--scratchDir=\"$MEMBERWORK/bie108/uniparc_checkpoints\"",
+                "--dataDir=\"$PROJWORK/bie108/split_uniref100\"",
+                "--batchSize=24",
+                "--warmup=10",
+                "--totalSteps=100",
+                "--stepsPerEpoch=10",
+                "--validationSteps=10",
+                "--lr=1E-4",
+                "--maskingFreq=0.15",
+                "--sequenceLength=512",
+                "--modelDimension=768",
+                "--numberXformerLayers=12",
+                "--initialEpoch=0"
+            ]
+        }
+    }
+}

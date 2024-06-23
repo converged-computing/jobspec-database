@@ -1,0 +1,69 @@
+{
+    "application": "Torchrun",
+    "details": {
+        "framework": "PyTorch",
+        "libraries": [
+            "CUDA",
+            "MPI",
+            "NCCL",
+            "EFA",
+            "OpenMPI"
+        ],
+        "resources": {
+            "nodes": 3,
+            "tasks_per_node": 8,
+            "cpus_per_gpu": 6,
+            "partition": "gamma",
+            "queue": "gamma"
+        },
+        "environment_variables": [
+            "NCCL_PROTO",
+            "FI_EFA_FORK_SAFE",
+            "FI_LOG_LEVEL",
+            "FI_EFA_USE_DEVICE_RDMA",
+            "NCCL_DEBUG",
+            "OMPI_MCA_mtl_base_verbose",
+            "FI_EFA_ENABLE_SHM_TRANSFER",
+            "FI_PROVIDER",
+            "FI_EFA_TX_MIN_CREDITS",
+            "NCCL_TREE_THRESHOLD",
+            "WORLD_SIZE",
+            "MASTER_PORT",
+            "OMP_NUM_THREADS"
+        ],
+        "training_parameters": {
+            "model_name": "HTSAT-tiny",
+            "text_encoder": "t5",
+            "dataset_type": "csv",
+            "precision": "fp32",
+            "batch_size": 6,
+            "learning_rate": 0.0001,
+            "weight_decay": 0.0,
+            "epochs": 60,
+            "workers": 1,
+            "use_bn_sync": true,
+            "warmup_steps": 1600,
+            "optimizer": "adam",
+            "data_filling": "repeatpad",
+            "data_truncating": "fusion",
+            "enable_fusion": true,
+            "fusion_type": "aff_2d",
+            "pretrained_audio_model": "./htsat.ckpt",
+            "resume_checkpoint": "path_to_resume_ckpt"
+        },
+        "logging": {
+            "wandb": true,
+            "wandb_notes": "final_train_without_sim_synth",
+            "logs_directory": "/fsx/clap_logs"
+        },
+        "data": {
+            "train_data": "./final_3negs_and_synth.csv",
+            "val_data": "./val.csv",
+            "top_k_checkpoint_select_dataset": "Clotho-test",
+            "top_k_checkpoint_select_metric": "mAP@10",
+            "openai_model_cache_dir": "./laion_clap"
+        },
+        "seed": 3407,
+        "gather_with_grad": true
+    }
+}

@@ -1,0 +1,40 @@
+{
+    "application": "Specfem3D",
+    "details": {
+        "software": [
+            "xmeshfem3D",
+            "xgenerate_databases",
+            "xspecfem3D",
+            "xcubedsphere_topo",
+            "xcubedsphere_topo_FindOcean"
+        ],
+        "resources": {
+            "processors": "NPROC",
+            "nodes": "NNODE",
+            "walltime": [
+                "00:20:00",
+                "00:30:00",
+                "18:00:00"
+            ],
+            "modules": [
+                "openmpi",
+                "intel"
+            ],
+            "job_submission_tool": "qsub"
+        },
+        "dependencies": {
+            "meshing": {
+                "depends_on": null,
+                "job_id": "jobid_mesh"
+            },
+            "database_generation": {
+                "depends_on": "meshing",
+                "job_id": "jobid_gen"
+            },
+            "solver": {
+                "depends_on": "database_generation",
+                "job_id": "jobid_spec"
+            }
+        }
+    }
+}

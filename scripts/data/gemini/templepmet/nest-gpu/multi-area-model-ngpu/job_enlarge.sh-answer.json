@@ -1,0 +1,32 @@
+{
+    "application": "PBS",
+    "details": {
+        "job_queue": "SQUID",
+        "group": "${GROUP_NAME}",
+        "wall_time": "01:00:00",
+        "output_file": "./log/job_%s_out.txt",
+        "error_file": "./log/job_%s_err.txt",
+        "nodes": 4,
+        "cpu_cores_per_node": 76,
+        "gpus_per_node": 8,
+        "OMP_NUM_THREADS": 8,
+        "mpi_module": "BaseGPU/2022",
+        "singularity_image": "../singularity/nestgpu.sif",
+        "singularity_image_alternative": "../singularity/nestgpu_sandbox",
+        "result_file": "./log/result.txt",
+        "n_scale": 0.2,
+        "k_scale": 0.117,
+        "t_scale": 1.0,
+        "label": "${PBS_NNODES}nodes_${PBS_NGPUS}gpus_N${N_SCALE}_K${K_SCALE}_T${T_SCALE}_${PBS_JOBID}",
+        "mpi_processes": 32,
+        "mpi_processes_per_node": 8,
+        "analysis_scripts": [
+            "analysis/each_proc/time.py",
+            "analysis/each_proc/memory.py",
+            "analysis/each_proc/neuron.py",
+            "analysis/each_proc/synapse.py",
+            "analysis/each_proc/spike.py",
+            "analysis/distributions/delay.py"
+        ]
+    }
+}

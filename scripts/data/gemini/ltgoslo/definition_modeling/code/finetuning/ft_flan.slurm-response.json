@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"Slurm\",\n  \"details\": {\n    \"job_name\": \"flan_t5_finetuning\",\n    \"account\": \"ec30\",\n    \"partition\": \"accel\",\n    \"gpus\": 2,\n    \"time\": \"9:00:00\",\n    \"nodes\": 1,\n    \"mem_per_cpu\": \"8G\",\n    \"cpus_per_task\": 8,\n    \"modules\": [\n      \"nlpl-datasets/2.3.2-foss-2021a-Python-3.9.5\",\n      \"nlpl-accelerate/0.13.2-foss-2021a-Python-3.9.5\",\n      \"nlpl-sentencepiece/0.1.96-foss-2021a-Python-3.9.5\",\n      \"nlpl-nlptools/2022.01-foss-2021a-Python-3.9.5\",\n      \"nlpl-transformers/4.24.0-foss-2021a-Python-3.9.5\"\n    ],\n    \"python_script\": \"finetune_flan.py\",\n    \"arguments\": [\n      \"--model_name_or_path\",\n      \"${MODEL}\",\n      \"--do_train\",\n      \"--do_eval\",\n      \"--train_file\",\n      \"${TRAIN_DATASET}\",\n      \"--validation_file\",\n      \"${VAL_DATASET}\",\n      \"--output_dir\",\n      \"${SAVE}\",\n      \"--overwrite_output_dir\",\n      \"--evaluation_strategy=epoch\",\n      \"--logging_strategy=epoch\",\n      \"--per_device_train_batch_size=16\",\n      \"--per_device_eval_batch_size=16\",\n      \"--predict_with_generate\",\n      \"--save_total_limit=5\",\n      \"--max_source_length=192\",\n      \"--max_target_length=128\",\n      \"--bf16=False\",\n      \"--num_train_epochs=20\",\n      \"--save_strategy=epoch\",\n      \"--load_best_model_at_end=True\",\n      \"--metric_for_best_model=eval_rouge1\",\n      \"--ddp_find_unused_parameters=False\",\n      \"--optim=adafactor\"\n    ]\n  }\n}\n```\n\nThis script uses the **Slurm** workload manager to submit a job for fine-tuning a FLAN-T5 model. The script requests two GPUs, a runtime of 9 hours, and 8 GB of memory per CPU core. \n\nThe script loads several modules from the EasyBuild system, including `nlpl-datasets`, `nlpl-accelerate`, `nlpl-sentencepiece`, `nlpl-nlptools`, and `nlpl-transformers`. These modules provide the necessary libraries and tools for working with datasets, accelerating training, handling text tokenization, and using the Transformers library.\n\nThe script then runs a Python script named `finetune_flan.py` with several arguments for configuring the training process. The arguments control various aspects of the fine-tuning, such as the model to be used, the training and validation datasets, the output directory, the batch size, the number of epochs, and the optimizer. \n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 664,
+        "candidates_token_count": 763,
+        "total_token_count": 1427,
+        "cached_content_token_count": 0
+    }
+}

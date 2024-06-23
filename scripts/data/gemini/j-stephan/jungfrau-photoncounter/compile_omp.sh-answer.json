@@ -1,0 +1,38 @@
+{
+    "application": "Slurm",
+    "details": {
+        "resource_requirements": {
+            "job_name": "OpenMP_Compile",
+            "partition": "defq",
+            "time": "1:00:00",
+            "nodes": 1,
+            "ntasks": 4,
+            "mem": "15g",
+            "mail_type": "ALL",
+            "mail_user": "j.schenke@hzdr.de",
+            "output_file": "log.oc.slurm-%j.out",
+            "error_file": "err.oc.slurm-%j.out"
+        },
+        "software_requirements": {
+            "alpaka_DIR": "/home/schenk24/workspace/alpaka/install/",
+            "modules": [
+                "git",
+                "intel",
+                "cmake",
+                "boost",
+                "python"
+            ]
+        },
+        "build_system": {
+            "build_directory": "build_omp",
+            "cmake_options": [
+                "-DCMAKE_BUILD_TYPE=Release",
+                "-DBENCHMARKING_ENABLED=ON",
+                "-DALPAKA_ACC_GPU_CUDA_ENABLE=OFF",
+                "-DCMAKE_C_FLAGS_RELEASE=\"-O3 -march=native -DNDEBUG\"",
+                "-DCMAKE_CXX_FLAGS_RELEASE=\"-O3 -march=native -DNDEBUG\""
+            ],
+            "make_options": "-j"
+        }
+    }
+}

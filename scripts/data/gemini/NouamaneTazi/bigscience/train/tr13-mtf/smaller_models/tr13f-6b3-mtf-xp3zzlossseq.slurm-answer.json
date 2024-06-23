@@ -1,0 +1,44 @@
+{
+    "application": "DeepSpeed",
+    "details": {
+        "framework": "PyTorch",
+        "library": "DeepSpeed",
+        "model": "T0",
+        "hardware": {
+            "nodes": 8,
+            "gpus": 8,
+            "cpus_per_task": 64
+        },
+        "resources": {
+            "partition": "gpu_p5",
+            "constraint": "a100",
+            "reservation": "hug",
+            "qos": "qos_gpu-gc",
+            "account": "six@a100",
+            "time": "100:00:00"
+        },
+        "parameters": {
+            "micro_batch_size": 4,
+            "global_batch_size": 2048,
+            "seq_len": 2048,
+            "save_interval": 2,
+            "train_samples": 6348800,
+            "optimizer": "adam",
+            "lr": 2e-05,
+            "exit_duration_in_mins": 5990
+        },
+        "data": {
+            "train_data_path": "$six_ALL_CCFRWORK/code/tr13f-6B3-ml-t0/Megatron-DeepSpeed/data/xp3zzlossseq_train.txt",
+            "valid_data_path": "$six_ALL_CCFRWORK/code/tr13f-6B3-ml-t0/Megatron-DeepSpeed/data/xp3capmixnewcodelong_validation_pretr.txt",
+            "tokenizer_name_or_path": "bigscience/tokenizer"
+        },
+        "environment_variables": {
+            "TRANSFORMERS_CACHE": "$six_ALL_CCFRWORK/models",
+            "HF_DATASETS_CACHE": "$six_ALL_CCFRWORK/datasets",
+            "HF_MODULES_CACHE": "$six_ALL_CCFRWORK/modules",
+            "HF_METRICS_CACHE": "$six_ALL_CCFRWORK/metrics",
+            "HF_DATASETS_OFFLINE": 1,
+            "TRANSFORMERS_OFFLINE": 1
+        }
+    }
+}

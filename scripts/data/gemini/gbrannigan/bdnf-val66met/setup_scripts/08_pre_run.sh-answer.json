@@ -1,0 +1,26 @@
+{
+    "application": "GROMACS",
+    "details": {
+        "software": [
+            "intel/15.0.2",
+            "mvapich2/2.1",
+            "boost",
+            "cuda/7.0",
+            "gromacs/5.1.2"
+        ],
+        "resource_requirements": {
+            "nodes": 1,
+            "tasks_per_node": 16,
+            "queue": "gpu",
+            "runtime": "1:30:00",
+            "environment_variables": {
+                "GMX_MAXBACKUP": "-1",
+                "OMP_NUM_THREADS": "15"
+            }
+        },
+        "commands": [
+            "ibrun -np 1  gmx grompp -f rep_\"$i\".mdp -t ex.cpt -c nvt_vol.gro -p topol.top -o ex.tpr  >& grompp_11.out",
+            "ibrun -np 480 mdrun_mpi_gpu -noappend -v -deffnm ex -multidir {0..63} -maxh 1 -replex 500 -nstlist 20"
+        ]
+    }
+}

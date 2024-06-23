@@ -1,0 +1,52 @@
+{
+    "application": "Singularity",
+    "details": {
+        "resource_requirements": {
+            "cores": 16,
+            "memory": "100G",
+            "gpu": 1,
+            "partition": "gpu"
+        },
+        "software_requirements": {
+            "singularity": "installed",
+            "python": "installed",
+            "nvidia-modprobe": "installed",
+            "ray": "installed"
+        },
+        "script_details": {
+            "arguments": {
+                "1": "experiment_config_file",
+                "2": "experiment_name",
+                "3": "number_of_epochs",
+                "4+": "additional_arguments"
+            },
+            "environment_variables": {
+                "ITER_PER_EPOCH": "200",
+                "MAX_SAVE_STEP_GB": "0",
+                "NUM_CPUS": "4",
+                "RAY_ROOT": "$TMPDIR/ray"
+            },
+            "data_files": {
+                "experiment_config_file": "argument",
+                "datasets": "$PROJECTS/ngoc/datasets/headneck",
+                "perf_folder": "$PROJECTS/ngoc/hn_surv/perf",
+                "temp_folder": "$SCRATCH_PROJECTS/ceheads/hn_surv",
+                "analysis_folder": "$SCRATCH_PROJECTS/ceheads/hn_surv_analysis"
+            }
+        },
+        "execution_flow": {
+            "setup": [
+                "copy_data_files_if_necessary",
+                "load_singularity_module",
+                "ensure_gpu_availability"
+            ],
+            "main_execution": [
+                "run_experiment_using_singularity_and_python"
+            ],
+            "post_processing": [
+                "post-processing_results_using_singularity_and_python",
+                "run_test_on_best_model_using_singularity_and_python"
+            ]
+        }
+    }
+}

@@ -1,0 +1,38 @@
+{
+    "application": "Gromacs",
+    "details": {
+        "version": "2023.3-gpu",
+        "resource_requirements": {
+            "partition": "small-g",
+            "account": "project_465000934",
+            "reservation": "gromacs_thursday",
+            "time": "00:10:00",
+            "nodes": 4,
+            "gpus_per_node": 8,
+            "ntasks_per_node": 8
+        },
+        "software_dependencies": [
+            "gromacs/2023.3-gpu",
+            "lumi-affinity.sh",
+            "MPI"
+        ],
+        "environment_variables": {
+            "OMP_NUM_THREADS": "7",
+            "MPICH_GPU_SUPPORT_ENABLED": "1",
+            "GMX_ENABLE_DIRECT_GPU_COMM": "1",
+            "GMX_FORCE_GPU_AWARE_MPI": "1"
+        },
+        "command_line_arguments": {
+            "num_multi": 16,
+            "cpu_bind": "${CPU_BIND}",
+            "simulation_directories": "sim_{01..16}",
+            "number_of_processes": 1,
+            "communication_method": "gpu",
+            "output_file": "ex4.2_${SLURM_NNODES}N_multi${num_multi}_jID${SLURM_JOB_ID}",
+            "number_of_steps": -1,
+            "time_step": 0.017,
+            "reset_hway": true,
+            "tune_pme": false
+        }
+    }
+}

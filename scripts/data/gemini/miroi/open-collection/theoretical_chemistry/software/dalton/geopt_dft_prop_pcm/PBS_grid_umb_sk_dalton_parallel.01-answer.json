@@ -1,0 +1,35 @@
+{
+    "application": "Dalton",
+    "software": [
+        "OpenMPI",
+        "Intel Fortran/C/C++ commercial compilers with MKL library",
+        "cmake",
+        "Python",
+        "PBS (Portable Batch System)"
+    ],
+    "resource_requirements": {
+        "nodes": 1,
+        "ppn": 8,
+        "walltime": "04:00:00",
+        "memory": "4g",
+        "queue": "batch",
+        "email": "Miroslav.Ilias@umb.sk"
+    },
+    "environment_variables": {
+        "DALTON_TMPDIR": "/mnt/local/$USER/$PBS_JOBID",
+        "PATH": "/home/milias/bin/openmpi-4.0.1_suites/openmpi-4.0.1_Intel14_GNU6.3g++/bin:$PATH",
+        "LD_LIBRARY_PATH": "/home/milias/bin/openmpi-4.0.1_suites/openmpi-4.0.1_Intel14_GNU6.3g++/lib:$LD_LIBRARY_PATH",
+        "OMP_NUM_THREADS": "1",
+        "MKL_DYNAMIC": "FALSE",
+        "OMP_DYNAMIC": "FALSE"
+    },
+    "commands": [
+        "source /mnt/apps/intel/bin/compilervars.sh intel64",
+        "module list",
+        "python -V",
+        "ls -lt $DALTON/$BUILD/dalton.x",
+        "ldd $DALTON/$BUILD/dalton.x",
+        "df -h /mnt/local/$USER",
+        "$DALTON/$BUILD/dalton -N $NPROCS_PBS  -noarch  b3lyp_geomopt_freq_shield_pcm  ch2o_sto2g"
+    ]
+}

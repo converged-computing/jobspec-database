@@ -1,0 +1,36 @@
+{
+    "application": "Slurm",
+    "details": {
+        "resource_requirements": {
+            "wall_clock_time": "24 hours",
+            "nodes": 1,
+            "tasks": 1,
+            "cpus_per_task": 1,
+            "memory_per_cpu": "8GB",
+            "job_name": "Incomp_NS"
+        },
+        "modules": [
+            "intel",
+            "FFmpeg"
+        ],
+        "executables": [
+            "ifort",
+            "kalle_anka.x",
+            "matlab",
+            "ffmpeg",
+            "scontrol",
+            "js"
+        ],
+        "libraries": [
+            "mkl"
+        ],
+        "commands": [
+            "ifort -o kalle_anka.x ins.f90 -mkl",
+            "srun ./kalle_anka.x",
+            "matlab -nodisplay -r \"pl\"",
+            "srun ffmpeg -r 10 -i frame%05d.jpg -vf \"crop=trunc(iw/2)*2:trunc(ih/2)*2\" test.mp4",
+            "scontrol show job $SLURM_JOB_ID",
+            "js -j $SLURM_JOB_ID"
+        ]
+    }
+}

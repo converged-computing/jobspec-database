@@ -1,0 +1,63 @@
+{
+    "application": "COBALT",
+    "details": {
+        "scheduler": "COBALT",
+        "queue": "default",
+        "nodes": "nNode",
+        "time": "06:00:00",
+        "project": "AtlasADSP",
+        "memory": "mcdram=cache:numa=quad",
+        "access_point": "{accessPoint}",
+        "environment_variables": [
+            "PROC_PER_NODE",
+            "NUM_NODES",
+            "ATHENA_PROC_NUMBER",
+            "HARVESTER_DIR",
+            "EXAMPLES_DIR",
+            "PILOT_DIR",
+            "YODA_DIR",
+            "YAMPL_DIR",
+            "YAMPL_PY_DIR",
+            "RUCIO_ACCOUNT",
+            "X509_USER_PROXY",
+            "X509_CERT_DIR",
+            "HPC_SW_INSTALL_AREA",
+            "PYTHONPATH",
+            "LD_LIBRARY_PATH",
+            "WORK_DIR",
+            "PANDA_JOB_IDS"
+        ],
+        "software_requirements": [
+            "python",
+            "aprun",
+            "mpirun",
+            "panda-yoda",
+            "yampl",
+            "python-yampl",
+            "rucio-clients",
+            "emi"
+        ],
+        "commands": [
+            "python -V",
+            "which aprun",
+            "which python",
+            "python -c \"import json;pids = json.load(open('worker_pandaids.json'));print ' '.join(str(x) for x in pids)\""
+        ],
+        "libraries": [
+            "python",
+            "yampl",
+            "panda-yoda"
+        ],
+        "resources": {
+            "cpu": "128",
+            "memory": "quad numa nodes",
+            "storage": "{accessPoint}"
+        },
+        "execution_style": {
+            "parallel": "mpi",
+            "tasks": "1 per node",
+            "runtime_environment": "aprun"
+        },
+        "input_data": "worker_pandaids.json"
+    }
+}

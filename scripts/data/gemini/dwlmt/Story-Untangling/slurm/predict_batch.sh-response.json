@@ -1,0 +1,62 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"AllenNLP\",\n  \"software\": [\n    \"Bash\",\n    \"Slurm\",\n    \"Conda\",\n    \"AllenNLP\",\n    \"rsync\"\n  ],\n  \"resources\": {\n    \"nodes\": 1,\n    \"tasks\": 1,\n    \"gpu\": 1,\n    \"memory\": 0,\n    \"cpu\": 4,\n    \"scratch_space\": [\n      \"/disk/scratch/${STUDENT_ID}\",\n      \"/disk/scratch_big/${STUDENT_ID}\",\n      \"/disk/scratch1/${STUDENT_ID}\",\n      \"/disk/scratch2/${STUDENT_ID}\",\n      \"/disk/scratch_fast/${STUDENT_ID}\",\n      \"${CLUSTER_HOME}/scratch/${STUDENT_ID}\"\n    ],\n    \"nltk_data\": \"${CLUSTER_HOME}/nltk_data/\",\n    \"exp_root\": \"${CLUSTER_HOME}/git/Story-Untangling/\",\n    \"allennlp_cache_root\": \"${CLUSTER_HOME}/allennlp_cache_root/\"\n  },\n  \"environment_variables\": [\n    \"STUDENT_ID\",\n    \"CLUSTER_HOME\",\n    \"SCRATCH_HOME\",\n    \"NLTK_DATA\",\n    \"EXP_ROOT\",\n    \"ALLENNLP_CACHE_ROOT\",\n    \"SLURM_ARRAY_TASK_ID\",\n    \"LINE\",\n    \"EXP_NAME\",\n    \"SERIAL_DIR\",\n    \"DATASET_PATH\",\n    \"PREDICTION_STORY_ID_FILE\",\n    \"PREDICTION_ONLY_ANNOTATION_STORIES\",\n    \"PREDICTION_LEVELS_TO_ROLLOUT\",\n    \"PREDICTION_GENERATE_PER_BRANCH\",\n    \"PREDICTION_SAMPLE_PER_BRANCH\",\n    \"PREDICTION_BEAM_SIZE\",\n    \"PREDICTION_SAMPLE_TOP_K_WORDS\",\n    \"PREDICTION_WINDOWING\",\n    \"PREDICTION_SENTIMENT_WEIGHTING\",\n    \"PREDICTION_SENTIMENT_POSITIVE_WEIGHTING\",\n    \"PREDICTION_SENTIMENT_NEGATIVE_WEIGHTING\",\n    \"PREDICTION_MARKED_SENTENCE\",\n    \"MODEL_PATH\",\n    \"DATASET_SOURCE\"\n  ],\n  \"commands\": [\n    \"source /home/${USER}/miniconda3/bin/activate pytorch\",\n    \"mkdir -p ${i}\",\n    \"allennlp predict --include-package story_untangling --use-dataset-reader --predictor uncertain_reader_gen_predictor ${CLUSTER_HOME}/${MODEL_PATH} ${CLUSTER_HOME}/${DATASET_SOURCE} --cuda-device 0 --output-file  ${SERIAL_DIR}/${EXP_NAME}_prediction_output.jsonl\",\n    \"mkdir -p \"${CLUSTER_HOME}/runs/cluster/\",\n    \"rsync -avuzhP \"${SERIAL_DIR}\" \"${CLUSTER_HOME}/runs/cluster/\",\n    \"rm -rf \"${SERIAL_DIR}/\"\n  ]\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "citation_metadata": {
+                "citation_sources": [
+                    {
+                        "start_index": 251,
+                        "end_index": 481,
+                        "uri": "https://github.com/dwlmt/Story-Untangling",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 1496,
+                        "end_index": 1755,
+                        "uri": "https://github.com/dwlmt/Story-Untangling",
+                        "license_": ""
+                    }
+                ]
+            },
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 1057,
+        "candidates_token_count": 678,
+        "total_token_count": 1735,
+        "cached_content_token_count": 0
+    }
+}

@@ -1,0 +1,116 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"PBS\",\n  \"details\": {\n    \"resource_requirements\": {\n      \"nodes\": \"1:hima:nogpu:ppn=32\",\n      \"walltime\": \"24:00:00\"\n    },\n    \"job_name\": \"sift100M_SGS\",\n    \"output\": \"output.sift100M_SGS.txt\",\n    \"error\": \"output.sift100M_SGS.txt\",\n    \"mail_options\": \"abe\",\n    \"job_dependency\": \"oe\",\n    \"access_policy\": \"SINGLEJOB\"\n  },\n  \"python_script\": \"../scripts/sciclone/test46.find_L_simple_search_large_graph.py\",\n  \"command\": \"${bin} /sciclone/pscr/zpeng01 SGS_find_L 90 1200 0.0\",\n  \"other_commands\": [\n    \"cd /sciclone/home20/zpeng01/pppp/parallel_ANNS/cmake-build-release\",\n    \"cd /sciclone/home20/zpeng01/pppp/clion/panns_mac/cmake-build-release\",\n    \"./profile_para_single_query_top_m_search_better_merge /sciclone/pscr/zpeng01/sift1m/sift_base.fvecs /sciclone/pscr/zpeng01/sift1m/sift_query.fvecs /sciclone/pscr/zpeng01/sift1m/sift.nsg 200 200 output.ivecs 128 /sciclone/pscr/zpeng01/sift1m/sift.true-100_NN.q-10000.binary 2\",\n    \"./profile_para_single_query_top_m_search_better_merge /sciclone/pscr/zpeng01/sift1m/sift_base.fvecs /sciclone/pscr/zpeng01/sift1m/sift_query.fvecs /sciclone/pscr/zpeng01/sift1m/sift.nsg 200 200 output.ivecs 128 /sciclone/pscr/zpeng01/sift1m/sift.true-100_NN.q-10000.binary 1\",\n    \"export OMP_PLACES=cores\",\n    \"export OMP_PROC_BIND=close\",\n    \"cd /sciclone/home20/zpeng01/pppp/clion/panns_mac/cmake-build-release\",\n    \"bin_panns=./profile_top_m_para_search\",\n    \"bin_panns=./profile_para_single_query_top_m_search_sync_or_not\",\n    \"bin_panns=./profile_top_m_seq_search_bit_CAS\",\n    \"bin_panns=./profile_top_m_seq_search_myths_M\",\n    \"bin_panns=./profile_para_single_query_top_m_search_by_sort\",\n    \"bin_panns=./profile_para_single_query_top_m_search_better_merge\",\n    \"num_t_max=32\",\n    \"num_t_max=1\",\n    \"value_m=128\",\n    \"data_path=/sciclone/pscr/zpeng01/sift1m\",\n    \"data_name=sift\",\n    \"k=200\",\n    \"l=200\",\n    \"echo \\\"----${data_name}----\\\"\",\n    \"${bin_panns} ${data_path}/${data_name}_base.fvecs ${data_path}/${data_name}_query.fvecs ${data_path}/${data_name}.nsg $l $k output.ivecs ${value_m} ${data_path}/${data_name}.true-100_NN.q-10000.binary ${num_t}\",\n    \"data_path=/sciclone/pscr/zpeng01/gist1m\",\n    \"data_name=gist\",\n    \"k=400\",\n    \"l=400\",\n    \"echo \\\"----${data_name}----\\\"\",\n    \"${bin_panns} ${data_path}/${data_name}_base.fvecs ${data_path}/${data_name}_query.fvecs ${data_path}/${data_name}.nsg $l $k output.ivecs ${value_m} ${data_path}/${data_name}.true-100_NN.q-1000.binary ${num_t}\",\n    \"data_path=/sciclone/pscr/zpeng01/deep1b\",\n    \"data_name=deep10M\",\n    \"k=400\",\n    \"l=400\",\n    \"echo \\\"----${data_name}----\\\"\",\n    \"${bin_panns} ${data_path}/${data_name}_base.fvecs ${data_path}/${data_name}_query.fvecs ${data_path}/${data_name}.nsg $l $k output.ivecs ${value_m} ${data_path}/${data_name}.true-100_NN.q-10000.binary ${num_t}\",\n    \"qsub -I -l nodes=2:c11a:ppn=8 -l walltime=08:00:00 -X\",\n    \"module add intel/2019\",\n    \"cd /sciclone/home20/zpeng01/pppp/graphPhi/tools/vertex_id_reorder_to_degrees\",\n    \"./friendster.sh\",\n    \"cd /sciclone/home20/zpeng01/pppp/graphPhi/tools/tiling_process\",\n    \"./test.sh\",\n    \"cd /sciclone/home20/zpeng01/Download/mvapich2-2.3.1\",\n    \"make -j && make install\",\n    \"cd /sciclone/home20/zpeng01/Download/boost_1_69_0\",\n    \"./b2 install threading=multi\",\n    \"cd /sciclone/home20/zpeng01/Download\",\n    \"mkdir build_gcc740\",\n    \"cd build_gcc740\",\n    \"$PWD/../gcc-7.4.0/configure --prefix=/sciclone/home20/zpeng01/lib/gcc-7.4.0 --with-system-zlib --enable-shared --enable-threads=posix --enable-multilib\",\n    \"make && make install\",\n    \"module add boost/1.69.0-gcc-7.4.0 mvapich2/2.3.1-gcc-7.4.0\",\n    \"cd /sciclone/home20/zpeng01/pppp/Galois/build/dist_apps\",\n    \"mvp2run -a -c 2 -m blocked ./bfs_push ../inputs/reference/scalefree/rmat8-2e14.gr -runs=10\",\n    \"mvp2run -c 2 -m blocked ./bfs_push ../inputs/reference/scalefree/rmat8-2e14.gr -runs=10\",\n    \"module add mvapich2/2.2/intel-hfi\",\n    \"cd /sciclone/home20/zpeng01/pppp/pado/cmake-build-release/distributed_version\",\n    \"set np = 1\",\n    \"mvp2run -a -c ${np} -m blocked ./dpado /sciclone/scr-mlt/zpeng01/hollywood/hollywood.binary >&output_holl_${np}.txt\",\n    \"np = ${np} * 2\",\n    \"path=/sciclone/pscr/zpeng01\",\n    \"cd /sciclone/home20/zpeng01/Download\",\n    \"./get_datasets.sh ${path}\",\n    \"cd /sciclone/home20/zpeng01/pppp/pado/cmake-build-release/distributed_version/tools/graph-convert\",\n    \"./edgelist2binary ${path}/indochina/indochina.txt ${path}/indochina/indochina.binary\",\n    \"./edgelist2binary ${path}/friendster/friendster.txt ${path}/friendster/friendster.binary\"\n  ]\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "citation_metadata": {
+                "citation_sources": [
+                    {
+                        "start_index": 615,
+                        "end_index": 1242,
+                        "uri": "https://github.com/johnpzh/parallel_ANNS",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 1255,
+                        "end_index": 1810,
+                        "uri": "https://github.com/johnpzh/parallel_ANNS",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 1905,
+                        "end_index": 2082,
+                        "uri": "https://github.com/johnpzh/parallel_ANNS",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 1944,
+                        "end_index": 2160,
+                        "uri": "https://github.com/johnpzh/parallel_ANNS",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 2228,
+                        "end_index": 2431,
+                        "uri": "https://github.com/johnpzh/parallel_ANNS",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 2293,
+                        "end_index": 2496,
+                        "uri": "https://github.com/johnpzh/parallel_ANNS",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 2540,
+                        "end_index": 2782,
+                        "uri": "https://github.com/johnpzh/parallel_ANNS",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 2644,
+                        "end_index": 2847,
+                        "uri": "https://github.com/johnpzh/parallel_ANNS",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 2859,
+                        "end_index": 3370,
+                        "uri": "https://github.com/johnpzh/parallel_ANNS",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 3370,
+                        "end_index": 4072,
+                        "uri": "https://github.com/johnpzh/parallel_ANNS",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 4329,
+                        "end_index": 4608,
+                        "uri": "https://github.com/johnpzh/parallel_ANNS",
+                        "license_": ""
+                    }
+                ]
+            },
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 2157,
+        "candidates_token_count": 2049,
+        "total_token_count": 4206,
+        "cached_content_token_count": 0
+    }
+}

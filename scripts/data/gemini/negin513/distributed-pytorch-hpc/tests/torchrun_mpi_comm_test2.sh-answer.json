@@ -1,0 +1,36 @@
+{
+    "application": "MPI",
+    "details": {
+        "modules": [
+            "nvhpc",
+            "cray-mpich",
+            "conda",
+            "cuda/11.7.0"
+        ],
+        "conda_environment": "/glade/work/schreck/conda-envs/holodec",
+        "resources": {
+            "walltime": "01:00:00",
+            "nodes": 2,
+            "mpiprocs": 1,
+            "ncpus": 64,
+            "ngpus": 4,
+            "memory": "480GB",
+            "queue": "main"
+        },
+        "environment_variables": [
+            "LSCRATCH=/glade/derecho/scratch/$USER/",
+            "LOGLEVEL=INFO",
+            "NCCL_DEBUG=INFO",
+            "MPICH_GPU_MANAGED_MEMORY_SUPPORT_ENABLED=1",
+            "MPICH_OFI_NIC_POLICY=GPU",
+            "MPICH_GPU_SUPPORT_ENABLED=1",
+            "NCCL_SOCKET_IFNAME=hsn",
+            "NCCL_DISABLE_IB=1",
+            "NCCL_DEBUG=INFO",
+            "CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7"
+        ],
+        "commands": [
+            "mpiexec -n 2 --ppn 1 --cpu-bind none torchrun --nnodes=2 --nproc-per-node=4 --rdzv-backend=c10d --rdzv-endpoint=$head_node_ip comm_test.py"
+        ]
+    }
+}

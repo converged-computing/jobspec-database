@@ -1,0 +1,52 @@
+{
+    "application": "PyTorch",
+    "details": {
+        "framework": "PyTorch",
+        "libraries": [
+            "deepspeed",
+            "webdataset"
+        ],
+        "resources": {
+            "compute": {
+                "nodes": 1,
+                "tasks_per_node": 8,
+                "cpus_per_task": 30,
+                "gpus_per_node": 8
+            },
+            "storage": {
+                "data_path": "/public_data/ma/data_process/aesthetics_tar_sam/{00000..44487}.tar"
+            },
+            "networking": {
+                "master_addr": "10.25.193.83",
+                "master_port": "29500"
+            }
+        },
+        "environment_variables": {
+            "CPATH": "/usr/local/cuda/include:$CPATH",
+            "LD_LIBRARY_PATH": "/usr/local/cuda/lib64:$LD_LIBRARY_PATH",
+            "PATH": "/usr/local/cuda/bin:$PATH",
+            "NCCL_P2P_LEVEL": "NVL",
+            "NCCL_IB_DISABLE": "1",
+            "PL_DEEPSPEED_CONFIG_PATH": "$MODEL_ROOT_DIR/${MODEL_NAME}.ds_config.json",
+            "CC": "gcc",
+            "CXX": "g++"
+        },
+        "configuration": {
+            "model_name": "glyphdraw_multi_2",
+            "micro_batch_size": 8,
+            "gpus_per_node": 8,
+            "nnodes": 4,
+            "zero_stage": 1,
+            "learning_rate": "3e-5",
+            "weight_decay": 0,
+            "warmup_steps": 1000,
+            "max_epoch": 10,
+            "precision": 16
+        },
+        "job_submission": {
+            "job_name": "finetune_oppo",
+            "output_log": "%x-%j.log",
+            "exclude_nodes": "dgx050"
+        }
+    }
+}

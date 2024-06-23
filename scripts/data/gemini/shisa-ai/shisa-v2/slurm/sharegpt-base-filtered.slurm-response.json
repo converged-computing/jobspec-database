@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"Axolotl\",\n  \"details\": {\n    \"configuration_file\": \"sharegpt-base-filtered.yaml\",\n    \"environment_variables\": [\n      \"AXOLOTL_CFG\",\n      \"HF_HUB_ENABLE_HF_TRANSFER\",\n      \"ACCELERATE_LOG_LEVEL\",\n      \"TRANSFORMERS_VERBOSITY\",\n      \"NCCL_ASYNC_ERROR_HANDLING\",\n      \"WANDB_ENTITY\",\n      \"WANDB_PROJECT\",\n      \"GPUS_PER_NODE\",\n      \"MASTER_ADDR\",\n      \"MASTER_PORT\",\n      \"NNODES\",\n      \"NODE_RANK\",\n      \"WORLD_SIZE\"\n    ],\n    \"libraries\": [\n      \"mamba\",\n      \"axolotl\",\n      \"accelerate\",\n      \"wandb\"\n    ],\n    \"resources\": {\n      \"compute_nodes\": 1,\n      \"tasks_per_node\": 1,\n      \"gpu_per_node\": 8,\n      \"storage_location\": \"/fsx/user02\"\n    },\n    \"command\": \"accelerate launch --multi_gpu --dynamo_backend no --mixed_precision bf16 --num_machines $NNODES --num_processes $WORLD_SIZE --main_process_ip \\\"$MASTER_ADDR\\\" --main_process_port $MASTER_PORT --machine_rank \\$SLURM_PROCID --role $SLURMD_NODENAME: --rdzv_conf rdzv_backend=c10d --max_restarts 0 --tee 3 -m axolotl.cli.train $AXOLOTL_CFG\",\n    \"execution_environment\": \"SLURM\",\n    \"logging\": {\n      \"output_file\": \"/fsx/user02/logs/%x-%j.out\",\n      \"error_file\": \"/fsx/user02/logs/%x-%j.err\",\n      \"main_log_file\": \"/fsx/user02/logs/main_log.txt\"\n    }\n  }\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 666,
+        "candidates_token_count": 485,
+        "total_token_count": 1151,
+        "cached_content_token_count": 0
+    }
+}

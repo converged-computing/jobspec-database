@@ -1,0 +1,38 @@
+{
+    "application": "SLURM",
+    "details": {
+        "partition": "sgs-only",
+        "exclusive": true,
+        "tasks": 4,
+        "time": "24:00:00",
+        "job_name": "slab",
+        "output": "slab.%j.out",
+        "account": "st",
+        "modules": [
+            "gcc/7.4.0",
+            "cuda/10.2",
+            "krypton/cmake/3.14.3"
+        ],
+        "environment_variables": {
+            "PATH": "$PATH:/home/eggersn/opt/krypton/openmpi-4.1.1/bin"
+        },
+        "build_commands": [
+            "rm -rf build_krypton",
+            "mkdir build_krypton",
+            "cd build_krypton",
+            "cmake ..",
+            "cmake --build ."
+        ],
+        "python_script": "launch.py",
+        "python_script_arguments": [
+            "--jobs krypton/slab/benchmarks_base.json krypton/slab/validation.json --build_dir \"build_krypton\" --global_params \"-p 4 -b ../benchmarks/krypton/forward\"",
+            "--jobs krypton/slab/benchmarks_base.json krypton/slab/validation.json --build_dir \"build_krypton\" --global_params \"-p 4 -b ../benchmarks/krypton/forward --opt 1\"",
+            "--jobs krypton/slab/benchmarks_base.json krypton/slab/validation.json --build_dir \"build_krypton\" --global_params \"-p 4 -b ../benchmarks/krypton/forward -s Z_Then_YX\"",
+            "--jobs krypton/slab/benchmarks_base.json krypton/slab/validation.json --build_dir \"build_krypton\" --global_params \"-p 4 -b ../benchmarks/krypton/forward -s Z_Then_YX --opt 1\"",
+            "--jobs krypton/slab/benchmarks_base.json --build_dir \"build_krypton\" --global_params \"-t 2 -p 4 -b ../benchmarks/krypton/inverse\"",
+            "--jobs krypton/slab/benchmarks_base.json --build_dir \"build_krypton\" --global_params \"-t 2 -p 4 -b ../benchmarks/krypton/inverse --opt 1\"",
+            "--jobs krypton/slab/benchmarks_base.json --build_dir \"build_krypton\" --global_params \"-t 2 -p 4 -b ../benchmarks/krypton/inverse -s Z_Then_YX\"",
+            "--jobs krypton/slab/benchmarks_base.json --build_dir \"build_krypton\" --global_params \"-t 2 -p 4 -b ../benchmarks/krypton/inverse -s Z_Then_YX --opt 1\""
+        ]
+    }
+}

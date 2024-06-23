@@ -1,0 +1,31 @@
+{
+    "application": "Slurm",
+    "details": {
+        "partition": "gpu",
+        "job_name": "Megatron-BERT",
+        "memory": "128G",
+        "nodes": 16,
+        "gpus": 4,
+        "gpus_per_node": 4,
+        "cpus_per_gpu": 2,
+        "time": "3-00:00:00",
+        "software": {
+            "wandb": "wandb login 0fc05c8f0ff7f9219378a081a69de35fc26c1011",
+            "singularity": "singularity exec --nv --pwd /workspace/Megatron-LM --bind $PROJECT:$TARGET_DIR $CONTAINER_PATH ./start_training_large.sh"
+        },
+        "container": {
+            "path": "/ceph/hpc/home/eujoeyo/group_space/containers/megatron-deepspeed.sif",
+            "bind": "/workspace/Megatron-LM"
+        },
+        "environment_variables": {
+            "WANDB_ENTITY": "joeyohman",
+            "WANDB_PROJECT": "megatron_bert",
+            "WANDB_MODE": "offline",
+            "MASTER_ADDR": "$addr",
+            "MASTER_PORT": "56782",
+            "NPROC_PER_NODE": "$SLURM_GPUS_PER_NODE",
+            "NCCL_DEBUG": "INFO",
+            "PYTHONFAULTHANDLER": "1"
+        }
+    }
+}

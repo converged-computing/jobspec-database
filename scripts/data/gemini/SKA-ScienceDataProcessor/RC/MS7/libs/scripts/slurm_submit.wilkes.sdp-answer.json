@@ -1,0 +1,35 @@
+{
+    "application": "SLURM",
+    "details": {
+        "resource_requirements": {
+            "nodes": "2",
+            "tasks": "2",
+            "walltime": "00:02:00",
+            "qos": "GPU1",
+            "partition": "tesla",
+            "project": "CORTEX-GPU"
+        },
+        "environment": {
+            "modules": [
+                "default-wilkes",
+                "default-impi"
+            ],
+            "application_path": "/home/mf582/GASNet-1.26.0/mxm-conduit/testam",
+            "options": "5 10240",
+            "workdir": "$SLURM_SUBMIT_DIR",
+            "omp_num_threads": "1",
+            "mpi_tasks_per_node": "$SLURM_TASKS_PER_NODE",
+            "pinning": {
+                "domain": "omp:compact",
+                "order": "scatter"
+            },
+            "gasnet_env": {
+                "GASNET_IBV_SPAWNER": "mpi",
+                "GASNET_SPAWNER": "mpi",
+                "GASNET_CONDUIT": "ibv"
+            },
+            "mpi_library": "/usr/local/Cluster-Apps/slurm/lib/libpmi.so"
+        },
+        "launch_method": "srun -n $np --error=$HOME/.dflogs/$SLURM_JOB_ID/logs/node-%n-task-%t --output=$HOME/.dflogs/$SLURM_JOB_ID/logs/node-%n-task-%t $SDP_LAUNCH_COMMAND $SDP_LAUNCH_ARGUMENTS"
+    }
+}

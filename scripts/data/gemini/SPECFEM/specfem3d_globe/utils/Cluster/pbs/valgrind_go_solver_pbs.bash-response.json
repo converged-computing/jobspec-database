@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"Valgrind\",\n  \"details\": {\n    \"software\": [\n      \"Valgrind\",\n      \"mpiexec\",\n      \"xspecfem3D\"\n    ],\n    \"resources\": {\n      \"nodes\": 18,\n      \"ppn\": [8, 6],\n      \"walltime\": \"15:00:00\",\n      \"queue\": \"tromp\",\n      \"preloaded_library\": \"/my_valgrind_path/valgrind/lib/valgrind/libmpiwrap-x86-linux.so\",\n      \"environment_variables\": {\n        \"LD_PRELOAD\": \"/my_valgrind_path/valgrind/lib/valgrind/libmpiwrap-x86-linux.so\",\n        \"PBS_O_WORKDIR\": \"current working directory\",\n        \"BASEMPIDIR\": \"path specified in DATA/Par_file\",\n        \"NPROC_XI\": \"value specified in DATA/Par_file\",\n        \"NPROC_ETA\": \"value specified in DATA/Par_file\",\n        \"NCHUNKS\": \"value specified in DATA/Par_file\",\n        \"numnodes\": \"calculated based on NCHUNKS, NPROC_XI, NPROC_ETA\",\n        \"PBS_NODEFILE\": \"file containing node information\",\n        \"PBS_JOBID\": \"job identifier\"\n      }\n    },\n    \"data_files\": [\n      \"DATA/Par_file\",\n      \"DATA/STATIONS\",\n      \"DATA/CMTSOLUTION\",\n      \"*.f90\",\n      \"*.c\",\n      \"*.in\",\n      \"*.h\",\n      \"addr*.txt\",\n      \"list*.txt\",\n      \"OUTPUT_FILES/compute_nodes\",\n      \"OUTPUT_FILES/jobid\",\n      \"cachegrind.out.*\"\n    ],\n    \"output_files\": [\n      \"OUTPUT_FILES/job.o\",\n      \"OUTPUT_FILES/job.memory-leaks.o\",\n      \"OUTPUT_FILES/job.cache-misses.o\"\n    ],\n    \"commands\": [\n      \"cd $PBS_O_WORKDIR\",\n      \"mkdir -p OUTPUT_FILES\",\n      \"cp DATA/Par_file OUTPUT_FILES/\",\n      \"cp DATA/STATIONS OUTPUT_FILES/\",\n      \"cp DATA/CMTSOLUTION OUTPUT_FILES/\",\n      \"rm -rf OUTPUT_FILES/src\",\n      \"mkdir OUTPUT_FILES/src\",\n      \"cp -p *.f90 OUTPUT_FILES/src/\",\n      \"cp -p *.c OUTPUT_FILES/src/\",\n      \"cp -p *.in OUTPUT_FILES/src/\",\n      \"cp -p *.h OUTPUT_FILES/src/\",\n      \"cat $PBS_NODEFILE > OUTPUT_FILES/compute_nodes\",\n      \"echo \\\"$PBS_JOBID\\\" > OUTPUT_FILES/jobid\",\n      \"cp $BASEMPIDIR/addr*.txt OUTPUT_FILES/\",\n      \"cp $BASEMPIDIR/list*.txt OUTPUT_FILES/\",\n      \"sleep 2\",\n      \"LD_PRELOAD=$PRELOAD_LIB mpiexec -np $numnodes valgrind --leak-check=full $PWD/bin/xspecfem3D\",\n      \"cp OUTPUT_FILES/job.o OUTPUT_FILES/job.memory-leaks.o\",\n      \"sleep 2\",\n      \"LD_PRELOAD=$PRELOAD_LIB mpiexec -np $numnodes valgrind --tool=cachegrind $PWD/bin/xspecfem3D\",\n      \"cp OUTPUT_FILES/job.o OUTPUT_FILES/job.cache-misses.o\",\n      \"cp cachegrind.out.* OUTPUT_FILES/\"\n    ]\n  }\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 2,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 775,
+        "candidates_token_count": 869,
+        "total_token_count": 1644,
+        "cached_content_token_count": 0
+    }
+}

@@ -1,0 +1,32 @@
+{
+    "application": "SLURM",
+    "details": {
+        "resource_requirements": {
+            "nodes": 1,
+            "wall_time": "04:00:00",
+            "memory": "all available",
+            "tasks_per_node": 8,
+            "exclusive_node_access": true,
+            "dependency": "singleton",
+            "mail_type": "FAIL"
+        },
+        "software": {
+            "container_image": "ghcr.io/nvidia/t5x:vit-2023-07-21",
+            "script": "rosetta/projects/vit/scripts/multiprocess_pretrain.sh",
+            "framework": "PyTorch"
+        },
+        "other_requirements": {
+            "base_workspace_dir": "BASE_WORKSPACE_DIR",
+            "base_wds_data_dir": "BASE_WDS_DATA_DIR",
+            "base_train_idx_dir": "BASE_TRAIN_IDX_DIR",
+            "base_eval_idx_dir": "BASE_EVAL_IDX_DIR",
+            "vit_size": "base",
+            "precision": "bfloat16",
+            "gpus_per_node": 8,
+            "batch_size_per_gpu": 512,
+            "model_dir_local": "pretrain_dir",
+            "gradient_accumulation": 1
+        },
+        "output_dir": "BASE_WORKSPACE_DIR/outputs/pretrain-${VIT_SIZE}-${PREC}-N${SLURM_JOB_NUM_NODES}-n${GPUS_PER_NODE}-BS${BSIZE_PER_GPU}"
+    }
+}

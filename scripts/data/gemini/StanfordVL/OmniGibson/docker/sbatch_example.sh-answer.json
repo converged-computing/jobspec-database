@@ -1,0 +1,58 @@
+{
+    "application": "SLURM",
+    "details": {
+        "resources": {
+            "account": "cvgl",
+            "partition": "svl",
+            "qos": "normal",
+            "nodes": 1,
+            "cpus-per-task": 8,
+            "memory": "30G",
+            "gres": "gpu:2080ti:1"
+        },
+        "software": {
+            "enroot": "For container creation and execution",
+            "micromamba": "For dependency management",
+            "pytest": "For running unit tests"
+        },
+        "image": {
+            "path": "/cvgl2/u/cgokmen/omnigibson.sqsh",
+            "name": "omnigibson_${GPU_ID}"
+        },
+        "cache": {
+            "path": "/scr-ssd/${SLURM_JOB_USER}/isaac_cache_${GPU_ID}",
+            "contents": {
+                "isaac-sim/kit/cache/Kit": "Isaac Sim kit cache",
+                "isaac-sim/cache/ov": "Omniverse cache",
+                "isaac-sim/cache/pip": "Python package cache",
+                "isaac-sim/cache/glcache": "OpenGL cache",
+                "isaac-sim/cache/computecache": "Compute cache",
+                "isaac-sim/logs": "Omniverse logs",
+                "isaac-sim/config": "Omniverse config",
+                "isaac-sim/data": "Omniverse data",
+                "isaac-sim/documents": "Documents"
+            }
+        },
+        "environment": {
+            "variables": [
+                "NVIDIA_DRIVER_CAPABILITIES=all",
+                "NVIDIA_VISIBLE_DEVICES=0",
+                "DISPLAY=",
+                "OMNIGIBSON_HEADLESS=1"
+            ],
+            "setup": "source /isaac-sim/setup_conda_env.sh"
+        },
+        "mounts": [
+            "/scr-ssd/og-data-0-2-1=/data",
+            "${ISAAC_CACHE_PATH}/isaac-sim/kit/cache/Kit=/isaac-sim/kit/cache/Kit",
+            "${ISAAC_CACHE_PATH}/isaac-sim/cache/ov=/root/.cache/ov",
+            "${ISAAC_CACHE_PATH}/isaac-sim/cache/pip=/root/.cache/pip",
+            "${ISAAC_CACHE_PATH}/isaac-sim/cache/glcache=/root/.cache/nvidia/GLCache",
+            "${ISAAC_CACHE_PATH}/isaac-sim/cache/computecache=/root/.nv/ComputeCache",
+            "${ISAAC_CACHE_PATH}/isaac-sim/logs=/root/.nvidia-omniverse/logs",
+            "${ISAAC_CACHE_PATH}/isaac-sim/config=/root/.nvidia-omniverse/config",
+            "${ISAAC_CACHE_PATH}/isaac-sim/data=/root/.local/share/ov/data",
+            "${ISAAC_CACHE_PATH}/isaac-sim/documents=/root/Documents"
+        ]
+    }
+}

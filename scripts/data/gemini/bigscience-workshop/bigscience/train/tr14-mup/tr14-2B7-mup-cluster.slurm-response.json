@@ -1,0 +1,98 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"DeepSpeed\",\n  \"details\": {\n    \"framework\": \"PyTorch\",\n    \"library\": \"DeepSpeed\",\n    \"model\": \"GPT-2\",\n    \"resource_requirements\": {\n      \"nodes\": 8,\n      \"cpus_per_task\": 12,\n      \"gpus\": 8,\n      \"gpu_type\": \"A100\",\n      \"runtime\": \"100 hours\"\n    },\n    \"environment_variables\": {\n      \"conda_environment\": \"tvn_dev\",\n      \"CUDA_version\": \"11.4\",\n      \"NCCL_PROTO\": \"simple\",\n      \"FI_EFA_FORK_SAFE\": 1,\n      \"FI_LOG_LEVEL\": 1,\n      \"FI_EFA_USE_DEVICE_RDMA\": 1,\n      \"PYTHONFAULTHANDLER\": 1,\n      \"CUDA_LAUNCH_BLOCKING\": 0,\n      \"OMPI_MCA_mtl_base_verbose\": 1,\n      \"FI_EFA_ENABLE_SHM_TRANSFER\": 0,\n      \"FI_PROVIDER\": \"efa\",\n      \"FI_EFA_TX_MIN_CREDITS\": 64,\n      \"NCCL_TREE_THRESHOLD\": 0,\n      \"NCCL_ASYNC_ERROR_HANDLING\": 1,\n      \"MASTER_ADDR\": \"scontrol show hostnames \\\"$SLURM_JOB_NODELIST\\\" | head -n 1\",\n      \"MASTER_PORT\": 12802,\n      \"MEGATRON_DEEPSPEED_REPO\": \"/fsx/teven/Megatron-DeepSpeed\",\n      \"TOKENIZER_NAME_OR_PATH\": \"t5-small\",\n      \"variant\": \"main\",\n      \"DATA_PATH\": \"/fsx/data/gpt2tok_c4_text_document\",\n      \"DATA_OUTPUT_PATH\": \"/fsx/mup_exps/checkpoints/tr14-2B7-lr$1-init0.1-inpm10-outm10-atnm10-mup\",\n      \"CHECKPOINT_PATH\": \"$DATA_OUTPUT_PATH/checkpoints/$variant\",\n      \"REPO_PATH\": \"$DATA_OUTPUT_PATH/tr14-2B7-test-lr$1-init0.1-inpm10-outm10-atnm10-mup\",\n      \"TENSORBOARD_PATH\": \"$REPO_PATH/tensorboard/$variant\",\n      \"LOGS_PATH\": \"$REPO_PATH/logs/$variant\",\n      \"GPUS_PER_NODE\": 8,\n      \"NNODES\": \"$SLURM_NNODES\",\n      \"PP_SIZE\": 1,\n      \"TP_SIZE\": 2,\n      \"MICRO_BATCH_SIZE\": 16,\n      \"GLOBAL_BATCH_SIZE\": 512,\n      \"NLAYERS\": 32,\n      \"NHIDDEN\": 2560,\n      \"NHEADS\": 32,\n      \"SEQ_LEN\": 2048,\n      \"SAVE_INTERVAL\": 250,\n      \"TRAIN_SAMPLES\": 1_953_125,\n      \"LR_DECAY_SAMPLES\": 1_953_125,\n      \"LR_WARMUP_SAMPLES\": 183_105,\n      \"MUP_ARGS\": \"    --lr $1     --min-lr `bc <<< \\\"scale=3; $1/10\\\"`     --init-method-std 0.1     --mup     --mup-input-mult 10     --mup-output-mult 10     --mup-attn-mult 10     \",\n      \"OPTIMIZER_ARGS\": \"    --optimizer adam     --adam-beta1 0.9     --adam-beta2 0.95     --adam-eps 1e-8     --lr-decay-style cosine     --lr-decay-samples $LR_DECAY_SAMPLES     --lr-warmup-samples $LR_WARMUP_SAMPLES     --clip-grad 1.0     --weight-decay 1e-1     \",\n      \"EXIT_OPTS\": \"    --exit-duration-in-mins 1190     \",\n      \"GPT_ARGS\": \"    --pp-partition-method 'type:transformer'     --num-layers $NLAYERS     --hidden-size $NHIDDEN     --num-attention-heads $NHEADS     --seq-length $SEQ_LEN     --max-position-embeddings $SEQ_LEN     --micro-batch-size $MICRO_BATCH_SIZE     --global-batch-size $GLOBAL_BATCH_SIZE     --train-samples $TRAIN_SAMPLES     --tokenizer-type PretrainedFromHF     --tokenizer-name-or-path $TOKENIZER_NAME_OR_PATH     --embed-layernorm     --fp16     --seed 42     --position-embedding-type alibi     --checkpoint-activations     --abort-on-unmet-fused-kernel-constraints     --pad-vocab-size-to 51200     $OPTIMIZER_ARGS     $EXIT_OPTS     \",\n      \"OUTPUT_ARGS\": \"    --log-interval 1     --save-interval $SAVE_INTERVAL     --eval-interval 1000     --eval-iters 1     --tensorboard-dir $TENSORBOARD_PATH     --tensorboard-queue-size 5     --log-timers-to-tensorboard     --log-batch-size-to-tensorboard     --log-validation-ppl-to-tensorboard     \",\n      \"ZERO_STAGE\": 1,\n      \"config_json\": \"./ds_config.$SLURM_JOBID.json\",\n      \"DEEPSPEED_ARGS\": \"    --deepspeed     --deepspeed_config ${config_json}     --zero-stage ${ZERO_STAGE}     --deepspeed-activation-checkpointing     \",\n      \"LAUNCHER\": \"python -u -m torch.distributed.run     --nproc_per_node $GPUS_PER_NODE     --nnodes $NNODES     --rdzv_endpoint $MASTER_ADDR:$MASTER_PORT     --rdzv_backend c10d     --max_restarts 0     --tee 3     \",\n      \"CMD\": \"     `pwd`/pretrain_gpt.py     --tensor-model-parallel-size $TP_SIZE     --pipeline-model-parallel-size $PP_SIZE     $GPT_ARGS     $OUTPUT_ARGS     $MUP_ARGS     --save $CHECKPOINT_PATH     --load $CHECKPOINT_PATH     --data-path $DATA_PATH     --data-impl mmap     --distributed-backend nccl      $DEEPSPEED_ARGS     \"\n    }\n  }\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "citation_metadata": {
+                "citation_sources": [
+                    {
+                        "start_index": 2147,
+                        "end_index": 2338,
+                        "uri": "https://github.com/rct-ai/rct-bigmodel-train",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 2425,
+                        "end_index": 2618,
+                        "uri": "https://github.com/TurkuNLP/finngen-tools",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 2516,
+                        "end_index": 2777,
+                        "uri": "https://github.com/EastInsure/train-online",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 2787,
+                        "end_index": 2959,
+                        "uri": "https://github.com/EastInsure/train-online",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 2974,
+                        "end_index": 3260,
+                        "uri": "https://github.com/rct-ai/rct-bigmodel-train",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 3221,
+                        "end_index": 3411,
+                        "uri": "https://github.com/rct-ai/rct-bigmodel-train",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 3561,
+                        "end_index": 3746,
+                        "uri": "https://www.editcode.net/forum.php?mod=viewthread&tid=868044",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 3614,
+                        "end_index": 3782,
+                        "uri": "https://discuss.pytorch.org/t/trouble-launching-on-multiple-nodes/172582",
+                        "license_": ""
+                    }
+                ]
+            },
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 2456,
+        "candidates_token_count": 1582,
+        "total_token_count": 4038,
+        "cached_content_token_count": 0
+    }
+}

@@ -1,0 +1,46 @@
+{
+    "application": "Slurm",
+    "details": {
+        "job_name": "vmcts",
+        "output_file": "/n/holyscratch01/kempner_fellows/Users/dbrandfonbrener/vmcts/logs/%A_%a.out",
+        "nodes": 1,
+        "tasks_per_node": 1,
+        "gpus_per_node": 1,
+        "cpus_per_task": 16,
+        "time": "1:00:00",
+        "memory": "250GB",
+        "account": "kempner_fellows",
+        "partition": "kempner_requeue",
+        "constraint": "a100",
+        "array": "0-499%12",
+        "environment": {
+            "conda_environment": "verify",
+            "PYTHONPATH": ".:${PYTHONPATH}",
+            "discovery_factor": "3.0",
+            "widen_policy_value": "0.1",
+            "model_arg_temps": "[0.6, 0.8, 1.0, 1.2, 1.4]",
+            "model_arg_topp": "0.95",
+            "model_arg_topk": "0",
+            "token_limit": "5000",
+            "WANDB_USERNAME": "seas",
+            "WANDB_PROJECT": "vmcts",
+            "WANDB_GROUP": "temp-sweep-2"
+        },
+        "python_script": "run_intermediate_expansion.py",
+        "python_script_arguments": {
+            "seed": "$SEED",
+            "use_wandb": "True",
+            "wandb_entity": "$WANDB_USERNAME",
+            "wandb_project": "$WANDB_PROJECT",
+            "wandb_group": "$WANDB_GROUP",
+            "wandb_name": "$WANDB_NAME",
+            "widen_policy_value": "$widen_policy_value",
+            "discovery_factor": "$discovery_factor",
+            "remove_hints": "True",
+            "model_arg_temp": "$model_arg_temp",
+            "model_arg_topp": "$model_arg_topp",
+            "model_arg_topk": "$model_arg_topk",
+            "token_limit": "$token_limit"
+        }
+    }
+}

@@ -1,0 +1,54 @@
+{
+    "application": "SLURM",
+    "details": {
+        "software": [
+            "Python",
+            "GCCcore/11.2.0",
+            "Stages/2022"
+        ],
+        "resources": {
+            "nodes": 1,
+            "tasks": 4,
+            "tasks_per_node": 4,
+            "gpus": 4,
+            "cpus_per_task": 10,
+            "partition": "booster",
+            "time": "24:00:00",
+            "job_name": "pretrain_dino_rn50",
+            "output": "srun_outputs/B13_train_dino_rn50_%j.out",
+            "error": "srun_outputs/B13_train_dino_rn50_%j.err",
+            "virtual_environment": "/p/project/hai_dm4eo/wang_yi/env2/bin/activate"
+        },
+        "data": {
+            "input": "/p/scratch/hai_ssl4eo/data/ssl4eo_s12/ssl4eo_250k_s2c_uint8.lmdb",
+            "checkpoints_dir": "/p/project/hai_ssl4eo/wang_yi/ssl4eo-s12-dataset/src/benchmark/fullset_temp/checkpoints/dino/B13_rn50_224"
+        },
+        "script": "pretrain_dino_s2c.py",
+        "arguments": [
+            "--is_slurm_job",
+            "--data /p/scratch/hai_ssl4eo/data/ssl4eo_s12/ssl4eo_250k_s2c_uint8.lmdb",
+            "--checkpoints_dir /p/project/hai_ssl4eo/wang_yi/ssl4eo-s12-dataset/src/benchmark/fullset_temp/checkpoints/dino/B13_rn50_224",
+            "--bands B13",
+            "--lmdb",
+            "--arch resnet50",
+            "--num_workers 10",
+            "--batch_size_per_gpu 64",
+            "--epochs 100",
+            "--warmup_epochs 10",
+            "--lr 0.03",
+            "--optimizer sgd",
+            "--weight_decay 1e-4",
+            "--weight_decay_end 1e-4",
+            "--global_crops_scale 0.14 1",
+            "--local_crops_scale 0.05 0.14",
+            "--dist_url $dist_url",
+            "--seed 42",
+            "--mode s2c",
+            "--dtype uint8",
+            "--season augment",
+            "--in_size 224",
+            "--resume /p/project/hai_dm4eo/wang_yi/ssl4eo-s12-dataset/src/benchmark/fullset_temp/checkpoints/moco/B13_rn18_int16/checkpoint_0059.pth.tar",
+            "--use_fp16 False"
+        ]
+    }
+}

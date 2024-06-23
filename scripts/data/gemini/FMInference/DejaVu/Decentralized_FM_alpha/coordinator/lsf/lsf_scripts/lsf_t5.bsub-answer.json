@@ -1,0 +1,35 @@
+{
+    "application": "python",
+    "details": {
+        "scheduler": "LSF",
+        "cores": 2,
+        "runtime": "4 hours 59 minutes",
+        "memory": "8000 MB per core",
+        "gpu": "1 GPU with at least 10000 MB of memory",
+        "modules": [
+            "gcc/6.3.0",
+            "cuda/11.0.3"
+        ],
+        "conda_environment": "pipeline",
+        "working_directory": "/cluster/home/juewang/workspace/GPT-home-latest",
+        "script": "dist_inference_runner_w_euler_coordinator.py",
+        "arguments": [
+            "--pp-mode pipe_async_sample_enc_dec_mask",
+            "--pipeline-group-size 6",
+            "--cuda-id 0",
+            "--model-type t5",
+            "--model-name /nfs/iiscratch-zhang.inf.ethz.ch/export/zhang/export/fm/pretrained_models/t5-11b-new",
+            "--num-iters 99999999999",
+            "--budget 2600",
+            "--num-layers 4",
+            "--coordinator-server-ip 129.132.93.89"
+        ],
+        "environment_variables": {
+            "NCCL_SOCKET_IFNAME": "access",
+            "GLOO_SOCKET_IFNAME": "access",
+            "NCCL_DEBUG": "INFO",
+            "NCCL_IB_DISABLE": "1",
+            "NCCL_P2P_DISABLE": "1"
+        }
+    }
+}

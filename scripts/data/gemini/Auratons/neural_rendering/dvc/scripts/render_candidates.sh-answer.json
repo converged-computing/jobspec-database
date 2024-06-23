@@ -1,0 +1,30 @@
+{
+    "application": "Singularity",
+    "details": {
+        "language": "Python",
+        "libraries": [
+            "jq",
+            "yq",
+            "CUDA",
+            "cuDNN",
+            "Mesa"
+        ],
+        "container": "~/containers/splatter-app.sif",
+        "resources": {
+            "memory": "64GB",
+            "time": "12 hours",
+            "gpu": "1",
+            "cpus_per_gpu": "2",
+            "partition": "gpu",
+            "exclude": "amd-[01-02],node-[12,14,15,16,17]"
+        },
+        "environment": {
+            "WORKSPACE": "/home/kremeto1/neural_rendering",
+            "PATH": "~/.conda/envs/pipeline/bin:~/.homebrew/bin:${PATH}"
+        },
+        "commands": [
+            "python $WORKSPACE/inloc/render_candidates.py",
+            "singularity exec --nv --bind /nfs:/nfs ~/containers/splatter-app.sif ${EXECUTABLE}"
+        ]
+    }
+}

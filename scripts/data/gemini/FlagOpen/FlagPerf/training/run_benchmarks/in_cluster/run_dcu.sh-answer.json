@@ -1,0 +1,38 @@
+{
+    "application": "SLURM",
+    "details": {
+        "resource_requirements": {
+            "partition": "xahdnormal",
+            "nodes": 16,
+            "cpus_per_task": 8,
+            "tasks_per_node": 4,
+            "gres": "dcu:4",
+            "job_name": "aquila",
+            "output_file": "./logs/%j.out",
+            "error_file": "./logs/%j.out",
+            "exclusive": true
+        },
+        "software_requirements": {
+            "python_version": "3",
+            "environment": "megatron.sh",
+            "script": "run.py",
+            "config_file": "config.py"
+        },
+        "other_details": {
+            "hostfile_creation": {
+                "hostfile_location": "./hostfile/$SLURM_JOB_ID",
+                "hostfile_content": "Each line contains the hostname with 'slots=4' appended"
+            },
+            "sleep_duration": "8 minutes",
+            "hostfile_transfer": {
+                "source": "/work/home/zhaoying1/work/pr_code/FlagPerf-AI_platform/training/dcu/hosts",
+                "destination": "/work/home/zhaoying1/work/pr_code/FlagPerf-AI_platform/training/dcu/hosts"
+            },
+            "config_file_modification": {
+                "remove_line": "hosts = ",
+                "append_line": "hosts = ['localhost']",
+                "replace_localhost": "localhost with $dist_url"
+            }
+        }
+    }
+}

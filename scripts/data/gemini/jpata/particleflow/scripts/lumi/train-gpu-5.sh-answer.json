@@ -1,0 +1,31 @@
+{
+    "application": "Singularity",
+    "details": {
+        "image": "/scratch/project_465000301/tf-rocm.simg",
+        "command": "python3 mlpf/pipeline.py train",
+        "arguments": "--config parameters/clic-test.yaml --plot-freq 1 --num-cpus 8 --batch-multiplier 5 --ntrain 50000 --ntest 50000 --benchmark_dir exp_dir",
+        "environment_variables": {
+            "PYTHONPATH": "hep_tfds",
+            "TFDS_DATA_DIR": "/scratch/project_465000301/tensorflow_datasets",
+            "MIOPEN_DISABLE_CACHE": "true",
+            "MIOPEN_USER_DB_PATH": "/tmp/${USER}-${SLURM_JOB_ID}-miopen-cache",
+            "MIOPEN_CUSTOM_CACHE_DIR": "${MIOPEN_USER_DB_PATH}",
+            "TF_CPP_MAX_VLOG_LEVEL": "-1",
+            "LD_LIBRARY_PATH": "/opt/rocm/lib/"
+        },
+        "resource_requirements": {
+            "account": "project_465000301",
+            "time": "1-00:00:00",
+            "nodes": 1,
+            "tasks_per_node": 1,
+            "cpus_per_task": 8,
+            "memory": "130G",
+            "gpus_per_task": 5,
+            "partition": "small-g",
+            "modules": [
+                "LUMI/22.08",
+                "partition/G"
+            ]
+        }
+    }
+}

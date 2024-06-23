@@ -1,0 +1,31 @@
+{
+    "application": "Beegenn",
+    "details": {
+        "resource_requirements": {
+            "nodes": 1,
+            "cpus": 2,
+            "mpi_processes": 10,
+            "memory": "10GB",
+            "walltime": "07:59:00",
+            "queue": "short_gpuQ"
+        },
+        "software_requirements": {
+            "cuda": "11.1",
+            "singularity": "3.4.0",
+            "squashfs-tools": "required (installed from source)",
+            "python3": "required (installed within Beegenn Docker image)"
+        },
+        "other_requirements": {
+            "genn-network-model": "required directory structure",
+            "outputs": "required directory structure"
+        },
+        "execution_details": {
+            "command": "python3 -m beegenn.simulation /t_30 t30noinputpoissoncluster",
+            "image": "docker://giacthephantom/beegenn:sleep",
+            "bind_mounts": [
+                "$PBS_O_WORKDIR/genn-network-model/t_30:/t_30",
+                "$PBS_O_WORKDIR/outputs:/home/genn"
+            ]
+        }
+    }
+}

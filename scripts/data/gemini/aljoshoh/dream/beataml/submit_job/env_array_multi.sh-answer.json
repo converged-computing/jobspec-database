@@ -1,0 +1,31 @@
+{
+    "application": "Slurm",
+    "details": {
+        "scheduler": "Slurm",
+        "resources": {
+            "memory": "5G per CPU",
+            "partition": "icb_cpu",
+            "time": "48 hours",
+            "cpus": "1 per task",
+            "nodes": "1"
+        },
+        "docker_image": "r-studio-charliecloud-master-b76b94e8c5040cd58fb0ffd1a463fd7409bb886e/exports/$DOCKER.tar.gz",
+        "script_execution": {
+            "script_path": "$BASEDIR/$FILE",
+            "arguments": {
+                "i": "1 to $tasksperarray",
+                "TASKID": "$SLURM_ARRAY_TASK_ID"
+            },
+            "environment": {
+                "BASEDIR": "$1",
+                "TOTALTASKS": "$2",
+                "FILE": "$3",
+                "DOCKER": "$5",
+                "tasksperarray": "$6",
+                "TASKID": "$SLURM_ARRAY_TASK_ID",
+                "SLEEPMULTIPLIER": "10"
+            },
+            "execution_method": "ch-run"
+        }
+    }
+}

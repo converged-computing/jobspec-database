@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"PBS\",\n  \"details\": {\n    \"software\": [\n      \"Grendel CUDA\",\n      \"Python (Manually installed)\",\n      \"Python2.7 (Shared)\",\n      \"cmake\",\n      \"nvidia-smi\"\n    ],\n    \"resources\": [\n      \"nodes=1:ppn=3\",\n      \"walltime=48:00:00\",\n      \"queue=qfermi\",\n      \"CUDA 5.5.22\",\n      \"GCC 4.6.4\"\n    ],\n    \"commands\": [\n      \"source /com/gcc/4.6.4/load.sh\",\n      \"export PATH=$HOME/bin:$PATH\",\n      \"export PATH=$CUDAPATH/bin:$PATH\",\n      \"export LD_LIBRARY_PATH=$CUDAPATH/lib64:$CUDAPATH/lib:$LD_LIBRARY_PATH\",\n      \"export PYTHONPATH=$HOME/.local/lib/python:$PYTHONPATH\",\n      \"export PYTHONPATH=$HOME/.local/lib64/python:$PYTHONPATH\",\n      \"export PATH=/home/adc/.local/bin:$PATH\",\n      \"export PYTHONPATH=$PYTHON/lib:$PYTHONPATH\",\n      \"export PATH=$PYTHON/bin:$PATH\",\n      \"echo `whoami`@`hostname`\",\n      \"echo \\\"Start at `date`\\\"\",\n      \"cp -r $ORIGDIR/* $WORKDIR\",\n      \"cd $WORKDIR\",\n      \"nvidia-smi\",\n      \"rm CMakeCache.txt\",\n      \"cmake . && make\",\n      \"cd python\",\n      \"python continue_sim.py halfshear-darcy-sigma0=20000.0-k_c=3.5e-13-mu=1.797e-07-velfac=1.0-shear 1 0 &\",\n      \"python continue_sim.py halfshear-darcy-sigma0=20000.0-k_c=3.5e-13-mu=1.797e-08-velfac=1.0-shear 1 1 &\",\n      \"python continue_sim.py halfshear-darcy-sigma0=20000.0-k_c=3.5e-13-mu=1.797e-09-velfac=1.0-shear 1 2 &\",\n      \"wait\",\n      \"cp $WORKDIR/output/* $ORIGDIR/output/\",\n      \"echo \\\"End at `date`\\\"\"\n    ]\n  }\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 2,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 591,
+        "candidates_token_count": 607,
+        "total_token_count": 1198,
+        "cached_content_token_count": 0
+    }
+}

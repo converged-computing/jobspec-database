@@ -1,0 +1,27 @@
+{
+    "application": "SLURM",
+    "details": {
+        "job_name": "t-mf-g",
+        "output": "log_train_mf_gan64d_%a.log",
+        "nodes": 1,
+        "cpus_per_task": 4,
+        "memory": "32GB",
+        "time": "2-00:00:00",
+        "gres": "gpu:1080ti:1",
+        "constraint": "gpu_12gb",
+        "modules": [
+            "cuda-10.2"
+        ],
+        "conda_environment": "ml",
+        "environment_variables": {
+            "PATH": "/home/brehmer/miniconda3/envs/ml/bin/:$PATH",
+            "OMP_NUM_THREADS": 1
+        },
+        "working_directory": "/data/brehmer/manifold-flow/experiments",
+        "commands": [
+            "nvcc --version",
+            "nvidia-smi",
+            "python -u train.py -c configs/train_mf_gan64d_april.config -i ${SLURM_ARRAY_TASK_ID}"
+        ]
+    }
+}

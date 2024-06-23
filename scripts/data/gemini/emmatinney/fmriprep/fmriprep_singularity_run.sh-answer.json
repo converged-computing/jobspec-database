@@ -1,0 +1,58 @@
+{
+    "application": "fmriprep",
+    "details": {
+        "software": [
+            "singularity",
+            "freesurfer"
+        ],
+        "resources": {
+            "cpu": {
+                "cores": 16,
+                "memory": "4G per core"
+            },
+            "time": "24 hours",
+            "storage": {
+                "scratch": {
+                    "templateflow_home": "/scratch/$USER/fmriprep_work/.cache/templateflow",
+                    "fmriprep_cache": "/scratch/$USER/fmriprep_work/.cache/fmriprep"
+                },
+                "bind_mounts": {
+                    "/shared": "/shared",
+                    "$BIDS_DIR": "/data",
+                    "${TEMPLATEFLOW_HOST_HOME}": "/templateflow",
+                    "/scratch/$USER/my_fmriprep_post": "/work",
+                    "${LOCAL_FREESURFER_DIR}": "/fsdir"
+                }
+            }
+        },
+        "environment_variables": [
+            "FS_LICENSE",
+            "TEMPLATEFLOW_HOME"
+        ],
+        "command_line_arguments": [
+            "/data",
+            "/data/${DERIVS_DIR}",
+            "participant",
+            "--participant-label",
+            "$subject_name",
+            "-w",
+            "/work/",
+            "-vv",
+            "--omp-nthreads",
+            "8",
+            "--nthreads",
+            "12",
+            "--mem_mb",
+            "30000",
+            "--output-spaces",
+            "MNI152NLin2009cAsym:res-2",
+            "anat",
+            "fsnative",
+            "fsaverage5",
+            "--use-aroma",
+            "--fs-subjects-dir",
+            "/fsdir",
+            "--skip_bids_validation"
+        ]
+    }
+}

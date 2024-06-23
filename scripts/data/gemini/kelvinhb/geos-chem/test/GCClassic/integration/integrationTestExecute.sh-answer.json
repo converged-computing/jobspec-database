@@ -1,0 +1,49 @@
+{
+    "application": "GEOS-Chem",
+    "details": {
+        "software": [
+            "GEOS-Chem Classic",
+            "HEMCO",
+            "SLURM",
+            "LSF",
+            "Docker",
+            "git"
+        ],
+        "resources": [
+            "CPU",
+            "Memory",
+            "Disk Space",
+            "Network"
+        ],
+        "dependencies": [
+            "Bash",
+            "sed",
+            "commonFunctionsForTests.sh",
+            "gcclassic.env",
+            "cleanRunDir.sh"
+        ],
+        "environment": [
+            "OMP_NUM_THREADS",
+            "OMP_STACKSIZE",
+            "SLURM_JOBID",
+            "LSB_JOBID",
+            "GIT_DISCOVERY_ACROSS_FILESYSTEM"
+        ],
+        "configuration": {
+            "scheduler": "SLURM or LSF",
+            "cores": 24,
+            "nodes": 1,
+            "walltime": "0-2:00",
+            "memory": "90000",
+            "partition": "REQUESTED_PARTITION",
+            "docker image": "registry.gsc.wustl.edu/sleong/esm:intel-2021.1.2",
+            "output": "lsf-%J.txt"
+        },
+        "execution": {
+            "command": "srun -c ${OMP_NUM_THREADS} ./${exeFile} or ./${exeFile}",
+            "input": "HEMCO_Config.rc",
+            "output": "results.execute.log",
+            "logs": "execute.${runDir}.log"
+        }
+    }
+}

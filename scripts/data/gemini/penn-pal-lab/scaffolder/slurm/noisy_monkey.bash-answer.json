@@ -1,0 +1,36 @@
+{
+    "application": "SLURM",
+    "details": {
+        "resource_requirements": {
+            "cpus_per_gpu": 4,
+            "gres": "gpu:1",
+            "time": "12:00:00",
+            "partition": "dineshj-compute",
+            "qos": "dj-med",
+            "array": "0-5",
+            "mem": "32G",
+            "exclude_nodes": "kd-2080ti-1.grasp.maas,kd-2080ti-2.grasp.maas,kd-2080ti-3.grasp.maas,kd-2080ti-4.grasp.maas,dj-2080ti-0.grasp.maas"
+        },
+        "environment_variables": {
+            "WANDB_RUN_GROUP": "asym-asymhandpen-explore-large",
+            "WANDB__SERVICE_WAIT": 600,
+            "MUJOCO_GL": "egl",
+            "CUDA_VISIBLE_DEVICES": 0,
+            "MUJOCO_EGL_DEVICE_ID": 0,
+            "SEED": "$SLURM_ARRAY_TASK_ID"
+        },
+        "conda_environment": "dreamerv3",
+        "python_script": "dreamerv3/train.py",
+        "script_arguments": {
+            "logdir": "~/logdir/${EXPERIMENT}_s$SEED",
+            "configs": "gymnasium_asymhandpen,${MODEL_SIZE}",
+            "seed": "$SEED"
+        },
+        "timeout": {
+            "dj-med": "11h",
+            "dj-high": "23h",
+            "default": "23h"
+        },
+        "requeue_on_timeout": true
+    }
+}

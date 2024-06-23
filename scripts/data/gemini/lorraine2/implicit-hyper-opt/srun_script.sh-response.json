@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"Slurm\",\n  \"details\": {\n    \"resource_requirements\": {\n      \"gpu\": 1,\n      \"cpus\": 1,\n      \"memory\": \"4GB\"\n    },\n    \"environment\": {\n      \"conda_environment\": \"ift-env\",\n      \"library_path\": \"/pkgs/cuda-9.2/lib64\",\n      \"python_script\": \"train_augment_net_slurm.py\"\n    },\n    \"script_functionality\": {\n      \"job_submission\": \"sbatch\",\n      \"job_name\": \"%A_%a\",\n      \"output_file\": \"slurm_out/slurm_%A_%a.out\",\n      \"array_job_submission\": \"sbatch --array=0-29%4 srun_script.sh\"\n    }\n  }\n}\n```\n\n**Explanation:**\n\n* **Application:** The script is designed to run within the **Slurm** workload manager. \n* **Details:** \n    * **Resource Requirements:**  The script requests 1 GPU, 1 CPU, and 4GB of memory.\n    * **Environment:** \n        * It activates the \"ift-env\" conda environment. \n        * It sets the LD_LIBRARY_PATH to include the CUDA library directory. \n        * It uses the Python script \"train_augment_net_slurm.py\" as the primary program to execute. \n    * **Script Functionality:**\n        * It utilizes the `sbatch` command for job submission.\n        * The job name is dynamically generated using Slurm variables.\n        * Output is directed to a file named \"slurm_out/slurm_%A_%a.out\".\n        * The script supports array jobs, with the `--array` flag and specifying a range of tasks. \n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 262,
+        "candidates_token_count": 418,
+        "total_token_count": 680,
+        "cached_content_token_count": 0
+    }
+}

@@ -1,0 +1,43 @@
+{
+    "application": "slurm",
+    "details": {
+        "software": [
+            "python",
+            "slurm",
+            "bash"
+        ],
+        "resources": {
+            "time": "02-12:00:00",
+            "nodes": 1,
+            "gpus": "a100:4",
+            "tasks_per_node": 4,
+            "cpus_per_task": 12,
+            "memory": "498G",
+            "output_directory": "logs",
+            "account": "def-ttt",
+            "virtual_environment": "ssl_env"
+        },
+        "script": {
+            "name": "solo_learn_train-bentho.py",
+            "arguments": [
+                "--ssl_cfg",
+                "byol.cfg",
+                "--method",
+                "byol",
+                "--aug_stack_cfg",
+                "byol_aug_stack.cfg",
+                "--nodes",
+                "$SLURM_JOB_NUM_NODES",
+                "--gpus",
+                "$GPUS_PER_NODE",
+                "--name",
+                "byol-100e",
+                "${@}"
+            ],
+            "dependencies": [
+                "slurm/get_socket.sh",
+                "slurm/copy_and_extract_data.sh"
+            ]
+        }
+    }
+}

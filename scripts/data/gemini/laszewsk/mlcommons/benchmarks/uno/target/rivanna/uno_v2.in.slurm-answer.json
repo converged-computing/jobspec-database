@@ -1,0 +1,63 @@
+{
+    "application": "Slurm",
+    "details": {
+        "environment": {
+            "python": {
+                "version": "3",
+                "environment_variable": "PYTHON_DIR",
+                "location": "$HOME/ENV3"
+            },
+            "user_scratch": {
+                "location": "/scratch/$USER"
+            },
+            "project_directory": {
+                "location": "$USER_SCRATCH/mlcommons/benchmarks/cloudmask"
+            },
+            "code_directory": {
+                "location": "$PROJECT_DIR/target/rivanna"
+            },
+            "container_directory": {
+                "location": "${CODE_DIR}"
+            },
+            "output_directory": {
+                "location": "${CODE_DIR}/project/{sbatch.identifier}/outputs"
+            },
+            "project_data": {
+                "location": "/project/bii_dsc_community/mlcommons/data/cloudmask/"
+            }
+        },
+        "resources": {
+            "cpu": {
+                "cores": "{experiment.cpu_num}",
+                "per_task": 1
+            },
+            "memory": {
+                "size": "{experiment.mem}"
+            },
+            "gpu": {
+                "type": "{experiment.card_name}",
+                "count": "{experiment.gpu_count}"
+            },
+            "time": {
+                "duration": "{sbatch.time}"
+            }
+        },
+        "modules": {
+            "singularity": {
+                "version": "latest"
+            }
+        },
+        "software": {
+            "cloudmask": {
+                "version": "2",
+                "container": {
+                    "image": "$CONTAINERDIR/cloudmask.sif"
+                },
+                "configuration_file": "config.yaml"
+            },
+            "cms": {
+                "command": "gpu watch"
+            }
+        }
+    }
+}

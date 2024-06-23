@@ -1,0 +1,37 @@
+{
+    "application": "SLURM",
+    "details": {
+        "job_name": "openbioml",
+        "partition": "gpu",
+        "nodes": 1,
+        "tasks_per_node": 1,
+        "gres": "gpu:1",
+        "output": "/fsx/home-zanussbaum/bio-chem-lm/logs/bio-chem-lm_latest_%A_%a.out",
+        "error": "/fsx/home-zanussbaum/bio-chem-lm/logs/bio-chem-lm_latest_%A_%a.err",
+        "comment": "openbioml",
+        "environment_variables": [
+            "NCCL_PROTO=simple",
+            "FI_EFA_FORK_SAFE=1",
+            "FI_EFA_USE_DEVICE_RDMA=1",
+            "OMPI_MCA_mtl_base_verbose=1",
+            "FI_EFA_ENABLE_SHM_TRANSFER=0",
+            "FI_PROVIDER=efa",
+            "FI_EFA_TX_MIN_CREDITS=64",
+            "NCCL_TREE_THRESHOLD=0",
+            "OMPI_MCA_pml=\"^cm\"",
+            "OMPI_MCA_btl=\"tcp,self\"",
+            "OMPI_MCA_btl_tcp_if_exclude=\"lo,docker1\"",
+            "MASTER_ADDR=$(scontrol show hostnames \"$SLURM_JOB_NODELIST\" | head -n 1)",
+            "MASTER_PORT=12802",
+            "WORLD_SIZE=$(scontrol show hostnames \"$SLURM_JOB_NODELIST\" | wc -l)",
+            "JOB_COMMENT=\"Key=Monitoring,Value=ON\"",
+            "WANDB_DIR=\"/fsx/home-zanussbaum/bio-chem-lm/outputs\"",
+            "WANDB_CACHE_DIR=\"/fsx/home-zanussbaum/.cache\"",
+            "WANDB_MODE=\"online\""
+        ],
+        "modules": "cuda/11.7",
+        "conda_environment": "/fsx/home-zanussbaum/bio-chem-lm/env",
+        "working_directory": "/fsx/home-zanussbaum/bio-chem-lm/bio_lm",
+        "command": "srun --comment openbioml --gres=gpu:1 --ntasks=1 wandb agent zanussbaum/bio-chem-lm/nj1zeot5"
+    }
+}

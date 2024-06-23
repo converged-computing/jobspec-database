@@ -1,0 +1,39 @@
+{
+    "application": "Slurm",
+    "details": {
+        "nodes": 1,
+        "queue": "normal_q",
+        "cpus": 1,
+        "memory": "230GB",
+        "time": "10:00:00",
+        "account": "nmayhall_group",
+        "job_name": "tpsci_cr2.jl",
+        "environment_variables": {
+            "NTHREAD": 16,
+            "JULIAENV": "/home/arnab22/tpsci_bimetallic",
+            "MKL_NUM_THREADS": 1,
+            "OMP_NUM_THREADS": 1,
+            "OPENBLAS_NUM_THREADS": 1,
+            "INFILE": "input file",
+            "OUTFILE": "input file.out",
+            "WORKDIR": "current working directory",
+            "TMPDIR": "temporary directory"
+        },
+        "modules": [
+            "site/tinkercliffs-rome/easybuild/setup",
+            "Anaconda3/2020.07",
+            "gcc/8.2.0",
+            "bst"
+        ],
+        "software": [
+            "Julia",
+            "Python"
+        ],
+        "script_execution": {
+            "commands": [
+                "julia --project=$JULIAENV -t $NTHREAD $INFILE >& $OUTFILE",
+                "python3 $INFILE >& $OUTFILE"
+            ]
+        }
+    }
+}

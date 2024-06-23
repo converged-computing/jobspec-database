@@ -1,0 +1,56 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n\"application\": \"Singularity\",\n\"software\": [\n\"Singularity\",\n\"Bash\",\n\"xz\"\n],\n\"resources\": [\n\"SLURM\",\n\"Data directory\",\n\"Configuration files\",\n\"Output directory\",\n\"Temporary directory\",\n\"Singularity image\"\n],\n\"configuration_files\": [\n\"do_sim.sh\",\n\"aao_rad.inp\",\n\"gsim.inp\",\n\"user_ana.tcl\"\n],\n\"output_files\": [\n\"gsim_no_gpp.bos.xz\",\n\"all.root\"\n],\n\"environment_variables\": [\n\"TMPDIR\",\n\"SINGULARITY_CACHEDIR\",\n\"JOB_DIR\",\n\"CONFIG_DIR\",\n\"OUTPUT_DIR\",\n\"DATA_DIR\",\n\"DATE\",\n\"TYPE\"\n],\n\"commands\": [\n\"module load singularity/2.6.0\",\n\"singularity shell -B $DATA_DIR:/data \\\n\t\t  -B $TMPDIR:/code \\\n\t\t  -B $DATA_DIR/parms/recsis:/recsis \\\n\t\t  $DATA_DIR/clas6.img -c \\\"cd /code && bash do_sim.sh\\\"\",\n\"xz -9 -v -T4 $TMPDIR/gsim_no_gpp.bos\",\n\"cp $TMPDIR/gsim_no_gpp.bos.xz $OUTPUT_DIR/gsim/npip/gsim_no_gpp_${TYPE}_${SLURM_ARRAY_JOB_ID}_${SLURM_ARRAY_TASK_ID}.bos.xz\",\n\"cp $TMPDIR/all.root $OUTPUT_DIR/npip/${TYPE}_${SLURM_ARRAY_JOB_ID}_${SLURM_ARRAY_TASK_ID}.root\",\n\"du -sh $TMPDIR\",\n\"rm -rf $TMPDIR\"\n],\n\"script_type\": \"Bash script\",\n\"purpose\": \"Running a simulation using Singularity\"\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "citation_metadata": {
+                "citation_sources": [
+                    {
+                        "start_index": 531,
+                        "end_index": 952,
+                        "uri": "https://github.com/tylern4/simScripts",
+                        "license_": ""
+                    }
+                ]
+            },
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 837,
+        "candidates_token_count": 461,
+        "total_token_count": 1298,
+        "cached_content_token_count": 0
+    }
+}

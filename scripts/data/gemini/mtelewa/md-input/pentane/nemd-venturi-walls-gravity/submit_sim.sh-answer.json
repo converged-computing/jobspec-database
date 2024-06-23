@@ -1,0 +1,33 @@
+{
+    "application": "LAMMPS",
+    "details": {
+        "software": [
+            "Intel Compiler 19.1",
+            "OpenMPI 4.0"
+        ],
+        "resources": {
+            "nodes": 4,
+            "tasks_per_node": 20,
+            "walltime": "40:00:00",
+            "partition": "multiple",
+            "output": "cluster.out",
+            "error": "cluster.err",
+            "job_name": "Pump"
+        },
+        "environment_variables": {
+            "KMP_AFFINITY": "compact,1,0"
+        },
+        "arguments": [
+            "--bind-to core",
+            "--map-by core",
+            "-report-bindings",
+            "lmp_mpi",
+            "-in",
+            "$(pwd)/flow.LAMMPS",
+            "-v",
+            "gravity 1",
+            "-v",
+            "Pext 5"
+        ]
+    }
+}

@@ -1,0 +1,42 @@
+{
+    "application": "Stable Diffusion",
+    "details": {
+        "cluster_manager": "SLURM",
+        "partition": "compute-od-gpu",
+        "nodes": 8,
+        "tasks_per_node": 1,
+        "cpus_per_gpu": 4,
+        "gpus": 8,
+        "mpi_implementation": "Intel MPI",
+        "libraries": [
+            "CUDA 11.0",
+            "NCCL",
+            "AWS OFI NCCL",
+            "Amazon EFA"
+        ],
+        "environment_variables": {
+            "LD_LIBRARY_PATH": "/opt/aws-ofi-nccl/lib:/opt/amazon/efa/lib64:/usr/local/cuda-11.0/efa/lib:/usr/local/cuda-11.0/lib:/usr/local/cuda-11.0/lib64:/usr/local/cuda-11.0:/opt/nccl/build/lib:/opt/aws-ofi-nccl-install/lib:/opt/aws-ofi-nccl/lib",
+            "NCCL_PROTO": "simple",
+            "PATH": "/opt/amazon/efa/bin",
+            "LD_PRELOAD": "/opt/nccl/build/lib/libnccl.so",
+            "FI_EFA_FORK_SAFE": "1",
+            "FI_LOG_LEVEL": "1",
+            "FI_EFA_USE_DEVICE_RDMA": "1",
+            "NCCL_DEBUG": "info",
+            "PYTHONFAULTHANDLER": "1",
+            "CUDA_LAUNCH_BLOCKING": "0",
+            "OMPI_MCA_mtl_base_verbose": "1",
+            "FI_EFA_ENABLE_SHM_TRANSFER": "0",
+            "FI_PROVIDER": "efa",
+            "FI_EFA_TX_MIN_CREDITS": "64",
+            "NCCL_TREE_THRESHOLD": "0",
+            "HOSTNAMES": "a list of hostnames from scontrol",
+            "MASTER_ADDR": "the first hostname from scontrol",
+            "MASTER_PORT": "12802",
+            "COUNT_NODE": "the number of nodes from scontrol",
+            "WORLD_SIZE": "the number of nodes from scontrol"
+        },
+        "script": "launcher.sh",
+        "script_path": "/fsx/stable-diffusion/stable-diffusion/scripts/slurm/v1_edgeinpainting/launcher.sh"
+    }
+}

@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "PBS\nThe script is using the Portable Batch System (PBS) to manage the execution of the jobs. It defines several PBS directives, including:\n\n* **-N ArgMining-MultiJob:** Job name\n* **-l walltime=167:00:00:** Maximum walltime allowed for the job\n* **-m abe:** Mail notification on abort, begin and end\n* **-M liebeck@cs.uni-duesseldorf.de:** Email address for notifications\n* **-l select=1:mem=10gb:ncpus=1:** Resource request: 1 node with 10GB memory and 1 CPU\n* **-A OP-NLP:** Account to charge for the job\n* **-r y:** Rerun the job if it fails\n* **-J 1-624:** Array job with 624 subjobs\n\nThe script also loads Python and spaCy modules, sets environment variables for library path and Python path, and defines an associative array called \"job_parameter\" with 624 entries. Each entry in the array contains a command to run a Python script called \"gridsearch.py\", which performs a grid search for optimal parameters for a sentence-level argument mining task. The script then runs the command corresponding to the current subjob index using the `eval` command. \n\nHere is the JSON output format: \n\n```json\n{\n  \"application\": \"PBS\",\n  \"software\": [\n    \"Python/3.4.5\",\n    \"spaCy/1.9.0\"\n  ],\n  \"resources\": {\n    \"walltime\": \"167:00:00\",\n    \"memory\": \"10gb\",\n    \"cpus\": 1,\n    \"account\": \"OP-NLP\"\n  },\n  \"script\": \"gridsearch.py\",\n  \"subjobs\": 624,\n  \"output_file\": \"$PBS_O_WORKDIR/$PBS_JOBID.print\"\n}\n```\n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 76277,
+        "candidates_token_count": 443,
+        "total_token_count": 76720,
+        "cached_content_token_count": 0
+    }
+}

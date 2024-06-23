@@ -1,0 +1,36 @@
+{
+    "application": "PyTorch",
+    "details": {
+        "environment": {
+            "cuda": "11.6",
+            "openmpi": "latest",
+            "intel-mpi": "latest",
+            "nccl": "build/lib",
+            "aws-ofi-nccl-install": "lib",
+            "amazon-efa": "bin",
+            "amazon-openmpi": "bin"
+        },
+        "libraries": {
+            "nccl": "libnccl.so",
+            "efa": "lib"
+        },
+        "resources": {
+            "slurm": {
+                "time": "72:00:00",
+                "account": "{FILL}",
+                "job_name": "text-sed",
+                "partition": "gpu",
+                "cpus_per_task": 6,
+                "nodes": 1,
+                "ntasks_per_node": 8,
+                "gres": "gpu:8",
+                "exclusive": true,
+                "requeue": true,
+                "output": "./checkpoints/pile/%x_%j.out",
+                "open_mode": "append",
+                "comment": "{FILL}"
+            },
+            "python": "3.8"
+        }
+    }
+}

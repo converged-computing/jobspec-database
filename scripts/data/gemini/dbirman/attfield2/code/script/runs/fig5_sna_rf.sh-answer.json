@@ -1,0 +1,50 @@
+{
+    "application": "slurm",
+    "details": {
+        "software": [
+            "python",
+            "bash",
+            "slurm"
+        ],
+        "resources": {
+            "cpu": "1 core",
+            "memory": "16GB",
+            "gpu": "1",
+            "gpu_memory": "16GB",
+            "partition": "gpu",
+            "time": "2:15:00",
+            "job_name": "f5_sna_rf",
+            "output_file": "/scratch/users/kaifox/attfield/data/runs/fig5/logs/sna_rf_%a.out",
+            "error_file": "/scratch/users/kaifox/attfield/data/runs/fig5/logs/sna_rf_%a.err"
+        },
+        "libraries": [
+            "python/3.6.1",
+            "code/script/shrlk.bash_rc"
+        ],
+        "scripts": [
+            "code/script/backprop.py",
+            "code/proc/att_models/sens_norm.py",
+            "code/cornet/cornet/cornet_zr.py"
+        ],
+        "data": [
+            "/scratch/users/kaifox/attfield/data/runs/fig5/sna_rf_n${N_IMG_PER_CAT}_b$BETA.h5",
+            "/scratch/users/kaifox/attfield/data/imagenet/imagenet_four224l0.h5",
+            "/scratch/users/kaifox/attfield/data/models/cZR_300units_rad.csv"
+        ],
+        "environment_variables": [
+            "DATA",
+            "CODE",
+            "SLURM_ARRAY_TASK_ID",
+            "N_IMG_PER_CAT",
+            "BETA",
+            "LOG",
+            "L"
+        ],
+        "parameters": {
+            "beta": "1.1, 2.0, 4.0, 11.0",
+            "n_img_per_cat": 100,
+            "layers": "[(0,1,0),(0,2,0),(0,3,0),(0,4,0)]",
+            "batch_size": 100
+        }
+    }
+}

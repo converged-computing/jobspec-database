@@ -1,0 +1,39 @@
+{
+    "application": "Apptainer",
+    "details": {
+        "resource_requirements": {
+            "nodes": 2,
+            "walltime": "01:00:00",
+            "queue": "workq",
+            "placement": "scatter",
+            "account": "Aurora_deployment"
+        },
+        "software_requirements": {
+            "modules": [
+                "spack",
+                "apptainer",
+                "squashfuse",
+                "fuse-overlayfs"
+            ],
+            "proxy": {
+                "http": "http://proxy.alcf.anl.gov:3128",
+                "https": "http://proxy.alcf.anl.gov:3128"
+            },
+            "mpi": "mpich_libraries",
+            "python_packages": [
+                "mpi4py",
+                "pytorch"
+            ]
+        },
+        "execution": {
+            "container": "$CONTAINER",
+            "mpi_ranks": 32,
+            "mpi_ranks_per_node": 16,
+            "python_scripts": [
+                "mpi_hello_world.py",
+                "pytorch_test.py",
+                "pytorch_mnist.py"
+            ]
+        }
+    }
+}

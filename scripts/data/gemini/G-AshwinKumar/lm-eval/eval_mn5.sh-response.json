@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"SLURM\",\n  \"details\": {\n    \"job_name\": \"eval-mn5\",\n    \"account\": \"bsc70\",\n    \"qos\": \"acc_bsccs\",\n    \"nodes\": 1,\n    \"cpus_per_task\": 80,\n    \"time\": \"02:00:00\",\n    \"gres\": \"gpu:4\",\n    \"model_name\": \"c4ai-command-r-v01\",\n    \"model_path\": \"/gpfs/projects/bsc70/heka/models/c4ai-command-r-v01\",\n    \"singularity_image\": \"/gpfs/projects/bsc70/heka/singularity/lm-evaluation-harness/lmharness.sif\",\n    \"python_script\": \"/home/lm-evaluation-harness/lm_eval\",\n    \"model_type\": \"vllm\",\n    \"model_args\": {\n      \"pretrained\": \"/gpfs/projects/bsc70/heka/models/c4ai-command-r-v01\",\n      \"tensor_parallel_size\": 4,\n      \"dtype\": \"bfloat16\",\n      \"gpu_memory_utilization\": 0.9,\n      \"data_parallel_size\": 1,\n      \"max_model_len\": 8192\n    },\n    \"tasks\": \"medmcqa\",\n    \"batch_size\": \"auto:4\",\n    \"num_fewshot\": 0,\n    \"output_path\": \"${CURRENT_DIR}/${COMMIT_TAG}.txt\",\n    \"log_samples\": true,\n    \"environment_variables\": {\n      \"HF_HUB_OFFLINE\": 1,\n      \"HF_HOME\": \"/gpfs/scratch/bsc70/hpai/storage/projects/heka/hf_caches/hf_cache2\",\n      \"HF_DATASETS_CACHE\": \"/gpfs/scratch/bsc70/hpai/storage/projects/heka/hf_caches/hf_cache2\"\n    }\n  }\n}\n```\n\nThe script is running within the **SLURM** workload manager, using a singularity container to execute the `lm-evaluation-harness` tool and run a python script for model evaluation. \n\nThe script is configured to:\n\n* Utilize 4 GPUs with a total of 80 CPUs.\n* Run for a maximum of 2 hours.\n* Run the `lm_eval` python script with the `vllm` model. \n* Load the model from `/gpfs/projects/bsc70/heka/models/c4ai-command-r-v01`.\n* Utilize the `medmcqa` task for evaluation.\n* Output results to `${CURRENT_DIR}/${COMMIT_TAG}.txt`.\n* Set specific environment variables for offline Hugging Face usage.\n\nThis configuration uses several resources:\n\n* **GPUs:** 4 GPUs for parallel processing.\n* **CPUs:** 80 CPUs for processing tasks.\n* **Storage:**  Multiple locations for model files, singularity image, and the `lm-evaluation-harness` tool.\n* **Singularity Container:** `lmharness.sif` for running the evaluation tool.\n* **Python environment:**  Libraries like `vllm`, `transformers`, `datasets`, and `lm_eval`. \n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 853,
+        "candidates_token_count": 768,
+        "total_token_count": 1621,
+        "cached_content_token_count": 0
+    }
+}

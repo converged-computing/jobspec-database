@@ -1,0 +1,41 @@
+{
+    "application": "CP2K",
+    "details": {
+        "version": "2022.1",
+        "module": "CP2K/2022.1-foss-2022a",
+        "resources": {
+            "walltime": "06:00:00",
+            "nodes": "8",
+            "cpus": "64",
+            "mpiprocs": "32",
+            "ompthreads": "2",
+            "memory": "200gb"
+        },
+        "libraries": {
+            "MKL": {
+                "threads": "2"
+            },
+            "OMP": {
+                "threads": "2"
+            }
+        },
+        "dependencies": {
+            "input files": [
+                "1_bulkLR.inp",
+                "2_dft_wfn.inp",
+                "3_0V.inp",
+                "4_V.inp"
+            ],
+            "bulk files": [
+                "*bulk*",
+                "bulk-VH_AV.dat"
+            ],
+            "dft files": [
+                "*dft*"
+            ]
+        },
+        "execution": {
+            "command": "mpirun $cp2k -i 4_${V}V.inp -o log_4_${V}V.out"
+        }
+    }
+}

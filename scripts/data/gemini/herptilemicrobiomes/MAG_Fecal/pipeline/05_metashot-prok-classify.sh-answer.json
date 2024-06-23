@@ -1,0 +1,37 @@
+{
+    "application": "Nextflow",
+    "software": [
+        "Singularity",
+        "GTDBTk",
+        "Metashot",
+        "Nextflow"
+    ],
+    "resources": [
+        "CPU (48 cores)",
+        "Memory (128 GB)",
+        "Scratch space",
+        "GTDBTk database (/srv/projects/db/gtdbtk/207_v2)",
+        "Singularity cache directory (/bigdata/stajichlab/shared/singularity_cache)"
+    ],
+    "input": "samples.csv",
+    "output": "results_bins_gtkdb",
+    "environment": "SLURM",
+    "configuration": [
+        "process-classify.config",
+        "metashot-classify.cfg",
+        "nextflow"
+    ],
+    "commands": [
+        "module load singularity",
+        "module load workspace/scratch",
+        "export NXF_SINGULARITY_CACHEDIR=/bigdata/stajichlab/shared/singularity_cache/",
+        "mkdir -p $OUTFOLDER $RUNDIR",
+        "tail -n +2 $SAMPFILE | sed -n ${N}p | while read STRAIN SHOTGUN",
+        "mkdir -p $OUT",
+        "pushd $RUNDIR",
+        "if [ ! -f process.config ]; then ln -s ../process-classify.config process.config; ln -s ../process-classify.config ./; fi",
+        "if [ ! -f metashot-qual.cfg ]; then ln -s ../metashot-classify.cfg ./; fi",
+        "if [ ! -f nextflow ]; then ln -s ../nextflow ./; fi",
+        "./nextflow run metashot/prok-classify -c metashot-classify.cfg --genomes \"$BINFOLDER/*.fa\" --gtdbtk_db /srv/projects/db/gtdbtk/207_v2 --outdir $OUT --max_cpus $CPU --scratch $SCRATCH"
+    ]
+}

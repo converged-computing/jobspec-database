@@ -1,0 +1,74 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"SLURM\",\n  \"details\": {\n    \"environment\": {\n      \"tensorflow\": \"gpu-2.2.0-py37\",\n      \"PROFILER\": \"cupy\",\n      \"enable_xla\": \"noxla\",\n      \"XLA_FLAGS\": \"--xla_gpu_cuda_data_dir=${CUDA_HOME}\",\n      \"CUDA_DIR\": \"${CUDA_HOME}\",\n      \"rankspernode\": 1,\n      \"OMP_NUM_THREADS\": \"40 / ${rankspernode}\",\n      \"OMP_PLACES\": \"threads\",\n      \"OMP_PROC_BIND\": \"spread\"\n    },\n    \"job_parameters\": {\n      \"job_name\": \"rnn1d-tf2-noxla\",\n      \"gpu_resources\": \"gpu:1\",\n      \"exclusive_execution\": true,\n      \"queue\": \"special\",\n      \"account\": \"m1759\",\n      \"time_limit\": \"4:00:00\"\n    },\n    \"script\": {\n      \"language\": \"python\",\n      \"name\": \"rnn1d_tf2.py\",\n      \"path\": \"../python/rnn1d_tf2.py\",\n      \"copy_to\": \"tf_cnn_kernels_nsight/rnn1d-tf2-noxla/$SLURM_JOBID/\"\n    },\n    \"profiler\": {\n      \"tool\": \"nv-nsight-cu-cli\",\n      \"metrics\": [\n        \"sm__cycles_elapsed.avg.per_second\",\n        \"sm__cycles_elapsed.avg\",\n        \"sm__inst_executed_pipe_tensor.sum\",\n        \"sm__sass_thread_inst_executed_op_fadd_pred_on.sum\",\n        \"sm__sass_thread_inst_executed_op_ffma_pred_on.sum\",\n        \"sm__sass_thread_inst_executed_op_fmul_pred_on.sum\",\n        \"sm__sass_thread_inst_executed_op_hadd_pred_on.sum\",\n        \"sm__sass_thread_inst_executed_op_hfma_pred_on.sum\",\n        \"sm__sass_thread_inst_executed_op_hmul_pred_on.sum\",\n        \"dram__bytes.sum\",\n        \"l1tex__t_sectors_pipe_lsu_mem_local_op_ld.sum\",\n        \"l1tex__t_sectors_pipe_lsu_mem_local_op_st.sum\",\n        \"l1tex__data_pipe_lsu_wavefronts_mem_shared_op_ld.sum\",\n        \"l1tex__data_pipe_lsu_wavefronts_mem_shared_op_st.sum\",\n        \"l1tex__t_sectors_pipe_lsu_mem_global_op_ld.sum\",\n        \"l1tex__t_sectors_pipe_lsu_mem_global_op_st.sum\",\n        \"l1tex__t_set_accesses_pipe_lsu_mem_global_op_atom.sum\",\n        \"l1tex__t_set_accesses_pipe_lsu_mem_global_op_red.sum\",\n        \"l1tex__t_set_accesses_pipe_tex_mem_surface_op_atom.sum\",\n        \"l1tex__t_set_accesses_pipe_tex_mem_surface_op_red.sum\",\n        \"lts__t_sectors_op_read.sum\",\n        \"lts__t_sectors_op_write.sum\",\n        \"lts__t_sectors_op_atom.sum\",\n        \"lts__t_sectors_op_red.sum\"\n      ]\n    },\n    \"framework\": \"TensorFlow\",\n    \"model\": \"RNN (LSTM)\",\n    \"parameters\": {\n      \"cells\": [\n        \"lstm\"\n      ],\n      \"precisions\": [\n        \"16\",\n        \"32\"\n      ],\n      \"network_parameters\": [\n        \"16,16,32,16\",\n        \"32,16,32,16\",\n        \"64,16,32,16\",\n        \"128,16,32,16\",\n        \"16,32,32,16\",\n        \"16,64,32,16\",\n        \"16,128,32,16\",\n        \"16,16,64,16\",\n        \"16,16,128,16\",\n        \"16,16,32,32\",\n        \"16,16,32,64\",\n        \"16,16,32,128\"\n      ],\n      \"num_warmups\": 5,\n      \"num_iterations\": 1\n    }\n  }\n}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "citation_metadata": {
+                "citation_sources": [
+                    {
+                        "start_index": 870,
+                        "end_index": 1408,
+                        "uri": "https://github.com/cyanguwa/DeepLearningProfiling",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 1393,
+                        "end_index": 1650,
+                        "uri": "",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 1635,
+                        "end_index": 1907,
+                        "uri": "https://github.com/NERSC/tf-perf-kernels",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 1766,
+                        "end_index": 2010,
+                        "uri": "https://forums.developer.nvidia.com/t/nsight-and-nvprof-results-have-large-differences/107139",
+                        "license_": ""
+                    }
+                ]
+            },
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 1663,
+        "candidates_token_count": 1172,
+        "total_token_count": 2835,
+        "cached_content_token_count": 0
+    }
+}

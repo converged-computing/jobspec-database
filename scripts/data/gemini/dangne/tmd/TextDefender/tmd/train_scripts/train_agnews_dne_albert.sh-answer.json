@@ -1,0 +1,35 @@
+{
+    "application": "SLURM",
+    "details": {
+        "partition": "research",
+        "output_file": "/lustre/scratch/client/vinai/users/dangnm12/slurm/log/%x-%j.out",
+        "error_file": "/lustre/scratch/client/vinai/users/dangnm12/slurm/log/%x-%j.out",
+        "job_name": "train_agnews_dne_albert",
+        "nodes": 1,
+        "tasks": 1,
+        "gpus_per_node": 1,
+        "cpus_per_task": 16,
+        "memory": "16G",
+        "mail_user": "v.dangnm12@vinai.io",
+        "mail_type": [
+            "END",
+            "FAIL"
+        ],
+        "container_image": "/lustre/scratch/client/vinai/users/dangnm12/setup/docker_images/dc-miniconda3-py:38-4.10.3-cuda11.4.2-cudnn8-ubuntu20.04.sqsh",
+        "container_mounts": "/lustre/scratch/client/vinai/users/dangnm12/:/root/",
+        "container_workdir": "/root/",
+        "environment_variables": [
+            "HTTP_PROXY=http://proxytc.vingroup.net:9090/",
+            "HTTPS_PROXY=http://proxytc.vingroup.net:9090/",
+            "http_proxy=http://proxytc.vingroup.net:9090/",
+            "https_proxy=http://proxytc.vingroup.net:9090/",
+            "HF_DATASETS_CACHE=/root/cache/huggingface/datasets",
+            "TRANSFORMERS_CACHE=/root/cache/huggingface/transformers",
+            "TOKENIZERS_PARALLELISM=false",
+            "TFHUB_CACHE_DIR=/root/cache/tfhub_modules"
+        ],
+        "conda_environment": "/root/miniconda3/envs/textdef",
+        "python_script": "main.py",
+        "python_script_arguments": "--mode=train --model_type=albert --model_name_or_path=/root/manifold_defense/models/albert-base-v2 --dataset_name=agnews --dataset_path=/root/TextDefender/dataset/agnews --training_type=dne --max_seq_len=128 --do_lower_case=True --dir_alpha=1.0 --dir_decay=0.5"
+    }
+}

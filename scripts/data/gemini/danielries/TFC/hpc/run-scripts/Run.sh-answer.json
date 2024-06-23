@@ -1,0 +1,23 @@
+{
+    "application": "LSF",
+    "details": {
+        "job_name": "Sl_Ep_p",
+        "output_file": "hpc/runs/Run_%J.out.txt",
+        "error_file": "hpc/runs/Run_%J.err.txt",
+        "queue": "gpuv100",
+        "gpu_request": "num=1:mode=exclusive_process",
+        "runtime": "3:00",
+        "memory_limit": "12GB",
+        "nodes": "1",
+        "cores": "6",
+        "modules": "python3/3.9.11",
+        "virtual_environment": "../HPC_env",
+        "python_script": "code/main.py",
+        "commands": [
+            "python code/main.py --training_mode pre_train --run_description Run1 --pretrain_dataset SleepEEG --target_dataset Epilepsy --subset False --device cuda",
+            "python code/main.py --training_mode fine_tune_test --pretrain_dataset FD_A --target_dataset FD_B --subset False --device cuda",
+            "python code/main.py --training_mode pre_train --pretrain_dataset ECG --target_dataset EMG --subset False --device cuda",
+            "python code/main.py --training_mode pre_train --pretrain_dataset HAR --target_dataset Gesture --subset False --device cuda"
+        ]
+    }
+}

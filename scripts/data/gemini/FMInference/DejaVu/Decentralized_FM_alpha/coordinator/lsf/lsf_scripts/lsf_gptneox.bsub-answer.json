@@ -1,0 +1,41 @@
+{
+    "application": "inference",
+    "software": [
+        "gcc/6.3.0",
+        "cuda/11.0.3",
+        "python",
+        "dist_inference_runner_w_euler_coordinator.py"
+    ],
+    "resources": {
+        "cores": 2,
+        "memory": "8000",
+        "gpus": 1,
+        "gpu_memory": "10000"
+    },
+    "environment": {
+        "conda_env": "pipeline",
+        "modules": [
+            "gcc/6.3.0",
+            "cuda/11.0.3"
+        ],
+        "variables": {
+            "NCCL_SOCKET_IFNAME": "access",
+            "GLOO_SOCKET_IFNAME": "access",
+            "NCCL_DEBUG": "INFO",
+            "NCCL_IB_DISABLE": 1,
+            "NCCL_P2P_DISABLE": 1
+        }
+    },
+    "model": {
+        "type": "gptneox",
+        "name": "/nfs/iiscratch-zhang.inf.ethz.ch/export/zhang/export/fm/pretrained_models/gpt-neox-20b-new"
+    },
+    "inference": {
+        "fp16": true,
+        "budget": 12000,
+        "num_layers": 4
+    },
+    "coordinator": {
+        "server_ip": "129.132.93.116"
+    }
+}

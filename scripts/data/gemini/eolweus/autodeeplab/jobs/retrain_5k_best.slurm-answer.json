@@ -1,0 +1,49 @@
+{
+    "application": "Slurm",
+    "details": {
+        "resource_allocation": {
+            "partition": "GPUQ",
+            "account": "share-ie-idi",
+            "time": "24:00:00",
+            "nodes": 1,
+            "gpu": "a100:1",
+            "constraint": "gpu80g|gpu40g",
+            "tasks_per_node": 1,
+            "cpus_per_task": 10,
+            "memory": "120G",
+            "job_name": "best_5k_retrain",
+            "output": "/cluster/home/erlingfo/autodeeplab/out/best_5k_retrain.out",
+            "mail_user": "erlingfo@stud.ntnu.no",
+            "mail_type": "ALL"
+        },
+        "environment": {
+            "workdir": "${SLURM_SUBMIT_DIR}",
+            "conda_env": "autodl",
+            "python_buffered": 1,
+            "cuda_visible_devices": 0,
+            "modules": {
+                "loaded": [
+                    "CUDA/11.3.1"
+                ],
+                "purged": []
+            }
+        },
+        "software": {
+            "training_script": "../train.py",
+            "dataset": "solis",
+            "checkname": "best_5k_retrain",
+            "resize": 224,
+            "crop_size": 224,
+            "num_bands": 12,
+            "epochs": 100,
+            "workers": 10,
+            "net_arch": "/cluster/home/erlingfo/autodeeplab/run/solis/5k/network_path.npy",
+            "cell_arch": "/cluster/home/erlingfo/autodeeplab/run/solis/5k/genotype.npy",
+            "resume": "/cluster/home/erlingfo/autodeeplab/run/solis/best_5k_retrain/experiment_0/checkpoint_6.pth.tar"
+        },
+        "monitoring": {
+            "gpu_usage_file": "/cluster/home/erlingfo/autodeeplab/out/best_5k_retrain_gpu_usage.log",
+            "cpu_usage_file": "/cluster/home/erlingfo/autodeeplab/out/best_5k_retrain_cpu_usage.log"
+        }
+    }
+}

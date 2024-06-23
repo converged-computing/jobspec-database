@@ -1,0 +1,39 @@
+{
+    "application": "jsrun",
+    "details": {
+        "batch_system": "LSF",
+        "resources": {
+            "nodes": 60,
+            "cores_per_node": 42,
+            "gpus_per_node": 1,
+            "memory": "not specified",
+            "walltime": "00:30:00"
+        },
+        "software": {
+            "python": "libtbx.python",
+            "script": "step5_batch.py",
+            "libraries": [
+                "libtbx",
+                "LS49"
+            ]
+        },
+        "environment_variables": {
+            "BBPATH": "/mnt/bb/$USER/",
+            "USE_EXASCALE_API": "True",
+            "LOG_BY_RANK": 1,
+            "RANK_PROFILE": 0,
+            "N_SIM": 99360,
+            "ADD_SPOTS_ALGORITHM": "cuda",
+            "ADD_BACKGROUND_ALGORITHM": "cuda",
+            "CACHE_FHKL_ON_GPU": "True",
+            "DEVICES_PER_NODE": 1
+        },
+        "execution": {
+            "command": "jsrun -n 360 -a 1 -c 1 -r 6 -g 1 libtbx.python $(libtbx.find_in_repositories LS49)/adse13_196/step5_batch.py logger.outdir=${BBPATH}",
+            "mpi_processes": 360,
+            "mpi_ranks_per_node": 6,
+            "mpi_tasks_per_node": 1,
+            "gpu_per_rank": 1
+        }
+    }
+}

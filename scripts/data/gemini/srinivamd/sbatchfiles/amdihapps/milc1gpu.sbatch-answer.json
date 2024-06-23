@@ -1,0 +1,32 @@
+{
+    "application": "Slurm",
+    "details": {
+        "resource_requirements": {
+            "nodes": 1,
+            "cpus_per_task": 16,
+            "memory": "64GB",
+            "gpu": 1,
+            "output_file": "%x-%N-%j.out",
+            "error_file": "%x-%N-%j.err"
+        },
+        "modules": {
+            "rocm": "5.4.2",
+            "ucx": "1.13.1",
+            "ompi": "4.1.4"
+        },
+        "container": {
+            "type": "Singularity",
+            "image": "/shared/apps/bin/milc_c30ed15e1.sif",
+            "command": "/bin/bash run-benchmark",
+            "arguments": {
+                "ngpus": 1,
+                "output": "bench-gpu1.txt"
+            },
+            "working_directory": "/benchmark",
+            "tmpfs": {
+                "mount_point": "/shared/apps/bin/milc_c30ed15e1.sif",
+                "writable": true
+            }
+        }
+    }
+}

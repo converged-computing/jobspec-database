@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\n  \"application\": \"spack\",\n  \"details\": {\n    \"scheduler\": \"slurm\",\n    \"scheduler_module\": \"slurm\",\n    \"spack_version\": \"0.17.3\",\n    \"spack_instance_name\": \"gpu\",\n    \"spack_instance_dir\": \"/cm/shared/apps/spack/0.17.3/gpu\",\n    \"spack_package\": \"ninja@1.10.2\",\n    \"spack_compiler\": \"gcc@8.5.0\",\n    \"spack_variants\": \"\",\n    \"spack_dependencies\": \"^python@3.8.12/$(spack find --format '{hash:7}' python@3.8.12 % ${SPACK_COMPILER})\",\n    \"spack_spec\": \"ninja@1.10.2 % gcc@8.5.0  ^python@3.8.12/$(spack find --format '{hash:7}' python@3.8.12 % gcc@8.5.0)\",\n    \"system_name\": \"tscc\",\n    \"cpu_cores\": 8,\n    \"time_limit\": \"00:30:00\",\n    \"account\": \"sys200\",\n    \"partition\": \"hotel-gpu\",\n    \"gpu\": \"gpu1\",\n    \"slurm_job_name\": \"ninja@1.10.2\"\n  }\n}\n```\n\nThis script uses `spack`, a package manager for scientific software, to install the `ninja` package. \n\n**Key Details:**\n\n* **spack:** The script uses spack, a software package manager, to install and manage the `ninja` package. \n* **slurm:** The script is configured to run on a SLURM (Simple Linux Utility for Resource Management) cluster.\n* **Dependencies:** The script installs the `python@3.8.12` package as a dependency for `ninja`, using the specified compiler `gcc@8.5.0`. \n* **Configuration:** The script sets environment variables for various aspects of the installation, including the spack instance name, directory, package, compiler, variants, dependencies, and the spec for the installation.\n* **Output:** The script provides verbose output, including the output from `spack install`, `spack spec`, and environment variables. \n* **Job Management:** The script leverages SLURM's `sbatch` command to launch a subsequent job (`meson@0.60.0.sh`) after the installation of `ninja` is complete.\n* **Job Dependencies:** The script sets the dependency of the `meson@0.60.0.sh` job on the successful completion of the current `spack` installation using `--dependency=\"afterok:${SLURM_JOB_ID}\"`. \n* **Resource Requirements:** The script allocates 1 node with 1 task and 8 CPUs per task. The job is allocated to the `hotel-gpu` partition and the `gpu1` node. The job has a time limit of 30 minutes. \n* **Module Management:** The script uses `module purge` to ensure a clean environment before loading the required modules, including `slurm` and setting up the spack environment.\n\nThe script demonstrates a common workflow for installing and managing software packages on high-performance computing (HPC) systems using spack and SLURM.  \n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 777,
+        "candidates_token_count": 773,
+        "total_token_count": 1550,
+        "cached_content_token_count": 0
+    }
+}

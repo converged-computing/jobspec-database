@@ -1,0 +1,37 @@
+{
+    "application": "SLURM",
+    "details": {
+        "job_name": "alphavr",
+        "output_file": "/mnt/lustre/users/%u/%j.out",
+        "tasks": 10,
+        "memory": "20000MB",
+        "time": "6-12:00",
+        "constraints": "skylake",
+        "environment_variables": {
+            "ulimit": "-n 4096"
+        },
+        "modules": "libs/cuda",
+        "python_script": "./rainbow_hac/train.py",
+        "script_arguments": [
+            "--id='hac_fed_large_15_variance'",
+            "--active-scheduler",
+            "--active-accesspoint",
+            "--previous-action-observable",
+            "--history-length-accesspoint=2",
+            "--history-length-scheduler=1",
+            "--architecture='canonical_4uav_61obv_3x3_mix'",
+            "--action-selection='greedy'",
+            "--data-reinforce",
+            "--evaluation-interval=500",
+            "--evaluation-episodes=20000",
+            "--federated-round='20'"
+        ],
+        "dependencies": [
+            "git",
+            "python"
+        ],
+        "files": [
+            "global_parameters.py"
+        ]
+    }
+}
