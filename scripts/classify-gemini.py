@@ -2,14 +2,10 @@
 
 import sys
 import os
-import re
 import time
 import json
 import hashlib
 import fnmatch
-import argparse
-import pathlib
-import textwrap
 import argparse
 from colorama import Fore, Back, Style
 
@@ -75,6 +71,9 @@ def main():
 
     # Testing case
     model = genai.GenerativeModel("gemini-1.5-flash")
+
+    # We should try this:
+    # https://hasanaboulhasan.medium.com/how-to-get-consistent-json-from-google-gemini-with-practical-example-48612ed1ab40
     # response = model.generate_content("What is the etymology of the phrase 'fast lane'?")
 
     parser = get_parser()
