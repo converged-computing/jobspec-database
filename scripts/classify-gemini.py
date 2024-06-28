@@ -8,6 +8,9 @@ import hashlib
 import fnmatch
 import argparse
 from colorama import Fore, Back, Style
+from typing import List, Dict
+import pydantic
+
 
 from google.api_core.exceptions import DeadlineExceeded
 
@@ -17,6 +20,33 @@ here = os.path.dirname(os.path.abspath(__file__))
 root = os.path.dirname(here)
 
 # pip install -q -U google-generativeai colorama
+
+
+def model_to_json(model_instance):
+    """
+    Converts a Pydantic model instance to a JSON string.
+    Args:
+        model_instance (YourModel): An instance of your Pydantic model.
+    Returns:
+        str: A JSON string representation of the model.
+    """
+    return model_instance.model_dump_json()
+
+
+class JobsModel(pydantic.BaseModel):
+    """
+    We can use the json structure of this to inform gemma.
+    In practice we didn't need Pydantic - we could have just
+    written a json string I think.
+    """
+
+    application: str
+    software: List[str]
+    modules: List[str]
+    environment_variables: Dict[str, str]
+    resources: Dict[str, str]
+    versions: Dict[str, str]
+
 
 token = os.environ.get("GEMINI_KEY")
 if not token:
@@ -47,7 +77,7 @@ def get_parser():
     parser.add_argument(
         "--output",
         help="Output data directory",
-        default=os.path.join(here, "data", "gemini"),
+        default=os.path.join(here, "data", "gemini-with-template"),
     )
     return parser
 
@@ -71,6 +101,39 @@ def main():
 
     # Testing case
     model = genai.GenerativeModel("gemini-1.5-flash")
+
+    # Example format for gemma
+    json_model = model_to_json(
+        JobsModel(
+            application="lammps",
+            software=[],
+            modules=[],
+            environment_variables={},
+            resources={
+                "gres": "",
+                "cpus_per_task": "",
+                "tasks": "",
+                "ntasks_per_code": "",
+                "gpus": "",
+                "gpus_per_node": "",
+                "cores_per_socket": "",
+                "gpus_per_task": "",
+                "exclusive": "",
+                "cpus_per_gpu": "",
+                "gpu_type": "",
+                "time": "",
+                "ntasks_per_node": "",
+                "nodes": "",
+                "memory": "",
+                "sockets_per_node": "",
+                "ntasks_per_socket": "",
+                "mem_per_gpu": "",
+                "mem_per_cpu": "",
+                "gres_flags": "",
+            },
+            versions={},
+        )
+    )
 
     # We should try this:
     # https://hasanaboulhasan.medium.com/how-to-get-consistent-json-from-google-gemini-with-practical-example-48612ed1ab40
@@ -106,10 +169,6 @@ def main():
     total = len(files)
     print(f"Found {total} unique jobspec files.")
     for i, filename in enumerate(files):
-        # If you want to take a sample
-        # if i > 1000:
-        #    break
-
         # Output files we want
         outfile = args.output + os.sep + os.path.relpath(filename, args.input)
         outfile_full = f"{outfile}-response.json"
@@ -129,8 +188,14 @@ def main():
             toprint = content[0:150] + "\n...\n" + content[-150:]
         print(Fore.LIGHTBLUE_EX + toprint + Style.RESET_ALL)
 
+        optimized_prompt = (
+            prompt
+            + content
+            + f". Please provide a response in a structured JSON format that matches the following model: {json_model}"
+        )
+
         try:
-            response = model.generate_content(prompt + content)
+            response = model.generate_content(optimized_prompt)
         except DeadlineExceeded:
             print("Deadline exceeded - waiting to try another.")
             time.sleep(20)
@@ -158,6 +223,11 @@ def main():
 
         write_json(response.to_dict(), outfile_full)
         print(Fore.LIGHTGREEN_EX + json.dumps(raw_json, indent=4) + Style.RESET_ALL)
+
+    import IPython
+
+    IPython.embed()
+    sys.exit()
 
 
 if __name__ == "__main__":

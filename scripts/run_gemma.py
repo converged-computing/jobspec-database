@@ -54,6 +54,8 @@ def model_to_json(model_instance):
 # !pip install -q -U keras-nlp
 # !pip install -q -U keras>=3
 # !pip install jax
+# pip install -q -U google-generativeai colorama
+
 
 # This can also be "tensorflow" or "torch".
 os.environ["KERAS_BACKEND"] = "jax"
@@ -62,6 +64,9 @@ os.environ["XLA_PYTHON_CLIENT_MEM_FRACTION"] = "0.9"
 import keras
 import keras_nlp
 import fnmatch
+
+# For inference, half-precision will work and save memory while mixed-precision is not applicable.
+keras.config.set_floatx("bfloat16")
 
 
 def content_hash(filename):
@@ -119,10 +124,11 @@ def main():
     time.sleep(8)
 
     # Just for testing
-    import IPython
+    # IMPORTANT: uncomment and test a few before you run this at scale.
+    # import IPython
 
-    IPython.embed()
-    sys.exit()
+    # IPython.embed()
+    # sys.exit()
 
     total = len(files)
     print(f"Found {total} unique jobspec files.")

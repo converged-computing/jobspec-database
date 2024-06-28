@@ -242,6 +242,11 @@ def main():
     # Create a data frame
     # Note we will need to custom parse memory too
     columns = list(resource_names)
+    import IPython
+
+    IPython.embed()
+    sys.exit()
+
     matrix = numpy.zeros((len(resources), len(columns)))
 
     # Also keep a lookup of the filename index
