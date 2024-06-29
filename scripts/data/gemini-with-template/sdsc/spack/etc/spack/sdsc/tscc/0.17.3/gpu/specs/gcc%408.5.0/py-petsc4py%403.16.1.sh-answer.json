@@ -1,0 +1,60 @@
+{
+    "application": "spack",
+    "software": [
+        "spack",
+        "py-petsc4py",
+        "py-numpy",
+        "openblas",
+        "petsc",
+        "gcc"
+    ],
+    "modules": [
+        "slurm"
+    ],
+    "environment_variables": {
+        "LOCAL_TIME": "date +'%Y%m%dT%H%M%S%z'",
+        "UNIX_TIME": "date +'%s'",
+        "SYSTEM_NAME": "tscc",
+        "SPACK_VERSION": "0.17.3",
+        "SPACK_INSTANCE_NAME": "gpu",
+        "SPACK_INSTANCE_DIR": "/cm/shared/apps/spack/${SPACK_VERSION}/${SPACK_INSTANCE_NAME}",
+        "SLURM_JOB_SCRIPT": "scontrol show job ${SLURM_JOB_ID} | awk -F= '/Command=/{print $2}'",
+        "SLURM_JOB_MD5SUM": "md5sum ${SLURM_JOB_SCRIPT}",
+        "SCHEDULER_MODULE": "slurm",
+        "SPACK_PACKAGE": "py-petsc4py@3.16.1",
+        "SPACK_COMPILER": "gcc@8.5.0",
+        "SPACK_VARIANTS": "~mpi",
+        "SPACK_DEPENDENCIES": "^py-numpy@1.20.3/$(spack find --format '{hash:7}' py-numpy@1.20.3 % ${SPACK_COMPILER}) ^openblas@0.3.17/$(spack find --format '{hash:7}' openblas@0.3.17 % ${SPACK_COMPILER} ~ilp64 threads=none) ^petsc@3.16.1/$(spack find --format '{hash:7}' petsc@3.16.1 % ${SPACK_COMPILER} ~mpi ~complex)",
+        "SPACK_SPEC": "${SPACK_PACKAGE} % ${SPACK_COMPILER} ${SPACK_VARIANTS} ${SPACK_DEPENDENCIES}"
+    },
+    "resources": {
+        "gres": "",
+        "cpus_per_task": "8",
+        "tasks": "",
+        "ntasks_per_code": "",
+        "gpus": "",
+        "gpus_per_node": "",
+        "cores_per_socket": "",
+        "gpus_per_task": "",
+        "exclusive": "",
+        "cpus_per_gpu": "",
+        "gpu_type": "",
+        "time": "00:30:00",
+        "ntasks_per_node": "1",
+        "nodes": "1",
+        "memory": "",
+        "sockets_per_node": "",
+        "ntasks_per_socket": "",
+        "mem_per_gpu": "",
+        "mem_per_cpu": "",
+        "gres_flags": ""
+    },
+    "versions": {
+        "spack": "0.17.3",
+        "py-petsc4py": "3.16.1",
+        "py-numpy": "1.20.3",
+        "openblas": "0.3.17",
+        "petsc": "3.16.1",
+        "gcc": "8.5.0"
+    }
+}

@@ -1,0 +1,63 @@
+{
+    "application": "OpenFOAM",
+    "software": [
+        "icoFoam",
+        "gmshToFoam",
+        "decomposePar",
+        "renumberMesh",
+        "checkMesh",
+        "mpirun"
+    ],
+    "modules": [
+        "GCC/5.4.0-2.26",
+        "OpenMPI/1.10.3",
+        "OpenFOAM/2.4.0"
+    ],
+    "environment_variables": {
+        "SLURM_COMP_VERBOSE": "3",
+        "SLURM_LOADER_VERBOSE": "3",
+        "np": "12",
+        "ms": "m0.5",
+        "moveToScratch": "0",
+        "moveFromScratch": "0",
+        "cronEraseFlag": "0",
+        "lastTimeErase": "none",
+        "dt": "(date '+%Y%m%d')",
+        "SCRDIR": "/scratch/$USER/$(realpath ${SLURM_SUBMIT_DIR} | cut -d'/' -f5-).$ms.run${dt}",
+        "parentDIR": "$(pwd)",
+        "timeEraseFile": "$parentDIR/postProcessing/internalField/listDif.tmp",
+        "endFlag": "0",
+        "stage": "runTime",
+        "eraseCmd": "$parentDIR/system/sampling/eraseCoordinatesAuto.sh \n    $parentDIR $endFlag $lastTimeErase $cronEraseFlag \n    > $parentDIR/log.eraseCoordinates.$stage 2>&1",
+        "cronJob": "*/1 * * * * $eraseCmd",
+        "nprocs": "$np",
+        "boundaryFile": "constant/polyMesh/boundary"
+    },
+    "resources": {
+        "gres": "",
+        "cpus_per_task": "",
+        "tasks": "",
+        "ntasks_per_code": "",
+        "gpus": "",
+        "gpus_per_node": "",
+        "cores_per_socket": "",
+        "gpus_per_task": "",
+        "exclusive": "",
+        "cpus_per_gpu": "",
+        "gpu_type": "",
+        "time": "0-12:00:00",
+        "ntasks_per_node": "32",
+        "nodes": "1",
+        "memory": "93G",
+        "sockets_per_node": "",
+        "ntasks_per_socket": "",
+        "mem_per_gpu": "",
+        "mem_per_cpu": "100",
+        "gres_flags": ""
+    },
+    "versions": {
+        "GCC": "5.4.0-2.26",
+        "OpenMPI": "1.10.3",
+        "OpenFOAM": "2.4.0"
+    }
+}

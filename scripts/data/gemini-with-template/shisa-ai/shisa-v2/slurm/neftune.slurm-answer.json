@@ -1,0 +1,59 @@
+{
+    "application": "axolotl",
+    "software": [
+        "accelerate",
+        "wandb",
+        "mamba",
+        "srun",
+        "python",
+        "nccl",
+        "transformers",
+        "huggingface_hub",
+        "c10d"
+    ],
+    "modules": [
+        "axolotl"
+    ],
+    "environment_variables": {
+        "AXOLOTL_CFG": "neftune.yaml",
+        "HF_HUB_ENABLE_HF_TRANSFER": "1",
+        "ACCELERATE_LOG_LEVEL": "info",
+        "TRANSFORMERS_VERBOSITY": "info",
+        "NCCL_ASYNC_ERROR_HANDLING": "1",
+        "WANDB_ENTITY": "augmxnt",
+        "WANDB_PROJECT": "shisa-v2",
+        "GPUS_PER_NODE": "8",
+        "MASTER_ADDR": null,
+        "MASTER_PORT": "6000",
+        "NNODES": null,
+        "NODE_RANK": null,
+        "WORLD_SIZE": null,
+        "CMD": "-m axolotl.cli.train neftune.yaml",
+        "LAUNCHER": "accelerate launch     --multi_gpu     --dynamo_backend no     --mixed_precision bf16     --num_machines $NNODES     --num_processes $WORLD_SIZE     --main_process_ip \"$MASTER_ADDR\"     --main_process_port $MASTER_PORT     --machine_rank $SLURM_PROCID     --role $SLURMD_NODENAME:     --rdzv_conf rdzv_backend=c10d     --max_restarts 0     --tee 3     ",
+        "SRUN_ARGS": "--wait=60 --kill-on-bad-exit=1",
+        "LOG_PATH": "/fsx/user02/logs/main_log.txt"
+    },
+    "resources": {
+        "gres": null,
+        "cpus_per_task": null,
+        "tasks": null,
+        "ntasks_per_code": null,
+        "gpus": null,
+        "gpus_per_node": "8",
+        "cores_per_socket": null,
+        "gpus_per_task": null,
+        "exclusive": "1",
+        "cpus_per_gpu": null,
+        "gpu_type": null,
+        "time": null,
+        "ntasks_per_node": "1",
+        "nodes": "2",
+        "memory": null,
+        "sockets_per_node": null,
+        "ntasks_per_socket": null,
+        "mem_per_gpu": null,
+        "mem_per_cpu": null,
+        "gres_flags": null
+    },
+    "versions": {}
+}

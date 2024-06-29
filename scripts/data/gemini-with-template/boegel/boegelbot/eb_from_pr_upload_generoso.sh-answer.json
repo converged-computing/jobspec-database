@@ -1,0 +1,56 @@
+{
+    "application": "easybuild",
+    "software": [
+        "easybuild-framework",
+        "easybuild-easyblocks",
+        "easybuild-easyconfigs"
+    ],
+    "modules": [
+        "${EASYBUILD_PREFIX}/modules/all"
+    ],
+    "environment_variables": {
+        "TOPDIR": "/project",
+        "CONTAINER_BIND_PATHS": "--bind ${TOPDIR}/$USER --bind ${TOPDIR}/maintainers",
+        "EB_PREFIX": "${HOME}/easybuild",
+        "PYTHONPATH": "${EB_PREFIX}/easybuild-framework:${EB_PREFIX}/easybuild-easyblocks:${EB_PREFIX}/easybuild-easyconfigs",
+        "PATH": "${EB_PREFIX}/easybuild-framework:${HOME}/.local/bin:${PATH}",
+        "CPU_ARCH": "haswell",
+        "EASYBUILD_PREFIX": "${TOPDIR}/${USER}/container-$(basename ${EB_CONTAINER})/${CPU_ARCH}",
+        "EASYBUILD_BUILDPATH": "/tmp/${USER}",
+        "EASYBUILD_SOURCEPATH": "${TOPDIR}/${USER}/sources:${TOPDIR}/maintainers/sources",
+        "EASYBUILD_GITHUB_USER": "boegelbot",
+        "EB_PYTHON": "python3",
+        "EASYBUILD_ACCEPT_EULA_FOR": ".*",
+        "EASYBUILD_HOOKS": "${HOME}/boegelbot/eb_hooks.py",
+        "EASYBUILD_CUDA_COMPUTE_CAPABILITIES": "7.0",
+        "PSM3_DEVICES": "'self,shm'",
+        "I_MPI_FABRICS": "shm",
+        "INTEL_LICENSE_FILE": "${TOPDIR}/maintainers/licenses/intel.lic",
+        "repo_pr_arg": "'--from-pr'",
+        "EB_CMD": "eb ${repo_pr_arg} ${EB_PR} --debug --rebuild --robot --upload-test-report --download-timeout=1000",
+        "CONTAINER_EXEC_CMD": "apptainer exec"
+    },
+    "resources": {
+        "gres": null,
+        "cpus_per_task": null,
+        "tasks": null,
+        "ntasks_per_code": null,
+        "gpus": null,
+        "gpus_per_node": null,
+        "cores_per_socket": null,
+        "gpus_per_task": null,
+        "exclusive": null,
+        "cpus_per_gpu": null,
+        "gpu_type": null,
+        "time": "100:0:0",
+        "ntasks_per_node": null,
+        "nodes": "1",
+        "memory": null,
+        "sockets_per_node": null,
+        "ntasks_per_socket": null,
+        "mem_per_gpu": null,
+        "mem_per_cpu": null,
+        "gres_flags": null
+    },
+    "versions": {}
+}

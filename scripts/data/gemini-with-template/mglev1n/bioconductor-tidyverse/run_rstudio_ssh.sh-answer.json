@@ -1,0 +1,35 @@
+{
+    "application": "rstudio",
+    "software": [
+        "singularity",
+        "rstudio",
+        "python",
+        "openssl",
+        "netstat"
+    ],
+    "modules": [
+        "python/3.6.1",
+        "singularity/3.8.3"
+    ],
+    "environment_variables": {
+        "R_LIBS_USER": "${HOME}/R/rocker-rstudio/4.0",
+        "RS_LOGGER_TYPE": "syslog",
+        "SINGULARITY_BIND": "${workdir}/run:/run, ${workdir}/tmp:/tmp, ${workdir}/database.conf:/etc/rstudio/database.conf, ${workdir}/rsession.sh:/etc/rstudio/rsession.sh, ${workdir}/var/lib/rstudio-server:/var/lib/rstudio-server, /project/PMBB/:/project/PMBB/, /project/damrauer_shared/:/project/damrauer_shared/, /scratch/:/${HOME}/roubaix/scratch/, /appl/:/appl/, /lsf/:/lsf/, /scratch/:/scratch",
+        "SINGULARITYENV_RSTUDIO_SESSION_TIMEOUT": "0",
+        "SINGULARITYENV_USER": "$(id -un)",
+        "SINGULARITYENV_PASSWORD": "$(openssl rand -base64 15)",
+        "OMP_NUM_THREADS": "${LSB_DJOB_NUMPROC}",
+        "OPENBLAS_NUM_THREADS": "1",
+        "LOGINHOST": "scisub7",
+        "PORT": "${RSTUDIO_PORT:-8787}",
+        "MEMORY": "$mem"
+    },
+    "resources": {
+        "cpus_per_task": "$ncpus",
+        "time": "$timelimit",
+        "memory": "$mem",
+        "queue": "$queue",
+        "resource": "$resource"
+    },
+    "versions": {}
+}

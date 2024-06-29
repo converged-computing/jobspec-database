@@ -108,7 +108,6 @@ python3 scripts/explore_top2vec.py --outname top2vec-jobspec-database-learn.md -
 python3 scripts/explore_top2vec.py --outname top2vec-jobspec-database-deep-learn.md --model ./scripts/data/combined/wordclouds/top2vec-with-doc2vec-deep-learn.model 
 ```
 
-
 For word2vec:
 
  - continuous bag of words: we create a window around the word and predict the word from the context
@@ -116,8 +115,38 @@ For word2vec:
 
 I had to run this on a large VM for it to work. See the topics in [scripts/data/combined/wordclouds](scripts/data/combined/wordclouds). We can likely tweak everything but I like how this tool is approaching it (see docs in [ddangelov/Top2Vec](https://github.com/ddangelov/Top2Vec)).
 
+### 4. Gemini
+
+We can run Gemini across our 33K jobspecs to generate a templatized output for each one:
+
+```bash
+python scripts/classify-gemini.py 
+```
+
+That takes a little over a day to run, and it will cost about 25-$30 per run. I did two runs for about $55.
+Then we can both check the model, normalize and visualize our resources (that we parsed) and compare to what Gemini says. 
+
+```bash
+python scripts/process-gemini.py
+```
+
+You can then see the data output in [scripts/data/gemini-with-template-processed](scripts/data/gemini-with-template-processed) or use this script to visualize results that are filtered to those with all, missing, or some wrong values:
+
+```bash
+# pip install rich
+python scripts/inspect-gemini.py
+
+# How to customize
+python scripts/inspect-gemini.py --type missing
+python scripts/inspect-gemini.py --type wrong
+
+# Print more than 1
+python scripts/inspect-gemini.py --type all --number 3
+```
 
 #### 4. LC Jobspec Database
+
+This database is kind of messy - not sure I like it as much as the one I generated. Someone else can deal with it :)
 
 - Total unique jobspec jsons: 210351
 - Total with BatchScript: 116117

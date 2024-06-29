@@ -1,0 +1,50 @@
+{
+    "application": "t5x",
+    "software": [
+        "jax",
+        "t5x",
+        "tensorflow",
+        "pip"
+    ],
+    "modules": [],
+    "environment_variables": {
+        "XLA_FLAGS": "--xla_gpu_simplify_all_fp_conversions --xla_gpu_all_reduce_combine_threshold_bytes=136314880",
+        "UCX_IB_ENABLE_CUDA_AFFINITY": "n",
+        "UCX_IB_PCI_RELAXED_ORDERING": "on",
+        "UCX_TLS": "rc",
+        "UCX_NET_DEVICES": "mlx5_ib0:1,mlx5_ib1:1,mlx5_ib2:1,mlx5_ib3:1,mlx5_ib4:1,mlx5_ib5:1,mlx5_ib6:1,mlx5_ib7:1",
+        "CUDA_DEVICE_ORDER": "PCI_BUS_ID",
+        "NCCL_IB_PCI_RELAXED_ORDERING": "1",
+        "NCCL_SOCKET_IFNAME": "eth0",
+        "NCCL_TOPO_FILE": "/microsoft/ndv4-topo.xml",
+        "PYTHONPATH": "/t5x/",
+        "CONTAINERS": "--container-image=nvcr.io/nvidia/tensorflow:22.11-tf2-py3 --container-mounts=$JAX_SCRATCH_SPACE:/workdir,/opt/microsoft/:/microsoft --container-name=nvidia_$RANDOM",
+        "TRAIN": "python3 -u /t5x/t5x/train.py --gin_file=/t5x/t5x/contrib/gpu/t5/t5_1_1/examples/${T5_SIZE}_pile_pretrain.gin --gin.MODEL_DIR=\"/workdir/model_dir/$(date --iso-8601=seconds)/\" --gin.network.T5Config.dtype=\"bfloat16\" --gin.TRAIN_STEPS=200 --tfds_data_dir=/workdir/data_dir/ --gin.train/utils.DatasetConfig.batch_size=$(($BS_PER_GPU*8*$SLURM_JOB_NUM_NODES)) --gin.CheckpointConfig.save=None --gin.train.stats_period=100 --gin.MIXTURE_OR_TASK_NAME=\"wmt_t2t_ende_v003\""
+    },
+    "resources": {
+        "gres": "gpu",
+        "cpus_per_task": null,
+        "tasks": null,
+        "ntasks_per_code": null,
+        "gpus": 8,
+        "gpus_per_node": 8,
+        "cores_per_socket": null,
+        "gpus_per_task": null,
+        "exclusive": true,
+        "cpus_per_gpu": null,
+        "gpu_type": null,
+        "time": null,
+        "ntasks_per_node": 8,
+        "nodes": null,
+        "memory": null,
+        "sockets_per_node": null,
+        "ntasks_per_socket": null,
+        "mem_per_gpu": null,
+        "mem_per_cpu": null,
+        "gres_flags": "gpus-per-node=8"
+    },
+    "versions": {
+        "jax": "0.4.1",
+        "tensorflow": "22.11"
+    }
+}

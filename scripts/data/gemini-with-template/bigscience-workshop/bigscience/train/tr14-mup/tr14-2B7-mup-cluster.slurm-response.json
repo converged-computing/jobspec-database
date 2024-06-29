@@ -1,0 +1,104 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\"application\": \"deepspeed\", \"software\": [\"deepspeed\", \"python\", \"torch\", \"nccl\", \"efa\", \"cuda\", \"mpi\", \"tensorboard\", \"conda\"], \"modules\": [], \"environment_variables\": {\"CUDA_LAUNCH_BLOCKING\": \"0\", \"OMP_MCA_mtl_base_verbose\": \"1\", \"FI_EFA_ENABLE_SHM_TRANSFER\": \"0\", \"FI_PROVIDER\": \"efa\", \"FI_EFA_TX_MIN_CREDITS\": \"64\", \"NCCL_TREE_THRESHOLD\": \"0\", \"NCCL_ASYNC_ERROR_HANDLING\": \"1\", \"TORCHELASTIC_ERROR_FILE\": \"/tmp/torch-elastic-error.json\", \"PYTHONFAULTHANDLER\": \"1\", \"NCCL_PROTO\": \"simple\", \"PATH\": \"/usr/local/cuda-11.4/bin:/opt/amazon/efa/bin:/admin/home/teven/miniconda3/bin:$PATH\", \"FI_EFA_FORK_SAFE\": \"1\", \"FI_LOG_LEVEL\": \"1\", \"FI_EFA_USE_DEVICE_RDMA\": \"1\", \"MASTER_ADDR\": null, \"MASTER_PORT\": \"12802\", \"MEGATRON_DEEPSPEED_REPO\": \"/fsx/teven/Megatron-DeepSpeed\", \"TOKENIZER_NAME_OR_PATH\": \"t5-small\", \"variant\": \"main\", \"DATA_PATH\": \"/fsx/data/gpt2tok_c4_text_document\", \"DATA_OUTPUT_PATH\": \"/fsx/mup_exps/checkpoints/tr14-2B7-lr$1-init0.1-inpm10-outm10-atnm10-mup\", \"CHECKPOINT_PATH\": \"/fsx/mup_exps/checkpoints/tr14-2B7-lr$1-init0.1-inpm10-outm10-atnm10-mup/checkpoints/main\", \"REPO_PATH\": \"/fsx/mup_exps/checkpoints/tr14-2B7-lr$1-init0.1-inpm10-outm10-atnm10-mup/tr14-2B7-test-lr$1-init0.1-inpm10-outm10-atnm10-mup\", \"TENSORBOARD_PATH\": \"/fsx/mup_exps/checkpoints/tr14-2B7-lr$1-init0.1-inpm10-outm10-atnm10-mup/tr14-2B7-test-lr$1-init0.1-inpm10-outm10-atnm10-mup/tensorboard/main\", \"LOGS_PATH\": \"/fsx/mup_exps/checkpoints/tr14-2B7-lr$1-init0.1-inpm10-outm10-atnm10-mup/tr14-2B7-test-lr$1-init0.1-inpm10-outm10-atnm10-mup/logs/main\", \"GPUS_PER_NODE\": \"8\", \"NNODES\": null, \"PP_SIZE\": \"1\", \"TP_SIZE\": \"2\", \"MICRO_BATCH_SIZE\": \"16\", \"GLOBAL_BATCH_SIZE\": \"512\", \"NLAYERS\": \"32\", \"NHIDDEN\": \"2560\", \"NHEADS\": \"32\", \"SEQ_LEN\": \"2048\", \"SAVE_INTERVAL\": \"250\", \"TRAIN_SAMPLES\": \"1_953_125\", \"LR_DECAY_SAMPLES\": \"1_953_125\", \"LR_WARMUP_SAMPLES\": \"183_105\", \"MUP_ARGS\": \"     --lr $1     --min-lr `bc <<< \\\"scale=3; $1/10\\\"`     --init-method-std 0.1     --mup     --mup-input-mult 10     --mup-output-mult 10     --mup-attn-mult 10     \", \"OPTIMIZER_ARGS\": \"     --optimizer adam     --adam-beta1 0.9     --adam-beta2 0.95     --adam-eps 1e-8     --lr-decay-style cosine     --lr-decay-samples $LR_DECAY_SAMPLES     --lr-warmup-samples $LR_WARMUP_SAMPLES     --clip-grad 1.0     --weight-decay 1e-1     \", \"EXIT_OPTS\": \"     --exit-duration-in-mins 1190     \", \"GPT_ARGS\": \"     --pp-partition-method 'type:transformer'     --num-layers $NLAYERS     --hidden-size $NHIDDEN     --num-attention-heads $NHEADS     --seq-length $SEQ_LEN     --max-position-embeddings $SEQ_LEN     --micro-batch-size $MICRO_BATCH_SIZE     --global-batch-size $GLOBAL_BATCH_SIZE     --train-samples $TRAIN_SAMPLES     --tokenizer-type PretrainedFromHF     --tokenizer-name-or-path $TOKENIZER_NAME_OR_PATH     --embed-layernorm     --fp16     --seed 42     --position-embedding-type alibi     --checkpoint-activations     --abort-on-unmet-fused-kernel-constraints     --pad-vocab-size-to 51200     $OPTIMIZER_ARGS     $EXIT_OPTS     \", \"OUTPUT_ARGS\": \"     --log-interval 1     --save-interval $SAVE_INTERVAL     --eval-interval 1000     --eval-iters 1     --tensorboard-dir $TENSORBOARD_PATH     --tensorboard-queue-size 5     --log-timers-to-tensorboard     --log-batch-size-to-tensorboard     --log-validation-ppl-to-tensorboard     \", \"ZERO_STAGE\": \"1\", \"config_json\": \"./ds_config.$SLURM_JOBID.json\", \"DEEPSPEED_ARGS\": \"     --deepspeed     --deepspeed_config ${config_json}     --zero-stage ${ZERO_STAGE}     --deepspeed-activation-checkpointing     \", \"LAUNCHER\": \"python -u -m torch.distributed.run     --nproc_per_node $GPUS_PER_NODE     --nnodes $NNODES     --rdzv_endpoint $MASTER_ADDR:$MASTER_PORT     --rdzv_backend c10d     --max_restarts 0     --tee 3     \", \"CMD\": \"     `pwd`/pretrain_gpt.py     --tensor-model-parallel-size $TP_SIZE     --pipeline-model-parallel-size $PP_SIZE     $GPT_ARGS     $OUTPUT_ARGS     $MUP_ARGS     --save $CHECKPOINT_PATH     --load $CHECKPOINT_PATH     --data-path $DATA_PATH     --data-impl mmap     --distributed-backend nccl      $DEEPSPEED_ARGS     \"}, \"resources\": {\"gres\": \"gpu:a100:8\", \"cpus_per_task\": \"12\", \"tasks\": null, \"ntasks_per_code\": null, \"gpus\": null, \"gpus_per_node\": \"8\", \"cores_per_socket\": null, \"gpus_per_task\": null, \"exclusive\": null, \"cpus_per_gpu\": null, \"gpu_type\": \"a100\", \"time\": \"100:00:00\", \"ntasks_per_node\": \"1\", \"nodes\": \"8\", \"memory\": null, \"sockets_per_node\": null, \"ntasks_per_socket\": null, \"mem_per_gpu\": null, \"mem_per_cpu\": null, \"gres_flags\": \"\"}, \"versions\": {}}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "citation_metadata": {
+                "citation_sources": [
+                    {
+                        "start_index": 2166,
+                        "end_index": 2352,
+                        "uri": "https://github.com/rct-ai/rct-bigmodel-train",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 2434,
+                        "end_index": 2627,
+                        "uri": "https://github.com/TurkuNLP/finngen-tools",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 2525,
+                        "end_index": 2786,
+                        "uri": "https://github.com/EastInsure/train-online",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 2796,
+                        "end_index": 2968,
+                        "uri": "https://github.com/EastInsure/train-online",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 2983,
+                        "end_index": 3264,
+                        "uri": "https://github.com/rct-ai/rct-bigmodel-train",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 3143,
+                        "end_index": 3329,
+                        "uri": "https://github.com/huggingface/datablations",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 3225,
+                        "end_index": 3399,
+                        "uri": "https://github.com/rct-ai/rct-bigmodel-train",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 3544,
+                        "end_index": 3729,
+                        "uri": "https://www.editcode.net/forum.php?mod=viewthread&tid=868044",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 3597,
+                        "end_index": 3759,
+                        "uri": "https://discuss.pytorch.org/t/trouble-launching-on-multiple-nodes/172582",
+                        "license_": ""
+                    }
+                ]
+            },
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 2611,
+        "candidates_token_count": 1850,
+        "total_token_count": 4461,
+        "cached_content_token_count": 0
+    }
+}

@@ -1,0 +1,53 @@
+{
+    "application": "pbs",
+    "software": [
+        "prodigal",
+        "blast",
+        "perl",
+        "uproc-prot",
+        "remove_simple_contigs.pl",
+        "get_hits_uproc.pl"
+    ],
+    "modules": [
+        "perl",
+        "blast"
+    ],
+    "environment_variables": {
+        "HOST": "hostname",
+        "LOG": "$STDOUT_DIR2/$HOST_getPatric_.log",
+        "ERRORLOG": "$STDERR_DIR2/$HOST_error.log",
+        "XFILE": "head -n +${PBS_ARRAY_INDEX} $FILES_LIST | tail -n 1",
+        "CFILE": "${XFILE:2}",
+        "FILE": "$SPLIT/$CFILE",
+        "OUT": "$PRODIGAL_DIR/$CFILE.gbk",
+        "PROT": "$PRODIGAL_DIR/$CFILE.faa",
+        "OUT2": "$SELECTED/selected_$CFILE.faa",
+        "RUN": "$WORKER_DIR/remove_simple_contigs.pl",
+        "OUT3": "$UPROC_DIR/uproc_$CFILE.txt",
+        "OUT4": "$UPROC_DIR/AMGs_$CFILE.txt",
+        "PFAM_VIR": "$PFAM_VIR"
+    },
+    "resources": {
+        "gres": "",
+        "cpus_per_task": "10",
+        "tasks": "",
+        "ntasks_per_code": "",
+        "gpus": "",
+        "gpus_per_node": "",
+        "cores_per_socket": "",
+        "gpus_per_task": "",
+        "exclusive": "",
+        "cpus_per_gpu": "",
+        "gpu_type": "",
+        "time": "12:00:00",
+        "ntasks_per_node": "",
+        "nodes": "5",
+        "memory": "50gb",
+        "sockets_per_node": "",
+        "ntasks_per_socket": "",
+        "mem_per_gpu": "",
+        "mem_per_cpu": "",
+        "gres_flags": "place=pack:shared,pvmem=235gb"
+    },
+    "versions": {}
+}

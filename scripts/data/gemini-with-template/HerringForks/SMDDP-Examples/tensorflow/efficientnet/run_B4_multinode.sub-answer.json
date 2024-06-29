@@ -1,0 +1,44 @@
+{
+    "application": "tensorflow",
+    "software": [
+        "python3",
+        "efficientnet-tf2",
+        "mpi"
+    ],
+    "modules": [
+        "nvcr.io/nvidia/efficientnet-tf2:21.02-tf2-py3"
+    ],
+    "environment_variables": {
+        "datadir": "/datasets/imagenet/train-val-tfrecord",
+        "checkpointdir": "$PWD/B4_mulitnode_AMP/",
+        "OUTFILE": "${checkpointdir}/slurm-%j.out",
+        "ERRFILE": "${checkpointdir}/error-%j.out",
+        "mounts": "${datadir}:/data,${checkpointdir}:/model"
+    },
+    "resources": {
+        "gres": null,
+        "cpus_per_task": null,
+        "tasks": null,
+        "ntasks_per_code": null,
+        "gpus": null,
+        "gpus_per_node": null,
+        "cores_per_socket": null,
+        "gpus_per_task": null,
+        "exclusive": true,
+        "cpus_per_gpu": null,
+        "gpu_type": null,
+        "time": "8:00:00",
+        "ntasks_per_node": 1,
+        "nodes": "${SLURM_JOB_NUM_NODES}",
+        "memory": 0,
+        "sockets_per_node": null,
+        "ntasks_per_socket": null,
+        "mem_per_gpu": null,
+        "mem_per_cpu": null,
+        "gres_flags": null
+    },
+    "versions": {
+        "python": "3",
+        "efficientnet-tf2": "21.02-tf2-py3"
+    }
+}

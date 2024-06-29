@@ -1,0 +1,45 @@
+{
+    "application": "python",
+    "software": [
+        "nvidia-smi",
+        "python dist_training_runner_w_coordinator.py"
+    ],
+    "modules": [
+        "gcc/6.3.0",
+        "cuda/11.0.3"
+    ],
+    "environment_variables": {
+        "NCCL_SOCKET_IFNAME": "access",
+        "GLOO_SOCKET_IFNAME": "access",
+        "world_size": "64",
+        "DIST_CONF": "--pp-mode gpipe --world-size 64 --pipeline-group-size 8 --data-group-size 8 --cuda-id 0",
+        "MODEL_CONF": "--fp16 --embedding-dim 2048 --num-heads 16 --num-layers 6 --batch-size 64 --micro-batch-size 1",
+        "COOR_CONF": "--coordinator-server-ip 129.132.93.84"
+    },
+    "resources": {
+        "gres": "gpu_model0==NVIDIATITANRTX",
+        "cpus_per_task": "1",
+        "tasks": null,
+        "ntasks_per_code": null,
+        "gpus": "1",
+        "gpus_per_node": null,
+        "cores_per_socket": null,
+        "gpus_per_task": "1",
+        "exclusive": true,
+        "cpus_per_gpu": null,
+        "gpu_type": "NVIDIATITANRTX",
+        "time": "0:20",
+        "ntasks_per_node": null,
+        "nodes": null,
+        "memory": "16000",
+        "sockets_per_node": null,
+        "ntasks_per_socket": null,
+        "mem_per_gpu": null,
+        "mem_per_cpu": null,
+        "gres_flags": "ngpus_excl_p=1"
+    },
+    "versions": {
+        "gcc": "6.3.0",
+        "cuda": "11.0.3"
+    }
+}

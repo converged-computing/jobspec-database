@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\"application\": \"miniem\", \"software\": [\"mpirun\", \"PanzerMiniEM_BlockPrec.exe\", \"MueLu\", \"Tpetra\", \"kokkos-tools\", \"LDPXI\", \"numactl\"], \"modules\": [], \"environment_variables\": {\"SLURM_JOB_ID\": \"424242\", \"DIR_BASE\": \"`pwd -P`\", \"DIR_ROOT\": \"`git rev-parse --show-toplevel`\", \"DAYSTAMP\": \"`date '+%Y%m%d'`\", \"SECSTAMP\": \"`date '+%Y%m%d_%H%M%S'`\", \"FULLUNIQ\": \"${SECSTAMP}_${RANDOM}\", \"DIR_CASE\": \"${SECSTAMP}_${SLURM_JOB_ID}\", \"DIR_RUN\": \"run-${DIR_CASE}\", \"TMPDIR\": \"/tmp/$SLURM_JOB_ID\", \"FILE_LOG\": \"output-mpirun-${DIR_CASE}.log\", \"FILE_METRICS\": \"output-metrics-${DIR_CASE}.csv\", \"FILE_ENV\": \"output-environment-${DIR_CASE}.txt\", \"FILE_STATE\": \"output-state-${DIR_CASE}.log\", \"FILE_TRY\": \"output-script-${DIR_CASE}.log\", \"FILE_TIME\": \"output-time-${DIR_CASE}.txt\", \"APP_NAME\": \"PanzerMiniEM_BlockPrec.exe\", \"APP_INPUT\": \"maxwell-large.xml\", \"APP_REPEAT\": \"${APP_REPEAT:-1}\", \"APP_EXE\": \"${DIR_BASE}/${APP_NAME}\", \"MINIEM_SIZE\": \"${MINIEM_SIZE:-40}\", \"MINIEM_STEPS\": \"${MINIEM_STEPS:-450}\", \"MINIEM_IS_KOKKOS_TOOLS\": \"${MINIEM_IS_KOKKOS_TOOLS:-no}\", \"NODES\": \"${NODES:-1}\", \"RANKS_PER_DOMAIN\": \"${RANKS_PER_DOMAIN:-14}\", \"SOCKETS_PER_NODE\": \"${SOCKETS_PER_NODE:-2}\", \"DOMAINS_PER_SOCKET\": \"${DOMAINS_PER_SOCKET:-4}\", \"RANKS_PER_SOCKET\": \"$(($RANKS_PER_DOMAIN * $DOMAINS_PER_SOCKET))\", \"RANKS_PER_NODE\": \"$(($RANKS_PER_DOMAIN * $DOMAINS_PER_SOCKET * $SOCKETS_PER_NODE))\", \"RANKS_PER_JOB\": \"$(($RANKS_PER_NODE * $NODES))\", \"MINIEM_RANK_BIND\": \"`${DIR_ROOT}/map_cpu/map_cpu ${RANKS_PER_NODE} 2>/dev/null`\", \"SWTHREADS_PER_RANK\": \"${SWTHREADS_PER_RANK:-1}\", \"HWTHREADS_PER_CORE\": \"${HWTHREADS_PER_CORE:-2}\", \"PLACEHOLDERS_PER_RANK\": \"$(($SWTHREADS_PER_RANK * $HWTHREADS_PER_CORE))\", \"PES_PER_NODE\": \"$(($RANKS_PER_NODE * $SWTHREADS_PER_RANK))\", \"OMP_NUM_THREADS\": \"${SWTHREADS_PER_RANK}\", \"OMP_PROC_BIND\": \"spread\", \"OMP_PLACES\": \"threads\", \"OMP_STACKSIZE\": \"2G\", \"MPICH_MAX_THREAD_SAFETY\": \"multiple\", \"FI_CXI_RX_MATCH_MODE\": \"software\", \"KOKKOS_TOOLS_LIBS\": \"${DIR_ROOT}/kokkos-tools/profiling/space-time-stack/kp_space_time_stack.so\", \"LDPXI_INST\": \"gru,io,mpi,rank,mem\", \"LDPXI_OUTPUT\": \"miniem-ldpxi.$SLURM_JOB_ID.csv\", \"dir_try\": \"try-` printf '%02d' $i `\", \"dir_current_work\": \"` pwd -P `\", \"MINIEM_CPU_BIND\": \"\"}, \"resources\": {\"gres\": \"\", \"cpus_per_task\": \"28\", \"tasks\": \"1\", \"ntasks_per_code\": \"1\", \"gpus\": \"\", \"gpus_per_node\": \"\", \"cores_per_socket\": \"\", \"gpus_per_task\": \"\", \"exclusive\": \"\", \"cpus_per_gpu\": \"\", \"gpu_type\": \"\", \"time\": \"4:00:00\", \"ntasks_per_node\": \"14\", \"nodes\": \"1\", \"memory\": \"\", \"sockets_per_node\": \"2\", \"ntasks_per_socket\": \"4\", \"mem_per_gpu\": \"\", \"mem_per_cpu\": \"\", \"gres_flags\": \"\"}, \"versions\": {}}\n```\n\n**Explanation:**\n\n* **Application**: The script is primarily for running MiniEM simulations, hence \"miniem\" is the application.\n* **Software**: The script utilizes various software packages like `mpirun` for parallel execution, `PanzerMiniEM_BlockPrec.exe` as the main executable, `MueLu` and `Tpetra` for linear algebra, `kokkos-tools` for profiling, `LDPXI` for performance analysis, and `numactl` for NUMA node information.\n* **Modules**:  There are no explicit module loading commands in the script, so this field is left empty.\n* **Environment Variables**: The script sets numerous environment variables for configuration and execution. These variables define paths, file names, application-specific parameters, MPI settings, OpenMP settings, and more. \n* **Resources**:\n    * **nodes**: The script requests one node (`--nodes=1`).\n    * **time**: The job is allocated a runtime of 4 hours (`--time=4:00:00`).\n    * **ntasks_per_node**:  The script utilizes 14 ranks per node based on the `RANKS_PER_NODE` variable.\n    * **cpus_per_task**:  The script uses 28 cores per task based on the `SRUN_CPUS_PER_TASK` variable. This is likely determined by hardware configuration and possibly related to the `RANKS_PER_NODE` and `SWTHREADS_PER_RANK` values.\n* **Versions**: The script doesn't explicitly specify versions for the software. \n\n**Note**: The script does not define the memory requirements for the job, so it's not included in the JSON output. Additionally, the `--exclude` option in the script is a SLURM directive to exclude specific nodes, not a resource request. \n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 2346,
+        "candidates_token_count": 1449,
+        "total_token_count": 3795,
+        "cached_content_token_count": 0
+    }
+}

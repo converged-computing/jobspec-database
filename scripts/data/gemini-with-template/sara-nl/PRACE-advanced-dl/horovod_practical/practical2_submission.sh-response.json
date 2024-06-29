@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\"application\": \"keras\", \"software\": [\"python\", \"mpirun\"], \"modules\": [\"Python/3.6.3-foss-2017b\"], \"environment_variables\": {\"HDIS_ROOT\": \"/path/to/hdis\"}, \"resources\": {\"gres\": \"\", \"cpus_per_task\": \"1\", \"tasks\": \"16\", \"ntasks_per_code\": \"16\", \"gpus\": \"\", \"gpus_per_node\": \"\", \"cores_per_socket\": \"\", \"gpus_per_task\": \"\", \"exclusive\": \"\", \"cpus_per_gpu\": \"\", \"gpu_type\": \"\", \"time\": \"1:50:00\", \"ntasks_per_node\": \"2\", \"nodes\": \"8\", \"memory\": \"\", \"sockets_per_node\": \"\", \"ntasks_per_socket\": \"\", \"mem_per_gpu\": \"\", \"mem_per_cpu\": \"\", \"gres_flags\": \"\"}, \"versions\": {\"python\": \"3.6.3\"}}\n```\n\n**Explanation:**\n\n* **application:** The primary application being run is \"keras\", indicated by the script name `keras-cifar10-resnet.py`. \n* **software:** The script uses Python and the `mpirun` command for parallel execution.\n* **modules:** The script loads the \"Python/3.6.3-foss-2017b\" module.\n* **environment_variables:** The script uses the `source hdis/bin/activate` command, indicating that an environment variable `HDIS_ROOT` likely points to the path of the `hdis` library.\n* **resources:** \n    * **tasks:**  The `mpirun -np 16`  specifies 16 tasks.\n    * **ntasks_per_node:**  `--tasks-per-node 2` indicates 2 tasks per node.\n    * **nodes:**  `-N 8` requests 8 nodes.\n    * **time:**  `-t 1:50:00` sets the job's time limit to 1 hour and 50 minutes.\n    * **ntasks_per_code:** The `--map-by ppr:1:socket:pe=16` option within `mpirun` suggests that the code will be launched on 16 processes, which are mapped to all sockets in the system and each process will utilize one physical core.\n* **versions:** The Python version is 3.6.3.\n\n**Note:**  The script does not provide information about other resources such as GPUs, memory, or specific hardware configurations. \n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 327,
+        "candidates_token_count": 586,
+        "total_token_count": 913,
+        "cached_content_token_count": 0
+    }
+}

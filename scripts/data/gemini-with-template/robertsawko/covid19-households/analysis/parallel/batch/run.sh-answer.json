@@ -1,0 +1,45 @@
+{
+    "application": "bsub",
+    "software": [
+        "python",
+        "scan.py"
+    ],
+    "modules": [
+        "ml",
+        "Community",
+        "anaconda"
+    ],
+    "environment_variables": {
+        "PYTHONPATH": "$(pwd):$PYTHONPATH",
+        "NO_OF_SIMS": "288",
+        "FIRST": "1",
+        "CORES_PER_HOST": "20",
+        "LAST": "$(($FIRST+$NO_OF_SIMS-1))",
+        "NO_OF_BATCHES": "$(($NO_OF_SIMS/$CORES_PER_HOST))",
+        "REMAINDER": "$(($NO_OF_SIMS%$CORES_PER_HOST))",
+        "JOB_NAME": "ensemble-${FIRST}-${LAST}"
+    },
+    "resources": {
+        "gres": "/covid/households",
+        "cpus_per_task": "20",
+        "tasks": "${NO_OF_BATCHES}",
+        "ntasks_per_code": "20",
+        "gpus": "",
+        "gpus_per_node": "",
+        "cores_per_socket": "",
+        "gpus_per_task": "",
+        "exclusive": "",
+        "cpus_per_gpu": "",
+        "gpu_type": "",
+        "time": "8:00",
+        "ntasks_per_node": "20",
+        "nodes": "",
+        "memory": "",
+        "sockets_per_node": "",
+        "ntasks_per_socket": "",
+        "mem_per_gpu": "",
+        "mem_per_cpu": "",
+        "gres_flags": ""
+    },
+    "versions": {}
+}

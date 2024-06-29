@@ -1,0 +1,45 @@
+{
+    "application": "slurm",
+    "software": [
+        "singularity",
+        "python",
+        "mixer.py"
+    ],
+    "modules": [
+        "singularity/3.7.1"
+    ],
+    "environment_variables": {
+        "COMORMENT": "/ess/p697/data/durable/s3-api/github/comorment",
+        "SINGULARITY_BIND": "$COMORMENT/mixer/reference:/REF:ro",
+        "SIF": "$COMORMENT/mixer/singularity",
+        "MIXER_COMMON_ARGS": "--chr2use 21 --ld-file /REF/ldsc/1000G_EUR_Phase3_plink/1000G.EUR.QC.@.run4.ld --bim-file /REF/ldsc/1000G_EUR_Phase3_plink/1000G.EUR.QC.@.bim",
+        "REP": "rep${SLURM_ARRAY_TASK_ID}",
+        "EXTRACT": "--extract /REF/ldsc/1000G_EUR_Phase3_plink/1000G.EUR.QC.prune_maf0p05_rand2M_r2p8.$REP.snps",
+        "PYTHON": "singularity exec --home $PWD:/home $SIF/mixer.sif python"
+    },
+    "resources": {
+        "gres": null,
+        "cpus_per_task": "16",
+        "tasks": null,
+        "ntasks_per_code": null,
+        "gpus": null,
+        "gpus_per_node": null,
+        "cores_per_socket": null,
+        "gpus_per_task": null,
+        "exclusive": null,
+        "cpus_per_gpu": null,
+        "gpu_type": null,
+        "time": "02:00:00",
+        "ntasks_per_node": null,
+        "nodes": null,
+        "memory": null,
+        "sockets_per_node": null,
+        "ntasks_per_socket": null,
+        "mem_per_gpu": null,
+        "mem_per_cpu": "8000M",
+        "gres_flags": null
+    },
+    "versions": {
+        "singularity": "3.7.1"
+    }
+}

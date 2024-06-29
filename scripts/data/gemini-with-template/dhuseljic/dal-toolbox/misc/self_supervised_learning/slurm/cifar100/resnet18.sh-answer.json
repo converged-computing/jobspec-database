@@ -1,0 +1,39 @@
+{
+    "application": "slurm",
+    "software": [
+        "python",
+        "zsh"
+    ],
+    "modules": [],
+    "environment_variables": {
+        "random_seed": "$SLURM_ARRAY_TASK_ID",
+        "temperature": "${temperature_array[$((SLURM_ARRAY_TASK_ID / 8 % 2)) + 1]}",
+        "accumulate_batches": "${accumulate_array[$((SLURM_ARRAY_TASK_ID % 2)) + 1]}",
+        "optimizer_base_lr": "${lr_array[$((SLURM_ARRAY_TASK_ID / 2 % 4)) + 1]}",
+        "effective_batch_size": "((accumulate_batches * train_batch_size))",
+        "output_dir": "/mnt/stud/home/ynagel/dal-toolbox/results/self_supervised_learning/${dataset}/simclr_${encoder}/baselr_${optimizer_base_lr}_bs_${effective_batch_size}_temp_${temperature}/seed${random_seed}/"
+    },
+    "resources": {
+        "gres": "gpu:1",
+        "cpus_per_task": "24",
+        "tasks": "1-16",
+        "ntasks_per_code": "1",
+        "gpus": "1",
+        "gpus_per_node": null,
+        "cores_per_socket": null,
+        "gpus_per_task": "1",
+        "exclusive": null,
+        "cpus_per_gpu": null,
+        "gpu_type": null,
+        "time": null,
+        "ntasks_per_node": null,
+        "nodes": null,
+        "memory": "32gb",
+        "sockets_per_node": null,
+        "ntasks_per_socket": null,
+        "mem_per_gpu": null,
+        "mem_per_cpu": null,
+        "gres_flags": null
+    },
+    "versions": {}
+}

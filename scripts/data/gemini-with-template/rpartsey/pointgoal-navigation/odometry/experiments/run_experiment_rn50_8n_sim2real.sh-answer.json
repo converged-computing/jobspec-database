@@ -1,0 +1,54 @@
+{
+    "application": "slurm",
+    "software": [
+        "python",
+        "train_odometry_v2"
+    ],
+    "modules": [
+        "cuda/10.1",
+        "cudnn/v7.6.5.32-cuda.10.1",
+        "anaconda3/5.0.1",
+        "gcc/7.1.0",
+        "cmake/3.10.1/gcc.5.4.0",
+        "challenge_2021"
+    ],
+    "environment_variables": {
+        "CUDA_HOME": "/public/apps/cuda/10.1",
+        "CUDA_NVCC_EXECUTABLE": "/public/apps/cuda/10.1/bin/nvcc",
+        "CUDNN_INCLUDE_PATH": "/public/apps/cuda/10.1/include/",
+        "CUDNN_LIBRARY_PATH": "/public/apps/cuda/10.1/lib64/",
+        "LIBRARY_PATH": "/public/apps/cuda/10.1/lib64",
+        "CMAKE_PREFIX_PATH": "${CONDA_PREFIX:-\"$(dirname $(which conda))/../\"}",
+        "USE_CUDA": "1",
+        "USE_CUDNN": "1",
+        "USE_MKLDNN": "1",
+        "CURRENT_DATETIME": "`date +%Y_%m_%d_%H_%M_%S`",
+        "MASTER_ADDR": "$(srun --ntasks=1 hostname 2>&1 | tail -n1)",
+        "CMD_OPTS": "$(cat \"$CMD_OPTS_FILE\")",
+        "GLOG_minloglevel": "2",
+        "MAGNUM_LOG": "quiet"
+    },
+    "resources": {
+        "gres": "gpu:8",
+        "cpus_per_task": "10",
+        "tasks": null,
+        "ntasks_per_code": null,
+        "gpus": "8",
+        "gpus_per_node": "8",
+        "cores_per_socket": null,
+        "gpus_per_task": "1",
+        "exclusive": null,
+        "cpus_per_gpu": "1.25",
+        "gpu_type": "volta",
+        "time": "72:00:00",
+        "ntasks_per_node": "8",
+        "nodes": "8",
+        "memory": "450GB",
+        "sockets_per_node": null,
+        "ntasks_per_socket": null,
+        "mem_per_gpu": "56.25GB",
+        "mem_per_cpu": "4.5GB",
+        "gres_flags": "volta32gb"
+    },
+    "versions": {}
+}

@@ -1,0 +1,51 @@
+{
+    "application": "nurd",
+    "software": [
+        "nurd_reweighting.py"
+    ],
+    "modules": [],
+    "environment_variables": {
+        "AMD_PYTHON_STRING": "/scratch/apm470/py38_amd/bin/python",
+        "NVIDIA_PYTHON_STRING": "/scratch/apm470/py38_nvidia/bin/python",
+        "PYTHON_STRING": "/scratch/apm470/py38_amd/bin/python",
+        "MODIFIER": "submit",
+        "GPUTYPE": "nvidia",
+        "WORKERS": "2",
+        "BS": "300",
+        "DIST_EPOCHS": "5",
+        "NR_EPOCHS": "10",
+        "NUM_FOLDS": "5",
+        "DATASET": "waterbirds",
+        "MODEL": "resnet_color",
+        "IMGSIZE": "224",
+        "GPUSTRING": "",
+        "BORDER": "6",
+        "RHO_TEST": "9",
+        "PREFIX": "ERM_EQUALIZED_weight_waterbirds_BS300_seed9000_RHOTEST09_BORDER6_allwd001_glr0005_FINAL",
+        "ARGS_STRING": "--prefix=ERM_EQUALIZED_weight_waterbirds_BS300_seed9000_RHOTEST09_BORDER6_allwd001_glr0005_FINAL --dataset=waterbirds --workers=0 --dist_epochs=5 --nr_epochs=10 --nr_batch_size=300 --dist_batch_size=300 --seed=9000 --rho=0.5 --img_side=224 --label_balance_method=downsample --rho_test=0.5 --border=6 --pred_model_type=resnet_color --weight_model_type=resnet_color --num_folds=5 --theta_lr=0.001 --gamma_lr=0.0005 --phi_lr=0.001 --nr_lr=0.001 --dist_decay=0.01 --phi_decay=0.01 --nr_decay=0.01 --nr_strategy=weight --debug=2",
+        "COMMAND_STRING": "\n                    \n# eval '$PYTHON_STRING nurd_reweighting.py $ARGS_STRING --nr_only --debug=10 >  SBATCH_LOGS/weights_$PREFIX.log'\n\n# eval '$PYTHON_STRING nurd_reweighting.py $ARGS_STRING --add_pred_suffix=_ERM --exact --coeff=0.5 --lambda_=0 --max_lambda_=0 --frac_phi_steps=0 --randomrestart=-1 > SBATCH_LOGS/${PREFIX}_ERM.log'\n\n                    "
+    },
+    "resources": {
+        "gres": "gpu:1",
+        "cpus_per_task": "2",
+        "tasks": null,
+        "ntasks_per_code": null,
+        "gpus": "1",
+        "gpus_per_node": null,
+        "cores_per_socket": null,
+        "gpus_per_task": "1",
+        "exclusive": null,
+        "cpus_per_gpu": null,
+        "gpu_type": null,
+        "time": "00:10:00",
+        "ntasks_per_node": null,
+        "nodes": null,
+        "memory": "30G",
+        "sockets_per_node": null,
+        "ntasks_per_socket": null,
+        "mem_per_gpu": null,
+        "mem_per_cpu": null,
+        "gres_flags": ""
+    },
+    "versions": {}
+}

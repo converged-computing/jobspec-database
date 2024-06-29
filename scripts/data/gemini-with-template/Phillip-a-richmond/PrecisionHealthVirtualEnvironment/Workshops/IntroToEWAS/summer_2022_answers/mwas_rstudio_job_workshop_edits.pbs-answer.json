@@ -1,0 +1,44 @@
+{
+    "application": "rstudio",
+    "software": [
+        "singularity",
+        "openssl",
+        "python",
+        "rserver"
+    ],
+    "modules": [
+        "gcc",
+        "singularity"
+    ],
+    "environment_variables": {
+        "RANDFILE": "$TMPDIR/.rnd",
+        "SINGULARITYENV_PASSWORD": "$(openssl rand -base64 15)",
+        "PORT": "$(python -c 'import socket; s=socket.socket(); s.bind((\"\", 0)); print(s.getsockname()[1]); s.close()')",
+        "SECURE_COOKIE": "$TMPDIR/secure-cookie-key",
+        "SINGULARITYENV_LD_LIBRARY_PATH": "/usr/lib/x86_64-linux-gnu:$LD_LIBRARY_PATH",
+        "RSTUDIO_WHICH_R": "/usr/local/bin/R"
+    },
+    "resources": {
+        "gres": "",
+        "cpus_per_task": "4",
+        "tasks": "1",
+        "ntasks_per_code": "",
+        "gpus": "",
+        "gpus_per_node": "",
+        "cores_per_socket": "",
+        "gpus_per_task": "",
+        "exclusive": "",
+        "cpus_per_gpu": "",
+        "gpu_type": "",
+        "time": "02:30:00",
+        "ntasks_per_node": "",
+        "nodes": "1",
+        "memory": "16gb",
+        "sockets_per_node": "",
+        "ntasks_per_socket": "",
+        "mem_per_gpu": "",
+        "mem_per_cpu": "",
+        "gres_flags": ""
+    },
+    "versions": {}
+}

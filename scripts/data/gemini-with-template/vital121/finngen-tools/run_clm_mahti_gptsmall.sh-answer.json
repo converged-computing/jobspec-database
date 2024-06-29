@@ -1,0 +1,61 @@
+{
+    "application": "deepspeed",
+    "software": [
+        "deepspeed",
+        "python",
+        "pytorch",
+        "gcc",
+        "cuda",
+        "pdsh",
+        "pickled_stats.py",
+        "run_clm.py",
+        "tokenizer"
+    ],
+    "modules": [
+        "gcc/10.3.0",
+        "cuda/11.2.2",
+        "pytorch/1.9",
+        "pdsh/2.31"
+    ],
+    "environment_variables": {
+        "SING_IMAGE": "/appl/soft/ai/singularity/images/pytorch_1.9.0_csc_custom.sif",
+        "SING_FLAGS": "-B /appl/spack/v014/install-tree/gcc-4.8.5/pdsh-2.31-cdzt5w/bin:/usr/local/sbin",
+        "DATA_DIR": "data",
+        "OUTPUT_DIR": "output-gptsmall",
+        "NUM_EPOCHS": "10",
+        "PER_GPU_BATCH_SIZE": "16",
+        "BASE_LEARNING_RATE": "3e-5",
+        "GRADIENT_ACCUMULATION_STEPS": "4",
+        "GPUS_PER_NODE": "4",
+        "HOSTFILE": "hostfiles/$SLURM_JOBID.txt",
+        "TRAIN_EXAMPLES": "$TRAIN_EXAMPLES",
+        "TOTAL_TRAIN_EXAMPLES": "$((TRAIN_EXAMPLES * NUM_EPOCHS))",
+        "NUM_GPUS": "$((NUM_NODES*GPUS_PER_NODE))",
+        "EFFECTIVE_BATCH_SIZE": "$((PER_GPU_BATCH_SIZE * NUM_GPUS * GRADIENT_ACCUMULATION_STEPS))",
+        "MAX_STEPS": "$((TOTAL_TRAIN_EXAMPLES + (EFFECTIVE_BATCH_SIZE-1)) / EFFECTIVE_BATCH_SIZE)",
+        "LEARNING_RATE": "$LEARNING_RATE"
+    },
+    "resources": {
+        "gres": "gpu:a100:4",
+        "cpus_per_task": null,
+        "tasks": null,
+        "ntasks_per_code": null,
+        "gpus": null,
+        "gpus_per_node": "4",
+        "cores_per_socket": null,
+        "gpus_per_task": null,
+        "exclusive": null,
+        "cpus_per_gpu": null,
+        "gpu_type": "a100",
+        "time": "36:00:00",
+        "ntasks_per_node": null,
+        "nodes": "6",
+        "memory": null,
+        "sockets_per_node": null,
+        "ntasks_per_socket": null,
+        "mem_per_gpu": null,
+        "mem_per_cpu": null,
+        "gres_flags": null
+    },
+    "versions": {}
+}

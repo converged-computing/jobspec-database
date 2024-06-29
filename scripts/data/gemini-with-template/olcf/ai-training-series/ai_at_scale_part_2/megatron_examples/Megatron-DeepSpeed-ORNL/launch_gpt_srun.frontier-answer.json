@@ -1,0 +1,59 @@
+{
+    "application": "deepspeed",
+    "software": [
+        "python",
+        "deepspeed",
+        "srun",
+        "gcc",
+        "rocm",
+        "nccl",
+        "conda",
+        "bash"
+    ],
+    "modules": [
+        "PrgEnv-gnu",
+        "gcc/11.2.0",
+        "rocm/5.4.0"
+    ],
+    "environment_variables": {
+        "LD_PRELOAD": "/usr/lib64/libcrypto.so /usr/lib64/libssh.so.4 /usr/lib64/libssl.so.1.1",
+        "ROCM_HOME": "/opt/rocm-5.4.0",
+        "TRANSFORMERS_OFFLINE": "1",
+        "HF_DATASETS_OFFLINE": "1",
+        "NCCL_DEBUG": "INFO",
+        "TORCH_EXTENSIONS_DIR": "$PWD/deepspeed",
+        "HF_HOME": "$PWD/hfdata",
+        "OMP_NUM_THREADS": "1",
+        "CUDA_DEVICE_MAX_CONNECTIONS": "1",
+        "MASTER_ADDR": null,
+        "CHECKPOINT_PATH": "checkpoints/gpt2_345m",
+        "VOCAB_FILE": "gpt2-vocab.json",
+        "MERGE_FILE": "gpt2-merges.txt",
+        "DATA_PATH": "/lustre/orion/world-shared/stf218/sajal/mtds/gptdata/gpttext_article_document",
+        "GPT_ARGS": "--tensor-model-parallel-size 8 \\          --pipeline-model-parallel-size 2 \\          --num-layers 24 \\          --hidden-size 2064 \\          --num-attention-heads 24 \\          --seq-length 2048 \\          --max-position-embeddings 2048 \\          --micro-batch-size 2 \\          --lr 0.00015 \\          --train-iters 1000 \\          --lr-decay-iters 50 \\          --lr-decay-style cosine \\          --vocab-file $VOCAB_FILE \\          --merge-file $MERGE_FILE \\          --lr-warmup-fraction .01 \\          ",
+        "OUTPUT_ARGS": "--log-interval 10 \\             --save-interval 500 \\             --eval-interval 100 \\             --eval-iters 10"
+    },
+    "resources": {
+        "gres": null,
+        "cpus_per_task": "2",
+        "tasks": null,
+        "ntasks_per_code": null,
+        "gpus": null,
+        "gpus_per_node": "8",
+        "cores_per_socket": null,
+        "gpus_per_task": null,
+        "exclusive": null,
+        "cpus_per_gpu": null,
+        "gpu_type": null,
+        "time": "00:20:00",
+        "ntasks_per_node": "8",
+        "nodes": "4",
+        "memory": null,
+        "sockets_per_node": null,
+        "ntasks_per_socket": null,
+        "mem_per_gpu": null,
+        "mem_per_cpu": null,
+        "gres_flags": null
+    },
+    "versions": {}
+}

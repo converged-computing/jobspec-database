@@ -1,0 +1,46 @@
+{
+    "application": "rstudio",
+    "software": [
+        "singularity",
+        "java",
+        "rserver"
+    ],
+    "modules": [
+        "java/11.0.5",
+        "singularity/3.5.2"
+    ],
+    "environment_variables": {
+        "OMP_NUM_THREADS": "${SLURM_JOB_CPUS_PER_NODE}",
+        "R_LIBS_USER": "/usr/local/lib/R/site-library",
+        "SINGULARITY_BIND": "${workdir}/run:/run,${workdir}/tmp:/tmp,${workdir}/database.conf:/etc/rstudio/database.conf,${workdir}/rsession.sh:/etc/rstudio/rsession.sh,${workdir}/var/lib/rstudio-server:/var/lib/rstudio-server",
+        "SINGULARITYENV_RSTUDIO_SESSION_TIMEOUT": "0",
+        "SINGULARITYENV_USER": "$(id -un)",
+        "SINGULARITYENV_PASSWORD": "$(echo $RANDOM | base64 | head -c 20)"
+    },
+    "resources": {
+        "gres": "",
+        "cpus_per_task": "40",
+        "tasks": "1",
+        "ntasks_per_code": null,
+        "gpus": null,
+        "gpus_per_node": null,
+        "cores_per_socket": null,
+        "gpus_per_task": null,
+        "exclusive": null,
+        "cpus_per_gpu": null,
+        "gpu_type": null,
+        "time": "1:00:00",
+        "ntasks_per_node": "1",
+        "nodes": "1",
+        "memory": "190000",
+        "sockets_per_node": null,
+        "ntasks_per_socket": null,
+        "mem_per_gpu": null,
+        "mem_per_cpu": null,
+        "gres_flags": ""
+    },
+    "versions": {
+        "java": "11.0.5",
+        "singularity": "3.5.2"
+    }
+}

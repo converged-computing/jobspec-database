@@ -1,0 +1,68 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\"application\": \"bwa\", \"software\": [\"sickle\", \"scythe\", \"seqqs\", \"bwa\", \"samtools\", \"picardtools\", \"bedtools\", \"python\", \"multi-map-corrector-V1.6.py\", \"perl\"], \"modules\": [\"testing_env\", \"production_env\", \"sickle-1.2.2013\", \"bwa-0.7.7\", \"samtools-0.1.18\", \"jre-7.11\", \"picardtools-1.84\", \"bedtools-2.17.0\", \"python-2.7.5\"], \"environment_variables\": {\"readsPath\": \"/tgac/data/reads\", \"indexFile\": \"/tgac/workarea/group-cg/baileyp/IWGSC_v2_ChrU_Ref/IWGSC_v2_ChrU_bwa_index\", \"PRIOR\": \"0.4\", \"QUAL_THRESH\": \"20\", \"ADAPTERS\": \"/tgac/workarea/group-cg/baileyp/Illumina_adaptors/adaptors.fasta\", \"paddingSize\": \"0\", \"bedfile\": \"/tgac/workarea/group-cg/baileyp/WheatLoLa/33.ExonCapture/all_wheat_singlectg.bedfile_plus_minus_${paddingSize}_1stbase_adjusted\", \"bedT_GenomeFile\": \"/tgac/workarea/group-cg/baileyp/IWGSC_v2_ChrU_Ref/IWGSC_v2_ChrU_lengths_sort_-n_reorder_contigId_tab_length\", \"bedT_GenomeFileName\": \"IWGSC_v2_ChrU_lengths_sort_-n_reorder_contigId_tab_length\", \"numbrBasesInIWGSC_v1\": \"10,393,511,112\", \"off_targBedFile\": \"/tgac/workarea/group-cg/baileyp/WheatLoLa/33.ExonCapture/indices/IWGSC_CSS_all_scaff_v1_off-target_regions_singlectg.bed\", \"off_targBedFile_IWGSP1_EnsemblPlnts22\": \"/tgac/workarea/group-cg/baileyp/WheatLoLa/33.ExonCapture/indices/IWGSC_CSS_all_scaff_v1_off-target_regions_IWGSP1.22.bed\", \"off_targBedFile_JoseRef\": \"/tgac/workarea/group-cg/baileyp/WheatLoLa/33.ExonCapture/indices/IWGSC_CSS_all_scaff_v1_off-target_regions_Jose_ref.bed\", \"source_testing_env\": \"source /tgac/software/production/bin/testing_env\", \"source_production_env\": \"source /tgac/software/production/bin/production_env\", \"cpu\": \"1\", \"mem_mb\": \"15000\", \"mem_gb\": \"15\", \"maxFileHandles\": \"100\", \"fileR1\": \"pathToReadsread1FileName\", \"fileR2\": \"pathToReadsread1FileName | sed s/_R1.fastq.gz/_R2.fastq.gz/\", \"CadenzaId\": \"CadenzaId\"}, \"resources\": {\"gres\": null, \"cpus_per_task\": \"1\", \"tasks\": null, \"ntasks_per_code\": null, \"gpus\": null, \"gpus_per_node\": null, \"cores_per_socket\": null, \"gpus_per_task\": null, \"exclusive\": null, \"cpus_per_gpu\": null, \"gpu_type\": null, \"time\": \"1-0:00\", \"ntasks_per_node\": null, \"nodes\": null, \"memory\": \"14000\", \"sockets_per_node\": null, \"ntasks_per_socket\": null, \"mem_per_gpu\": null, \"mem_per_cpu\": null, \"gres_flags\": null}, \"versions\": {}}\n```\n\nThis script is primarily focused on **read alignment** using the **BWA** (Burrows-Wheeler Aligner) tool. \n\n**Here's a breakdown of the script and its functionalities:**\n\n1. **Read Alignment:** The script performs alignment of sequencing reads against a reference genome using BWA. It utilizes the `aln` and `sampe` commands from BWA to align reads and determine concordant read pairs.\n\n2. **Read Processing:** The script performs various steps to prepare and analyze aligned reads:\n   - **Trimming and Quality Control:** Uses `sickle` and `scythe` for adapter trimming and quality filtering.\n   - **Sorting and Indexing:** Uses `samtools` for sorting and indexing BAM files.\n   - **Duplicate Removal:** Uses `Picard`'s `MarkDuplicates.jar` for removing PCR duplicates.\n   - **Filtering Properly Paired Reads:** Uses `samtools` with the `-f2` flag to filter for properly paired reads.\n   - **On-Target Read Extraction:**  Uses `samtools` with the `-L` flag to extract reads overlapping target regions defined in a BED file.\n\n3. **Coverage Analysis:**\n   - **Coverage Estimation:** Uses `bedtools` `coverageBed` to calculate coverage at each base.\n   - **Genome-Wide Coverage:** Uses `bedtools` `genomecov` to analyze genome-wide coverage.\n   - **Coverage Statistics:** Utilizes custom scripts (`35.getCoverageStats_On-targetRegions.pl` and `35.getCoverageStats_WholeGenome.pl`) to process coverage information.\n\n4. **Ambiguous Read Handling:**\n   - **Masking Reference:**  Employs a custom script (`39.WheatReferenceMasking_BJsWay.pl`) to identify and mask regions in the reference genome based on ambiguous alignments.\n   - **Remapping:** Re-aligns reads against the masked reference using BWA.\n\n5. **Uniquely Aligned Reads:**  \n   - **Sorting by Name:**  Uses `samtools` to sort reads by name.\n   - **Extraction:**  Employs a Perl script to extract uniquely aligned reads from the sorted BAM file.\n\n6. **SNP Calling (Not Implemented):** The script sets the stage for SNP calling but the actual SNP calling process is not detailed in the script.\n\n**Software and Modules:**\n\nThe script uses a variety of tools, including:\n\n- **BWA (Burrows-Wheeler Aligner)**: For read alignment.\n- **Sickle:** For adapter trimming.\n- **Scythe:** For adapter trimming.\n- **Seqqs:**  For quality control.\n- **Samtools:** For manipulating and analyzing BAM files.\n- **Picard:** For removing duplicates.\n- **Bedtools:** For analyzing genomic intervals and calculating coverage.\n- **Python:** For running a multi-map correction script.\n- **Perl:** For filtering uniquely aligned reads.\n\n**Resource Requirements:**\n\nThe script requires significant computational resources:\n\n- **CPU:** The `-n` flag in `bsub` commands indicates the number of CPUs requested, which varies depending on the step.\n- **Memory:** The `-R` flag in `bsub` commands specifies the memory requirement (in MB). Some steps, like Picard's `MarkDuplicates`, require substantial memory.\n- **Time:** The script involves multiple steps that can take significant time to complete, particularly those involving read alignment and coverage calculations.\n\n**Output:**\n\nThe script generates various output files, including:\n\n- **Log files:** Contain information about the execution of each step.\n- **BAM files:** Contain aligned reads after different processing steps.\n- **Coverage statistics files:**  Summary statistics about the coverage of target regions and the genome.\n\nThe script is designed to analyze a set of sequencing reads and provide insights into their alignment and coverage across the wheat genome.  While it doesn't perform SNP calling directly, it prepares the data for subsequent analysis using tools like MAPS or other SNP calling software. \n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "citation_metadata": {
+                "citation_sources": [
+                    {
+                        "start_index": 620,
+                        "end_index": 763,
+                        "uri": "https://github.com/DubcovskyLab/wheat_tilling_pub",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 762,
+                        "end_index": 911,
+                        "uri": "https://github.com/DubcovskyLab/wheat_tilling_pub",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 1018,
+                        "end_index": 1466,
+                        "uri": "https://github.com/DubcovskyLab/wheat_tilling_pub",
+                        "license_": ""
+                    }
+                ]
+            },
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 16111,
+        "candidates_token_count": 1818,
+        "total_token_count": 17929,
+        "cached_content_token_count": 0
+    }
+}

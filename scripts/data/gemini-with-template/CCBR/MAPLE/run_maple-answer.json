@@ -1,0 +1,49 @@
+{
+    "application": "snakemake",
+    "software": [
+        "snakemake",
+        "singularity",
+        "dos2unix"
+    ],
+    "modules": [
+        "python/3.7",
+        "snakemake/7.7.0",
+        "singularity"
+    ],
+    "environment_variables": {
+        "PYTHON_VERSION": "python/3.7",
+        "SNAKEMAKE_VERSION": "snakemake/7.7.0",
+        "EXTRA_SINGULARITY_BINDS": "/lscratch, /data/CCBR_Pipeliner/",
+        "SCRIPTNAME": "$0",
+        "SCRIPTDIRNAME": "$(readlink -f $(dirname $0))",
+        "SCRIPTBASENAME": "$(readlink -f $(basename $0))",
+        "log_time": "`date +\"%Y%m%d_%H%M\"`",
+        "PIPELINE_HOME": "$(readlink -f $(dirname \"$0\"))",
+        "SNAKEFILE": "${PIPELINE_HOME}/workflow/Snakefile",
+        "GIT_COMMIT_TAG": "$(get_git_commitid_tag $PIPELINE_HOME)",
+        "SINGULARITY_BINDS": "-B $EXTRA_SINGULARITY_BINDS,$binds"
+    },
+    "resources": {
+        "gres": "{cluster.gres}",
+        "cpus_per_task": "{cluster.threads}",
+        "tasks": "500",
+        "ntasks_per_code": null,
+        "gpus": null,
+        "gpus_per_node": null,
+        "cores_per_socket": null,
+        "gpus_per_task": null,
+        "exclusive": null,
+        "cpus_per_gpu": null,
+        "gpu_type": null,
+        "time": "{cluster.time}",
+        "ntasks_per_node": null,
+        "nodes": null,
+        "memory": "{cluster.mem}",
+        "sockets_per_node": null,
+        "ntasks_per_socket": null,
+        "mem_per_gpu": null,
+        "mem_per_cpu": null,
+        "gres_flags": ""
+    },
+    "versions": {}
+}

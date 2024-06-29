@@ -1,0 +1,46 @@
+{
+    "application": "shifter",
+    "software": [
+        "opencatalyst-opt"
+    ],
+    "modules": [
+        "gpu",
+        "nccl-2.18"
+    ],
+    "environment_variables": {
+        "MODEL_NAME": "oc20",
+        "MODEL_FRAMEWORK": "pytorch",
+        "MLPERF_RULESET": "2.0.0",
+        "DGXNGPU": "4",
+        "NEXP": "1",
+        "NCCL_TEST": "1",
+        "DATESTAMP": "$(date +'%y%m%d%H%M%S%N')",
+        "LOGDIR": "$SCRATCH/optimized-hpc/opencatalyst/results/${SLURM_JOB_NAME}-${SLURM_JOB_ID}",
+        "SEED": "${_seed_override:-$(date +%s)}",
+        "EXP_ID": "${_experiment_index}",
+        "CONT": "registry.nersc.gov/das/sfarrell/opencatalyst-opt:23.09.01"
+    },
+    "resources": {
+        "gres": "gpu",
+        "cpus_per_task": "32",
+        "tasks": "$(( SLURM_JOB_NUM_NODES * DGXNGPU ))",
+        "ntasks_per_code": null,
+        "gpus": null,
+        "gpus_per_node": "4",
+        "cores_per_socket": null,
+        "gpus_per_task": null,
+        "exclusive": null,
+        "cpus_per_gpu": null,
+        "gpu_type": null,
+        "time": null,
+        "ntasks_per_node": "4",
+        "nodes": "${SLURM_JOB_NUM_NODES}",
+        "memory": null,
+        "sockets_per_node": null,
+        "ntasks_per_socket": null,
+        "mem_per_gpu": null,
+        "mem_per_cpu": null,
+        "gres_flags": null
+    },
+    "versions": {}
+}

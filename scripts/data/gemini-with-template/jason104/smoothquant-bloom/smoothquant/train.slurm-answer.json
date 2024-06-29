@@ -1,0 +1,46 @@
+{
+    "application": "slurm",
+    "software": [
+        "python",
+        "torchrun",
+        "accelerate",
+        "deepspeed"
+    ],
+    "modules": [],
+    "environment_variables": {
+        "PYTHONUSERBASE": "$CONDA_PREFIX",
+        "HF_HOME": "/work/twsuzrf718/hf_home",
+        "MASTER_ADDR": "`scontrol show hostnames $SLURM_JOB_NODELIST | head -n 1`",
+        "MASTER_PORT": "$(expr 10000 + $(echo -n $SLURM_JOBID | tail -c 4))",
+        "NCCL_DEBUG": "WARN",
+        "NCCL_SOCKET_IFNAME": "ib0",
+        "NCCL_IB_HCA": "mlx5_0",
+        "PYTORCH_CUDA_ALLOC_CONF": "max_split_size_mb:2048",
+        "OMP_NUM_THREADS": "1",
+        "LAUNCHER": "torchrun",
+        "CMD": "testBloom.py"
+    },
+    "resources": {
+        "gres": "gpu:8",
+        "cpus_per_task": "32",
+        "tasks": null,
+        "ntasks_per_code": null,
+        "gpus": "8",
+        "gpus_per_node": "8",
+        "cores_per_socket": null,
+        "gpus_per_task": null,
+        "exclusive": null,
+        "cpus_per_gpu": null,
+        "gpu_type": null,
+        "time": null,
+        "ntasks_per_node": "1",
+        "nodes": "1",
+        "memory": null,
+        "sockets_per_node": null,
+        "ntasks_per_socket": null,
+        "mem_per_gpu": null,
+        "mem_per_cpu": null,
+        "gres_flags": null
+    },
+    "versions": {}
+}

@@ -1,0 +1,49 @@
+{
+    "application": "aprun",
+    "software": [
+        "python",
+        "build_imagenet_data.py",
+        "do_bb.sh",
+        "do_tf.sh"
+    ],
+    "modules": [
+        "bwpy/0.3.0",
+        "tensorflow"
+    ],
+    "environment_variables": {
+        "RAW_DATA_DIR": "${HOME}/scratch/ImageNet/raw-imagenet/$MODE",
+        "DATA_LIST_FILE": "${MODE}_files.txt",
+        "META_DATA_FILE": "$PBS_O_WORKDIR/../../models/research/inception/inception/data/imagenet_metadata.txt",
+        "OUTPUT_DIR": "${HOME}/scratch/ImageNet/tf_records/${MODE}",
+        "LOG_DIR": "logs/build_imagenet_data_${PBS_JOBID}",
+        "NUM_DIV": "$(cat $PBS_NODEFILE | wc -l)",
+        "TOT_LENGTH": "$(wc -l $DATA_LIST_FILE | cut -d \" \" -f1)",
+        "BB_RUN_SCRIPT": "do_bb.sh",
+        "TF_RUN_SCRIPT": "do_tf.sh",
+        "RUN_CMD": "python build_imagenet_data.py",
+        "RUN_ARGUMENTS": "--name ${MODE} \\\\--data_dir $RAW_DATA_DIR \\\\--output_directory $OUTPUT_DIR \\\\--imagenet_metadata_file $META_DATA_FILE \\\\--data_list_file $DATA_LIST_FILE \\\\--shards 1024 \\\\--proc_tot $NUM_DIV \\\\--distributed"
+    },
+    "resources": {
+        "gres": null,
+        "cpus_per_task": null,
+        "tasks": 16,
+        "ntasks_per_code": null,
+        "gpus": null,
+        "gpus_per_node": null,
+        "cores_per_socket": null,
+        "gpus_per_task": null,
+        "exclusive": null,
+        "cpus_per_gpu": null,
+        "gpu_type": null,
+        "time": "02:00:00",
+        "ntasks_per_node": 1,
+        "nodes": 16,
+        "memory": null,
+        "sockets_per_node": null,
+        "ntasks_per_socket": null,
+        "mem_per_gpu": null,
+        "mem_per_cpu": null,
+        "gres_flags": null
+    },
+    "versions": {}
+}

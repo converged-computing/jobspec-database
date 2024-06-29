@@ -1,0 +1,41 @@
+{
+    "application": "accelerate",
+    "software": [
+        "accelerate",
+        "python",
+        "slurm",
+        "c10d"
+    ],
+    "modules": [],
+    "environment_variables": {
+        "GPUS_PER_NODE": "4",
+        "LAUNCHER": "accelerate launch --num_processes $((SLURM_NNODES * GPUS_PER_NODE)) --num_machines $SLURM_NNODES --rdzv_backend c10d --main_process_ip $head_node_ip --main_process_port 29500 ",
+        "SCRIPT": "/accelerate/examples/complete_nlp_example.py",
+        "SCRIPT_ARGS": " --mixed_precision fp16 --output_dir /accelerate/examples/output ",
+        "CMD": "$LAUNCHER $PYTHON_FILE $ARGS",
+        "head_node_ip": "scontrol show hostnames $SLURM_JOB_NODELIST | head -n 1"
+    },
+    "resources": {
+        "gres": "gpu:4",
+        "cpus_per_task": "160",
+        "tasks": null,
+        "ntasks_per_code": null,
+        "gpus": null,
+        "gpus_per_node": "4",
+        "cores_per_socket": null,
+        "gpus_per_task": null,
+        "exclusive": null,
+        "cpus_per_gpu": null,
+        "gpu_type": null,
+        "time": "01:59:00",
+        "ntasks_per_node": "1",
+        "nodes": "4",
+        "memory": null,
+        "sockets_per_node": null,
+        "ntasks_per_socket": null,
+        "mem_per_gpu": null,
+        "mem_per_cpu": null,
+        "gres_flags": null
+    },
+    "versions": {}
+}

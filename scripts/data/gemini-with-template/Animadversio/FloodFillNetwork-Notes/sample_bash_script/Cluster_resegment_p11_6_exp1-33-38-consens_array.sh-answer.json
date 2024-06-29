@@ -1,0 +1,40 @@
+{
+    "application": "FloodFillNetwork",
+    "software": [
+        "singularity",
+        "python3",
+        "run_resegment.py"
+    ],
+    "modules": [
+        "singularity-2.4.2"
+    ],
+    "environment_variables": {
+        "config": "inference {image {hdf5: \"/scratch/binxu.wang/ffn-Data/LGN_DATA/grayscale_ixP11_6_align_norm.h5:raw\"}\nimage_mean: 138\nimage_stddev: 38\ncheckpoint_interval: 1800\nseed_policy: \"PolicyPeaks\"\nmodel_checkpoint_path: \"/scratch/binxu.wang/ffn-Data/models/LR_model_Longtime_SF_Deep/model.ckpt-15392756\"\nmodel_name: \"convstack_3d.ConvStack3DFFNModel\"\nmodel_args: \"{\"depth\": 12, \"fov_size\": [33, 33, 17], \"deltas\": [8, 8, 4]}\"\nsegmentation_output_dir: \"/scratch/binxu.wang/results/LGN/p11_6_exp1-38\"\ninference_options {init_activation: 0.95\npad_value: 0.05\nmove_threshold: 0.90\nmin_boundary_dist {x: 5 y: 5 z: 1}\nsegment_threshold: 0.6\nmin_segment_size: 5000\ndisco_seed_threshold: 0.002}\ninit_segmentation {npz: \"/scratch/binxu.wang/results/LGN/p11_6_consensus_33_38_full/0/0/seg-0_0_0.npz:segmentation\"}\n}\nradius {x: 50 y: 50 z: 17}\noutput_directory: \"/scratch/binxu.wang/results/LGN/p11_6_consensus_33_38_full/reseg\"\nmax_retry_iters: 10\nsegment_recovery_fraction: 0.6\nanalysis_radius {x: 35 y: 35 z: 10}\n'",
+        "HDF5_USE_FILE_LOCKING": "FALSE",
+        "point_path": "/scratch/binxu.wang/results/LGN/p11_6_consensus_33_38_full/reseg_points/*.txt",
+        "pixelsize": "(8, 8, 40)"
+    },
+    "resources": {
+        "gres": "gpu",
+        "cpus_per_task": "2",
+        "tasks": "45",
+        "ntasks_per_code": "1",
+        "gpus": "1",
+        "gpus_per_node": "1",
+        "cores_per_socket": "",
+        "gpus_per_task": "1",
+        "exclusive": "",
+        "cpus_per_gpu": "",
+        "gpu_type": "haswell",
+        "time": "24:00:00",
+        "ntasks_per_node": "2",
+        "nodes": "1",
+        "memory": "10gb",
+        "sockets_per_node": "",
+        "ntasks_per_socket": "",
+        "mem_per_gpu": "",
+        "mem_per_cpu": "",
+        "gres_flags": ""
+    },
+    "versions": {}
+}

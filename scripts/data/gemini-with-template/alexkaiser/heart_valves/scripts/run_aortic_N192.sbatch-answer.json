@@ -1,0 +1,56 @@
+{
+    "application": "slurm",
+    "software": [
+        "gcc",
+        "openmpi",
+        "python",
+        "visit",
+        "main3d",
+        "watchdog_job_restart.py",
+        "run_parallel_movie.py",
+        "run_parallel_convert_visit_to_paraview.py",
+        "run_parallel_movie_paraview.py",
+        "fourier_coeffs*.txt",
+        "kill_all_mpi.sh",
+        "run_aortic_N192.sbatch"
+    ],
+    "modules": [
+        "gcc/8.1.0",
+        "openmpi/2.0.2"
+    ],
+    "environment_variables": {
+        "SRCDIR": "$PWD",
+        "RUNDIR": "$SCRATCH/aortic_${SLURM_JOBID/.*}_192_8f290e8_convergence_check_layers_up",
+        "BASE_NAME": "aortic_192",
+        "INPUT_NAME": "input_aortic_192",
+        "RUN_LINE": "mpiexec --bind-to core -report-bindings main3d",
+        "OPTIONS": "-velocity_ksp_type cg -velocity_pc_type none -velocity_ksp_max_it 1 -velocity_ksp_norm_type none > output.txt 2>&1",
+        "SESSION_NAME": "aortic_192_visit2pt9.session",
+        "VIEW_CLIPPING": "-0.2",
+        "env_log": "$RUNDIR/env.log",
+        "SESSION_NAME_PARAVIEW": "~/copies_scripts/velocity_slices_5.py"
+    },
+    "resources": {
+        "gres": null,
+        "cpus_per_task": null,
+        "tasks": null,
+        "ntasks_per_code": null,
+        "gpus": null,
+        "gpus_per_node": null,
+        "cores_per_socket": null,
+        "gpus_per_task": null,
+        "exclusive": null,
+        "cpus_per_gpu": null,
+        "gpu_type": null,
+        "time": "24:00:00",
+        "ntasks_per_node": "24",
+        "nodes": "1",
+        "memory": "185GB",
+        "sockets_per_node": null,
+        "ntasks_per_socket": null,
+        "mem_per_gpu": null,
+        "mem_per_cpu": null,
+        "gres_flags": null
+    },
+    "versions": {}
+}

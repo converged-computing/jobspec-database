@@ -1,0 +1,57 @@
+{
+    "application": "pytorch",
+    "software": [
+        "torchrun",
+        "python3"
+    ],
+    "modules": [
+        "deepspeed"
+    ],
+    "environment_variables": {
+        "GLOO_SOCKET_IFNAME": "eth0",
+        "NODE_NUM": "1",
+        "INDEX": "0",
+        "MASTER_ADDR": "127.0.0.1",
+        "MASTER_PORT": "12321",
+        "GPU_NUM_PER_NODE": "4",
+        "RAYGPUS": "1",
+        "MAXLEN": "2048",
+        "EPOCH": "2",
+        "PER_GPU_BATCH": "16",
+        "GRA_ACC": "1",
+        "DS_CONFIG": "1b",
+        "maindir": "$1",
+        "datadir": "${maindir}data",
+        "codedir": "${maindir}codes",
+        "taskdir": "${datadir}/tasks",
+        "raw_model_path": "${model}",
+        "test_data": "${taskdir}/${task}/test.jsonl",
+        "data_path": "${taskdir}/${task}",
+        "preprocessed_data_dir": "${taskdir}/processed/${task}/processed_${task}_${model%-*}.pt",
+        "model_output_path": "${maindir}model/${model}_${task}/",
+        "deepspeed_config_path": "${codedir}/configs/ds_config_${DS_CONFIG}.json"
+    },
+    "resources": {
+        "gres": "gpu:1",
+        "cpus_per_task": null,
+        "tasks": null,
+        "ntasks_per_code": null,
+        "gpus": null,
+        "gpus_per_node": "4",
+        "cores_per_socket": null,
+        "gpus_per_task": null,
+        "exclusive": null,
+        "cpus_per_gpu": null,
+        "gpu_type": null,
+        "time": null,
+        "ntasks_per_node": null,
+        "nodes": "1",
+        "memory": null,
+        "sockets_per_node": null,
+        "ntasks_per_socket": null,
+        "mem_per_gpu": null,
+        "mem_per_cpu": null,
+        "gres_flags": null
+    },
+    "versions": {}
+}

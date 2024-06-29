@@ -1,0 +1,86 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\"application\": \"minigo\", \"software\": [\"nvidia-docker\", \"docker\", \"mpi\", \"bash\", \"python\", \"tensorflow\", \"mlperf_compliance\", \"minigo\"], \"modules\": [], \"environment_variables\": {\"CONT\": \"mlperf-nvidia:reinforcement\", \"BENCHMARK\": \"reinforcement\", \"BENCHMARK_NAME\": \"MINIGO\", \"DATADIR\": \"/raid/data\", \"LOGDIR\": \"/raid/results/reinforcement\", \"NEXP\": \"10\", \"SEED\": \"random\", \"SYSLOGGING\": \"1\", \"DGXSYSTEM\": \"DGX1\", \"IBDEVICES\": \"$DGXIBDEVICES\", \"INSLURM\": \"1\", \"SLURM_JOB_ID\": \"$DATESTAMP\", \"SLURM_NNODES\": \"1\", \"OMPI_COMM_WORLD_LOCAL_RANK\": \"0\", \"SLURM_NTASKS_PER_NODE\": \"$DGXNGPU\", \"NV_GPU\": \"$(seq 0 $((${SLURM_NTASKS_PER_NODE:-${DGXNGPU}}-1)) | tr '\\n' ',' | sed 's/,$//'))\", \"LOGFILE_BASE\": \"${LOGDIR}/${DATESTAMP}\", \"CONTVOLS\": \"-v $DATADIR:/data -v $LOGDIR:/results\", \"DOCKEREXEC\": \"env NV_GPU=${NV_GPU} nvidia-docker run --init --rm --net=host --uts=host --ipc=host --ulimit stack=67108864 --ulimit memlock=-1 --name=cont_${SLURM_JOB_ID} --security-opt seccomp=unconfined $IBDEVICES\", \"MLPERF_HOST_OS\": \"$(cat /etc/issue | head -1 | cut -f1-3 -d\\\" \\\" ) / $(cat /etc/dgx-release | grep -E \\\"DGX_PRETTY_NAME|DGX_OTA_VERSION\\\" |cut -f2 -d= |cut -f2 -d'\\\"' |paste -sd' ')\", \"SHARED_DIR_EXCHANGE\": \"$LOGDIR/scratch/multinode_${SLURM_JOB_ID}\", \"CONTAINER_UID\": \"0\", \"CONTAINER_GID\": \"0\", \"MASTER_IP\": \"`getent hosts \\`hostname\\` | cut -d ' ' -f1`\", \"PORT\": \"4242 + RANDOM%1000\", \"SSH\": \"'ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no $hostn'\", \"SRUN\": \"'srun --mem=0 -N 1 -n 1 -w $hostn'\", \"MULTI_NODE\": \" --master_port=$PORT\", \"DOCKERENV\": \"(-e DGXSYSTEM=$DGXSYSTEM -e SEED=$SEED -e MULTI_NODE=$MULTI_NODE -e SLURM_JOB_ID=$SLURM_JOB_ID -e SLURM_NTASKS_PER_NODE=$SLURM_NTASKS_PER_NODE -e SLURM_NNODES=$SLURM_NNODES -e MLPERF_HOST_OS=$MLPERF_HOST_OS)\", \"MPIRUN\": \"mpirun --allow-run-as-root --bind-to none --oversubscribe ${MULTINODE_VARS[@]//-e/-x} --launch-agent \\\"docker exec cont_${SLURM_JOB_ID} orted\\\"\", \"BASE_DIR_SUFFIX\": \"$hostn-\"$(date +%Y-%m-%d-%H-%M)\"}, \"resources\": {\"gres\": \"\", \"cpus_per_task\": \"\", \"tasks\": \"\", \"ntasks_per_code\": \"\", \"gpus\": \"\", \"gpus_per_node\": \"$DGXNGPU\", \"cores_per_socket\": \"20\", \"gpus_per_task\": \"\", \"exclusive\": \"1\", \"cpus_per_gpu\": \"\", \"gpu_type\": \"\", \"time\": \"12:00:00\", \"ntasks_per_node\": \"1\", \"nodes\": \"1\", \"memory\": \"0\", \"sockets_per_node\": \"\", \"ntasks_per_socket\": \"\", \"mem_per_gpu\": \"\", \"mem_per_cpu\": \"\", \"gres_flags\": \"\"}, \"versions\": {}}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "citation_metadata": {
+                "citation_sources": [
+                    {
+                        "start_index": 782,
+                        "end_index": 955,
+                        "uri": "https://github.com/mlcommons/training_results_v0.7",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 844,
+                        "end_index": 995,
+                        "uri": "https://github.com/popperized/popper-experiments",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 1000,
+                        "end_index": 1177,
+                        "uri": "https://github.com/mlcommons/training_results_v0.6",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 1558,
+                        "end_index": 1733,
+                        "uri": "https://github.com/mlcommons/training_results_v0.6",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 1619,
+                        "end_index": 1776,
+                        "uri": "https://github.com/mlcommons/training_results_v0.6",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 1782,
+                        "end_index": 1939,
+                        "uri": "https://github.com/mlcommons/training_results_v0.6",
+                        "license_": ""
+                    }
+                ]
+            },
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 4193,
+        "candidates_token_count": 960,
+        "total_token_count": 5153,
+        "cached_content_token_count": 0
+    }
+}

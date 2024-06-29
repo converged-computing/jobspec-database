@@ -1,0 +1,66 @@
+{
+    "application": "lammps",
+    "software": [
+        "spack",
+        "openblas",
+        "fftw",
+        "kokkos",
+        "ffmpeg",
+        "plumed",
+        "mvapich2",
+        "python"
+    ],
+    "modules": [
+        "slurm"
+    ],
+    "environment_variables": {
+        "LOCAL_TIME": "$(date +'%Y%m%dT%H%M%S%z')",
+        "UNIX_TIME": "$(date +'%s')",
+        "SYSTEM_NAME": "expanse",
+        "SPACK_VERSION": "0.17.3",
+        "SPACK_INSTANCE_NAME": "cpu",
+        "SPACK_INSTANCE_DIR": "$(HOME)/cm/shared/apps/spack/${SPACK_VERSION}/${SPACK_INSTANCE_NAME}",
+        "SLURM_JOB_SCRIPT": "$(scontrol show job ${SLURM_JOB_ID} | awk -F= '/Command=/{print $2}')",
+        "SLURM_JOB_MD5SUM": "$(md5sum ${SLURM_JOB_SCRIPT})",
+        "SCHEDULER_MODULE": "slurm",
+        "SPACK_PACKAGE": "lammps@20210310",
+        "SPACK_COMPILER": "gcc@10.2.0",
+        "SPACK_VARIANTS": "+asphere +body +class2 +colloid +compress +coreshell ~cuda +dipole ~exceptions +ffmpeg +granular ~ipo +jpeg +kim +kokkos +kspace ~latte +lib +manybody +mc ~meam +misc +mliap +molecule +mpi +mpiio ~opencl +openmp +opt +peri +png +poems +python +qeq +replica +rigid +shock +snap +spin +srd ~user-adios +user-atc +user-awpmd +user-bocs +user-cgsdk +user-colvars +user-diffraction +user-dpd +user-drude +user-eff +user-fep ~user-h5md +user-lb +user-manifold +user-meamc +user-mesodpd +user-mesont +user-mgpt +user-misc +user-mofff ~user-netcdf ~user-omp +user-phonon +user-plumed +user-ptm +user-qtb +user-reaction +user-reaxc +user-sdpd +user-smd +user-smtbq +user-sph +user-tally +user-uef +user-yaff +voronoi",
+        "SPACK_DEPENDENCIES": "^openblas@0.3.17/$(spack find --format '{hash:7}' openblas@0.3.17 % ${SPACK_COMPILER} ~ilp64 threads=none) ^fftw@3.3.10/$(spack find --format '{hash:7}' fftw@3.3.10 % ${SPACK_COMPILER} ~mpi ~openmp) ^kokkos@3.4.01/$(spack find --format '{hash:7}' kokkos@3.4.01 % ${SPACK_COMPILER}) ^ffmpeg@4.3.2/$(spack find --format '{hash:7}' ffmpeg@4.3.2 % ${SPACK_COMPILER}) ^plumed@2.6.3/$(spack find --format '{hash:7}' plumed@2.6.3 % ${SPACK_COMPILER} +mpi ^mvapich2@2.3.7) ^python@3.8.12/$(spack find --format '{hash:7}' python@3.8.12 % ${SPACK_COMPILER})",
+        "SPACK_SPEC": "${SPACK_PACKAGE} % ${SPACK_COMPILER} ${SPACK_VARIANTS} ${SPACK_DEPENDENCIES}"
+    },
+    "resources": {
+        "gres": "",
+        "cpus_per_task": "16",
+        "tasks": "",
+        "ntasks_per_code": "",
+        "gpus": "",
+        "gpus_per_node": "",
+        "cores_per_socket": "",
+        "gpus_per_task": "",
+        "exclusive": "",
+        "cpus_per_gpu": "",
+        "gpu_type": "",
+        "time": "00:30:00",
+        "ntasks_per_node": "1",
+        "nodes": "1",
+        "memory": "32G",
+        "sockets_per_node": "",
+        "ntasks_per_socket": "",
+        "mem_per_gpu": "",
+        "mem_per_cpu": "",
+        "gres_flags": ""
+    },
+    "versions": {
+        "openblas": "0.3.17",
+        "fftw": "3.3.10",
+        "kokkos": "3.4.01",
+        "ffmpeg": "4.3.2",
+        "plumed": "2.6.3",
+        "mvapich2": "2.3.7",
+        "python": "3.8.12",
+        "gcc": "10.2.0",
+        "spack": "0.17.3",
+        "lammps": "20210310"
+    }
+}

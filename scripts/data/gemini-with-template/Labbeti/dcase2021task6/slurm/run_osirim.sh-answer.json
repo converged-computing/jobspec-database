@@ -1,0 +1,61 @@
+{
+    "application": "sbatch",
+    "software": [
+        "singularity",
+        "python",
+        "sbatch"
+    ],
+    "modules": [
+        "singularity/3.0.3"
+    ],
+    "environment_variables": {
+        "PYSCRIPT": "the name of the python script in $project/standalone, without \".py\" extension",
+        "job_name": "the first argument passed to the script",
+        "fname_script": "${job_name}.py",
+        "script_params": "the parameters passed to the script",
+        "path": "the path to the data, defaulting to \"osirim\"",
+        "datetime": "the date and time of the job, defaulting to the current time",
+        "tag": "a tag for the job, defaulting to \"\"",
+        "cpus": "the number of CPUs to use, defaulting to 4",
+        "gpus": "the number of GPUs to use, defaulting to 1",
+        "dataset": "the dataset to use, defaulting to \"clotho\"",
+        "dpath_project": "the path to the project directory",
+        "fpath_python": "$HOME/.conda/envs/env_aac/bin/python",
+        "fpath_script": "${dpath_project}/standalone/${fname_script}",
+        "dpath_log": "${dpath_project}/logs/sbatch",
+        "fpath_out": "${dpath_log}/${dataset}_${job_name}_%j_${tag}.out",
+        "fpath_err": "${dpath_log}/${dataset}_${job_name}_%j_${tag}.err",
+        "fpath_singularity": "/logiciels/containerCollections/CUDA10/pytorch.sif",
+        "srun": "srun singularity exec ${fpath_singularity}",
+        "partition": "the partition to use, defaulting to \"48CPUNodes\" if gpus is 0, otherwise \"GPUNodes\"",
+        "mem": "the memory limit, defaulting to 0",
+        "time": "the time limit, defaulting to 0",
+        "module_load": "module load singularity/3.0.3",
+        "fpath_sbatch": ".tmp_${job_name}.sbatch"
+    },
+    "resources": {
+        "gres": "gpu:${gpus}",
+        "cpus_per_task": "${cpus}",
+        "tasks": "1",
+        "ntasks_per_code": null,
+        "gpus": "${gpus}",
+        "gpus_per_node": null,
+        "cores_per_socket": null,
+        "gpus_per_task": null,
+        "exclusive": null,
+        "cpus_per_gpu": null,
+        "gpu_type": null,
+        "time": "${time}",
+        "ntasks_per_node": "1",
+        "nodes": "1",
+        "memory": "${mem}",
+        "sockets_per_node": null,
+        "ntasks_per_socket": null,
+        "mem_per_gpu": null,
+        "mem_per_cpu": null,
+        "gres_flags": "enforce-binding"
+    },
+    "versions": {
+        "singularity": "3.0.3"
+    }
+}

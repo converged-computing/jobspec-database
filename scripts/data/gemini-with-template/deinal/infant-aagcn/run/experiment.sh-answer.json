@@ -1,0 +1,44 @@
+{
+    "application": "slurm",
+    "software": [
+        "pytorch"
+    ],
+    "modules": [
+        "pytorch/1.13"
+    ],
+    "environment_variables": {
+        "commands": [
+            "train.py --data-dir data/streams/combined --output-dir results/stgcn-xy --age-file metadata/combined.csv --learning-rate 0.01 --batch-size 32 --num-workers 16 --streams j --k-folds 10 --epochs 20 --xy-data",
+            "train.py --data-dir data/streams/combined --output-dir results/stgcn-physical --age-file metadata/combined.csv --learning-rate 0.01 --batch-size 32 --num-workers 16 --streams j --k-folds 10 --epochs 20 --physical-edges",
+            "train.py --data-dir data/streams/combined --output-dir results/stgcn --age-file metadata/combined.csv --learning-rate 0.01 --batch-size 32 --num-workers 16 --streams j --k-folds 10 --epochs 20",
+            "train.py --data-dir data/streams/combined --output-dir results/aagcn --age-file metadata/combined.csv --learning-rate 0.01 --batch-size 32 --num-workers 16 --streams j --k-folds 10 --epochs 20 --adaptive --attention",
+            "train.py --data-dir data/streams/combined --output-dir results/ms-aagcn --age-file metadata/combined.csv --learning-rate 0.01 --batch-size 32 --num-workers 16 --streams j,b,v,a --k-folds 10 --epochs 20 --adaptive --attention",
+            "train.py --data-dir data/streams/combined --output-dir results/ms-aagcn-fts --age-file metadata/combined.csv --learning-rate 0.01 --batch-size 32 --num-workers 16 --streams j,b,v,a --k-folds 10 --epochs 20 --adaptive --attention --concat-features"
+        ]
+    },
+    "resources": {
+        "gres": "gpu:v100:1",
+        "cpus_per_task": "16",
+        "tasks": "6",
+        "ntasks_per_code": "1",
+        "gpus": "1",
+        "gpus_per_node": "1",
+        "cores_per_socket": null,
+        "gpus_per_task": "1",
+        "exclusive": true,
+        "cpus_per_gpu": null,
+        "gpu_type": "v100",
+        "time": "08:00:00",
+        "ntasks_per_node": "1",
+        "nodes": "1",
+        "memory": "2G",
+        "sockets_per_node": null,
+        "ntasks_per_socket": null,
+        "mem_per_gpu": null,
+        "mem_per_cpu": "2G",
+        "gres_flags": null
+    },
+    "versions": {
+        "pytorch": "1.13"
+    }
+}

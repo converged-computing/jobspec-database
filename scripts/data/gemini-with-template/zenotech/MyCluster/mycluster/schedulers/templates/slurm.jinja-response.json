@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\"application\": \"SLURM\", \"software\": [\"OpenMPI\", \"MVAPICH2\", \"Intel MPI\", \"OpenMP\"], \"modules\": [], \"environment_variables\": {\"MYCLUSTER_QUEUE\": \"{{queue_name}}\", \"MYCLUSTER_JOB_NAME\": \"{{my_name}}\", \"NUM_TASKS\": \"{{num_tasks}}\", \"TASKS_PER_NODE\": \"{{tpn}}\", \"THREADS_PER_TASK\": \"{{num_threads_per_task}}\", \"CPUS_PER_NODE\": \"${SLURM_JOB_CPUS_PER_NODE}\", \"NUM_NODES\": \"{{num_nodes}}\", \"JOBID\": \"$SLURM_JOB_ID\", \"OMP_NUM_THREADS\": \"$THREADS_PER_TASK\", \"OMP_PROC_BIND\": \"true\", \"OMP_PLACES\": \"sockets\", \"OMPI_CMD\": \"mpiexec -n $NUM_TASKS -npernode $TASKS_PER_NODE {{openmpi_args}}\", \"OMPI_NEW_CMD\": \"mpiexec -n $NUM_TASKS --map-by ppr:1:numa --bind-to numa\", \"MV2_CPU_BINDING_LEVEL\": \"SOCKET\", \"MV2_CPU_BINDING_POLICY\": \"scatter\", \"MVAPICH_CMD\": \"mpiexec -n $NUM_TASKS -ppn $TASKS_PER_NODE -bind-to-socket\", \"I_MPI_PIN_DOMAIN\": \"omp:compact\", \"I_MPI_PIN_ORDER\": \"scatter\", \"IMPI_CMD\": \"mpiexec -n $NUM_TASKS -ppn $TASKS_PER_NODE\"}, \"resources\": {\"gres\": \"{{gres}}\", \"cpus_per_task\": \"{{num_threads_per_task}}\", \"tasks\": \"{{num_tasks}}\", \"ntasks_per_code\": null, \"gpus\": null, \"gpus_per_node\": null, \"cores_per_socket\": null, \"gpus_per_task\": null, \"exclusive\": \"{{exclusive}}\", \"cpus_per_gpu\": null, \"gpu_type\": null, \"time\": \"{{wall_clock}}\", \"ntasks_per_node\": \"{{tpn}}\", \"nodes\": \"{{num_nodes}}\", \"memory\": null, \"sockets_per_node\": null, \"ntasks_per_socket\": null, \"mem_per_gpu\": null, \"mem_per_cpu\": null, \"gres_flags\": \"\"}, \"versions\": {}}\n``` \n\n**Explanation:**\n\n* **application:**  \"SLURM\" -  This script is designed for submitting jobs to a SLURM (Simple Linux Utility for Resource Management) cluster.\n* **software:**  The script lists various software packages that are configured or used, including:\n    * OpenMPI (with different command configurations)\n    * MVAPICH2\n    * Intel MPI\n    * OpenMP\n* **environment_variables:**  These are variables defined within the script that control the job's environment, including:\n    * Job name and queue\n    * Number of tasks and nodes\n    * MPI and OpenMP settings\n* **resources:**  This section maps the resource allocation parameters provided in the script to the corresponding fields in the JSON structure. \n* **modules:**  The script does not explicitly load any modules.  Modules are used to load software on a cluster, and are not part of this script.\n* **versions:**  This field is left empty as the script does not specify specific versions of the listed software.\n\n**Important Note:**  The script uses templating variables (e.g., `{{my_name}}`, `{{queue_name}}`) that would need to be filled in with actual values during execution. \n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 1245,
+        "candidates_token_count": 821,
+        "total_token_count": 2066,
+        "cached_content_token_count": 0
+    }
+}

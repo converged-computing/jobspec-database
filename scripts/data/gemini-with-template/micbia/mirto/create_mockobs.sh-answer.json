@@ -1,0 +1,55 @@
+{
+    "application": "wsclean",
+    "software": [
+        "python",
+        "karabo_ms_skalow.py",
+        "add_gain.py",
+        "add_noise.py"
+    ],
+    "modules": [
+        "daint-gpu",
+        "gcc/9.3.0",
+        "cudatoolkit/10.2.89_3.28-2.1__g52c0314",
+        "spack-config"
+    ],
+    "environment_variables": {
+        "IDX_S": "0",
+        "IDX_F": "$((${SLURM_ARRAY_TASK_ID}+600))",
+        "INST_EFFECTS": "noisegain",
+        "SKY_MODEL": "iongf",
+        "ROOT_NAME": "lc_256_train_130923_i${IDX_S}",
+        "PATH_OUT": "$SCRATCH/output_sdc3/dataLC_130923/",
+        "RUN_NAME": "${ROOT_NAME}_dT${SKY_MODEL}_ch${IDX_F}_4h1d_256",
+        "DATA": "DATA",
+        "BIPP_PATH": "/users/mibianco/codes/bluebild2",
+        "FNAME": "${ROOT_NAME}_dT${INST_EFFECTS}${SKY_MODEL}_ch${IDX_F}_4h1d_256",
+        "MS_PREFIX": "${PATH_OUT}ms/${FNAME}",
+        "PATH_MS": "$MS_PREFIX.MS",
+        "SCALE": "14.0625asec",
+        "SIZE": "2048",
+        "WEIGHT": "natural"
+    },
+    "resources": {
+        "gres": "gpu",
+        "cpus_per_task": "18",
+        "tasks": "151",
+        "ntasks_per_code": null,
+        "gpus": null,
+        "gpus_per_node": null,
+        "cores_per_socket": null,
+        "gpus_per_task": null,
+        "exclusive": null,
+        "cpus_per_gpu": null,
+        "gpu_type": null,
+        "time": "03:00:00",
+        "ntasks_per_node": null,
+        "nodes": "1",
+        "memory": "62G",
+        "sockets_per_node": null,
+        "ntasks_per_socket": null,
+        "mem_per_gpu": null,
+        "mem_per_cpu": null,
+        "gres_flags": null
+    },
+    "versions": {}
+}

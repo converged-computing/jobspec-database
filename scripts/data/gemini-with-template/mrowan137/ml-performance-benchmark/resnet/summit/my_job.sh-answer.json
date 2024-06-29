@@ -1,0 +1,47 @@
+{
+    "application": "jsrun",
+    "software": [
+        "horovod",
+        "nsight-systems",
+        "python",
+        "xla"
+    ],
+    "modules": [
+        "nsight-systems"
+    ],
+    "environment_variables": {
+        "BATCHSIZE": "64",
+        "STRATEGY": "horovod",
+        "DATA_MODE": "synthetic",
+        "DO_PROFILING": "true",
+        "DO_NCCL_DEBUG": "false",
+        "MODELDIR": "/mnt/bb/$USER/models/model_dir_${NODES}_nodes",
+        "NODES": "$(cat ${LSB_DJOB_HOSTFILE} | sort | uniq | grep -v login | grep -v batch | wc -l)",
+        "XLA_FLAGS": "--xla_gpu_cuda_data_dir=$CUDA_DIR",
+        "PYTHONPATH": "$(pwd):$PYTHONPATH",
+        "DATADIR": "/mnt/bb/$USER"
+    },
+    "resources": {
+        "gres": "",
+        "cpus_per_task": "7",
+        "tasks": "42",
+        "ntasks_per_code": "6",
+        "gpus": "6",
+        "gpus_per_node": "6",
+        "cores_per_socket": "",
+        "gpus_per_task": "1",
+        "exclusive": "",
+        "cpus_per_gpu": "",
+        "gpu_type": "",
+        "time": "02:00",
+        "ntasks_per_node": "42",
+        "nodes": "8",
+        "memory": "",
+        "sockets_per_node": "",
+        "ntasks_per_socket": "",
+        "mem_per_gpu": "",
+        "mem_per_cpu": "",
+        "gres_flags": "nvme smt4"
+    },
+    "versions": {}
+}

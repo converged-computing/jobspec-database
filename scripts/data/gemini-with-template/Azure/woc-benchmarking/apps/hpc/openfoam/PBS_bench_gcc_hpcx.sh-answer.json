@@ -1,0 +1,63 @@
+{
+    "application": "openfoam",
+    "software": [
+        "openfoam",
+        "gcc",
+        "hpcx",
+        "python3",
+        "spack",
+        "ucx"
+    ],
+    "modules": [
+        "gcc-12.2.0",
+        "mpi/hpcx-v2.14.0"
+    ],
+    "environment_variables": {
+        "compiler": "gcc-12.2.0",
+        "mpi_library": "hpcx-v2.14.0",
+        "FOAM_SPEC": "openfoam@2006",
+        "MESH_DIM": "120x88x88",
+        "NODE_LIST": "[1, 2, 4, 8]",
+        "PPN_LIST": "[96, 120, 176]",
+        "APPNS": "/share/home/hpcuser/woc-benchmarking/apps/hpc/utils/azure_process_pinning.sh",
+        "clustertype": "GenoaX",
+        "az_FOAMROOT": "$WM_PROJECT_DIR",
+        "az_FOAM_VERSION": "",
+        "LOGFILE": "log_GenoaX_bench_gcc-12.2.0_hpcx-v2.14.0.txt",
+        "az_FOAM_SIZE": "$PROB_SIZE",
+        "mppflags": "--bind-to cpulist:ordered --cpu-set $AZURE_PROCESSOR_LIST --rank-by slot --report-bindings",
+        "mpi_one_per_node": "-machinefile hostlist.bench -np $NODES --map-by node",
+        "mpi_options": "-machinefile $PBS_NODEFILE -np $NTASKS $mppflags --rank-by slot -x UCX_TLS=dc_x,sm,self -x LD_LIBRARY_PATH -x PATH -x PWD -x MPI_BUFFER_SIZE -x WM_PROJECT_DIR -x WM_DIR -x WM_PROJECT_USER_DIR -x WM_PROJECT_INST_DIR",
+        "IB_PKEY": "$(( $IB_PKEY & 0x0FFF ))",
+        "UCX_IB_PKEY": "0x$(( $IB_PKEY & 0x0FFF ))",
+        "OMP_NUM_THREADS": "1"
+    },
+    "resources": {
+        "gres": null,
+        "cpus_per_task": "1",
+        "tasks": "$NTASKS",
+        "ntasks_per_code": null,
+        "gpus": null,
+        "gpus_per_node": null,
+        "cores_per_socket": null,
+        "gpus_per_task": null,
+        "exclusive": null,
+        "cpus_per_gpu": null,
+        "gpu_type": null,
+        "time": "03:00:00",
+        "ntasks_per_node": "$PPN",
+        "nodes": "$NODES",
+        "memory": null,
+        "sockets_per_node": null,
+        "ntasks_per_socket": null,
+        "mem_per_gpu": null,
+        "mem_per_cpu": null,
+        "gres_flags": null
+    },
+    "versions": {
+        "openfoam": "2006",
+        "gcc": "12.2.0",
+        "hpcx": "v2.14.0",
+        "spack": "$SPACK_VERSION"
+    }
+}

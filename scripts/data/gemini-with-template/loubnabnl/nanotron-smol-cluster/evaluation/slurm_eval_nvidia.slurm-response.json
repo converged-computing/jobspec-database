@@ -1,0 +1,62 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\"application\": \"accelerate\", \"software\": [\"accelerate\", \"nvidia-smi\", \"conda\", \"srun\", \"bash\"], \"modules\": [\"bigcode_br4\"], \"environment_variables\": {\"PYTHONPATH\": \"/fsx/loubna/bigcode_2/code/pr/transformers/src:$PYTHONPATH\", \"GPUS_PER_NODE\": \"4\", \"MASTER_ADDR\": \"$(scontrol show hostnames $SLURM_JOB_NODELIST | head -n 1)\", \"MASTER_PORT\": \"6000\", \"NNODES\": \"$SLURM_NNODES\", \"NODE_RANK\": \"$SLURM_PROCID\", \"WORLD_SIZE\": \"$(($GPUS_PER_NODE*$NNODES))\", \"model\": \"/fsx/bigcode/experiments/pretraining/starcoder2-1B/checkpoints/conversions\", \"save_path\": \"/fsx/loubna/bigcode_2/code/bigcode-evaluation-harness/nvidia/humaneval_3b\", \"filename\": \"$1\", \"CMD\": \"\\    /fsx/loubna/bigcode_2/code/bigcode-evaluation-harness/main.py \\    --model nvidia/$model \\    --tasks humaneval \\    --max_length_generation 512 \\    --batch_size 1 \\    --n_samples 20 \\    --do_sample True \\    --temperature 0.2 \\    --top_p 0.95 \\    --precision bf16 \\    --allow_code_execution \\    --save_generations \\    --use_auth_token \\    --load_generations_path /fsx/loubna/bigcode_2/code/bigcode-evaluation-harness/nvidia/$1.json \\    --metric_output_path $save_path/metric_$1.json \\\", \"LAUNCHER\": \"accelerate launch \\    --multi_gpu \\    --num_machines $NNODES \\    --num_processes $WORLD_SIZE \\    --main_process_ip \\\"$MASTER_ADDR\\\" \\    --main_process_port $MASTER_PORT \\    --num_processes $WORLD_SIZE \\    --machine_rank \\$SLURM_PROCID \\    --role $SLURMD_NODENAME: \\    --rdzv_conf rdzv_backend=c10d \\    --max_restarts 0 \\    --tee 3 \\    \", \"NCCL_ASYNC_ERROR_HANDLING\": \"1\", \"NCCL_PROTO\": \"simple\", \"RDMAV_FORK_SAFE\": \"1\", \"FI_EFA_FORK_SAFE\": \"1\", \"FI_EFA_USE_DEVICE_RDMA\": \"1\", \"FI_PROVIDER\": \"efa\", \"FI_LOG_LEVEL\": \"1\", \"NCCL_IB_DISABLE\": \"1\", \"NCCL_SOCKET_IFNAME\": \"ens\", \"SRUN_ARGS\": \" \\    --wait=60 \\    --kill-on-bad-exit=1 \\    \"}, \"resources\": {\"gres\": null, \"cpus_per_task\": \"96\", \"tasks\": null, \"ntasks_per_code\": null, \"gpus\": null, \"gpus_per_node\": \"4\", \"cores_per_socket\": null, \"gpus_per_task\": null, \"exclusive\": true, \"cpus_per_gpu\": null, \"gpu_type\": null, \"time\": null, \"ntasks_per_node\": \"1\", \"nodes\": \"1\", \"memory\": null, \"sockets_per_node\": null, \"ntasks_per_socket\": null, \"mem_per_gpu\": null, \"mem_per_cpu\": null, \"gres_flags\": null}, \"versions\": {}}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "citation_metadata": {
+                "citation_sources": [
+                    {
+                        "start_index": 258,
+                        "end_index": 460,
+                        "uri": "https://github.com/loubnabnl/megatron-smol-cluster",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 1166,
+                        "end_index": 1519,
+                        "uri": "https://github.com/uukuguy/speechless",
+                        "license_": ""
+                    }
+                ]
+            },
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 1090,
+        "candidates_token_count": 854,
+        "total_token_count": 1944,
+        "cached_content_token_count": 0
+    }
+}

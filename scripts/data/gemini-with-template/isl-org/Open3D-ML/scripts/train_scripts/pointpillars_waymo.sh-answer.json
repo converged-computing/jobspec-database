@@ -1,0 +1,38 @@
+{
+    "application": "slurm",
+    "software": [
+        "python",
+        "nvidia-smi",
+        "srun"
+    ],
+    "modules": [],
+    "environment_variables": {
+        "PRIMARY_ADDR": "${PRIMARY_ADDR:-$SLURMD_NODENAME}",
+        "PRIMARY_PORT": "${PRIMARY_PORT:-29500}",
+        "DEVICE_IDS": "${DEVICE_IDS:-$(nvidia-smi --list-gpus | cut -f2 -d' ' | tr ':\n' ' ')}",
+        "NODE_RANK": "${NODE_RANK:-SLURM_NODEID}"
+    },
+    "resources": {
+        "gres": "gpu:4",
+        "cpus_per_task": "48",
+        "tasks": null,
+        "ntasks_per_code": null,
+        "gpus": null,
+        "gpus_per_node": "4",
+        "cores_per_socket": null,
+        "gpus_per_task": null,
+        "exclusive": null,
+        "cpus_per_gpu": null,
+        "gpu_type": null,
+        "time": null,
+        "ntasks_per_node": "1",
+        "nodes": "2",
+        "memory": "384G",
+        "sockets_per_node": null,
+        "ntasks_per_socket": null,
+        "mem_per_gpu": null,
+        "mem_per_cpu": null,
+        "gres_flags": null
+    },
+    "versions": {}
+}

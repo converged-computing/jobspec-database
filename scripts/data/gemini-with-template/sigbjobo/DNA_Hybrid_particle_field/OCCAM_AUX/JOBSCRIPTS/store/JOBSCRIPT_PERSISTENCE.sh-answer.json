@@ -1,0 +1,48 @@
+{
+    "application": "lammps",
+    "software": [
+        "namd",
+        "python3"
+    ],
+    "modules": [
+        "intel/2018b",
+        "Python/3.7.0-intel-2018b"
+    ],
+    "environment_variables": {
+        "NPROCS": "${SLURM_NTASKS}",
+        "SHELL_PATH": "/cluster/home/sigbjobo/DNA/DNA_Hybrid_particle_field/DNA_ANALYSIS_CODE/shell",
+        "INPUT_PATH": "/cluster/home/sigbjobo/DNA/DNA_Hybrid_particle_field/DNA_ANALYSIS_CODE/INPUT_FILES",
+        "SCRATCH_DIRECTORY": "${SCRATCH}",
+        "SLURM_SUBMIT_DIR": "$(pwd)",
+        "k_phi": "7",
+        "alpha": "10",
+        "beta": "-10",
+        "dna_seq": "ATGCAATGCTACATATTCGCTTTTTGCGAATATGTAGCATTGCAT",
+        "L": "$(head  fort.5 -n 2 | tail -n 1 | awk '{print $1}')",
+        "M": "$(python3 -c \"print(int($L / 0.8)))\"",
+        "N": "$(tail fort.5 -n 1 | awk '{print $1}')"
+    },
+    "resources": {
+        "gres": "",
+        "cpus_per_task": "1",
+        "tasks": "192",
+        "ntasks_per_code": "192",
+        "gpus": "",
+        "gpus_per_node": "",
+        "cores_per_socket": "",
+        "gpus_per_task": "",
+        "exclusive": "",
+        "cpus_per_gpu": "",
+        "gpu_type": "",
+        "time": "0-0:20:00",
+        "ntasks_per_node": "",
+        "nodes": "",
+        "memory": "2000M",
+        "sockets_per_node": "",
+        "ntasks_per_socket": "",
+        "mem_per_gpu": "",
+        "mem_per_cpu": "2000M",
+        "gres_flags": ""
+    },
+    "versions": {}
+}

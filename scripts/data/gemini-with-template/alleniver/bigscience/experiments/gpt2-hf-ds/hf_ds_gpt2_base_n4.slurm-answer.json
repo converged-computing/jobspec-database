@@ -1,0 +1,60 @@
+{
+    "application": "deepspeed",
+    "software": [
+        "python",
+        "torch",
+        "transformers",
+        "deepspeed"
+    ],
+    "modules": [
+        "six_ALL_CCFRWORK/start-prod"
+    ],
+    "environment_variables": {
+        "PYTHONUNBUFFERED": "1",
+        "HF_DATASETS_CACHE": "$six_ALL_CCFRWORK/datasets",
+        "HF_MODULES_CACHE": "$six_ALL_CCFRWORK/modules",
+        "HF_METRICS_CACHE": "$six_ALL_CCFRWORK/metrics",
+        "DATASET": "stas/openwebtext-10k",
+        "MASTER_ADDR": "$(scontrol show hostnames $SLURM_JOB_NODELIST | head -n 1)",
+        "MASTER_PORT": "6000",
+        "NNODES": "4",
+        "MICRO_BATCH_SIZE": "4",
+        "MSIZE": "25",
+        "NHIDDEN": "7168",
+        "NLAYERS": "40",
+        "GPUS_PER_NODE": "4",
+        "NHEADS": "32",
+        "SEQ_LEN": "1024",
+        "VOCAB_SIZE": "50257",
+        "LAUNCHER": "python -u -m torch.distributed.launch     --nproc_per_node $GPUS_PER_NODE     --nnodes $NNODES     --master_addr $MASTER_ADDR     --master_port $MASTER_PORT     ",
+        "config_json": "./ds_z3_cpu_offload.json",
+        "PYTHONPATH": "src",
+        "HF_DATASETS_OFFLINE": "1",
+        "TRANSFORMERS_OFFLINE": "1",
+        "USE_TF": "0",
+        "CMD": "     examples/pytorch/language-modeling/run_clm.py     --model_type gpt2     --tokenizer_name gpt2     --config_overrides \"n_embd=$NHIDDEN,n_head=$NHEADS,n_layer=$NLAYERS,n_positions=$SEQ_LEN,gradient_checkpointing=true,use_cache=False\"     --dataset_name $DATASET     --output_dir output_dir     --overwrite_output_dir     --do_train     --max_train_samples 1000     --per_device_train_batch_size $MICRO_BATCH_SIZE     --num_train_epochs 1     --warmup_steps 8     --fp16     --report_to none     --deepspeed $config_json     "
+    },
+    "resources": {
+        "gres": "gpu:4",
+        "cpus_per_task": "40",
+        "tasks": null,
+        "ntasks_per_code": null,
+        "gpus": "4",
+        "gpus_per_node": "4",
+        "cores_per_socket": null,
+        "gpus_per_task": null,
+        "exclusive": null,
+        "cpus_per_gpu": null,
+        "gpu_type": "v100-32g",
+        "time": "00:30:00",
+        "ntasks_per_node": "1",
+        "nodes": "4",
+        "memory": null,
+        "sockets_per_node": null,
+        "ntasks_per_socket": null,
+        "mem_per_gpu": null,
+        "mem_per_cpu": null,
+        "gres_flags": null
+    },
+    "versions": {}
+}

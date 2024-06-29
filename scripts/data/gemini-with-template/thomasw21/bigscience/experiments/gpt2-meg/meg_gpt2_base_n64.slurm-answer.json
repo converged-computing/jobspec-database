@@ -1,0 +1,40 @@
+{
+    "application": "megatron-lm",
+    "software": [
+        "python",
+        "torch.distributed.launch",
+        "nvidia-smi",
+        "perl"
+    ],
+    "modules": [
+        "six_ALL_CCFRWORK/start-prod"
+    ],
+    "environment_variables": {
+        "six_ALL_CCFRWORK": "environment variable path",
+        "LAUNCHER": "python -u -m torch.distributed.launch --nproc_per_node $GPUS_PER_NODE --nnodes $NNODES --master_addr $MASTER_ADDR --master_port $MASTER_PORT",
+        "CMD": " `pwd`/pretrain_gpt.py --tensor-model-parallel-size $TP_SIZE --pipeline-model-parallel-size $PP_SIZE $GPT_ARGS $OUTPUT_ARGS --save $SAVE_CHECKPOINT_PATH --load $SAVE_CHECKPOINT_PATH --data-path $DATA_PATH --data-impl mmap --split 949,50,1 --distributed-backend nccl"
+    },
+    "resources": {
+        "gres": "gpu:4",
+        "cpus_per_task": "40",
+        "tasks": null,
+        "ntasks_per_code": null,
+        "gpus": "4",
+        "gpus_per_node": "4",
+        "cores_per_socket": null,
+        "gpus_per_task": "4",
+        "exclusive": null,
+        "cpus_per_gpu": "10",
+        "gpu_type": "v100-32g",
+        "time": "00:10:00",
+        "ntasks_per_node": "1",
+        "nodes": "64",
+        "memory": null,
+        "sockets_per_node": null,
+        "ntasks_per_socket": null,
+        "mem_per_gpu": null,
+        "mem_per_cpu": null,
+        "gres_flags": "hint=nomultithread"
+    },
+    "versions": {}
+}

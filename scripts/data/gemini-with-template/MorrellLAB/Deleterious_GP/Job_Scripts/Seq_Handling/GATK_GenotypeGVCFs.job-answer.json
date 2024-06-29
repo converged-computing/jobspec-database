@@ -1,0 +1,43 @@
+{
+    "application": "gatk",
+    "software": [
+        "GenomeAnalysisTK.jar"
+    ],
+    "modules": [
+        "java"
+    ],
+    "environment_variables": {
+        "REF": "${HOME}/Shared/References/Reference_Sequences/Barley/Morex/barley_RefSeq_v1.0/barley_pseudomolecules_parts.fa",
+        "REF_DICT": "${HOME}/Shared/References/Reference_Sequences/Barley/Morex/barley_RefSeq_v1.0/barley_pseudomolecules_parts.dict",
+        "GVCF_DIR": "/panfs/roc/scratch/tkono/Genomic_Prediction/GVCFs/",
+        "SAMPLE_LIST": "($(find ${GVCF_DIR} -name '*.g.vcf'))",
+        "GATK_IN": "(()",
+        "SEQNAMES": "($(cut -f 2 ${REF_DICT} | grep -E '^SN' | cut -f 2 -d ':'))",
+        "CURRENT": "${SEQNAMES[${PBS_ARRAYID}]}",
+        "OUTPUT_DIR": "/panfs/roc/scratch/tkono/Genomic_Prediction/Variants/Parts",
+        "_JAVA_OPTIONS": "-Xmx71g"
+    },
+    "resources": {
+        "gres": null,
+        "cpus_per_task": "1",
+        "tasks": null,
+        "ntasks_per_code": null,
+        "gpus": null,
+        "gpus_per_node": null,
+        "cores_per_socket": null,
+        "gpus_per_task": null,
+        "exclusive": null,
+        "cpus_per_gpu": null,
+        "gpu_type": null,
+        "time": "36:00:00",
+        "ntasks_per_node": "1",
+        "nodes": "1",
+        "memory": "72gb",
+        "sockets_per_node": null,
+        "ntasks_per_socket": null,
+        "mem_per_gpu": null,
+        "mem_per_cpu": null,
+        "gres_flags": null
+    },
+    "versions": {}
+}

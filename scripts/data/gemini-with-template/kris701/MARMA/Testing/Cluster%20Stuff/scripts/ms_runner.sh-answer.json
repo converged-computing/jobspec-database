@@ -1,0 +1,51 @@
+{
+    "application": "slurm",
+    "software": [
+        "FAST_DOWNWARD",
+        "META_SOLVER"
+    ],
+    "modules": [],
+    "environment_variables": {
+        "FAST_DOWNWARD": "$1",
+        "META_SOLVER": "$2",
+        "DOMAIN": "$3",
+        "DOMAIN_NAME": "$(dirname \"$DOMAIN\")",
+        "PROBLEM": "$4",
+        "PROBLEM_NAME": "${PROBLEM##*/}",
+        "META_DOMAIN": "$5",
+        "CACHE": "$6",
+        "RESULT_DIR": "$7",
+        "RESULT_FILE": "${RESULT_DIR}/${SLURM_JOBID}",
+        "PD": "$(pwd)",
+        "PROCESS_DIRECTORY": "${PD}/${SLURM_JOBID}",
+        "MS": "${META_SOLVER} -d ${DOMAIN} -m ${META_DOMAIN} -p ${PROBLEM} -f ${FAST_DOWNWARD} -c ${CACHE}",
+        "t1": "${EPOCHREALTIME/[^0-9]/}",
+        "t2": "${EPOCHREALTIME/[^0-9]/}",
+        "MS_TIME": "($t2 - $t1)",
+        "OUTPUT": "true, ${DOMAIN_NAME}, ${PROBLEM_NAME}, ${MS_TIME}, ${MS_TIME}, false",
+        "EXIT_CODE": "$?"
+    },
+    "resources": {
+        "gres": "",
+        "cpus_per_task": "",
+        "tasks": "",
+        "ntasks_per_code": "",
+        "gpus": "",
+        "gpus_per_node": "",
+        "cores_per_socket": "",
+        "gpus_per_task": "",
+        "exclusive": "",
+        "cpus_per_gpu": "",
+        "gpu_type": "",
+        "time": "0:30:00",
+        "ntasks_per_node": "",
+        "nodes": "",
+        "memory": "4000",
+        "sockets_per_node": "",
+        "ntasks_per_socket": "",
+        "mem_per_gpu": "",
+        "mem_per_cpu": "",
+        "gres_flags": ""
+    },
+    "versions": {}
+}

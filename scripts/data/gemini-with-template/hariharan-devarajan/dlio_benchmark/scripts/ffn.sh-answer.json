@@ -1,0 +1,57 @@
+{
+    "application": "dlio_benchmark",
+    "software": [
+        "tensorflow",
+        "darshan",
+        "python",
+        "mpich"
+    ],
+    "modules": [
+        "/soft/datascience/tensorflow/tf2.2-craympi.sh",
+        "/soft/perftools/darshan/darshan-3.1.8/lib/libdarshan.so"
+    ],
+    "environment_variables": {
+        "MPICH_MAX_THREAD_SAFETY": "multiple",
+        "CURRENT_DIR": "pwd",
+        "DLIO_ROOT": "dirname $CURRENT_DIR",
+        "PYTHONPATH": "$DLIO_ROOT:$PYTHONPATH",
+        "COBALT_JOBSIZE": "1",
+        "NNODES": "$COBALT_JOBSIZE",
+        "RANKS_PER_NODE": "4",
+        "NRANKS": "((COBALT_JOBSIZE*RANKS_PER_NODE))",
+        "NUM_CORES": "64",
+        "THREADS_PER_CORE": "2",
+        "NUM_THREADS": "((NUM_CORES*THREADS_PER_CORE))",
+        "PROCESS_DISTANCE": "((NUM_THREADS/RANKS_PER_NODE))",
+        "DARSHAN_PRELOAD": "/soft/perftools/darshan/darshan-3.1.8/lib/libdarshan.so",
+        "DATA_DIR": "/projects/datascience/dhari/dlio_datasets",
+        "APP_DATA_DIR": "${DATA_DIR}/ffn",
+        "OPTS": "(-f hdf5 -fa shared -nf 1 -sf 43008 -rl 32768 -bs 1 -df ${APP_DATA_DIR} -gd 0 -k 1)"
+    },
+    "resources": {
+        "gres": "",
+        "cpus_per_task": "64",
+        "tasks": "128",
+        "ntasks_per_code": "128",
+        "gpus": "",
+        "gpus_per_node": "",
+        "cores_per_socket": "64",
+        "gpus_per_task": "",
+        "exclusive": "",
+        "cpus_per_gpu": "",
+        "gpu_type": "",
+        "time": "3:00:00",
+        "ntasks_per_node": "4",
+        "nodes": "32",
+        "memory": "",
+        "sockets_per_node": "1",
+        "ntasks_per_socket": "4",
+        "mem_per_gpu": "",
+        "mem_per_cpu": "",
+        "gres_flags": ""
+    },
+    "versions": {
+        "tensorflow": "2.2",
+        "darshan": "3.1.8"
+    }
+}

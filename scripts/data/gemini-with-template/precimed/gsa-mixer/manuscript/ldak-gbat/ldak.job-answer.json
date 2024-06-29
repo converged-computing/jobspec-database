@@ -1,0 +1,54 @@
+{
+    "application": "ldak",
+    "software": [
+        "ldak5.2.linux",
+        "make_extract_list.py",
+        "plink",
+        "singularity",
+        "python",
+        "sed",
+        "zcat",
+        "grep",
+        "tail",
+        "cut",
+        "sort"
+    ],
+    "modules": [
+        "singularity/3.7.1"
+    ],
+    "environment_variables": {
+        "REFERENCE_FOLDER": "/ess/p697/data/durable/s3-api/github/precimed/mixer_private_docker/reference",
+        "annot_file_raw": "${REFERENCE_FOLDER}/gsa-mixer-gene-annot_10mar2023.csv",
+        "SUMSTATS": "$1",
+        "GENEFILE": "annotSorted.csv",
+        "BFILE": "/ess/p697/cluster/projects/moba_qc_imputation/resources/HRC/plink/hrc_chr${SLURM_ARRAY_TASK_ID}_EUR_qc",
+        "RESULT_OUT": "out/${SUMSTATS}_chr${SLURM_ARRAY_TASK_ID}",
+        "MIXER_SIF": "/ess/p697/data/durable/s3-api/github/norment/ofrei_repo/2023_03_27/mixer.sif",
+        "PYTHON": "singularity exec --home $PWD:/home ${MIXER_SIF} python",
+        "SUMSTATS_FOLDER": "/ess/p697/cluster/users/ofrei/2023_02_06_GSA_MiXeR_natgen_revisions/sumstats_v3p1",
+        "SUMSTATS_LDAK": "sumstats/${SUMSTATS}.chr${SLURM_ARRAY_TASK_ID}.ldak_sumstats"
+    },
+    "resources": {
+        "gres": null,
+        "cpus_per_task": "8",
+        "tasks": "22",
+        "ntasks_per_code": null,
+        "gpus": null,
+        "gpus_per_node": null,
+        "cores_per_socket": null,
+        "gpus_per_task": null,
+        "exclusive": null,
+        "cpus_per_gpu": null,
+        "gpu_type": null,
+        "time": "1:00:00",
+        "ntasks_per_node": null,
+        "nodes": null,
+        "memory": "8000M",
+        "sockets_per_node": null,
+        "ntasks_per_socket": null,
+        "mem_per_gpu": null,
+        "mem_per_cpu": "8000M",
+        "gres_flags": null
+    },
+    "versions": {}
+}

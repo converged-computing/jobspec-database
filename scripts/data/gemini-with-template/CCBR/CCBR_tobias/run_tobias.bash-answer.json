@@ -1,0 +1,53 @@
+{
+    "application": "snakemake",
+    "software": [
+        "snakemake",
+        "singularity",
+        "python"
+    ],
+    "modules": [
+        "python/3.10",
+        "snakemake/7.32.3",
+        "singularity"
+    ],
+    "environment_variables": {
+        "PYTHON_VERSION": "python/3.10",
+        "SNAKEMAKE_VERSION": "snakemake/7.32.3",
+        "SINGULARITY_VERSION": "singularity",
+        "SCRIPTNAME": "$0",
+        "SCRIPTBASENAME": "$(readlink -f $(basename $0))",
+        "EXTRA_SINGULARITY_BINDS": "/lscratch",
+        "ESSENTIAL_FILES": "config/config.yaml config/uropa_base_config.yaml config/cluster.json config/tools.yaml",
+        "ESSENTIAL_FOLDERS": "scripts",
+        "PIPELINE_HOME": "$(readlink -f $(dirname \"$0\"))",
+        "SNAKEFILE": "${PIPELINE_HOME}/tobias.snakefile",
+        "GIT_COMMIT_TAG": "$(get_git_commitid_tag $PIPELINE_HOME)",
+        "CLUSTERJSON": "$(run \"--dry-run\"|grep \"cluster.json\"|awk '{print $NF}')",
+        "BUYINPARTITIONS": "$(bash <(curl -s https://raw.githubusercontent.com/CCBR/Tools/master/Biowulf/get_buyin_partition_list.bash 2>/dev/null))",
+        "PARTITIONS": "norm",
+        "SINGULARITY_BINDS": "-B $EXTRA_SINGULARITY_BINDS,$binds"
+    },
+    "resources": {
+        "gres": "{cluster.gres}",
+        "cpus_per_task": "2",
+        "tasks": "500",
+        "ntasks_per_code": null,
+        "gpus": null,
+        "gpus_per_node": null,
+        "cores_per_socket": null,
+        "gpus_per_task": null,
+        "exclusive": null,
+        "cpus_per_gpu": null,
+        "gpu_type": null,
+        "time": "96:00:00",
+        "ntasks_per_node": null,
+        "nodes": null,
+        "memory": "10g",
+        "sockets_per_node": null,
+        "ntasks_per_socket": null,
+        "mem_per_gpu": null,
+        "mem_per_cpu": null,
+        "gres_flags": null
+    },
+    "versions": {}
+}

@@ -1,0 +1,45 @@
+{
+    "application": "picongpu",
+    "software": [
+        "jsrun",
+        "cuda_memtest.sh"
+    ],
+    "modules": [],
+    "environment_variables": {
+        "OMP_NUM_THREADS": "!TBG_coresPerGPU",
+        "TBG_queue": "batch",
+        "TBG_wallTimeNoSeconds": "${TBG_wallTime::-3}",
+        "TBG_mailSettings": "${MY_MAILNOTIFY:-\"\"}",
+        "TBG_mailAddress": "${MY_MAIL:-\"someone@example.com\"}",
+        "TBG_author": "${MY_NAME:+--author \"${MY_NAME}\"}",
+        "TBG_nameProject": "${proj:-\"\"}",
+        "TBG_profile": "${PIC_PROFILE:-\"${PROJWORK}/!TBG_nameProject/${USER}/picongpu.profile\"}",
+        "TBG_numHostedGPUPerNode": "6",
+        "TBG_gpusPerNode": "`if [ $TBG_tasks -gt $TBG_numHostedGPUPerNode ] ; then echo $TBG_numHostedGPUPerNode; else echo $TBG_tasks; fi`",
+        "TBG_coresPerGPU": "7",
+        "TBG_nodes": "$((( TBG_tasks + TBG_gpusPerNode - 1 ) / TBG_gpusPerNode))"
+    },
+    "resources": {
+        "gres": null,
+        "cpus_per_task": "!TBG_coresPerGPU",
+        "tasks": "!TBG_tasks",
+        "ntasks_per_code": null,
+        "gpus": null,
+        "gpus_per_node": "!TBG_gpusPerNode",
+        "cores_per_socket": null,
+        "gpus_per_task": "1",
+        "exclusive": null,
+        "cpus_per_gpu": "!TBG_coresPerGPU",
+        "gpu_type": null,
+        "time": "!TBG_wallTimeNoSeconds",
+        "ntasks_per_node": null,
+        "nodes": "!TBG_nodes",
+        "memory": null,
+        "sockets_per_node": null,
+        "ntasks_per_socket": null,
+        "mem_per_gpu": null,
+        "mem_per_cpu": null,
+        "gres_flags": null
+    },
+    "versions": {}
+}

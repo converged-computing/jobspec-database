@@ -1,0 +1,45 @@
+{
+    "application": "deepspeed",
+    "software": [
+        "python",
+        "torch.distributed.launch",
+        "pretrain_gpt.py",
+        "deepspeed"
+    ],
+    "modules": [
+        "start-prod"
+    ],
+    "environment_variables": {
+        "TRANSFORMERS_CACHE": "$six_ALL_CCFRWORK/models",
+        "HF_DATASETS_CACHE": "$six_ALL_CCFRWORK/datasets",
+        "HF_MODULES_CACHE": "$six_ALL_CCFRWORK/modules",
+        "HF_METRICS_CACHE": "$six_ALL_CCFRWORK/metrics",
+        "HF_DATASETS_OFFLINE": "1",
+        "TRANSFORMERS_OFFLINE": "1",
+        "LAUNCHER": "python -u -m torch.distributed.launch \n    --nproc_per_node $GPUS_PER_NODE \n    --nnodes $NNODES \n    --master_addr $MASTER_ADDR \n    --master_port $MASTER_PORT \n    ",
+        "CMD": " \n    `pwd`/pretrain_gpt.py \n    --tensor-model-parallel-size $TP_SIZE \n    --pipeline-model-parallel-size $PP_SIZE \n    $GPT_ARGS \n    $OUTPUT_ARGS \n    --save $OUTPUT_PATH/checkpoints \n    --load $OUTPUT_PATH/checkpoints \n    --data-path $DATA_PATH \n    --data-impl mmap \n    --split 949,50,1 \n    --distributed-backend nccl \n     $DEEPSPEED_ARGS \n    "
+    },
+    "resources": {
+        "gres": "gpu:4",
+        "cpus_per_task": "40",
+        "tasks": "4",
+        "ntasks_per_code": "4",
+        "gpus": "4",
+        "gpus_per_node": "4",
+        "cores_per_socket": null,
+        "gpus_per_task": "1",
+        "exclusive": null,
+        "cpus_per_gpu": null,
+        "gpu_type": null,
+        "time": "20:00:00",
+        "ntasks_per_node": "1",
+        "nodes": "4",
+        "memory": null,
+        "sockets_per_node": null,
+        "ntasks_per_socket": null,
+        "mem_per_gpu": null,
+        "mem_per_cpu": null,
+        "gres_flags": null
+    },
+    "versions": {}
+}

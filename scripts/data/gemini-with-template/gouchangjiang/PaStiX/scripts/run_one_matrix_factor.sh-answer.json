@@ -1,0 +1,62 @@
+{
+    "application": "pastix",
+    "software": [
+        "pastix_sharedM/example/bench_facto"
+    ],
+    "modules": [
+        "build/cmake/3.15.3",
+        "compiler/gcc/9.2.0",
+        "linalg/mkl/2019_update4",
+        "mpi/openmpi/4.0.2",
+        "compiler/cuda/10.1",
+        "hardware/hwloc/1.11.13",
+        "trace/eztrace/1.1-8",
+        "partitioning/metis/int64/5.1.0",
+        "partitioning/scotch/int64/6.0.9",
+        "runtime/parsec/master/mpi",
+        "runtime/starpu/1.3.3/mpi"
+    ],
+    "environment_variables": {
+        "STARPU_HOSTNAME": "echo $HOSTNAME | sed 's/[0-9]//g'",
+        "MTXNAME": "$1",
+        "ARTIFACTDIR": "$PWD",
+        "BINARY": "$ARTIFACTDIR/pastix_sharedM/example/bench_facto",
+        "TESTDIR": "$ARTIFACTDIR/raw_results",
+        "MACHINENAME": "miriel",
+        "NBCORES": "24",
+        "OPTIONS": "$* -v4 -i iparm_ordering_default 0 -i iparm_scotch_cmin 20 -t $NBCORES",
+        "dist1d": "-i iparm_tasks2d_level 0",
+        "dist2d": "-i iparm_tasks2d_width",
+        "s": "1",
+        "bsize": "-s $s -i iparm_min_blocksize $min -i iparm_max_blocksize $max $dist1d",
+        "cand": "0",
+        "allcand": "-i iparm_allcand $cand",
+        "fname": "${MACHINENAME}_${MTXNAME}_sched${s}_1d_bs${min}_${max}_cand${cand}.log",
+        "min": "288",
+        "maxcoef": "3",
+        "max": "((min * maxcoef))"
+    },
+    "resources": {
+        "gres": "",
+        "cpus_per_task": "",
+        "tasks": "",
+        "ntasks_per_code": "",
+        "gpus": "",
+        "gpus_per_node": "",
+        "cores_per_socket": "",
+        "gpus_per_task": "",
+        "exclusive": "",
+        "cpus_per_gpu": "",
+        "gpu_type": "",
+        "time": "23:59:59",
+        "ntasks_per_node": "24",
+        "nodes": "1",
+        "memory": "120Gb",
+        "sockets_per_node": "",
+        "ntasks_per_socket": "",
+        "mem_per_gpu": "",
+        "mem_per_cpu": "",
+        "gres_flags": ""
+    },
+    "versions": {}
+}

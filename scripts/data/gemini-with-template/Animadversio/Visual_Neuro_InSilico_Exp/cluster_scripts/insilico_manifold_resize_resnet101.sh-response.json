@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\"application\": \"pbs\", \"software\": [\"python\", \"torch\", \"resnet101\"], \"modules\": [], \"environment_variables\": {\"PATH\": \"/act/Anaconda3-2.3.0/bin:${PATH}\", \"TORCH_HOME\": \"/scratch/binxu/torch\", \"unit_name\": \"units = ('resnet101', '.layer1.Bottleneck1', 5, 28, 28); Xlim = (103, 124); Ylim = (103, 124); imgsize = (21, 21); corner = (103, 103); RFfit = True;\", \"python_code\": \"import torch\\nimport numpy as np\\nimport matplotlib.pyplot as plt\\nfrom scipy import ndimage\\nfrom torchvision.models import resnet101\\nfrom skimage import io\\nfrom skimage.transform import resize\\n\\n# Load the pre-trained ResNet101 model\\nmodel = resnet101(pretrained=True)\\nmodel.eval()\\n\\n# Specify the layer and unit to analyze\\nlayer_name = units[0]\\nunit_name = units[1]\\n\\n# Define the receptive field size and location\\nRF_size = units[2]\\nRF_x_size = units[3]\\nRF_y_size = units[4]\\n\\n# Define the image size and corner location for receptive field analysis\\nimgsize = (imgsize[0], imgsize[1])\\ncorner = (corner[0], corner[1])\\n\\n# Specify the X and Y limits for the receptive field analysis\\nXlim = (Xlim[0], Xlim[1])\\nYlim = (Ylim[0], Ylim[1])\\n\\n# Define the grid of input stimuli\\nX = np.arange(Xlim[0], Xlim[1], 1)\\nY = np.arange(Ylim[0], Ylim[1], 1)\\n\\n# Initialize the receptive field map\\nRF_map = np.zeros((len(Y), len(X)))\\n\\n# Define the input image\\nimg = np.zeros((imgsize[0], imgsize[1], 3))\\nimg = np.uint8(img)\\n\\n# Iterate over each location in the input image\\nfor i, x in enumerate(X):\\n    for j, y in enumerate(Y):\\n        # Create a stimulus image with a white square at the current location\\n        stimulus = np.zeros((imgsize[0], imgsize[1], 3))\\n        stimulus[y:y+RF_size, x:x+RF_size, :] = 255\\n        stimulus = np.uint8(stimulus)\\n\\n        # Preprocess the stimulus image\\n        stimulus = torch.from_numpy(stimulus.transpose((2, 0, 1))).float().unsqueeze(0).to('cuda')\\n\\n        # Forward pass the stimulus through the model\\n        with torch.no_grad():\\n            output = model(stimulus)\\n\\n        # Extract the activation of the specified unit\\n        unit_activation = output[0, 0, corner[0]:corner[0]+RF_size, corner[1]:corner[1]+RF_size]\\n\\n        # Calculate the average activation of the unit\\n        avg_activation = unit_activation.mean().item()\\n\\n        # Store the activation value in the RF map\\n        RF_map[j, i] = avg_activation\\n\\n# Plot the receptive field map\\nplt.figure(figsize=(10, 10))\\nplt.imshow(RF_map, cmap='hot', interpolation='nearest')\\nplt.xlabel('X Coordinate (pixels)')\\nplt.ylabel('Y Coordinate (pixels)')\\nplt.title('Receptive Field Map for Unit: {}'.format(unit_name))\\nplt.colorbar()\\nplt.show()\\n\\n# Optional: Save the RF map\\n# np.save('RF_map.npy', RF_map)\", \"python_code_full\": \"units = ('resnet101', '.layer1.Bottleneck1', 5, 28, 28); Xlim = (103, 124); Ylim = (103, 124); imgsize = (21, 21); corner = (103, 103); RFfit = True;\\nimport torch\\nimport numpy as np\\nimport matplotlib.pyplot as plt\\nfrom scipy import ndimage\\nfrom torchvision.models import resnet101\\nfrom skimage import io\\nfrom skimage.transform import resize\\n\\n# Load the pre-trained ResNet101 model\\nmodel = resnet101(pretrained=True)\\nmodel.eval()\\n\\n# Specify the layer and unit to analyze\\nlayer_name = units[0]\\nunit_name = units[1]\\n\\n# Define the receptive field size and location\\nRF_size = units[2]\\nRF_x_size = units[3]\\nRF_y_size = units[4]\\n\\n# Define the image size and corner location for receptive field analysis\\nimgsize = (imgsize[0], imgsize[1])\\ncorner = (corner[0], corner[1])\\n\\n# Specify the X and Y limits for the receptive field analysis\\nXlim = (Xlim[0], Xlim[1])\\nYlim = (Ylim[0], Ylim[1])\\n\\n# Define the grid of input stimuli\\nX = np.arange(Xlim[0], Xlim[1], 1)\\nY = np.arange(Ylim[0], Ylim[1], 1)\\n\\n# Initialize the receptive field map\\nRF_map = np.zeros((len(Y), len(X)))\\n\\n# Define the input image\\nimg = np.zeros((imgsize[0], imgsize[1], 3))\\nimg = np.uint8(img)\\n\\n# Iterate over each location in the input image\\nfor i, x in enumerate(X):\\n    for j, y in enumerate(Y):\\n        # Create a stimulus image with a white square at the current location\\n        stimulus = np.zeros((imgsize[0], imgsize[1], 3))\\n        stimulus[y:y+RF_size, x:x+RF_size, :] = 255\\n        stimulus = np.uint8(stimulus)\\n\\n        # Preprocess the stimulus image\\n        stimulus = torch.from_numpy(stimulus.transpose((2, 0, 1))).float().unsqueeze(0).to('cuda')\\n\\n        # Forward pass the stimulus through the model\\n        with torch.no_grad():\\n            output = model(stimulus)\\n\\n        # Extract the activation of the specified unit\\n        unit_activation = output[0, 0, corner[0]:corner[0]+RF_size, corner[1]:corner[1]+RF_size]\\n\\n        # Calculate the average activation of the unit\\n        avg_activation = unit_activation.mean().item()\\n\\n        # Store the activation value in the RF map\\n        RF_map[j, i] = avg_activation\\n\\n# Plot the receptive field map\\nplt.figure(figsize=(10, 10))\\nplt.imshow(RF_map, cmap='hot', interpolation='nearest')\\nplt.xlabel('X Coordinate (pixels)')\\nplt.ylabel('Y Coordinate (pixels)')\\nplt.title('Receptive Field Map for Unit: {}'.format(unit_name))\\nplt.colorbar()\\nplt.show()\\n\\n# Optional: Save the RF map\\n# np.save('RF_map.npy', RF_map)\"}, \"resources\": {\"gres\": \"gpu\", \"cpus_per_task\": \"1\", \"tasks\": \"1\", \"ntasks_per_code\": null, \"gpus\": \"1\", \"gpus_per_node\": \"1\", \"cores_per_socket\": null, \"gpus_per_task\": \"1\", \"exclusive\": null, \"cpus_per_gpu\": null, \"gpu_type\": null, \"time\": \"23:55:00\", \"ntasks_per_node\": \"1\", \"nodes\": \"1\", \"memory\": \"15gb\", \"sockets_per_node\": null, \"ntasks_per_socket\": null, \"mem_per_gpu\": null, \"mem_per_cpu\": null, \"gres_flags\": null}, \"versions\": {}}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 1692,
+        "candidates_token_count": 1992,
+        "total_token_count": 3684,
+        "cached_content_token_count": 0
+    }
+}

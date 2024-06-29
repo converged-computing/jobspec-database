@@ -1,0 +1,49 @@
+{
+    "application": "slurm",
+    "software": [
+        "python",
+        "train.py",
+        "openmpi"
+    ],
+    "modules": [
+        "openmpi"
+    ],
+    "environment_variables": {
+        "PYTHONFAULTHANDLER": "1",
+        "CUDA_LAUNCH_BLOCKING": "0",
+        "HOSTNAMES": "scontrol show hostnames \"$SLURM_JOB_NODELIST\"",
+        "MASTER_ADDR": "scontrol show hostnames \"$SLURM_JOB_NODELIST\" | head -n 1",
+        "MASTER_PORT": "12802",
+        "COUNT_NODE": "scontrol show hostnames \"$SLURM_JOB_NODELIST\" | wc -l",
+        "DATA_PATH": "/path/to/data/dir",
+        "SCALE": "small",
+        "SEED": "0",
+        "OUTPUT_DIR": "/path/to/output/dir",
+        "NUM_CHECKPOINTS": "8",
+        "EXP_NAME": "datacomp-scale-${SCALE}-seed${SEED}",
+        "PRECISION": "amp"
+    },
+    "resources": {
+        "gres": "",
+        "cpus_per_task": "6",
+        "tasks": null,
+        "ntasks_per_code": null,
+        "gpus": null,
+        "gpus_per_node": null,
+        "cores_per_socket": null,
+        "gpus_per_task": null,
+        "exclusive": null,
+        "cpus_per_gpu": null,
+        "gpu_type": null,
+        "time": null,
+        "ntasks_per_node": "4",
+        "nodes": "1",
+        "memory": null,
+        "sockets_per_node": null,
+        "ntasks_per_socket": null,
+        "mem_per_gpu": null,
+        "mem_per_cpu": null,
+        "gres_flags": null
+    },
+    "versions": {}
+}

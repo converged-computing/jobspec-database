@@ -1,0 +1,61 @@
+{
+    "application": "hpl",
+    "software": [
+        "cray-hdf5-parallel",
+        "cmake",
+        "cray-mpich",
+        "craype-network-ucx",
+        "cray-mpich-ucx",
+        "ADIOS2",
+        "hpl-2.3"
+    ],
+    "modules": [
+        "PrgEnv-cray/8.0.0",
+        "PrgEnv-gnu",
+        "cray-hdf5-parallel",
+        "cmake",
+        "craype-network-ucx",
+        "cray-mpich-ucx"
+    ],
+    "environment_variables": {
+        "PPN": "${SLURM_NTASKS_PER_NODE}",
+        "OMP_NUM_THREADS": "1",
+        "IOCOMP_DIR": "/work/e609/e609/shr203/iocomp",
+        "LD_LIBRARY_PATH": "${ADIOS2_DIR}/lib64:${LD_LIBRARY_PATH}",
+        "ADIOS2_DIR": "/work/e609/e609/shr203/opt/gnu/8.0.0/ADIOS2",
+        "HPL": "/mnt/lustre/a2fs-work3/work/e609/e609/shr203/hpl-2.3/bin/cray/xhpl",
+        "CONFIG": "${SLURM_SUBMIT_DIR}/config.xml",
+        "NUM_COMP_PROCS": "(${SLURM_NNODES} * ${SLURM_NTASKS_PER_NODE}/2 )",
+        "HPL_DAT": "${SLURM_SUBMIT_DIR}/dat_files/${NUM_COMP_PROCS}.dat",
+        "IOLAYERS": "(\"MPIIO\" \"HDF5\" \"ADIOS2_HDF5\" \"ADIOS2_BP4\" \"ADIOS2_BP5\")",
+        "i": "${SLURM_ARRAY_TASK_ID}",
+        "HALF_CORES": "(${SLURM_NTASKS_PER_NODE}/2)",
+        "FULL_CORES": "(${SLURM_NTASKS_PER_NODE})",
+        "HALF_NODES": "(${SLURM_NNODES}/2)",
+        "MAP": "0",
+        "PARENT_DIR": "${SLURM_SUBMIT_DIR}/${DIR}/${SLURM_NNODES}_${SLURM_NTASKS_PER_NODE}/${IOLAYERS[${m}]}"
+    },
+    "resources": {
+        "gres": "",
+        "cpus_per_task": "1",
+        "tasks": "",
+        "ntasks_per_code": "",
+        "gpus": "",
+        "gpus_per_node": "",
+        "cores_per_socket": "",
+        "gpus_per_task": "",
+        "exclusive": "",
+        "cpus_per_gpu": "",
+        "gpu_type": "",
+        "time": "00:05:00",
+        "ntasks_per_node": "128",
+        "nodes": "1",
+        "memory": "",
+        "sockets_per_node": "",
+        "ntasks_per_socket": "",
+        "mem_per_gpu": "",
+        "mem_per_cpu": "",
+        "gres_flags": ""
+    },
+    "versions": {}
+}

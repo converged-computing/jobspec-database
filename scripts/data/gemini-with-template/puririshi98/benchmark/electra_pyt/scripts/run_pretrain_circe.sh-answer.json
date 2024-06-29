@@ -1,0 +1,50 @@
+{
+    "application": "pytorch",
+    "software": [
+        "pytorch",
+        "electra",
+        "lamb",
+        "python",
+        "srun"
+    ],
+    "modules": [],
+    "environment_variables": {
+        "MULTI_NODE": "--nnodes=$SLURM_NNODES --node_rank=$SLURM_NODEID --master_addr=$MASTER_IP --master_port=$PORT",
+        "DGXSOCKETCORES": "24",
+        "DGXNSOCKET": "2",
+        "SRUN_HOST": "srun --mem=0 -N 1 -n 1 -w $hostn",
+        "SRUN_CONT": "srun --mem=0 -N 1 -n 1 -w $hostn --container-image=\"$CONTAINER\" $MOUNTS",
+        "SLURM_NNODES": "1",
+        "MASTER_IP": "10.100.10.10",
+        "PORT": "4242",
+        "DGXSYSTEM": "DGX2-H",
+        "cluster": "circe",
+        "datadir_phase2": "/gpfs/fs1/sharatht/electra_tf2_data/pretrain_tfrecords",
+        "datadir": "/gpfs/fs1/yuya/electra_pyt_data/",
+        "docker_image": "gitlab-master.nvidia.com/dl/joc/electra_pyt:pretrain",
+        "mounts": ".:/workspace/electra,/gpfs/fs1/yuya/electra_pyt_data/:/workspace/electra/pretraining_data"
+    },
+    "resources": {
+        "gres": "",
+        "cpus_per_task": "16",
+        "tasks": "16",
+        "ntasks_per_code": "1",
+        "gpus": "",
+        "gpus_per_node": "",
+        "cores_per_socket": "24",
+        "gpus_per_task": "",
+        "exclusive": "true",
+        "cpus_per_gpu": "",
+        "gpu_type": "",
+        "time": "8:00:00",
+        "ntasks_per_node": "16",
+        "nodes": "8",
+        "memory": "0",
+        "sockets_per_node": "2",
+        "ntasks_per_socket": "8",
+        "mem_per_gpu": "",
+        "mem_per_cpu": "",
+        "gres_flags": ""
+    },
+    "versions": {}
+}

@@ -90,18 +90,40 @@ def main():
     parser = get_parser()
     args, _ = parser.parse_known_args()
 
-    gemma_lm = keras_nlp.models.GemmaCausalLM.from_preset("gemma_2b_en")
+    gemma_lm = keras_nlp.models.GemmaCausalLM.from_preset("code_gemma_2b_en")
+    # gemma_lm = keras_nlp.models.GemmaCausalLM.from_preset("gemma_2b_en")
     gemma_lm.summary()
 
     # Example format for gemma
     json_model = model_to_json(
         JobsModel(
             application="lammps",
-            software=["openmpi", "cuda"],
+            software=[],
             modules=[],
-            environment_variables={"CUDA_VISIBLE_DEVICES": "0,1,2,3,4"},
-            resources={"nodes": "8", "cores": "512", "gpu": "8", "memory": "200GB"},
-            versions={"libfabric": "1.21", "openmpi": "4.1.2"},
+            environment_variables={},
+            resources={
+                "gres": "",
+                "cpus_per_task": "",
+                "tasks": "",
+                "ntasks_per_code": "",
+                "gpus": "",
+                "gpus_per_node": "",
+                "cores_per_socket": "",
+                "gpus_per_task": "",
+                "exclusive": "",
+                "cpus_per_gpu": "",
+                "gpu_type": "",
+                "time": "",
+                "ntasks_per_node": "",
+                "nodes": "",
+                "memory": "",
+                "sockets_per_node": "",
+                "ntasks_per_socket": "",
+                "mem_per_gpu": "",
+                "mem_per_cpu": "",
+                "gres_flags": "",
+            },
+            versions={},
         )
     )
 

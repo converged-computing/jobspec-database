@@ -1,0 +1,51 @@
+{
+    "application": "slurm",
+    "software": [
+        "awk",
+        "zcat",
+        "sort",
+        "gzip",
+        "wc",
+        "cut",
+        "rm",
+        "mergeBed",
+        "bedtools",
+        "intersect",
+        "uniq",
+        "Rscript"
+    ],
+    "modules": [
+        "rhel8/default-icl",
+        "R/4.3.1-icelake"
+    ],
+    "environment_variables": {
+        "TMPDIR": "${HPC_WORK}/work",
+        "analysis": "~/Caprion/analysis",
+        "suffix": "_dr",
+        "p": "$(awk 'NR==ENVIRON[\"SLURM_ARRAY_TASK_ID\"]{print $1}' ${analysis}/output/caprion${suffix}.varlist)${suffix}",
+        "lines": "$(wc -l ${analysis}/METAL${suffix}/sentinels/${p}_nold.p | cut -d' ' -f1)"
+    },
+    "resources": {
+        "gres": "",
+        "cpus_per_task": "",
+        "tasks": "987",
+        "ntasks_per_code": "",
+        "gpus": "",
+        "gpus_per_node": "",
+        "cores_per_socket": "",
+        "gpus_per_task": "",
+        "exclusive": "",
+        "cpus_per_gpu": "",
+        "gpu_type": "",
+        "time": "12:00:00",
+        "ntasks_per_node": "",
+        "nodes": "",
+        "memory": "28800",
+        "sockets_per_node": "",
+        "ntasks_per_socket": "",
+        "mem_per_gpu": "",
+        "mem_per_cpu": "",
+        "gres_flags": ""
+    },
+    "versions": {}
+}

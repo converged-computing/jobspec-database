@@ -1,0 +1,52 @@
+{
+    "application": "mpi",
+    "software": [
+        "python3",
+        "mpiexec",
+        "postgresql",
+        "initdb",
+        "pg_ctl",
+        "createdb",
+        "dropdb",
+        "sed"
+    ],
+    "modules": [],
+    "environment_variables": {
+        "PBS_ARRAY_INDEX": "3",
+        "problem": "jahs",
+        "search": "tpe",
+        "timeout": "10200",
+        "SEED": "${PBS_ARRAY_INDEX}",
+        "NRANKS_PER_NODE": "4",
+        "NDEPTH": "((64 / $NRANKS_PER_NODE))",
+        "NNODES": "`wc -l < $PBS_NODEFILE`",
+        "NTOTRANKS": "(( $NNODES * $NRANKS_PER_NODE ))",
+        "OMP_NUM_THREADS": "$NDEPTH",
+        "DEEPHYPER_LOG_DIR": "results/$problem-$search-$NNODES-$SEED",
+        "OPTUNA_DB_DIR": "$DEEPHYPER_LOG_DIR/optunadb",
+        "OPTUNA_DB_HOST": "$HOST"
+    },
+    "resources": {
+        "gres": "",
+        "cpus_per_task": "",
+        "tasks": "${NTOTRANKS}",
+        "ntasks_per_code": "",
+        "gpus": "",
+        "gpus_per_node": "",
+        "cores_per_socket": "",
+        "gpus_per_task": "",
+        "exclusive": "",
+        "cpus_per_gpu": "",
+        "gpu_type": "",
+        "time": "03:00:00",
+        "ntasks_per_node": "${NRANKS_PER_NODE}",
+        "nodes": "`wc -l < $PBS_NODEFILE`",
+        "memory": "",
+        "sockets_per_node": "",
+        "ntasks_per_socket": "",
+        "mem_per_gpu": "",
+        "mem_per_cpu": "",
+        "gres_flags": ""
+    },
+    "versions": {}
+}

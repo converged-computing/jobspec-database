@@ -1,0 +1,46 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\"application\": \"slurm\", \"software\": [\"OpenMP\", \"OpenMPI\", \"MVAPICH2\", \"Intel MPI\"], \"modules\": [], \"environment_variables\": {\"MYCLUSTER_QUEUE\": \"{{queue_name}}\", \"MYCLUSTER_JOB_NAME\": \"{{my_name}}\", \"NUM_TASKS\": \"{{num_tasks}}\", \"TASKS_PER_NODE\": \"{{tpn}}\", \"THREADS_PER_TASK\": \"{{num_threads_per_task}}\", \"CPUS_PER_NODE\": \"${SLURM_JOB_CPUS_PER_NODE}\", \"NUM_NODES\": \"{{num_nodes}}\", \"JOBID\": \"$SLURM_JOB_ID\", \"OMP_NUM_THREADS\": \"$THREADS_PER_TASK\", \"OMP_PROC_BIND\": \"true\", \"OMP_PLACES\": \"sockets\", \"OMPI_CMD\": \"mpiexec -n $NUM_TASKS -npernode $TASKS_PER_NODE {{openmpi_args}}\", \"OMPI_NEW_CMD\": \"mpiexec -n $NUM_TASKS --map-by ppr:1:numa --bind-to numa\", \"MV2_CPU_BINDING_LEVEL\": \"SOCKET\", \"MV2_CPU_BINDING_POLICY\": \"scatter\", \"MVAPICH_CMD\": \"mpiexec -n $NUM_TASKS -ppn $TASKS_PER_NODE -bind-to-socket\", \"I_MPI_PIN_DOMAIN\": \"omp:compact\", \"I_MPI_PIN_ORDER\": \"scatter\", \"IMPI_CMD\": \"mpiexec -n $NUM_TASKS -ppn $TASKS_PER_NODE\"}, \"resources\": {\"gres\": \"\", \"cpus_per_task\": \"${THREADS_PER_TASK}\", \"tasks\": \"{{num_tasks}}\", \"ntasks_per_code\": null, \"gpus\": null, \"gpus_per_node\": null, \"cores_per_socket\": null, \"gpus_per_task\": null, \"exclusive\": \"true\", \"cpus_per_gpu\": null, \"gpu_type\": null, \"time\": \"{{wall_clock}}\", \"ntasks_per_node\": \"{{tpn}}\", \"nodes\": \"{{num_nodes}}\", \"memory\": null, \"sockets_per_node\": null, \"ntasks_per_socket\": null, \"mem_per_gpu\": null, \"mem_per_cpu\": null, \"gres_flags\": \"\"}, \"versions\": {}}\n```\n\n**Explanation of the JSON fields:**\n\n* **application**: This is the primary application that the script is designed to run with. In this case, it is **slurm**, the workload manager.\n* **software**: This field lists the various software packages that the script uses.  It includes OpenMP for multi-threading, OpenMPI for message passing, MVAPICH2 for high-performance MPI, and Intel MPI.\n* **modules**: This field is empty because the script does not use any modules for software loading.\n* **environment_variables**: This field provides a detailed list of environment variables defined within the script, including:\n    * Variables related to MyCluster job setup.\n    * OpenMP configurations for threading.\n    * Commands for running MPI programs with different libraries.\n* **resources**: This field defines the resources that the script requests from SLURM.\n    * **gres**:  This is left empty because the script does not request any general resources. \n    * **cpus_per_task**: Specifies the number of CPUs assigned to each task. It uses the value of the `THREADS_PER_TASK` variable.\n    * **tasks**: Represents the total number of tasks requested for the job.\n    * **ntasks_per_code**:  This is not specified in the script, as the script does not use this concept. \n    * **gpus**: Not specified in the script.\n    * **gpus_per_node**: Not specified in the script.\n    * **cores_per_socket**: Not specified in the script.\n    * **gpus_per_task**: Not specified in the script.\n    * **exclusive**: This is set to \"true\" based on the `--exclusive` flag in the script. \n    * **cpus_per_gpu**:  Not specified in the script.\n    * **gpu_type**:  Not specified in the script.\n    * **time**: Specifies the requested wall-clock time for the job.\n    * **ntasks_per_node**: Specifies the number of tasks per node, represented by the `tpn` variable.\n    * **nodes**: Specifies the number of nodes requested for the job.\n    * **memory**: Not specified in the script. \n    * **sockets_per_node**: Not specified in the script.\n    * **ntasks_per_socket**: Not specified in the script.\n    * **mem_per_gpu**: Not specified in the script.\n    * **mem_per_cpu**: Not specified in the script.\n    * **gres_flags**: Not specified in the script.\n* **versions**: This field is left empty as the script does not specify the versions of the software used.\n\n**Note**: The values for some of the resources (e.g., \"cpus_per_task\", \"time\", \"ntasks_per_node\", \"nodes\") will be dynamic based on the parameters passed to the script through the `{{...}}` placeholders. \n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 1295,
+        "candidates_token_count": 1190,
+        "total_token_count": 2485,
+        "cached_content_token_count": 0
+    }
+}

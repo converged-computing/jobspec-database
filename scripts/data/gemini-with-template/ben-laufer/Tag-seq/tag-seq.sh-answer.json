@@ -1,0 +1,54 @@
+{
+    "application": "slurm",
+    "software": [
+        "samtools",
+        "fastqc",
+        "bbmap",
+        "STAR"
+    ],
+    "modules": [
+        "samtools/1.9",
+        "fastqc/0.11.7",
+        "bbmap/37.68",
+        "star/2.6.1d"
+    ],
+    "environment_variables": {
+        "THREADS": "SLURM_NTASKS",
+        "MEM": "SLURM_MEM_PER_CPU / 1024",
+        "directory": "${PWD}/",
+        "sample": "sed \"${SLURM_ARRAY_TASK_ID}q;d\" task_samples.txt",
+        "rawpath": "${directory}raw_sequences/",
+        "mappath": "${directory}${sample}",
+        "fastq": "${rawpath}${sample}.fastq.gz",
+        "trim": "${sample}_trimmed.fastq.gz",
+        "BAM": "${sample}_Aligned.sortedByCoord.out.bam"
+    },
+    "resources": {
+        "gres": "",
+        "cpus_per_task": "",
+        "tasks": "",
+        "ntasks_per_code": "",
+        "gpus": "",
+        "gpus_per_node": "",
+        "cores_per_socket": "",
+        "gpus_per_task": "",
+        "exclusive": "",
+        "cpus_per_gpu": "",
+        "gpu_type": "",
+        "time": "0-00:30:00",
+        "ntasks_per_node": "",
+        "nodes": "",
+        "memory": "32000",
+        "sockets_per_node": "",
+        "ntasks_per_socket": "",
+        "mem_per_gpu": "",
+        "mem_per_cpu": "",
+        "gres_flags": ""
+    },
+    "versions": {
+        "samtools": "1.9",
+        "fastqc": "0.11.7",
+        "bbmap": "37.68",
+        "STAR": "2.6.1d"
+    }
+}

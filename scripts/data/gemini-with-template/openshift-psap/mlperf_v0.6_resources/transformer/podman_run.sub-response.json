@@ -1,0 +1,80 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\"application\": \"slurm\", \"software\": [\"podman\", \"python3\", \"torch\", \"nvidia-podman\"], \"modules\": [], \"environment_variables\": {\"DATESTAMP\": \"date +'%y%m%d%H%M%S%N'\", \"BENCHMARK\": \"translation\", \"BENCHMARK_NAME\": \"TRANSFORMER\", \"CONT\": \"mlperf-nvidia:$BENCHMARK\", \"DATADIR\": \"/raid/data/xformer_v0p6/utf8\", \"LOGDIR\": \"/raid/results/$BENCHMARK\", \"NEXP\": \"10\", \"SEED\": \"od -A n -t d -N 3 /dev/urandom\", \"SYSLOGGING\": \"1\", \"SYS_LOG_GET\": \"'import mlperf_compliance; from mlperf_log_utils import mlperf_submission_log; mlperf_submission_log(mlperf_compliance.constants.$BENCHMARK_NAME)'\", \"DGXSYSTEM\": \"DGX1\", \"IBDEVICES\": \"$DGXIBDEVICES\", \"INSLURM\": \"1\", \"LOGFILE_BASE\": \"${LOGDIR}/${DATESTAMP}\", \"CONTVOLS\": \"-v $DATADIR:/data -v $LOGDIR:/results\", \"NV_GPU\": \"${NVIDIA_VISIBLE_DEVICES:-$(seq 0 $((${SLURM_NTASKS_PER_NODE:-${DGXNGPU}}-1)) | tr '\\n' ',' | sed 's/,$//')}\", \"DOCKEREXEC\": \"env NV_GPU=${NV_GPU} podman run --rm --net=host --uts=host --ipc=host --ulimit stack=67108864 --ulimit memlock=-1 -e NVIDIA_VISIBLE_DEVICES=ALL --cap-drop=ALL --security-opt label=type:nvidia_container_t --security-opt seccomp=unconfined --name=cont_${SLURM_JOB_ID} $IBDEVICES\", \"MLPERF_HOST_OS\": \"/etc/redhat-release\", \"MASTER_IP\": \"getent hosts \\`hostname\\` | cut -d ' ' -f1\", \"PORT\": \"4242 + RANDOM%1000\", \"SSH\": \"ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no $hostn\", \"SRUN\": \"srun --mem=0 -N 1 -n 1 -w $hostn\", \"DOCKERPULL\": \"podman pull $CONT\", \"VARS\": \"(-e SLURM_NNODES=$SLURM_NNODES -e MLPERF_HOST_OS)\", \"VARS_STR\": \"${VARS[@]}\", \"LOG_COMPLIANCE\": \"'import mlperf_compliance; mlperf_compliance.mlperf_log.mlperf_print(mlperf_compliance.constants.CACHE_CLEAR, value=True, stack_offset=0)'\", \"MULTI_NODE\": \" --nnodes=$SLURM_NNODES --node_rank=$h --master_addr=$MASTER_IP --master_port=$PORT\", \"DOCKERENV\": \"(-e DGXSYSTEM=$DGXSYSTEM -e MULTI_NODE=$MULTI_NODE -e SEED=$SEED -e SLURM_JOB_ID=$SLURM_JOB_ID -e SLURM_NTASKS_PER_NODE=$SLURM_NTASKS_PER_NODE -e SLURM_NNODES=$SLURM_NNODES)\", \"MODE\": \"TRAIN\"}, \"resources\": {\"gres\": \"\", \"cpus_per_task\": \"2\", \"tasks\": \"8\", \"ntasks_per_code\": \"1\", \"gpus\": \"8\", \"gpus_per_node\": \"8\", \"cores_per_socket\": \"20\", \"gpus_per_task\": \"1\", \"exclusive\": \"True\", \"cpus_per_gpu\": \"1\", \"gpu_type\": \"\", \"time\": \"12:00:00\", \"ntasks_per_node\": \"8\", \"nodes\": \"1\", \"memory\": \"0\", \"sockets_per_node\": \"1\", \"ntasks_per_socket\": \"40\", \"mem_per_gpu\": \"\", \"mem_per_cpu\": \"\", \"gres_flags\": \"\"}, \"versions\": {}}\n```"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "citation_metadata": {
+                "citation_sources": [
+                    {
+                        "start_index": 423,
+                        "end_index": 581,
+                        "uri": "https://github.com/mlcommons/training_results_v0.6",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 702,
+                        "end_index": 908,
+                        "uri": "https://github.com/popperized/popper-experiments",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 1551,
+                        "end_index": 1700,
+                        "uri": "https://github.com/mlcommons/training_results_v0.6",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 1812,
+                        "end_index": 1969,
+                        "uri": "https://github.com/NVIDIA/DeepLearningExamples",
+                        "license_": ""
+                    },
+                    {
+                        "start_index": 1851,
+                        "end_index": 1993,
+                        "uri": "https://github.com/mlcommons/training_results_v0.7",
+                        "license_": ""
+                    }
+                ]
+            },
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 2706,
+        "candidates_token_count": 952,
+        "total_token_count": 3658,
+        "cached_content_token_count": 0
+    }
+}

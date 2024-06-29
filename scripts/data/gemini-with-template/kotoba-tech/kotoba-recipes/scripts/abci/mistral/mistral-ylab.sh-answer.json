@@ -1,0 +1,60 @@
+{
+    "application": "pytorch",
+    "software": [
+        "python",
+        "mpirun"
+    ],
+    "modules": [
+        "cuda/11.8",
+        "cudnn/cuda-11.x/8.9.0",
+        "nccl/cuda-11.7/2.14.3",
+        "openmpi/4.0.5"
+    ],
+    "environment_variables": {
+        "MASTER_ADDR": "/usr/sbin/ip a show | grep inet | grep 192.168.205 | head -1 | cut -d \" \" -f 6 | cut -d \"/\" -f 1",
+        "MASTER_PORT": "10000 + ($SLURM_JOBID % 50000)",
+        "NUM_GPU_PER_NODE": "4",
+        "NODE_TYPE": "a100",
+        "NUM_NODES": "1",
+        "NUM_GPUS": "(${NUM_NODES} * ${NUM_GPU_PER_NODE})",
+        "SEQ_LENGTH": "4096",
+        "DATA_PARALLEL_SIZE": "$NUM_GPUS",
+        "MICRO_BATCH_SIZE": "4",
+        "GLOBAL_BATCH_SIZE": "1024",
+        "TRAIN_STEPS": "25000",
+        "LR": "1e-4",
+        "MIN_LR": "3.3e-6",
+        "LR_WARMUP_STEPS": "1000",
+        "LR_DECAY_STEPS": "25000",
+        "WEIGHT_DECAY": "0.1",
+        "GRAD_CLIP": "1",
+        "TOKENIZER_MODEL": "/home/kazuki/hf_checkpoints/Mistral-7B-v0.1/tokenizer.model",
+        "CHECKPOINT_DIR": "/home/kazuki/hf_checkpoints/Mistral-7B-v0.1",
+        "CHECKPOINT_SAVE_DIR": "/home/kazuki/checkpoints/Mistral-7b/pretrain",
+        "DATASET_DIR": "/home/kazuki/datasets/pretrain",
+        "DATA_PATH": "2493597126 ${DATASET_DIR}/train_ja_wiki_text_document"
+    },
+    "resources": {
+        "gres": "gpu:rtx6000-ada_4",
+        "cpus_per_task": null,
+        "tasks": null,
+        "ntasks_per_code": null,
+        "gpus": "4",
+        "gpus_per_node": "4",
+        "cores_per_socket": null,
+        "gpus_per_task": "1",
+        "exclusive": null,
+        "cpus_per_gpu": null,
+        "gpu_type": "rtx6000-ada",
+        "time": "2:00:00",
+        "ntasks_per_node": null,
+        "nodes": "1",
+        "memory": null,
+        "sockets_per_node": null,
+        "ntasks_per_socket": null,
+        "mem_per_gpu": null,
+        "mem_per_cpu": null,
+        "gres_flags": null
+    },
+    "versions": {}
+}

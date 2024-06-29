@@ -1,0 +1,46 @@
+{
+    "application": "hpcrun",
+    "software": [
+        "aprun",
+        "AMG2013"
+    ],
+    "modules": [
+        "hpctoolkit/2022.08.03"
+    ],
+    "environment_variables": {
+        "OMP_TOOL": "disabled",
+        "OMP_PROC_BIND": "true",
+        "OMP_PLACES": "threads",
+        "OMP_NUM_THREADS": "4",
+        "OMP_WAIT_POLICY": "active",
+        "HPCRUN_ARGS": "-o hpctoolkit-amg2013.m -e CPUTIME -t",
+        "ranks": "16",
+        "cores_per_task": "4",
+        "bind": "--cc none",
+        "refine": "20",
+        "CMD": "aprun -N $(( $ranks / 2 )) -n $ranks -d $cores_per_task $bind hpcrun ${HPCRUN_ARGS} AMG2013/test/amg2013  -P 2 4 2  -r  $refine $refine $refine"
+    },
+    "resources": {
+        "gres": "filesystems=grand",
+        "cpus_per_task": "4",
+        "tasks": "16",
+        "ntasks_per_code": null,
+        "gpus": null,
+        "gpus_per_node": null,
+        "cores_per_socket": null,
+        "gpus_per_task": null,
+        "exclusive": null,
+        "cpus_per_gpu": null,
+        "gpu_type": null,
+        "time": "10",
+        "ntasks_per_node": null,
+        "nodes": "2",
+        "memory": null,
+        "sockets_per_node": null,
+        "ntasks_per_socket": null,
+        "mem_per_gpu": null,
+        "mem_per_cpu": null,
+        "gres_flags": null
+    },
+    "versions": {}
+}

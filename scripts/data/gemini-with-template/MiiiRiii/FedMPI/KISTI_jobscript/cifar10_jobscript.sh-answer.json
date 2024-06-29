@@ -1,0 +1,44 @@
+{
+    "application": "singularity",
+    "software": [
+        "ssh",
+        "shuf"
+    ],
+    "modules": [
+        "singularity/3.9.7"
+    ],
+    "environment_variables": {
+        "server_port": "RANDOM%55535+10000",
+        "server_ip": "hostname -I | awk '{print $1}'",
+        "num_clients": "30",
+        "num_threads_list": "(1 1 1 1 1 1 2 2 2 2 2 2 3 3 3 3 3 3 4 4 4 4 4 4 8 8 8 8 8 8)",
+        "shuffled_num_threads_list": "shuf -e \"${num_threads_list[@]}\"",
+        "nnodes": "2",
+        "lr": "0.001",
+        "dataset": "CIFAR10",
+        "iid": "False",
+        "split": "gaussian",
+        "target_acc": "1.0",
+        "round": "1500",
+        "method": "CHAFL",
+        "d": "30",
+        "repeat": "1",
+        "node_rank": "0",
+        "arr_idx": "0",
+        "s": "0",
+        "e": "0",
+        "cnt": "0",
+        "temp": "1 $num_threads_per_node",
+        "num_threads": "echo $temp | tr -d ' '",
+        "nproc_per_node": "e-s+1",
+        "subset": "\"${shuffled_num_threads_list[@]:$s:$((e-s+1))}\"",
+        "num_threads_per_node": "${subset[@]}"
+    },
+    "resources": {
+        "select": "2:ncpus=68",
+        "walltime": "48:00:00",
+        "PBS_NODEFILE": "PBS_NODEFILE",
+        "PBS_O_WORKDIR": "PBS_O_WORKDIR"
+    },
+    "versions": {}
+}

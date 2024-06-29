@@ -1,0 +1,45 @@
+{
+    "application": "slurm",
+    "software": [
+        "python",
+        "scripts/run_with_environment.sh",
+        "scripts/train.py",
+        "configs/llama7.yaml"
+    ],
+    "modules": [],
+    "environment_variables": {
+        "OMP_NUM_THREADS": "$SLURM_CPUS_PER_TASK",
+        "MPICH_GPU_SUPPORT_ENABLED": "1",
+        "MIOPEN_USER_DB_PATH": "/tmp/${USER}-miopen-cache-${SLURM_JOB_ID}",
+        "MIOPEN_CUSTOM_CACHE_DIR": "${MIOPEN_USER_DB_PATH}",
+        "PYTHONPATH": ".:${PYTHONPATH}",
+        "PYTORCH_HIP_ALLOC_CONF": "max_split_size_mb:512",
+        "DATA_PATH": "/n/home06/dgroeneveld/data/preprocessed/olmo-mix",
+        "EVAL_DATA_PATH": "/n/home06/dgroeneveld/data/eval-data",
+        "CHECKPOINTS_PATH": "/n/home06/dgroeneveld/checkpoints",
+        "PYTORCH_KERNEL_CACHE_PATH": "/tmp/pytorch_kernel_cache/"
+    },
+    "resources": {
+        "gres": null,
+        "cpus_per_task": "16",
+        "tasks": null,
+        "ntasks_per_code": null,
+        "gpus": "4",
+        "gpus_per_node": "4",
+        "cores_per_socket": null,
+        "gpus_per_task": null,
+        "exclusive": null,
+        "cpus_per_gpu": null,
+        "gpu_type": null,
+        "time": "167:00:00",
+        "ntasks_per_node": "4",
+        "nodes": "16",
+        "memory": "0",
+        "sockets_per_node": null,
+        "ntasks_per_socket": null,
+        "mem_per_gpu": null,
+        "mem_per_cpu": null,
+        "gres_flags": null
+    },
+    "versions": {}
+}

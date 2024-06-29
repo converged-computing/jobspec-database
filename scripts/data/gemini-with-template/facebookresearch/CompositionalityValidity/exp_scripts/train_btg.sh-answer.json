@@ -1,0 +1,56 @@
+{
+    "application": "sbatch",
+    "software": [
+        "python",
+        "conda",
+        "neural_btg/commands/train_nmt_seg2seg.py"
+    ],
+    "modules": [
+        "anaconda3/2022.05",
+        "cuda"
+    ],
+    "environment_variables": {
+        "dataset": "NACS",
+        "split": "length",
+        "seed": "0",
+        "base_dir": "${BASE_DIR}",
+        "input_path": "${base_dir}/data/${dataset}/${split}",
+        "warmup": "0",
+        "TEST_SPLIT": "test",
+        "output_dir": "${base_dir}/trained_models/${dataset}/${split}",
+        "lr": "1e-4",
+        "gradient_accumulation_steps": "8",
+        "batch_size": "25",
+        "segment": "3",
+        "dev_file_suffix": "test",
+        "train_step": "15000",
+        "eval_step_list": "1000 4000 7000 10000 13000 15000",
+        "vocab_size": "100",
+        "max_source_length": "128",
+        "max_target_length": "128",
+        "SAVE_NAME": "btg_${seed}"
+    },
+    "resources": {
+        "gres": "gpu:volta32gb",
+        "cpus_per_task": "1",
+        "tasks": "1",
+        "ntasks_per_code": "1",
+        "gpus": "1",
+        "gpus_per_node": "1",
+        "cores_per_socket": null,
+        "gpus_per_task": "1",
+        "exclusive": null,
+        "cpus_per_gpu": null,
+        "gpu_type": "volta32gb",
+        "time": "2-24:00:00",
+        "ntasks_per_node": "1",
+        "nodes": "1",
+        "memory": "64G",
+        "sockets_per_node": null,
+        "ntasks_per_socket": null,
+        "mem_per_gpu": null,
+        "mem_per_cpu": null,
+        "gres_flags": null
+    },
+    "versions": {}
+}

@@ -1,0 +1,54 @@
+{
+    "application": "tensorflow",
+    "software": [
+        "mpi4py",
+        "tensorflow",
+        "hdf5",
+        "python",
+        "aprun"
+    ],
+    "modules": [
+        "datascience/tensorflow-1.13",
+        "datascience/mpi4py",
+        "cray-hdf5-parallel/1.10.2.0"
+    ],
+    "environment_variables": {
+        "HDF5_USE_FILE_LOCKING": "FALSE",
+        "PYTHONPATH": "$PYTHONPATH:/projects/connectomics_aesp/hanyuli/programs/google_ffn/ffn/run_inference.py",
+        "NRANK_PER_NODE": "32",
+        "NTHREAD_PER_CORE": "4",
+        "NNODE": "$COBALT_JOBSIZE",
+        "MYSCRIPT": "/projects/connectomics_aesp/hanyuli/programs/google_ffn/ffn/run_distributed_inference.py",
+        "NRANK": "$((NRANK_PER_NODE*NNODE))",
+        "NTHREAD": "$((NTHREAD_PER_CORE*64/NRANK_PER_NODE))",
+        "MYNAME": "distributed_inference",
+        "MKL_VERBOSE": "0",
+        "MKLDNN_VERBOSE": "0",
+        "KMP_BLOCKTIME": "0",
+        "KMP_AFFINITY": "granularity=fine,compact,1,0",
+        "OMP_NUM_THREADS": "$NTHREAD"
+    },
+    "resources": {
+        "gres": "",
+        "cpus_per_task": "$NTHREAD",
+        "tasks": "$NRANK",
+        "ntasks_per_code": "$NRANK_PER_NODE",
+        "gpus": "",
+        "gpus_per_node": "",
+        "cores_per_socket": "64",
+        "gpus_per_task": "",
+        "exclusive": "",
+        "cpus_per_gpu": "",
+        "gpu_type": "",
+        "time": "60",
+        "ntasks_per_node": "$NRANK_PER_NODE",
+        "nodes": "$COBALT_JOBSIZE",
+        "memory": "",
+        "sockets_per_node": "1",
+        "ntasks_per_socket": "",
+        "mem_per_gpu": "",
+        "mem_per_cpu": "",
+        "gres_flags": ""
+    },
+    "versions": {}
+}

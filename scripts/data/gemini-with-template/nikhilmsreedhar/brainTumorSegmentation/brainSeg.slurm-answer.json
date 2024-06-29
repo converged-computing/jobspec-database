@@ -1,0 +1,47 @@
+{
+    "application": "slurm",
+    "software": [
+        "mpirun",
+        "nvidia-smi",
+        "python",
+        "time"
+    ],
+    "modules": [
+        "anaconda/anaconda3",
+        "cuda/cuda-11.4",
+        "gcc/gcc-9.1.0",
+        "openmpi/openmpi-4.0.0-gcc-9.1.0"
+    ],
+    "environment_variables": {
+        "job_name": "tumor_seg",
+        "log_dir": "/home/cap5516.student10/job_logs/tumor_seg-$SLURM_JOB_ID",
+        "debug_logs": "/home/cap5516.student10/job_logs/tumor_seg-$SLURM_JOB_ID/job_$SLURM_JOB_ID.log",
+        "benchmark_logs": "/home/cap5516.student10/job_logs/tumor_seg-$SLURM_JOB_ID/job_$SLURM_JOB_ID.log",
+        "file": "",
+        "args": "-m torch.distributed.launch --nproc_per_node=2 --master_port 20003 train.py --experiment $SLURM_JOB_ID --batch_size 3 --end_epoch 400",
+        "python": "/home/cap5516.student10/my-envs/cenv/bin/python"
+    },
+    "resources": {
+        "gres": "gpu:2",
+        "cpus_per_task": "8",
+        "tasks": "1",
+        "ntasks_per_code": null,
+        "gpus": "2",
+        "gpus_per_node": "2",
+        "cores_per_socket": null,
+        "gpus_per_task": null,
+        "exclusive": null,
+        "cpus_per_gpu": null,
+        "gpu_type": null,
+        "time": "96:00:00",
+        "ntasks_per_node": null,
+        "nodes": "1",
+        "memory": "32768",
+        "sockets_per_node": null,
+        "ntasks_per_socket": null,
+        "mem_per_gpu": null,
+        "mem_per_cpu": "8192",
+        "gres_flags": null
+    },
+    "versions": {}
+}

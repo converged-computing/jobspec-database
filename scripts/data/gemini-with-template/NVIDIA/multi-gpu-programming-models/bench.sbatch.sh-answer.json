@@ -1,0 +1,51 @@
+{
+    "application": "enroot",
+    "software": [
+        "nvidia-smi",
+        "modinfo",
+        "nvcc",
+        "mpicxx",
+        "mpirun",
+        "srun",
+        "enroot",
+        "docker",
+        "md5sum",
+        "bash"
+    ],
+    "modules": [],
+    "environment_variables": {
+        "ENROOT_IMG_PATH": ".",
+        "LUSTRE": ".",
+        "IMG": "nvcr.io/nvidia/nvhpc:24.1-devel-cuda12.3-ubuntu22.04",
+        "SQUASHFS_IMG": "${ENROOT_IMG_PATH}/`echo \"$IMG\" | md5sum | cut -f1 -d \" \"`",
+        "CONTAINER_NAME": "HPCSDK-CONTAINER",
+        "CONTAINER_MNTS": "$LUSTRE/workspace/multi-gpu-programming-models:/mnt",
+        "SRUN_ARGS": "--cpu-bind=none --mpi=none --no-container-remap-root --container-mounts=$CONTAINER_MNTS --container-workdir=/mnt --container-name=$CONTAINER_NAME",
+        "OMPI_MCA_coll_hcoll_enable": "0",
+        "MPIRUN_ARGS": "--oversubscribe",
+        "CONTAINER_IMG": "$SQUASHFS_IMG"
+    },
+    "resources": {
+        "gres": "",
+        "cpus_per_task": "1",
+        "tasks": "1",
+        "ntasks_per_code": "1",
+        "gpus": "",
+        "gpus_per_node": "",
+        "cores_per_socket": "",
+        "gpus_per_task": "",
+        "exclusive": "",
+        "cpus_per_gpu": "",
+        "gpu_type": "",
+        "time": "02:00:00",
+        "ntasks_per_node": "1",
+        "nodes": "1",
+        "memory": "",
+        "sockets_per_node": "",
+        "ntasks_per_socket": "",
+        "mem_per_gpu": "",
+        "mem_per_cpu": "",
+        "gres_flags": ""
+    },
+    "versions": {}
+}

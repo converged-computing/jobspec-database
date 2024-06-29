@@ -1,0 +1,63 @@
+{
+    "application": "mpiexec",
+    "software": [
+        "libtree",
+        "make",
+        "gcc",
+        "uuidgen",
+        "date",
+        "rpm",
+        "git",
+        "hipcc",
+        "ldd"
+    ],
+    "modules": [
+        "PrgEnv-gnu-amd",
+        "libfabric/1.15.2.0",
+        "craype-accel-amd-gfx90a",
+        "rocm"
+    ],
+    "environment_variables": {
+        "HIPCC_COMPILE_FLAGS_APPEND": "--offload-arch=gfx90a $(CC --cray-print-opts=cflags)",
+        "HIPCC_LINK_FLAGS_APPEND": "$(CC --cray-print-opts=libs)",
+        "ASAN_OPTIONS": "protect_shadow_gap=0:use_sigaltstack=0",
+        "TSAN_OPTIONS": "second_deadlock_stack=1",
+        "FI_HMEM_CUDA_USE_GDRCOPY": "1",
+        "FI_CXI_OPTIMIZED_MRS": "1",
+        "FI_LOG_LEVEL": "Debug",
+        "FI_CXI_RDZV_THRESHOLD": "4096",
+        "HYDRA_TOPO_DEBUG": "1",
+        "PMI_DIR": "${DBS_DIR}",
+        "OFI_DIR": "/opt/cray/libfabric/1.15.2.0/",
+        "OFI_LIB": "${OFI_DIR}/lib64",
+        "DBS_DIR": "${HOME}/lib-PMI-4.1.1",
+        "MPI_DIR": "${DBS_DIR}",
+        "HOME_DIR": "${HOME}/rmem",
+        "SCRATCH_DIR": "/scratch/project_465000723/tgillis/rmem_${TAG}_${SLURM_JOBID}",
+        "FI_CXI_DISABLE_NON_INJECT_MSG_IDC": "${cxi_disable_idc}",
+        "USE_HIP": "${device}"
+    },
+    "resources": {
+        "gres": null,
+        "cpus_per_task": "16",
+        "tasks": null,
+        "ntasks_per_code": null,
+        "gpus": "1",
+        "gpus_per_node": null,
+        "cores_per_socket": null,
+        "gpus_per_task": "1",
+        "exclusive": null,
+        "cpus_per_gpu": null,
+        "gpu_type": null,
+        "time": "06:00:00",
+        "ntasks_per_node": "1",
+        "nodes": "2",
+        "memory": null,
+        "sockets_per_node": null,
+        "ntasks_per_socket": null,
+        "mem_per_gpu": null,
+        "mem_per_cpu": null,
+        "gres_flags": null
+    },
+    "versions": {}
+}

@@ -1,0 +1,49 @@
+{
+    "application": "openfold",
+    "software": [
+        "shifter",
+        "bash",
+        "python3",
+        "nccl-2.18",
+        "mlperf_logging"
+    ],
+    "modules": [
+        "gpu",
+        "nccl-2.18"
+    ],
+    "environment_variables": {
+        "MODEL_NAME": "openfold",
+        "MODEL_FRAMEWORK": "pytorch",
+        "_seed_override": "${SEED:-}",
+        "_logfile_base": "${LOGDIR}/slurm_${DATESTAMP}",
+        "_cont_name": "${MODEL_NAME}_${SLURM_JOB_ID}",
+        "_cont_mounts": "${DATADIR}:/data:ro;${LOGDIR}:/results",
+        "MASTER_ADDR": "$(hostname)",
+        "SEED": "${_seed_override:-$(date +%s%N)}",
+        "EXP_ID": "${_experiment_index}",
+        "DATESTAMP": "${DATESTAMP}"
+    },
+    "resources": {
+        "gres": "gpu&hbm80g",
+        "cpus_per_task": "32",
+        "tasks": null,
+        "ntasks_per_code": null,
+        "gpus": null,
+        "gpus_per_node": "4",
+        "cores_per_socket": null,
+        "gpus_per_task": null,
+        "exclusive": null,
+        "cpus_per_gpu": null,
+        "gpu_type": null,
+        "time": null,
+        "ntasks_per_node": "4",
+        "nodes": null,
+        "memory": null,
+        "sockets_per_node": null,
+        "ntasks_per_socket": null,
+        "mem_per_gpu": null,
+        "mem_per_cpu": null,
+        "gres_flags": null
+    },
+    "versions": {}
+}

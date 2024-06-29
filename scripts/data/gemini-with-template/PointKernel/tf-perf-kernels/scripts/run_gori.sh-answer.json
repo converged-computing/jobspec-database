@@ -1,0 +1,46 @@
+{
+    "application": "tensorflow",
+    "software": [
+        "python",
+        "nvprof"
+    ],
+    "modules": [
+        "cuda/10.1.243",
+        "python/3.7-anaconda-2019.07",
+        "tensorflow/gpu-1.13.1-py36",
+        "tensorflow/gpu-2.0.0-beta-py36"
+    ],
+    "environment_variables": {
+        "OMP_NUM_THREADS": "(( 40 / ${rankspernode} ))",
+        "OMP_PLACES": "threads",
+        "OMP_PROC_BIND": "spread",
+        "TF_FORCE_GPU_ALLOW_GROWTH": "true"
+    },
+    "resources": {
+        "gres": "gpu:8",
+        "cpus_per_task": "80",
+        "tasks": "SLURM_NNODES * rankspernode",
+        "ntasks_per_code": "SLURM_NNODES * rankspernode",
+        "gpus": "8",
+        "gpus_per_node": "8",
+        "cores_per_socket": "40",
+        "gpus_per_task": "8",
+        "exclusive": "True",
+        "cpus_per_gpu": "10",
+        "gpu_type": "gpu",
+        "time": "02:00:00",
+        "ntasks_per_node": "rankspernode",
+        "nodes": "SLURM_NNODES",
+        "memory": null,
+        "sockets_per_node": "1",
+        "ntasks_per_socket": "40",
+        "mem_per_gpu": null,
+        "mem_per_cpu": null,
+        "gres_flags": null
+    },
+    "versions": {
+        "cuda": "10.1.243",
+        "python": "3.7-anaconda-2019.07",
+        "tensorflow": "1.13.1-py36"
+    }
+}

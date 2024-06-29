@@ -1,0 +1,56 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\"application\": \"trinity\", \"software\": [\"trimmomatic\", \"trinity\", \"salmon\", \"blast\", \"hmmer\", \"transdecoder\", \"bwa\"], \"modules\": [\"trimmomatic\", \"trinity-rnaseq\", \"ncbi-blast\", \"hmmer\", \"transdecoder\", \"bwa-mem2\"], \"environment_variables\": {\"REFERENCE\": \"/rhome/danielaz/bigdata/transcriptomics/glacialisREF/glac.v0.1.fa.gz\", \"READ1\": \"/rhome/danielaz/bigdata/transcriptomics/raw_fastq/PLACEHOLDER_R1_001.fastq.gz\", \"READ2\": \"/rhome/danielaz/bigdata/transcriptomics/raw_fastq/PLACEHOLDER_R2_001.fastq.gz\", \"OUTPUT1\": \"/rhome/danielaz/bigdata/transcriptomics/trim_fastq\", \"SAMPLE_LIST\": \"/rhome/danielaz/bigdata/transcriptomics/raw_fastq/neoclara.deNovo.samples\", \"FASTQ\": \"/rhome/danielaz/bigdata/transcriptomics/raw_fastq\", \"SAMPLES\": \"/rhome/danielaz/bigdata/transcriptomics/trinity/neoclara.trinity.IDs.txt\", \"DE_NOVO\": \"/rhome/danielaz/bigdata/transcriptomics/trinity/neoclara.deNovo.fa\", \"SWISSPROT_DB\": \"/rhome/danielaz/bigdata/transcriptomics/blast/uniprot_sprot.fasta\", \"DE_NOVO_FA\": \"/rhome/danielaz/bigdata/transcriptomics/trinity/neoclara.deNovo.fa\", \"PEP\": \"/rhome/danielaz/bigdata/transcriptomics/raw_fastq/Trinotate/neoclara.deNovo.fa.transdecoder.pep\", \"PFAM\": \"/rhome/danielaz/bigdata/transcriptomics/blast/Pfam-A.hmm\", \"REFERENCE\": \"/rhome/danielaz/bigdata/polyergus/fselysi/f_selysi_v02.fasta\"}, \"resources\": {\"gres\": \"\", \"cpus_per_task\": \"30\", \"tasks\": \"1\", \"ntasks_per_code\": null, \"gpus\": null, \"gpus_per_node\": null, \"cores_per_socket\": null, \"gpus_per_task\": null, \"exclusive\": null, \"cpus_per_gpu\": null, \"gpu_type\": null, \"time\": \"5-00:00:00\", \"ntasks_per_node\": null, \"nodes\": \"1\", \"memory\": \"90G\", \"sockets_per_node\": null, \"ntasks_per_socket\": null, \"mem_per_gpu\": null, \"mem_per_cpu\": \"3G\", \"gres_flags\": \"\"}, \"versions\": {\"trimmomatic\": \"0.39\", \"trinity-rnaseq\": \"2.14.0\", \"ncbi-blast\": \"2.14.0+\", \"hmmer\": \"3.3.2\", \"transdecoder\": \"5.5.0\", \"bwa-mem2\": \"2\"}}\n```\n\n**Explanation of Software and Resources:**\n\n* **Software:** The script utilizes a suite of bioinformatics tools for transcriptomic analysis, including:\n    * **Trimmomatic:**  For adapter removal and quality trimming of Illumina FASTQ data.\n    * **Trinity:** For de novo transcriptome assembly from RNA-Seq data.\n    * **Salmon:** For transcript abundance estimation using alignment-free methods.\n    * **BLAST:** For sequence homology searches against protein databases like SwissProt.\n    * **HMMER:** For protein domain identification using hidden Markov models (HMMs) against the Pfam database.\n    * **TransDecoder:** For identifying potential protein-coding regions within assembled transcripts.\n    * **bwa:** For aligning the de novo transcriptome to a reference genome (F. selysi).\n* **Modules:** The script uses various software modules loaded through the system's module system. \n    * **trimmomatic:** Specifies the version of Trimmomatic to use.\n    * **trinity-rnaseq:** Specifies the version of Trinity to use.\n    * **ncbi-blast:** Specifies the version of BLAST to use.\n    * **hmmer:** Specifies the version of HMMER to use.\n    * **transdecoder:** Specifies the version of TransDecoder to use.\n    * **bwa-mem2:** Specifies the version of bwa-mem2 to use.\n* **Environment Variables:**  The script uses several environment variables to specify the paths to important files and databases, for example:\n    * **REFERENCE:** Points to the reference genome used for alignment.\n    * **READ1:**  Points to the first read of paired-end sequences.\n    * **READ2:** Points to the second read of paired-end sequences.\n    * **OUTPUT1:** Specifies the output directory for trimmed reads.\n    * **SAMPLE_LIST:** Points to the file containing information about samples.\n    * **FASTQ:** Points to the directory where raw FASTQ files are located.\n    * **SAMPLES:** Points to the file containing the sample IDs.\n    * **DE_NOVO:**  Points to the de novo assembled transcriptome.\n    * **SWISSPROT_DB:** Points to the SwissProt database.\n    * **DE_NOVO_FA:** Points to the de novo assembled transcriptome in FASTA format.\n    * **PEP:** Points to the predicted protein sequences file.\n    * **PFAM:** Points to the Pfam-A database.\n* **Resources:** The script uses several resources for running the bioinformatics tools:\n    * **Nodes:** The script requests 1 node for each job.\n    * **CPUs:** The script typically requests 30 CPUs per task (with some variations).\n    * **Memory:** The script often requests a significant amount of memory, typically 90 GB.\n    * **Time:**  The execution time for each job can vary but can range from minutes to several hours or even days.\n    * **Modules:**  The script uses various software modules, specifying versions for each.\n    * **Environment variables:** The script sets up several environment variables to point to specific data files and databases.\n\n**Key Parts of the Script:**\n\n* **Data Preparation:** The script starts by preparing the input data, including:\n    * Listing and filtering FASTQ files.\n    * Acquiring adapter sequences.\n    * Creating sample information files.\n* **Data Analysis:** The script performs a comprehensive transcriptomic analysis:\n    * **Quality Trimming:** Trimming and adapter removal using Trimmomatic.\n    * **De Novo Assembly:** Building a de novo transcriptome with Trinity.\n    * **Transcript Quantification:** Estimating transcript abundance with Salmon.\n    * **Functional Annotation:** Annotating transcripts using Trinotate, including:\n        * Protein coding region prediction with TransDecoder.\n        * BLAST searches against SwissProt.\n        * HMMER searches against Pfam.\n    * **Differential Expression Analysis:** Identifying differentially expressed genes and transcripts using DESeq2.\n    * **Transcript Clustering:** Grouping transcripts based on their expression profiles.\n    * **Alignment to Reference Genome:** Aligning the de novo transcriptome to a reference genome.\n    * **Analysis of Social Supergene:** Identifying transcripts located on the social supergene by comparing the aligned transcripts to a known list of transcripts mapping to a specific scaffold. \n\n**Important Notes:**\n\n* **SLURM:** The script is written for a high-performance computing (HPC) environment and uses SLURM for job submission and resource management.\n* **Pairwise Comparisons:**  The differential expression analysis is performed by comparing different groups or conditions within the data. \n* **Output Files:**  The script generates various output files, including:\n    * Trimmed FASTQ files.\n    * Transcriptome assemblies.\n    * Transcript abundance estimates.\n    * Functional annotation results.\n    * Differentially expressed gene lists.\n    * Expression matrices.\n    * Plots and heatmaps visualizing expression patterns.\n    * Alignment files. \n    * Transcripts mapping to a specific scaffold. \n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "citation_metadata": {
+                "citation_sources": [
+                    {
+                        "start_index": 335,
+                        "end_index": 580,
+                        "uri": "https://github.com/danielazarate/Formica-Supergene-Transcriptomics",
+                        "license_": ""
+                    }
+                ]
+            },
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 15168,
+        "candidates_token_count": 1833,
+        "total_token_count": 17001,
+        "cached_content_token_count": 0
+    }
+}

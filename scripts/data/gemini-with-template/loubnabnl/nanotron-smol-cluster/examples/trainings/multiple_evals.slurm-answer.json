@@ -1,0 +1,58 @@
+{
+    "application": "accelerate",
+    "software": [
+        "python3",
+        "conda",
+        "accelerate",
+        "srun",
+        "bash",
+        "main.py"
+    ],
+    "modules": [
+        "eval-harness"
+    ],
+    "environment_variables": {
+        "GPUS_PER_NODE": "4",
+        "MASTER_ADDR": "scontrol show hostnames $SLURM_JOB_NODELIST | head -n 1",
+        "MASTER_PORT": "6000",
+        "NNODES": "$SLURM_NNODES",
+        "NODE_RANK": "$SLURM_PROCID",
+        "WORLD_SIZE": "($GPUS_PER_NODE*$NNODES)",
+        "OUT_PATH": "/fsx/loubna/code/bigcode-evaluation-harness/multiple_gens",
+        "LAUNCHER": "accelerate launch --multi_gpu --num_machines $NNODES --num_processes $WORLD_SIZE --main_process_ip \"$MASTER_ADDR\" --main_process_port $MASTER_PORT --num_processes $WORLD_SIZE --machine_rank $SLURM_PROCID --role $SLURMD_NODENAME: --rdzv_conf rdzv_backend=c10d --max_restarts 0 --tee 3 ",
+        "NCCL_ASYNC_ERROR_HANDLING": "1",
+        "NCCL_PROTO": "simple",
+        "RDMAV_FORK_SAFE": "1",
+        "FI_EFA_FORK_SAFE": "1",
+        "FI_EFA_USE_DEVICE_RDMA": "1",
+        "FI_PROVIDER": "efa",
+        "FI_LOG_LEVEL": "1",
+        "NCCL_IB_DISABLE": "1",
+        "NCCL_SOCKET_IFNAME": "ens",
+        "SRUN_ARGS": " --wait=60 --kill-on-bad-exit=1 ",
+        "SLURM_JOB_ID": "$SLURM_JOB_ID"
+    },
+    "resources": {
+        "gres": "gpu:4",
+        "cpus_per_task": "48",
+        "tasks": "1",
+        "ntasks_per_code": "1",
+        "gpus": "4",
+        "gpus_per_node": "4",
+        "cores_per_socket": null,
+        "gpus_per_task": "4",
+        "exclusive": true,
+        "cpus_per_gpu": "12",
+        "gpu_type": null,
+        "time": null,
+        "ntasks_per_node": "1",
+        "nodes": "1",
+        "memory": null,
+        "sockets_per_node": null,
+        "ntasks_per_socket": null,
+        "mem_per_gpu": null,
+        "mem_per_cpu": null,
+        "gres_flags": ""
+    },
+    "versions": {}
+}

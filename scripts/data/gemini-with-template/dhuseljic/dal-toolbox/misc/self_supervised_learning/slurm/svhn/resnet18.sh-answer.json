@@ -1,0 +1,60 @@
+{
+    "application": "python",
+    "software": [
+        "python",
+        "main.py",
+        "resnet18_deterministic",
+        "mlp"
+    ],
+    "modules": [
+        "dal-toolbox/venv"
+    ],
+    "environment_variables": {
+        "random_seed": "$SLURM_ARRAY_TASK_ID",
+        "temperature_array": "[0.1 0.5]",
+        "lr_array": "[0.025 0.075 0.125 0.175]",
+        "accumulate_array": "[1 4]",
+        "dataset": "SVHN",
+        "color_distortion_strength": "0.5",
+        "rotation_probability": "0.0",
+        "n_epochs": "801",
+        "encoder": "resnet18_deterministic",
+        "projector": "mlp",
+        "projector_dim": "128",
+        "temperature": "${temperature_array[$((SLURM_ARRAY_TASK_ID / 8 % 2)) + 1]}",
+        "train_batch_size": "512",
+        "accumulate_batches": "${accumulate_array[$((SLURM_ARRAY_TASK_ID % 2)) + 1]}",
+        "optimizer_base_lr": "${lr_array[$((SLURM_ARRAY_TASK_ID / 2 % 4)) + 1]}",
+        "optimizer_weight_decay": "0.000001",
+        "le_model_train_batch_size": "4096",
+        "le_model_num_epochs": "90",
+        "le_model_optimizer_base_lr": "0.1",
+        "le_model_optimizer_weight_decay": "0.0",
+        "le_model_optimizer_momentum": "0.9",
+        "effective_batch_size": "((accumulate_batches * train_batch_size))",
+        "output_dir": "/mnt/stud/home/ynagel/dal-toolbox/results/self_supervised_learning/${dataset}_rotation_${rotation_probability}/simclr_${encoder}/baselr_${optimizer_base_lr}_bs_${effective_batch_size}_temp_${temperature}/seed${random_seed}/"
+    },
+    "resources": {
+        "gres": "gpu:1",
+        "cpus_per_task": "24",
+        "tasks": "16",
+        "ntasks_per_code": "1",
+        "gpus": "1",
+        "gpus_per_node": null,
+        "cores_per_socket": null,
+        "gpus_per_task": "1",
+        "exclusive": null,
+        "cpus_per_gpu": null,
+        "gpu_type": null,
+        "time": null,
+        "ntasks_per_node": null,
+        "nodes": null,
+        "memory": "32gb",
+        "sockets_per_node": null,
+        "ntasks_per_socket": null,
+        "mem_per_gpu": null,
+        "mem_per_cpu": null,
+        "gres_flags": null
+    },
+    "versions": {}
+}

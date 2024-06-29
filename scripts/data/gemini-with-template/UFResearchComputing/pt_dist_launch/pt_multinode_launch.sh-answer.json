@@ -1,0 +1,48 @@
+{
+    "application": "pytorch",
+    "software": [
+        "Megatron-LM/pretrain_bert.py",
+        "pt_dist_launch/run_pt_on_node.sh",
+        "pt_dist_launch/pt_multinode_helper_funcs.sh"
+    ],
+    "modules": [],
+    "environment_variables": {
+        "PYTHON_PATH": "singularity exec --nv /apps/nvidia/containers/pytorch/20.12-py3.sif python",
+        "PT_LAUNCH_UTILS_PATH": "pt_dist_launch",
+        "NCCL_DEBUG": "INFO",
+        "CHECKPOINT_PATH": "checkpoints_2_node",
+        "VOCAB_FILE": "../data/vocab.txt",
+        "DATA_PATH": "../data/uf1_TEXT_sentence",
+        "BERT_ARGS": "--num-layers 24 \\    --hidden-size 1024 \\    --num-attention-heads 16 \\    --seq-length 512 \\    --max-position-embeddings 512 \\    --lr 0.0001 \\    --lr-decay-iters 990000 \\    --train-iters 200000 \\    --min-lr 0.00001 \\    --lr-warmup-fraction 0.01 \\    --micro-batch-size 4 \\    --global-batch-size 256 \\    --vocab-file $(realpath $VOCAB_FILE) \\    --split 949,50,1 \\    --fp16",
+        "OUTPUT_ARGS": "--log-interval 10 \\    --save-interval 20000 \\    --eval-interval 100 \\    --eval-iters 10 \\    --checkpoint-activations",
+        "TRAINING_SCRIPT": "$(realpath Megatron-LM/pretrain_bert.py)",
+        "TRAINING_CMD": "$TRAINING_SCRIPT \\    $BERT_ARGS \\    $OUTPUT_ARGS \\    --save $(realpath $CHECKPOINT_PATH) \\    --load $(realpath $CHECKPOINT_PATH) \\    --data-path $(realpath $DATA_PATH)",
+        "PT_LAUNCH_SCRIPT": "$(realpath \"${PT_LAUNCH_UTILS_PATH}/run_pt_on_node.sh\")",
+        "PRIMARY": "$PRIMARY",
+        "PRIMARY_PORT": "$PRIMARY_PORT",
+        "SECONDARIES": "$SECONDARIES"
+    },
+    "resources": {
+        "gres": "",
+        "cpus_per_task": "128",
+        "tasks": "",
+        "ntasks_per_code": "",
+        "gpus": "",
+        "gpus_per_node": "8",
+        "cores_per_socket": "",
+        "gpus_per_task": "8",
+        "exclusive": "true",
+        "cpus_per_gpu": "",
+        "gpu_type": "",
+        "time": "48:00:00",
+        "ntasks_per_node": "1",
+        "nodes": "2",
+        "memory": "96gb",
+        "sockets_per_node": "",
+        "ntasks_per_socket": "",
+        "mem_per_gpu": "",
+        "mem_per_cpu": "",
+        "gres_flags": ""
+    },
+    "versions": {}
+}

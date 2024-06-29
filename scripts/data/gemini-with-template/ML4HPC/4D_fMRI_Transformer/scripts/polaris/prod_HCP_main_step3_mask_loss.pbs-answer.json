@@ -1,0 +1,50 @@
+{
+    "application": "mpi",
+    "software": [
+        "mpiexec",
+        "python",
+        "conda",
+        "nvidia-smi",
+        "torchrun",
+        "set_affinity_gpu_polaris.sh"
+    ],
+    "modules": [
+        "conda",
+        "3DCNN"
+    ],
+    "environment_variables": {
+        "MPICH_GPU_SUPPORT_ENABLED": "1",
+        "NCCL_COLLNET_ENABLE": "1",
+        "NCCL_NET_GDR_LEVEL": "PHB",
+        "MASTER_ADDR": "`/bin/hostname -s`",
+        "NNODES": "`wc -l < $PBS_NODEFILE`",
+        "NRANKS_PER_NODE": "`nvidia-smi -L | wc -l`",
+        "NTOTRANKS": "(( NNODES * NRANKS_PER_NODE ))",
+        "NDEPTH": "16",
+        "OMP_NUM_THREADS": "${NTHREADS}",
+        "OMP_PLACES": "threads"
+    },
+    "resources": {
+        "gres": "gpu",
+        "cpus_per_task": "1",
+        "tasks": "${NTOTRANKS}",
+        "ntasks_per_code": "${NTOTRANKS}",
+        "gpus": "${NRANKS_PER_NODE}",
+        "gpus_per_node": "${NRANKS_PER_NODE}",
+        "cores_per_socket": "",
+        "gpus_per_task": "1",
+        "exclusive": "",
+        "cpus_per_gpu": "",
+        "gpu_type": "",
+        "time": "1:00:00",
+        "ntasks_per_node": "${NRANKS_PER_NODE}",
+        "nodes": "10",
+        "memory": "",
+        "sockets_per_node": "",
+        "ntasks_per_socket": "",
+        "mem_per_gpu": "",
+        "mem_per_cpu": "",
+        "gres_flags": "gpu:1"
+    },
+    "versions": {}
+}

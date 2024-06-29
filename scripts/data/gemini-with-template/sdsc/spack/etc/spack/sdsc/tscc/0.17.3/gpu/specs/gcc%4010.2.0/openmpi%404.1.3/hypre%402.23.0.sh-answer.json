@@ -1,0 +1,53 @@
+{
+    "application": "spack",
+    "software": [
+        "hypre@2.23.0",
+        "gcc@10.2.0",
+        "openblas@0.3.17",
+        "superlu-dist@7.1.1",
+        "openmpi@4.1.3",
+        "valgrind@3.17.0"
+    ],
+    "modules": [
+        "slurm"
+    ],
+    "environment_variables": {
+        "LOCAL_TIME": "20231026T162108-0700",
+        "UNIX_TIME": "1730053268",
+        "SYSTEM_NAME": "tscc",
+        "SPACK_VERSION": "0.17.3",
+        "SPACK_INSTANCE_NAME": "gpu",
+        "SPACK_INSTANCE_DIR": "/cm/shared/apps/spack/0.17.3/gpu",
+        "SLURM_JOB_SCRIPT": "#!/usr/bin/env bash\n\n#SBATCH --job-name=hypre@2.23.0\n#SBATCH --account=sys200\n#SBATCH --partition=hotel-gpu\n#SBATCH --nodes=1\n#SBATCH --ntasks-per-node=1\n#SBATCH --cpus-per-task=8\n#SBATCH -w gpu1\n#SBATCH --time=00:30:00\n#SBATCH --output=%x.o%j.%N\n\ndeclare -xr LOCAL_TIME=\"$(date +'%Y%m%dT%H%M%S%z')\"\ndeclare -xir UNIX_TIME=\"$(date +'%s')\"\n\ndeclare -xr SYSTEM_NAME='tscc'\n\ndeclare -xr SPACK_VERSION='0.17.3'\ndeclare -xr SPACK_INSTANCE_NAME='gpu'\ndeclare -xr SPACK_INSTANCE_DIR=\"/cm/shared/apps/spack/${SPACK_VERSION}/${SPACK_INSTANCE_NAME}\"\n\ndeclare -xr SLURM_JOB_SCRIPT=\"$(scontrol show job ${SLURM_JOB_ID} | awk -F= '/Command=/{print $2}')\"\ndeclare -xr SLURM_JOB_MD5SUM=\"$(md5sum ${SLURM_JOB_SCRIPT})\"\n\ndeclare -xr SCHEDULER_MODULE='slurm'\n\necho \"${UNIX_TIME} ${SLURM_JOB_ID} ${SLURM_JOB_MD5SUM} ${SLURM_JOB_DEPENDENCY}\" \necho \"\n\ncat \"${SLURM_JOB_SCRIPT}\"\n\nmodule purge\nmodule load \"${SCHEDULER_MODULE}\"\nmodule list\n. \"${SPACK_INSTANCE_DIR}/share/spack/setup-env.sh\"\n\ndeclare -xr SPACK_PACKAGE='hypre@2.23.0'\ndeclare -xr SPACK_COMPILER='gcc@10.2.0'\ndeclare -xr SPACK_VARIANTS='~complex +cuda cuda_arch=60,75,80,86 ~debug +fortran ~int64 ~internal-superlu ~mixedint +mpi ~openmp +shared +superlu-dist ~unified-memory'\ndeclare -xr SPACK_DEPENDENCIES=\"^openblas@0.3.17/$(spack find --format '{hash:7}' openblas@0.3.17 % ${SPACK_COMPILER} ~ilp64 threads=none) ^superlu-dist@7.1.1/$(spack find --format '{hash:7}' superlu-dist@7.1.1 % ${SPACK_COMPILER} ^openmpi@4.1.3\"\ndeclare -xr SPACK_SPEC=\"${SPACK_PACKAGE} % ${SPACK_COMPILER} ${SPACK_VARIANTS} ${SPACK_DEPENDENCIES}\"\n\nprintenv\n\nspack config get compilers\nspack config get config  \nspack config get mirrors\nspack config get modules\nspack config get packages\nspack config get repos\nspack config get upstreams\n\nspack spec --long --namespaces --types hypre@2.23.0 % gcc@10.2.0 ~complex +cuda cuda_arch=60,75,80,86 ~debug +fortran ~int64 ~internal-superlu ~mixedint +mpi ~openmp +shared +superlu-dist ~unified-memory \"^openblas@0.3.17/$(spack find --format '{hash:7}' openblas@0.3.17 % ${SPACK_COMPILER} ~ilp64 threads=none) ^superlu-dist@7.1.1/$(spack find --format '{hash:7}' superlu-dist@7.1.1 % ${SPACK_COMPILER} ^openmpi@4.1.3\"\nif [[ \"${?}\" -ne 0 ]]; then\n  echo 'ERROR: spack concretization failed.'\n  exit 1\nfi\n\ntime -p spack install --jobs \"${SLURM_CPUS_PER_TASK}\" --fail-fast --yes-to-all hypre@2.23.0 % gcc@10.2.0 ~complex +cuda cuda_arch=60,75,80,86 ~debug +fortran ~int64 ~internal-superlu ~mixedint +mpi ~openmp +shared +superlu-dist ~unified-memory \"^openblas@0.3.17/$(spack find --format '{hash:7}' openblas@0.3.17 % ${SPACK_COMPILER} ~ilp64 threads=none) ^superlu-dist@7.1.1/$(spack find --format '{hash:7}' superlu-dist@7.1.1 % ${SPACK_COMPILER} ^openmpi@4.1.3\"\nif [[ \"${?}\" -ne 0 ]]; then\n  echo 'ERROR: spack install failed.'\n  exit 1\nfi\n\nspack module lmod refresh --delete-tree -y\n\nsbatch --dependency=\"afterok:${SLURM_JOB_ID}\" 'valgrind@3.17.0.sh'\n\nsleep 20\n",
+        "SLURM_JOB_MD5SUM": "c33e5a7f544380e484f3c9e4342a33c2",
+        "SCHEDULER_MODULE": "slurm",
+        "SPACK_PACKAGE": "hypre@2.23.0",
+        "SPACK_COMPILER": "gcc@10.2.0",
+        "SPACK_VARIANTS": "~complex +cuda cuda_arch=60,75,80,86 ~debug +fortran ~int64 ~internal-superlu ~mixedint +mpi ~openmp +shared +superlu-dist ~unified-memory",
+        "SPACK_DEPENDENCIES": "^openblas@0.3.17/$(spack find --format '{hash:7}' openblas@0.3.17 % ${SPACK_COMPILER} ~ilp64 threads=none) ^superlu-dist@7.1.1/$(spack find --format '{hash:7}' superlu-dist@7.1.1 % ${SPACK_COMPILER} ^openmpi@4.1.3)",
+        "SPACK_SPEC": "hypre@2.23.0 % gcc@10.2.0 ~complex +cuda cuda_arch=60,75,80,86 ~debug +fortran ~int64 ~internal-superlu ~mixedint +mpi ~openmp +shared +superlu-dist ~unified-memory ^openblas@0.3.17/$(spack find --format '{hash:7}' openblas@0.3.17 % ${SPACK_COMPILER} ~ilp64 threads=none) ^superlu-dist@7.1.1/$(spack find --format '{hash:7}' superlu-dist@7.1.1 % ${SPACK_COMPILER} ^openmpi@4.1.3)"
+    },
+    "resources": {
+        "gres": "",
+        "cpus_per_task": "8",
+        "tasks": "",
+        "ntasks_per_code": "",
+        "gpus": "",
+        "gpus_per_node": "",
+        "cores_per_socket": "",
+        "gpus_per_task": "",
+        "exclusive": "",
+        "cpus_per_gpu": "",
+        "gpu_type": "",
+        "time": "00:30:00",
+        "ntasks_per_node": "1",
+        "nodes": "1",
+        "memory": "",
+        "sockets_per_node": "",
+        "ntasks_per_socket": "",
+        "mem_per_gpu": "",
+        "mem_per_cpu": "",
+        "gres_flags": ""
+    },
+    "versions": {}
+}

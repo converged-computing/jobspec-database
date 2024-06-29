@@ -1,0 +1,44 @@
+{
+    "application": "python",
+    "software": [
+        "python",
+        "slurm",
+        "srun",
+        "mpi",
+        "pmix",
+        "nccl",
+        "nvidia-docker"
+    ],
+    "modules": [],
+    "environment_variables": {
+        "rankspernode": "16",
+        "totalranks": "${SLURM_NNODES} * ${rankspernode}",
+        "run_tag": "deepcam_prediction_run5_nnodes${SLURM_NNODES}-3",
+        "data_dir_prefix": "/data",
+        "output_dir": "/runs/${run_tag}",
+        "checkpoint_file": "${output_dir}/classifier_step_17200.cpt"
+    },
+    "resources": {
+        "gres": "",
+        "cpus_per_task": "96 / ${rankspernode}",
+        "tasks": "${totalranks}",
+        "ntasks_per_code": "${totalranks}",
+        "gpus": "",
+        "gpus_per_node": "",
+        "cores_per_socket": "",
+        "gpus_per_task": "",
+        "exclusive": "",
+        "cpus_per_gpu": "",
+        "gpu_type": "",
+        "time": "08:00:00",
+        "ntasks_per_node": "${rankspernode}",
+        "nodes": "${SLURM_NNODES}",
+        "memory": "",
+        "sockets_per_node": "",
+        "ntasks_per_socket": "",
+        "mem_per_gpu": "",
+        "mem_per_cpu": "",
+        "gres_flags": ""
+    },
+    "versions": {}
+}

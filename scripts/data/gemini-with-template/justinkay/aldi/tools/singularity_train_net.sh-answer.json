@@ -1,0 +1,41 @@
+{
+    "application": "slurm",
+    "software": [
+        "singularity",
+        "python"
+    ],
+    "modules": [],
+    "environment_variables": {
+        "HOME": "/tmp/aldi-$USER",
+        "TMPDIR": "$HOME/.tmp",
+        "CACHEDIR": "$HOME/.cache",
+        "SINGULARITY_CACHEDIR": "$CACHEDIR/singularity",
+        "LEADER_PORT": "expr 10000 + $(echo -n $SLURM_JOBID | tail -c 4)",
+        "WORLD_SIZE": "($SLURM_JOB_NUM_NODES * $SLURM_NTASKS_PER_NODE)",
+        "LEADER_ADDR": "$(scontrol show hostnames \"$SLURM_JOB_NODELIST\" | head -n 1)",
+        "CFG": "${1:-configs/cityscapes/Base-RCNN-FPN-Cityscapes_strongaug_ema.yaml}"
+    },
+    "resources": {
+        "gres": "gpu:8",
+        "cpus_per_task": "64",
+        "tasks": null,
+        "ntasks_per_code": null,
+        "gpus": null,
+        "gpus_per_node": "8",
+        "cores_per_socket": null,
+        "gpus_per_task": null,
+        "exclusive": null,
+        "cpus_per_gpu": null,
+        "gpu_type": null,
+        "time": "12:00:00",
+        "ntasks_per_node": "1",
+        "nodes": "1",
+        "memory": "64G",
+        "sockets_per_node": null,
+        "ntasks_per_socket": null,
+        "mem_per_gpu": null,
+        "mem_per_cpu": null,
+        "gres_flags": null
+    },
+    "versions": {}
+}

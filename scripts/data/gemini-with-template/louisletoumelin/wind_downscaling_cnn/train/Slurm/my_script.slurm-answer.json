@@ -1,0 +1,44 @@
+{
+    "application": "horovod",
+    "software": [
+        "slurm-docker-run",
+        "horovod",
+        "python"
+    ],
+    "modules": [],
+    "environment_variables": {
+        "SLURM_HOSTLIST": "scontrol show hostnames|paste -d, -s",
+        "UID": "`id -u`",
+        "GID": "`id -g`",
+        "ARGS": "$1",
+        "ARGS2": "${ARGS//|/ }",
+        "NB_SECONDARY_WORKERS": "SLURM_JOB_NUM_NODES-1",
+        "HOME_DIR": "/home/mrmn/letoumelinl/train",
+        "DATA_DIR": "/scratch/mrmn/letoumelinl/ARPS",
+        "PYTHON_SCRIPT": "/home/mrmn/letoumelinl/train/train_models.py",
+        "HOROVOD_CONTAINER": "horovod:env_DLv2"
+    },
+    "resources": {
+        "gres": "gpu:v100:1",
+        "cpus_per_task": "1",
+        "tasks": null,
+        "ntasks_per_code": null,
+        "gpus": "1",
+        "gpus_per_node": "1",
+        "cores_per_socket": null,
+        "gpus_per_task": "1",
+        "exclusive": null,
+        "cpus_per_gpu": null,
+        "gpu_type": "v100",
+        "time": "0-12:00:00",
+        "ntasks_per_node": "1",
+        "nodes": "1",
+        "memory": null,
+        "sockets_per_node": null,
+        "ntasks_per_socket": null,
+        "mem_per_gpu": null,
+        "mem_per_cpu": null,
+        "gres_flags": null
+    },
+    "versions": {}
+}

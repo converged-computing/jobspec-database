@@ -1,0 +1,56 @@
+{
+    "candidates": [
+        {
+            "content": {
+                "parts": [
+                    {
+                        "text": "```json\n{\"application\": \"rstudio\", \"software\": [\"singularity\", \"rstudio-server\", \"openblas\", \"python\"], \"modules\": [\"singularity/3.9.2\"], \"environment_variables\": {\"USER_R_LIB\": \"${HOME}/R/RNA_seq/4.2\", \"LOCAL_PORT\": \"8787\", \"SINGULARITY_IMAGE\": \"rnaseq_r_v1.sif\", \"SINGULARITY_EXEC_OPTS\": \"$1\", \"max_n_cores\": \"$(grep processor /proc/cpuinfo | wc -l)\", \"workdir\": \"$(python -c 'import tempfile; print(tempfile.mkdtemp())')\", \"OMP_NUM_THREADS\": \"${max_n_cores}\", \"R_LIBS_USER\": \"$USER_R_LIB\", \"SINGULARITY_BIND\": \"${workdir}/run:/run,${workdir}/tmp:/tmp,${workdir}/database.conf:/etc/rstudio/database.conf,${workdir}/rsession.sh:/etc/rstudio/rsession.sh,${workdir}/var/lib/rstudio-server:/var/lib/rstudio-server\", \"SINGULARITYENV_RSTUDIO_SESSION_TIMEOUT\": \"0\", \"SINGULARITYENV_USER\": \"$(id -un)\", \"SINGULARITYENV_PASSWORD\": \"$(openssl rand -base64 15)\", \"PORT\": \"$(python -c 'import socket; s=socket.socket(); s.bind((\"\", 0)); print(s.getsockname()[1]); s.close()')\", \"LSB_JOBID\": \"${LSB_JOBID}\"}, \"resources\": {\"gres\": \"\", \"cpus_per_task\": \"12\", \"tasks\": \"1\", \"ntasks_per_code\": \"1\", \"gpus\": \"\", \"gpus_per_node\": \"\", \"cores_per_socket\": \"\", \"gpus_per_task\": \"\", \"exclusive\": \"\", \"cpus_per_gpu\": \"\", \"gpu_type\": \"\", \"time\": \"23:59\", \"ntasks_per_node\": \"1\", \"nodes\": \"1\", \"memory\": \"128\", \"sockets_per_node\": \"\", \"ntasks_per_socket\": \"\", \"mem_per_gpu\": \"\", \"mem_per_cpu\": \"\", \"gres_flags\": \"\"}, \"versions\": {\"singularity\": \"3.9.2\"}}\n```\n\n**Explanation:**\n\n* **Application:** `rstudio` -  This script launches an RStudio Server instance within a Singularity container. \n* **Software:**\n    * `singularity`: The container runtime used to run the RStudio Server image.\n    * `rstudio-server`: The server software providing the RStudio environment.\n    * `openblas`:  A high-performance BLAS library often used by R for numerical computations. It's likely included in the Singularity image.\n    * `python`: Used for tasks like generating temporary directories and managing socket ports.\n* **Modules:** \n    * `singularity/3.9.2`: The specific version of the Singularity module being loaded.\n* **Environment Variables:**\n    * Many variables are defined for configuration: \n        * `USER_R_LIB`:  Location of R packages within the container.\n        * `LOCAL_PORT`: Port on the local machine used to access the RStudio server.\n        * `SINGULARITY_IMAGE`: Path to the Singularity container image containing RStudio Server.\n        * `SINGULARITY_EXEC_OPTS`: Additional options for running the Singularity container. \n        * `max_n_cores`: Number of available cores on the HPC node. \n        * `workdir`:  Temporary directory used for bind-mounting directories into the container.\n        * `OMP_NUM_THREADS`: Controls the number of threads used by OpenBLAS.\n        * `R_LIBS_USER`: Location of R libraries within the container.\n        * `SINGULARITY_BIND`:  Specifies directories to bind-mount into the container.\n        * `SINGULARITYENV_RSTUDIO_SESSION_TIMEOUT`: Controls RStudio session idle timeout.\n        * `SINGULARITYENV_USER`: Username to access the RStudio server.\n        * `SINGULARITYENV_PASSWORD`: Randomly generated password for RStudio.\n        * `PORT`:  The specific port assigned to the RStudio server within the container.\n* **Resources:**\n    * **`-n 12`**: Requests 12 CPUs for the job (number of processors)\n    * **`-R \"rusage[mem=128] span[hosts=1]\"`**: Requests 128GB of memory per node and specifies that the job should run on a single node.\n    * **`-W 23:59`**: Sets the maximum runtime of the job to 23 hours and 59 minutes.\n    * **`-q rna`**: Specifies the queue to submit the job to.\n* **Versions:**\n    * `singularity`: `3.9.2`\n\nThis script sets up a self-contained RStudio environment on an HPC using Singularity for efficient execution. \n"
+                    }
+                ],
+                "role": "model"
+            },
+            "finish_reason": 1,
+            "index": 0,
+            "safety_ratings": [
+                {
+                    "category": 9,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 8,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 7,
+                    "probability": 1,
+                    "blocked": false
+                },
+                {
+                    "category": 10,
+                    "probability": 1,
+                    "blocked": false
+                }
+            ],
+            "citation_metadata": {
+                "citation_sources": [
+                    {
+                        "start_index": 494,
+                        "end_index": 715,
+                        "uri": "https://yufree.cn/en/2022/05/26/using-xcmsrocker-on-hpc-via-singularity/",
+                        "license_": ""
+                    }
+                ]
+            },
+            "token_count": 0,
+            "grounding_attributions": []
+        }
+    ],
+    "usage_metadata": {
+        "prompt_token_count": 1288,
+        "candidates_token_count": 1145,
+        "total_token_count": 2433,
+        "cached_content_token_count": 0
+    }
+}

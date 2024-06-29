@@ -1,0 +1,53 @@
+{
+    "application": "pytorch",
+    "software": [
+        "conda",
+        "python",
+        "transformers",
+        "huggingface_datasets",
+        "slurm"
+    ],
+    "modules": [
+        "ewc"
+    ],
+    "environment_variables": {
+        "HF_DATASETS_OFFLINE": "1",
+        "TRANSFORMERS_OFFLINE": "1",
+        "conda_setup": "/home/smg/$(whoami)/miniconda3/etc/profile.d/conda.sh",
+        "seed": "3435",
+        "lambda": "$(sed -n \"$SLURM_ARRAY_TASK_ID\"p lambdas.txt)",
+        "dir": "$(basename \"$PWD\")",
+        "reg": "$(basename \"$(dirname \"$PWD\")\")",
+        "prior": "${prior%_*}",
+        "data_dir": "../../data/${dir}",
+        "max_len": "128",
+        "pretrained": "bert-base-uncased",
+        "prior_model_dir": "${pretrained}-${max_len}-mod",
+        "model_dir": "${pretrained}-${max_len}-${lambda}-mod",
+        "ckpt": "",
+        "SLURM_ARRAY_TASK_ID": ""
+    },
+    "resources": {
+        "gres": "gpu:tesla_a100:1",
+        "cpus_per_task": null,
+        "tasks": "5",
+        "ntasks_per_code": null,
+        "gpus": "1",
+        "gpus_per_node": null,
+        "cores_per_socket": null,
+        "gpus_per_task": "1",
+        "exclusive": null,
+        "cpus_per_gpu": null,
+        "gpu_type": "tesla_a100",
+        "time": "24:00:00",
+        "ntasks_per_node": null,
+        "nodes": null,
+        "memory": null,
+        "sockets_per_node": null,
+        "ntasks_per_socket": null,
+        "mem_per_gpu": null,
+        "mem_per_cpu": null,
+        "gres_flags": null
+    },
+    "versions": {}
+}

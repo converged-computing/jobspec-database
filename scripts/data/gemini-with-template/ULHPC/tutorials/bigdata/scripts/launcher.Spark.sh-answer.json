@@ -1,0 +1,54 @@
+{
+    "application": "spark",
+    "software": [
+        "spark"
+    ],
+    "modules": [
+        "devel/Spark"
+    ],
+    "environment_variables": {
+        "SPARK_HOME": "$EBROOTSPARK",
+        "SPARK_IDENT_STRING": "${SLURM_JOBID}",
+        "SPARK_LOG_DIR": "${SPARK_LOG_DIR:-$HOME/.spark/logs}",
+        "SPARK_WORKER_DIR": "${SPARK_WORKER_DIR:-$HOME/.spark/worker}",
+        "SPARK_LOCAL_DIRS": "${SPARK_LOCAL_DIRS:-/tmp/spark}",
+        "SPARK_WORKER_CORES": "${SLURM_CPUS_PER_TASK:-1}",
+        "DAEMON_MEM": "${SLURM_MEM_PER_CPU:=4096}",
+        "SPARK_MEM": "(( ${DAEMON_MEM}*(${SPARK_WORKER_CORES} -1) ))",
+        "SPARK_DAEMON_MEMORY": "${DAEMON_MEM}m",
+        "SPARK_WORKER_MEMORY": "${SPARK_MEM}m",
+        "SPARK_EXECUTOR_MEMORY": "${SPARK_MEM}m",
+        "SPARK_MASTER_WEBUI_PORT": "8082",
+        "SPARK_SLAVE_LAUNCHER": "${SPARK_WORKER_DIR}/spark-start-slaves-${SLURM_JOBID}.sh",
+        "OUTPUTFILE": "result_${SLURM_JOB_NAME}-${SLURM_JOB_ID}.out",
+        "SPARK_MASTER_HOST": "$(hostname -s)",
+        "SPARK_MASTER_OPTS": "",
+        "SPARK_WORKER_OPTS": "",
+        "MASTER_URL": "$(grep -Po '(?=spark://).*' ${SPARK_LOG_DIR}/spark-${SPARK_IDENT_STRING}-org.*master*.out)",
+        "SRUN_CPUS_PER_TASK": "${SLURM_CPUS_PER_TASK}",
+        "SPARK_NO_DAEMONIZE": "1"
+    },
+    "resources": {
+        "gres": "",
+        "cpus_per_task": "28",
+        "tasks": "${SLURM_NTASKS}",
+        "ntasks_per_code": "",
+        "gpus": "",
+        "gpus_per_node": "",
+        "cores_per_socket": "",
+        "gpus_per_task": "",
+        "exclusive": "true",
+        "cpus_per_gpu": "",
+        "gpu_type": "",
+        "time": "0-01:00:00",
+        "ntasks_per_node": "1",
+        "nodes": "3",
+        "memory": "",
+        "sockets_per_node": "",
+        "ntasks_per_socket": "",
+        "mem_per_gpu": "",
+        "mem_per_cpu": "4096",
+        "gres_flags": ""
+    },
+    "versions": {}
+}

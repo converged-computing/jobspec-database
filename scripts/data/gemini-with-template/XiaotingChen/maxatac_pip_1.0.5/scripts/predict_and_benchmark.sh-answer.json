@@ -1,0 +1,55 @@
+{
+    "application": "bsub",
+    "software": [
+        "maxatac",
+        "bedtools",
+        "samtools",
+        "pigz",
+        "ucsctools"
+    ],
+    "modules": [
+        "bedtools/2.29.2-wrl",
+        "samtools/1.6-wrl",
+        "gcc/9.3.0",
+        "cuda/11.7",
+        "pigz/2.6.0",
+        "ucsctools"
+    ],
+    "environment_variables": {
+        "model_dir": "$MYTEAM/maxatac/runs/multiinput_GATA3",
+        "tf": "GATA3",
+        "cell_line": "A549",
+        "chromosomes": "chr1",
+        "best_model": "$(cat ${model_dir}/*txt)",
+        "dataset": "train",
+        "output_dir": "$model_dir/prediction",
+        "benchmark_dir": "$model_dir/benchmark",
+        "gold_standard": "$MYTEAM/maxatac/training_data/ChIP_Peaks/ChIP_Peaks/${cell_line}__$tf.bw",
+        "atac_signal": "$MYTEAM/maxatac/training_data/ATAC_Signal_File/ATAC_Signal_File/${cell_line}_RP20M_minmax_percentile99.bw",
+        "cell_types_1": "D3_definitive_endoderm_SOX17KO D3_definitive_endoderm_WT Pluripotent_ES_cells",
+        "cell_types_2": "D1_mesendoderm D2_endoderm_progenitors D3_neuromesodermal_progenitors_SOX2KD D3_neuromesodermal_progenitors_WT"
+    },
+    "resources": {
+        "gres": "gpu",
+        "cpus_per_task": "2",
+        "tasks": null,
+        "ntasks_per_code": null,
+        "gpus": "1",
+        "gpus_per_node": null,
+        "cores_per_socket": null,
+        "gpus_per_task": null,
+        "exclusive": null,
+        "cpus_per_gpu": null,
+        "gpu_type": "amdgpu",
+        "time": "6:00",
+        "ntasks_per_node": null,
+        "nodes": null,
+        "memory": "32000",
+        "sockets_per_node": null,
+        "ntasks_per_socket": null,
+        "mem_per_gpu": null,
+        "mem_per_cpu": null,
+        "gres_flags": null
+    },
+    "versions": {}
+}

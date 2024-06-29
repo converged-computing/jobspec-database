@@ -1,0 +1,44 @@
+{
+    "application": "pytorch",
+    "software": [
+        "python",
+        "nv-nsight-cu-cli"
+    ],
+    "modules": [
+        "pytorch/v1.5.0-gpu"
+    ],
+    "environment_variables": {
+        "PROFILER": "cupy",
+        "OMP_NUM_THREADS": null,
+        "OMP_PLACES": "threads",
+        "OMP_PROC_BIND": "spread",
+        "sruncmd": "srun -N ${SLURM_NNODES} -n $(( ${SLURM_NNODES} * ${rankspernode} )) --cpu_bind=cores",
+        "TF_XLA_FLAGS": "--tf_xla_auto_jit=2",
+        "XLA_FLAGS": "--xla_dump_to=$run_dir"
+    },
+    "resources": {
+        "gres": "gpu:1",
+        "cpus_per_task": null,
+        "tasks": null,
+        "ntasks_per_code": null,
+        "gpus": 1,
+        "gpus_per_node": 1,
+        "cores_per_socket": null,
+        "gpus_per_task": 1,
+        "exclusive": true,
+        "cpus_per_gpu": 40,
+        "gpu_type": null,
+        "time": "2:00:00",
+        "ntasks_per_node": 1,
+        "nodes": null,
+        "memory": null,
+        "sockets_per_node": null,
+        "ntasks_per_socket": null,
+        "mem_per_gpu": null,
+        "mem_per_cpu": null,
+        "gres_flags": ""
+    },
+    "versions": {
+        "pytorch": "1.5.0"
+    }
+}

@@ -1,0 +1,52 @@
+{
+    "application": "horovod",
+    "software": [
+        "nvidia-smi",
+        "jupyterlab_nvdashboard",
+        "tensorboard",
+        "horovodrun",
+        "rsync"
+    ],
+    "modules": [
+        "cuda/10.1.243"
+    ],
+    "environment_variables": {
+        "NCCL_DEBUG": "INFO",
+        "PERSISTENT_LOGGING_DIR": "../results/$SLURM_JOB_NAME/logs",
+        "PERSISTENT_CHECKPOINTS_DIR": "$PERSISTENT_LOGGING_DIR/checkpoints",
+        "PERSISTENT_TENSORBOARD_DIR": "$PERSISTENT_LOGGING_DIR/tensorboard",
+        "LOCAL_LOGGING_DIR": "/tmp/$SLURM_JOB_NAME/$SLURM_JOB_ID/logs",
+        "LOCAL_CHECKPOINTS_DIR": "$LOCAL_LOGGING_DIR/checkpoints",
+        "LOCAL_TENSORBOARD_DIR": "$LOCAL_LOGGING_DIR/tensorboard",
+        "NVIDIA_SMI_DELAY_SECONDS": "60",
+        "NVDASHBOARD_PORT": "8000",
+        "TENSORBOARD_PORT": "6006",
+        "RSYNC_DELAY_SECONDS": "600",
+        "HOROVODRUN_STATE": "$(ps -h --pid $HOROVODRUN_PID -o state | head -n 1)",
+        "DATA_DIR": "$DATA_DIR",
+        "TRAINING_SCRIPT": "$TRAINING_SCRIPT"
+    },
+    "resources": {
+        "gres": "gpu:v100",
+        "cpus_per_task": "6",
+        "tasks": "$SLURM_NTASKS",
+        "ntasks_per_code": null,
+        "gpus": "8",
+        "gpus_per_node": "8",
+        "cores_per_socket": null,
+        "gpus_per_task": "1",
+        "exclusive": null,
+        "cpus_per_gpu": "6",
+        "gpu_type": "v100",
+        "time": "24:00:00",
+        "ntasks_per_node": "8",
+        "nodes": null,
+        "memory": "0",
+        "sockets_per_node": null,
+        "ntasks_per_socket": null,
+        "mem_per_gpu": null,
+        "mem_per_cpu": null,
+        "gres_flags": null
+    },
+    "versions": {}
+}

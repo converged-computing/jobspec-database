@@ -1,0 +1,49 @@
+{
+    "application": "slurm",
+    "software": [
+        "bedtools",
+        "gcc",
+        "RepeatMasker",
+        "awk",
+        "sed",
+        "gzip",
+        "gunzip"
+    ],
+    "modules": [
+        "gcc/10.1.0",
+        "bedtools2/2.29.2"
+    ],
+    "environment_variables": {
+        "RMPATH": "/lustre/work/daray/software/RepeatMasker-4.1.0/util",
+        "NAMESFILE": "/lustre/scratch/aosmansk/new_croc_assemblies/repeatmasker/RM_LIST",
+        "BASEDIR": "/lustre/scratch/aosmansk/new_croc_assemblies/repeatmasker",
+        "WORKDIR": "/lustre/scratch/aosmansk/new_croc_assemblies/repeatmasker/${CHRANGE}_RM",
+        "DIR": "$WORKDIR/rmout2gff",
+        "RMOUT": "${GENOME}.fa.out.new",
+        "CHRANGE": "$awk \"NR==$SLURM_ARRAY_TASK_ID\" $NAMESFILE",
+        "GENOME": "${CHRANGE}_ref-based_assembly"
+    },
+    "resources": {
+        "gres": "",
+        "cpus_per_task": "1",
+        "tasks": "20",
+        "ntasks_per_code": "1",
+        "gpus": "",
+        "gpus_per_node": "",
+        "cores_per_socket": "",
+        "gpus_per_task": "",
+        "exclusive": "",
+        "cpus_per_gpu": "",
+        "gpu_type": "",
+        "time": "",
+        "ntasks_per_node": "1",
+        "nodes": "1",
+        "memory": "",
+        "sockets_per_node": "",
+        "ntasks_per_socket": "",
+        "mem_per_gpu": "",
+        "mem_per_cpu": "32G",
+        "gres_flags": ""
+    },
+    "versions": {}
+}

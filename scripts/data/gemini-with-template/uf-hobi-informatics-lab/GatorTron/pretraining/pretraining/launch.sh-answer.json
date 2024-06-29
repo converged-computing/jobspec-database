@@ -1,0 +1,47 @@
+{
+    "application": "pytorch",
+    "software": [
+        "pytorch",
+        "Megatron-LM"
+    ],
+    "modules": [],
+    "environment_variables": {
+        "VOCAB_FILE": "./vocab.txt",
+        "CHECKPOINT_PATH": "./gatortron_4b_uf30kcased",
+        "DATA_PATH": "./uf_all_ufvocab_30k_cased_NOTE_TEXT_sentence",
+        "BERT_ARGS": "--num-layers 48 \n    --hidden-size 2560 \n    --tokenizer-type BertWordPieceCase \n    --num-attention-heads 40 \n    --seq-length 512 \n    --max-position-embeddings 512 \n    --lr 0.0001 \n    --lr-decay-iters 500000 \n    --seed 13 \n    --train-iters 1000000 \n    --min-lr 0.00001 \n    --lr-warmup-fraction 0.01 \n    --micro-batch-size 8 \n    --global-batch-size 3968 \n    --vocab-file $(realpath $VOCAB_FILE) \n    --split 949,50,1 \n    --DDP-impl torch \n    --tensor-model-parallel-size 2 \n    --pipeline-model-parallel-size 1 \n    --tensorboard-dir ./log \n    --fp16",
+        "OUTPUT_ARGS": "--log-interval 1000 \n    --save-interval 10000 \n    --eval-interval 5000 \n    --eval-iters 100 \n    --checkpoint-activations",
+        "TRAINING_SCRIPT": "./Megatron-LM/pretrain_bert.py",
+        "TRAINING_CMD": "$TRAINING_SCRIPT \n    $BERT_ARGS \n    $OUTPUT_ARGS \n    --save $(realpath $CHECKPOINT_PATH) \n    --load $(realpath $CHECKPOINT_PATH) \n    --data-path $(realpath $DATA_PATH)",
+        "PYTHON_PATH": "singularity exec --nv ./containers/py2103.sif python",
+        "PT_LAUNCH_UTILS_PATH": ".",
+        "NCCL_DEBUG": "INFO",
+        "PRIMARY": "$PRIMARY",
+        "PRIMARY_PORT": "$PRIMARY_PORT",
+        "SECONDARIES": "$SECONDARIES",
+        "LAUNCH_CMD": "$PYTHON_PATH \n        -m torch.distributed.launch \n              --nproc_per_node=$SLURM_GPUS_PER_TASK \n              --nnodes=$SLURM_JOB_NUM_NODES \n              --node_rank=$SLURM_NODEID \n              --master_addr=$PRIMARY \n              --master_port=$PRIMARY_PORT \n            $TRAINING_CMD"
+    },
+    "resources": {
+        "gres": "gpu",
+        "cpus_per_task": "128",
+        "tasks": null,
+        "ntasks_per_code": null,
+        "gpus": null,
+        "gpus_per_node": "8",
+        "cores_per_socket": null,
+        "gpus_per_task": "8",
+        "exclusive": true,
+        "cpus_per_gpu": null,
+        "gpu_type": null,
+        "time": "120:00:00",
+        "ntasks_per_node": "1",
+        "nodes": "124",
+        "memory": "2000gb",
+        "sockets_per_node": null,
+        "ntasks_per_socket": null,
+        "mem_per_gpu": null,
+        "mem_per_cpu": null,
+        "gres_flags": ""
+    },
+    "versions": {}
+}

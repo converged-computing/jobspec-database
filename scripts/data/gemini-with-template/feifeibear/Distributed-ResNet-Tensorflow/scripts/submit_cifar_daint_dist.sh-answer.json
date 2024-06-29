@@ -1,0 +1,48 @@
+{
+    "application": "tensorflow",
+    "software": [
+        "TensorFlow/1.3.0-CrayGNU-17.08-cuda-8.0-python3",
+        "run_dist_train_eval_daint.sh"
+    ],
+    "modules": [
+        "/apps/daint/UES/6.0.UP02/sandbox-dl/modules/all",
+        "daint-gpu",
+        "TensorFlow/1.3.0-CrayGNU-17.08-cuda-8.0-python3"
+    ],
+    "environment_variables": {
+        "WORKON_HOME": "~/Envs",
+        "TF_SCRIPT": "${WORK_DIR}/resnet_cifar_main.py",
+        "TF_EVAL_SCRIPT": "${WORK_DIR}/resnet_cifar_eval.py",
+        "DATASET": "cifar10",
+        "BATCH_SIZE": "128",
+        "TF_FLAGS": "  --train_data_path=${SCRATCH}/data \\  --log_root=./tmp/resnet_model \\  --train_dir=./tmp/resnet_model/train \\  --dataset=${DATASET} \\  --num_gpus=1 \\  --batch_size=${BATCH_SIZE} \\  --sync_replicas=True \\  --train_steps=80000",
+        "TF_EVAL_FLAGS": "  --eval_data_path=${SCRATCH}/data/cifar-10-batches-bin/test_batch* \\  --log_root=./tmp/resnet_model \\  --eval_dir=./tmp/resnet_model/test \\  --dataset=${DATASET} \\  --mode=eval \\  --dataset='cifar10' \\  --num_gpus=1",
+        "TF_NUM_PS": "$1",
+        "TF_NUM_WORKERS": "$2",
+        "DIST_TF_LAUNCHER_SCRIPT": "run_dist_train_eval_daint.sh",
+        "DIST_TF_LAUNCHER_DIR": "./logs/$1-ps-$2-wk-batch-$3-${DATASET}-log"
+    },
+    "resources": {
+        "gres": "gpu",
+        "cpus_per_task": null,
+        "tasks": null,
+        "ntasks_per_code": null,
+        "gpus": null,
+        "gpus_per_node": null,
+        "cores_per_socket": null,
+        "gpus_per_task": null,
+        "exclusive": null,
+        "cpus_per_gpu": null,
+        "gpu_type": null,
+        "time": "2:30:00",
+        "ntasks_per_node": null,
+        "nodes": "9",
+        "memory": null,
+        "sockets_per_node": null,
+        "ntasks_per_socket": null,
+        "mem_per_gpu": null,
+        "mem_per_cpu": null,
+        "gres_flags": ""
+    },
+    "versions": {}
+}

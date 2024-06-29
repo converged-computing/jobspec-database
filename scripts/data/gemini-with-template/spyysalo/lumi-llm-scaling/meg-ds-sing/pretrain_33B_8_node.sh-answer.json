@@ -1,0 +1,42 @@
+{
+    "application": "deepspeed",
+    "software": [
+        "Megatron-DeepSpeed/pretrain_gpt.py",
+        "singularity",
+        "launch.sh"
+    ],
+    "modules": [],
+    "environment_variables": {
+        "MASTER_ADDR": "scontrol show hostnames \"$SLURM_JOB_NODELIST\" | head -n 1",
+        "MASTER_PORT": "9999",
+        "WORLD_SIZE": "$SLURM_NTASKS",
+        "CC": "gcc-10",
+        "CXX": "g++-10",
+        "CONTAINER": "pytorch-lumi_sles-rocm-5.5.1-python-3.10-pytorch-v2.0.1-apex-torchvision-torchdata-torchtext-torchaudio.sif",
+        "SING_BIND": "/scratch/project_462000273,/flash/project_462000273",
+        "BIND_MASK": "0x${c}000000000000,0x${c}00000000000000,0x${c}0000,0x${c}000000,0x${c},0x${c}00,0x${c}00000000,0x${c}0000000000"
+    },
+    "resources": {
+        "gres": "mi250:8",
+        "cpus_per_task": "8",
+        "tasks": "$SLURM_NTASKS",
+        "ntasks_per_code": null,
+        "gpus": null,
+        "gpus_per_node": "mi250:8",
+        "cores_per_socket": null,
+        "gpus_per_task": null,
+        "exclusive": "user",
+        "cpus_per_gpu": null,
+        "gpu_type": "mi250",
+        "time": "0-00:30:00",
+        "ntasks_per_node": "8",
+        "nodes": "8",
+        "memory": "0",
+        "sockets_per_node": null,
+        "ntasks_per_socket": null,
+        "mem_per_gpu": null,
+        "mem_per_cpu": null,
+        "gres_flags": null
+    },
+    "versions": {}
+}

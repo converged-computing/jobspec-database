@@ -113,7 +113,7 @@ def main():
                 "gres": "",
                 "cpus_per_task": "",
                 "tasks": "",
-                "ntasks_per_code": "",
+                "ntasks_per_core": "",
                 "gpus": "",
                 "gpus_per_node": "",
                 "cores_per_socket": "",

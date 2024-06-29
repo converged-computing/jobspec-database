@@ -1,0 +1,48 @@
+{
+    "application": "deephyper",
+    "software": [
+        "python",
+        "redis-server"
+    ],
+    "modules": [],
+    "environment_variables": {
+        "MIOPEN_DISABLE_CACHE": "1",
+        "TRANSFORMERS_OFFLINE": "1",
+        "HF_DATASETS_OFFLINE": "1",
+        "NCCL_DEBUG": "INFO",
+        "HF_HOME": "$PWD/hfdata",
+        "NNODES": "$SLURM_JOB_NUM_NODES",
+        "NNODES_PER_TRIAL": "2",
+        "NUM_CONCURRENT_TRIALS": "2",
+        "NTOTGPUS": "(( $NNODES * 8 ))",
+        "NGPUS_PER_TRIAL": "(( 8 * $NNODES_PER_TRIAL ))",
+        "NTOT_DEEPHYPER_RANKS": "(( $NTOTGPUS / $NGPUS_PER_TRIAL ))",
+        "OMP_NUM_THREADS": "4",
+        "DEEPHYPER_LOG_DIR": "deephyper-experiment-$SLURM_JOB_ID",
+        "DEEPHYPER_DB_HOST": "$HOST",
+        "REDIS_CONF": "..."
+    },
+    "resources": {
+        "gres": null,
+        "cpus_per_task": null,
+        "tasks": null,
+        "ntasks_per_code": null,
+        "gpus": null,
+        "gpus_per_node": "8",
+        "cores_per_socket": null,
+        "gpus_per_task": null,
+        "exclusive": null,
+        "cpus_per_gpu": null,
+        "gpu_type": null,
+        "time": "0:30:00",
+        "ntasks_per_node": "1",
+        "nodes": "4",
+        "memory": null,
+        "sockets_per_node": null,
+        "ntasks_per_socket": null,
+        "mem_per_gpu": null,
+        "mem_per_cpu": null,
+        "gres_flags": null
+    },
+    "versions": {}
+}
