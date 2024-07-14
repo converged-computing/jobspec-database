@@ -1,0 +1,229 @@
+## IMI configuration file
+## Documentation @ https://imi.readthedocs.io/en/latest/getting-started/imi-config-file.html
+
+## General
+RunName: "imi"
+isAWS: false
+UseSlurm: true
+SafeMode: false
+S3Upload: false
+
+## Period of interest
+StartDate: 20180601
+EndDate: 20180701
+SpinupMonths: 1
+
+## Use blended TROPOMI+GOSAT data (true)? Or use operational TROPOMI data (false)?
+BlendedTROPOMI: true
+
+## Is this a regional inversion? Set to false for global inversion
+isRegional: false
+
+## Select two character region ID (for using pre-cropped meteorological fields)
+##   Current options are listed below with ([lat],[lon]) bounds:
+##     "AF" : Africa ([-37,40], [-20,53])
+##     "AS" : Asia ([-11,55],[60,150]) 
+##     "EU" : Europe ([33,61],[-30,70])
+##     "ME" : Middle East ([12,50], [-20,70])
+##     "NA" : North America ([10,70],[-140,-40])
+##     "OC" : Oceania ([-50,5], [110,180])
+##     "RU" : Russia ([41,83], [19,180])
+##     "SA" : South America ([-59,16], [-88,-31])
+##     ""   : Use for global global simulation or custom regions
+##   For example, if the region of interest is in Europe ([33,61],[-30,70]), select "EU".
+RegionID: ""
+
+## Region of interest
+##   These lat/lon bounds are only used if CreateAutomaticRectilinearStateVectorFile: true
+##   Otherwise lat/lon bounds are determined from StateVectorFile
+LonMin: -180
+LonMax: 180
+LatMin: -90
+LatMax: 90
+
+## Kalman filter options
+KalmanMode: false
+UpdateFreqDays: 7
+NudgeFactor: 0.1
+
+## State vector
+CreateAutomaticRectilinearStateVectorFile: true
+nBufferClusters: 0
+BufferDeg: 0
+LandThreshold: 0.01
+IceThreshold: 0.10
+OffshoreEmisThreshold: 0
+OptimizeBCs: false
+
+## Point source datasets
+## Used for visualizations and state vector clustering
+PointSourceDatasets: ["SRON"]
+
+## Clustering Options
+ReducedDimensionStateVector: false
+DynamicKFClustering: false
+ClusteringMethod: "kmeans"
+NumberOfElements: 45
+ForcedNativeResolutionElements: 
+  - [31.5, -104]
+
+## Custom state vector
+StateVectorFile: "None"
+ShapeFile: "None"
+
+## Inversion
+## Note PriorError is a relative percentage 
+## and PriorErrorBCs is in ppb
+PriorError: 0.5
+PriorErrorBCs: 10.0
+ObsError: 15
+Gamma: 1.0
+PrecomputedJacobian: false
+
+## Grid
+##   Options are 0.25x0.3125 (GEOSFP only), 0.5x0.625, 2.0x2.5, or 4.0x5.0
+Res: "2.0x2.5"
+
+## Meteorology
+##   Options are GEOSFP or MERRA2
+#Met: "MERRA2"
+Met: "GEOSFP"
+
+## GEOS-Chem modifications
+CustomGC: true
+CustomGCfunction: "/n/holylfs05/LABS/jacob_lab/Users/jeast/proj/global_ch4_inv_2x25_monthly/prep/gc_global_sensitivities/run-before/modify-geos-chem-fxn.sh"
+GEOSChemTROPOMIModDir: "/n/holylfs05/LABS/jacob_lab/Users/jeast/proj/global_ch4_inv_2x25_monthly/prep/gc_global_sensitivities/run-before"
+## for online TROPOMI operator
+#SatObsDir: "/n/holylfs05/LABS/jacob_lab/Users/nbalasus/for_james/satellite_observations"
+SatObsDir: "/n/home06/nbalasus/holylfs05/gc_global_sensitivities/hourly_blended_tropomi_gosat"
+## HEMCO_Config.rc
+CustomHEMCOConfig: true
+CustomHEMCOConfigFile: "/n/holylfs05/LABS/jacob_lab/Users/jeast/proj/global_ch4_inv_2x25_monthly/prep/gc_global_sensitivities/run-before/HEMCO_Config.rc"
+PrecomputedEmisDir: "/n/holylfs05/LABS/jacob_lab/Users/jeast/proj/globalinv/hemco/hemco_2x25_geosfp/OutputDir"
+
+
+## Setup modules
+##   Turn on/off different steps in setting up the inversion 
+SetupTemplateRundir: true
+SetupSpinupRun: true
+SetupJacobianRuns: true
+SetupInversion: false
+SetupPosteriorRun: false
+
+## Run modules
+##   Turn on/off different steps in performing the inversion
+RunSetup: true
+DoSpinup: false
+DoJacobian: false
+DoInversion: false
+DoPosterior: false
+
+## IMI preview
+##   NOTE: RunSetup must be true to run preview
+DoPreview: false
+DOFSThreshold: 0
+
+## Resource allocation settings for slurm jobs
+SimulationCPUs: 8
+SimulationMemory: 10000
+JacobianCPUs: 8
+JacobianMemory: 10000
+RequestedTime: "0-00:30"
+SchedulerPartition: "sapphire"
+#SchedulerPartition: "huce_cascade,seas_compute,huce_bigmem,shared"
+
+## Max number of simultaneous Jacobian runs from the job array (-1: no limit)
+MaxSimultaneousRuns: 1500
+
+##====================================================================
+##
+## Advanced Settings (optional)
+##
+##====================================================================
+
+## These settings are intended for advanced users who wish to:
+##   a. modify additional GEOS-Chem options, or
+##   b. run the IMI on a local cluster.
+## They can be ignored for any standard cloud application of the IMI.
+
+##--------------------------------------------------------------------
+## Additional settings for GEOS-Chem simulations
+##--------------------------------------------------------------------
+
+
+## Jacobian settings
+## Note PerturbValue is a relative scalefactor and 
+## PerturbValueBCs is in ppb
+PerturbValue: 1.5
+PerturbValueBCs: 10.0
+
+## Apply scale factors from a previous inversion?
+UseEmisSF: false
+UseOHSF: false
+
+## Save out hourly diagnostics from GEOS-Chem?
+## For use in satellite operators via post-processing -- required for TROPOMI
+## inversions
+HourlyCH4: true
+
+## Turn on planeflight diagnostic in GEOS-Chem?
+## For use in comparing GEOS-Chem against planeflight data. The path
+## to those data must be specified in input.geos.
+PLANEFLIGHT: false
+
+## Turn on old observation operators in GEOS-Chem?
+## These will save out text files comparing GEOS-Chem to observations, but have
+## to be manually incorporated into the IMI
+GOSAT: false
+TCCON: false
+AIRS: false
+
+##------------------------------------------------------------------
+## Settings for running on local cluster
+##------------------------------------------------------------------
+
+## Path for IMI runs and output
+#OutputPath: "/n/holyscratch01/jacob_lab/$USER"
+OutputPath: "/n/holyscratch01/jacob_lab/jeast/proj/globalinv"
+
+## Path to GEOS-Chem input data
+DataPath: "/n/holyscratch01/external_repos/GEOS-CHEM/gcgrid/gcdata/ExtData"
+
+## Path to TROPOMI Data
+DataPathTROPOMI: "/n/holylfs05/LABS/jacob_lab/imi/ch4/blended"
+
+## Conda environment file
+## See envs/README to create the Conda environment specified below
+CondaEnv: "imi_env"
+
+## GEOS-Chem environment file (with fortran compiler, netcdf libraries, etc.)
+##   NOTE: Copy your own file in the envs/ directory within the IMI
+GEOSChemEnv: "envs/Harvard-Cannon/gcclassic.rocky+gnu12.minimal.env"
+
+## Download initial restart file from AWS S3?
+##   NOTE: Must have AWS CLI enabled
+RestartDownload: false
+
+## Path to initial GEOS-Chem restart file + prefix
+##   ("YYYYMMDD_0000z.nc4" will be appended)
+#RestartFilePrefix: "/n/holylfs05/LABS/jacob_lab/Users/jeast/proj/globalinv/spinup/gc_2x25_47L_geosfp_CH4/Restarts/GEOSChem.Restart."
+#RestartFilePreviewPrefix: "/n/holylfs05/LABS/jacob_lab/Users/jeast/proj/globalinv/spinup/gc_2x25_47L_geosfp_CH4/Restarts/GEOSChem.Restart."
+RestartFilePrefix: "/n/holylfs05/LABS/jacob_lab/imi/ch4/tropomi-boundary-conditions/v2023-10/GEOSChem.BoundaryConditions."
+RestartFilePreviewPrefix: "/n/holylfs05/LABS/jacob_lab/imi/ch4/tropomi-boundary-conditions/v2023-10/GEOSChem.BoundaryConditions."
+# Use global boundary condition files for initial conditions
+UseBCsForRestart: false
+UseBCsForSpinupRestart: true
+
+
+## Path to GEOS-Chem boundary condition files (for regional simulations)
+## BCversion will be appended to the end of this path. ${BCpath}/${BCversion}
+BCpath: "/n/holylfs05/LABS/jacob_lab/imi/ch4/tropomi-boundary-conditions"
+BCversion: "v2023-10"
+
+## Options to download missing GEOS-Chem input data from AWS S3
+##   NOTE: Must have AWS CLI enabled
+PreviewDryRun: false
+SpinupDryrun: false
+ProductionDryRun: false
+PosteriorDryRun: false
+BCdryrun: false

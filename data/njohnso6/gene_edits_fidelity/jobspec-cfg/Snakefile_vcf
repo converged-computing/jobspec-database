@@ -1,0 +1,71 @@
+import glob
+import os
+
+CHROMS = ['chr1', 'chr2', 'chr3', 'chr4', 'chr5', 'chr5', 'chr7', 'chr8', 'chr9', 'chr10', 
+            'chr11', 'chr12', 'chr13', 'chr14', 'chr15', 'chr16', 'chr17', 'chr18',
+            'chr19', 'chr20', 'chr21', 'chr22', 'chrX'] # No Y for whatever reason
+
+file_dir = "/data/CARDPB/data/NABEC/ILM_WGS/"
+rna_dir = "/data/CARDPB/data/NABEC/RNAseq/star_aligned_sorted_bams/pileups/base_contents/"
+
+sample_names = glob.glob(pathname="*fctx/*fctx_chr*.tsv", root_dir=rna_dir)
+tmp = list(map(os.path.split, sample_names))
+tmp2 = [item[0] for item in tmp]
+samples = list(map(lambda x: x.replace("fctx", ""), tmp2))
+SAMPLES = list(set(samples))  # Get unique samples 
+
+localrules: all, gunzip
+
+rule all:
+    input: 
+        expand("fidelity_counts/{sample}/{sample}_{chrom}_fidelity_counts.tsv", sample=SAMPLES, chrom=CHROMS)
+
+rule gunzip:
+    input: file_dir + "nabec.freeze9.{chrom}.gtonly.vcf.gz"
+    output:
+        temp("vcf_gz/{chrom}.vcf")
+    resources:
+        mem_mb=15360
+    shell:
+        """
+        mkdir -p vcf_gz
+        cp {input} vcf_gz/{wildcards.chrom}.vcf.gz
+        gunzip vcf_gz/{wildcards.chrom}.vcf.gz
+        """
+
+rule  make_vcf_readable:
+    input: 
+        "vcf_gz/{chrom}.vcf"
+    output:
+        otsv = "genotypes/nabec_{chrom}_genotypes.tsv"
+    resources:
+        mem_mb=25600
+    wildcard_constraints:
+        chrom="\w+"
+    params:
+        t1 = "genotypes/nabec_temp_{chrom}.vcf",
+        t2 = "genotypes/nabec_temp_2_{chrom}.vcf",
+    shell:
+        """
+        mkdir -p genotypes
+        /data/johnsonnicl/sctype_env_2/bin/vcfsnps <{input} > {params.t1} # Only so SNPS
+        /data/johnsonnicl/sctype_env_2/bin/vcfgeno2alleles <{params.t1} > {params.t2} # Show actual alleles
+        /data/johnsonnicl/sctype_env_2/bin/vcfclearinfo <{params.t2} > {params.t1} # clear info field
+        /data/johnsonnicl/sctype_env_2/bin/vcf2tsv -g {params.t1} > {output.otsv} # Do one line per sample
+        rm {params.t1}
+        rm {params.t2}
+        """
+
+# Need to finish
+rule make_fidelity_counts:
+    input:
+        rna = rna_dir + "{sample}fctx/{sample}fctx_{chrom}.tsv",
+        dna = "genotypes/nabec_{chrom}_genotypes.tsv"
+    output:
+        "fidelity_counts/{sample}/{sample}_{chrom}_fidelity_counts.tsv"
+    log:
+        "logs/{sample}_{chrom}_fidelity_counts.log"
+    resources:
+        mem_mb=20480, slurm_partition="quick,norm"
+    script:
+        "scripts/combine_data.py"

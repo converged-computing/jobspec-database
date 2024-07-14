@@ -1,0 +1,57 @@
+base:
+  log_dir: /home/aaa208/scratch/PANORAMIA/experiments/WikiText-2/paper/target_whole/generator_generation/dp_fine_tune/extra_dp_syn/
+  project_name: PANORAMIA-Wiki_Text_2-paper-target_whole
+dataset:
+  path: wikitext
+  name: wikitext-2-raw-v1
+  path_to_synthetic_data: ~
+  synthetic_text_column_name: text
+  seed: 8
+  do_shuffle: True
+  pretrained_model_name_or_path: gpt2
+  block_size: 64
+  generator_train_percent: 34
+  prompt_sampling_percent: 18
+  target_model_percent: 76
+  helper_model_percent: 100
+  helper_model_train_data_mode: 'syn'
+  syn_audit_percent: 30
+  mia_num_train : 6000
+  mia_num_val : 1000
+  mia_num_test : 10000
+  include_synthetic: False
+  audit_mode:  RMFN
+  num_syn_canary: ~
+  include_auxilary: True
+  game_seed: 30
+generator:
+  train:
+    pretrained_model_name_or_path: gpt2
+    saving_dir: /home/aaa208/scratch/PANORAMIA/outputs/WikiText-2/generator/paper/target_whole/dp_fine_tune/
+    run_name: generator-dp-fine-tune-paper-target_whole
+    seed: 42
+    train_with_dp: True
+    optimization:
+      max_steps: -1
+      per_device_batch_size: 16
+      epoch: 40
+      learning_rate: 0.001
+      weight_decay: 0.00
+      warmup_steps: 100
+      gradient_accumulation_steps: 64
+    dp:
+      per_example_max_grad_norm: 0.1
+      target_epsilon: 3
+  generation:
+    saving_dir: /home/aaa208/scratch/PANORAMIA/outputs/WikiText-2/generator/paper/target_whole/extra_dp_synthetic_data/
+    syn_file_name: syn_data.csv
+    save_loss_on_target: False
+    seed: 42
+    parameters:
+      batch_size: 128
+      prompt_sequence_length: 64
+      max_length: 128
+      top_k: 200
+      top_p: 1
+      temperature: 1
+      num_return_sequences: 3

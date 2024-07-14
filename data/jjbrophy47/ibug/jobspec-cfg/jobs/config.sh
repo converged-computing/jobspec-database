@@ -1,0 +1,27 @@
+#!/bin/bash
+
+declare -A datasets
+datasets[1]='ames'
+datasets[2]='bike'
+datasets[3]='california'
+datasets[4]='communities'
+datasets[5]='concrete'
+datasets[6]='energy'
+datasets[7]='facebook'
+datasets[8]='kin8nm'
+datasets[9]='life'
+datasets[10]='meps'
+datasets[11]='msd'
+datasets[12]='naval'
+datasets[13]='obesity'
+datasets[14]='news'
+datasets[15]='power'
+datasets[16]='protein'
+datasets[17]='star'
+datasets[18]='superconductor'
+datasets[19]='synthetic'
+datasets[20]='wave'
+datasets[21]='wine'
+datasets[22]='yacht'
+
+datasets[100]='heart'

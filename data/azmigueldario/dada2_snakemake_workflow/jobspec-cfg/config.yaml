@@ -1,0 +1,151 @@
+# This file should contain everything to configure the workflow on a global scale.
+# In case of sample based data, it should be complemented by a samples.tsv file that contains
+# one row per sample. It can be parsed easily via pandas.
+
+#**************
+#*** inputs ***
+#**************
+
+# List of fastq files
+list_files: "samples/samples.tsv"
+
+
+#******* CHECK BEFORE RUNNING ON A NEW DATASET******#
+#A path to where the raw fastq files are stored
+input_dir: "/work/IMC_binf/sbagheri/16S_pipeline_test/test"
+
+
+#The name of the output directory. This is for not overwriting the output folder in case of rerunning the pipeline after changing some parameters.
+output_dir: "output"
+
+#******* CHECK BEFORE RUNNING ON A NEW DATASET******#
+#path of the main snakemake directory
+path: "/work/IMC_binf/sbagheri/16S_pipeline_test/github_test/dada2_snakemake_workflow"
+
+
+#******* CHECK BEFORE RUNNING ON A NEW DATASET******#
+# Reads format
+forward_read_suffix: "_R1_001"
+reverse_read_suffix: "_R2_001"
+
+
+
+#**************
+#***** QC *****
+#**************
+
+
+#For QC reports, we randomly choose samples to check their reads length distribution, here we exclude controls and undetermined samples
+#Example "Water|DNA|Undetermined
+
+excluded_samples: "Undetermined|Water|WATER|DNA|Neg|neg"
+
+
+## Cutadapt
+## IMPORTANT ****** If you want to remove primers uncomment line 51  in utils/rules/qc_cutadapt.smk******
+
+# Example: Illumina V3V4 protocol primers
+#fwd_primer: "TCGTCGGCAGCGTCAGATGTGTATAAGAGACAGCCTACGGGNGGCWGCAG"
+#rev_primer: "GTCTCGTGGGCTCGGAGATGTGTATAAGAGACAGGACTACHVGGGTATCTAATCC"
+#fwd_primer_rc: "CTGCWGCCNCCCGTAGGCTGTCTCTTATACACATCTGACGCTGCCGACGA"  
+#rev_primer_rc: "GGATTAGATACCCBDGTAGTCCTGTCTCTTATACACATCTCCGAGCCCACGAGAC"
+
+
+#******* CHECK BEFORE RUNNING ON ANY REGION******#
+primers:
+# Illumina V4 protocol primers
+fwd_primer: ""
+rev_primer: ""
+fwd_primer_rc: ""
+rev_primer_rc: ""
+
+
+## CutAdapt parameters for quality trimming
+
+# minimum length of reads
+
+min_len: 10
+
+#******* CHECK BEFORE RUNNING ON ANY REGION******#
+# minimum overlap length
+min_overlap: 17
+
+# maximum error rate
+max_e: 0.1
+
+#******* CHECK BEFORE RUNNING ON ANY REGION******#
+# quality trimming
+qf: 20
+qr: 20
+
+
+
+#***************
+#**** DADA2 ****
+#***************
+
+##Parameters 
+
+#Default is FALSE. If TRUE, multithreading is enabled and the number of available threads is automatically determined.
+#If an integer is provided, the number of threads to use is set
+threads: 20
+
+#Truncation length (Make sure your reads still overlap after truncation in order to merge them later!)
+#truncLen:
+#  - 260
+#  - 220
+
+
+#******* CHECK BEFORE RUNNING ON ANY REGION******#
+#Maximum error rate (maximum number of “expected errors” allowed in a read)
+maxEE:
+  - 2
+  - 2
+
+#Truncate reads at the first instance of a quality score less than or equal to truncQ.
+truncQ: 2
+
+
+#Default 1e8. The minimum number of total bases to use for error rate learning.
+learn_nbases: 100e6
+
+
+#If "consensus": The samples in a sequence table are independently checked for bimeras, and a consensus decision on each sequence variant is made.
+chimera_method: "consensus"
+
+
+
+#Initialize random number generator for reproducibility of taxonomy assignment
+seed: 100 
+
+
+## Taxonomy using idtaxa classifer 
+idtaxa_dbs:
+ RDP: "/bulk/IMCshared_bulk/shared/dbs/16s_dbs/RDP_v18-mod_July2020.RData"
+ Silva: "/bulk/IMCshared_bulk/shared/dbs/16s_dbs/SILVA_SSU_r138_2019.RData"
+ GTDB: "/bulk/IMCshared_bulk/shared/dbs/16s_dbs/GTDB_r207-mod_April2022.RData"
+
+idtaxa_species:
+ RDP: "/bulk/IMCshared_bulk/shared/dbs/16s_dbs/rdp_species_assignment_18.fa.gz"
+ Silva: "/bulk/IMCshared_bulk/shared/dbs/16s_dbs/silva_species_assignment_v138.1.fa.gz"
+ GTDB: "/bulk/IMCshared_bulk/shared/dbs/16s_dbs/GTDB_bac120_arc53_ssu_r207_Species.fa.gz"
+
+
+## Taxonomy using RDP classifier
+RDP_dbs:
+ RDP: "/bulk/IMCshared_bulk/shared/dbs/16s_dbs/rdp_train_set_18.fa.gz"
+ Silva: "/bulk/IMCshared_bulk/shared/dbs/16s_dbs/silva_nr99_v138.1_train_set.fa.gz"
+ GTDB: "/bulk/IMCshared_bulk/shared/dbs/16s_dbs/GTDB_bac120_arc53_ssu_r207_fullTaxo.fa.gz"
+ URE: "/bulk/IMCshared_bulk/shared/dbs/16s_dbs/UREv2.1_genus.fasta"
+
+RDP_species:
+ RDP: "/bulk/IMCshared_bulk/shared/dbs/16s_dbs/rdp_species_assignment_18.fa.gz"
+ Silva: "/bulk/IMCshared_bulk/shared/dbs/16s_dbs/silva_species_assignment_v138.1.fa.gz"
+ GTDB: "/bulk/IMCshared_bulk/shared/dbs/16s_dbs/GTDB_bac120_arc53_ssu_r207_Species.fa.gz"  
+ URE: "/bulk/IMCshared_bulk/shared/dbs/16s_dbs/UREv2.1_species.fasta"
+
+
+## Taxonomy using vsearch
+vsearch_DBs: 
+ GTDB:"/bulk/IMCshared_bulk/shared/dbs/16s_dbs/GTDB_bac120_arc53_ssu_r207_fullTaxo.fa.gz"
+ URE:"/bulk/IMCshared_bulk/shared/dbs/16s_dbs/UREv2.1_full_taxonomy.fasta"

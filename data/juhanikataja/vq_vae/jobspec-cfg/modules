@@ -1,0 +1,18 @@
+#module use /appl/local/csc/modulefiles 
+#ml pytorch/2.2
+export EBU_USER_PREFIX=/project/project_462000559/EasyBuild
+ml LUMI/23.09
+module load PyTorch/2.2.0-rocm-5.6.1-python-3.10-asterix-singularity-20240315
+
+## Unified memory off
+#export CRAY_ACC_USE_UNIFIED_MEM=0
+#export HSA_XNACK=0
+
+## Analysator
+export PYTHONPATH=$PYTHONPATH:/scratch/project_462000559/kostis/libs/analysator
+
+alias srme='srun -t 00:05:00 -J asterix_vqvae_test -p dev-g -A project_462000559 -N 1 -n 1 -G 1 singularity exec --bind $(pwd) $SIF'
+alias srmem='srun -t 00:05:00 -J asterix_vqvae_test -p dev-g -A project_462000559 -N 1 -n 1 -G 2 singularity exec --bind $(pwd) $SIF'
+
+# example: srme python3 vq_vae2.py restart.0000100.2024-05-31_12-50-15.vlsv
+

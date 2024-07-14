@@ -1,0 +1,90 @@
+import subprocess
+
+# pwd of the directory where running the snakefile ("/home/users/smartinezarbas/git/gitlab/CRISPR_analysis_pipeline")
+PWD = os.getcwd()
+
+# Definition of environmental variables: paths for the source codes, among others
+CONFIG = os.environ.get("CONFIG", "%s/config/config.json" % PWD)
+SRCDIR = os.environ.get("SRCDIR", "%s/src" % PWD)
+ESB_TOOLS_DIR = "/mnt/nfs/projects/ecosystem_biology/local_tools"
+configfile: CONFIG
+
+TMPDIR = os.environ.get("TMPDIR", config['tmp_dir'])
+MEMCORE = os.environ.get("MEMCORE", config['memory_per_core_gb'])
+THREADS = os.environ.get("THREADS", config['threads'])
+MEMTOTAL = os.environ.get("MEMTOTAL", config['memory_total_gb'])
+
+## input directories
+## IMP results
+TS_DIR = os.environ.get("TS_DIR", "/work/users/smartinezarbas/comparative_analysis/AmazonRiver/IMP_results")
+
+## path of files of assemblies with contig IDs already changes (sample name added to the contig name of each sample)
+DB_FA_DIR = os.environ.get("DB_FA_DIR", "/work/users/smartinezarbas/comparative_analysis/AmazonRiver/IMP_results/Assemblies")
+
+## Define samples
+TS_SAMPLES = os.environ.get("TS_SAMPLES", "TS2 TD2").split()
+
+## Define output directory
+MGE_OUTDIR = os.environ.get("MGE_OUTDIR", "/scratch/users/smartinezarbas/AmazonRiverCRISPR_MGE/MGE_prediction")
+workdir:
+    MGE_OUTDIR
+
+include:
+    '../rules/MgePrediction/run_virsorter_mgmt.rule'
+
+include:
+    '../rules/MgePrediction/run_virsorter_mt.rule'
+
+include:
+    '../rules/MgePrediction/run_virfinder_mgmt.rule'
+
+include:
+    '../rules/MgePrediction/run_virfinder_mt.rule'
+
+include:
+    '../rules/MgePrediction/run_virfinder_mt_unmapped.rule'
+
+include:
+    '../rules/MgePrediction/run_plasflow_mgmt.rule'
+
+include:
+    '../rules/MgePrediction/run_cBar_mgmt.rule'
+
+# master command
+rule PHAGE_PREDICTION:
+    input:
+        expand("VirSorter/{ts_sample}/Readme.txt", ts_sample=TS_SAMPLES),
+        expand("VirSorter/{ts_sample}/VIRSorter_global-phage-signal.csv", ts_sample=TS_SAMPLES),
+        expand("VirSorter/{ts_sample}/MT/Readme.txt", ts_sample=TS_SAMPLES),
+        expand("VirSorter/{ts_sample}/MT/VIRSorter_global-phage-signal.csv", ts_sample=TS_SAMPLES),
+        expand("VirSorter/{ts_sample}/{ts_sample}_mgmt.done", ts_sample=TS_SAMPLES),
+        expand("VirSorter/{ts_sample}/MT/{ts_sample}_mt.done", ts_sample=TS_SAMPLES),
+
+        expand("VirFinder/{ts_sample}/VirFinder_phages_mgmt_all.tsv", ts_sample=TS_SAMPLES),
+        expand("VirFinder/{ts_sample}/VirFinder_phages_mgmt_pval005.tsv", ts_sample=TS_SAMPLES),
+        expand("VirFinder/{ts_sample}/VirFinder_phages_mgmt_pval001.tsv", ts_sample=TS_SAMPLES),
+        expand("VirFinder/{ts_sample}/{ts_sample}_mgmt.done", ts_sample=TS_SAMPLES),
+
+        expand("VirFinder/{ts_sample}/VirFinder_phages_mt_all.tsv", ts_sample=TS_SAMPLES),
+        expand("VirFinder/{ts_sample}/VirFinder_phages_mt_pval005.tsv", ts_sample=TS_SAMPLES),
+        expand("VirFinder/{ts_sample}/VirFinder_phages_mt_pval001.tsv", ts_sample=TS_SAMPLES),
+        expand("VirFinder/{ts_sample}/{ts_sample}_mt.done", ts_sample=TS_SAMPLES),
+
+        expand("VirFinder/{ts_sample}/VirFinder_phages_mt_unmapped_all.tsv", ts_sample=TS_SAMPLES),
+        expand("VirFinder/{ts_sample}/VirFinder_phages_mt_unmapped_pval005.tsv", ts_sample=TS_SAMPLES),
+        expand("VirFinder/{ts_sample}/VirFinder_phages_mt_unmapped_pval001.tsv", ts_sample=TS_SAMPLES),
+        expand("VirFinder/{ts_sample}/{ts_sample}_mt_unmapped.done", ts_sample=TS_SAMPLES),
+
+        expand("PlasFlow/{ts_sample}/PlasFlow_mgmt_plasmids.tsv", ts_sample=TS_SAMPLES),
+        expand("PlasFlow/{ts_sample}/PlasFlow_mgmt_plasmids.tsv_chromosomes.fasta", ts_sample=TS_SAMPLES),
+        expand("PlasFlow/{ts_sample}/PlasFlow_mgmt_plasmids.tsv_plasmids.fasta", ts_sample=TS_SAMPLES),
+        expand("PlasFlow/{ts_sample}/PlasFlow_mgmt_plasmids.tsv_unclassified.fasta", ts_sample=TS_SAMPLES),
+        expand("PlasFlow/{ts_sample}/{ts_sample}_mgmt.done", ts_sample=TS_SAMPLES),
+
+        expand("cBar/{ts_sample}/cBar_mgmt_plasmids.tsv", ts_sample=TS_SAMPLES),
+        expand("PlasFlow/{ts_sample}/{ts_sample}_mgmt.done", ts_sample=TS_SAMPLES)
+
+    output:
+        touch('plasmid_phage_prediction_workflow.done')
+
+

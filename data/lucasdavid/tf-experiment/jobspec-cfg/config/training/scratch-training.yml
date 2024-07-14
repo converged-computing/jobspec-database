@@ -1,0 +1,45 @@
+model:
+  backbone:
+    trainable: true
+    config:
+      weights: null
+training:
+  perform: true
+  config:
+    epochs: &epochs 200
+  callbacks:
+    - TerminateOnNaN
+    - class_name: WandbCallback
+      config:
+        save_model: false
+        save_graph: false
+    - class_name: EarlyStopping
+      config:
+        patience: 30
+        verbose: 1
+    - class_name: ReduceLROnPlateau
+      config:
+        factor: 0.5
+        patience: 10
+        verbose: 1
+    - class_name: CSVLogger
+      config:
+        filename: "./history.csv"
+        append: true
+      override:
+        filename: paths.train_history
+    - class_name: ModelCheckpoint
+      config:
+        verbose: 1
+        filepath: "./best.h5"
+        save_best_only: true
+        save_weights_only: true
+      override:
+        filepath: paths.best
+    - class_name: BackupAndRestore
+      config:
+        backup_dir: "/tmp/ckpt"
+      override:
+        backup_dir: paths.ckpt
+  finetune:
+    perform: false

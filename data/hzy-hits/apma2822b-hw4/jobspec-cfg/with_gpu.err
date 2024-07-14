@@ -1,0 +1,33 @@
+module: loading 'cuda/12.2.2'
+module: cuda: To use: module load gcc/10.2
+module: loading 'gcc/10.2'
+module: gcc: "Note: loading the gcc module overrides the gcc version on the system.  If you want to revert to the version of gcc provided by the OS, unload the gcc module."
+==32541== NVPROF is profiling process 32541, command: ./a.out
+==32541== Profiling application: ./a.out
+==32541== Profiling result:
+            Type  Time(%)      Time     Calls       Avg       Min       Max  Name
+ GPU activities:   58.96%  12.6353s     44000  287.17us  1.2800us  2.7722ms  [CUDA memcpy HtoD]
+                   40.46%  8.67050s     36000  240.85us  65.343us  2.0720ms  MatrixVectorProduct(double*, double*, double*, int, int)
+                    0.57%  122.81ms     36000  3.4110us     832ns  10.528us  [CUDA memcpy DtoH]
+      API calls:   31.16%  16.7651s     24000  698.55us  120.08us  18.688ms  cudaHostRegister
+                   28.09%  15.1097s     16000  944.36us  4.0460us  13.548ms  cudaDeviceSynchronize
+                   16.36%  8.80261s     24000  366.78us  54.680us  49.120ms  cudaHostUnregister
+                   11.83%  6.36215s     24000  265.09us  3.0940us  16.042ms  cudaFree
+                    8.66%  4.65677s     24000  194.03us  2.6280us  13.440ms  cudaMalloc
+                    0.86%  462.05ms     36000  12.834us  1.5050us  137.70ms  cudaStreamCreate
+                    0.83%  448.70ms     36000  12.463us  3.9910us  23.674ms  cudaLaunchKernel
+                    0.82%  440.06ms     72000  6.1110us  2.8260us  23.575ms  cudaMemcpyAsync
+                    0.61%  327.43ms      8000  40.929us  29.071us  13.734ms  cudaMemcpy
+                    0.34%  182.44ms     36000  5.0670us  1.6060us  22.113ms  cudaStreamDestroy
+                    0.19%  102.21ms     16000  6.3870us  2.1100us  13.580ms  cudaEventRecord
+                    0.14%  76.363ms     16000  4.7720us     478ns  25.090ms  cudaEventCreate
+                    0.08%  43.176ms      8000  5.3970us  1.7140us  23.074ms  cudaEventElapsedTime
+                    0.03%  16.159ms     16000  1.0090us     363ns  136.51us  cudaEventDestroy
+                    0.00%  516.94us       114  4.5340us     119ns  249.16us  cuDeviceGetAttribute
+                    0.00%  27.195us         1  27.195us  27.195us  27.195us  cuDeviceGetName
+                    0.00%  6.4800us         1  6.4800us  6.4800us  6.4800us  cuDeviceGetPCIBusId
+                    0.00%  2.3110us         3     770ns     160ns  1.9600us  cuDeviceGetCount
+                    0.00%     530ns         2     265ns     137ns     393ns  cuDeviceGet
+                    0.00%     354ns         1     354ns     354ns     354ns  cuDeviceTotalMem
+                    0.00%     292ns         1     292ns     292ns     292ns  cuModuleGetLoadingMode
+                    0.00%     198ns         1     198ns     198ns     198ns  cuDeviceGetUuid

@@ -1,0 +1,46 @@
+{
+	"__default__" :
+	{
+		"partition" : "short",
+		"cores"     : 1,
+		"mem"       : "1000",
+		"time"      : "00:10:00",
+		"out"       : "logs/rc-test_slurm_logs/%j_{rule}.log",
+		"err"       : "logs/rc-test_slurm_logs/%j_{rule}.log",
+		"mail"      : "NONE",
+		"J"			: "snakejob"
+	},
+	"make_bipartite_graph" :
+	{
+		"mem"  : "500",
+		"time" : "00:02:00",
+		"J"    : "1_{wildcards.cancer}"
+	},
+	"permute_bipartite_graph" :
+	{
+		"partition" : "{params.partition}",
+		"mem"       : "{params.mem}",
+		"time"      : "{params.time_alloc}",
+		"J"	        : "2_{wildcards.cancer}",
+		"out"       : "logs/rc-test_slurm_logs/%j_{rule}_{wildcards.cancer}_{wildcards.perm_num}.log",
+		"err"       : "logs/rc-test_slurm_logs/%j_{rule}_{wildcards.cancer}_{wildcards.perm_num}.log"
+	},
+	"make_results_df" :
+	{
+		"mem"       : "{params.mem}",
+		"time"      : "{params.time}",
+		"J"	        : "3_{wildcards.cancer}_{params.which_test_short}",
+		"out"       : "logs/rc-test_slurm_logs/%j_{rule}_{wildcards.cancer}_{params.which_test_short}.log",
+		"err"       : "logs/rc-test_slurm_logs/%j_{rule}_{wildcards.cancer}_{params.which_test_short}.log"
+	},
+	"process_permuted_graph" :
+	{
+		"cores"     : "{params.n_cores}",
+		"partition" : "{params.partition}",
+		"mem"       : "{params.mem}",
+		"time"      : "{params.time}",
+		"J"	        : "4_{wildcards.cancer}_{params.which_test_short}",
+		"out"       : "logs/rc-test_slurm_logs/%j_{rule}_{wildcards.cancer}_{params.which_test_short}.log",
+		"err"       : "logs/rc-test_slurm_logs/%j_{rule}_{wildcards.cancer}_{params.which_test_short}.log"
+	}
+}

@@ -1,0 +1,599 @@
+#!/usr/bin/env ruby
+require "thor"
+require "open3"
+require "benchmark"
+
+# bin/rake pipeline:bold_taxons | cut -f2 -d' ' taxons.txt | sort
+# Feb 21, 2021
+TAXONS = %w(
+Acanthocephala
+Acanthopteroctetidae
+Acartophthalmidae
+Acoelomorpha
+Acroceridae
+Acrothoracica
+Adelidae
+Agaonidae
+Agathiphagidae
+Agromyzidae
+Aididae
+Alucitidae
+Ammoplanidae
+Ampulicidae
+Anaxyelidae
+Andesianidae
+Andrenidae
+Anisopodidae
+Annelida
+Anthelidae
+Anthomyiidae
+Anthomyzidae
+Apatelodidae
+Aphelinidae
+Apidae
+Apioceridae
+Apsilocephalidae
+Apystomyiidae
+Arachnida
+Archaeognatha
+Argidae
+Argyresthiidae
+Ascomycota
+Asilidae
+Astatidae
+Asteiidae
+Atelestidae
+Athericidae
+Attevidae
+Aulacidae
+Aulacigastridae
+Australimyzidae
+Austroleptidae
+Autostichidae
+Axymyiidae
+Azotidae
+Basidiomycota
+Batrachedridae
+Bedelliidae
+Bembicidae
+Bethylidae
+Bibionidae
+Blasticotomidae
+Blastobasidae
+Blattodea
+Blephariceridae
+Bolbomyiidae
+Bolitophilidae
+Bombycidae
+Bombyliidae
+Brachiopoda
+Brachodidae
+Brachystomatidae
+Braconidae
+Bradynobaenidae
+Brahmaeidae
+Branchiopoda
+Braulidae
+Bryophyta
+Bryozoa
+Bucculatricidae
+Callidulidae
+Calliphoridae
+Camillidae
+Canacidae
+Canthyloscelidae
+Carnidae
+Carposinidae
+Carthaeidae
+Castniidae
+Cecidomyiidae
+Cecidosidae
+Celyphidae
+Cephalocarida
+Cephidae
+Ceraphronidae
+Ceratopogonidae
+Chaetognatha
+Chalcididae
+Chamaemyiidae
+Chaoboridae
+Chilopoda
+Chironomidae
+Chlorarachniophyta
+Chlorophyta
+Chloropidae
+Chordata
+Choreutidae
+Chrysididae
+Chyphotidae
+Chyromyidae
+Chytridiomycota
+Ciliophora
+Cimbicidae
+Cimeliidae
+Clusiidae
+Cnidaria
+Coelopidae
+Coleophoridae
+Coleoptera
+Collembola
+Colletidae
+Conopidae
+Copepoda
+Copromorphidae
+Corethrellidae
+Cosmopterigidae
+Cossidae
+Crabronidae
+Crambidae
+Cryptochetidae
+Ctenophora
+Ctenostylidae
+Culicidae
+Curtonotidae
+Cycliophora
+Cyclotornidae
+Cylindrotomidae
+Cynipidae
+Cypselosomatidae
+Dalceridae
+Depressariidae
+Dermaptera
+Deuterophlebiidae
+Diadocidiidae
+Diapriidae
+Diastatidae
+Diopsidae
+Diplopoda
+Diplura
+Diprionidae
+Diptera_family_incertae_sedis
+Ditomyiidae
+Dixidae
+Doidae
+Dolichopodidae
+Douglasiidae
+Drepanidae
+Drosophilidae
+Dryadaulidae
+Dryinidae
+Dryomyzidae
+Dudgeoneidae
+Echinodermata
+Elachistidae
+Embioptera
+Embolemidae
+Empididae
+Encyrtidae
+Endromidae
+Entoprocta
+Epermeniidae
+Ephemeroptera
+Ephydridae
+Epicopeiidae
+Epimarptidae
+Epipyropidae
+Erebidae
+Eriaporidae
+Eriocottidae
+Eriocraniidae
+Eucharitidae
+Eulophidae
+Eupelmidae
+Eupterotidae
+Eurytomidae
+Euteliidae
+Evaniidae
+Evocoidae
+Fanniidae
+Fergusoninidae
+Figitidae
+Formicidae
+Galacticidae
+Gasteruptiidae
+Gastrotricha
+Gelechiidae
+Geometridae
+Glomeromycota
+Glossinidae
+Glyphipterigidae
+Gnathostomulida
+Gobryidae
+Gracillariidae
+Halictidae
+Hedylidae
+Helcomyzidae
+Heleomyzidae
+Heliodinidae
+Heliozelidae
+Heloridae
+Helosciomyzidae
+Hemichordata
+Hemiptera
+Hepialidae
+Heptamelidae
+Hesperiidae
+Hesperinidae
+Heterobathmiidae
+Heterogynidae
+Heterokontophyta
+Hexanauplia
+Hilarimorphidae
+Himantopteridae
+Hippoboscidae
+Homalocnemiidae
+Huttoninidae
+Hyblaeidae
+Hybotidae
+Ibaliidae
+Ichneumonidae
+Ichthyostraca
+Immidae
+Inbiomyiidae
+Incurvariidae
+Ironomyiidae
+Ismaridae
+Iteaphila-group
+Keroplatidae
+Kinorhyncha
+Lacturidae
+Lasiocampidae
+Lauxaniidae
+Lecithoceridae
+Lepidoptera_incertae_sedis
+Leucospidae
+Limacodidae
+Limoniidae
+Liopteridae
+Lonchaeidae
+Lonchopteridae
+Lophocoronidae
+Lycaenidae
+Lycopodiophyta
+Lyonetiidae
+Lypusidae
+Maamingidae
+Magnoliophyta
+Malacostraca
+Mantodea
+Marginidae
+Mecoptera
+Meessiidae
+Megachilidae
+Megalodontesidae
+Megaloptera
+Megalopygidae
+Megalyridae
+Megamerinidae
+Megaspilidae
+Megastigmidae
+Melittidae
+Mellinidae
+Merostomata
+Mesembrinellidae
+Metarbelidae
+Micropezidae
+Micropterigidae
+Milichiidae
+Millieriidae
+Mimallonidae
+Mnesarchaeidae
+Mollusca
+Momphidae
+Monomachidae
+Mormotomyiidae
+Muscidae
+Mutillidae
+Mycetophilidae
+Mydidae
+Mymaridae
+Mymarommatidae
+Myrmosidae
+Mystacinobiidae
+Mythicomyiidae
+Myxomycota
+Nannodastiidae
+Natalimyzidae
+Nematoda
+Nematomorpha
+Nemertea
+Nemestrinidae
+Neminidae
+Neopseustidae
+Nepticulidae
+Neriidae
+Neurochaetidae
+Neuroptera
+Noctuidae
+Nolidae
+Nothybidae
+Notodontidae
+Notoptera
+Nymphalidae
+Nymphomyiidae
+Odiniidae
+Odonata
+Oecophoridae
+Oenosandridae
+Oestridae
+Oligostraca_class_incertae_sedis
+Onychophora
+Opetiidae
+Opomyzidae
+Opostegidae
+Oreogetonidae
+Oreoleptidae
+Ormyridae
+Orthoptera
+Orussidae
+Ostracoda
+Pachyneuridae
+Palaephatidae
+Pallopteridae
+Pamphiliidae
+Pantophthalmidae
+Papilionidae
+Paraleucopidae
+Pauropoda
+Pediciidae
+Pelecinidae
+Pelecorhynchidae
+Peleopodidae
+Pemphredonidae
+Pentastomida
+Pergidae
+Perilampidae
+Periscelididae
+Perissommatidae
+Phasmatodea
+Phaudidae
+Phiditiidae
+Philanthidae
+Phoridae
+Phoronida
+Pieridae
+Pinophyta
+Piophilidae
+Pipunculidae
+Placozoa
+Platygastridae
+Platyhelminthes
+Platypezidae
+Platystomatidae
+Plecoptera
+Plumariidae
+Plutellidae
+Polleniidae
+Pompilidae
+Porifera
+Praydidae
+Priapulida
+Proctotrupidae
+Prodidactidae
+Prodoxidae
+Protura
+Psenidae
+Pseudobistonidae
+Pseudopomyzidae
+Psilidae
+Psocodea
+Psychidae
+Psychodidae
+Pteridophyta
+Pterolonchidae
+Pteromalidae
+Pterophoridae
+Ptychopteridae
+Pycnogonida
+Pyralidae
+Pyrgotidae
+Pyrrophycophyta
+Raphidioptera
+Ratardidae
+Remipedia
+Rhagionidae
+Rhiniidae
+Rhinophoridae
+Rhodophyta
+Rhombozoa
+Rhopalosomatidae
+Richardiidae
+Riodinidae
+Roeslerstammiidae
+Ropalomeridae
+Roproniidae
+Rotifera
+Rotoitidae
+Sapygidae
+Sarcophagidae
+Saturniidae
+Scathophagidae
+Scatopsidae
+Scelionidae
+Scenopinidae
+Schistonoeidae
+Schreckensteiniidae
+Sciaridae
+Sciaroidea_incertae_sedis
+Sciomyzidae
+Sclerogibbidae
+Scolebythidae
+Scoliidae
+Scythrididae
+Scythropiidae
+Sematuridae
+Sepsidae
+Sesiidae
+Sierolomorphidae
+Signiphoridae
+Simaethistidae
+Simuliidae
+Siphonaptera
+Sipuncula
+Siricidae
+Somabrachyidae
+Somatiidae
+Sphaeroceridae
+Sphecidae
+Sphingidae
+Stathmopodidae
+Stenotritidae
+Stephanidae
+Stratiomyidae
+Strepsiptera
+Strongylophthalmyiidae
+Symphyla
+Syringogastridae
+Syrphidae
+Tabanidae
+Tachinidae
+Tanaostigmatidae
+Tanyderidae
+Tanypezidae
+Tardigrada
+Tenthredinidae
+Tephritidae
+Teratomyzidae
+Tetracampidae
+Thaumaleidae
+Thecostraca
+Therevidae
+Thynnidae
+Thyrididae
+Thysanoptera
+Tineidae
+Tineodidae
+Tiphiidae
+Tipulidae
+Tischeriidae
+Tonzidae
+Tortricidae
+Torymidae
+Trachypetidae
+Trichoceridae
+Trichogrammatidae
+Trichoptera
+Tridentaformidae
+Trigonalidae
+Ulidiidae
+Uraniidae
+Urodidae
+Ustyurtiidae
+Vanhorniidae
+Vermileonidae
+Vespidae
+Whalleyanidae
+Xenacoelomorpha
+Xenasteiidae
+Xiphydriidae
+Xyelidae
+Xylomyidae
+Xylophagidae
+Xyloryctidae
+Yponomeutidae
+Ypsolophidae
+Zoraptera
+Zygaenidae
+Zygentoma
+Zygomycota
+)
+#
+# `curl https://www.boldsystems.org/index.php/TaxBrowser_Home | egrep -o '\w+ \[\d+\]' | awk '{ print $1 }'`.split also works but is brittle
+#
+# NOTE: some downloads above will fail due to not having any public records available, these failures can be ignored
+# examples include: Australimyzidae, Braulidae, Epimarptidae, Homalocnemiidae, etc.
+
+def download_bold_taxon(taxon, dir, force=false)
+  Dir.chdir(dir) do
+    file = "#{taxon.downcase}.tsv"
+
+    if force || !File.file?("#{file}")
+      start_time = Time.now
+      status = system("curl -sS 'http://www.boldsystems.org/index.php/API_Public/combined?taxon=#{taxon}&format=tsv' -o #{file}")
+
+      # now validate
+      if !status
+        puts "attempt to download #{file} failed!"
+        File.unlink if File.file?(file)
+      elsif File.file?(file) && `tail #{file}`.include?('</html>')
+        puts "file is resulted in HTML error: #{file}"
+        FileUtils.mv file, "#{file}.error.html"
+      elsif !File.file?(file)
+        puts "download for #{file} is empty!"
+      else
+        puts "downloaded #{file}. #{File.new(file).size} bytes in #{(Time.now - start_time).to_i} seconds."
+      end
+
+    else
+      puts "skipping #{file} since it already exists"
+    end
+  end
+end
+
+class MyCLI < Thor
+  def self.exit_on_failure?
+    true
+  end
+
+  desc "populate_test", "reset and populate test database with test data"
+  def populate_test
+    invoke :populate, ['test', 'test/data/reptilia_gbif_occurrences.tsv']
+  end
+
+  desc "populate RAILS_ENV OCCURRENCES_TSV_PATH", "reset and populate specified database with data"
+  def populate(rails_env, occurrences_tsv_path)
+    ENV['RAILS_ENV'] = rails_env
+    db_path = `bin/rails r 'puts ActiveRecord::Base.connection.instance_variable_get(:@config)[:database]'`.strip
+
+    puts "using database: #{db_path}"
+    system('bin/rake db:reset')
+    puts "add occurrences and species to database from #{occurrences_tsv_path}"
+
+    Benchmark.bm(26) do |x|
+      x.report("pipeline:add_occurrences:") { system("bin/rake pipeline:add_occurrences < #{occurrences_tsv_path}") }
+      # FIXME: I think this is no longer approriate? FWIW it was also incorrect
+      # x.report("update Species metrics:") { system("bin/rails r 'Species.find_each(&:update_metrics!)'") }
+    end
+  end
+
+  desc "download_bold TAXON DIR", "download bold taxon to specified location"
+  def download_bold(taxon, dir)
+    puts "download bold data for #{taxon}"
+    download_bold_taxon taxon, dir
+  end
+
+  desc "download_all_bold DIR", "download all bold data to dir"
+  def download_all_bold(dir)
+    require 'parallel'
+    Parallel.each(-> { TAXONS.pop || Parallel::Stop } , in_processes: 20) do |taxon|
+      download_bold_taxon taxon, dir
+    end
+  end
+
+  desc "list_bold_taxons", "list bold taxons"
+  def list_bold_taxons
+    puts TAXONS
+  end
+
+  desc "search", "generate a tarball or zip file using the provided query"
+  def search
+   app_root = File.expand_path('../..', __FILE__)
+   Dir.chdir(app_root)
+   exec 'bin/rake search:search'
+  end
+
+  desc "search_test genbank_root_path", "generate tarball of reptilia in dev database from dev"
+  def search_test(genbank_root)
+    require_relative '../app/models/serialize'
+    params = { :taxon_class => 'Reptilia'}
+    ENV['PARAMS'] = Serialize.to_str(params)
+    ENV['RESULTS'] = File.join(Dir.pwd,'reptilia.tar.gz')
+    ENV['INFO_FILE'] = File.join(Dir.pwd,'reptilia.tar.gz.json')
+    ENV['RAILS_ENV'] = 'development'
+    ENV['GENBANK_ROOT'] = genbank_root
+
+    invoke :search, []
+  end
+end
+
+MyCLI.start(ARGV)

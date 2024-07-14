@@ -1,0 +1,513 @@
+EXPID:  OutputDir/GEOSChem
+EXPDSC: GEOS-Chem_devel
+CoresPerNode: 24
+VERSION: 1
+
+#==============================================================================
+# Define grid labels
+#
+# Define output grids different from the native cubed sphere in this section.
+# Each diagnostics collection is output on the native resolution global cubed
+# sphere grid unless a different grid defined here is set for that collection
+# in the collections section of this file.
+#
+# See the examples below for defining different types of grid at different
+# resolutions.
+#
+# See the collections section later on in this file for instructions on
+# using an alternative grid for output.
+#==============================================================================
+GRID_LABELS: PE24x144-CF
+             PC360x181-DC
+             REGIONAL1x1
+    ::
+
+    # Example of cubed-sphere grid at c24 resolution
+    PE24x144-CF.GRID_TYPE: Cubed-Sphere
+    PE24x144-CF.IM_WORLD: 24
+    PE24x144-CF.JM_WORLD: 144
+    PE24x144-CF.LM: 72
+
+    # Example of lat-lon global grid at 1x1 resolution
+    PC360x181-DC.GRID_TYPE: LatLon
+    PC360x181-DC.IM_WORLD: 360
+    PC360x181-DC.JM_WORLD: 181
+    PC360x181-DC.POLE: PC
+    PC360x181-DC.DATELINE: DC
+    PC360x181-DC.LM: 72
+
+    # Example of lat-lon regional grid at 1x1 resolution
+    REGIONAL1x1.GRID_TYPE: LatLon
+    REGIONAL1x1.IM_WORLD: 80
+    REGIONAL1x1.JM_WORLD: 40
+    REGIONAL1x1.POLE: XY
+    REGIONAL1x1.DATELINE: XY
+    REGIONAL1x1.LON_RANGE:   0 80
+    REGIONAL1x1.LAT_RANGE: -30 10
+    REGIONAL1x1.LM: 72
+
+#==============================================================================
+# Declare collection names
+#
+# You can disable collections by commenting out with #
+# Also note, you can avoid adding collections to the benchmark simulation
+# by prefacing lines with , which will get commented out.
+# (e.g. to get around an "input file too long" error in MAPL)
+#==============================================================================
+COLLECTIONS: 'Restart',
+             'MercuryEmis',
+             'MercuryChem',
+             #'MercuryOcean',
+             'SpeciesConc',
+             #'Budget',
+             #'CloudConvFlux',
+             'DryDep',
+             #'LevelEdgeDiags',
+             'StateMet',
+             'WetLossConv',
+             'WetLossLS',
+             #'BoundaryConditions',
+::
+#==============================================================================
+# Define collections
+#
+# The rest of this file consists of collection definitions.
+# Above collections whose declarations are commented out will be ignored.
+# You can skip individual diagnostics by commenting out their names.
+#
+# WARNING: Frequency, duration, and mode will be over-written with
+# settings in runConfig.sh. Edit settings in that file. You can execute the
+# script to update this file and then inspect results before submitting a
+# run. Collection names are hard-coded in that file; if you add more
+# collections then you must also add them there for auto-update, or manually
+# change settings for the new collection in this file.
+#
+# NOTES:
+#    (1) Template keyword defines suffix of output filename, appended to
+#        GCHP.{collection}.
+#
+#    (2) Frequency keyword sets frequency of data in each output file
+#
+#    (3) Duration keyword sets frequency of output file
+#
+#    (4) Mode keyword may be 'time-averaged' or 'instantaneous'
+#
+#    (5) See the GRID_LABELS sections above for details about output grids
+#
+#    (6) To output data on a grid other than native res global cubed sphere
+#        include the 'grid_label' field. For example,
+#
+#           SpeciesConc.grid_label:   REGIONAL1x1
+#
+#    (7) If you are outputting on a lat/lon grid, be sure to specify
+#        conservative regridding. Otherwise regridding will be bi-linear.
+#
+#           SpeciesConc.conservative: 1
+#
+#    (8) To output a reduced set of levels, use the levels keyword, e.g.:
+#
+#           SpeciesConc.levels: 1 2 3
+#
+#==============================================================================
+
+#==============================================================================
+# %%%%% THE Restart COLLECTION %%%%%
+#
+# GEOS-Chem restart file fields
+#
+# Available for all simulations
+#==============================================================================
+  Restart.filename:           './GEOSChem.Restart.%y4%m2%d2_%h2%n2z.nc4',
+  Restart.frequency:          'End',  
+  Restart.duration:           'End', 
+  Restart.mode:               'instantaneous'
+  Restart.fields:             'SpeciesRst_Hg0                 ', 'GCHPchem',
+                              'SpeciesRst_Hg2                 ', 'GCHPchem',
+                              'SpeciesRst_HgP                 ', 'GCHPchem',
+                              'Met_DELPDRY                    ', 'GCHPchem',
+                              'Met_PS1WET                     ', 'GCHPchem',
+                              'Met_PS1DRY                     ', 'GCHPchem',
+                              'Met_SPHU1                      ', 'GCHPchem',
+                              'Met_TMPU1                      ', 'GCHPchem',
+                              #'Chem_OceanHg0                  ', 'GCHPchem',
+                              #'Chem_OceanHg2                  ', 'GCHPchem',
+                              #'Chem_OceanHgP                  ', 'GCHPchem',
+                              #'Chem_SnowHgOcean               ', 'GCHPchem',
+                              #'Chem_SnowHgLand                ', 'GCHPchem',
+                              #'Chem_SnowHgOceanStored         ', 'GCHPchem',
+                              #'Chem_SnowHgLandStored          ', 'GCHPchem',
+::
+#==============================================================================
+# %%%%% THE SpeciesConc COLLECTION %%%%%
+#
+# GEOS-Chem species concentrations (default = advected species)
+#
+# Available for all simulations
+#==============================================================================
+  SpeciesConc.template:       '%y4%m2%d2_%h2%n2z.nc4',
+  SpeciesConc.format:         'CFIO',
+  SpeciesConc.timestampStart: .true.
+  SpeciesConc.monthly:        0
+  SpeciesConc.frequency:      010000
+  SpeciesConc.duration:       010000
+  SpeciesConc.mode:           'time-averaged'
+  SpeciesConc.fields:         'SpeciesConc_Hg0             ', 'GCHPchem',
+                              'SpeciesConc_Hg2             ', 'GCHPchem',
+                              'SpeciesConc_HgP             ', 'GCHPchem',
+::
+#==============================================================================
+# %%%%% THE Budget COLLECTION %%%%%
+#
+# GEOS-Chem budget diagnostics defined as species kg/s in the column
+# (full, troposphere, or PBL) due to a single component (e.g. chemistry)
+# (default = advected species)
+#
+# Available for all simulations
+#==============================================================================
+  Budget.template:     '%y4%m2%d2_%h2%n2z.nc4',
+  Budget.format:          'CFIO',
+  Budget.timestampStart:  .true.
+  Budget.monthly:         0
+  Budget.frequency:    010000
+  Budget.duration:     010000
+  Budget.mode:         'time-averaged'
+  Budget.fields:       'BudgetEmisDryDepFull_Hg0           ', 'GCHPchem',
+                       'BudgetEmisDryDepFull_Hg2           ', 'GCHPchem',
+                       'BudgetEmisDryDepFull_HgP           ', 'GCHPchem',
+                       'BudgetEmisDryDepTrop_Hg0           ', 'GCHPchem',
+                       'BudgetEmisDryDepTrop_Hg2           ', 'GCHPchem',
+                       'BudgetEmisDryDepTrop_HgP           ', 'GCHPchem',
+                       'BudgetEmisDryDepPBL_Hg0            ', 'GCHPchem',
+                       'BudgetEmisDryDepPBL_Hg2            ', 'GCHPchem',
+                       'BudgetEmisDryDepPBL_HgP            ', 'GCHPchem',
+                       'BudgetChemistryFull_Hg0             ', 'GCHPchem',
+                       'BudgetChemistryFull_Hg2             ', 'GCHPchem',
+                       'BudgetChemistryFull_HgP             ', 'GCHPchem',
+                       'BudgetChemistryTrop_Hg0            ', 'GCHPchem',
+                       'BudgetChemistryTrop_Hg2            ', 'GCHPchem',
+                       'BudgetChemistryTrop_HgP            ', 'GCHPchem',
+                       'BudgetChemistryPBL_Hg0             ', 'GCHPchem',
+                       'BudgetChemistryPBL_Hg2             ', 'GCHPchem',
+                       'BudgetChemistryPBL_HgP             ', 'GCHPchem',
+                       'BudgetTransportFull_Hg0            ', 'GCHPchem',
+                       'BudgetTransportFull_Hg2            ', 'GCHPchem',
+                       'BudgetTransportFull_HgP            ', 'GCHPchem',
+                       'BudgetTransportTrop_Hg0            ', 'GCHPchem',
+                       'BudgetTransportTrop_Hg2            ', 'GCHPchem',
+                       'BudgetTransportTrop_HgP            ', 'GCHPchem',
+                       'BudgetTransportPBL_Hg0             ', 'GCHPchem',
+                       'BudgetTransportPBL_Hg2             ', 'GCHPchem',
+                       'BudgetTransportPBL_HgP             ', 'GCHPchem',
+                       'BudgetMixingFull_Hg0               ', 'GCHPchem',
+                       'BudgetMixingFull_Hg2               ', 'GCHPchem',
+                       'BudgetMixingFull_HgP               ', 'GCHPchem',
+                       'BudgetMixingTrop_Hg0               ', 'GCHPchem',
+                       'BudgetMixingTrop_Hg2               ', 'GCHPchem',
+                       'BudgetMixingTrop_HgP               ', 'GCHPchem',
+                       'BudgetMixingPBL_Hg0                ', 'GCHPchem',
+                       'BudgetMixingPBL_Hg2                ', 'GCHPchem',
+                       'BudgetMixingPBL_HgP                ', 'GCHPchem',
+                       'BudgetConvectionFull_Hg0           ', 'GCHPchem',
+                       'BudgetConvectionFull_Hg2           ', 'GCHPchem',
+                       'BudgetConvectionFull_HgP           ', 'GCHPchem',
+                       'BudgetConvectionTrop_Hg0           ', 'GCHPchem',
+                       'BudgetConvectionTrop_Hg2           ', 'GCHPchem',
+                       'BudgetConvectionTrop_HgP           ', 'GCHPchem',
+                       'BudgetConvectionPBL_Hg0            ', 'GCHPchem',  
+                       'BudgetConvectionPBL_Hg2            ', 'GCHPchem',  
+                       'BudgetConvectionPBL_HgP            ', 'GCHPchem',  
+                       'BudgetWetDepFull_Hg2               ', 'GCHPchem',
+                       'BudgetWetDepFull_HgP               ', 'GCHPchem',
+                       'BudgetWetDepTrop_Hg2               ', 'GCHPchem',
+                       'BudgetWetDepTrop_HgP               ', 'GCHPchem',
+                       'BudgetWetDepPBL_Hg2                ', 'GCHPchem',  
+                       'BudgetWetDepPBL_HgP                ', 'GCHPchem',  
+::
+#==============================================================================
+# %%%%% THE CloudConvFlux COLLECTION %%%%%
+#
+# Cloud convective flux (default = advected species)
+#
+# Available for all simulations
+#==============================================================================
+  CloudConvFlux.template:     '%y4%m2%d2_%h2%n2z.nc4',
+  CloudConvFlux.format:         'CFIO',
+  CloudConvFlux.timestampStart: .true.
+  CloudConvFlux.monthly:        0
+  CloudConvFlux.frequency:    010000
+  CloudConvFlux.duration:     010000
+  CloudConvFlux.mode:         'time-averaged'
+  CloudConvFlux.fields:       'CloudConvFlux_Hg0           ', 'GCHPchem',
+                              'CloudConvFlux_Hg2           ', 'GCHPchem',
+                              'CloudConvFlux_HgP           ', 'GCHPchem',
+::
+#==============================================================================
+# %%%%% THE DryDep COLLECTION %%%%%
+#
+# Dry depositon fluxes and velocities (for all dry-depositing species)
+#
+# Available for all simuations that have dry-depositing species
+#==============================================================================
+  DryDep.template:            '%y4%m2%d2_%h2%n2z.nc4',
+  DryDep.format:          'CFIO',
+  DryDep.timestampStart:  .true.
+  DryDep.monthly:         0
+  DryDep.frequency:           010000
+  DryDep.duration:            010000
+  DryDep.mode:                'time-averaged'
+  DryDep.fields:              'DryDepVel_Hg0               ', 'GCHPchem',
+                              'DryDepVel_Hg2               ', 'GCHPchem',
+                              'DryDepVel_HgP               ', 'GCHPchem',
+                              'DryDep_Hg0                  ', 'GCHPchem',
+                              'DryDep_Hg2                  ', 'GCHPchem',
+                              'DryDep_HgP                  ', 'GCHPchem',
+                              #'DryDepChm_?DRY?              ', 'GCHPchem',
+                              #'DryDepMix_?DRY?              ', 'GCHPchem',
+::
+#==============================================================================
+# %%%%% THE LevelEdgeDiags COLLECTION %%%%%
+#
+# Diagnostics that are defined on grid box level edges
+#
+# Available for all simulations
+#==============================================================================
+  LevelEdgeDiags.template:    '%y4%m2%d2_%h2%n2z.nc4',
+  LevelEdgeDiags.format:         'CFIO',
+  LevelEdgeDiags.timestampStart: .true.
+  LevelEdgeDiags.monthly:        0
+  LevelEdgeDiags.frequency:   010000
+  LevelEdgeDiags.duration:    010000
+  LevelEdgeDiags.mode:        'time-averaged'
+  LevelEdgeDiags.fields:      'Met_CMFMC                     ', 'GCHPchem',
+                              'Met_PEDGE                     ', 'GCHPchem',
+                              'Met_PEDGEDRY                  ', 'GCHPchem',
+                              'Met_PFICU                     ', 'GCHPchem',
+                              'Met_PFILSAN                   ', 'GCHPchem',
+                              'Met_PFLCU                     ', 'GCHPchem',
+                              'Met_PFLLSAN                   ', 'GCHPchem',
+::
+#==============================================================================
+# %%%%% THE MercuryEmis COLLECTION %%%%%
+#
+# Diagnostics for mercury emissions
+# (mostly from HEMCO manual diagnostic outputs)
+#
+# Available for the Hg and tagged Hg simulations
+#==============================================================================
+  MercuryEmis.template:       '%y4%m2%d2_%h2%n2z.nc4',
+  MercuryEmis.frequency:      010000
+  MercuryEmis.duration:       010000
+  MercuryEmis.mode:           'time-averaged'
+  MercuryEmis.fields:         'EmisHg0anthro                 ', 'GCHPchem',
+                              'EmisHg0biomass                ', 'GCHPchem',
+                              'EmisHg0geogenic               ', 'GCHPchem',
+                              'EmisHg0land                   ', 'GCHPchem',
+                              'EmisHg0ocean                  ', 'GCHPchem',
+                              'EmisHg0soil                   ', 'GCHPchem',
+                              'EmisHg0snow                   ', 'GCHPchem',
+                              'EmisHg0vegetation             ', 'GCHPchem',
+                              'EmisHg2HgPanthro              ', 'GCHPchem',
+                              'EmisHg2snowToOcean            ', 'GCHPchem',
+                              'EmisHg2rivers                 ', 'GCHPchem',
+                              'FluxHg2HgPfromAirToSnow       ', 'GCHPchem',
+::
+#==============================================================================
+# %%%%% THE MercuryChem COLLECTION %%%%%
+#
+# Concentration and prod/loss diagnostics for mercury species
+#
+# Available for the Hg and tagged Hg simulations
+#==============================================================================
+  MercuryChem.template:       '%y4%m2%d2_%h2%n2z.nc4',
+  MercuryChem.frequency:      010000
+  MercuryChem.duration:       010000
+  MercuryChem.mode:           'time-averaged'
+  MercuryChem.fields:         'ConcBr                        ', 'GCHPchem',
+                              'ConcBrO                       ', 'GCHPchem',
+                              'LossHg2bySeaSalt              ', 'GCHPchem',
+                              'LossRateHg2bySeaSalt          ', 'GCHPchem',
+                              'PolarConcBr                   ', 'GCHPchem',
+                              'PolarConcBrO                  ', 'GCHPchem',
+                              'PolarConcO3                   ', 'GCHPchem',
+                              'ProdHg2fromBr                 ', 'GCHPchem',
+                              'ProdHg2fromBrY                ', 'GCHPchem',
+                              'ProdHg2fromClY                ', 'GCHPchem',
+                              'ProdHg2fromHg0                ', 'GCHPchem',
+                              'ProdHg2fromHgBrPlusBr2        ', 'GCHPchem',
+                              'ProdHg2fromHgBrPlusBrBrO      ', 'GCHPchem',
+                              'ProdHg2fromHgBrPlusBrClO      ', 'GCHPchem',
+                              'ProdHg2fromHgBrPlusBrHO2      ', 'GCHPchem',
+                              'ProdHg2fromHgBrPlusBrNO2      ', 'GCHPchem',
+                              'ProdHg2fromHgBrPlusBrOH       ', 'GCHPchem',
+                              'ProdHg2fromO3                 ', 'GCHPchem',
+                              'ProdHg2fromOH                 ', 'GCHPchem',
+                              'ParticulateBoundHg            ', 'GCHPchem',
+                              'ReactiveGaseousHg             ', 'GCHPchem',
+::
+#==============================================================================
+# %%%%% THE MercuryOcean COLLECTION %%%%%
+#
+# Oceanic masses and fluxes of mercury species
+#
+# Available for the Hg and tagged Hg simulations
+#==============================================================================
+  MercuryOcean.template:      '%y4%m2%d2_%h2%n2z.nc4',
+  MercuryOcean.frequency:     010000
+  MercuryOcean.duration:      010000
+  MercuryOcean.mode:          'time-averaged'
+  MercuryOcean.fields:        'FluxHg0fromAirToOcean         ', 'GCHPchem',
+                              'FluxHg0fromOceanToAir         ', 'GCHPchem',
+                              'FluxHg2HgPfromAirToOcean      ', 'GCHPchem',
+                              'FluxHg2toDeepOcean            ', 'GCHPchem',
+                              'FluxOCtoDeepOcean             ', 'GCHPchem',
+                              'MassHg0inOcean                ', 'GCHPchem',
+                              'MassHg2inOcean                ', 'GCHPchem',
+                              'MassHgPinOcean                ', 'GCHPchem',
+                              'MassHgTotalInOcean            ', 'GCHPchem',
+::
+#==============================================================================
+# %%%%% The StateMet COLLECTION %%%%%
+#
+# Fields of the State_Met object (also see the LevelEdgeDiags collection)
+#
+# Available for all simulations
+#==============================================================================
+  StateMet.template:          '%y4%m2%d2_%h2%n2z.nc4',
+  StateMet.format:         'CFIO',
+  StateMet.timestampStart: .true.
+  StateMet.monthly:        0
+  StateMet.frequency:         010000
+  StateMet.duration:          010000
+  StateMet.mode:              'time-averaged'
+  StateMet.fields:            'Met_AD                        ', 'GCHPchem',
+                              'Met_AIRDEN                    ', 'GCHPchem',
+                              'Met_AIRVOL                    ', 'GCHPchem',
+                              'Met_ALBD                      ', 'GCHPchem',
+                              'Met_AVGW                      ', 'GCHPchem',
+                              'Met_BXHEIGHT                  ', 'GCHPchem',
+                              'Met_ChemGridLev               ', 'GCHPchem',
+                              'Met_CLDF                      ', 'GCHPchem',
+                              'Met_CLDFRC                    ', 'GCHPchem',
+                              'Met_CLDTOPS                   ', 'GCHPchem',
+                              'Met_DELP                      ', 'GCHPchem',
+                              'Met_DQRCU                     ', 'GCHPchem',
+                              'Met_DQRLSAN                   ', 'GCHPchem',
+                              'Met_DTRAIN                    ', 'GCHPchem',
+                              'Met_EFLUX                     ', 'GCHPchem',
+                              'Met_FRCLND                    ', 'GCHPchem',
+                              'Met_FRLAKE                    ', 'GCHPchem',
+                              'Met_FRLAND                    ', 'GCHPchem',
+                              'Met_FRLANDIC                  ', 'GCHPchem',
+                              'Met_FROCEAN                   ', 'GCHPchem',
+                              'Met_FRSEAICE                  ', 'GCHPchem',
+                              'Met_FRSNO                     ', 'GCHPchem',
+                              'Met_GWETROOT                  ', 'GCHPchem',
+                              'Met_GWETTOP                   ', 'GCHPchem',
+                              'Met_HFLUX                     ', 'GCHPchem',
+                              'Met_LAI                       ', 'GCHPchem',
+                              'Met_LWI                       ', 'GCHPchem',
+                              'Met_PARDR                     ', 'GCHPchem',
+                              'Met_PARDF                     ', 'GCHPchem',
+                              'Met_PBLTOPL                   ', 'GCHPchem',
+                              'Met_PBLH                      ', 'GCHPchem',
+                              'Met_PHIS                      ', 'GCHPchem',
+                              'Met_PMID                      ', 'GCHPchem',
+                              'Met_PMIDDRY                   ', 'GCHPchem',
+                              'Met_PRECANV                   ', 'GCHPchem',
+                              'Met_PRECCON                   ', 'GCHPchem',
+                              'Met_PRECLSC                   ', 'GCHPchem',
+                              'Met_PRECTOT                   ', 'GCHPchem',
+                              'Met_PS1DRY                    ', 'GCHPchem',
+                              'Met_PS1WET                    ', 'GCHPchem',
+                              'Met_PS2DRY                    ', 'GCHPchem',
+                              'Met_PS2WET                    ', 'GCHPchem',
+                              'Met_PSC2WET                   ', 'GCHPchem',
+                              'Met_PSC2DRY                   ', 'GCHPchem',
+                              'Met_QI                        ', 'GCHPchem',
+                              'Met_QL                        ', 'GCHPchem',
+                              'Met_OMEGA                     ', 'GCHPchem',
+                              'Met_OPTD                      ', 'GCHPchem',
+                              'Met_REEVAPCN                  ', 'GCHPchem',
+                              'Met_REEVAPLS                  ', 'GCHPchem',
+                              'Met_SLP                       ', 'GCHPchem',
+                              'Met_SNODP                     ', 'GCHPchem',
+                              'Met_SNOMAS                    ', 'GCHPchem',
+                              'Met_SPHU                      ', 'GCHPchem',
+                              'Met_SPHU1                     ', 'GCHPchem',
+                              'Met_SPHU2                     ', 'GCHPchem',
+                              'Met_SUNCOS                    ', 'GCHPchem',
+                              'Met_SUNCOSmid                 ', 'GCHPchem',
+                              'Met_SWGDN                     ', 'GCHPchem',
+                              'Met_T                         ', 'GCHPchem',
+                              'Met_TAUCLI                    ', 'GCHPchem',
+                              'Met_TAUCLW                    ', 'GCHPchem',
+                              'Met_THETA                     ', 'GCHPchem',
+                              'Met_TMPU1                     ', 'GCHPchem',
+                              'Met_TMPU2                     ', 'GCHPchem',
+                              'Met_TO3                       ', 'GCHPchem',
+                              'Met_TropHt                    ', 'GCHPchem',
+                              'Met_TropLev                   ', 'GCHPchem',
+                              'Met_TropP                     ', 'GCHPchem',
+                              'Met_TS                        ', 'GCHPchem',
+                              'Met_TSKIN                     ', 'GCHPchem',
+                              'Met_TV                        ', 'GCHPchem',
+                              'Met_U                         ', 'GCHPchem',
+                              'Met_U10M                      ', 'GCHPchem',
+                              'Met_USTAR                     ', 'GCHPchem',
+                              'Met_UVALBEDO                  ', 'GCHPchem',
+                              'Met_V                         ', 'GCHPchem',
+                              'Met_V10M                      ', 'GCHPchem',
+                              'Met_Z0                        ', 'GCHPchem',
+::
+#==============================================================================
+# %%%%% THE WetLossConv COLLECTION %%%%%
+#
+# Loss of soluble species in convective updrafts
+#
+# Available for all simulations that have soluble species
+#==============================================================================
+  WetLossConv.template:       '%y4%m2%d2_%h2%n2z.nc4',
+  WetLossConv.format:         'CFIO',
+  WetLossConv.timestampStart: .true.
+  WetLossConv.monthly:        0
+  WetLossConv.frequency:      010000
+  WetLossConv.duration:       010000
+  WetLossConv.mode:           'time-averaged'
+  WetLossConv.fields:         'WetLossConv_Hg2             ', 'GCHPchem',
+                              'WetLossConv_HgP             ', 'GCHPchem',
+                              'WetLossConvFrac_Hg2         ', 'GCHPchem',
+                              'WetLossConvFrac_HgP         ', 'GCHPchem',
+::
+#==============================================================================
+# %%%%% THE WetLossLS COLLECTION %%%%%
+#
+# Loss of soluble species in large-scale wetdep (i.e. rainout and washout)
+#
+# Available for all simulations that have soluble species
+#==============================================================================
+# Loss due to rainout and washout (per deposited species)
+  WetLossLS.template:         '%y4%m2%d2_%h2%n2z.nc4',
+  WetLossConv.format:         'CFIO',
+  WetLossConv.timestampStart: .true.
+  WetLossConv.monthly:        0
+  WetLossLS.frequency:        010000
+  WetLossLS.duration:         010000
+  WetLossLS.mode:             'time-averaged'
+  WetLossLS.fields:           'WetLossLS_Hg2               ', 'GCHPchem',
+                              'WetLossLS_HgP               ', 'GCHPchem',
+::
+#==============================================================================
+# %%%%% THE BoundaryConditions COLLECTION %%%%%
+#
+# GEOS-Chem boundary conditions for use in nested grid simulations
+#
+# Available for all simulations
+#==============================================================================
+  BoundaryConditions.template:   '%y4%m2%d2_%h2%n2z.nc4',
+  BoundaryConditions.frequency:  00000000 030000
+  BoundaryConditions.duration:   00000001 000000
+  BoundaryConditions.mode:       'instantaneous'
+  BoundaryConditions.fields:     'SpeciesBC_Hg0             ', 'GCHPchem',
+                                 'SpeciesBC_Hg2             ', 'GCHPchem',
+                                 'SpeciesBC_HgP             ', 'GCHPchem',
+::

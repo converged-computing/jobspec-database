@@ -29,6 +29,12 @@ Note that the data now is just a trial run! For the first run, we had 11k+ uniqu
 For the second run, that went up to `19544`. When I added more applications, for half of the run it was 25k.
 The current total is `31932` scripts. I didn't add the last run of flux because I saw what I thought were false positives.
 
+Also try to get associated GitHub files.
+
+```bash
+python scripts/get_jobspec_configs.py
+```
+
 ## Analysis
 
 ### 1. Word2Vec

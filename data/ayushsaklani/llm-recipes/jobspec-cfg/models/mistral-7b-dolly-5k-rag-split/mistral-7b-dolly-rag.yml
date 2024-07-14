@@ -1,0 +1,58 @@
+experiment: 
+  name: mistral-7b-chat-pdf-trial-1
+  model_save_name: mistral-7b-chat-pdf
+  version: v0.2
+  push_to_hub: True
+  wandb_token: 9050e71c21d0cb99c585c969acf8bdcaff4c45bb
+
+model:
+  name: mistral-7b-chat-pdf
+  version: Null
+  torch_dtype: bfloat16 
+
+dataset:
+  name : dyumat/databricks-dolly-5k-rag-split
+  dataset_text_field: text
+
+tokenizer:
+  model_name: mistral-7b-chat-pdf
+  padding_side: right
+  truncation_side: right
+  pad_token_as_eos_token: True
+
+
+train:
+  task_type: CAUSAL_LM
+  output_dir: "/scratch/engin_root/engin1/asaklani/experiments/mistral-rag-pdf-1"
+  num_train_epochs: 1
+  seed: 445
+  max_seq_length: 2048
+  lora: 
+    lora_r: 16
+    lora_alpha: 16
+    lora_dropout: 0.1
+    lora_target_modules:
+      - q_proj
+      - up_proj
+      - o_proj
+      - k_proj
+      - down_proj
+      - gate_proj
+      - v_poroj
+  per_device_train_batch_size: 4
+  gradient_accumulation_steps: 16
+  gradient_checkpointing: True
+  eval_accumulation_steps: 16
+  optim: paged_adamw_8bit
+  logging_steps: 1
+  learning_rate: 1e-4
+  fp16: False
+  max_grad_norm: 0.3
+  evaluation_strategy: steps
+  eval_steps: 0.5
+  warmup_ratio: 0.05
+  save_strategy: epoch
+  report_to: wandb
+  lr_scheduler: cosine
+
+  

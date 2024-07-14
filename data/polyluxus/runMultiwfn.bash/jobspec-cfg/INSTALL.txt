@@ -1,0 +1,144 @@
+INSTALLATION GUIDE
+
+This is the most important part, because without the 
+correct installation it will not work.
+I have tried to simplify it as much as possible and I will be
+working on it further, but until then see the following.
+
+(.) The script
+
+  You probably have obtained the script already, have read the 
+  readme file and are ready to modify it to your system. 
+  Below are some recommendations about how I have installed it.
+
+(a) Variables
+
+  The script will attempt to read variables necessary for
+  the execution of MultiWFN from the environment settings.
+  The reason for that was so that the script could be called 
+  by another script which submits it to a scheduler, and the 
+  execution is then carried out on via the compute nodes.
+  However, I have abandonned this idea. 
+  It is possible to write a submission script, which implements
+  this functionality here.
+
+  I am currently unsure (version > 0.5.0 of this script)
+  what happens if such variables are set, 
+  I need to test this again. (But I have no time.)
+
+  If variables are unset, they will be replaced by default 
+  values or they can be specified via the option switches,
+  or the rc file.
+
+  If you followed the instructions in the Multiwfn manual 
+  then you might have already set the environment variables
+  KMP_STACKSIZE, and Multiwfnpath. 
+  In older versions you had to make additions to
+  LD_LIBRARY_PATH, too.
+  You might even have added a directory to PATH.
+  This needs to be undone in order to use this script
+  without problems.
+  If you have added any of the following lines to your 
+  bashrc, then they need to be removed. We assume for a
+  moment, that we unpacked the program to the path
+  ~/sob/Multiwfn, so the bashrc probably contains these
+  lines:
+    export KMP_STACKSIZE=64000000
+    export Multiwfnpath=~/sob/Multiwfn
+  And in older versions also
+    export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:~/sob/Multiwfn
+  Delete them. Otherwise the script will always read 
+  these values and use them. Then there is no point in 
+  using this script in the first place.
+  (Again, I am not sure anymore what actually happens,
+  but it is safe to delete those lines.)
+
+  If the script finds executable commands 'Multiwfn', or
+  'multiwfn', it will abort, make sure nothing is sourced 
+  at that time.
+
+(b) Unpacking
+
+  I personally like to have a seperate user for any
+  chemistry related software. This is not necessary. But
+  it keeps the pathnames a little shorter. On my system
+  the user is called "chemsoft". This is the home:
+    /home/chemsoft/
+  (This is unfortunately not true anymore.)
+
+  You can also easily install it to a directory in your
+  home, or sowftware collection.
+  I currently use 
+    $HOME/local/multiwfn/multiwfn.current
+  or alternatively the project directory on CLAIX18, like
+    /home/rwth0425/local/multiwfn/multiwfn-3.6
+
+  You can uncompress the original script to any location
+  that suits you. I simply clone the git repository into
+    $HOME/local/multiwfn/runMultiwfn.bash
+  or alternatively
+    /home/rwth0425/local/runMultiwfn.bash
+
+  Version 0.5.0 (and later) comes with an example `settings.ini`,
+  which you should modify to suit your needs and copy 
+  to the same directory as `runMultiwfn.sh`.
+
+  The only line you should leave untouched is the one like
+    nthreads= <digit(s)> //How many threads [...]
+  because that will be modified by the script.
+  (It wouldn't have an effect if you'd modify it.)
+
+  You should then modify the `runMultiwfn.rc` file, or
+  create `.runMultiwfnrc` (takes precedence if found),
+  and set the following two lines:
+    installpath_Multiwfn_gui="$HOME/local/multiwfn/multiwfn.current"
+    installpath_Multiwfn_nogui="" # Disabled if empty
+
+  The default search chain for rc files is
+    (1) the installation directory
+    (2) the user's home directory
+    (3) the parent work directory
+  and it will use the values from the last one found.
+  All settings (except the binaries) can be changed with switches.
+
+(c) Non-GUI versions
+
+  If you want to use the version without the GUI (and maybe want to
+  switch) you have to specify another version, i.e.
+    installpath_Multiwfn_nogui="$HOME/local/multiwfn/multiwfn_nogui.current"
+
+(d) Modifying the script
+
+  If you use the rc settings, you do not have to modify the script.
+  However, if you prefer, you can hardcode the paths into the script, too.
+
+(e) What else?
+
+  If you want to access the manual with the -H switch, you need to download 
+  it and put it with the executable. The script searches for a pdf file,
+  and will display the first it finds, which fits the pattern 
+  `Multiwfn*.pdf`.
+
+  There are a couple of options implemented to look for a pdf viewer,
+  the safest is to set 'use_pdfviewer=' to your preferred one in the rc.
+  Tested are in that order: "use_pdfviewer" xdg-open gvfs-open evince okular less.
+
+  Also please make sure the script is executeable.
+    (chmod +x <scriptname>)
+  Occasionally the Multiwfn distribution itself was not marked executable;
+  therefore better check that one, too.
+
+  Now everything should be done.
+
+(f) Optional
+
+  You can create a softlink link in your personal ~/bin 
+  directory for easier access. This is of course provided 
+  that your ~/bin is part of $PATH.
+  The script finds its directory even through multiple links.
+  Alternatively you can add an alias, or add the multiwfn
+  directory to your PATH.
+  Do not use the commands 'Multiwfn' or 'multiwfn', as the script will
+  abort whenever it finds out that these commands exist, even if it is itself.
+
+(Martin; 0.6.0; 2019-09-10)

@@ -1,0 +1,97 @@
+#!/data/users/astar/gis/rpd/apps/miniconda3/bin/python
+"""Convenience wrapper to pipelines for users
+
+This is the only place where the interpreter needs to be set for a
+release.
+
+Could be used to set other env vars but then things get
+tricky (needed for example in Snakefile etc).
+"""
+
+
+import subprocess
+import os
+import sys
+from collections import namedtuple
+
+
+Pipeline = namedtuple('Pipeline', ['cat', 'script'])
+
+disabled_pipeline_cfg = os.path.join(os.path.dirname(os.path.realpath(__file__)), 
+                                     ".disabled-pipelines.txt")
+disabled_pipelines = []
+if os.path.exists(disabled_pipeline_cfg):
+    with open(disabled_pipeline_cfg) as fh:
+        for line in fh:
+            disabled_pipelines.append(line.strip())
+#sys.stderr.write("DEBUG disabled = {}\n".format(disabled_pipelines))
+
+SCRIPTS = ['chromatin-profiling/atacseq/atacseq.py',
+           'chromatin-profiling/chipseq/chipseq.py',
+           'custom/SG10K/SG10K.py',
+           'germs/vipr/vipr.py',
+           'mapping/BWA-MEM/BWA-MEM.py',
+           'metagenomics/essential-genes/essential-genes.py',
+           'metagenomics/shotgun-metagenomics/shotgun-metagenomics.py',
+           'rnaseq/fluidigm-ht-c1-rnaseq/fluidigm-ht-c1-rnaseq.py',
+           'rnaseq/star-rsem/star-rsem.py',
+           'rnaseq/wafergen-scrna/wafergen-scrna.py',
+           'somatic/lofreq-somatic/lofreq-somatic.py',
+           'somatic/mutect/mutect.py',
+           'variant-calling/gatk/gatk.py',
+           'variant-calling/lacer-lofreq/lacer-lofreq.py'
+       ]
+
+SCRIPTS = [s for s in SCRIPTS if s not in disabled_pipelines]
+
+def usage(fh, pipeline_map):
+    """print usage info"""
+    myname = os.path.abspath(sys.argv[0])
+    fh.write("Usage: {} name options\n".format(myname))
+    fh.write(" e.g.: {} gatk --help\n\n".format(myname))
+    fh.write("Please chose a pipeline from the following list:\n")
+    for cat in sorted(set([pipeline.cat for pipeline in pipeline_map.values()])):
+        fh.write("# category: {}\n".format(cat))
+        # this is stupid
+        for k, p in sorted(pipeline_map.items()):
+            if p.cat == cat:
+                fh.write("{}\n".format(k))
+
+
+def main():
+    """main function"""
+    python = sys.executable
+    root_path = os.path.dirname(os.path.abspath(
+        os.path.realpath(sys.argv[0])))
+    # set PYTHONPATH, used within wrappers and Snakefiles though
+    #python_path = sys.path
+    #python_path.insert(0, os.path.join(root_path, "lib"))
+
+    pipeline_map = dict()
+    for script in SCRIPTS:
+        key = os.path.basename(os.path.splitext(script)[0])
+        cat = os.path.dirname(script).split(os.sep)[0]
+        script = os.path.join(root_path, script)
+        pipeline_map[key] = Pipeline(cat, script)
+
+    if len(sys.argv) > 1:
+        name = sys.argv[1]
+    else:
+        name = None
+    if name not in pipeline_map or not name:
+        if name is None:
+            sys.stderr.write("ERROR: Need pipeline name as first argument.\n")
+            usage(sys.stderr, pipeline_map)
+        elif name not in pipeline_map:
+            sys.stderr.write("FATAL: unknown pipeline '{}'\n".format(name))
+            usage(sys.stderr, pipeline_map)
+        sys.exit(1)
+    pipeline_args = sys.argv[2:]
+
+    pipeline = pipeline_map[name]
+    #cmd = "PYTHONPATH={} {} {}".format(':'.join(python_path), python, pipeline.script)
+    cmd = "{} {} {}".format(python, pipeline.script, ' '.join(pipeline_args))
+    subprocess.call(cmd, shell=True)
+
+if __name__ == "__main__":
+    main()

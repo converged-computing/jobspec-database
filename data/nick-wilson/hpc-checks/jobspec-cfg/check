@@ -1,0 +1,26 @@
+#!/bin/sh
+cd `dirname $0` || exit $?
+
+# Environment settings
+PATH="${PATH}:/opt/pbs/bin" ; export PATH
+
+csv=results.csv
+
+echo === Failures
+grep FAIL $csv
+echo
+
+echo === Action
+for jobid in `grep FAIL $csv | awk -F, '{printf "%s ",$2}'` ; do
+ if [ x"$jobid" == xNA ] ; then continue ; fi
+ d=`grep " $jobid " $csv | awk '{print $NF}'`
+ t=`grep " $jobid " $csv | awk '{print $1}'`
+ cat $d/${t}*
+ echo
+ grep " $jobid " $csv
+ echo Accept?
+ read ans
+ if [ x"$ans" != x ] ; then
+  sed -i "/ $jobid /s/FAIL/$ans/" $csv
+ fi
+done

@@ -1,0 +1,4 @@
+# export REPORTS_DIR=/shared/results/bartekk/reports
+export WANDB_API_KEY=07a2cd842a6d792d578f8e6c0978efeb8dcf7638
+export WANDB_ENTITY=gmum
+export WANDB_PROJECT=Critical_Periods_Interventions

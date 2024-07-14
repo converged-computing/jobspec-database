@@ -1,0 +1,51 @@
+# Load the pdb/psf structure files.
+mol delete all
+mol new ionized.psf
+mol addfile ionized.pdb
+
+# Find and load all .dcd output files.
+for {set i 0} {$i <= 75} {incr i} {
+	if {$i == 0} {
+		if {[file exists output_run0.dcd]} {
+			mol addfile output_run0.dcd waitfor all
+		} else {
+			mol addfile output.dcd waitfor all
+		}
+	} else {
+		if {[file exists output_run$i.dcd]} {
+			mol addfile output_run$i.dcd waitfor all
+		} else {
+			puts "DCD file, output_run$i.dcd does not exist."
+		}
+	}
+}
+
+# Load required package.
+package require namdenergy 
+# See for namdenergy usage - https://www.ks.uiuc.edu/Research/vmd/plugins/namdenergy/
+
+# Create two atom selections for chain U and chain V.
+set sel1 [atomselect top "chain U"];# First atom selection for energy calculations.
+set sel2 [atomselect top "chain V"]; # Second atom selection for energy calculations.
+
+# Specify the path to your NAMD executable, which is required by the package namdenergy.
+set namdexe "/software/NAMD/2.13/verbs/namd2"; # Path to NAMD executable.
+
+# Set the stride of the dcd file.
+set dcdstride 25000; # Stride of the dcd file
+
+# Load parameter files used in the simulation, which will be used to calculate NAMD energies.
+set par1 "TYR.prm"; # A parameter file used by the namdenergy command.
+set par2 "ARG.prm"; # A parameter file used by the namdenergy command.
+set par3 "par_all36m_prot_NBFIX.prm"; # A parameter file used by the namdenergy command.
+set par4 "toppar_water_ions.str"; # A parameter file used by the namdenergy command.
+set par5 "par_all36_cgenff_NBFIX.prm"; # A parameter file used by the namdenergy command.
+
+# Set some variables to be passed to the namdenergy command.
+set namdenergy_outputfile "namdenergy.csv"; # Name for namdenergy output file.
+set skipframes 9; # Set the number of frames to be skipped between energy calculations.
+set extsysfile "restart_run0.xsc"; # Set the name of the extended system file.
+# Run namdenergy.
+namdenergy -sel $sel1 $sel2 -ofile $namdenergy_outputfile -extsys $extsysfile -exe $namdexe -switch 9 -cutoff 10 -skip $skipframes -stride $dcdstride -par $par1 -par $par2 -par $par3 -par $par4 -par $par5 -vdw -nonb -elec
+
+exit

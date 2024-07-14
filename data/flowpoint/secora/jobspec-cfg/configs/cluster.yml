@@ -1,0 +1,41 @@
+#logdir: "../cluster_output"
+#checkpoint_dir: "../cluster_output"
+
+logdir: "/scratch/fhoels2s/cluster_output"
+checkpoint_dir: "/scratch/fhoels2s/cluster_output"
+
+name: 'cluster_run_name'
+seed: 42
+max_checkpoints: 5
+
+num_gpus: 'auto'
+precision: mixed
+cuda_graphs: False
+
+preprocess_cores: 10
+preprocess_mode: concat
+max_input_tokens: 256
+languages:
+  - python
+
+epochs: 4
+shards: 10
+warmup_batches: 10000
+
+finetune_mode: all
+
+model_name: 'microsoft/codebert-base'
+optimizer: adam
+lr_schedule: constant
+
+learning_rate: 1e-5
+batch_size: 16
+grad_accum: 64 # counted in batches
+temp: 0.05
+dropout: 0.1
+grad_clip: 0.
+
+embedding_size: 128
+top_k:  10
+
+

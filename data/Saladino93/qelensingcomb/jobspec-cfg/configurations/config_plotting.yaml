@@ -1,0 +1,97 @@
+sims_directory: '../extract_sehgal/manusmaps/flat_maps_large/newmaps11022021/148/'
+savingdirectory: 'output_biases1102/'
+
+analysisdirectory: 'output1102/'
+plotsdirectory: 'plots1102/'
+resultsdirectory: 'resultssumfg1102/'
+#ells, ctt, ctt_lensed, detectnoise, fftot, fg, ftSZ
+spectra_path: 'input_spectra/'
+
+
+lmaxes_configs_input_to_try: [[2000, 2000, 2000, 2000], [2500, 2500, 2500, 2500], [3000, 3000, 3000, 3000],
+                               [3500, 3500, 3500, 3500], [4000, 4000, 4000, 4000], [4500, 4500, 4500, 4500]]
+
+Nsims: 80
+oldversion: True
+
+optversion: {'weights_name': 'absbias', 'sum_biases_squared': False, 'abs_biases': True, 'bias_squared': False,
+                      'color': 'purple', 'latexformula': '\sigma^2(\hat{A}_{\rm{comb}})+\left(\int_{\vec{L}}\vec{a}^TB\vec{a}\right)^2'}
+
+
+Lmin: 20
+Lmax: 6000
+
+logmode: True
+nlogBins: 15
+deltalplot: 100
+
+lmin_sel: 30
+lmax_sel: 1200
+
+fgnamefiles: ['cib', 'tsz', 'radiops', 'ksz', 'total']
+
+#number of configs is 120
+#if size of srun is size, then size/Nsims number of groups
+#then you make sure each sims gets 1
+#you want size to be multiple of 80 and 120
+#e.g. size = 240, 480, 960,...
+##lmax_min, lmax_max, are for the available configs
+estimators:
+        hu_ok: 
+                nu: 148
+                hardening: ''
+                lmax_min: 2000
+                lmax_max: 4500
+                number: 6
+                direc_name: h
+                color: blue
+                label: QE
+                field_names: ['X', 'Y'] 
+        shear:
+                nu: 148
+                hardening: ''
+                lmax_min: 3000
+                lmax_max: 4500
+                number: 4
+                direc_name: s
+                color: red
+                label: Shear
+                field_names: ['X', 'Y']
+        bh:
+                nu: 148
+                hardening: src
+                lmax_min: 2500
+                lmax_max: 4500
+                number: 5
+                direc_name: b
+                color: green
+                label: BH
+                field_names: ['X', 'Y']
+noisekey: N
+trispectrumkey: T
+primarykey: P
+secondarykey: S
+primarycrosskey: PC
+
+kkkey: 'kk'
+kgkey: 'kg'
+ggkey: 'gg'
+ellskey: 'ells'
+thetakey: 'theta'
+thetacrosskey: 'thetacross'
+
+totalabsbiaskey: 'totalabsbias'
+totalbiaskey: 'totalbias'
+
+sumalltotalabsbiaskey: 'sum_all_totalabsbias'
+sumalltotalbiaskey: 'sum_all_totalbias'
+sumallcrosstotalabsbiaskey: 'sum_all_crosstotalabsbias'
+sumallcrosstotalbiaskey: 'sum_all_crosstotalbias'
+
+optimisation:
+    gtol: 10000
+    fbs: [1.] #[1., 0.01, 0.03, 0.05, 0.1, 0.5, 2, 5, 10, 100, 0.]
+    inv_variances: [0]
+    noiseequalsbias: [0]
+    bias_source: 'total' # can be total, sum_bias, sum_abs_bias: from bias of sum of fgs at map level, sum bias, sum abs bias
+

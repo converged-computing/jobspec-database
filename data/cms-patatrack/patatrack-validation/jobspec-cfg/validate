@@ -1,0 +1,147 @@
+#! /bin/bash -e
+
+# Script for testing one or more pull requests against a reference release and an intermediate development release
+#
+# Usage:
+#   validate [PR ...]
+#
+# Note: this script relies on `visDQMUpload` and `visDQMUtils.py` being available in the same directory.
+# If they are missing they are automatically downloaded from https://github.com/rovere/dqmgui/ .
+
+# Local configuration - should go before the others
+source local.sh
+
+# CMSSW workflows
+source workflows.sh
+
+# DQM configuration
+source dqm.sh
+
+# GitHub-related configuration
+source github.sh
+
+# Input samples configuration
+source input.sh
+
+# Validation scripts
+source validate.sh
+
+# Create a temporay working directory
+function join_args() { local IFS=_; echo "$*" | sed -e's/[^a-zA-Z0-9]/_/g'; }
+BASE=$(mktemp -d -p $PWD $(join_args run "$@").XXXXXXXXXX)
+[ -d $BASE ] || exit 1
+REPORT=$BASE/report.md
+
+# save the original file descriptors, then redirect all output and errors to a log file
+exec 3>&1 4>&2
+exec &> $BASE/log
+
+# main
+echo > $REPORT
+
+# require a PR number
+REPO=cmssw
+PULL=$1
+TEST=*
+
+if echo $PULL | grep -q '#'; then
+  REPO=$(echo $PULL | cut -d# -f1)
+  PULL=$(echo $PULL | cut -d# -f2)
+fi
+
+if echo $PULL | grep -q '/'; then
+  TEST=$(echo $PULL | cut -d/ -f2)
+  PULL=$(echo $PULL | cut -d/ -f1)
+fi
+
+if ! [ "$PULL" ] || ! (( "$PULL" > 0 )); then
+  echo "Usage: `basename $0` [REPO#]PULL[/TEST]"
+  echo
+  echo "  REPO  can be either cmssw (the default if not given) or cmsdist"
+  echo "  PULL  is the pull request number"
+  echo "  TEST  is the Jenkis test TEST for that PR, or * (default) to automatically use the last one"
+  exit 1
+fi
+
+# load the CMS environment
+source $VO_CMS_SW_DIR/cmsset_default.sh
+
+# extract the information from the latest PR test
+PR_PATH=`ls -d -1 -t /cvmfs/cms-ci.cern.ch/week*/cms-sw/$REPO/$PULL/$TEST/ | head -n1`
+RELEASE=`ls $PR_PATH | grep CMSSW_`
+ARCH=`ls $PR_PATH/$RELEASE/lib`
+
+# create a working area for the reference release
+rm -rf "$BASE"/reference
+mkdir "$BASE"/reference
+cd "$BASE"/reference
+SCRAM_ARCH=$ARCH scram project $RELEASE 2>&1 | tee setup.log
+cd "$BASE"
+
+# create a working areas for the testing release
+rm -rf "$BASE"/testing
+mkdir "$BASE"/testing
+cd "$BASE"/testing
+$PR_PATH/install.sh 2>&1 | tee setup.log
+cd "$BASE"
+
+# working directories for each release
+DIRECTORIES="reference/$RELEASE testing/$RELEASE"
+
+# the PR number is also the issue number
+ISSUE_NUMBER=$PULL
+
+# if we can edit the comment after posting it, create an empty comment as a starting point
+COMMENT_ID=$(can_post_comment $ISSUE_NUMBER && $EDIT_COMMENT && upload_report $ISSUE_NUMBER) || true
+
+# set up the workflows
+build_matrix "reference/$RELEASE" "$WORKFLOWS"
+build_data_matrix "reference/$RELEASE" "$DATA_WORKFLOWS"
+upload_report $ISSUE_NUMBER $COMMENT_ID
+
+build_matrix "testing/$RELEASE" "$WORKFLOWS"
+build_data_matrix "testing/$RELEASE" "$DATA_WORKFLOWS"
+upload_report $ISSUE_NUMBER $COMMENT_ID
+
+# compute a unique hash for this validation run
+JOBID=$({ date; hostname; echo $BASE; } | sha1sum | cut -d' ' -f1)
+echo $JOBID > $BASE/jobid
+
+# download the benchmark scripts
+git clone https://github.com/cms-patatrack/patatrack-scripts.git $BASE/patatrack-scripts
+
+# run the workflows
+run_workflows $DIRECTORIES
+upload_report $ISSUE_NUMBER $COMMENT_ID
+# make validation plots
+make_validation_plots $DIRECTORIES
+upload_report $ISSUE_NUMBER $COMMENT_ID
+# make GpuVsCpu plots
+make_gpucpu_plots $DIRECTORIES
+upload_report $ISSUE_NUMBER $COMMENT_ID
+# make throughput plots
+make_throughput_plots $DIRECTORIES
+upload_report $ISSUE_NUMBER $COMMENT_ID
+# upload nvprof profiles
+upload_profiles $DIRECTORIES
+upload_report $ISSUE_NUMBER $COMMENT_ID
+
+# restore the original descriptors, close and upload the log files
+exec 1>&3- 2>&4-
+upload_log_files $DIRECTORIES
+
+#echo "This report can be found at $REPORT:"
+#echo
+#cat $REPORT
+
+# post the report to GitHub
+upload_final_report $ISSUE_NUMBER $COMMENT_ID
+
+# suggest to upload the plots and reports
+#if ! hostname | grep -q '\.cern\.ch'; then
+#  echo "Please upload the plots and reports with:"
+#  echo "  rsync -arvzz $LOCAL_DIR/$JOBID lxplus.cern.ch:$UPLOAD_DIR/"
+#fi
+
+# mark the validation as complete
+touch "$LOCAL_DIR/$JOBID/done"

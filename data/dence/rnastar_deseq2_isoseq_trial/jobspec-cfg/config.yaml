@@ -1,0 +1,68 @@
+# path or URL to sample sheet (TSV format, columns: sample, condition, ...)
+samples: samples.tsv
+# path or URL to sequencing unit sheet (TSV format, columns: sample, unit, fq1, fq2,
+# strandedness). Units are technical replicates (e.g. lanes, or resequencing of the
+# same biological sample).If the column "strandedness" is present (which is optional),
+# can be empty or has one of these values: none, yes or reverse. none is for unstranded
+# protocols, yes an reverse follow the nomenclature used in `htseq-count --reverse`
+# which is referenced in STAR manual section 7, "Counting number of reads per gene".
+
+#units: Dec_2020_units.tsv
+#units: Jan_2021_units.tsv
+units: Jan_29_2021_units.tsv
+
+
+
+trimming:
+  # skip trimming: false or true
+  skip: true
+  # the sequencing adapter
+  adapter1: ACGGATCGATCGATCGATCGAT
+  adapter2: GATCGTCGGACTGTAGAACTCTGAACGTGTAGATCTCGGTGGTCGCCGTATCATT
+
+ref:
+  #ref_fasta="/home/d.ence/d.ence_peter_share/pinus_taeda_L/miami_ohio_ESTs_ptaeda_rbh/combining_PacBio_miami_of_ohio/PITA.2_01_and_PacBio_t3352.more_than_500.est_0.9"
+  #spike_in_fasta="/home/d.ence/d.ence_peter_share/pinus_taeda_L/MeJA_time_course_experiment/rnastar_deseq2_isoseq_trial_Jan_2021/SIRV_set3_ref/SIRV_ERCCs_multi-fasta_170612a.fasta"
+  # the STAR index
+  #index: "/home/d.ence/d.ence_peter_share/pinus_taeda_L/reanalysis_old_RNAseq/rna-seq-star-deseq2/star_indices/v2.01_genome_annots_index"
+  #index: "/home/d.ence/d.ence_peter_share/pinus_taeda_L/reanalysis_old_RNAseq/rna-seq-star-deseq2/star_indices/t3352.cdna.v1.contig"
+  #index: "/home/d.ence/d.ence_peter_share/pinus_taeda_L/reanalysis_old_RNAseq/rna-seq-star-deseq2/star_indices/clustered_longer_than_500.est_0.9" #This was an index built on a wrong version of the improved txome. DE Jan 21, 2021
+  index: "/home/d.ence/d.ence_peter_share/pinus_taeda_L/reanalysis_old_RNAseq/rna-seq-star-deseq2/star_indices/clustered_longer_than_500.est_0.9/" #This is the correct improved txome version. DE Jan 21, 2021
+  ref_fasta: "/home/d.ence/d.ence_peter_share/pinus_taeda_L/miami_ohio_ESTs_ptaeda_rbh/combining_PacBio_miami_of_ohio/PITA.2_01_and_PacBio_t3352.more_than_500.est_0.9"
+  #index: "/home/d.ence/d.ence_peter_share/pinus_taeda_L/reanalysis_old_RNAseq/rna-seq-star-deseq2/star_indices/PacBio"
+  spike_in_index: "/home/d.ence/d.ence_peter_share/pinus_taeda_L/MeJA_time_course_experiment/rnastar_deseq2_isoseq_trial_Jan_2021/SIRV_set3_ref/"
+  spike_in_ref: "/home/d.ence/d.ence_peter_share/pinus_taeda_L/MeJA_time_course_experiment/rnastar_deseq2_isoseq_trial_Jan_2021/SIRV_set3_ref/SIRV_ERCCs_multi-fasta_170612a.fasta"
+    #"Miami_of_Ohio": "/home/d.ence/d.ence_peter_share/pinus_taeda_L/reanalysis_old_RNAseq/rna-seq-star-deseq2/star_indices/t3352.cdna.v1.contig"
+    #"PacBio": "/home/d.ence/d.ence_peter_share/pinus_taeda_L/reanalysis_old_RNAseq/rna-seq-star-deseq2/star_indices/PacBio"
+    #"Clustered": "/home/d.ence/d.ence_peter_share/pinus_taeda_L/reanalysis_old_RNAseq/rna-seq-star-deseq2/star_indices/clustered_longer_than_500.est_0.9"
+    #"v2.01_annnotations": "/home/d.ence/d.ence_peter_share/pinus_taeda_L/reanalysis_old_RNAseq/rna-seq-star-deseq2/star_indices/v2.01_genome_annots_index"
+  # gtf file with transcripts
+  #annotation: "path/to/annotation.gtf"
+
+
+pca:
+  labels:
+    # columns of sample sheet to use for PCA
+    - tissue
+    - treatment
+
+diffexp:
+  # contrasts for the deseq2 results method
+  contrasts:
+    treated-vs-untreated:
+      - MeJAtreated
+      - MeJAcontrol
+    #cambium-vs-stem:
+    #  - cambium
+    #  - stem
+
+#got the options for aligning EndToEnd from github from the STAR developers
+#https://github.com/alexdobin/STAR/issues/123
+params:
+  #star: "--alignEndsType EndToEnd --alignIntronMax 1 --alignIntronMin 2 --scoreDelOpen -10000 --scoreInsOpen -10000"
+  star: "--alignEndsType EndToEnd --outFilterScoreMinOverLread 0 --outFilterMatchNminOverLread 0 --outFilterMatchNmin 0 --outFilterMismatchNmax 2 "
+  #star: "--alignEndsType EndToEnd --alignIntronMax 1 --alignIntronMin 2 --scoreDelOpen -10000 --scoreInsOpen -10000 --outFilterMismatchNmax 2"
+  #star: "--alignEndsType EndToEnd --alignIntronMax 1 --alignIntronMin 2 --scoreDelOpen -10000 --scoreInsOpen -10000 --outFilterScoreMinOverLread 0 --outFilterMatchNminOverLread 0 --outFilterMatchNmin 0 "
+  #star: "--alignEndsType EndToEnd --alignIntronMax 1 --alignIntronMin 2 --scoreDelOpen -10000 --scoreInsOpen -10000 --outFilterScoreMinOverLread 0 --outFilterMatchNminOverLread 0 --outFilterMatchNmin 0 --outFilterMismatchNmax 2 "
+  cutadapt-se: " -m 16 "
+  cutadapt-pe: " -m 16:16 "

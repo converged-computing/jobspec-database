@@ -1,0 +1,58 @@
+# Defining relative path locations and parameters to run the snakemake pipeline
+
+###########################################################################################
+#################################### General setting ######################################
+proj_dir:  /p/11208719-interreg
+data_dir:  /p/11208719-interreg/data/racmo
+cdo_grid:  /p/11208719-interreg/wflow/wflow_meuse_julia/inmaps_racmo/wflow_fews_meuse_grid.txt
+wflow_dir: /p/11208719-interreg/wflow
+
+data_source: members_bias_corrected_revised #name of the data folder in data_dir
+input_folder: a_raw                 #name of the raw data folder in data_source
+
+#################################### wflow model ######################################
+wflow_model: "p_geulrur" #"o_rwsinfo"        #name of the folder in wflow_dir that contains the staticmaps.nc
+wflow_params:                       #wflow params to adapt
+    #  starttime: "1950-01-01T00:00:00"
+    #  endtime: "1953-12-31T00:00:00"
+    starttime: "1950-01-01T00:00:00"
+    endtime: "2014-12-31T00:00:00"
+wflow_base_toml: /p/11208719-interreg/wflow/p_geulrur/run_geulrur/run_geulrur.toml #/p/11208719-interreg/wflow/o_rwsinfo/run_rwsinfo/run_rwsinfo.toml
+wflow_path_input: /p/11208719-interreg/wflow/p_geulrur/run_geulrur_eobs25/outstate/outstates.nc #/p/11208719-interreg/wflow/o_rwsinfo/run_rwsinfo_eobs25/outstate/outstates.nc
+julia_env_fn : ~/.julia/environments/wflow_063 #location of the wflow julia environment - USER DEPENDENT!!
+
+#################################### data ######################################
+#dts: ["daily", "hourly"]            #folders in input_folders with the raw data
+orography_fn: "orog_WEU-11_EC-Earth-Consortium-EC-Earth3_historical_r0i0p5f0_KNMI-RACMO23E_v2ds_fx.nc"
+dts:
+    daily:
+        name_main: "full_ds"         #Name of main folder in zipped file [name_zip/name_main]
+        ext: 'DD'
+    # hourly:
+    #     name_main: "full_ds"     #Name of main folder in zipped file [name_zip/name_main]
+    #     ext: 'h'
+
+members: ["r1i1p5f1", "r2i1p5f1", "r3i1p5f1", "r4i1p5f1", "r5i1p5f1", "r6i1p5f1", "r7i1p5f1", "r8i1p5f1", "r9i1p5f1", "r10i1p5f1", "r11i1p5f1", "r12i1p5f1", "r13i1p5f1", "r14i1p5f1", "r15i1p5f1", "r16i1p5f1"]
+
+variables:
+    pet:
+        daily: 86400
+        hourly: 3600
+        conversion: "multiplicative"
+        expected_original_units: ['kg m-2 s-1','kg/m2/s'] #Attributes of the units in the cdo netcdf file
+        new_units: 'mm/timestep'
+        wflow_name: "pet"
+    precip:
+        daily: 86400
+        hourly: 3600
+        conversion: "multiplicative"
+        expected_original_units: ['kg m-2 s-1','kg/m2/s']
+        new_units: 'mm/timestep'
+        wflow_name: "precip"
+    t2m:
+        daily: -273.15
+        hourly: -273.15
+        conversion: "additive"
+        expected_original_units: ['K']
+        new_units: 'C'
+        wflow_name: "temp"

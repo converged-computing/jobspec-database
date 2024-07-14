@@ -1,0 +1,32 @@
+pytorch_lightning:
+  checkpoint_dir: './checkpoints/3D/blind-denoising/'
+  experiment_name: 'unet'
+  num_gpus: 8
+  num_nodes: 1
+  accelerator: 'ddp'
+  visualize: False
+  seed: 1
+
+dataset:
+  input_labels: ['x1e5', 'x1e6', 'x1e7', 'x1e8']
+  valid_labels: ['x1e5', 'x1e6', 'x1e7', 'x1e8']
+  output_label: 'x1e9'
+  train_path: 'data/train/3D/64x64x64/'
+  valid_path: 'data/validation/3D/128x128x128/'
+
+model:
+  architecture: 'UNet'
+  UNet:
+    activation_fn: 'F.relu'
+    do_3d: True
+loss:
+  loss_option: ['MSE']
+
+solver:
+  optimizer: 'AdamW'
+  batch_size: 4
+  base_lr: 1e-4
+  total_iterations: 1500
+  iteration_restart: False
+  lr_scheduler_name: "WarmupCosineLR"
+  warmup_iters: 10

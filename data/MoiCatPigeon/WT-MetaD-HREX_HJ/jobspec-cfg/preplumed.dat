@@ -1,0 +1,68 @@
+# vim:ft=plumed
+# PDB that provides information on the molecules that are present in your system.
+LOAD FILE=./GHBFIX.cpp
+
+MOLINFO STRUCTURE=ref.pdb
+#WHOLEMOLECULES ENTITY0=1-2026
+# Flush open files regularly in case of data loss
+FLUSH STRIDE=1000
+
+#eRMSD_start: ...
+#  ERMSD
+#  ATOMS=@lcs-1,@lcs-2,@lcs-3,@lcs-4,@lcs-5,@lcs-6,@lcs-7,@lcs-8,@lcs-9,@lcs-10,@lcs-11,@lcs-12,@lcs-13,@lcs-14,@lcs-15,@lcs-16,@lcs-17,@lcs-18,@lcs-19,@lcs-20,@lcs-21,@lcs-22,@lcs-23,@lcs-24,@lcs-25,@lcs-26,@lcs-27,@lcs-28,@lcs-29,@lcs-30,@lcs-31,@lcs-32,@lcs-33,@lcs-34,@lcs-35,@lcs-36,@lcs-37,@lcs-38,@lcs-39,@lcs-40,@lcs-42,@lcs-43,@lcs-44,@lcs-45,@lcs-46,@lcs-47,@lcs-48,@lcs-49,@lcs-50,@lcs-51,@lcs-52,@lcs-53,@lcs-54,@lcs-55,@lcs-56,@lcs-57,@lcs-58,@lcs-59,@lcs-60,@lcs-61,@lcs-62,@lcs-63,@lcs-64
+#  REFERENCE=ref.pdb
+#...
+
+
+####################################################################################################
+# gHBfix RESTRAINT SECTION
+####################################################################################################
+
+# GroupA and GroupB are all relevant donors and acceptors. D_0, D_MAX and C have to be defined according to the gHBfix switching function - default values printed (Kuehrova, Mlynsky et al., JCTC 2019). Each relevant type of donor and acceptor are labeled with an integer (typesTable.dat) and eta/scaling parameters are specified (scalingParameters.dat).
+group_1: GHBFIX PAIR GROUPA=20,18,494,492,1036,1034,1503,1505,1508,240,242,244,274,272,1252,1254,1257,1288,1286 GROUPB=1007,1005,1540,1538,2017,2015,523,525,527,779,781,784,1760,1758,1790,1792,1794,752,750 D_0=0.23 D_MAX=0.33 C=0.8 TYPES=typesTable.dat PARAMS=scalingParameters.dat
+
+tot_1: COMBINE ARG=group_1 PERIODIC=NO 
+
+BIASVALUE ARG=tot_1 LABEL=all_1
+
+
+
+# Coordination number within middle base pairs as a CV
+bp8_25: GROUP ATOMS=233-244,773-787
+bp9_56: GROUP ATOMS=263-276,1751-1764
+bp24_41: GROUP ATOMS=741-754,1279-1292
+bp57_40: GROUP ATOMS=1246-1260,1783-1794
+
+h12: COORDINATION GROUPA=bp8_25 GROUPB=bp9_56 R_0=0.3 NN=4
+h34: COORDINATION GROUPA=bp24_41 GROUPB=bp57_40 R_0=0.3 NN=4
+h13: COORDINATION GROUPA=bp8_25 GROUPB=bp24_41 R_0=0.3 NN=4
+h24: COORDINATION GROUPA=bp9_56 GROUPB=bp57_40 R_0=0.3 NN=4
+
+# Function to CVs that unifies the Gaussian width
+s12: CUSTOM PERIODIC=NO ARG=h12 FUNC=x^0.65 
+s34: CUSTOM PERIODIC=NO ARG=h34 FUNC=x^0.65
+#s13: CUSTOM PERIODIC=NO ARG=h13 FUNC=x^0.65
+#s24: CUSTOM PERIODIC=NO ARG=h24 FUNC=x^0.65
+
+#isoi: CUSTOM ARG=s12,s34 FUNC=x+y PERIODIC=NO
+#isoi_1: CUSTOM ARG=s12,s34 FUNC=x-y PERIODIC=NO
+
+# Set wall to restraint CV space
+#LOWER_WALLS ARG=isoi_1 AT=0 KAPPA=0.22 LABEL=lwall
+UPPER_WALLS ARG=h13,h24 AT=10,10 KAPPA=0.02,0.02 LABEL=uwall
+
+# Well-tempered MetaDynamics
+metad: ...
+  METAD
+  ARG=s12,s34
+  PACE=500 HEIGHT=2.5 BIASFACTOR=15
+  SIGMA=0.8,0.8
+  FILE=HILLS GRID_MIN=0,0 GRID_MAX=26,26
+  GRID_WSTRIDE=25000000 GRID_WFILE=GRID
+...
+
+#DEBUG DETAILED_TIMERS
+
+PRINT ARG=h12,h34,s12,s34,metad.bias STRIDE=500 FILE=COLVAR
+PRINT ARG=tot_1,all_1.bias STRIDE=2500 FILE=check_gHBfix_one-zero.dat
+

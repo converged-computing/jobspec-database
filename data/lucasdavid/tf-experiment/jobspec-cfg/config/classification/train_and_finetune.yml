@@ -1,0 +1,182 @@
+setup:
+  tf_seed: 7129
+  gpus_with_memory_growth: true
+  paths:
+    data: &paths_data "./data"
+    tensorboard: "{report_dir}"
+    best: "{report_dir}/best.h5"
+    export: "{report_dir}/saved_model"
+    train_history: "{report_dir}/training.csv"
+    evaluation_report: "{report_dir}/evaluation.csv"
+    weights_report: "{report_dir}/weights.csv"
+    model_diagram: "{report_dir}/model.png"
+    samples_dir: "{report_dir}/samples"
+    ckpt: "./logs/backup/classification/cifar10/rn50.baseline/"
+    wandb_dir: "./logs/wandb/classification/cifar10/rn50.baseline"
+dataset:
+  load:
+    name: cifar10
+    data_dir: *paths_data
+    splits:
+      - train[:80%]
+      - train[80%:]
+      - test
+  prepare:
+    take: null
+    batch_size: 64
+    sizes: &image_sizes [32, 32, 3]
+    prefetch_buffer_size: auto
+    parallel_calls: auto
+    drop_remainder: true
+    task: classification
+    classes: &classes 10
+    keys:
+      - image
+      - label
+    shuffle:
+      seed: 2181
+      buffer_size: 1000
+      reshuffle_each_iteration: true
+      splits:
+        - train[:80%]
+    augmentation:
+      splits:
+        - train[:80%]
+        # - train[80%:]
+        # - test
+      policy:
+        class_name: Default
+        config: {}
+      over: batches
+    preprocess_fn: null
+model:
+  name: mc_cifar10
+  input_shape: *image_sizes
+  head:
+    units: *classes
+    activation: softmax
+    dropout_rate: 0
+    batch_norm: false
+    kernel_regularizer: null
+    kernel_initializer: glorot_uniform
+    layer_class: dense
+  backbone:
+    architecture: ResNet50V2
+    trainable: false
+    config:
+      weights: imagenet
+      pooling: avg
+training:
+  perform: true
+  loss: SparseCategoricalCrossentropy
+  scale_loss: false
+  optimizer:
+    class_name: adam
+    config:
+      learning_rate: 0.001
+  metrics:
+    - SparseCategoricalAccuracy
+    - SparseTopKCategoricalAccuracy
+  config:
+    epochs: &epochs 30
+    verbose: 2
+  callbacks:
+    - TerminateOnNaN
+    - class_name: WandbCallback
+      config:
+        save_model: false
+        save_graph: false
+    - class_name: EarlyStopping
+      config:
+        patience: 10
+        verbose: 1
+    - class_name: ReduceLROnPlateau
+      config:
+        factor: 0.5
+        patience: 4
+        verbose: 1
+    - class_name: TensorBoard
+      config:
+        log_dir: "./logs/"
+        histogram_freq: 0
+        profile_batch: 0
+        write_graph: true
+      override:
+        log_dir: paths.tensorboard
+    - class_name: CSVLogger
+      config:
+        filename: "./history.csv"
+        append: true
+      override:
+        filename: paths.train_history
+    - class_name: ModelCheckpoint
+      config:
+        verbose: 1
+        filepath: "./best.h5"
+        save_best_only: true
+        save_weights_only: true
+      override:
+        filepath: paths.best
+    - class_name: BackupAndRestore
+      config:
+        backup_dir: "/tmp/ckpt"
+      override:
+        backup_dir: paths.ckpt
+  finetune:
+    perform: true
+    unfreeze:
+      layers: conv5_block1_1_conv
+      freeze_bn: true
+    optimizer:
+      class_name: adam
+      config:
+        learning_rate: 0.001
+    config:
+      epochs: 100
+      initial_epoch: *epochs
+      verbose: 2
+    callbacks:
+      - TerminateOnNaN
+      - class_name: WandbCallback
+        config:
+          save_model: false
+          save_graph: false
+      - class_name: EarlyStopping
+        config:
+          patience: 30
+          verbose: 1
+      - class_name: ReduceLROnPlateau
+        config:
+          factor: 0.5
+          patience: 8
+          verbose: 1
+      - class_name: TensorBoard
+        config:
+          log_dir: "./logs/"
+          histogram_freq: 1
+          profile_batch: 0
+          write_graph: true
+        override:
+          log_dir: paths.tensorboard
+      - class_name: CSVLogger
+        config:
+          filename: "./history.csv"
+          append: true
+        override:
+          filename: paths.train_history
+      - class_name: ModelCheckpoint
+        config:
+          verbose: 1
+          filepath: "./best.h5"
+          save_best_only: true
+          save_weights_only: true
+        override:
+          filepath: paths.best
+      - class_name: BackupAndRestore
+        config:
+          backup_dir: "/tmp/ckpt"
+        override:
+          backup_dir: paths.ckpt
+evaluation:
+  task: sparse_classification_multiclass
+  kind: offline

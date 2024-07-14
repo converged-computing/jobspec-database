@@ -1,0 +1,267 @@
+EXPID:  OutputDir/GCHP
+EXPDSC: GEOS-Chem_devel
+CoresPerNode: 30
+VERSION: 1
+
+#==============================================================================
+# Define output grids different from the native cubed sphere in this section.
+# Each diagnostics collection will be output on the native resolution cubed
+# sphere grid unless a different grid is configured. A few examples are
+# provided below.
+#
+# To use a grid for a specific collection, include the 'grid_label' field
+# in the collection definition. For example,
+#
+#   SpeciesConc.grid_label:   REGIONAL1x1
+#
+# If you are outputting on a lat/lon grid, be sure to specify conservative
+# regridding. Otherwise regridding will be bi-linear.
+#
+#   SpeciesConc.conservative: 1
+#
+#==============================================================================
+GRID_LABELS: PE24x144-CF
+             PC360x181-DC
+             REGIONAL1x1
+    ::
+
+    # Example of cubed-sphere grid at c24 resolution
+    PE24x144-CF.GRID_TYPE: Cubed-Sphere
+    PE24x144-CF.IM_WORLD: 24
+    PE24x144-CF.JM_WORLD: 144
+    PE24x144-CF.LM: 72
+
+    # Example of lat-lon global grid at 1x1 resolution
+    PC360x181-DC.GRID_TYPE: LatLon
+    PC360x181-DC.IM_WORLD: 360
+    PC360x181-DC.JM_WORLD: 181
+    PC360x181-DC.POLE: PC
+    PC360x181-DC.DATELINE: DC
+    PC360x181-DC.LM: 72
+
+    # Example of lat-lon regional grid at 1x1 resolution
+    REGIONAL1x1.GRID_TYPE: LatLon
+    REGIONAL1x1.IM_WORLD: 80
+    REGIONAL1x1.JM_WORLD: 40
+    REGIONAL1x1.POLE: XY
+    REGIONAL1x1.DATELINE: XY
+    REGIONAL1x1.LON_RANGE:   0 80
+    REGIONAL1x1.LAT_RANGE: -30 10
+    REGIONAL1x1.LM: 72
+
+#==============================================================================
+# %%%%% COLLECTION NAME DECLARATIONS %%%%%
+#
+# To enable a collection, remove the "#" character in front of its name. The
+# Restart collection should always be turned on.
+#
+# NOTE: These are the "default" collections for GEOS-Chem, but you can create
+# your own customized diagnostic collections as well.
+#==============================================================================
+COLLECTIONS: 'Eta_Species',
+             'Eta_MetC',
+             'Eta_MetE',
+             'Cooper_Species',
+             'Cooper_MetC',
+             'Cooper_MetE',
+             'Bindle_GasAnimations',
+             'Bindle_AerAnimations',
+             'Meng_DustAnimations',
+             'Meng_Species',
+             'Meng_MetC',
+             'Meng_MetE',
+::
+  Eta_Species.template:   '%y4%m2%d2_%h2%n2z.nc4',
+  Eta_Species.format:     'CFIO',
+  Eta_Species.frequency:  240000
+  Eta_Species.duration:   240000
+  Eta_Species.mode:       'instantaneous'
+  Eta_Species.fields:     'SpeciesConc_SO4        ', 'GIGCchem',
+                          'SpeciesConc_NH4        ', 'GIGCchem',
+                          'SpeciesConc_NIT        ', 'GIGCchem',
+                          'SpeciesConc_BCPO       ', 'GIGCchem',
+                          'SpeciesConc_BCPI       ', 'GIGCchem',
+                          'SpeciesConc_SALA       ', 'GIGCchem',
+                          'SpeciesConc_SALC       ', 'GIGCchem',
+                          'SpeciesConc_DST1       ', 'GIGCchem',
+                          'SpeciesConc_DST2       ', 'GIGCchem',
+                          'SpeciesConc_DST3       ', 'GIGCchem',
+                          'SpeciesConc_DST4       ', 'GIGCchem',
+                          'SpeciesConc_ASOAN      ', 'GIGCchem',
+                          'SpeciesConc_ASOA1      ', 'GIGCchem',
+                          'SpeciesConc_ASOA2      ', 'GIGCchem',
+                          'SpeciesConc_ASOA3      ', 'GIGCchem',
+                          'SpeciesConc_SOAIE      ', 'GIGCchem',
+                          'SpeciesConc_SOAME      ', 'GIGCchem',
+                          'SpeciesConc_INDIOL     ', 'GIGCchem',
+                          'SpeciesConc_SOAGX      ', 'GIGCchem',
+                          'SpeciesConc_SOAMG      ', 'GIGCchem',
+                          'SpeciesConc_LVOCOA     ', 'GIGCchem',
+                          'SpeciesConc_ISN1OA     ', 'GIGCchem',
+                          'SpeciesConc_TSOA1      ', 'GIGCchem',
+                          'SpeciesConc_TSOA2      ', 'GIGCchem',
+                          'SpeciesConc_TSOA3      ', 'GIGCchem',
+                          'SpeciesConc_TSOA0      ', 'GIGCchem',
+                          ## ---------- Not available ----------
+                          #'SpeciesConc_OPOA1      ', 'GIGCchem',  # ComplexSOA-only
+                          #'SpeciesConc_OPOA2      ', 'GIGCchem',  # ComplexSOA-only
+                          #'SpeciesConc_POA1       ', 'GIGCchem',  # ComplexSOA-only
+                          #'SpeciesConc_POA1       ', 'GIGCchem',  # ComplexSOA-only
+                          #'SpeciesConc_SOAGC      ', 'GIGCchem',  # Unknown
+                          ## ----------- New aerosols -----------
+                          #'SpeciesConc_NITs       ', 'GIGCchem',
+                          #'SpeciesConc_SO4s       ', 'GIGCchem',
+                          #'SpeciesConc_AERI       ', 'GIGCchem',
+                          #'SpeciesConc_BrSALA     ', 'GIGCchem',
+                          #'SpeciesConc_BrSALC     ', 'GIGCchem',
+                          #'SpeciesConc_DMS        ', 'GIGCchem',
+                          #'SpeciesConc_IONITA     ', 'GIGCchem',
+                          #'SpeciesConc_ISALA      ', 'GIGCchem',
+                          #'SpeciesConc_ISALC      ', 'GIGCchem',
+                          #'SpeciesConc_ISN1OG     ', 'GIGCchem',
+                          #'SpeciesConc_MONITA     ', 'GIGCchem',
+                          #'SpeciesConc_MSA        ', 'GIGCchem',
+                          #'SpeciesConc_OCPI       ', 'GIGCchem',
+                          #'SpeciesConc_OCPO       ', 'GIGCchem',
+                          #'SpeciesConc_SOAP       ', 'GIGCchem',
+                          #'SpeciesConc_SOAS       ', 'GIGCchem',
+::
+  Eta_MetC.template:      '%y4%m2%d2_%h2%n2z.nc4',
+  Eta_MetC.format:        'CFIO',
+  Eta_MetC.frequency:     240000
+  Eta_MetC.duration:      240000
+  Eta_MetC.mode:          'instantaneous'
+  Eta_MetC.fields:        'Met_BXHEIGHT        ', 'GIGCchem',
+                          'Met_T               ', 'GIGCchem',
+                          'Met_SPHU            ', 'GIGCchem',
+                          'Met_AIRDEN          ', 'GIGCchem',
+                          'Met_QL              ', 'GIGCchem',
+                          'Met_QI              ', 'GIGCchem',
+                          'Met_PMID            ', 'GIGCchem',
+                          'Met_PMIDDRY         ', 'GIGCchem',             
+::
+  Eta_MetE.template:      '%y4%m2%d2_%h2%n2z.nc4',
+  Eta_MetE.format:        'CFIO',
+  Eta_MetE.frequency:     240000
+  Eta_MetE.duration:      240000
+  Eta_MetE.mode:          'instantaneous'
+  Eta_MetE.fields:        'Met_PEDGE      ', 'GIGCchem',
+                          'Met_PEDGEDRY   ', 'GIGCchem',         
+::
+  Cooper_Species.template:   '%y4%m2%d2_%h2%n2z.nc4',
+  Cooper_Species.format:     'CFIO',
+  Cooper_Species.frequency:  240000
+  Cooper_Species.duration:   240000
+  Cooper_Species.mode:       'instantaneous'
+  Cooper_Species.fields:  'SpeciesConc_NO2        ', 'GIGCchem',
+                          'SpeciesConc_NO         ', 'GIGCchem',
+                          'SpeciesConc_HNO3       ', 'GIGCchem',
+                          'SpeciesConc_R4N2       ', 'GIGCchem',
+                          'SpeciesConc_PAN        ', 'GIGCchem',
+::
+  Cooper_MetC.template:   '%y4%m2%d2_%h2%n2z.nc4',
+  Cooper_MetC.format:     'CFIO',
+  Cooper_MetC.frequency:  240000
+  Cooper_MetC.duration:   240000
+  Cooper_MetC.mode:       'instantaneous'
+  Cooper_MetC.fields:     'Met_T               ', 'GIGCchem',
+                          'Met_SPHU            ', 'GIGCchem',
+                          'Met_AIRDEN          ', 'GIGCchem',
+                          'Met_PMID            ', 'GIGCchem',
+                          'Met_PMIDDRY         ', 'GIGCchem',     
+                          'Met_TropHt          ', 'GIGCchem',
+                          'Met_TropP           ', 'GIGCchem',        
+::
+  Cooper_MetE.template:   '%y4%m2%d2_%h2%n2z.nc4',
+  Cooper_MetE.format:     'CFIO',
+  Cooper_MetE.frequency:  240000
+  Cooper_MetE.duration:   240000
+  Cooper_MetE.mode:       'instantaneous'
+  Cooper_MetE.fields:     'Met_PEDGE      ', 'GIGCchem',
+                          'Met_PEDGEDRY   ', 'GIGCchem',         
+::
+  Bindle_GasAnimations.template:   '%y4%m2%d2_%h2%n2z.nc4',
+  Bindle_GasAnimations.format:     'CFIO',
+  Bindle_GasAnimations.frequency:  003000
+  Bindle_GasAnimations.duration:   003000
+  Bindle_GasAnimations.mode:       'instantaneous'
+  Bindle_GasAnimations.fields:     'SpeciesConc_NO2  ', 'GIGCchem',
+                                   'SpeciesConc_NO   ', 'GIGCchem',
+                                   'SpeciesConc_O3   ', 'GIGCchem',
+::
+  Bindle_AerAnimations.template:   '%y4%m2%d2_%h2%n2z.nc4',
+  Bindle_AerAnimations.format:     'CFIO',
+  Bindle_AerAnimations.frequency:  003000
+  Bindle_AerAnimations.duration:   003000
+  Bindle_AerAnimations.mode:       'instantaneous'
+  Bindle_AerAnimations.fields:  'AODHygWL1_SO4                 ', 'GIGCchem',
+                                'AODHygWL1_BCPI                ', 'GIGCchem',
+                                'AODHygWL1_OCPI                ', 'GIGCchem',
+                                'AODHygWL1_SALA                ', 'GIGCchem',
+                                'AODHygWL1_SALC                ', 'GIGCchem',
+                                'AODDust                       ', 'GIGCchem',
+                                'AODSOAfromAqIsopreneWL1       ', 'GIGCchem',
+                                'AODStratLiquidAerWL1          ', 'GIGCchem',
+                                'AODPolarStratCloudWL1         ', 'GIGCchem',
+::
+  Meng_DustAnimations.template:  '%y4%m2%d2_%h2%n2z.nc4',
+  Meng_DustAnimations.format:    'CFIO',
+  Meng_DustAnimations.frequency: 003000
+  Meng_DustAnimations.duration:  003000
+  Meng_DustAnimations.mode:      'instantaneous'
+  Meng_DustAnimations.fields:    'AODDust                       ', 'GIGCchem',
+                                 'AODDustWL1_bin1               ', 'GIGCchem',
+                                 'AODDustWL1_bin2               ', 'GIGCchem',
+                                 'AODDustWL1_bin3               ', 'GIGCchem',
+                                 'AODDustWL1_bin4               ', 'GIGCchem',
+                                 'AODDustWL1_bin5               ', 'GIGCchem',
+                                 'AODDustWL1_bin6               ', 'GIGCchem',
+                                 'AODDustWL1_bin7               ', 'GIGCchem',
+                                 'SpeciesConc_DST1              ', 'GIGCchem',
+                                 'SpeciesConc_DST2              ', 'GIGCchem',
+::
+  Meng_Species.template:  '%y4%m2%d2_%h2%n2z.nc4',
+  Meng_Species.format:    'CFIO',
+  Meng_Species.frequency: 240000
+  Meng_Species.duration:  240000
+  Meng_Species.mode:      'time-averaged'
+  Meng_Species.fields:    'AODDust          ', 'GIGCchem',   
+                          'AODDustWL1_bin1  ', 'GIGCchem',
+                          'AODDustWL1_bin2  ', 'GIGCchem',
+                          'AODDustWL1_bin3  ', 'GIGCchem',
+                          'AODDustWL1_bin4  ', 'GIGCchem',
+                          'AODDustWL1_bin5  ', 'GIGCchem',
+                          'AODDustWL1_bin6  ', 'GIGCchem',
+                          'AODDustWL1_bin7  ', 'GIGCchem',
+                          'AODHygWL1_SO4    ', 'GIGCchem',
+                          'AODHygWL1_BCPI   ', 'GIGCchem',
+                          'AODHygWL1_OCPI   ', 'GIGCchem',
+                          'AODHygWL1_SALA   ', 'GIGCchem',
+                          'AODHygWL1_SALC   ', 'GIGCchem',
+                          'SpeciesConc_DST1 ', 'GIGCchem',
+                          'SpeciesConc_DST2 ', 'GIGCchem',
+                          'SpeciesConc_DST3 ', 'GIGCchem',
+                          'SpeciesConc_DST4 ', 'GIGCchem',
+::
+  Meng_MetC.template:      '%y4%m2%d2_%h2%n2z.nc4',
+  Meng_MetC.format:        'CFIO',
+  Meng_MetC.frequency:     240000
+  Meng_MetC.duration:      240000
+  Meng_MetC.mode:          'time-averaged'
+  Meng_MetC.fields:        'Met_BXHEIGHT        ', 'GIGCchem',
+                           'Met_T               ', 'GIGCchem',
+                           'Met_SPHU            ', 'GIGCchem',
+                           'Met_AIRDEN          ', 'GIGCchem',
+                           'Met_QL              ', 'GIGCchem',
+                           'Met_QI              ', 'GIGCchem',
+                           'Met_PMID            ', 'GIGCchem',
+                           'Met_PMIDDRY         ', 'GIGCchem',    
+::
+  Meng_MetE.template:      '%y4%m2%d2_%h2%n2z.nc4',
+  Meng_MetE.format:        'CFIO',
+  Meng_MetE.frequency:     240000
+  Meng_MetE.duration:      240000
+  Meng_MetE.mode:          'time-averaged'
+  Meng_MetE.fields:        'Met_PEDGE      ', 'GIGCchem',
+                           'Met_PEDGEDRY   ', 'GIGCchem',    
+::

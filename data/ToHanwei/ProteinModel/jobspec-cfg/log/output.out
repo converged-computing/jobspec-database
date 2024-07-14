@@ -1,0 +1,69 @@
+Sender: LSF System <lsfadmin@c011>
+Subject: Job 678407: <jobname> in cluster <hpc> Exited
+
+Job <jobname> was submitted from host <mgt> by user <hanwei> in cluster <hpc>.
+Job was executed on host(s) <36*c011>, in queue <zhaolabgpu>, as user <hanwei> in cluster <hpc>.
+</share/home/hanwei> was used as the home directory.
+</share/apps/alphfold/alphafold> was used as the working directory.
+Started at Results reported on 
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+#!/bin/bash 
+#BSUB -J jobname
+#BSUB -e log/output.err
+#BSUB -o log/output.out
+#BSUB -q zhaolabgpu
+#BSUB -n 36
+
+
+# write by hanwei
+# 20210720
+
+# >>> conda initialize >>>
+# !! Contents within this block are managed by 'conda init' !!
+__conda_setup="$('/share/apps/anaconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
+if [ $? -eq 0 ]; then
+    eval "$__conda_setup"
+else
+    if [ -f "/share/apps/anaconda3/etc/profile.d/conda.sh" ]; then
+        . "/share/apps/anaconda3/etc/profile.d/conda.sh"
+    else
+        export PATH="/share/apps/anaconda3/bin:$PATH"
+    fi
+fi
+unset __conda_setup
+# <<< conda initialize <<<
+
+# activate env
+conda activate alphafold
+
+# run the alphafold2
+python /share/apps/alphfold/alphafold/docker/run_docker.py --fasta_paths=input.fasta --max_template_date=2021-07-20
+
+------------------------------------------------------------
+
+Exited with exit code 1.
+
+Resource usage summary:
+
+    CPU time :                                   1.82 sec.
+    Max Memory :                                 23 MB
+    Average Memory :                             23.00 MB
+    Total Requested Memory :                     -
+    Delta Memory :                               -
+    Max Swap :                                   -
+    Max Processes :                              5
+    Max Threads :                                6
+    Run time :                                   3 sec.
+    Turnaround time :                            4 sec.
+
+The output (if any) follows:
+
+
+
+PS:
+
+Read file <log/output.err> for stderr output of this job.
+

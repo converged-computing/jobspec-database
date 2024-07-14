@@ -1,0 +1,220 @@
+### Import some useful python library
+import os
+import shutil
+import itertools
+import numpy as np
+from datetime import datetime
+from snakemake.io import Wildcards
+
+# Parsing the Snakemake config file (options)
+f_proj = config["proj_dir"]
+f_setup = config["data_dir"]
+f_input = config['data_source']
+f_data = config["input_folder"]
+f_wflow = config["wflow_dir"]
+f_orography = f_setup + "/" + config["orography_fn"]
+
+#Data preprocessing directories
+f_unzipped = f_setup + "/" + f_input + "/a_raw"
+f_modif = f_setup + "/" + f_input + "/b_preprocess"
+f_wflow_input = f_setup + "/" + f_input + "/c_wflow"
+f_figures = f_proj + "/Figures/" +  f_input
+
+#wflow model specifics
+exp_name = config['data_source']
+model = config['wflow_model']
+year_start = int(datetime.strptime(config['wflow_params']['starttime'], '%Y-%m-%dT%H:%M:%S').year)
+year_end = int(datetime.strptime(config['wflow_params']['endtime'], '%Y-%m-%dT%H:%M:%S').year)
+
+member_0 = config['members'][0]
+# print(year_start, member_0)
+# print(f_orography)
+# var_0 = config['variables'].keys()[0]
+# print(member_0, var_0)
+
+# def get_member_name(wildcards):
+#     return config["members"][wildcards.member_nb]["name"]
+# def get_zip_name(wildcards):
+#     return config["dts"][wildcards.dts]["name_zip"]
+def get_zip_main_fn_name(wildcards):
+    return config["dts"][wildcards.dt]["name_main"]
+def get_extension(wildcards):
+    return config["dts"][wildcards.dt]["ext"]
+
+onstart:
+    print("##### Creating profile pipeline #####\n") 
+    print("\t Creating jobs output subfolders...\n")
+    shell("mkdir -p jobs/unzip jobs/cdo_merge_rename jobs/pre_wflow_idx jobs/pre_wflow_orog jobs/update_toml_wflow jobs/run_wflow")
+
+rule all:
+    input:
+        expand((f"{f_wflow_input}"+"/{dt}"+"/{member_nb}/"+"ds_merged_{year}.nc"), dt = config["dts"], member_nb = config["members"], year= np.arange(year_start,year_end+1)),   
+        expand(f"{f_wflow}"+f"/{model}"+f"/{exp_name}"+"_{dt}"+"/{member_nb}"+"/output.csv", dt = config["dts"], member_nb = config["members"]),
+        # expand(f"{f_figures}"+"/{dt}"+"/{member_nb}"+"/precip_sum.png", dt = config["dts"], member_nb = config["members"]),
+        expand(f"{f_unzipped}"+"/{dt}"+"/full_ds"+"/{member_nb}/"+"{var}"+"/{var}"+".KNMI-{year}.{member_nb}"+".nc", dt = config["dts"], member_nb = config["members"], var = config["variables"], year= np.arange(year_start,year_end)),
+        expand(f"{f_wflow}"+f"/{model}"+f"/{exp_name}"+"_{dt}"+"/orog.nc", dt = config["dts"])
+
+rule unzip:
+    input:
+        f_zip = os.path.join(f_setup, f_input, f_data, "{dt}",'data.zip')
+    params:
+        member_number = "{member_nb}",
+        main_folder =  get_zip_main_fn_name,
+        ext =  get_extension,
+        year_name = "{year}",
+        var_name = "{var}",
+        dt_name = "{dt}",
+        extract_to = f_unzipped
+    output:
+        #expand((f"{f_unzipped}"+"/{dt}"+"/full_ds"+"/{member_nb}/"+"{var}"+"/{var}"+".KNMI-{year}.{member_nb}"+".nc"), dt = config["dts"], member_nb = config["members"], var = config["variables"], year= np.arange(year_start,year_end))
+        (f"{f_unzipped}"+"/{dt}"+"/full_ds"+"/{member_nb}/"+"{var}"+"/{var}"+".KNMI-{year}.{member_nb}"+".nc")
+    group: "preprocess"
+    conda:
+        "envs/env_cdo.yaml"
+    script:
+        "src/preprocess/unzip_knmi.py"
+
+rule cdo_merge_rename: 
+    input:   
+        fn_temp = f"{f_unzipped}"+"/{dt}"+"/full_ds"+"/{member_nb}/"+"t2m"+"/t2m.KNMI-{year}.{member_nb}"+".nc",
+        fn_pet = f"{f_unzipped}"+"/{dt}"+"/full_ds"+"/{member_nb}/"+"pet"+"/pet.KNMI-{year}.{member_nb}"+".nc",
+        fn_precip = f"{f_unzipped}"+"/{dt}"+"/full_ds"+"/{member_nb}/"+"precip"+"/precip.KNMI-{year}.{member_nb}"+".nc"
+    params:
+        f_src = f_unzipped,
+        new_temp_name =  config["variables"]["t2m"]["wflow_name"],
+        new_pet_name =  config["variables"]["pet"]["wflow_name"],
+        new_precip_name =  config["variables"]["precip"]["wflow_name"]
+    output:
+        fn_out = f"{f_wflow_input}"+"/{dt}"+"/{member_nb}/"+"ds_merged_{year}.nc"
+    group: "preprocess"
+    shell: #Breaking down the cdo command line on multiple lines
+        " cdo -L -f nc4 -z zip merge "
+        "-selname,{params.new_pet_name} -chname,pet,{params.new_pet_name} {input.fn_pet} "
+        "-selname,{params.new_precip_name} -chname,precip,{params.new_precip_name} {input.fn_precip} "
+        "-selname,{params.new_temp_name} -chname,t2m,{params.new_temp_name} {input.fn_temp} "
+        "{output.fn_out}"
+        #cdo -L -f nc4 -z zip merge -selname,pet pet.KNMI-1950.r1i1p5f1.nc -selname,precip precip.KNMI-1950.r1i1p5f1.nc -selname,t2m t2m.KNMI-1950.r1i1p5f1.nc test_merged.nc
+        #cdo -L -f nc4 -z zip merge -selname,new_pet -chname,pet,new_pet pet.KNMI-1950.r1i1p5f1.nc -selname,new_precip -chname,precip,new_precip precip.KNMI-1950.r1i1p5f1.nc -selname,t2m_new -chname,t2m,t2m_new t2m.KNMI-1950.r1i1p5f1.nc test_merged2.nc
+
+rule pre_wflow_idx: #run create_idx_file
+    input:
+        fn_in = f"{f_unzipped}"+"/{dt}"+"/full_ds"+f"/{member_0}/"+"t2m"+f"/t2m.KNMI-{year_start}.{member_0}"+".nc"
+    params:
+        model = config['wflow_model'], 
+        fn_wflow = f"{f_wflow}"
+    output:
+        fn_out = f"{f_wflow}"+f"/{model}"+f"/{exp_name}"+"_{dt}"+"/forcing_idx.nc"
+    conda:
+        "envs/env_hydromt_wflow.yaml"
+    script:
+        "src/model_building/create_idx_file.py"
+
+rule pre_wflow_orog: #run overlap_orog
+    input:
+        fn_in = f"{f_wflow_input}"+"/{dt}/"+f"{member_0}/"+f"ds_merged_{year_start}.nc"
+    params:
+        oro_fn = f_orography 
+    output:
+        fn_out = f"{f_wflow}"+f"/{model}"+f"/{exp_name}"+"_{dt}"+"/orog.nc"
+    conda:
+        "envs/env_hydromt_wflow.yaml"
+    script:
+        "src/model_building/overlap_orog.py"
+
+# rule cdo_regrid:
+#     input:
+#         (f"{f_unzipped}"+"/{dt}"+"/full_ds"+"/{member_nb}/"+"{var}"+"/{var}"+".KNMI-{year}.{member_nb}"+".nc")
+#     params:
+#         f_src = f_unzipped,
+#         f_dst = f_modif,
+#         grid_fn = config["cdo_grid"],
+#         dt_step = "{dt}",
+#         var_name = "{var}"
+#     output:
+#         fn_out = f"{f_modif}"+"/{dt}"+"/{member_nb}/"+"{var}"+"/{var}"+".KNMI-{year}.{member_nb}_regrid_meuse"+".nc"
+#     group: "preprocess"
+#     conda:
+#         "envs/env_cdo.yaml"
+#     script:
+#         "src/preprocess/cdo_regrid_script.py"
+
+# rule ds_convert_merge:
+#     input:
+#         fn_temp = f"{f_modif}"+"/{dt}"+"/{member_nb}/"+"t2m"+"/t2m.KNMI-{year}.{member_nb}_regrid_meuse"+".nc",
+#         fn_pet = f"{f_modif}"+"/{dt}"+"/{member_nb}/"+"pet"+"/pet.KNMI-{year}.{member_nb}_regrid_meuse"+".nc",
+#         fn_precip = f"{f_modif}"+"/{dt}"+"/{member_nb}/"+"precip"+"/precip.KNMI-{year}.{member_nb}_regrid_meuse"+".nc"
+#     params:
+#         conv_params = config["variables"],
+#         dt_step = "{dt}",
+#         year_name = "{year}", 
+#     output:
+#         fn_out = f"{f_wflow_input}"+"/{dt}"+"/{member_nb}/"+"ds_merged_{year}.nc"
+#     group: "xr_merge"
+#     conda:
+#         "envs/env_hydromt_wflow.yaml"
+#     script:
+#         "src/preprocess/convert_nc.py"
+
+# rule figure_forcing:
+#     input:
+#         fn_forcing = [(f"{f_wflow_input}"+"/{dt}"+"/{member_nb}/"+f"ds_merged_{years}.nc") for years in np.arange(year_start,year_end+1)] 
+#     params:
+#         year_random = np.random.randint(year_start,year_end+1)
+#     output:
+#         f"{f_figures}"+"/{dt}"+"/{member_nb}"+"/precip_sum.png",
+#         f"{f_figures}"+"/{dt}"+"/{member_nb}"+"/pet_sum.png",   
+#         f"{f_figures}"+"/{dt}"+"/{member_nb}"+"/temp_max.png", 
+#     conda:
+#         "envs/env_hydromt_wflow.yaml"
+#     script:
+#         "src/preprocess/convert_nc_figures.py"  
+
+rule update_toml_wflow:
+    input:
+        # fn_in = f"{f_modif}"+"/{dt}/"+"{member_nb}/"+f"{var_0}/"+f"{var_0}.KNMI-{year_start}.{member_0}_rename"+".nc"
+        fn_in = f"{f_wflow_input}"+"/{dt}"+"/{member_nb}/"+f"ds_merged_{year_start}.nc"
+    params:
+        wflow_params = config["wflow_params"], #Change this to have the size of the years if they are missing
+        wflow_base_toml = config["wflow_base_toml"],
+        timestep = "{dt}",
+        exp_name = config['data_source'],
+        model = config['wflow_model'], 
+        fn_wflow = f"{f_wflow}",
+        fn_forcing = f"{f_wflow_input}"+"/{dt}"+"/{member_nb}",
+        member_nb = "{member_nb}",
+        conv_params = config["variables"],
+        fn_orography = f"{f_wflow}"+f"/{model}"+f"/{exp_name}"+"_{dt}"+"/orog.nc",
+        fn_idx = f"{f_wflow}"+f"/{model}"+f"/{exp_name}"+"_{dt}"+"/forcing_idx.nc",
+        start_path = f"{f_wflow}"+f"/{model}"+f"/{exp_name}"+"_{dt}"+"/{member_nb}"
+    output:
+        fn_out = f"{f_wflow}"+f"/{model}"+f"/{exp_name}"+"_{dt}"+"/{member_nb}"+f"/{exp_name}"+"_{dt}"+"_{member_nb}.toml"
+    conda:
+        "envs/env_hydromt_wflow.yaml"
+    script:
+        "src/model_building/update_toml_wflow.py"
+    
+rule run_wflow:
+    input: #We need the tomls!
+        fn_toml = f"{f_wflow}"+f"/{model}"+f"/{exp_name}"+"_{dt}"+"/{member_nb}"+f"/{exp_name}"+"_{dt}"+"_{member_nb}.toml",
+        fn_in = [(f"{f_wflow_input}"+"/{dt}"+"/{member_nb}/"+f"ds_merged_{years}.nc") for years in np.arange(year_start,year_end+1)],
+        fn_out_orog = f"{f_wflow}"+f"/{model}"+f"/{exp_name}"+"_{dt}"+"/orog.nc",
+        fn_out_idx = f"{f_wflow}"+f"/{model}"+f"/{exp_name}"+"_{dt}"+"/forcing_idx.nc"
+    params:
+        wd = f"{f_wflow}"+f"/{model}"+f"/{exp_name}"+"_{dt}"+"/{member_nb}",
+        julia_env_fn = config["julia_env_fn"]
+    output:
+        csv_file = f"{f_wflow}"+f"/{model}"+f"/{exp_name}"+"_{dt}"+"/{member_nb}"+"/output.csv"
+    # threads: 4
+    # resources:
+    #     partition='4vcpu'
+    shell:
+        """
+        julia --project={params.julia_env_fn} -t 4 src/model_building/run_custom_wflow.jl "{input.fn_toml}"
+        """
+
+
+#rule eva: #to be added
+
+
+
+#read also; https://taylorreiter.github.io/2020-02-03-How-to-use-snakemake-checkpoints-to-extract-files-from-an-archive/

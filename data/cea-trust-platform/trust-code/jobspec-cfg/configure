@@ -1,0 +1,1120 @@
+#!/bin/bash
+
+[ ! -f ./configure ] && echo "`basename $0` must be run where it is located." && exit -1
+# Unset TRUST variables from the previous source if available
+for variable in "project_directory `env | grep -Ev 'PATH|OLDPWD|PWD' | grep TRUST | cut -d'=' -f 1`" ; do unset $variable ; done
+TRUST_ROOT_SA=$TRUST_ROOT
+
+if [ ! -f /usr/bin/g++ ]
+then
+   [ "`grep -i ubuntu /etc/issue`" != "" ] && echo "Try: sudo apt-get install -y g++ gfortran make libglu1-mesa-dev libegl1-mesa-dev libx11-dev texlive texlive-latex-extra" && exit -1
+fi
+
+[ "`id -u 2>/dev/null`" = 0 ] && echo "It is not recommended to configure and install TRUST as root." && exit
+
+# Fedora
+if [ -f /etc/fedora-release ] && [ ! -f /usr/bin/g++ ] && [ ! -f /usr/bin/gfortran ]
+then
+   echo "Ok. Minimal install found for Fedora, so install missing packages with then configure again:"
+   echo "$ sudo dnf install -y patch gcc-g++ gcc-gfortran libX11-devel mesa-libGLU-devel texlive-scheme-full"
+   echo "$ ./configure"
+   exit -1
+fi
+
+
+[ -f NON_INSTALLED ] && rm -f NON_INSTALLED
+
+##########################
+# Testing basic commands #
+##########################
+[ "`uname 1>/dev/null 2>&1;echo $?`" != 0 ] && echo "    uname" >> NON_INSTALLED
+multiple_choices=0 # if =1, it tells the user that he can install a command among those belonging to the same line
+
+if [ "`whence ls 1>/dev/null 2>&1;echo $?`" != 0 ] && [ "`whereis -b whereis 1>/dev/null 2>&1;echo $?`" != 0 ] && [ "`type type 1>/dev/null 2>&1;echo $?`" != 0 ]
+then
+   echo "    whence type whereis  (*)" >> NON_INSTALLED
+   multiple_choices=1
+fi
+
+############################
+# Check if a command exists
+whence2_()
+{
+      a=`whence ls 2>/dev/null`
+      err=$?
+      [ "`uname -s`" = OSF1 ] && err=1
+      if [ "`uname -s`" = "Darwin" ]; then
+        which $1
+      elif [ $err = 0 ]; then
+         whence $1 > .toto
+         cat .toto
+      else
+         a=`type $1 2>/dev/null`
+         if [ $? = 0 ] ; then
+            echo $a
+         else
+            whereis -b $1 > .toto
+            cat .toto
+         fi
+      fi
+}
+############################
+cmds="pwd whoami find cut wc ln tar gunzip"
+for com in $cmds ; do
+   [ "`whence2_ $com`" = "$com:" ] && [ "`whence2_ $com`" != "" ] && echo "    $com" >> NON_INSTALLED
+done
+
+if [ -f NON_INSTALLED ] ; then
+   echo "Fatal error: command(s)"
+   cat NON_INSTALLED
+   echo "is (are) not accessible... host misconfigured."
+   [ "$multiple_choices" = 1 ] && echo "(*) Only one command is needed but none has been found"
+   exit
+fi
+
+#######################################################################################################
+# Checking if compilers exist. User can still force the use of a specific compiler
+# If user forces a compiler, we do not check if it really exists. This is still done by configurer_env
+#######################################################################################################
+c_compiler_found=0
+CC_compiler_found=0
+f77_compiler_found=0
+list_c_found=""
+list_CC_found=""
+
+# This list is token from the env_src/configurer_env script
+list_of_c_compilers="cc"
+list_of_f77_compilers="f90 f77 g77"
+
+arch=`uname -s`
+case $arch in
+ HP-UX) list_of_CC_compilers="aCC CC g++"
+        ;;
+ IRIX*) list_of_CC_compilers="CC g++"
+        ;;
+ SunOS) list_of_CC_compilers="g++ CC"
+        ;;
+   AIX) list_of_CC_compilers="mpCC_r xlC g++"
+        list_of_f77_compilers="f90 f77 g77 mpxlf_r xlf xlf90"
+        list_of_c_compilers="mpcc_r cc"
+        ;;
+  OSF1) list_of_CC_compilers="cxx g++"
+        ;;
+ Linux) list_of_CC_compilers="g++ icpx icpc icc ecc pgCC"
+        list_of_c_compilers="gcc icx icc ecc pgcc cc"
+        list_of_f77_compilers="f90 f77 g77 gfortran ifx ifort ifc efc pgf90 pgf77 crayftn"
+        ;;
+CYGWIN*) list_of_CC_compilers="g++ icpc icc ecc pgCC"
+         list_of_f77_compilers="f90 f77 g77 gfortran ifort ifc efc pgf90 pgf77"
+         list_of_c_compilers="gcc icc ecc pgcc cc"
+        ;;
+Darwin) list_of_CC_compilers="g++ gcc"
+        list_of_c_compilers="gcc cc"
+        list_of_f77_compilers="gfortran"
+        ;;
+ cobea) list_of_CC_compilers="CC g++"
+        list_of_f77_compilers="fort77 g77 f90"
+        ;;
+UNIX_System_V) list_of_CC_compilers="CC g++"
+        list_of_f77_compilers="frt f77 f90"
+        ;;
+     *) list_of_CC_compilers="g++ CC"
+        list_of_f77_compilers="f90 f77 g77 fort77"
+        list_of_c_compilers="gcc cc"
+        ;;
+esac
+
+if [ "`echo $@ | grep 'cc='`" = "" ] ; then # C compiler has not been forced
+   for comp in $list_of_c_compilers ; do
+     [ "`whence2_ $comp`" != "$comp:" ] && [ "`whence2_ $comp`" != "" ] && c_compiler_found=1 && list_c_found=$list_c_found" "$comp
+   done
+else
+   c_compiler_found=2
+fi
+
+if [ "`echo $@ | grep 'c++='`" = "" ] ; then # C++ compiler has not been forced
+   for comp in $list_of_CC_compilers ; do
+     [ "`whence2_ $comp`" != "$comp:" ] && [ "`whence2_ $comp`" != "" ] && CC_compiler_found=1 && list_CC_found=$list_CC_found" "$comp
+   done
+else
+   CC_compiler_found=2
+fi
+
+if [ "`echo $@ | grep 'fc='`" = "" ] ; then # F77 compiler has not been forced
+   for comp in $list_of_f77_compilers ; do
+     [ "`whence2_ $comp`" != "$comp:" ] && [ "`whence2_ $comp`" != "" ] && f77_compiler_found=1
+   done
+else
+   f77_compiler_found=2
+fi
+
+
+[ "$list_c_found" = " gcc" ] && [ "`eval gcc --version 1>/dev/null 2>&1;echo $?`" != 0 ] && c_compiler_found=0 && list_c_found=""
+
+[ "$c_compiler_found" = 0 ] && multiple_choices=1 && echo "    C compiler: $list_of_c_compilers  (*)" >> NON_INSTALLED
+[ "$CC_compiler_found" = 0 ] && multiple_choices=1 && echo "    C++ compiler: $list_of_CC_compilers  (*)" >> NON_INSTALLED
+[ "$f77_compiler_found" = 0 ] && multiple_choices=1 && echo "    Fortran compiler: $list_of_f77_compilers  (*)" >> NON_INSTALLED
+
+######################
+# Checking prerequis #
+######################
+OSfile="/dev/null"
+for file in /etc/os-release /etc/system-release /etc/release /etc/issue.net /etc/issue
+do
+   [ -f $file ] && OSfile=$file && break
+done
+
+if [ "`grep 'Ubuntu ' $OSfile 2>/dev/null`" != "" ] || [ "`grep 'Debian ' $OSfile 2>/dev/null`" != "" ]
+then
+   [ `eval dpkg-query -W libx11-dev 1>/dev/null 2>&1;echo $?` != 0 ] && echo "libx11-dev" >> NON_INSTALLED
+elif [ "`grep 'Fedora ' $OSfile 2>/dev/null`" != "" ] || [ "`grep 'CentOS ' $OSfile 2>/dev/null`" != "" ] || [ "`grep 'Red Hat' $OSfile 2>/dev/null`" != "" ]
+then
+   [ `eval rpm -qa | grep -i libX11-devel 1>/dev/null 2>&1;echo $?` != 0 ] && echo "libX11-devel" >> NON_INSTALLED
+#elif [ "`grep 'CentOS ' $OSfile 2>/dev/null`" != "" ] || [ "`grep 'Red Hat' $OSfile 2>/dev/null`" != "" ]
+#then
+#   [ `eval yum list installed libX11-devel 1>/dev/null 2>&1;echo $?` != 0 ] && echo "libX11-devel" >> NON_INSTALLED
+else
+   echo "If an error with hwloc occurs, install libX11-dev on your OS"
+fi
+
+########################
+# Testing make command #
+########################
+if [ "`eval make --version 1>/dev/null 2>&1;echo $?`" != 0 ] ; then
+   echo ""
+   echo "Fatal error:"
+   echo "------------"
+   echo "    make command not found."
+   if [ -f NON_INSTALLED ] ; then
+      echo ""
+      echo "These packages are also missing:"
+      echo "--------------------------------"
+      cat NON_INSTALLED
+      [ "$multiple_choices" = 1 ] && echo "(*) Only one command is needed but none has been found."
+   fi
+   echo "Contact your system administrator to install it."
+   exit
+fi
+
+###################
+# Debut du script #
+###################
+
+export TRUST_ROOT=`pwd`
+first=1
+[ "$TRUST_ROOT" = "$TRUST_ROOT_SA" ] && [ "$TRUST_ENV" != "" ]  && first=0
+[ -f configure.log ] && first=0
+mkdir -p lib exec env
+( cd env; ln -sf ../env_src/* .)
+
+###################
+# Check prerequis #
+###################
+
+bin/Installer_TRUST -check_prerequis || exit -1
+export PATH=$PATH:$TRUST_ROOT/exec/utils/bin
+#[ -d $TRUST_ROOT/exec/utils/bin ] && export PATH=$PATH:$TRUST_ROOT/exec/utils/bin
+#[ -d $TRUST_ROOT/bin/bin ] && export PATH=$PATH:$TRUST_ROOT/bin/bin
+
+###############################
+# Clean old directories (<v169)
+###############################
+#reps="ALE EF Front_tracking_discontinu Kernel MAIN P1NCP1B Phase_field Rayonnement Rayonnement_semi_transp ThHyd ThSol UtilitairesAssemblages VDF VEF Zoom"
+#reps="EF Kernel MAIN P1NCP1B ThHyd ThSol VDF VEF"
+#for rep in $reps
+#do
+#   [ -d $rep ] && rm -r -f $rep
+#done
+
+#########################################
+# Creation des liens avec les autres VOBS
+#########################################
+#reps="../Tests_TRUST/tests ../Doc_TRUST/doc ../Pre_Post_TRUST/Outils"
+#reps=""
+#for rep in $reps
+#do
+#   # Eventuelle substitution pour les VOBs en Noyau et non TRUST
+#   # Attention TRUST_Awk n'est pas encore defini...
+#   [ ! -d $rep ] && rep=`echo $rep | awk '{sub("TRUST","Noyau",$0);print $0}'`
+#   if [ -d $rep ]
+#   then
+#      r=`basename $rep`
+#      [ ! -d $r ]  && ln -sf $rep $r && echo "Link created: $rep ->" $r
+#   fi
+#done
+
+if [ "$1" != "-disable-optionals" ] && [ "$1" != "-for_appli_salome" ] && [ "$1" != "-disable-tools" ]
+then
+echo " "
+echo "======================================="
+echo "***  BEGIN TRUST CONFIGURE OPTIONS  ***"
+echo "======================================="
+echo " "
+echo "Usage: `basename $0` "
+echo " "
+echo -e "\033[1m\033[4mHelp option\033[0m"
+echo " "
+echo "   -help                             Print help of the different configure options."
+
+echo " "
+echo -e "\033[1m\033[4mCleaning configuration\033[0m"
+echo " "
+echo "   -clean                            Clean the packages installed by configure after a make clean."
+
+echo " "
+echo -e "\033[1m\033[4mCompilation options/flags\033[0m"
+echo " "
+echo "   -force_even_unsupported           Force the configure even the compiler/OS is not supported."
+echo "   -c++=<prog>                       Force the use of a specified C++ compiler."
+echo "   -cc=<prog>                        Force the use of a specified C compiler."
+echo "   -fc=<prog>                        Force the use of a specified Fortran compiler."
+echo " "
+echo "   -cxxflags=<flags>                 Add C++ compiler options."
+echo "   -cflags=<flags>                   Add C compiler options."
+echo "   -fflags=<flags>                   Add Fortran compiler options."
+echo " "
+echo "   -linker=<prog>                    Force the use of a specified linker (if -linker=default, standard linking will be used)."
+echo " "
+echo "   -with-64-bit-indices              Build with 64 bits integer indices."
+echo " "
+echo "   -add_search=<dir>                 Add a directory to the defaults path to search a tool."
+echo "   -native                           Add compiler optimizations relative to native architecture. Warning: binary is not portable and segfault are possible..."
+
+echo " "
+echo -e "\033[1m\033[4mParallelism & GPU options\033[0m"
+echo " "
+echo "   -force_provided_mpich             Use the provided MPICH `awk -F= '/default_version=/ {print $2}' ThirdPart/src/LIBMPI/Installer_mpich` version (default, except on cluster/batch system)."
+echo "   -force_latest_mpich               Download and use the MPICH `awk -F= '/^latest_version=/ {print $2}' ThirdPart/src/LIBMPI/Installer_mpich` version."
+echo "   -force_provided_openmpi           Use the provided OpenMPI `awk -F= '/default_version=/ {print $2}' ThirdPart/src/LIBMPI/Installer_openmpi` version."
+echo "   -force_latest_openmpi             Download and use the OpenMPI `awk -F= '/^latest_version=/ {print $2}' ThirdPart/src/LIBMPI/Installer_openmpi` version."
+echo "   -force_system_mpi                 Use the system-provided MPI library."
+echo " "
+echo "   -rocalution=0|path to rocALUTION  Disable or specify extern rocALUTION library for AMD GPU computing (experimental). Default: using provided rocALUTION library."
+echo "   -cuda=path/to/nvcc | =download    Activate the CUDA support into several libraries for NVidia GPU computing (experimental)."
+echo "   -rocm                             Activate the ROCM support into several libraries for AMD GPU computing (experimental)."
+echo "   -openmp                           Enable OpenMP support (and GPU offload if -cuda is also used. In this case NVidia SDK is downloaded if not available)."
+echo "   -kokkos_simd                      Enable SIMD Kokkos support"
+echo " "
+echo -e "\033[1m\033[4mLinking with external Thermo-Physical Properties libraries\033[0m"
+echo " "
+echo "   -with-eos=<path_to_eos>           Compiles TRUST and links with an external static EOS library."
+echo "   -with-coolprop=<path_to_coolprop> Compiles TRUST and links with an external static CoolProp library. The python CoolProp package will be also installed."
+echo "   -with-refprop=<path_to_refprop>   Path towards your local RefProp library installation (dynamic library will be opened via the CoolProp interface if requested)."
+
+echo " "
+echo -e "\033[1m\033[4mOptions to enable/disable libraries/tools\033[0m"
+echo " "
+echo "   -enable-petsc-debug               Enable PETSc library debug only with \$exec_debug of TRUST."
+echo "   -enable-mc-debug                  Enable MEDCoupling library debug only with \$exec_debug of TRUST."
+echo "   -enable-kokkos-debug              Enable Kokkos library debug only with \$exec_debug of TRUST."
+echo "   -with-doxygen-doc                 Enable the build of HTML documentation of TRUST sources."
+echo " "
+echo "   -disable-petsc-optionals          Disable some PETSc optionals for Cathare (visualization features, HDF5 support,...)"
+echo "   -disable-petsc                    Disable PETSc library installation."
+echo "   -disable-openblas                 Disable OpenBLAS library installation and use Netlib BLAS instead."
+echo "   -disable-hwloc                    Disable hwloc installation."
+echo "   -disable-vc                       Disable VC installation, might be necessary for intel compilers with lower version than 17."
+echo "   -disable-mpi                      Disable MPI library detection/installation and build a non-parallel version of the application."
+echo "   -disable-mpi4py                   Disable mpi4py installation."
+echo "   -disable-ccache                   Disable ccache detection/installation."
+echo "   -disable-mpiio                    Disable MPI-IO mode for writing of .xyz binary output file."
+echo "   -disable-cgns                     Disable the build/link of the CGNS library."
+echo "   -disable-optionals                Disable all optionals librairies and tools."
+echo "   -disable-tools                    Disable all tools to build only a binary."
+echo "   -disable-metis                    Disable metis library installation."
+echo "   -disable-jupyter                  Disable jupyter installation."
+echo "   -disable-valgrind                 Disable valgrind installation and build."
+echo "   -disable-gnuplot                  Disable gnuplot installation and build."
+echo "   -disable-doxygen                  Disable doxygen installation and build. HTML documentation cannot be build if doxygen disabled."
+echo "   -disable-tcl_tk                   Disable Tcl/Tk detection/installation."
+echo "   -disable-gmsh                     Disable Gmsh installation and build."
+echo "   -disable-trustpy                  Do not build the trustpy documentation."
+echo "   -disable-plot2d                   Disable PLOT2D installation and build."
+echo "   -disable-checks                   Disable checks for external packages, sources, disk space and speed."
+echo "   -disable-check_sources            Disable check sources before compiling."
+echo " "
+echo "   -without-conda                    Do not use Miniconda for Python packages, CMake, swig and other crucial system tools for TRUST."
+echo "                                       !!WARNING!! Use at your own risks, no support will be provided."
+echo "   -without-host_file                Do not load the environnement variables specified in an env_src/HOST_`hostname | awk -F. '{print $1}'`.sh file."
+echo "   -without-doc                      Do not build the documentation."
+echo "   -without-pdflatex                 Do not build the pdf documentation."
+echo "   -without-visit                    Do not install VisIt."
+
+echo " "
+echo -e "\033[1m\033[4mOptions for post-processing tools\033[0m"
+echo " "
+echo "   -download-visit                   Download a version of VisIt rather trying to build a version."
+echo "   -for_appli_salome                 Force the configuration for TRUST application in Salome platform."
+echo " "
+echo "====================================="
+echo "***  END TRUST CONFIGURE OPTIONS  ***"
+echo "====================================="
+echo " "
+fi
+CC=""
+cc=""
+F77=""
+clean=""
+
+LIST_THIRD_PARTY="PETSC MED MPI METIS MEDCOUPLING VC CCACHE GMSH VALGRIND GNUPLOT TCL_TK PLOT2D DOXYGEN TRUSTPY"
+
+#[ -f configure.log ] && sed "s/^/# /" -i  configure.log
+[ -f configure.log ] && sed "s/# //" -i  configure.log && sed "s/^/# /" -i  configure.log
+echo $0 $* "\$"* >> configure.log
+
+if [ "$1" = "-for_appli_salome" ]
+then
+  shift
+  export TRUST_ROOT=$TRUST_ROOT_SA
+  $0 -disable-ccache -disable-gnuplot -disable-tcl_tk -disable-valgrind -without-visit -disable-gmsh -disable-checks -disable-check_sources -with-med=$MEDFILE_ROOT_DIR -with-hdf=$HDF5_ROOT_DIR $*
+# pas encore pas ICoCoMEDField -with-medcoupling=$MEDCOUPLING_ROOT_DIR $*
+  exit $?
+fi
+if [ "$1" = "-disable-optionals" ]
+then
+  shift
+  export TRUST_ROOT=$TRUST_ROOT_SA
+  $0 -disable-ccache -disable-openblas -disable-petsc -disable-petsc-optionals -disable-hwloc -disable-gnuplot -disable-tcl_tk -disable-vc -disable-valgrind -disable-mpi -disable-cgns -disable-metis -without-visit -disable-gmsh -disable-plot2d -without-pdflatex -without-doc -disable-jupyter -disable-doxygen -disable-checks -disable-check_sources -rocalution=0 -disable-trustpy $*
+  exit $?
+fi
+if [ "$1" = "-disable-tools" ]
+then
+  shift
+  export TRUST_ROOT=$TRUST_ROOT_SA
+  $0 -disable-ccache -disable-openblas -disable-hwloc -disable-gnuplot -disable-tcl_tk -disable-valgrind -disable-metis -without-visit -disable-gmsh -disable-plot2d -without-doc -without-pdflatex -disable-checks -disable-check_sources -disable-trustpy $*
+  exit $?
+fi
+
+for THIRD_PARTY in $LIST_THIRD_PARTY
+do
+  command=TRUST_DISABLE_$THIRD_PARTY=0
+  eval $command
+done
+export TRUST_DISABLE_HWLOC=0
+export TRUST_DISABLE_PETSC_OPTIONALS=0
+export TRUST_ENABLE_PETSC_DEBUG=0
+export TRUST_ENABLE_MC_DEBUG=0
+export TRUST_ENABLE_KOKKOS_DEBUG=0
+export TRUST_DISABLE_MPIIO=0
+export TRUST_DISABLE_CGNS=0
+export TRUST_DISABLE_CHECK_SRC=0
+export TRUST_DISABLE_CHECKS=0
+export TRUST_INT64=0
+export TRUST_USE_CUDA=0
+export TRUST_USE_AMGX=0
+export TRUST_USE_EOS=0
+export TRUST_USE_COOLPROP=0
+export TRUST_USE_REFPROP=0
+export TRUST_ROCALUTION=1
+export TRUST_USE_OPENBLAS=1
+export TRUST_USE_OPENMP=0
+export TRUST_USE_KOKKOS=1
+export TRUST_USE_KOKKOS_SIMD=0
+export TRUST_USE_AVX=1
+export TRUST_DISABLE_MPI4PY=0
+export TRUST_DISABLE_JUPYTER=0
+export TRUST_WITHOUT_DOC=0
+export TRUST_WITHOUT_PDFLATEX=0
+export TRUST_WITHOUT_VISIT=0
+export TRUST_WITHOUT_CONDA=0
+export TRUST_DOWNLOAD_VISIT=0
+export TRUST_WITHOUT_HOST=0
+export TRUST_ENABLE_DOC_DOXYGEN=0
+unset CUDA_NVCC
+unset TRUST_USE_EXTERNAL_HDF
+unset TRUST_USE_EXTERNAL_MED
+unset TRUST_USE_EXTERNAL_MEDCOUPLING
+unset TRUST_EOS_HOME_DIR
+unset TRUST_COOLPROP_HOME_DIR
+unset TRUST_REFPROP_HOME_DIR
+unset TRUST_CC_BASE_EXTP
+unset TRUST_F77_BASE_EXTP
+unset TRUST_cc_BASE_EXTP
+unset TRUST_USE_ROCM
+
+var=env/configure.env && rm -f $var
+echo "$0 called with options: $*"
+echo ""
+
+if [ "`echo $* | grep '\-disable-petsc'`" != "" ] && [ "`echo $* | grep '\-enable-petsc-debug'`" != ""  ]
+then
+   echo ""
+   echo "Configure error:"
+   echo "----------------"
+   echo "You cannot configure TRUST with both options: -enable-petsc-debug -disable-petsc."
+   echo "Re-configure it only with one of these options."
+   exit -1
+fi
+
+while [ "$1" != "" ]
+do
+   if [ "${1%-help}" != "$1" ]
+   then
+      exit
+
+   elif [ "${1#-c++=}" != "$1" ]
+   then
+      export TRUST_FORCE_CC=${1#-c++=}
+
+   elif [ "${1#-cc=}" != "$1" ]
+   then
+      export TRUST_FORCE_cc=${1#-cc=}
+
+   elif [ "${1#-cxxflags=}" != "$1" ]
+   then
+      export TRUST_ADD_CXXFLAGS=${1#-cxxflags=}
+
+   elif [ "${1#-cflags=}" != "$1" ]
+   then
+      export TRUST_ADD_CFLAGS=${1#-cflags=}
+
+   elif [ "${1#-fflags=}" != "$1" ]
+   then
+      export TRUST_ADD_FFLAGS=${1#-fflags=}
+
+   elif [ "${1#-linker=}" != "$1" ]
+   then
+      export TRUST_FORCE_LINKER=${1#-linker=}
+
+   elif [ "${1#-native}" != "$1" ]
+   then
+      export TRUST_ADD_NATIVE_FLAGS=1
+
+   elif [ "${1#-fc=}" != "$1" ]
+   then
+      export TRUST_FORCE_F77=${1#-fc=}
+
+   elif [ "${1#-add_search=}" != "$1" ]
+   then
+      export TRUST_FORCE_SEARCH=$TRUST_FORCE_SEARCH" "${1#-add_search=}
+   
+   elif [ "${1#-with-medcoupling=}" != "$1" ]
+   then
+      export TRUST_USE_EXTERNAL_MEDCOUPLING=${1#-with-medcoupling=}
+
+   elif [ "${1#-with-med=}" != "$1" ]
+   then
+      export TRUST_USE_EXTERNAL_MED=${1#-with-med=}
+
+   elif [ "${1#-with-hdf=}" != "$1" ]
+   then
+      export TRUST_USE_EXTERNAL_HDF=${1#-with-hdf=}
+
+   elif [ "${1#-force_even_unsupported}" != "$1" ]
+   then
+      export TRUST_FORCE_SUPPORTED=1
+
+   elif [ "${1#-force_provided_openmpi}" != "$1" ]
+   then
+      export TRUST_FORCE_PROVIDED_OPENMPI=1
+
+   elif [ "${1#-force_latest_mpich}" != "$1" ]
+   then
+      export TRUST_FORCE_LATEST_MPICH=1
+
+   elif [ "${1#-force_latest_openmpi}" != "$1" ]
+   then
+      export TRUST_FORCE_LATEST_OPENMPI=1
+
+   elif [ "${1#-force_provided_mpich}" != "$1" ]
+   then
+      export TRUST_FORCE_PROVIDED_MPICH=1
+
+   elif [ "${1#-force_system_mpi}" != "$1" ]
+   then
+      export TRUST_FORCE_SYSTEM_MPI=1
+
+   elif [ "${1#-disable-openblas}" != "$1" ]
+   then
+      export TRUST_USE_OPENBLAS=0
+
+   elif [ "${1#-disable-petsc-optionals}" != "$1" ]
+   then
+      export TRUST_DISABLE_PETSC_OPTIONALS=1
+
+   elif [ "${1#-enable-petsc-debug}" != "$1" ]
+   then
+      export TRUST_ENABLE_PETSC_DEBUG=1
+
+   elif [ "${1#-enable-mc-debug}" != "$1" ]
+   then
+      export TRUST_ENABLE_MC_DEBUG=1
+   
+   elif [ "${1#-enable-kokkos-debug}" != "$1" ]
+   then
+      export TRUST_ENABLE_KOKKOS_DEBUG=1
+
+   elif [ "${1#-disable-avx}" != "$1" ]
+   then
+      export TRUST_USE_AVX=0
+
+   elif [ "${1#-cuda}" != "$1" ]
+   then
+      export TRUST_USE_CUDA=1
+      [ "${1#-cuda=}" != "$1" ] && CUDA_NVCC=${1#-cuda=}
+
+   elif [ "${1#-rocm}" != "$1" ]
+   then
+      export TRUST_USE_ROCM=1
+
+   elif [ "${1#-with-eos}" != "$1" ]
+   then
+      # Proper include files for EOS are managed by script bin/cree_include
+      export TRUST_USE_EOS=1
+      export TRUST_EOS_HOME_DIR=${1#-with-eos=}
+      if [ ! -f $TRUST_EOS_HOME_DIR/lib/libeos.a ]
+      then
+         echo ""
+         echo "You specified to use the EOS library in your TRUST configuration. However, we can not find the static library (libeos.a) in the path $TRUST_EOS_HOME_DIR/lib !!"
+         echo "Either verify your EOS installation or re-configure TRUST without the option -with-eos=$TRUST_EOS_HOME_DIR ... "
+         exit -1
+      fi
+
+   elif [ "${1#-with-coolprop}" != "$1" ]
+   then
+      # Proper include files for CoolProp are managed by script bin/cree_include
+      export TRUST_USE_COOLPROP=1
+      export TRUST_COOLPROP_HOME_DIR=${1#-with-coolprop=}
+      if [ ! -f $TRUST_COOLPROP_HOME_DIR/build/libCoolProp.a ]
+      then
+         echo "You specified to use the CoolProp library in your TRUST configuration. However, we can not find the static library (libCoolProp.a) in the path $TRUST_COOLPROP_HOME_DIR/build !!"
+         echo "Either verify your CoolProp installation or re-configure TRUST without the option -with-coolprop=$TRUST_COOLPROP_HOME_DIR ... "
+         exit -1
+      fi
+
+   elif [ "${1#-with-refprop}" != "$1" ]
+   then
+      export TRUST_USE_REFPROP=1
+      export TRUST_REFPROP_HOME_DIR=${1#-with-refprop=}
+
+   elif [ "${1#-rocalution}" != "$1" ]
+   then
+      export TRUST_ROCALUTION=${1#-rocalution=}
+
+   elif [ "${1#-with-64-bit-indices}" != "$1" ]
+   then
+      export TRUST_INT64=1
+      # PL: We NEED int64 support !
+      #echo "Disabling rocALUTION library (no integer 64 bits support yet)..."
+      #export TRUST_ROCALUTION=0
+
+   elif [ "${1#-disable-mpi4py}" != "$1" ]
+   then
+      export TRUST_DISABLE_MPI4PY=1
+
+   elif [ "${1#-disable-jupyter}" != "$1" ]
+   then
+      export TRUST_DISABLE_JUPYTER=1
+
+   elif [ "${1#-openmp}" != "$1" ]
+   then
+      export TRUST_USE_OPENMP=1
+
+   elif [ "${1#-kokkos_simd}" != "$1" ]
+   then
+      export TRUST_USE_KOKKOS_SIMD=1
+
+   elif [ "${1#-without-doc}" != "$1" ]
+   then
+      export TRUST_WITHOUT_DOC=1
+      THIRD_PARTY="DOC"
+      REP_THIRD_PARTY=$TRUST_ROOT/doc
+      ([ -d $REP_THIRD_PARTY ] && [ $first -eq 0 ] && cd $REP_THIRD_PARTY && echo "Disabling $THIRD_PARTY, so make clean:" && make clean)
+      export TRUST_DISABLE_DOXYGEN=1
+      # disable pdf doc build
+      export TRUST_WITHOUT_PDFLATEX=1
+
+   elif [ "${1#-without-pdflatex}" != "$1" ]
+   then
+      export TRUST_WITHOUT_PDFLATEX=1
+
+   elif [ "${1#-with-doxygen-doc}" != "$1" ]
+   then
+      export TRUST_ENABLE_DOC_DOXYGEN=1
+
+   elif [ "${1#-without-visit}" != "$1" ]
+   then
+      export TRUST_WITHOUT_VISIT=1
+      THIRD_PARTY="VISIT"
+      REP_THIRD_PARTY=$TRUST_ROOT/Outils/VisIt
+      ([ -d $REP_THIRD_PARTY ] && [ $first -eq 0 ] && cd $REP_THIRD_PARTY && echo "Disabling $THIRD_PARTY, so make clean:" && make clean)
+
+   elif [ "${1#-download-visit}" != "$1" ]
+   then
+      export TRUST_DOWNLOAD_VISIT=1
+
+   elif [ "${1#-clean}" != "$1" ]
+   then
+      make clean 2>/dev/null
+      export clean="clean"
+
+   elif [ "${1#-disable-mpiio}" != "$1" ]
+   then
+      export TRUST_DISABLE_MPIIO=1
+
+   elif [ "${1#-disable-check_sources}" != "$1" ]
+   then
+      export TRUST_DISABLE_CHECK_SRC=1
+
+   elif [ "${1#-disable-checks}" != "$1" ]
+   then
+      export TRUST_DISABLE_CHECKS=1
+      export TRUST_DISABLE_CHECK_SRC=1
+
+   elif [ "${1#-disable-}" != "$1" ]
+   then
+      THIRD_PARTY=`echo ${1#-disable-} | awk '{print toupper($1)}'`
+
+      REP_THIRD_PARTY=$TRUST_ROOT/ThirdPart/src/LIB$THIRD_PARTY
+      [ "$THIRD_PARTY" = "GMSH" ] && REP_THIRD_PARTY=$TRUST_ROOT/Outils/Gmsh
+      [ "$THIRD_PARTY" = "CCACHE" ] && REP_THIRD_PARTY=$TRUST_ROOT/env/ccache
+      [ "$THIRD_PARTY" = "VALGRIND" ] && REP_THIRD_PARTY=$TRUST_ROOT/Outils/valgrind
+      [ "$THIRD_PARTY" = "HWLOC" ] && REP_THIRD_PARTY=$TRUST_ROOT/Outils/hwloc
+      [ "$THIRD_PARTY" = "GNUPLOT" ] && REP_THIRD_PARTY=$TRUST_ROOT/Outils/gnuplot
+      [ "$THIRD_PARTY" = "TRUSTPY" ] && REP_THIRD_PARTY=$TRUST_ROOT/Outils/trustpy
+      [ "$THIRD_PARTY" = "DOXYGEN" ] && REP_THIRD_PARTY=$TRUST_ROOT/Outils/doxygen
+      [ "$THIRD_PARTY" = "TCL_TK" ] && REP_THIRD_PARTY=$TRUST_ROOT/Outils/tcl_tk
+      [ "$THIRD_PARTY" = "PLOT2D" ] && REP_THIRD_PARTY=$TRUST_ROOT/Outils/IHM
+      [ "$THIRD_PARTY" = "TRUSTPY" ] && REP_THIRD_PARTY=$TRUST_ROOT/Outils/trustpy
+      if [ ! -d $REP_THIRD_PARTY ]
+      then
+         echo "$1 option not available cause $REP_THIRD_PARTY is not installed."
+         exit -1
+      fi
+
+      testv="echo \$TRUST_DISABLE_$THIRD_PARTY"
+      res=`eval $testv`
+      if [ "$res" = "" ]
+      then
+         echo "$1 option not available cause $THIRD_PARTY is not in list"
+         exit -1
+      fi
+
+      (cd $REP_THIRD_PARTY && [ $first -eq 0 ] && echo "Disabling $THIRD_PARTY, so make clean:" && make clean)
+      command=TRUST_DISABLE_$THIRD_PARTY=1
+      eval $command
+
+   elif [ "${1#-without-host_file}" != $1 ]
+   then
+      export TRUST_WITHOUT_HOST=1
+
+   elif [ "${1#-without-conda}" != $1 ]
+   then
+      export TRUST_WITHOUT_CONDA=1
+      export TRUST_DISABLE_JUPYTER=1
+      export TRUST_DISABLE_MPI4PY=1
+
+   else
+      echo "Unknown option $1."
+      exit -1
+   fi
+   shift
+done
+
+[ "${#TRUST_ROOT}" -ge "90" ] && echo "Error: Installation path $TRUST_ROOT is too long, you should install TRUST in a path with less than 90 characters." && [ $TRUST_WITHOUT_CONDA == 0 ] && exit -1
+
+
+######
+# Cuda
+######
+if [ "$CUDA_NVCC" != "" ]
+then
+   if [ "$CUDA_NVCC" = download ]
+   then
+      source env/TRUST_TMP.env 1>/dev/null 2>&1
+      source env/gpu/install_cuda_toolkit.sh
+   else
+      CUDA_BIN=`dirname $CUDA_NVCC`
+   fi
+   if [ ! -f $CUDA_BIN/nvcc ]
+   then
+      echo "Error: $CUDA_BIN/nvcc doesn't exist." && exit -1
+   else
+      echo "OK: Cuda nvcc installed under $CUDA_BIN"
+   fi
+   export PATH=$CUDA_BIN:$PATH
+fi
+
+########
+# Kokkos
+########
+
+#if [ "$TRUST_USE_KOKKOS" = 1 ]
+#then
+#    source env/TRUST_TMP.env 1>/dev/null 2>&1
+#    source env/gpu/install_kokkos.sh
+#    export PATH=$KOKKOS_ROOT_DIR/bin:$PATH
+#    nvcc_wrapper --help 1>/dev/null 2>&1
+#    [ $? != 0 ] && echo "Kokkos: error, nvc_wrapper not correctly installed!" && exit -1
+#    echo "# Kokkos root dir is: $KOKKOS_ROOT_DIR"
+#else
+#    echo "Kokkos not requested - cleaning previous install..."
+#    rm -rf env/gpu/kokkos
+#fi
+
+export TRUST_ROOT_VERSION=`awk '/version/ && /Release notes/ {print $4;exit}' $TRUST_ROOT/RELEASE_NOTES`
+if [ "$clean" != "clean" ]
+then
+   if [ ! -d externalpackages ] && [ ! -L externalpackages ]
+   then
+      extp_commit=`cat bin/gestion_externalpackages/extp.commit`
+      echo "Error: You need to download externalpackages $TRUST_ROOT_VERSION before configuring :"
+      version_extp=$TRUST_ROOT_VERSION
+      [ "`grep beta $version_extp &>/dev/null ; echo $?`" != 0 ] && version_extp="next"
+      echo "   wget ftp://ftp.cea.fr/pub/TRUST/externalpackages/externalpackages-$version_extp.tar"
+      echo " or:"
+      echo "   curl ftp://ftp.cea.fr/pub/TRUST/externalpackages/externalpackages-$version_extp.tar > externalpackages-$version_extp.tar"
+      echo " or if you have access to git, commit: $extp_commit"
+      exit -1
+   fi
+   if [ "$TRUST_DISABLE_CHECKS" = 0 ]
+   then
+      # Gestion externalpackages
+      echo "Verify externalpackages..."
+      cd $TRUST_ROOT/bin/gestion_externalpackages
+      export LC_ALL=C && ./Verify_externalpackages.sh
+      err=$?
+      cd $TRUST_ROOT
+      if [ $err != 0 ]
+      then
+         extp_commit=`cat bin/gestion_externalpackages/extp.commit`
+         msg="$TRUST_ROOT_VERSION version (if access to git, commit $extp_commit)"
+         echo "Error: You need to update externalpackages directory to $msg"
+         exit -1
+      fi
+   else
+      echo "Disabling CHECKS, so externalpackages will not be verified."
+   fi
+fi
+
+
+for THIRD_PARTY in $LIST_THIRD_PARTY
+do
+   VAR=TRUST_DISABLE_$THIRD_PARTY
+   echo "$VAR=${!VAR} && export $VAR 	# Disable/enable $THIRD_PARTY"  					>> $var
+done
+echo "TRUST_USE_OPENBLAS=$TRUST_USE_OPENBLAS && export TRUST_USE_OPENBLAS # Enable OpenBLAS instead of Netlib for BLAS/LAPACK library" >> $var
+echo "TRUST_DISABLE_MPIIO=$TRUST_DISABLE_MPIIO && export TRUST_DISABLE_MPIIO	# Disable/enable MPI-IO mode for writing of binary output file"	>> $var
+echo "TRUST_DISABLE_CGNS=$TRUST_DISABLE_CGNS && export TRUST_DISABLE_CGNS  # Disable/enable CGNS library."   >> $var
+echo "TRUST_DISABLE_PETSC_OPTIONALS=$TRUST_DISABLE_PETSC_OPTIONALS && export TRUST_DISABLE_PETSC_OPTIONALS	# Disable/enable PETSc visualization features"	>> $var
+echo "TRUST_ENABLE_PETSC_DEBUG=$TRUST_ENABLE_PETSC_DEBUG && export TRUST_ENABLE_PETSC_DEBUG	# Disable/enable PETSc debug"	>> $var
+echo "TRUST_ENABLE_MC_DEBUG=$TRUST_ENABLE_MC_DEBUG && export TRUST_ENABLE_MC_DEBUG # Disable/enable MEDCoupling debug" >> $var
+echo "TRUST_ENABLE_KOKKOS_DEBUG=$TRUST_ENABLE_KOKKOS_DEBUG && export TRUST_ENABLE_KOKKOS_DEBUG # Disable/enable Kokkos debug" >> $var
+echo "TRUST_DISABLE_CHECKS=$TRUST_DISABLE_CHECKS && export TRUST_DISABLE_CHECKS	# Disable/enable checks for external packages, sources, disk space and speed" >> $var
+echo "TRUST_INT64=$TRUST_INT64 && export TRUST_INT64	# Build in 64 bits integer indices." >> $var
+echo "TRUST_DISABLE_MPI4PY=$TRUST_DISABLE_MPI4PY && export TRUST_DISABLE_MPI4PY  # disable mpi4py build." >> $var
+echo "TRUST_WITHOUT_DOC=$TRUST_WITHOUT_DOC && export TRUST_WITHOUT_DOC		# Disable/enable Documentation"	>> $var
+echo "TRUST_WITHOUT_PDFLATEX=$TRUST_WITHOUT_PDFLATEX && export TRUST_WITHOUT_PDFLATEX		# Disable/enable pdf Documentation build only"	>> $var
+echo "TRUST_ENABLE_DOC_DOXYGEN=$TRUST_ENABLE_DOC_DOXYGEN && export TRUST_ENABLE_DOC_DOXYGEN      # Disable/enable the build of HTML doc" >> $var
+echo "TRUST_WITHOUT_VISIT=$TRUST_WITHOUT_VISIT && export TRUST_WITHOUT_VISIT	# Disable/enable VisIt" 	>> $var
+echo "TRUST_DOWNLOAD_VISIT=$TRUST_DOWNLOAD_VISIT && export TRUST_DOWNLOAD_VISIT 	# Download or build VisIt" >> $var
+echo "TRUST_WITHOUT_CONDA=$TRUST_WITHOUT_CONDA && export TRUST_WITHOUT_CONDA    	# `[ $TRUST_WITHOUT_CONDA = 1 ] && echo 'Installing without conda - The auto-detected Python will be used and is sym-linked in exec/python/bin' || echo 'conda enabled by default'`" >> $var
+echo "TRUST_USE_KOKKOS=$TRUST_USE_KOKKOS && export TRUST_USE_KOKKOS    	# TRUST built with Kokkos" >> $var
+echo "TRUST_USE_KOKKOS_SIMD=$TRUST_USE_KOKKOS_SIMD && export TRUST_USE_KOKKOS_SIMD    	# TRUST built with Kokkos SIMD" >> $var
+
+if [ "$TRUST_USE_EXTERNAL_MEDCOUPLING" != "" ]
+then
+    echo "export TRUST_USE_EXTERNAL_MEDCOUPLING=1" >> $var
+    echo "export MEDCOUPLING_ROOT_DIR=$TRUST_USE_EXTERNAL_MEDCOUPLING" >> $var
+else
+    echo "unset TRUST_USE_EXTERNAL_MEDCOUPLING" >> $var
+    # echo "unset MEDFILE_ROOT_DIR" >> $var
+fi
+if [ "$TRUST_USE_EXTERNAL_MED" != "" ]
+then
+    echo "export TRUST_USE_EXTERNAL_MED=1" >> $var
+    echo "export MEDFILE_ROOT_DIR=$TRUST_USE_EXTERNAL_MED" >> $var
+else
+    echo "unset TRUST_USE_EXTERNAL_MED" >> $var
+    # echo "unset MEDFILE_ROOT_DIR" >> $var
+fi
+if [ "$TRUST_USE_EXTERNAL_HDF" != "" ]
+then
+    echo "export TRUST_USE_EXTERNAL_HDF=1" >> $var
+    echo "export HDF5_ROOT_DIR=$TRUST_USE_EXTERNAL_HDF" >> $var
+else
+    echo "unset TRUST_USE_EXTERNAL_HDF" >> $var
+    #echo "unset HDF5_ROOT_DIR" >> $var
+fi
+
+echo "TRUST_USE_EOS=$TRUST_USE_EOS && export TRUST_USE_EOS    	# TRUST built with EOS" >> $var
+if [ "$TRUST_EOS_HOME_DIR" != "" ]
+then
+    echo "export TRUST_EOS_HOME_DIR=$TRUST_EOS_HOME_DIR" >> $var
+else
+    echo "unset TRUST_EOS_HOME_DIR" >> $var
+fi
+
+echo "TRUST_USE_COOLPROP=$TRUST_USE_COOLPROP && export TRUST_USE_COOLPROP    	# TRUST built with CoolProp" >> $var
+if [ "$TRUST_COOLPROP_HOME_DIR" != "" ]
+then
+    echo "export TRUST_COOLPROP_HOME_DIR=$TRUST_COOLPROP_HOME_DIR" >> $var
+else
+    echo "unset TRUST_COOLPROP_HOME_DIR" >> $var
+fi
+
+echo "TRUST_USE_REFPROP=$TRUST_USE_REFPROP && export TRUST_USE_REFPROP    	# TRUST built with REFPROP" >> $var
+if [ "$TRUST_REFPROP_HOME_DIR" != "" ]
+then
+    echo "export TRUST_REFPROP_HOME_DIR=$TRUST_REFPROP_HOME_DIR" >> $var
+else
+    echo "unset TRUST_REFPROP_HOME_DIR" >> $var
+fi
+
+# IF HDF5 tools are not installed, detect h5dump version mismatch
+if [ "`h5dump -help 1>/dev/null 2>&1;echo $?`" = 0 ]; then
+    h5versionOK=`h5dump --version 2>/dev/null | awk '/h5dump/ {split($3,a,".");v=a[1]*1000+a[2]*10+a[3];print (v<=1103?1:0)}'`
+    [ "$h5versionOK" != 1 ] && echo "export HDF5_DISABLE_VERSION_CHECK=2 # to ignore warnings about hdf5 version" >> $var
+fi
+
+echo "# TRUST_ROOT=$TRUST_ROOT  # Path of the install" >> $var
+
+
+##########################################################
+#     Check if trust has already been built in 64bits    #
+# We prevent a 32bits build after having sed int by long #
+##########################################################
+# before commenting this part, ensure you sed long by int in trust sources
+if [ "$clean" != "clean" ] && [ "$TRUST_INT64" = "0" ] && [ -f .build64 ]
+then
+    echo "Sources are in 64 bits while you're trying to build a 32 bits version. "
+    echo "Ensure you download a version which can be built in 32 bits"
+    echo "Contact support at trust@cea.fr"
+    exit -1
+fi
+
+################################
+# Check options for some hosts #
+################################
+HOST=`hostname`
+
+####################################################
+# Configuration et initialisation de l'environnement
+####################################################
+rm -f env_TRUST.sh env/env_TRUST.sh
+sed "s?TRUST_ROOT=path_to_trio?TRUST_ROOT=$TRUST_ROOT?" env_src/env_TRUST.sh.in > env/env_TRUST.sh
+chmod gou+x env/env_TRUST.sh
+ln -sf env/env_TRUST.sh .
+cd bin
+ln -sf trust triou
+cd ..
+
+cd env
+./configurer_env $clean || exit -1
+
+[ "$clean" != "" ] && exit 0
+cd ..
+
+exiterror=0
+[ -f $TRUST_ROOT/NON_INSTALLED ] && [ "`grep 'Error while installing' $TRUST_ROOT/NON_INSTALLED`" != "" ] && exiterror=1
+
+source ./env_TRUST.sh 1>/dev/null 2>&1
+
+if [ "$TRUST_WITHOUT_DOC" != 1 ] && [ "$TRUST_WITHOUT_PDFLATEX" != 1 ]
+then
+   texerror=0
+
+   if [ "`eval pdflatex --version 1>/dev/null 2>&1;echo $?`" != 0 ]
+   then
+      echo "pdflatex is missing..." >> NON_INSTALLED
+      texerror=1
+   elif [ "`echo | makeindex -i 1>/dev/null 2>&1;echo $?`" != 0 ]
+   then
+      echo "makeindex is missing..." >> NON_INSTALLED # Ajoute pour Outils/TRIOXDATA
+      texerror=1
+   else
+      dest2=$TRUST_TMP/tmp_tex
+      [ -d $dest2 ] && rm -r $dest2
+      mkdir $dest2
+      cd $dest2
+      cp -r $TRUST_ROOT/Outils/TexFiles/* .
+      make 1>LOG_FILE 2>&1
+      if [ $? != 0 ]
+      then
+         echo "Some latex packages are missing... see $dest2/LOG" >> $TRUST_ROOT/NON_INSTALLED
+         texerror=1
+      else
+         cd fiche_prm_test
+         Run_fiche -not_run 1>/dev/null 2>&1
+         [ ! -f build/rapport.pdf ] && cp Run.log $TRUST_TMP && texerror=2
+         rm -r $dest2
+      fi
+
+      cd $TRUST_ROOT
+  fi
+  if [ "`eval xelatex --version 1>/dev/null 2>&1;echo $?`" != 0 ] && [ $TRUST_DISABLE_JUPYTER = 0 ]
+  then
+     echo "xelatex is missing... it is needed if you want to build pdf reports from Jupyter notebook format using Run_fiche -export_pdf." >> NON_INSTALLED
+     texerror=3
+  elif [ $TRUST_DISABLE_JUPYTER = 0 ]
+  then
+     dest2=$TRUST_TMP/tmp_xelatex
+     [ -d $dest2 ] && rm -r $dest2
+     mkdir $dest2
+     cd $dest2
+     cp $TRUST_ROOT/Outils/TexFiles/Makefile .
+     cp $TRUST_ROOT/Outils/TexFiles/mini_jupyter.tex .
+     make jupyter 1>LOG_FILE 2>&1
+     if [ $? != 0 ]
+     then
+        echo "Some latex packages are missing... see $dest2/LOG" >> $TRUST_ROOT/NON_INSTALLED
+        texerror=3
+     else
+        rm -r $dest2
+     fi
+     cd $TRUST_ROOT
+  fi
+  if [ $texerror = 1 ]
+  then
+     echo "You cannot generate the PDF documentation of TRUST and its sub-projects unless you install metapackages equivalent to:" >> NON_INSTALLED
+     echo "  1. texlive-latex-base " >> NON_INSTALLED
+     echo "  2. texlive-latex-recommended" >> NON_INSTALLED
+     echo "  3. texlive-fonts-recommended" >> NON_INSTALLED
+     echo "  4. texlive-latex-extra" >> NON_INSTALLED
+     echo " NOTE1: The names of these packages may differ if your OS is not one of Debian/Ubuntu/Mint" >> NON_INSTALLED
+     echo " For instance on Fedora, you can try: sudo dnf install texlive-scheme-full" >> NON_INSTALLED
+     echo " NOTE2: In the case you DO NOT WANT to install it, run: " >> NON_INSTALLED
+     Num_opts_configure=`tail -1 configure.log | awk '{print NF-1}'`
+     opts_configure=`tail -1 configure.log | cut -d ' ' -f 1-$Num_opts_configure`
+     echo "        $opts_configure -without-pdflatex" >> NON_INSTALLED
+     exiterror=1
+  fi
+
+  if [ $texerror = 2 ]
+  then
+     echo "Something strange... PDF documentation can be generated, not rapport.pdf from prm file." >> NON_INSTALLED
+     echo "see $TRUST_TMP/Run.log " >> NON_INSTALLED
+  fi
+
+  if [ $texerror = 3 ]
+  then
+     echo "You cannot run Run_fiche -export_pdf unless you install metapackages equivalent to:" >> NON_INSTALLED
+     echo "   sudo apt-get install texlive-xetex texlive-fonts-recommended texlive-plain-generic" >> NON_INSTALLED
+     echo " NOTE1: The names of these packages may differ if your OS is not one of Debian/Ubuntu" >> NON_INSTALLED
+     echo " For instance on Fedora, you can try: sudo dnf install texlive-scheme-full" >> NON_INSTALLED
+     echo " NOTE2: In the case you DO NOT WANT to install it, run: " >> NON_INSTALLED
+     Num_opts_configure=`tail -1 configure.log | awk '{print NF-1}'`
+     opts_configure=`tail -1 configure.log | cut -d ' ' -f 1-$Num_opts_configure`
+     echo "        $opts_configure -without-pdflatex" >> NON_INSTALLED
+     exiterror=1
+  fi
+
+fi
+
+if [ "`grep 'Ubuntu 2[0-1]' /etc/issue 2>/dev/null`" != "" ]
+then
+   if [ "$TRUST_DISABLE_GMSH" != 1 ] || [ $TRUST_WITHOUT_VISIT != 1 ]
+   then
+      missing=""
+      [ `eval dpkg-query -W libx11-dev 1>/dev/null 2>&1;echo $?` != 0 ] && missing="libx11-dev"
+      [ `eval dpkg-query -W libegl1-mesa-dev  1>/dev/null 2>&1;echo $?` != 0 ] && missing=$missing" libegl1-mesa-dev"
+      [ `eval dpkg-query -W libglu1-mesa-dev  1>/dev/null 2>&1;echo $?` != 0 ] && missing=$missing" libglu1-mesa-dev"
+      if [ "$missing" != "" ]
+      then
+         echo "Visit and gmsh cannot be installed unless you install some packages using:" >> NON_INSTALLED
+         echo "   sudo apt install $missing" >> NON_INSTALLED
+         echo "You can also disable VisIt and Gmsh by adding -without-visit and -disable-gmsh to configure options"  >> NON_INSTALLED
+         exiterror=1
+      fi
+   fi
+fi
+
+if [ "`dot -V 1>/dev/null 2>&1;echo $?`" != 0 ] && [ $TRUST_DISABLE_DOXYGEN != 1 ]
+then
+   echo "graphviz package needed to build html diagrams via doxygen" >> NON_INSTALLED
+fi
+
+if [ -f $TRUST_ROOT/NON_INSTALLED ]
+then
+   echo ""
+   echo "========================================================================="
+   echo "Some packages needed by TRUST code were not found/correctly installed:"
+   echo "----------------------------------------------------------------"
+   cat $TRUST_ROOT/NON_INSTALLED
+   [ "$multiple_choices" = 1 ] && echo "(*) Only one command is needed but none has been found!"
+   echo $ECHO_OPTS "See previous messages for further details or contact support at trust@cea.fr"
+   echo "========================================================================="
+   [ "$exiterror" = 1 ] && exit -1
+fi
+
+
+###############################################
+# Verification des performances de TRUST_TMP #
+###############################################
+if [ "$TRUST_DISABLE_CHECKS" = 0 ]
+then
+   dd.ksh -speed $TRUST_TMP -silent
+   if [ $? != 0 ]
+   then
+      echo "TRUST_TMP=$TRUST_TMP"
+      echo "Please, specify a directory for the TRUST_TMP variable in the $perso file"
+      echo "in order to have good performances for TRUST."
+   fi
+fi
+
+##########################################
+# Creation d'un Makefile sous $TRUST_ROOT
+##########################################
+cd $TRUST_ROOT
+if [ "$clean" = "" ]
+then
+   Build=$TRUST_ROOT/build
+   [ ! -d ${Build} ] && echo Creating ${Build} directory && mkdir -p ${Build}
+   # echo $ECHO_OPTS "all:\n\tcompile" 				> $TRUST_ROOT/Makefile
+   echo $ECHO_OPTS "SHELL=/bin/bash" > $TRUST_ROOT/Makefile
+   echo $ECHO_OPTS "all:\n\t(source ./env_TRUST.sh && env cibles=\"micro_kernel_opt numeric_kernel_opt standard_kernel_opt opt micro_kernel_debug numeric_kernel_debug standard_kernel_debug debug\" monodir)"  >> $TRUST_ROOT/Makefile
+   echo $ECHO_OPTS "tools:\n\t(source ./env_TRUST.sh && compile tools)" >> $TRUST_ROOT/Makefile
+   echo  $ECHO_OPTS "optim:\t opt" 	>> $TRUST_ROOT/Makefile
+   echo  $ECHO_OPTS "semi_optim:\t semi_opt" 	>> $TRUST_ROOT/Makefile
+   for cible in opt debug prof gcov  semi_opt custom
+   do
+     echo $ECHO_OPTS "${cible}:\n\t(source ./env_TRUST.sh && env cibles=\"micro_kernel_${cible} numeric_kernel_${cible} standard_kernel_${cible} ${cible}\" monodir)" >> $TRUST_ROOT/Makefile
+   done
+   echo $ECHO_OPTS "unit:\n\t(source ./env_TRUST.sh && env cibles=\"micro_kernel_debug\" monodir)" >> $TRUST_ROOT/Makefile
+   echo $ECHO_OPTS "opt_avx:\n\t@echo opt_avx target not available since TRUST v1.9.2" >> $TRUST_ROOT/Makefile
+   echo $ECHO_OPTS "clean:\n\t(source ./env_TRUST.sh && compile clean)" >> $TRUST_ROOT/Makefile
+   echo $ECHO_OPTS "doxygen:\n\t(source ./env_TRUST.sh && env TRUST_ENABLE_DOC_DOXYGEN=1 make_Doxyfile)" 			>> $TRUST_ROOT/Makefile
+   echo $ECHO_OPTS "validation:\n\t(source ./env_TRUST.sh && cd Validation/Rapports_automatiques && ./lance_tout)" >> $TRUST_ROOT/Makefile
+   echo $ECHO_OPTS "check:\n\t(source ./env_TRUST.sh && echo 0 | lance_test \${exec_opt} \${TRUST_ROOT}/build )" >> $TRUST_ROOT/Makefile
+   echo $ECHO_OPTS "check_optim:\tcheck" >> $TRUST_ROOT/Makefile
+   echo $ECHO_OPTS "check_semi_opt:\n\t(source ./env_TRUST.sh && echo 0 | lance_test \${exec_semi_opt} \${TRUST_ROOT}/build )" >> $TRUST_ROOT/Makefile
+   echo $ECHO_OPTS "check_debug:\n\t(source ./env_TRUST.sh && echo 0 | lance_test \${exec_debug} \${TRUST_ROOT}/build )" >> $TRUST_ROOT/Makefile
+   echo $ECHO_OPTS "ctest_debug:\n\t(source ./env_TRUST.sh && lance_test -ctest \${exec_debug})" >> $TRUST_ROOT/Makefile
+   echo $ECHO_OPTS "ctest_optim:\n\t(source ./env_TRUST.sh && lance_test -ctest \${exec_opt})" >> $TRUST_ROOT/Makefile
+   echo $ECHO_OPTS "ctest_semi_opt:\n\t(source ./env_TRUST.sh && lance_test -ctest \${exec_semi_opt})" >> $TRUST_ROOT/Makefile
+   echo $ECHO_OPTS "ctest_semi_optim:\t ctest_semi_opt" 	>> $TRUST_ROOT/Makefile
+   echo $ECHO_OPTS "gui:\n\t(source ./env_TRUST.sh && cd Outils/TRIOXDATA && ./Install_all)" >> $TRUST_ROOT/Makefile
+   echo $ECHO_OPTS "check_gui:\n\t(source ./env_TRUST.sh && cd Outils/TRIOXDATA && ./check_jdd)" >> $TRUST_ROOT/Makefile
+   [ "${#ECHO_OPTS}" = 0 ] && echo "Error: Check "$TRUST_ROOT"/Makefile !!! (ECHO_OPTS="$ECHO_OPTS")" && exit -1
+   ##################################
+   # Desormais on recree les makefile
+   ##################################
+   echo $ECHO_OPTS "File Makefile created."
+   echo $ECHO_OPTS "File configure.log created."
+   echo
+   echo $ECHO_OPTS "=========================================="
+   echo $ECHO_OPTS "*  RECOMMENDATIONS FOR USERS/DEVELOPERS  *"
+   echo $ECHO_OPTS "=========================================="
+   echo
+   echo $ECHO_OPTS "# To initialize the TRUST environment, run:"
+   echo $ECHO_OPTS "source ./env_TRUST.sh"
+   echo
+   echo $ECHO_OPTS "# To build TRUST as a user application (optimized mode only), run:"
+   echo $ECHO_OPTS "make optim"
+   echo
+   echo $ECHO_OPTS "# To build TRUST as a developer (optimized + debug modes), run:"
+   echo $ECHO_OPTS "make"
+   echo
+   echo $ECHO_OPTS "# To check TRUST in a parallel way (more than one test case at a time), run:"
+   echo $ECHO_OPTS "make ctest_optim"
+   echo
+   echo $ECHO_OPTS "# To check TRUST in a sequential way (one test case at a time), run:"
+   echo $ECHO_OPTS "make check"
+   echo
+   echo $ECHO_OPTS "# To initialize the TRUST python environment (medcoupling, swig and ICoCo python), run (TRUST should be built):"
+   echo $ECHO_OPTS "source ./env_for_python.sh"
+   echo
+
+fi
+
+exit 0

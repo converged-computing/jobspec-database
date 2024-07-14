@@ -1,0 +1,396 @@
+include : 'Importer'
+
+# load configuration
+configfile : 'config/config.yaml'
+
+from utils import parse_hmmsearch
+from utils import bipartition_compatibility, bipartition_compatibility_ratio
+from utils import find_links
+from utils import batched
+
+import os, pandas, polars, dendropy
+import pysam
+import random
+from pathlib import Path
+from copy import deepcopy
+from hmm_profile import reader as hmmreader
+from hmm_profile import writer as hmmwriter
+from cdhit_reader import read_cdhit
+from Bio.SeqIO import parse
+from Bio import AlignIO, SearchIO
+from Bio.Align import MultipleSeqAlignment
+from numpy import linspace, zeros, unique
+from collections import defaultdict, ChainMap
+from itertools import combinations, product
+from scipy.cluster.hierarchy import single, fcluster
+from scipy.spatial.distance import squareform
+from scipy.stats import kendalltau, pearsonr, skew, kurtosis
+from statistics import stdev
+from SuchTree import SuchTree, SuchLinkedTrees
+
+HMMS_DIR         = config['hmm_dir']
+GENOME_BATCH_DIR = config['genome_batch_dir']
+#GENOMES_DIR      = config['genome_dir']
+
+# index data inputs
+HMM_FILES      = glob_wildcards( os.path.join( HMMS_DIR, '{hmm}.hmm' ) )
+GENOME_BATCHES = glob_wildcards( os.path.join( GENOME_BATCH_DIR, '{fasta}.fna' ) )
+#GENOME_FILES   = glob_wildcards( os.path.join( GENOMES_DIR, '{fasta}.fna' ) )
+
+# extract the {hmm} values into a list
+HMMS    = HMM_FILES.hmm
+
+# extract the {fasta} values into a list
+GENOMES = GENOME_BATCHES.fasta
+
+# gene pair lists
+HMMS1,HMMS2 = list( zip( *combinations( HMMS, 2 ) ) )
+
+# post-trimming aligned fraction threshold
+AFT = config['aligned_fraction_threshold']
+
+# threads to use when invoking multithreaded applications
+THREADS = config['threads']
+
+# cutoff thresholds for genome ANI clustering
+ANI_THRESHOLDS = linspace( config['ani_thresholds_min'],
+                           config['ani_thresholds_max'],
+                           config['ani_thresholds_n'] )
+
+# minimum number of links per cluster for tree correlation
+MIN_CLUSTER_LINKS = config['min_cluster_links']
+
+# degenerate tree threshold : exclude pairwise tree-to-tree
+# comparisons where the ratio of non-unique leaf-to-leaf
+# distances exceeds this threshold
+DEGEN_THRESHOLD = config['degeneracy_threshold']
+
+# random seed for shuffling
+SEED = 31173
+
+rule all :
+  input :
+    'cluster_data/redundancy.tsv'
+
+rule clean :
+  shell :
+    'rm -rf aggregated_genomes proteins genes \
+        hmm_hits hmmdb preani ani ani_clusters \
+        scored_proteins cluster_data clusters \
+        statistics benchmarks logs'
+
+rule prodigal :
+  group : 'gene_prediction'
+  input :
+    fna = os.path.join( config['genome_batch_dir'], '{batch}.fna' )
+  output :
+    faa = 'proteins/{batch}.faa',
+    fna = 'genes/{batch}.fna',
+  log :
+    'logs/prodigal/{batch}.log',
+  benchmark :
+    'benchmarks/prodigal/{batch}.tsv'
+  params :
+    extra = '',
+  wrapper :
+    'file://wrappers/prodigal-gv'
+
+rule hmmdb :
+  group : 'gene_prediction'
+  input :
+    hmms = expand( os.path.join( config['hmm_dir'], '{hmm}.hmm' ), hmm=HMMS )
+  output :
+    db   = 'hmmdb/models.hmm'
+  log :
+    'logs/hmmdb/hmmdb.log'
+  benchmark :
+    'benchmarks/hmmdb/hmmdb.tsv'
+  run :
+    profiles = []
+    for hmmfile in input.hmms :
+      hmm = hmmreader.read_single( open( hmmfile ) )
+      if Path(hmmfile).stem != hmm.metadata.model_name :
+        raise Exception( 'file name ({hmmfile}) must match model name ({modelname}).'.format(
+                          hmmfile=hmmfile, modelname=hmm.metadata.model_name ) )
+      profiles.append( hmm ) 
+    hmmwriter.save_many_to_file( hmms=profiles, output=output.db )
+
+rule hmmer :
+  group : 'gene_prediction'
+  input :
+    fasta   = 'proteins/{batch}.faa',
+    profile = 'hmmdb/models.hmm'
+  log :
+    'logs/hmmer/{batch}.log',
+  benchmark :
+    'benchmarks/hmmer/{batch}.tsv'
+  output :
+    tblout         = 'hmm_hits/{batch}_prot_tbl.txt',
+    #domtblout      = 'hmm_hits/{fasta}_{hmm}_prot_dom_tbl.txt',
+    #alignment_hits = 'hmm_hits/{fasta}_{hmm}_alg_hits.txt',
+    #outfile        = 'hmm_hits/{fasta}_{hmm}_prot.txt'
+  wrapper :
+    'file://wrappers/hmmer/hmmsearch'
+
+rule scoring :
+  input :
+    # for each HMM...
+    hits    = expand( 'hmm_hits/{batch}_prot_tbl.txt', batch=GENOMES ),
+    # ... score orthologs for each genome...
+    faa     = expand( 'proteins/{batch}.faa', batch=GENOMES ),
+    profile = 'hmmdb/models.hmm'
+  output :
+    prealign = expand( 'scored_proteins/{hmm}.faa', hmm=HMMS )
+  log :
+    'logs/scoring/scoring.log'
+  threads : config['threads']
+  params :
+    evalue = config['evalue'] 
+  benchmark :
+    'benchmarks/scoring/scoring.tsv'
+  run :
+    with open( log[0], 'w' ) as LOG :
+      
+      LOG.write( 'opening {n} output files...\n'.format( n=str(len(output.prealign)) ) )
+      outfiles = { Path(fname).stem : fname for fname in output.prealign }
+      
+      # not all hmms will have proteins that survive the scoring process, but
+      # they all need to have output files.
+
+      for fname in output.prealign :
+        Path( fname ).touch()
+
+      for hit_table,faa in zip( input.hits, input.faa ) :
+        LOG.write( 'processing {ht}...\n'.format( ht=hit_table ) )
+        
+        # read hmmsearch hits
+        hits = polars.DataFrame( [ hit for hit in parse_hmmsearch( hit_table ) ] )
+        
+        # apply evalue cutoff
+        hits = hits.filter( polars.col('eval') < float( params.evalue ) )
+        
+        # reject lower scoring hits to the same protein, because sometimes
+        # ortholog groups are less orthologous than one might hope for
+        hits = hits.group_by( [ 'tname' ] ).agg( polars.col( [ 'qname', 'eval' ] ).take( polars.col('eval').min() ) )
+        
+        # build the genome name
+        hits = hits.with_columns( hits.map_rows( lambda t : t[0].rsplit('_',3)[0] )['map'].alias( 'genome' ) )
+        
+        # when the same ortholog group hits the same genome, rank the paralogs by e-value
+        hits = hits.with_columns( polars.col( 'eval' ).sort().rank('ordinal').over( [ 'genome', 'qname' ] ).alias('p') - 1 )
+        
+        # build paralog name
+        hits = hits.with_columns( polars.concat_str( [ 'tname', 'p' ], separator='_p' ).alias( 'paralog' ) )
+        
+        with pysam.FastaFile( faa ) as fasta_in :
+          for row in hits.select( 'qname' ).unique().rows( named=True ) :
+            hmm = row['qname']
+            with open( outfiles[hmm], 'a' ) as outfile :
+              for n,(hmm,protein,paralog) in enumerate( hits[ [ 'qname',
+                                                                'tname',
+                                                                'paralog'] ].filter( polars.col('qname') == hmm ).rows() ) :
+                seq = fasta_in.fetch( protein )
+                if seq[-1] == '*' : seq = seq[:-1]
+                outfile.write( '>{name}\n{seq}\n'.format( name=paralog, seq=seq ) )
+            LOG.write( '   {hmm} : wrote {n} records\n'.format( n=str(n), hmm=hmm ) )
+      
+      LOG.write( 'scoring complete.\n' )
+
+rule fastani :
+  group : 'ani'
+  input :
+    fastas = expand( os.path.join( config['genome_batch_dir'], '{batch}.fna' ), batch=GENOMES )
+  output :
+    'ani/ani.tsv'
+  params :
+    prelog = 'logs/fastani/preani.log',
+  log :
+    'logs/fastani/fastani.log'
+  benchmark :
+    'benchmarks/fastani/fastani.tsv'
+  threads : config['ani_threads']
+  wrapper :
+    'file://wrappers/fastani'
+
+rule ani_clusters :
+  group : 'ani'
+  input :
+    ani = 'ani/ani.tsv',
+  output :
+    clusterfiles = expand( 'ani_clusters/ani_clusters_{ani_cutoff}.txt', ani_cutoff=ANI_THRESHOLDS )
+  params :
+    min_ani = config['ani_thresholds_min'],
+    max_ani = config['ani_thresholds_max'],
+    min_aln = config['ani_min_aln'],
+    ani_cutoffs = ANI_THRESHOLDS,
+  log :
+    'logs/ani_clusters/ani_clusters.log'
+  benchmark :
+    'benchmarks/ani_clusters/ani_cutoffs.txt',
+  run :
+    with open( log[0], 'w' ) as LOG :
+      header = [ 'query', 'reference', 'ANI', 
+                 'bidirectional fragment mappings',
+                 'total query fragments' ]
+      
+      fastani = polars.read_csv( '../kizuchi/ani/ani.tsv', separator='\t', has_header=False )
+      fastani.columns = header
+      
+      LOG.write( 'found {n} ANI hits.\n'.format( n=str(len(fastani)) ) ) 
+      
+      # file names -> genome names
+      fastani = fastani.with_columns( fastani.map_rows( lambda t : Path(t[0]).stem )['map'].alias('query') )
+      fastani = fastani.with_columns( fastani.map_rows( lambda t : Path(t[1]).stem )['map'].alias('reference') )
+      
+      # %ID -> distance
+      fastani = fastani.with_columns( fastani.select( 1 - polars.col('ANI') / 100 )['literal'].alias('distance') )
+      
+      # drop NaNs
+      fastani = fastani.filter( polars.all_horizontal( polars.selectors.float().is_not_nan() ) )
+      
+      filteredani = fastani.filter( ( polars.col('ANI') <= params.max_ani )
+                                  & ( polars.col('ANI') >= params.min_ani )
+                                  & ( polars.col('bidirectional fragment mappings') >= params.min_aln ) )
+      
+      LOG.write( 'found {n} ANI hits that meet filtering criteria.\n'.format( n=str(len(filteredani)) ) )
+      
+      # make some indexes
+      genomes = list( set( filteredani['query'] ) | set( filteredani['reference'] ) )
+      genome_index = { g:n for n,g in enumerate( genomes ) }
+      
+      # allocate the empty matrix
+      D = zeros( ( len(genomes), len(genomes) ) )
+      D.fill( 1.0 )
+      
+      # set self-distance to zero
+      for i in range(len(genomes)) :
+        D[i,i] = 0.0
+      
+      # populate distance matrix with filtered ANI hits
+      for query,reference,ani,bfm,tqf,d in filteredani.iter_rows() :
+        i = genome_index[ query ]
+        j = genome_index[ reference ]
+        D[i,j] = D[j,i] = d
+      
+      # single linkage clustering at each ANI threshold
+      all_clusters = {}
+      for T in params.ani_cutoffs :
+        threshold = 1 - (  T / 100 )
+        ani_clusters = defaultdict(list)
+        for n,c in enumerate( fcluster( single( squareform(D) ),
+                              threshold,
+                              criterion='distance' ) ) :
+          ani_clusters[c].append( genomes[n] )
+        LOG.write( 'found {n} clusters at ANI>{t}.\n'.format( n=str(len(ani_clusters)),
+                                                              t=str(T) ) )
+        all_clusters[T] = ani_clusters
+      
+      # write genome ANI cluster files
+      outfiles = { t : p for t,p in zip( params.ani_cutoffs, output.clusterfiles ) }
+      for ani_cutoff,ani_clusters in all_clusters.items() :
+        with open( outfiles[ani_cutoff], 'w' ) as f :
+          for cid,cluster_genomes in ani_clusters.items() :
+            f.write( '{cid}\t{genomes}\n'.format( cid=str(cid),
+                                                  genomes=','.join(cluster_genomes) ) )
+
+
+rule build_clusters :
+  input :
+    prealignments = expand( 'scored_proteins/{hmm}.faa', hmm=HMMS ),
+    genes         = expand( 'genes/{batch}.fna', batch=GENOMES ),
+    ani_clusters  = expand( 'ani_clusters/ani_clusters_{ani_cutoff}.txt', ani_cutoff=ANI_THRESHOLDS )
+  output :
+    redundancy    = 'cluster_data/redundancy.tsv',
+    clusters      = directory( 'clusters' ),
+  params :
+    ANIs = ANI_THRESHOLDS,
+    MCL  = MIN_CLUSTER_LINKS
+  log :
+    'logs/build_clusters/build_clusters.log'
+  benchmark :
+    'benchmarks/cluster_filtering/cluster_filtering.tsv'
+  run :
+
+    def intersect( hmms, genomes, threshold ) :
+        C = defaultdict( set )
+        for hmm,genome in zip( hmms, genomes ) :
+            C[hmm].add(genome)
+        return sum( [ len( C[a] & C[b] ) > threshold
+                      for a,b in combinations( C.keys(), 2 ) ] )
+
+    with open( log[0], 'w' ) as LOG :
+      
+      clusterpath = 'clusters'
+
+      LOG.write( 'creating directory for gene data for ANI clusters....\n' )
+
+      if not os.path.exists( clusterpath ) : os.mkdir( clusterpath )
+
+      genesets = {}
+
+      for ANI in params.ANIs :
+          
+          genesets[ANI] = {}
+          
+          LOG.write( 'finding gene families at ANI={ani}...\n'.format( ani=str(ANI) ) )
+          
+          df = hmm2gene.join( genome_ani.filter( polars.col('ani') == ANI ), on='genome' )
+          
+          clusters = df.group_by('cid').agg( ['hmm','genome'] ).map_rows(
+                          lambda x : ( x[0],
+                                        intersect( x[1], 
+                                                  x[2],
+                                                  params.MCL ) ) ).filter( polars.col('column_1') > 0 )['column_0'].to_list()
+          
+          LOG.write( '   found {n} potentially informative clusters...\n'.format( n=str( len(clusters) ) ) )
+          
+          cluster_table = df.filter( polars.col('cid').is_in( clusters ) )
+          
+          LOG.write( '   creating directory for gene data for ANI={n}...\n'.format( n=str(ANI) ) )
+          
+          anipath = os.path.join( clusterpath, str(ANI) )
+          if not os.path.exists( anipath ) : os.mkdir( anipath )
+          
+          HMMS,GENES = 0,0
+          for cid in cluster_table['cid'].unique().to_list() :
+
+              genesets[ANI][cid] = {}
+              
+              cidpath = os.path.join( anipath, str( cid ) )
+              if not os.path.exists( cidpath ) : os.mkdir( cidpath )
+              genepath = os.path.join( cidpath, 'genes' )
+              if not os.path.exists( genepath ) : os.mkdir( genepath )
+            
+              for hmm in cluster_table.filter( polars.col('cid') == cid )['hmm'].unique().to_list() :
+                  HMMS = HMMS + 1
+                  records = cluster_table.filter( ( polars.col('cid') == cid ) 
+                                            & ( polars.col('hmm') == hmm ) )['gene'].to_list()
+                  if len(records) < MCL : continue
+                  genesets[ANI][cid][hmm] = frozenset( records )
+                  with open( os.path.join( genepath, hmm + '.fna'), 'w' ) as f :
+                      for gene in records :
+                          GENES = GENES + 1
+                          f.write( '>{seq_id}\n{seq}\n'.format( seq_id = gene,
+                                                                seq    = genes[gene] ) )
+            
+          LOG.write( '   wrote {G} sequences for {H} genes.\n'.format( G=str(GENES), H=str(HMMS) ) )
+
+      hmmtable = polars.DataFrame( 
+          [ { 'fna' : '{ani}/{cid}/genes/{hmm}.fna'.format( ani=ani,
+                                                            cid=cid,
+                                                            hmm=hmm ),
+              'id'  : ':'.join( sorted( genesets[ani][cid][hmm] ) ) }
+            for ani in genesets
+            for cid in genesets[ani]
+            for hmm in genesets[ani][cid] ] )
+
+      LOG.write( 'total alignments  : {n}\n'.format( n=len(alltable) ) )
+      LOG.write( 'unique alignments : {n}\n'.format( n=len( hmmtable['id'].unique() ) ) )
+      LOG.write( 'percent unique    : {n:.1f}%\n'.format( n=(len(allhmms)/len( hmmtable['id'].unique() )*100 ) ) )
+
+      with open( output.redunancy, 'w' ) as f :
+          f.write( '\n'.join( [ '\t'.join( row[1] )
+                                for row
+                                in hmmtable.group_by( 'id' ).agg( 'fna' ).rows() ] ) )
+      
+      LOG.write( 'redundancy table written.')

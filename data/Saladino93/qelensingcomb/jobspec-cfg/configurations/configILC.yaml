@@ -1,0 +1,117 @@
+sims_directory: '../extract_sehgal/manusmaps/flat_maps_large/newmaps11022021/ilc/'
+savingdirectory: 'output_biases_ILC/'
+
+analysisdirectory: 'output_ILC/'
+plotsdirectory: 'plots_ILC/'
+resultsdirectory: 'resultssumfg_ILC/' #'resultssumfg_ILC_1503/'
+#ells, ctt, ctt_lensed, detectnoise, fftot, fg, ftSZ
+spectra_path: 'input_spectra/'
+
+lmaxes_configs_input_to_try: [] #[[2000, 2000, 2000, 2000], [2500, 2500, 2500, 2500], [3000, 3000, 3000, 3000],
+                               #[3500, 3500, 3500, 3500], [4000, 4000, 4000, 4000], [4500, 4500, 4500, 4500]]
+
+Nsims: 80
+oldversion: True
+
+optversion: {'weights_name': 'absbias', 'sum_biases_squared': False, 'abs_biases': True, 'bias_squared': False,
+                      'color': 'purple', 'latexformula': '\sigma^2(\hat{A}_{\rm{comb}})+\left(\int_{\vec{L}}\vec{a}^TB\vec{a}\right)^2'}
+
+
+Lmin: 10
+Lmax: 6000
+
+logmode: True
+nlogBins: 15
+deltalplot: 100
+
+lmin_sel: 30
+lmax_sel: 1200
+
+fgnamefiles: ['total']
+
+estimatorssubset: ['shear', 'bh', 'pbh', 'symm']
+
+#if number of configs is 120
+#if size of srun is size, then size/Nsims number of groups
+#then you make sure each sims gets 1
+#you want size to be multiple of 80 and 120
+#e.g. size = 240, 480, 960,...
+##lmax_min, lmax_max, are for the available configs
+estimators:
+        shear:
+                nu: ilc
+                hardening: ''
+                tszprofile: ''
+                lmax_min: 3000
+                lmax_max: 4500
+                number: 4
+                direc_name: s
+                color: red
+                label: Shear
+                field_names: ['ilcA', 'ilcB']
+        bh:
+                nu: ilc
+                hardening: srcbh
+                tszprofile: ''
+                lmax_min: 3000
+                lmax_max: 4500
+                number: 4
+                direc_name: b
+                color: green
+                label: BH
+                field_names: ['ilcA', 'ilcB']
+        pbh:
+                nu: ilc
+                hardening: srcpbh
+                tszprofile: 1
+                lmax_min: 3000
+                lmax_max: 4500
+                number: 4
+                direc_name: p
+                color: purple
+                label: PBH
+                field_names: ['ilcA', 'ilcB']
+        symm:
+                nu: [ilc, ilc_depr]
+                hardening: ''
+                tszprofile: ''
+                lmax_min: 3000
+                lmax_max: 4500
+                number: 4
+                direc_name: sy
+                color: orange
+                label: Symm
+                field_names: ['ilc', 'ilcdepr']
+
+noisekey: N
+trispectrumkey: T
+primarykey: P
+secondarykey: S
+primarycrosskey: PC
+
+kkkey: 'kk'
+kgkey: 'kg'
+ggkey: 'gg'
+ellskey: 'ells'
+thetakey: 'theta'
+thetacrosskey: 'thetacross'
+
+totalabsbiaskey: 'totalabsbias'
+totalbiaskey: 'totalbias'
+
+sumalltotalabsbiaskey: 'sum_all_totalabsbias'
+sumalltotalbiaskey: 'sum_all_totalbias'
+sumallcrosstotalabsbiaskey: 'sum_all_crosstotalabsbias'
+sumallcrosstotalbiaskey: 'sum_all_crosstotalbias'
+
+optimisation:
+    regularised: False
+    regtype: 'std'
+    filter_biases: True
+    gtol: 2500
+    fbs: [0.1, 1., 4.] #[0.1, 1., 4, 9., 16.] #[0, 0.0001, 0.0002, 0.001, 0.01, 0.05, 0.1, 0.12, 0.14, 0.15, 0.154, 0.157, 0.16, 0.2, 0.25, 0.5, 1., 4., 9., 16., 32.] #[0., 0.01, 0.1, 0.2, 0.4, 0.5, 0.7, 1., 2, 3, 5, 7, 10]
+    inv_variances: [0]
+    analyticalwL: True
+    noiseequalsbias: [0]
+    bias_source: 'total' # can be total, sum_bias, sum_abs_bias: from bias of sum of fgs at map level, sum bias, sum abs bias
+

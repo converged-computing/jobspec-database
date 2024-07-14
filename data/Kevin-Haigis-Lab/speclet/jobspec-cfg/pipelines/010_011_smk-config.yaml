@@ -1,0 +1,59 @@
+__default__:
+  partition: "short"
+  cores: 1
+  mem: "1000"
+  time: "00:10:00"
+  gres: "gpu:0"
+  out: "logs/%j_{rule}.log"
+  err: "logs/%j_{rule}.log"
+  mail: "NONE"
+  J: "snakejob"
+sample_pymc_mcmc:
+  partition: "{params.partition}"
+  cores: 1
+  mem: "{params.mem}"
+  time: "{params.time}"
+  J: "pymc-mc"
+combine_pymc_mcmc:
+  partition: "short"
+  cores: 1
+  mem: "26000"
+  time: "00:22:00"
+  J: "pymc-comb"
+sample_pymc_numpyro:
+  partition: "{params.partition}"
+  cores: 1
+  mem: "{params.mem}"
+  time: "{params.time}"
+  gres: "{params.gres}"
+  J: "pyro-mc"
+combine_pymc_numpyro:
+  partition: "short"
+  cores: 1
+  mem: "250000"
+  time: "02:00:00"
+  J: "pyro-comb"
+sample_pymc_advi:
+  partition: "{params.partition}"
+  cores: 1
+  mem: "{params.mem}"
+  time: "{params.time}"
+  J: "pymc-advi"
+summarize_posterior:
+  partition: "short"
+  cores: 1
+  mem: "120000"
+  time: "5:00:00"
+  J: "summary"
+execute_report:
+  partition: "short"
+  cores: 1
+  mem: "8000"
+  time: "00:20:00"
+  J: "report"
+execute_lineage_report:
+  partition: "short"
+  cores: 2
+  mem: "{resources.mem}"
+  time: "{resources.time}"
+  J: "lin-rep"

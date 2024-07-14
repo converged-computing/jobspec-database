@@ -1,0 +1,98 @@
+// Keywords: 
+
+
+
+// set up a simple neutral simulation
+initialize()
+{	
+	// set the overall mutation rate
+	initializeMutationRate(1e-7);
+	
+	// m1 mutation type: neutral
+	initializeMutationType("m1", 0.5, "f", 0.0);
+	
+	// m2 mutation type: neutral
+	initializeMutationType("m2", 1.0, "f", 0.5);
+	
+	// g1 genomic element type: uses m1 for all neutral mutations
+	initializeGenomicElementType("g1", m1, 1.0);
+	
+	// uniform chromosome of length 100 kb
+	initializeGenomicElement(g1, 0, 99999);
+	
+	// uniform recombination along the chromosome
+	initializeRecombinationRate(1e-8);
+}
+
+1
+{
+// save this run's identifier, used to save and restore
+	defineConstant("simID", getSeed());
+// create a population of 10,000 individuals (1000 for testing)
+	sim.addSubpop("p1", 10000);
+}
+
+// at generation 5000, introduce an adaptive allele 
+8000 late() {
+	target = sample(p1.genomes, 1);
+	target.addNewDrawnMutation(m2, 50000);
+}
+
+// ensure the sweep is partial - i.e. if it doesn't establish terminate
+// if it does, set selective coefficient to 0 once it breaks freq >0.5
+// also echo lost/established
+8000:10000 late() {
+	mut = sim.mutationsOfType(m2);
+	if (size(mut) == 0) {
+			sim.simulationFinished();
+			cat(simID + ": lOST \n");
+	}
+	else if (mut.selectionCoeff != 0.0)
+		if (sim.mutationFrequencies(NULL, mut) >= 0.6) {
+			mut.setSelectionCoeff(0.0);
+			cat(simID + ": ESTABLISHED \n");
+		}
+}
+
+// at generation 8000, start pop growth
+8000: {
+
+newSize = asInteger(round(1.03^(sim.generation - 7999) * 10000));
+ if (newSize >= 25000)
+
+{
+
+newSize = 25000;
+
+sim.deregisterScriptBlock(self);
+ }
+
+p1.setSubpopulationSize(newSize);
+ }
+ 
+// run to generation 10000
+10000 late() {
+
+	mut = sim.mutationsOfType(m2);
+	if (size(mut) == 0) {
+			cat(simID + ": lOST \n");
+	}
+	else {
+			cat(simID + ": ESTABLISHED : Freq is " + (sim.mutationFrequencies(NULL, mut) + 				"\n"));
+		}
+
+
+// randomly subsample 20 individuals for output
+allIndividuals = sim.subpopulations.individuals;
+// set up weights
+w1 = asFloat(allIndividuals.countOfMutationsOfType(m2));
+w2 = (w1 * -1) + 2;
+// first sample individuals with mutation
+sampledIndividuals1 = sample(allIndividuals, 10, weights = w1);
+// then without
+sampledIndividuals2 = sample(allIndividuals, 10, weights = w2);
+// then combine
+final_sampledIndividuals = c(sampledIndividuals1, sampledIndividuals2);
+// create vcf
+final_sampledIndividuals.genomes.outputVCF();
+}

@@ -1,0 +1,28 @@
+decode:
+  model_name_or_path: 'gpt2'
+  max_seq_len: 1024 # maximum sequence length of inputs
+  data_size: -1 # how many examples to decode
+  decode_only: [] # which dialogue IDs to decode
+  max_len: 1024 # maximum sequence length to be generated before <EOS>
+  temperature: 1.0
+  num_beams: 1
+  # Path where the hypothesis files are saved.
+  # Will be suffixed by model binary file name (aka checkpoint.split("/")[-1]. Can be overridden via -hyp/--hyp_path.
+  hyp_dir: 'hyps'
+  # Subdirectory in hyp_dir where files are to be saved
+  experiment_name: 'experiment-11-1'
+  # If set to `huggingface', calls Hugging Face API during decoding for generation. Might fail by predicting same
+  # token repeatedly and failing to predict <EOS>. All subsequent calls to the API fail. If this happens set the
+  # flag to `custom'
+  generate_api: 'custom'
+  # Maxinum number of tokens repeated consecutively. Only used when for generate_api is `custom'
+  repeat_token_tolerance: 15
+  verbose:
+    disable_display: false
+
+reproduce:
+  seed: 20211118 # same seed for random, NumPy, PyTorch (CPU/GPU), across devices.
+  cudnn:
+    enabled: False
+    deterministic: True
+    benchmark: False

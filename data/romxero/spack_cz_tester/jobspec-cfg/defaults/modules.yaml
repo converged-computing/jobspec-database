@@ -1,0 +1,45 @@
+---
+modules:
+  prefix_inspections:
+    ./bin:
+      - PATH
+    ./man:
+      - MANPATH
+    ./share/man:
+      - MANPATH
+    ./share/aclocal:
+      - ACLOCAL_PATH
+    ./lib/pkgconfig:
+      - PKG_CONFIG_PATH
+    ./lib64/pkgconfig:
+      - PKG_CONFIG_PATH
+    ./share/pkgconfig:
+      - PKG_CONFIG_PATH
+    ./:
+      - CMAKE_PREFIX_PATH
+   ./include:
+      - CPATH
+   ./lib:
+      - LIBRARY_PATH
+
+  # These are configurations for the module set named "default"
+  default:
+    # Where to install modules
+    roots:
+     tcl:    $spack/share/spack/modules
+     lmod:   $spack/share/spack/lmod
+    # What type of modules to use ("tcl" and/or "lmod")
+    enable: []
+
+    tcl:
+      all:
+        autoload: direct
+
+    # Default configurations if lmod is enabled
+    lmod:
+      all:
+        autoload: direct
+      hash_length: 0
+      hierarchy:
+        - mpi
+        - compiler

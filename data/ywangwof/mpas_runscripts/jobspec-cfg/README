@@ -1,0 +1,72 @@
+  Version History
+
+03/21/2024 Version 3.7
+    1. Upgraded to Rocky linux OS on Jet
+    2. Note that "atmosphere_model.single" is renamed as "atmosphere_model"
+       in exec.
+
+02/08/2024 Version 3.6
+    1. Upgraded to MPAS V8.0.1
+
+11/14/2023 Version 3.5
+
+    1. Added support for reservation rtwrfruc on Jet.
+    2. Upgraded fix file SOILPARM.TBL with latest WRF pacakge, especially for RUC LSM 
+       with soil type 9.
+
+11/01/2023 Version 3.4
+
+    1. Incorporated fixes for diagnostic outputs when convection_scheme is turned off
+       from the latest MPAS package within branch atmosphere/nssl_v7.3_smiol_lcc.
+    2. Fixed a divide-by-zero float problem when computing 1-km hourly max reflectivity.
+    3. Trimmed the docstring in scripts/run_mpas.sh.
+
+08/24/2023 Version 3.3
+
+    1. Added support for the RRFS-A North American datasets by converting
+       the rotated lat/lon grid to the HRRR grid using wgrib2
+
+       A new option "-i rrfsna" is added and it will depend the download
+       RRFS-A NA data files from /lfs4/NAGAPE/wof/grib_files/RRFS-A.
+
+06/20/2023 Version 3.2
+
+    1. Added option config_microp_re following Ted's suggestion
+    2. Updated static processing with new BNU soil type and parallel
+       processing capability
+    3. Separated subdirectory fix_files from templates.
+
+05/12/2023 Version 3.1
+
+    1. Fixed bug with hourly precipitation in convective_diagnostics.F.
+    2. Improved resource usage on Jet.
+    3. Used 768 core for jobs of ICs and LBCs instead of 800.
+    4. Improved python scripts of plotting, especially for plotting precipitation fields.
+
+    new executables:
+       atmosphere_model.single
+       init_atmosphere_model
+
+04/28/2023 Version 3.0
+
+    1. Bill implemented the analysis fields wind rotation in the MPAS init_atmosphere core
+    2. Fix output of various UH values and 1-km max reflectivity
+    3. Fix for RUC LSM soil moisture issues
+
+    new executables:
+       atmosphere_model.single
+       init_atmosphere_model
+
+04/26/2023 Version 2.0
+
+    Here are the main updates:
+
+    1. Upgrade the PNETCDF library because MPAS uses a feature that is not available with version 1.6;
+    2. Add a wgrib2 step to rotate winds for the HRRR datasets;
+    3. Process wgrib2 & ungrib in parallel mode for speedup;
+    4. RRFS-initialized MPAS runs up to 60 hours
+
+    new executables:
+       atmosphere_model.single
+       init_atmosphere_model
+       ungrib.exe

@@ -1,0 +1,37 @@
+#!/bin/bash
+
+
+scriptName="sub"
+function printUsage () {
+    cat <<EOF
+
+Synopsis
+Add a module load command inside a submission script
+
+    $scriptName [-h | --help] submissionscriptName ModuleName
+
+        submissionscriptname: 	submission script name that was probably generated using JobR.sh or JobR_condo.sh
+	ModuleName:		Need to add the module to load to this script in order for the commands to run.  Example runFASTQC
+	#NAME:			#add a way to append to the existing name will improve walltime script
+ 
+Author
+
+    Andrew Severin, Genome Informatics Facilty, Iowa State University
+    severin@iastate.edu
+    18 February, 2016
+
+
+EOF
+}
+
+
+if [ $# -lt 1 ] ; then
+        printUsage
+        exit 0
+fi
+
+dir=$1
+
+sed -i '0,/module load/{s/module load/module load '$2'\nmodule load/}' $1
+#perl -i -pe 's/module use/module load '$2' \nmodule use/' $1
+

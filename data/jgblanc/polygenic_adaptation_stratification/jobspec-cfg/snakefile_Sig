@@ -1,0 +1,53 @@
+CHR =[]
+for i in range(0, 2000):
+  CHR.append(str(i))
+CONFIG=["C1"]
+REP = []
+for i in range(1,101):
+  REP.append("D"+str(i))
+SIZE=2000
+
+wildcard_constraints:
+    rep="[A-Z]\d+",
+    config="C."
+
+rule all:
+    input:
+        expand("output/PGA_test/4PopSplit/{rep}/{config}/q.txt", config=CONFIG,rep=REP, chr=CHR)
+
+
+# GWAS PCA
+
+rule GWAS_PCA:
+    input:
+        psam="output/Simulate_Genotypes/4PopSplit/{rep}/{config}/genos-gwas_common.psam",
+        pgen="output/Simulate_Genotypes/4PopSplit/{rep}/{config}/genos-gwas_common.pgen",
+        pvar="output/Simulate_Genotypes/4PopSplit/{rep}/{config}/genos-gwas_common.pvar"
+    output:
+        "output/PGA_test/4PopSplit/{rep}/{config}/genos-gwas.eigenvec",
+        "output/PGA_test/4PopSplit/{rep}/{config}/genos-gwas.eigenval"
+    shell:
+        """
+        plink2 \
+	      --pfile output/Simulate_Genotypes/4PopSplit/{wildcards.rep}/{wildcards.config}/genos-gwas_common \
+	      --out output/PGA_test/4PopSplit/{wildcards.rep}/{wildcards.config}/genos-gwas \
+		    --pca 10 approx
+		    """
+
+
+# Do PGA test
+
+rule Calc_Qx:
+  input:
+    tp_genos="output/Simulate_Genotypes/4PopSplit/{rep}/{config}/genos-test_common.psam",
+    gp_genos="output/Simulate_Genotypes/4PopSplit/{rep}/{config}/genos-gwas_common.psam",
+    evec="output/PGA_test/4PopSplit/{rep}/{config}/genos-gwas.eigenvec"
+  output:
+    qx="output/PGA_test/4PopSplit/{rep}/{config}/q.txt"
+  shell:
+    """
+    Rscript code/PGA_test/ts_fig.R output/Simulate_Genotypes/4PopSplit/{wildcards.rep}/{wildcards.config}/genos-gwas_common output/Simulate_Genotypes/4PopSplit/{wildcards.rep}/{wildcards.config}/genos-test_common {output} {input.evec}
+    """
+
+
+

@@ -1,0 +1,658 @@
+
+import numpy as np
+import pandas as pd
+import os
+
+from glob import glob
+from io import StringIO
+
+# load the sample sheet
+sumstats = pd.read_csv(config['sumstats'], sep='\t', index_col='ID', header=0)
+assert 'PATH' in sumstats.columns, 'Error, missing column "PATH" in sumstats sample sheet.'
+assert 'N' in sumstats.columns, 'Error, missing column "N" in sumstats sample sheet.'
+
+# load optional other sample sheet
+other_sumstats = pd.read_csv(config['other_sumstats'], sep='\t', index_col='ID', header=0) if 'other_sumstats' in config else pd.DataFrame()
+
+# load the big40 metadata
+big40 = pd.read_csv('resources/big40_metadata.tsv.gz', sep='\t')
+big40['idp'] = ['{:04d}'.format(x) for x in big40['Pheno'].values ]
+big40.set_index('idp',drop=False,inplace=True)
+
+# load the big40 phenotypes we wish to analyse
+with open(config['big40_phenotypes'], 'r') as infile:
+    big40_phenotypes = ['{:04d}'.format(int(x.strip())) for x in infile]
+
+# triggers running all rules
+rule all:
+    input:
+        'results/results.tsv.gz'
+
+
+wildcard_constraints:
+    id='[A-Za-z0-9_]+',
+    annot_id='[A-Za-z0-9_\.]+'
+
+
+#################################
+# dependencies / pre-processing #
+#################################
+
+rule install_ldsc_conda:
+    conda:
+        "env/ldsc.yml"
+    output:
+        touch('ldsc_conda.ok')
+    shell:
+        "echo 'dummy rule to install ldsc conda environment'"
+
+rule download_hm3_snplist:
+    # note: this link is broken :(
+    output:
+        "resources/w_hm3/w_hm3.snplist"
+    shell:
+        "cd resources/w_hm3 && "
+        "wget https://data.broadinstitute.org/alkesgroup/LDSCORE/w_hm3.snplist.bz2 && "
+        "bunzip2 w_hm3.snplist.bz2"
+
+rule download_and_munge_brain_sumstats:
+    input:
+        "resources/w_hm3/w_hm3.snplist"
+    output:
+        ss_tmp=temp("resources/sumstats/big40/{idp}.txt.gz"),
+        ss_munged="resources/sumstats/big40_munged/{idp}.sumstats.gz"
+    params:
+        N=lambda wc: big40.loc[wc['idp'],'N(all)'],
+        out_prefix=lambda wc, output: output['ss_munged'].replace('.sumstats.gz','')
+    conda:
+        "env/ldsc.yml"
+    resources:
+        threads=1,
+        mem_mb=8000,
+        time="02:00:00"
+    shell:
+        "wget --no-verbose -O {output[ss_tmp]} https://open.win.ox.ac.uk/ukbiobank/big40/release2/stats33k/{wildcards[idp]}.txt.gz && "
+        "zcat {output[ss_tmp]} | awk 'BEGIN{{print \"CHR\", \"SNP\", \"POS\", \"A1\", \"A2\", \"BETA\", \"SE\", \"P\"}}{{if(NR>1){{$NF=10**(-1*$NF); print $0}}}}' > {params[out_prefix]}.reformat.tmp.txt && "
+        "python ldsc/munge_sumstats.py --chunksize 500000 --sumstats {params[out_prefix]}.reformat.tmp.txt --N {params[N]} --out {params[out_prefix]} --merge-alleles {input} && "
+        "rm {params[out_prefix]}.reformat.tmp.txt"
+
+
+rule munge_target_sumstats:
+    input:
+        snplist="resources/w_hm3/w_hm3.snplist",
+        ss=lambda wc: sumstats.loc[wc['id'],'PATH']
+    output:
+        ss_munged='results/munged_sumstats/{id}.sumstats.gz'
+    params:
+        out_prefix=lambda wc, output: output['ss_munged'].replace('.sumstats.gz',''),
+        N=lambda wc: sumstats.loc[wc['id'],'N'],
+        pvcol=lambda wc: '--p "{}"'.format(sumstats.loc[wc['id'],'PVAL_COLUMN']) if not sumstats.loc[wc['id'],'PVAL_COLUMN'] == '.' else '',
+        a1col=lambda wc: '--a1 "{}"'.format(sumstats.loc[wc['id'],'A1_COLUMN']) if not sumstats.loc[wc['id'],'A1_COLUMN'] == '.' else '',
+        a2col=lambda wc: '--a2 "{}"'.format(sumstats.loc[wc['id'],'A2_COLUMN']) if not sumstats.loc[wc['id'],'A2_COLUMN'] == '.' else ''
+    conda:
+        "env/ldsc.yml"
+    resources:
+        threads=1,
+        mem_mb=8000,
+        time="02:00:00"
+    shell:
+        "python ldsc/munge_sumstats.py --chunksize 500000 --sumstats {input[ss]} --N {params[N]} --out {params[out_prefix]} --merge-alleles {input[snplist]} {params[pvcol]} {params[a1col]} {params[a2col]}"
+
+
+rule harmonize_other_sumstats:
+    input:
+        ss = lambda wc: other_sumstats.loc[wc['id'],'PATH']
+    output:
+        ss_renamed = 'results/other_sumstats/{id}.tsv.gz'
+    params:
+        tmp_prefix = lambda wc: 'results/other_sumstats/{}.tsv'.format(wc['id'])
+    log:
+        'results/other_sumstats/{id}.log'
+    conda:
+        "env/ldsc.yml"
+    resources:
+        threads = 1,
+        mem_mb=64000,
+        time="00:30:00"
+    shell:
+        "("
+        "python workflow/scripts/process_gwas_catalog_sumstats.py -o {params[tmp_prefix]} -i {input} && "
+        "gzip {params[tmp_prefix]} "
+        ") &> {log}"
+
+
+rule all_harmonize_other_sumstats:
+    input:
+        expand(rules.harmonize_other_sumstats.output, id=other_sumstats.index.tolist())
+
+
+rule munge_other_sumstats:
+    input:
+        snplist="resources/w_hm3/w_hm3.snplist",
+        ss='results/other_sumstats/{id}.tsv.gz'
+    output:
+        ss_munged='results/munged_other_sumstats/{id}.sumstats.gz'
+    log:
+        "results/munged_other_sumstats/{id}.snakelog"
+    params:
+        out_prefix=lambda wc, output: output['ss_munged'].replace('.sumstats.gz',''),
+        N=lambda wc: '--N {}'.format(other_sumstats.loc[wc['id'],'N']) if not other_sumstats.loc[wc['id'],'N'] == '.' else ''
+    conda:
+        "env/ldsc.yml"
+    resources:
+        threads=1,
+        mem_mb=8000,
+        time="02:00:00"
+    shell:
+        "("
+        "python ldsc/munge_sumstats.py --chunksize 500000 --sumstats {input[ss]} {params[N]} --out {params[out_prefix]} --merge-alleles {input[snplist]} "
+        ") &> {log}"
+
+
+rule all_munge_other_sumstats:
+    input:
+        expand(rules.munge_other_sumstats.output.ss_munged, id = other_sumstats.index.to_list())
+
+
+rule download_ld_scores:
+    # note: this link is broken :(
+    output:
+        directory('resources/eur_w_ld_chr')
+    shell:
+        "cd resources && "
+        "wget --no-verbose https://data.broadinstitute.org/alkesgroup/LDSCORE/eur_w_ld_chr.tar.bz2 && "
+        "tar -jxvf eur_w_ld_chr.tar.bz2"
+
+
+# rule to trigger downloading and preprocessing of all requested big40 phenotypes
+rule all_download_and_munge_big40:
+    input:
+        expand(rules.download_and_munge_brain_sumstats.output, idp=big40_phenotypes)
+
+
+# rule to trigger preprocessing of all target sumstats
+rule all_munge_sumstats:
+    input:
+        expand(rules.munge_target_sumstats.output, id=sumstats.index.values)
+
+# make rules above local
+localrules:
+    all_download_and_munge_big40,
+    all_munge_sumstats
+
+
+##########
+# S-LDSC #
+##########
+
+
+rule download_baseline_ld:
+    # note: these links are broken :(
+    output:
+        baseline=expand("1000G_EUR_Phase3_baseline/baseline.{chrom}.{suffix}", chrom=range(1,23), suffix=["annot.gz","l2.M", "l2.M_5_50", "l2.ldscore.gz"]),
+        weights=expand("weights_hm3_no_hla/weights.{chrom}.l2.ldscore.gz", chrom=range(1,23)),
+        ok=touch("download_baseline.ok")
+    shell:
+        "wget https://data.broadinstitute.org/alkesgroup/LDSCORE/1000G_Phase3_baseline_ldscores.tgz && "
+        "wget https://data.broadinstitute.org/alkesgroup/LDSCORE/weights_hm3_no_hla.tgz && "
+        "tar -xvzf 1000G_Phase3_baseline_ldscores.tgz && "
+        "tar -xvzf weights_hm3_no_hla.tgz "
+
+    
+rule extract_baseline_hm3_snps:
+    input:
+        expand("1000G_EUR_Phase3_baseline/baseline.{chrom}.l2.ldscore.gz", chrom=range(1,23))
+    output:
+        expand("1000G_EUR_Phase3_baseline/hm3_{chrom}.snps", chrom=range(1,23))
+    shell:
+        'for file in 1000G_EUR_Phase3_baseline/baseline*ldscore.gz; do '
+        'chrom="$(basename $file)"; '
+        'chrom="${{chrom#baseline.}}"; '
+        'chrom="${{chrom%.l2.ldscore.gz}}"; '
+        'zcat $file | awk \'{{if(NR>1){{print $2}}}}\' > "1000G_EUR_Phase3_baseline/hm3_${{chrom}}.snps"; '
+        'done'
+
+localrules:
+    extract_baseline_hm3_snps
+
+
+#######################################
+# S-LDSC with pre-defined annotations #
+#######################################
+
+rule download_ldsc_cts:
+    # note: this link is broken :(
+    output:
+        ok=touch("download_{cts_name}.ok"),
+        ldcts="{cts_name}.ldcts"
+    shell:
+        "wget https://data.broadinstitute.org/alkesgroup/LDSCORE/LDSC_SEG_ldscores/{wildcards[cts_name]}_1000Gv3_ldscores.tgz && "
+        "tar -xvzf {wildcards[cts_name]}_1000Gv3_ldscores.tgz "
+
+
+# make rules above local
+localrules:
+    download_ldsc_cts,
+    download_baseline_ld
+
+rule run_ldsc_cts:
+    input:
+        sumstats="results/munged_sumstats/{id}.sumstats.gz",
+        ldcts="{cts_name}.ldcts"
+    output:
+        ok=touch('results/ldsc_cts/{id}/{cts_name}.ok')
+    conda:
+        "env/ldsc.yml"
+    resources:
+        threads=1,
+        mem_mb=8000,
+        time="02:30:00"
+    shell:
+        "ldsc/ldsc.py "
+        "--h2-cts {input[sumstats]} "
+        "--ref-ld-chr 1000G_EUR_Phase3_baseline/baseline. "
+        "--out results/ldsc_cts/{wildcards[id]}/{wildcards[cts_name]} "
+        "--ref-ld-chr-cts {input[ldcts]} "
+        "--w-ld-chr weights_hm3_no_hla/weights."
+
+
+rule all_run_ldsc_cts:
+    input:
+        expand(rules.run_ldsc_cts.output, id=sumstats.index.tolist(), allow_missing=True)
+    output:
+        touch('results/ldsc_cts/{cts_name}.all_ok')
+
+
+rule run_ldsc_cts_other:
+    input:
+        sumstats="results/munged_other_sumstats/{id}.sumstats.gz",
+        ldcts="{cts_name}.ldcts"
+    output:
+        ok=touch('results/ldsc_cts_other/{id}/{cts_name}.ok')
+    conda:
+        "env/ldsc.yml"
+    resources:
+        threads=1,
+        mem_mb=8000,
+        time="02:30:00"
+    shell:
+        "ldsc/ldsc.py "
+        "--h2-cts {input[sumstats]} "
+        "--ref-ld-chr 1000G_EUR_Phase3_baseline/baseline. "
+        "--out results/ldsc_cts_other/{wildcards[id]}/{wildcards[cts_name]} "
+        "--ref-ld-chr-cts {input[ldcts]} "
+        "--w-ld-chr weights_hm3_no_hla/weights."
+
+rule all_run_ldsc_cts_other:
+    input:
+        expand(rules.run_ldsc_cts_other.output, id=other_sumstats.index.tolist(), allow_missing=True)
+    output:
+        touch('results/ldsc_cts_other/{cts_name}.all_ok')
+
+#################################################
+# S-LDSC with custom annotations from BED-files #
+#################################################
+
+# annot files should be generated with respect to the plink files in 1000G_EUR_Phase3_plink
+# these were downloaded from https://doi.org/10.5281/zenodo.7768714
+
+rule make_1000G_EUR_Phase3_vcf:
+    input:
+        bim = expand('1000G_EUR_Phase3_plink/1000G.EUR.QC.{chrom}.bim', chrom=range(1,23)),
+        fam = '1000G_EUR_Phase3_plink/1000G.EUR.QC.1.fam',
+        plink2 = ancient(config['plink2'])
+    output:
+        vcf = expand('1000G_EUR_Phase3_plink/1000G.EUR.QC.{chrom}.variants.vcf.gz', chrom=range(1,23))
+    log:
+        'logs/make_1000G_EUR_Phase3_vcf.log'
+    shell:
+         "("
+         "head -n 1 {input.fam}  > 1000G_EUR_Phase3_plink/tmp_fam.txt; "
+         "for chrom in {{1..22}}; do "
+         "{input.plink2} --memory 1000 --bfile 1000G_EUR_Phase3_plink/1000G.EUR.QC.${{chrom}} --export vcf-4.2 id-paste=iid bgz --keep-fam 1000G_EUR_Phase3_plink/tmp_fam.txt "
+         "--out 1000G_EUR_Phase3_plink/1000G.EUR.QC.${{chrom}}.variants ; "
+         "done; "
+         "rm 1000G_EUR_Phase3_plink/tmp_fam.txt; "
+         ") &> {log}"
+    
+
+
+rule bim_to_vcf:
+     # converts the bim file(s) to VCF format, which is needed for most variant effect prediction steps
+     # there should be a better way to do this but the plink documentation is so bad I can't figure it out.
+     input:
+         bim = 'data/genotypes/{id}.bim',
+         fam = 'data/genotypes/{id}.fam',
+         plink2 = 'bin/plink2'
+     output:
+         vcf = 'work/variant_effect_prediction/vcf/{id}.vcf.gz'
+     params:
+         in_prefix = lambda wc, input: input.bim.replace('.bim',''),
+         out_prefix = lambda wc, output: output.vcf.replace('.vcf.gz','')
+     log:
+         'logs/setup/bim_to_vcf_{id}.log'
+     shell:
+         "("
+         "head -n 1 {input.fam} | cut -f1 > {params.out_prefix}_tmp_fam.txt; "
+         "{input.plink2} --memory 1000 --bfile {params.in_prefix} --export vcf-4.2 id-paste=iid bgz --keep-fam {params.out_prefix}_tmp_fam.txt "
+         "--out {params.out_prefix} && rm {params.out_prefix}_tmp_fam.txt "
+         ") &> {log}"
+
+rule generate_annot_file_from_bed:
+    input:
+        bim=expand('1000G_EUR_Phase3_plink/1000G.EUR.QC.{chrom}.bim', chrom=range(1,23)),
+        bed='annot_bed/{annot_group}/{annot_id}.bed'
+    output:
+        annot=expand("results/annot/{{annot_group}}/{{annot_id}}_chr{chrom}.annot", chrom=range(1,23))
+    conda:
+        'env/ldsc.yml'
+    resources:
+        threads=1,
+        mem_mb=8000,
+        time="01:00:00"
+    shell:
+        'for chrom in {{1..22}}; do '
+        'python ldsc/make_annot.py '
+        '--bed-file {input[bed]} '
+        '--bimfile 1000G_EUR_Phase3_plink/1000G.EUR.QC.${{chrom}}.bim '
+        '--annot-file results/annot/{wildcards[annot_group]}/{wildcards[annot_id]}_chr${{chrom}}.annot; '
+        'done '
+
+
+rule calculate_ld_scores_annot:
+    input:
+        bed=expand("1000G_EUR_Phase3_plink/1000G.EUR.QC.{chrom}.bed", chrom=range(1,23)),
+        bim=expand("1000G_EUR_Phase3_plink/1000G.EUR.QC.{chrom}.bim", chrom=range(1,23)),
+        fam=expand("1000G_EUR_Phase3_plink/1000G.EUR.QC.{chrom}.fam", chrom=range(1,23)),
+        annot=expand("results/annot/{{annot_group}}/{{annot_id}}_chr{chrom}.annot", chrom=range(1,23)),
+        snps=expand("1000G_EUR_Phase3_baseline/hm3_{chrom}.snps", chrom=range(1,23))
+    output:
+        ldscore=expand("results/annot/{{annot_group}}/{{annot_id}}_chr{chrom}.l2.ldscore.gz", chrom=range(1,23)),
+        M=expand("results/annot/{{annot_group}}/{{annot_id}}_chr{chrom}.l2.M", chrom=range(1,23)),
+        M_5_50=expand("results/annot/{{annot_group}}/{{annot_id}}_chr{chrom}.l2.M_5_50", chrom=range(1,23)),
+        ldsc_log=expand("results/annot/{{annot_group}}/{{annot_id}}_chr{chrom}.log", chrom=range(1,23))
+    conda:
+        'env/ldsc.yml'
+    log:
+        "logs/calculate_ld_scores_annot/{annot_group}/{annot_id}.log"
+    resources:
+        threads=1,
+        mem_mb=8000,
+        time="03:30:00"
+    shell:
+        '('
+        'for chrom in {{1..22}}; do '
+        'python ldsc/ldsc.py '
+        '--bfile "1000G_EUR_Phase3_plink/1000G.EUR.QC.${{chrom}}" '
+        '--ld-wind-cm 1 '
+        '--annot "results/annot/{wildcards[annot_group]}/{wildcards[annot_id]}_chr${{chrom}}.annot" '
+        '--thin-annot '
+        '--out results/annot/{wildcards[annot_group]}/{wildcards[annot_id]}_chr${{chrom}} '
+        '--print-snps "1000G_EUR_Phase3_baseline/hm3_${{chrom}}.snps"; '
+        'done '
+        ') &> {log} '
+
+
+def get_ld_scores_from_bed_annot(wildcards):
+    # input function for the rule below
+    infiles = glob('annot_bed/{}/*.bed'.format(wildcards['annot_group']))
+    annot_ids = [ (s.split('/')[-1]).replace('.bed','') for s in infiles ]
+    return expand("results/annot/{annot_group}/{annot_id}_chr{chrom}.l2.ldscore.gz", annot_group=wildcards['annot_group'], annot_id=annot_ids, chrom=range(1,23))
+
+
+rule all_calculate_ld_scores_from_bed_annot:
+    input:
+        get_ld_scores_from_bed_annot
+    output:
+        touch('results/annot/{annot_group}/all.ok')
+
+# the rules run_ldsc_cts and run_ldsc_cts_other above can be used to run ldsc for these annotations
+# an appropriate .ldcts-file needs to be created.
+
+
+################
+# running ldsc #
+################
+
+# chunk the phenotypes into batches
+checkpoint chunk_phenotypes:
+    input:
+        pheno_file=config['big40_phenotypes']
+    output:
+        chunks=directory('results/pheno_chunks')
+    run:
+        os.makedirs(output['chunks'])
+        for i, p in enumerate(big40_phenotypes):
+            outfile='results/pheno_chunks/{}.txt'.format(int(i/100))
+            with open(outfile, 'a+') as out:
+                out.write(p+'\n')
+
+# make rule above local
+localrules:
+    chunk_phenotypes
+
+# input function for rule below
+def input_files_from_chunk(wildcards):
+    with open('results/pheno_chunks/{}.txt'.format(wildcards['i']),'r') as infile:
+        phenos = [ p.strip() for p in infile ]
+    input_files = ['resources/sumstats/big40_munged/{}.sumstats.gz'.format(p) for p in phenos]
+    return input_files
+
+rule genetic_correlation_chunk:
+    input:
+        ss_big40=input_files_from_chunk,
+        ss_target='results/munged_sumstats/{id}.sumstats.gz',
+        ldscores=rules.download_ld_scores.output # this is a directory
+    output:
+        log='results/genetic_correlation_chunk/{id}/{i}.log'
+    params:
+        out_prefix=lambda wc, output: output['log'].replace('.log',''),
+        ss_string=lambda wc, input: input['ss_target'] + ',' + ','.join(input['ss_big40'])
+    conda:
+        'env/ldsc.yml'
+    shell:
+        "python ldsc/ldsc.py "
+        "--ref-ld-chr {input[ldscores]}/ "
+        "--out {params[out_prefix]} "
+        "--rg {params[ss_string]} "
+        "--w-ld-chr {input[ldscores]}/"
+
+# input function for rule below
+def aggregate_input_chunks(wildcards):
+    checkpoint_output = checkpoints.chunk_phenotypes.get(**wildcards).output['chunks']
+
+    # "i" will contain all the chunk numbers
+    i = glob_wildcards(os.path.join(checkpoint_output, '{i}.txt'))[0]
+    print('aggregating {} chunks'.format(len(i)))
+
+    return expand("results/genetic_correlation_chunk/{id}/{i}.log", id=wildcards.id, i=i)
+
+rule aggregate_chunks:
+    input:
+        chunks=aggregate_input_chunks
+    output:
+        touch('results/genetic_correlation_chunk/{id}.ok')
+ 
+rule all_aggregate_chunks:
+    input:
+        expand(rules.aggregate_chunks.output, id=sumstats.index.values)
+
+
+# genetic correlation of target sumstats with other sumstats
+
+rule genetic_correlation_other:
+    input:
+        ss_other=rules.all_munge_other_sumstats.input,
+        ss_target='results/munged_sumstats/{id}.sumstats.gz',
+        ldscores=rules.download_ld_scores.output # this is a directory
+    output:
+        log='results/genetic_correlation_other/{id}.log'
+    log:
+        'results/genetic_correlation_other/{id}.snakelog'
+    params:
+        out_prefix=lambda wc, output: output['log'].replace('.log',''),
+        ss_string=lambda wc, input: input['ss_target'] + ',' + ','.join(input['ss_other'])
+    conda:
+        'env/ldsc.yml'
+    shell:
+        "("
+        "python ldsc/ldsc.py "
+        "--ref-ld-chr {input[ldscores]}/ "
+        "--out {params[out_prefix]} "
+        "--rg {params[ss_string]} "
+        "--w-ld-chr {input[ldscores]}/"
+        ") &> {log} "
+
+rule all_genetic_correlation_other:
+    input:
+        expand(rules.genetic_correlation_other.output, id = sumstats.index.tolist())
+
+
+# genetic correlation of other sumstats with other sumstats
+
+rule genetic_correlation_within_other:
+    input:
+        ss_other=rules.all_munge_other_sumstats.input,
+        ss_target='results/munged_other_sumstats/{id}.sumstats.gz',
+        ldscores=rules.download_ld_scores.output # this is a directory
+    output:
+        log='results/genetic_correlation_within_other/{id}.log'
+    log:
+        'results/genetic_correlation_within_other/{id}.snakelog'
+    params:
+        out_prefix=lambda wc, output: output['log'].replace('.log',''),
+        ss_string=lambda wc, input: input['ss_target'] + ',' + ','.join(list( s for s in input['ss_other'] if s != input['ss_target']))
+    conda:
+        'env/ldsc.yml'
+    shell:
+        "("
+        "python ldsc/ldsc.py "
+        "--ref-ld-chr {input[ldscores]}/ "
+        "--out {params[out_prefix]} "
+        "--rg {params[ss_string]} "
+        "--w-ld-chr {input[ldscores]}/"
+        ") &> {log} "
+
+rule all_genetic_correlation_within_other:
+    input:
+        expand(rules.genetic_correlation_within_other.output, id = other_sumstats.index.tolist())
+
+
+# genetic correlation of target sumstats with target sumstats
+
+rule genetic_correlation_within_target:
+    input:
+        ss_other=rules.all_munge_sumstats.input,
+        ss_target='results/munged_sumstats/{id}.sumstats.gz',
+        ldscores=rules.download_ld_scores.output # this is a directory
+    output:
+        log='results/genetic_correlation_within_target/{id}.log'
+    log:
+        'results/genetic_correlation_within_target/{id}.snakelog'
+    params:
+        out_prefix=lambda wc, output: output['log'].replace('.log',''),
+        ss_string=lambda wc, input: input['ss_target'] + ',' + ','.join(list( s for s in input['ss_other'] if s != input['ss_target']))
+    conda:
+        'env/ldsc.yml'
+    shell:
+        "("
+        "python ldsc/ldsc.py "
+        "--ref-ld-chr {input[ldscores]}/ "
+        "--out {params[out_prefix]} "
+        "--rg {params[ss_string]} "
+        "--w-ld-chr {input[ldscores]}/"
+        ") &> {log} "
+
+rule all_genetic_correlation_within_target:
+    input:
+        expand(rules.genetic_correlation_within_target.output, id = sumstats.index.tolist())
+
+
+#######################
+# merging the results #
+#######################
+
+# function used in the rules below
+def parse_log(path):
+    """
+    parses output of genetic correlation, returns a pandas DataFrame
+    """
+    with open(path, 'r') as infile:
+        keep=False
+        record = ''
+        for line in infile:
+            if line.startswith('Summary of Genetic Correlation'):
+                keep = True
+                continue
+            if not keep:
+                continue
+            if len(line) == 1:
+                break
+            record += line
+    return pd.read_csv(StringIO(record), delim_whitespace=True)
+    
+rule parse_logs:
+    input:
+        rules.all_aggregate_chunks.input,
+        metadata='resources/big40_metadata.tsv.gz'
+    output:
+        results_tsv='results/results.tsv.gz'
+    run:
+        metadata = pd.read_csv(input['metadata'], sep='\t')
+        logs = glob('results/genetic_correlation_chunk/*/*.log')
+        ssid = [ p.split('/')[-2] for p in logs]
+        chunk = [ p.split('/')[-1].split('.')[0] for p in logs ]
+        genet_cor = [ parse_log(x) for x in logs ]
+        for i, _ in enumerate(genet_cor):
+            genet_cor[i]['ss'] = ssid[i]
+            genet_cor[i]['chunk'] = chunk[i]
+        genet_cor = pd.concat(genet_cor)
+        genet_cor['big40_id'] = genet_cor.p2.str.split('/',expand=True)[3].str.split('.',expand=True)[0]
+        metadata['big40_id'] = ['{:04d}'.format(i) for i in metadata.Pheno]
+        genet_cor = genet_cor.merge(metadata[['big40_id','UKB ID','IDP short name','Cat.','Category name','IDP description']], on=['big40_id'], validate='many_to_one').sort_values('p')
+        genet_cor.to_csv(output['results_tsv'], sep='\t')
+
+
+rule parse_logs_other:
+    input:
+        logs = rules.all_genetic_correlation_other.input
+    output:
+        results_tsv = 'results/results_other.tsv.gz'
+    run:
+        logs = input['logs']
+        genet_cor = [ parse_log(x) for x in logs ]
+        genet_cor = pd.concat(genet_cor)
+        genet_cor.to_csv(output['results_tsv'], sep='\t', index=False)
+
+localrules:
+    parse_logs_other
+        
+
+rule parse_logs_within_other:
+    input:
+        logs = rules.all_genetic_correlation_within_other.input
+    output:
+        results_tsv = 'results/results_within_other.tsv.gz'
+    run:
+        logs = input['logs']
+        genet_cor = [ parse_log(x) for x in logs ]
+        genet_cor = pd.concat(genet_cor)
+        genet_cor.to_csv(output['results_tsv'], sep='\t', index=False)
+
+localrules:
+    parse_logs_within_other
+
+
+rule parse_logs_within_target:
+    input:
+        logs = rules.all_genetic_correlation_within_target.input
+    output:
+        results_tsv = 'results/results_within_target.tsv.gz'
+    run:
+        logs = input['logs']
+        genet_cor = [ parse_log(x) for x in logs ]
+        genet_cor = pd.concat(genet_cor)
+        genet_cor.to_csv(output['results_tsv'], sep='\t', index=False)
+
+localrules:
+    parse_logs_within_target

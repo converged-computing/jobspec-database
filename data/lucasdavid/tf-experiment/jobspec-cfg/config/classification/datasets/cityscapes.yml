@@ -1,0 +1,46 @@
+setup:
+  tf_seed: 1583
+dataset:
+  load:
+    name: "cityscapes/semantic_segmentation_extra"
+    data_dir: "./data"
+    splits:
+      - train
+      - validation
+      - train_extra
+  prepare:
+    batch_size: 64
+    sizes: &image_sizes [512, 1024, 3]
+    prefetch_buffer_size: auto
+    parallel_calls: auto
+    drop_remainder: true
+    task: classification_multilabel_from_segmentation
+    classes: &classes 20
+    keys:
+      - image
+      - segmentation_label
+    shuffle:
+      seed: 4081
+      buffer_size: 5000
+      splits:
+        - train
+    augmentation:
+      splits:
+        - train
+        # - validation
+        # - train_extra
+    pad_values: [0, -1]
+model:
+  name: rn101_cityscapes_ml
+  input_shape: *image_sizes
+  head:
+    units: *classes
+    activation: sigmoid
+training:
+  loss: BinaryCrossentropy
+  metrics:
+    - BinaryAccuracy
+    - Precision
+    - Recall
+evaluation:
+  task: classification_multilabel

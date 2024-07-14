@@ -1,0 +1,102 @@
+#!/usr/bin/env python
+
+import os
+import re
+import sys
+import time
+import shutil
+import argparse
+from gen_batch import gen_batch
+from subprocess import call
+
+def make_next_directory(path):
+    max_num = 0
+    for name in os.listdir(path):
+        match = re.match('pluto-(\d+)', name)
+        if match:
+            if int(match.group(1)) > max_num:
+                max_num = int(match.group(1))
+
+    ret = os.path.join(path,'pluto-{}'.format(max_num+1))
+    os.mkdir(ret)
+    return ret
+
+def get_command_line_args():
+    return repr(sys.argv)
+
+parser = argparse.ArgumentParser()
+parser.add_argument('scratch',
+        help='Set the scratch folder where run folders are stored by date and number')
+parser.add_argument('ntasks',
+        help="Number of tasks to launch")
+
+parser.add_argument('-i', '--ignore', dest='ignore', action='store_true', 
+        help='Ignore the fact that the changes to the working directory are not commited and proceed anyway')
+parser.add_argument('--no-compile', dest='compile', action='store_false', 
+        help='Disable automatically compiling the program')
+parser.add_argument('--no-submit', action='store_false', dest='submit',
+        help='Set this flag to just setup the folder without submitting the SLURM job.')
+parser.add_argument('-m', '--message', dest='message',
+        help='Provide a message to be saved with the output')
+
+parser.add_argument('-j', '--job-name', dest='jobname', default='pluto',
+        help="Set the job name. The default is 'pluto'.")
+parser.add_argument('--tasks-per-node', dest='tasks_per_node', default=None,
+        help="Maximum number of tasks to launch per node.")
+parser.add_argument('--partition', default='t1standard',
+        help="Name the partition to submit to. The defualt is 't1standard'")
+parser.add_argument('--time', default=None,
+        help="Time limit for the run")
+parser.add_argument('--test-only', dest='test', action='store_true',
+        help="Have slurm validate the batch script and return an estimate of when the job would be scheduled to run")
+
+parser.add_argument('--contiguous', dest='cont', action='store_true',
+        help="Request contiguous node allocation.")
+
+args = parser.parse_args()
+
+# Check if working directory is clean unless we ignore it.
+if not args.ignore:
+    if call('git diff-index --quiet HEAD --', shell=True):
+        print("There are uncommited changes in the working directory. Commit them and try again or set the --ignore flag.")
+        sys.exit()
+
+# Make sure the program is rebuilt correctly.
+if args.compile:
+    ret = call('make FC=mpifort', shell=True)
+    if ret != 0:
+        sys.exit(ret)
+
+# If it doesn't exist already, make a folder for today's runs.
+date_today = time.strftime("%Y-%a-%b-%d")
+if not os.path.exists(os.path.join(args.scratch, date_today)):
+    os.mkdir(os.path.join(args.scratch, date_today))
+
+# Now make a new subfolder to put this run into.
+data_folder = make_next_directory(os.path.join(args.scratch, date_today))
+
+
+# Copy the needed hybrid code files over
+shutil.copy('hybrid', data_folder)
+shutil.copy('inputs.dat', data_folder)
+
+# Generate a few more informational files
+with open(os.path.join(data_folder, 'invocation'), mode='w') as f:
+    f.write(get_command_line_args())
+with open(os.path.join(data_folder, 'message'), mode='w') as f:
+    f.write(args.message)
+
+if args.ignore:
+    with open(os.path.join(data_folder, 'diff'), mode='w') as f:
+        call('git diff --no-color', shell=True, stdout=f)
+
+with open(os.path.join(data_folder, 'commit'), mode='w') as f:
+    call('git show --quiet --pretty=fuller HEAD', shell=True, stdout=f)
+
+# Generate the SLURM batch script that will be used to submit the job
+gen_batch( os.path.join(data_folder,'pluto.slurm'), args.jobname, args.partition, args.ntasks,
+           args.tasks_per_node, args.time, args.test, args.cont )
+
+if args.submit:
+    os.chdir(data_folder)
+    call('sbatch pluto.slurm', shell=True)

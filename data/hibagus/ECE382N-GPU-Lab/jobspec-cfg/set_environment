@@ -1,0 +1,18 @@
+SCRIPT=$(readlink --canonicalize --no-newline $BASH_SOURCE)
+SCRIPTPATH=$(dirname "$SCRIPT")
+
+echo "Activating CUDA Toolkit 12.0 Module from TACC..."
+module load cuda/12.0
+
+echo "Setting-up NCU Path..."
+export PATH="$SCRIPTPATH/nsight-compute/2023.2.0/:$PATH"
+
+echo "Activating Python Virtual Environment..."
+source "$SCRIPTPATH/application/venv/bin/activate"
+
+echo "Detecting Python Version..."
+VERSION=$(python -c "import sys; print(str(sys.version_info[0])+'.'+str(sys.version_info[1]))")
+echo "Python $VERSION is detected."
+
+echo "Override TACC NVIDIA nvjitlink..."
+export LD_LIBRARY_PATH="$SCRIPTPATH/application/venv/lib/python$VERSION/site-packages/nvidia/nvjitlink/lib/:$LD_LIBRARY_PATH"

@@ -1,0 +1,6 @@
+#!/bin/bash
+
+qstat -f "$PBS_JOBID" | awk '/Job_Name/ || /walltime/ || /Id:/ || /Resource_List.nodes/' | awk '{print $3}' | paste - - - - | awk 'BEGIN{OFS="\t"} {print "'"$(date)"'",$0}' | awk 'NR==1'>> ~/walltime.txt
+qstat -f "$PBS_JOBID" | awk '/Job_Name/ || /walltime/ || /Id:/ || /Resource_List.nodes/' | awk '{print $3}' | paste - - - - | awk 'BEGIN{OFS="\t"} {print "'"$(date)"'",$0}' | awk 'NR==1'
+echo "Written to ~/walltime.txt"
+

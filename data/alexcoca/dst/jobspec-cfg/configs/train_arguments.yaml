@@ -1,0 +1,42 @@
+data:
+  # This is updated at runtime based on data version provided in CLI
+  version: -1
+
+train:
+  model_name_or_path: 'gpt2'
+  max_seq_len: 1024 # maximum sequence length
+  epochs: 2 # maximum number of epochs
+  data_size: -1 # number of examples in an epoch (-1: all examples available); use for testing
+  batch_size: 16
+  gradient_accumulation_steps: 4 # gradients applied every this many batches to the output
+  max_grad_norm: 1.0
+  use_scheduler: true
+  warmup_steps: 0
+  learning_rate: 6.25e-5
+  adam_eps: 1e-12
+  fp16: false # use float16 in training
+  eps: 1e-12
+  # Path where checkpoints are *saved*
+  checkpoint_dir: 'models'
+  # If populated, the checkpoints are saved under checkpoint_dir/experiment_name
+  experiment_name: 'experiment-14'
+  # Populate if the training is restarted from checkpoint
+  checkpoint: ''
+  verbose:
+    disable_display: false
+
+dev:
+  model_name_or_path: 'gpt2'
+  max_seq_len: 1024 # maximum sequence length
+  data_size: -1 # number of examples in an epoch (-1: all examples available); use for testing
+  eval_interval: 320000 # number of examples after which the model is evaluated
+  batch_size: 32
+  verbose:
+    disable_display: false
+
+reproduce:
+  seed: 20211118 # same seed for random, NumPy, PyTorch (CPU/GPU), across devices
+  cudnn:
+    enabled: True
+    deterministic: False
+    benchmark: True

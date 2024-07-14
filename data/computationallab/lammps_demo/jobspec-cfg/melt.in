@@ -1,0 +1,45 @@
+# 3d Lennard-Jones melt
+# refactored and documented example from https://github.com/lammps/lammps/tree/master/examples/melt
+
+variable        ATOM_TYPE equal 1
+
+units           lj
+atom_style      atomic
+
+# style (fcc|bcc..) reduced density
+lattice         fcc 0.8442
+
+# id xlo xhi ylo yhi zlo zhi
+region          main_box block 0 10 0 10 0 10
+
+# N_atom_types region_id
+create_box      1 main_box
+
+# atom_type style (box|region)
+create_atoms    ${ATOM_TYPE} box
+
+# atom_type value
+mass            ${ATOM_TYPE} 1.0
+
+# group_id create temp rnd_seed
+velocity        all create 3.0 87287
+
+# LJ cutoff value
+pair_style      lj/cut 2.5
+
+# LJ eps sigma
+pair_coeff      ${ATOM_TYPE} ${ATOM_TYPE} 1.0 1.0
+
+# neighbor list cutoff style (bin|nsq|mult)
+neighbor        0.3 bin
+# how often the neighbor list is recalculated
+neigh_modify    every 20 delay 0 check no
+
+fix             fix_nve all nve
+
+dump            xyz_writer all xyz 10000 out/coor.*.xyz
+
+# log interval
+thermo          10000
+
+run             250000

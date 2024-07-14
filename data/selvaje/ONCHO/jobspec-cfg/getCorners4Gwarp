@@ -1,0 +1,13 @@
+#!/bin/bash
+# get corners for gdalwarp -te option
+# gdalwarp  -te  $(getCorners4Gwarp reference.tif  ) input.tif output.tif
+file=$1
+
+# -te xmin ymin xmax ymax
+
+xmin=$(gdalinfo $file | grep "Upper Left"  | awk '{ gsub ("[(),]"," ") ; print  $3  }')
+ymax=$(gdalinfo $file | grep "Upper Left"  | awk '{ gsub ("[(),]"," ") ; print  $4  }')
+xmax=$(gdalinfo $file | grep "Lower Right" | awk '{ gsub ("[(),]"," ") ; print  $3  }')
+ymin=$(gdalinfo $file | grep "Lower Right" | awk '{ gsub ("[(),]"," ") ; print  $4  }')
+
+echo $xmin $ymin $xmax $ymax

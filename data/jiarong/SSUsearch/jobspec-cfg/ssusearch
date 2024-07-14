@@ -1,0 +1,75 @@
+#!/usr/bin/env python
+"""
+Execution script for snakemake workflows.
+"""
+import argparse
+import os.path
+import sys
+import pprint
+import subprocess
+
+__version__ = '1.0.0'
+
+thisdir = os.path.realpath(os.path.dirname(__file__))
+
+def main(args, unknown):
+    # first, find the Snakefile
+    snakefile = None
+    if os.path.exists(args.snakefile) and not os.path.isdir(args.snakefile):
+        snakefile = args.snakefile
+    else:
+        snakefile = os.path.join(thisdir, 'Snakefile')
+        if not os.path.exists(snakefile):
+            sys.stderr.write('Error: cannot find Snakefile at {}\n'.format(snakefile))
+            sys.exit(-1)
+
+    snakefile = os.path.abspath(snakefile)
+    # next, find the workflow configfile, a.k.a config.yaml
+    configfile = None
+    if os.path.exists(args.configfile) and not os.path.isdir(args.configfile):
+        configfile = args.configfile
+    else:
+        for suffix in ('', '.yaml', 'yml'):
+            tryfile = os.path.join(thisdir, args.configfile + suffix)
+            if os.path.exists(tryfile) and not os.path.isdir(tryfile):
+                sys.stderr.write('Found configfile at {}\n'.format(tryfile))
+                configfile = tryfile
+                break
+
+    if not configfile:
+        sys.stderr.write('Error: cannot find paramsfile {}\n'.format(args.paramsfile))
+        sys.exit(-1)
+
+    configfile = os.path.abspath(configfile)
+
+    print('--------')
+    print('Details:')
+    print('\tsnakefile: {}'.format(snakefile))
+    print('\tconfigfile: {}'.format(configfile))
+    print('--------')
+
+    if args.dryrun:
+        arg_list = ['snakemake', '--use-conda', '--snakefile', snakefile, '--configfile', configfile, '--dryrun']
+    else:
+        arg_list = ['snakemake', '--use-conda', '--snakefile', snakefile, '--configfile', configfile]
+    arg_list = arg_list + unknown
+    # run!!
+    status = subprocess.call(arg_list)
+    return status
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(
+            description='Run snakemake workflows using the given config file & metadata file.', 
+            usage="""
+*** ssusearch --snakefile <Snakefile> --configfile <config.yaml> [other snakemake params]
+*** All snakemake options are allowed. See details in snakemake help.
+            """
+    )
+
+    parser.add_argument('-s', '--snakefile', default='Snakefile', help='default: %(default)s')
+    parser.add_argument('--configfile', default='config.yaml', help='default: %(default)s')
+    parser.add_argument('-n', '--dryrun', action='store_true', help='check workflow without actually running')
+    parser.add_argument('-v', '--version', action='version', version='{version}'.format(version=__version__))
+    args, unknown = parser.parse_known_args()
+
+    sys.exit(main(args, unknown))

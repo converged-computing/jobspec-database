@@ -1,0 +1,68 @@
+import subprocess
+
+# pwd of the directory where running the snakefile ("/home/users/smartinezarbas/git/gitlab/CRISPR_analysis_pipeline")
+
+PWD = os.getcwd()
+
+# Definition of environmental variables: paths for the source codes, among others
+
+TMPDIR = os.environ.get("TMPDIR", "/tmp")
+SRCDIR = os.environ.get("SRCDIR", "%s/src" % PWD)
+CONFIG = os.environ.get("CONFIG", "config/config.json")
+DBPATH = os.environ.get("DBPATH", "/mnt/nfs/projects/ecosystem_biology/local_tools/IMP/dependencies/prokka/db")
+
+configfile: CONFIG
+
+MEMCORE = os.environ.get("MEMCORE", config['memory_per_core_gb'])
+THREADS = os.environ.get("THREADS", config['threads'])
+MEMTOTAL = os.environ.get("MEMTOTAL", config['memory_total_gb'])
+
+## Define input directory
+DB_FA_DIR = os.environ.get("DB_FA_DIR", "/mnt/nfs/projects/ecosystem_biology/LAO/time_series/IMP_analysis/LAO_TS/Databases/Assemblies")
+VIRSORTER_DIR = os.environ.get("VIRSORTER_DIR", "/mnt/nfs/projects/ecosystem_biology/LAO/time_series/IMP_analysis/LAO_TS/CRISPR_analysis/PhagePlasmidPrediction/VirSorter")
+VIRFINDER_DIR = os.environ.get("VIRFINDER_DIR", "/mnt/nfs/projects/ecosystem_biology/LAO/time_series/IMP_analysis/LAO_TS/CRISPR_analysis/PhagePlasmidPrediction/VirFinder")
+CBAR_DIR = os.environ.get("CBAR_DIR", "/mnt/nfs/projects/ecosystem_biology/LAO/time_series/IMP_analysis/LAO_TS/CRISPR_analysis/PhagePlasmidPrediction/cBar")
+PLASF_DIR = os.environ.get("PLASF_DIR", "/mnt/nfs/projects/ecosystem_biology/LAO/time_series/IMP_analysis/LAO_TS/CRISPR_analysis/PhagePlasmidPrediction/PlasFlow")
+
+
+## Define output directory
+WORK_DIR = os.environ.get("WORK_DIR", "/scratch/users/smartinezarbas/CRISPR_results/MgeDereplication")
+
+workdir:
+    WORK_DIR
+
+include:
+    '../rules/MgeDereplication/collect_phages.rule'
+
+include:
+    '../rules/MgeDereplication/collect_plasmids.rule'
+
+include:
+    '../rules/MgeDereplication/collect_mge_concatenate.rule'
+
+include:
+    '../rules/MgeDereplication/collect_mge_seqs.rule'
+
+include:
+    '../rules/MgeDereplication/collapse_mge.rule'
+
+#include:
+#    '../rules/MgeDereplication/contig_to_class.rule'
+
+
+rule MGE_DEREPLICATION_WORKFLOW:
+    input:
+        "ALL_VirSorter_id_contigs.txt",
+        "ALL_VirFinder_id_contigs.txt",
+        "ALL_PlasFlow_id_contigs.txt",
+        "ALL_cBar_id_contigs.txt",
+        "ALL_PSpCC_id_contigs.txt",
+        "ALL_MGEs.txt",
+        "ALL_MGEs.fa",
+        "ALL_MGEs-merged.fa",
+        "ALL_MGEs-merged.fa.clstr",
+        "ALL_MGEs-merged.fa.tbl",
+        "ALL_MGEs-merged.fa.tbl2seq",
+#        "ALL_MGEcontigs_class.tsv",
+    output:
+        touch('mge_dereplication_workflow.done')

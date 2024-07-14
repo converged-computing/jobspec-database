@@ -1,0 +1,106 @@
+import subprocess
+
+# pwd of the directory where running the snakefile ("/home/users/smartinezarbas/git/gitlab/CRISPR_analysis_pipeline")
+PWD = os.getcwd()
+
+# Definition of environmental variables: paths for the source codes, among others
+CONFIG = os.environ.get("CONFIG", "%s/config/config.json" % PWD)
+SRCDIR = os.environ.get("SRCDIR", "%s/src" % PWD)
+ESB_TOOLS_DIR = "/mnt/nfs/projects/ecosystem_biology/local_tools"
+configfile: CONFIG
+
+TMPDIR = os.environ.get("TMPDIR", config['tmp_dir'])
+MEMCORE = os.environ.get("MEMCORE", config['memory_per_core_gb'])
+THREADS = os.environ.get("THREADS", config['threads'])
+MEMTOTAL = os.environ.get("MEMTOTAL", config['memory_total_gb'])
+
+## input directories
+## IMP results 
+TS_DIR = os.environ.get("TS_DIR", "/mnt/nfs/projects/ecosystem_biology/LAO/time_series/IMP_analysis/LAO_TS")
+
+## path of files of assemblies with contig IDs already changes (sample name added to the contig name of each sample)
+DB_FA_DIR = os.environ.get("DB_FA_DIR", "/mnt/nfs/projects/ecosystem_biology/LAO/time_series/IMP_analysis/LAO_TS/Databases/Assemblies")
+
+## Define samples
+TS_SAMPLES = os.environ.get("TS_SAMPLES", "A01 A02 D01 D02 D03 D04 D05 D06 D07 D08 D09 D10 D11 D12 D13 D14 D15 D16 D17 D18 D19 D20 D21 D22 D23 D24 D25 D26 D27 D28 D29 D30 D31 D32 D33 D34 D35 D36 D37 D38 D39 D40 D41 D42 D43 D44 D45 D46 D47 D48 D49 D50 D51").split()
+
+## Define output directory
+CRISPR_OUTDIR = os.environ.get("CRISPR_OUTDIR", "/scratch/users/smartinezarbas/CRISPR_results")
+workdir:
+    CRISPR_OUTDIR
+
+include:
+    '../rules/CrisprPrediction/run_metacrt_mgmt.rule'
+
+include:
+    '../rules/CrisprPrediction/run_metacrt_mt.rule'
+
+include:
+    '../rules/CrisprPrediction/run_crass_mg.rule'
+
+include:
+    '../rules/CrisprPrediction/run_crass_mt.rule'
+
+include:
+    '../rules/CrisprPrediction/run_cd_hit_repeats.rule'
+
+include:
+    '../rules/CrisprPrediction/run_cd_hit_spacers.rule'
+
+include:
+    '../rules/CrisprPrediction/run_cd_hit_flanks.rule'
+
+include:
+    '../rules/CrisprPrediction/run_formatdb.rule'
+
+include:
+    '../rules/CrisprPrediction/run_blast_spacers.rule'
+
+include:
+    '../rules/CrisprPrediction/run_blast_repeats.rule'
+
+include:
+    '../rules/CrisprPrediction/run_blast_flanks.rule'
+
+include:
+    '../rules/CrisprPrediction/filter_protospacers.rule'
+
+include:
+    '../rules/CrisprPrediction/get_metaCRT_flanks.rule'
+
+# master command
+rule CRISPR_PIPELINE:
+    input:
+        expand("ALL/{ts_sample}/metacrt_contigs-mt/metacrt_contigs-mt.out", ts_sample = TS_SAMPLES),
+        expand("ALL/{ts_sample}/crass_mg-reads/crass.crispr", ts_sample = TS_SAMPLES),
+        expand("ALL/{ts_sample}/crass_mt-reads/crass.crispr", ts_sample = TS_SAMPLES),
+        expand("ALL/{ts_sample}/crass_mg-reads/crass_mg-reads_{ts_sample}_spacers.fa", ts_sample = TS_SAMPLES),
+        expand("ALL/{ts_sample}/crass_mt-reads/crass_mt-reads_{ts_sample}_spacers.fa", ts_sample = TS_SAMPLES),
+        expand("ALL/{ts_sample}/crass_mg-reads/crass_mg-reads_{ts_sample}_repeats.fa", ts_sample = TS_SAMPLES),
+        expand("ALL/{ts_sample}/crass_mt-reads/crass_mt-reads_{ts_sample}_repeats.fa", ts_sample = TS_SAMPLES),
+        expand("ALL/{ts_sample}/crass_mg-reads/crass_mg-reads_{ts_sample}_flanks.fa", ts_sample = TS_SAMPLES),
+        expand("ALL/{ts_sample}/crass_mt-reads/crass_mt-reads_{ts_sample}_flanks.fa", ts_sample = TS_SAMPLES),
+        "ALL/metaCRT/metacrt_contigs-mgmt.out",
+        "ALL/metaCRT/metacrt_contigs-mgmt_repeats.fa",
+        "ALL/metaCRT/metacrt_contigs-mgmt_spacers.fa",
+        "ALL/metaCRT/metacrt_contigs-mgmt_crispr.fa",
+        "ALL/metaCRT/metacrt_contigs-mgmt_crispr.ann",
+        "ALL/metaCRT/metacrt_contigs-mgmt_flanks.fa",
+        "ALL/spacers/ALL_spacers-merged.fa.tbl2seq",
+        "ALL/spacers/ReSpa2MeSpa.tsv",
+        "ALL/repeats/ALL_repeats-merged.fa.tbl2seq",
+        "ALL/flanks/ALL_flanks-merged.fa.tbl2seq",
+        "db/ALL-mgmt.assembly.merged.fa",
+        "db/formatdb.done",
+        "ALL/spacers/blast_spacers.done",
+        "ALL/repeats/blast_repeats.done",
+        "ALL/flanks/blast_flanks.done",
+        "ALL/spacers/ALL_spacers-merged_x_ALL_MGMT.assembly.merged.tsv",
+        "ALL/flanks/ALL_flanks-merged_x_ALL_MGMT.assembly.merged.tsv",
+        "ALL/repeats/ALL_repeats-merged_x_ALL_MGMT.assembly.merged.tsv",
+        "ALL/protospacers/ALL_pspcc.tsv",
+        "ALL/protospacers/ALL_pspcc_qcov95_pident95.tsv",
+        "ALL/protospacers/ALL_pspcc_qcov95_pident95.gff",
+#        expand("ALL/{crispr_element}/ALL_{crispr_element}_gc.txt", crispr_element = CRISPR_ELEMENTS),
+    output:
+        touch('crispr_workflow.done')

@@ -1,0 +1,48 @@
+#!/bin/bash
+
+logging (){
+ timestamp=`date +%Y%m%d%H%M%S`
+ logger -p user.info "$1"
+ if [ -w /var/log/dgx-cgroup ] ; then
+  echo "$HOSTNAME $timestamp $1" >> /var/log/dgx-cgroup
+ fi
+}
+
+attach_cgroup(){
+ echo executing: cgclassify -g devices:/$1 $parent 1>&2
+ logging "cgroup attach $parent to $1 for user $USER"
+ exec cgclassify -g devices:/$1 $parent
+}
+
+parent="$PPID"
+available=`find /sys/fs/cgroup/devices/*.wlm01/tasks -user $USER 2>/dev/null | awk -F/ '{printf "%s ",$6}' | sed -e 's/ $//'`
+
+if [ x"$1" == x"-h" -o x"$1" == x"--help" -o x"$1" == x"--usage" ] ; then
+ echo 'pbs-attach [-l] [-h] [JOBID]'
+ echo ' attaches shell to cgroup for PBS job'
+ echo ' without any arguments uses first cgroup found'
+ echo ' if no cgroup is found attaches to a cgroup with no GPUs'
+ exit 0
+fi
+
+if [ x"$1" == x"-l" -o x"$1" == x"-list" -o x"$1" == x"--list" ] ; then
+ echo $available
+ exit 0
+fi
+
+if [ "$#" -eq 1 ] ; then
+ attach_cgroup $1
+fi
+
+if [ x"$available" == x ] ; then
+ echo cannot find any cgroup, attaching to nogpu 1>&2
+ logging "cgroup attach failed for user $USER"
+ attach_cgroup nogpu
+fi
+
+declare -a cgroups
+cgroups=($available)
+num=${#cgroups[*]}
+
+if [ $num -gt 1 ] ; then echo info: using cgroup ${cgroups[0]} of available $available 1>&2 ; fi
+attach_cgroup ${cgroups[0]}

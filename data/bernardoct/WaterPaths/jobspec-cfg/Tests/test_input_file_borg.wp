@@ -1,0 +1,354 @@
+########################################################################
+# In the lines below, the optimization will be performed for variables #
+# marked with a %%% or with an @ preceding an alias. Variables marked  #
+# with a %%% will have its value optimized, while vairables with a @   #
+# in the same line will have their order optimized.                    #
+# For more details about how to build a file like this one, see        #
+# documentation on GitHub.                                             #
+########################################################################
+
+[RUN PARAMETERS]
+n_realizations 1000
+n_weeks 2344
+rdm_utilities /scratch/bct52/TestFiles/rdm_utilities_test_problem_opt.csv 
+rdm_water_sources /scratch/bct52/TestFiles/rdm_water_sources_test_problem_opt.csv 
+rdm_dmps /scratch/bct52/TestFiles/rdm_dmp_test_problem_opt.csv
+n_threads 5
+rof_tables_dir /scratch/bct52/rof_tables_test_problem/
+output_dir /scratch/bct52/output/
+use_rof_tables import
+seed 0
+optimize 75000 2500
+
+[DATA TO LOAD]
+# Files with "*" are always fully loaded instead of having on n_realizations lines loaded. Add "*" to any file that's not a demand, inflow or evaporation time series.
+*caryDemandClassesFractions /scratch/bct52/TestFiles/caryDemandClassesFractions.csv
+*caryUserClassesWaterPrices /scratch/bct52/TestFiles/caryUserClassesWaterPrices.csv
+*demand_to_wastewater_fraction_owasa_raleigh /scratch/bct52/TestFiles/demand_to_wastewater_fraction_owasa_raleigh.csv
+*raleighDemandClassesFractions /scratch/bct52/TestFiles/raleighDemandClassesFractions.csv
+*raleighUserClassesWaterPrices /scratch/bct52/TestFiles/raleighUserClassesWaterPrices.csv
+*durhamDemandClassesFractions /scratch/bct52/TestFiles/durhamDemandClassesFractions.csv
+*durhamUserClassesWaterPrices /scratch/bct52/TestFiles/durhamUserClassesWaterPrices.csv
+cary_demand /scratch/bct52/TestFiles/demands/cary_demand.csv
+durham_demand /scratch/bct52/TestFiles/demands/durham_demand.csv
+raleigh_demand /scratch/bct52/TestFiles/demands/raleigh_demand.csv
+falls_lake_evap /scratch/bct52/TestFiles/evaporation/falls_lake_evap.csv
+jordan_lake_evap /scratch/bct52/TestFiles/evaporation/jordan_lake_evap.csv
+clayton_inflows /scratch/bct52/TestFiles/inflows/clayton_inflows.csv
+crabtree_inflows /scratch/bct52/TestFiles/inflows/crabtree_inflows.csv
+durham_inflows /scratch/bct52/TestFiles/inflows/durham_inflows.csv
+falls_lake_inflows /scratch/bct52/TestFiles/inflows/falls_lake_inflows.csv
+jordan_lake_inflows /scratch/bct52/TestFiles/inflows/jordan_lake_inflows.csv
+lillington_inflows /scratch/bct52/TestFiles/inflows/lillington_inflows.csv
+little_river_raleigh_inflows /scratch/bct52/TestFiles/inflows/little_river_raleigh_inflows.csv
+stone_quarry_inflows /scratch/bct52/TestFiles/inflows/stone_quarry_inflows.csv
+university_lake_inflows /scratch/bct52/TestFiles/inflows/university_lake_inflows.csv
+
+[DECISION VARIABLE BOUNDS]
+0 0.334,0.9     # watertown LMA
+1 0.05,0.333    # dryville LMA
+2 0.05,0.333    # fallsland LMA
+3 0.0,0.1       # watertown annual payment
+4 0.0,1.0       # new river rank watertown
+5 0.0,1.0      # college rock expansion rank low
+6 0.0,1.0      # college rock expansion rank high
+7 0.0,1.0      # watertown reuse I rank
+8 0.0,1.0      # watertown reuse II rank
+9 0.001,1.0    # watertown inf trigger
+10 0.0,0.1      # dryville annual payment
+11 0.0,1.0      # sugar creek rank
+12 0.0,1.0      # granite quarry rank
+13 0.0,1.0      # dryville reuse rank
+14 0.001,1.0    # dryville inf trigger
+15 0.0,0.1      # fallsland annual payment
+16 0.0,1.0      # new river rank fallsland
+17 0.0,1.0      # fallsland reuse rank
+18 0.001,1.0    # fallsland inf trigger
+19 0.001,1.0     # watertown restrictions
+20 0.001,1.0     # dryville restrictions
+21 0.001,1.0     # fallsland restrictions
+22 0.001,1.0     # dryville transfer
+23 0.001,1.0     # fallsland transfer
+24 0.001,1.0    # watertown insurance use
+25 0.001,1.0    # dryville insurance use
+26 0.001,1.0    # fallsland insurance use
+27 0.0,0.02     # watertown insurance payment
+28 0.0,0.02     # dryville insurance payment
+29 0.0,0.02     # fallsland insurance payment
+
+[OBJECTIVES EPSILONS]
+0.001,0.02,10.0,0.025,0.01
+
+[RESERVOIR]
+name College_Rock_Reservoir
+treatment_capacity 560
+capacity 1049
+streamflow_files stone_quarry_inflows university_lake_inflows crabtree_inflows
+evaporation_file jordan_lake_evap
+storage_area 222
+
+[RESERVOIR]
+name Granite_Quarry
+treatment_capacity 100000
+capacity 1500
+streamflow_files durham_inflows
+evaporation_file jordan_lake_evap
+storage_area_curve 0,1500 0,551.25
+
+[ALLOCATED RESERVOIR]
+name Lake_Michael
+treatment_capacity 548
+capacity 19925
+streamflow_files jordan_lake_inflows
+evaporation_file jordan_lake_evap
+storage_area 13940
+utilities_with_allocations Watertown,Dryville,Fallsland,WATER_QUALITY
+allocated_fractions %%%,%%%,%%%,0.6
+allocated_treatment_fractions 1,0,0
+
+[ALLOCATED RESERVOIR]
+name Autumn_Lake
+treatment_capacity 100000 #unlimitted
+capacity 27500
+streamflow_files falls_lake_inflows little_river_raleigh_inflows
+evaporation_file jordan_lake_evap
+storage_area_curve 0,14000,27500 1834.88,9280,11321.52
+utilities_with_allocations Dryville,Fallsland,WATER_QUALITY
+allocated_fractions 0.19,0.3,0.51
+allocated_treatment_fractions 0.38,0.52
+
+[RESERVOIR]
+name dummy_node
+capacity 1
+treatment_capacity 1
+storage_area 1
+evaporation_file jordan_lake_evap
+streamflow_files jordan_lake_inflows
+bond level 150 25 0.05 0 deferred
+ctime 3 5
+ptime 17
+
+[RESERVOIR]
+name New_River_Reservoir
+treatment_capacity 100000
+capacity 7300
+streamflow_files clayton_inflows little_river_raleigh_inflows
+evaporation_file falls_lake_evap
+storage_area_curve 0,7300 0,2682.75
+bond level 263 25 0.05 0 deferred
+utilities_with_allocations 1,2,-1
+allocated_fractions 0.3,0.4,0.3
+allocated_treatment_fractions 0.5,0.5
+ctime 3 5
+ptime 17
+
+[RESERVOIR]
+name Sugar_Creek_Reservoir
+treatment_capacity 100000
+capacity 4500
+streamflow_files clayton_inflows little_river_raleigh_inflows
+evaporation_file jordan_lake_evap
+storage_area_curve 0,4500 0,1653.75
+bond level 150 25 0.05 0 deferred
+ctime 3 5
+ptime 17
+
+[RESERVOIR EXPANSION]
+name College_Rock_Expansion_Low
+capacity 1000
+bond level 50 30 0.05 0 deferred
+ctime 4 6
+ptime 15
+parent_reservoir College_Rock_Reservoir
+
+[RESERVOIR EXPANSION]
+name College_Rock_Expansion_High
+capacity 2500
+bond level 100 30 0.05 0 deferred
+ctime 4 6
+ptime 15
+parent_reservoir College_Rock_Reservoir
+
+[WATER REUSE]
+name Watertown_Reuse_I
+treatment_capacity 35
+bond level 50 30 0.05 0 immediate
+ctime 3 5
+ptime 5
+
+[WATER REUSE]
+name Watertown_Reuse_II
+treatment_capacity 35
+bond level 30 30 0.05 0 immediate
+ctime 3 5
+ptime 5
+
+[WATER REUSE]
+name Dryville_Reuse
+treatment_capacity 35
+bond level 30 30 0.05 0 immediate
+ctime 3 5
+ptime 5
+
+[WATER REUSE]
+name Fallsland_Reuse
+treatment_capacity 35
+bond level 50 30 0.05 0 immediate
+ctime 3 5
+ptime 5
+
+
+
+[UTILITY]
+name Watertown
+demands cary_demand
+number_of_week_demands 2400
+percent_contingency_fund_contribution %%%
+typesMonthlyDemandFraction caryDemandClassesFractions
+typesMonthlyWaterPrice caryUserClassesWaterPrices
+demand_buffer 0.35
+rof_infra_construction_order @New_River_Reservoir,@College_Rock_Expansion_Low,@College_Rock_Expansion_High,@Watertown_Reuse_I,@Watertown_Reuse_II
+infra_construction_triggers %%%
+infra_discount_rate 0.7
+water_source_to_wtp College_Rock_Reservoir Lake_Michael New_River_Reservoir
+utility_owned_wtp_capacities 560.,548.,9999999.
+
+[UTILITY]
+name Dryville
+demands durham_demand
+number_of_week_demands 2400
+percent_contingency_fund_contribution %%%
+typesMonthlyDemandFraction durhamDemandClassesFractions
+typesMonthlyWaterPrice durhamUserClassesWaterPrices
+wwtp_discharge_rule demand_to_wastewater_fraction_owasa_raleigh New_River_Reservoir
+demand_buffer 0.35
+rof_infra_construction_order @Sugar_Creek_Reservoir,@Dryville_Reuse
+infra_construction_triggers %%%
+infra_discount_rate 0.07
+water_source_to_wtp Autumn_Lake Sugar_Creek_Reservoir Granite_Quarry
+utility_owned_wtp_capacities 9999999.,9999999.,9999999.
+
+[UTILITY]
+name Fallsland
+demands raleigh_demand
+number_of_week_demands 2400
+percent_contingency_fund_contribution %%%
+typesMonthlyDemandFraction raleighDemandClassesFractions
+typesMonthlyWaterPrice raleighUserClassesWaterPrices
+wwtp_discharge_rule demand_to_wastewater_fraction_owasa_raleigh New_River_Reservoir
+demand_buffer 0.35
+rof_infra_construction_order @New_River_Reservoir,@Fallsland_Reuse
+infra_construction_triggers %%%
+infra_discount_rate 0.07
+water_source_to_wtp Autumn_Lake New_River_Reservoir
+utility_owned_wtp_capacities 9999999,9999999.
+
+
+[WATER SOURCES GRAPH]
+College_Rock_Reservoir,Lake_Michael
+Lake_Michael,dummy_node
+Granite_Quarry,Sugar_Creek_Reservoir
+Sugar_Creek_Reservoir,Autumn_Lake
+Autumn_Lake,New_River_Reservoir
+New_River_Reservoir,dummy_node
+
+[WS TO UTILITY MATRIX]
+Watertown College_Rock_Reservoir,Lake_Michael,New_River_Reservoir,College_Rock_Expansion_Low,College_Rock_Expansion_High,Watertown_Reuse_I,Watertown_Reuse_II
+Dryville Autumn_Lake,Sugar_Creek_Reservoir,Granite_Quarry,Dryville_Reuse
+Fallsland Autumn_Lake,New_River_Reservoir,Fallsland_Reuse
+
+[UTILITIES GRAPH]
+Watertown,Fallsland
+Watertown,Dryville
+Fallsland,Dryville
+
+[TABLE STORAGE SHIFT]
+Fallsland New_River_Reservoir 1500
+Dryville Sugar_Creek_Reservoir 100
+Watertown Watertown_Reuse_I 1000
+Watertown Watertown_Reuse_II 600
+Dryville Dryville_Reuse 600
+Fallsland Fallsland_Reuse 1000
+
+
+[RESTRICTIONS POLICY]
+apply_to_utilities Watertown
+stage_multipliers 0.9,0.75,0.65,0.5
+stage_triggers %%%
+
+[RESTRICTIONS POLICY]
+apply_to_utilities Dryville
+stage_multipliers 0.9,0.75,0.65,0.5
+stage_triggers %%%
+
+[RESTRICTIONS POLICY]
+apply_to_utilities Fallsland
+stage_multipliers 0.9,0.75,0.65,0.5
+stage_triggers %%%
+
+[TRANSFERS POLICY]
+apply_to_utilities Dryville,Fallsland
+source_utility_id Watertown
+transfer_water_source_id Lake_Michael
+source_treatment_buffer 0.35
+pipe_transfer_capacities 140,140,105
+buyers_transfer_triggers %%%,%%%
+
+[INSURANCE POLICY]
+apply_to_utilities Watertown,Dryville,Fallsland
+insurance_triggers %%%,%%%,%%%
+insurance_premium 1.2
+fixed_payouts %%%,%%%,%%%
+
+
+[FIXED FLOW RESERVOIR CONTROL RULE]
+water_source_id New_River_Reservoir
+release 0
+
+[FIXED FLOW RESERVOIR CONTROL RULE]
+water_source_id Granite_Quarry
+release 0
+
+[FIXED FLOW RESERVOIR CONTROL RULE]
+water_source_id College_Rock_Reservoir
+release 0
+
+[INFLOW-BASED RESERVOIR CONTROL RULE]
+water_source_id Sugar_Creek_Reservoir
+inflows 836.898,1673.796,2789.66
+releases 4.522,9.03,13.58
+
+[SEASONAL RESERVOIR CONTROL RULE]
+water_source_id Autumn_Lake
+week_thresholds 0,13,43,53
+releases 357,490,357
+
+[LAKE MICHAEL RESERVOIR CONTROL RULE CUSTOM]
+water_source_id Lake_Michael
+lillington_gage_catchment lillington_inflows
+wq_lims 64.63,129.26,25.85
+lillington_lims 93.89,190.84,287.79
+lake_michael_supply_capacity 9100.0
+lake_michael_wq_capacity 10825.0
+
+
+#   @ College Rock Reservoir, small expansion, large expansion
+#    \
+#     \                           @ Granite Quarry
+#      \                         /
+#       \                       @ Sugar Creek Reservoir
+#        @ Lake Michael        /
+#         \                   /
+#          \                 @ Autumn Lake
+#           \               /
+# Lillington @             /
+#             \           /
+#              \         /
+#               \       /
+#                \     @ New River Reservoir
+#                 \   /
+#                  \ /    Watertown I, Watertown II,
+#                   V     Dryville, Fallsland reuse
+#	                |	  
+#                   |
+#                   @ Dummy Endpoint 

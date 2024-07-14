@@ -1,0 +1,223 @@
+# HPC Parameters
+#-----------------------------------------------------------------------------------------------------------------------
+# Memory and thread parameters used when running on a cluster
+hpc_parameters:
+    # Number of threads to create solo-WCGW assets with
+    wcgw_threads: 16
+    # Number of threads to run trim_galore with
+    trim_threads: 8
+    # Number of threads to run biscuit align with
+    biscuit_sifter_threads: 20
+    # Number of threads to index BAMs with
+    samtools_index_threads: 8
+    # Number of threads to run biscuit pileup with
+    pileup_threads: 8
+    # Low amount of memory to request
+    small_memory_gb: 20
+    # Middle amount of memory to request
+    intermediate_memory_gb: 80
+    # High amount of memory to request
+    max_memory_gb: 245
+
+# Time to request when running on a cluster
+# Give in 'D-HH:MM:SS', must be given as a string for pipeline to work
+runtime:
+    short: '0-01:00:00'
+    medium: '1-00:00:00'
+    long: '2-00:00:00'
+#-----------------------------------------------------------------------------------------------------------------------
+
+# Input and Output for Pipeline
+#-----------------------------------------------------------------------------------------------------------------------
+# Reference genome
+ref:
+    # Absolute path to reference FASTA file
+    fasta: /path/to/your/fasta/file/genome.fa
+    # Absolute path to FASTA index, can be the same as "fasta", but might be useful if 2-bit packed reference doesn't
+    #     have .fa extension or is named differently
+    index: /path/to/your/biscuit/index/base/that/could/be/the/same/as/fasta/genome.fa
+    # Prebuilt assets and scripts to build custom assets can be found at https://github.com/huishenlab/biscuit/releases/
+    assets: /path/to/your/biscuit_qc/assets
+
+# Directory where raw FASTQs live, can be absolute path or path relative to top directory of pipeline
+fastqs: raw_data
+
+# Samplesheet for specifying sample names and corresponding FASTQ files, can be absolute path or path relative to top
+#     directory of pipeline
+samples: config/samples.tsv
+
+# Directory for writing analysis/ directory to (if '', write to same directory as top directory of pipeline)
+output_directory: ''
+#-----------------------------------------------------------------------------------------------------------------------
+
+# Preprocessing Options
+#-----------------------------------------------------------------------------------------------------------------------
+# Create BISCUITqc assets, CpG seascape (islands, shores, shelves, and open seas), and genomic feature BED files
+# While the BISCUITqc asset files are readily available on GitHub, the seascape and genomic features need to be
+#     generated from various annotation files from UCSC and GENCODE. You are welcome to create these yourself (using the
+#     naming scheme seen in workflow/rules/create_assets.smk) and point to them in the optional analysis entries below
+create_assets:
+    # Run if True (output will be in a directory called assets/), skip if False
+    run: False
+    # Genome to create files for (possible choices: 'hg38', 'hg19', 'mm10', 'mm9')
+    genome: 'hg38'
+
+# Turn on/off read trimming, handle additional trim_galore options
+# Note, when processing data generated with the Adaptase module, it is highly suggested to set args_list: '--clip_R2 15'
+trim_galore:
+    # Run trimming (set as True) or not (set as False)
+    trim_before_biscuit: False
+    # Additonal arguments to pass to trim_galore (note --paired, --fastqc, --cores, and --output_dir are always
+    #     included), '' will not include any extra arguments
+    args_list: ''
+
+# Create a joint reference with ref['fasta'], lambda phage, and pUC19 genomes (lambda phage and pUC19 genomes provided
+#     in bin/)
+# Lambda phage and pUC19 control vectors are only included in Illumina's NEBNext® Enzymatic Methyl-seq Kit
+# If True - create a joint reference and use this as reference during alignment and further processing
+# If False - ref['fasta'] will be used as expected
+build_ref_with_methylation_controls: False
+
+# Run fastq_screen on data
+fastq_screen:
+    # Run fastq_screen with --bisulfite option (uses Bismark) if True, else skip
+    run: False
+    # Absolute path to fastq_screen config file (passed to --conf option)
+    conf: /primary/projects/bbc/references/fastq_screen/downloaded_20200309/FastQ_Screen_Genomes_Bisulfite/fastq_screen.conf
+#-----------------------------------------------------------------------------------------------------------------------
+
+# BISCUIT Options
+#-----------------------------------------------------------------------------------------------------------------------
+biscuit:
+    # Additional options to include in biscuit align (number of threads (-@) and read group (-R) already included),
+    #     if '' then default values are used for all values except -@ and -R
+    args_align: ''
+    # Additional options to include in biscuit pileup (number of threads (-@) and output name (-o) already included),
+    #     if '' then default values are used for all values except -@ and -R
+    args_pileup: ''
+    # Additional options to include in biscuit vcf2bed for CG methylation extraction (-t cg specified to ensure CG
+    #     methylation is extracted), if '' then default values are used for all other values
+    args_vcf2bed_cg: ''
+    # Additional options to include in biscuit mergecg, if '' then default values are used
+    args_mergecg: ''
+    # Additional options to include in biscuit vcf2bed for SNP extraction (-t snp specified to ensure SNPs are
+    #     extracted), if '' then default values are used for all other values
+    args_vcf2bed_snp: ''
+    # Additional options to include in biscuit epiread (number of threads (-@) and SNP file (-B) already included),
+    #     if '' then default values are used for all values except -@ and -B
+    args_epiread: ''
+    # Call SNPs with BISCUIT (True) or not (False)
+    extract_snps: False
+    # Create SNP BEDs and epiBED files (True) or not (False)
+    make_epibeds: False
+
+# Inputs to SAM read group in biscuit align
+sam_header:
+    # Platform/technology entry
+    PL: il
+    # Platform unit entry
+    PU: nv
+    # Library preparation entry
+    LB: b1
+#-----------------------------------------------------------------------------------------------------------------------
+
+# Optional Analysis Output
+#-----------------------------------------------------------------------------------------------------------------------
+# Calculate lambda phage and pUC19 methylation levels and create summary plot
+# Only useful if the reference genome included the control vectors with fasta headers:
+#     >J02459.1 (lamdba / unmethylated control) and >M77789.2 (puc19 / methylated control). 
+# The ref genome can be modified automatically to include these control vectors as the first two contigs by setting
+#     config["build_ref_with_methylation_controls"].
+# If True - calculate methylation and create plot
+# If False - skip this step
+control_vectors: False
+
+# Run preseq on data
+preseq:
+    # Run preseq if True, skip if False
+    run: False
+    # Other options to include in preseq c_curve (output file, paired end, and BAM input options already included)
+    args_list: ''
+
+# Calculate the ratio observed/expected coverage based on bismap results for different genomic features
+obs_exp:
+    # Create obs/exp plots if True, skip if False
+    run: False
+    # Directory where asset files live (set create_assets['run'] to True if you don't have these files already)
+    assets: assets/hg38
+
+# Find some CpG statistics not found elsewhere (% covered, CpG island coverage)
+cpg_stats:
+    # Create CpG stats plots if True, skip if False
+    run: False
+    # Directory where asset files live (set create_assets['run'] to True if you don't have these files already)
+    assets: assets/hg38
+
+# Determine uniformity of coverage across genome
+covg_uniformity:
+    # Create uniformity plots if True, skip if False
+    run: False
+    # Directory where asset files live (set create_assets['run'] to True if you don't have these files already)
+    assets: assets/hg38
+
+# Create plot of the percent of the genome covered by each sample
+percent_covered:
+    # Create percent covered plot if True, skip if False
+    run: False
+
+# Create binned average methylation values using bin/find_binned_averages.sh
+binned_averages:
+    # Calculate binned averages if True, skip if False
+    run: False
+    # Minimum coverage at CG loci to be considered for average calculation
+    cov_filter: 1
+    # Bin sizes to find averages for
+    # A single bin size can also be supplied, but must be provided as a python list (i.e., bin_size: [10000])
+    bin_sizes: [10000, 100000, 1000000]
+   
+# Turn on/off region_centered_bin_averages
+region_centered_bin_averages:
+    # Calculate bin averages centered around given regions if True, skip if False
+    run: False
+    # BED file with regions to build bins around
+    region_file: /path/to/a/region/file/for/which/you/want/centered/bins.bed
+    # Additonal arguments to pass to workflow/scripts/region_centered_bin_averages.py
+    # For more info, run "python workflow/scripts/region_centered_bin_averages.py --help"
+    args_list: '--flankstep 5 --flanknumber 200 --numinternal 1 --strand 4 --middle --collapse'
+
+# Create bigWigs for genome browser viewing
+make_bigwigs:
+    # Make Bigwig files from BED file output of biscuit vcf2bed
+    run: False
+    # Pileups have a min of 3 by default, so values <= 3 have no effect
+    min_depth: 3
+    # Valid options are "CA", "CC", "CT", "CG", "mergecg". Case-sensitive
+    contexts: ['mergecg']
+#-----------------------------------------------------------------------------------------------------------------------
+
+# Environment Modules
+#-----------------------------------------------------------------------------------------------------------------------
+# Environment modules paths used in "module load <string>" (pending you have a module system available)
+# If your system does not use environmental modules, then executables for all of the modules must be in your PATH and
+#     each tool should be set to "NULL" (i.e., samtools: "NULL").
+# If all dependency executables are in PATH and the module is specified with NULL, the workflow will still run with
+#     warnings that modules could not be loaded.
+envmodules: 
+    samtools: bbc2/samtools/samtools-1.17
+    R: bbc2/R/R-4.3.0
+    snakemake: bbc2/snakemake/snakemake-7.25.0
+    trim_galore: bbc2/trim_galore/trim_galore-0.6.10
+    biscuit: bbc2/biscuit/biscuit_1_2_0
+    dupsifter: bbc2/dupsifter/dupsifter_1_2_0
+    preseq: bbc2/preseq/preseq-3.2.0
+    htslib: bbc2/htslib/htslib-1.17
+    bedtools: bbc2/bedtools/bedtools-2.30.0
+    fastqc: bbc2/fastqc/fastqc-0.12.1
+    multiqc: bbc2/multiqc/multiqc-1.14
+    parallel: bbc/parallel/parallel-20191122
+    pigz: bbc2/pigz/pigz-2.7
+    fastq_screen: bbc2/fastq_screen/fastq_screen-0.14.0
+    bismark: bbc2/bismark/bismark-0.24.0
+    python3: bbc2/python3/python-3.11.3
+    ucsc: bbc2/ucsc_tools/ucsc_tools-20231127
+#-----------------------------------------------------------------------------------------------------------------------

@@ -1,0 +1,27 @@
+From 96028824723e2e7db155d27bfea19f6392d3c266 Mon Sep 17 00:00:00 2001
+From: "Jack S. Hale" <mail@jackhale.co.uk>
+Date: Wed, 3 Nov 2021 13:28:09 +0100
+Subject: [PATCH 5/5] Use parmetis by default.
+
+---
+ cpp/dolfinx/graph/partition.cpp | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/cpp/dolfinx/graph/partition.cpp b/cpp/dolfinx/graph/partition.cpp
+index 17fcd29b6..f8d3ef626 100644
+--- a/cpp/dolfinx/graph/partition.cpp
++++ b/cpp/dolfinx/graph/partition.cpp
+@@ -23,8 +23,8 @@ graph::partition_graph(MPI_Comm comm, int nparts,
+                        const AdjacencyList<std::int64_t>& local_graph,
+                        std::int32_t num_ghost_nodes, bool ghosting)
+ {
+-  return graph::scotch::partitioner()(comm, nparts, local_graph,
+-                                      num_ghost_nodes, ghosting);
++  return graph::parmetis::partitioner()(comm, nparts, local_graph,
++                                        num_ghost_nodes, ghosting);
+ }
+ //-----------------------------------------------------------------------------
+ std::tuple<graph::AdjacencyList<std::int64_t>, std::vector<int>,
+-- 
+2.27.0
+

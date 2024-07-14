@@ -1,0 +1,1083 @@
+Simulations:
+- name: sim1
+  optimizer: opt1
+  time_integrator: ti_1
+
+# Hypre memory and other configurations
+hypre_config:
+  umpire_device_pool_mbs: 4096
+  use_vendor_spgemm: 1
+  use_vendor_spmv: 0
+  use_vendor_sptrans: 0
+
+Time_Integrators:
+- StandardTimeIntegrator:
+    name: ti_1
+    realms:
+    - realm_1
+    second_order_accuracy: true
+    start_time: 0
+    termination_step_count: 50000
+    time_step: 0.0002667
+    time_step_count: 0
+    time_stepping_type: fixed
+
+linear_solvers:
+  # solver for the momentum
+  - name: solve_mom
+    type: hypre
+    method: hypre_gmres
+    preconditioner: boomerAMG
+    tolerance: 1e-5
+    max_iterations: 1000
+    kspace: 1000
+    sync_alg: 1
+    output_level: 0
+    write_matrix_files: no
+    #write_preassembly_matrix_files: yes
+    recompute_preconditioner_frequency: 1
+    reuse_linear_system: yes
+    simple_hypre_matrix_assemble: yes
+    dump_hypre_matrix_stats: no
+    segregated_solver: yes
+    hypre_cfg_file: hypre_file.yaml
+    hypre_cfg_node: hypre_simple_precon
+
+  # solver for the scalars TKE, SDR
+  - name: solve_scalar
+    type: hypre
+    method: hypre_gmres
+    preconditioner: boomerAMG
+    tolerance: 1e-5
+    max_iterations: 1000
+    kspace: 1000
+    sync_alg: 1
+    output_level: 0
+    write_matrix_files: no
+    #write_preassembly_matrix_files: yes
+    recompute_preconditioner_frequency: 1
+    reuse_linear_system: yes
+    simple_hypre_matrix_assemble: yes
+    dump_hypre_matrix_stats: no
+    hypre_cfg_file: hypre_file.yaml
+    hypre_cfg_node: hypre_simple_precon
+
+  # solver for the pressure
+  - name: solve_elliptic
+    type: hypre
+    method: hypre_gmres
+    preconditioner: boomerAMG
+    tolerance: 1e-5
+    max_iterations: 1000
+    kspace: 1000
+    sync_alg: 1
+    output_level: 0
+    write_matrix_files: no
+    #write_preassembly_matrix_files: yes
+    recompute_preconditioner_frequency: 1
+    reuse_linear_system: yes
+    simple_hypre_matrix_assemble: yes
+    dump_hypre_matrix_stats: no
+    hypre_cfg_file: hypre_file.yaml
+    hypre_cfg_node: hypre_elliptic
+
+realms:
+- mesh: mesh/ffaw3211_3d_aoa50_periodic_overset.exo
+  automatic_decomposition_type: rcb
+  rebalance_mesh: yes
+  stk_rebalance_method: parmetis
+  check_jacobians: true
+    
+  boundary_conditions:
+  - target_name: airfoil
+    wall_boundary_condition: bc_wing
+    wall_user_data:
+      turbulent_ke: 0.0
+      use_wall_function: false
+      velocity:
+      - 0
+      - 0
+      - 0
+  - inflow_boundary_condition: bc_inflow
+    target_name: inflow
+    inflow_user_data:
+      specific_dissipation_rate: 2266.4
+      turbulent_ke: 0.095118
+      velocity:
+      - 15.0
+      - 0.0
+      - 0.0
+    
+  - open_boundary_condition: bc_open
+    target_name: outflow
+    open_user_data:
+      pressure: 0.0
+      specific_dissipation_rate: 2266.4
+      turbulent_ke: 0.095118
+      velocity:
+      - 0.0
+      - 0.0
+      - 0.0
+
+  - periodic_boundary_condition: bc_front_back
+    target_name: [front-fluid, back-fluid]
+    check_for_missing_bcs: true
+    periodic_user_data:
+      search_tolerance: 0.0001
+
+  - periodic_boundary_condition: bc_front_back_af
+    target_name: [front-airfoil, back-airfoil]
+    check_for_missing_bcs: true
+    periodic_user_data:
+      search_tolerance: 0.0001
+
+  - overset_boundary_condition: bc_overset
+    overset_connectivity_type: tioga
+    overset_user_data:
+      tioga_options:
+        symmetry_direction: 2
+        set_resolutions: no
+      mesh_group:
+      - overset_name: airfoil
+        mesh_parts:
+        - airfoil-HEX
+        wall_parts: [airfoil]
+        ovset_parts: [outerBCairfoil]
+      - overset_name: static
+        mesh_parts:
+        - fluid-HEX
+
+  equation_systems:
+    max_iterations: 4
+    name: theEqSys
+    decoupled_overset_solve: true
+
+    solver_system_specification:
+      velocity: solve_mom
+      turbulent_ke: solve_scalar
+      specific_dissipation_rate: solve_scalar
+      pressure: solve_elliptic
+      ndtw: solve_elliptic
+
+    systems:
+    - WallDistance:
+        convergence_tolerance: 1.0e-08
+        max_iterations: 1
+        name: myNDTW
+    - LowMachEOM:
+        convergence_tolerance: 1.0e-08
+        max_iterations: 1
+        name: myLowMach
+    - ShearStressTransport:
+        convergence_tolerance: 1.0e-08
+        max_iterations: 1
+        name: mySST
+
+  initial_conditions:
+    - constant: ic_1
+      target_name: [fluid-HEX, airfoil-HEX]
+      value:
+        pressure: 0
+        velocity: [15.0, 0.0, 0.0]
+        turbulent_ke: 0.095118
+        specific_dissipation_rate: 2266.4
+        minimum_distance_to_wall: 8.0
+
+  material_properties:
+    specifications:
+    - name: density
+      type: constant
+      value: 1.2
+    - name: viscosity
+      type: constant
+      value: 9.0e-06
+    target_name: [fluid-HEX, airfoil-HEX]
+  name: realm_1
+  output:
+    output_data_base_name: results/pitchingAF_field_val2cumulative.e
+    output_frequency: 100
+    output_node_set: false
+    output_variables:
+    - velocity
+    - density
+    - pressure
+    - pressure_force
+    - viscous_force
+    - tau_wall_vector
+    - tau_wall
+    - turbulent_ke
+    - specific_dissipation_rate
+    - minimum_distance_to_wall
+    - sst_f_one_blending
+    - turbulent_viscosity
+    - element_courant
+    - q_criterion
+    - vorticity
+    - assembled_area_force_moment
+
+
+  mesh_transformation:
+  - mesh_parts:
+    - airfoil-HEX
+    motion:
+    - angle: 47.9
+      axis:
+      - 0.0
+      - 0.0
+      - 1.0
+      centroid:
+      - 0.0
+      - 0.0
+      - 0.0
+      type: rotation
+    name: angle_of_attack
+
+  mesh_motion:
+  - name: arbitrary_motion_airfoil
+    mesh_parts: 
+    - airfoil-HEX
+    frame: non_inertial
+    motion:
+    - type: rotation
+      angle: 0.0
+      start_time: 1.0e-6
+      end_time: 0.10282051282051283
+      axis: [0.0, 0.0, 1.0]
+      origin: [0.0, 0.0, 0.0]
+    - type: rotation
+      angle: 0.0
+      start_time: 0.10282151282051283
+      end_time: 0.20564102564102565
+      axis: [0.0, 0.0, 1.0]
+      origin: [0.0, 0.0, 0.0]
+    - type: rotation
+      angle: 0.761374497065864
+      start_time: 0.20564202564102566
+      end_time: 0.3084615384615385
+      axis: [0.0, 0.0, 1.0]
+      origin: [0.0, 0.0, 0.0]
+    - type: rotation
+      angle: 1.863600070184717
+      start_time: 0.3084625384615385
+      end_time: 0.4112820512820513
+      axis: [0.0, 0.0, 1.0]
+      origin: [0.0, 0.0, 0.0]
+    - type: rotation
+      angle: 1.7027042259268952
+      start_time: 0.4112830512820513
+      end_time: 0.5141025641025642
+      axis: [0.0, 0.0, 1.0]
+      origin: [0.0, 0.0, 0.0]
+    - type: rotation
+      angle: 1.4840765972283663
+      start_time: 0.5141035641025642
+      end_time: 0.616923076923077
+      axis: [0.0, 0.0, 1.0]
+      origin: [0.0, 0.0, 0.0]
+    - type: rotation
+      angle: 1.1766395273460715
+      start_time: 0.616924076923077
+      end_time: 0.7197435897435898
+      axis: [0.0, 0.0, 1.0]
+      origin: [0.0, 0.0, 0.0]
+    - type: rotation
+      angle: 0.798559414445756
+      start_time: 0.7197445897435898
+      end_time: 0.8225641025641026
+      axis: [0.0, 0.0, 1.0]
+      origin: [0.0, 0.0, 0.0]
+    - type: rotation
+      angle: 0.38070629630115604
+      start_time: 0.8225651025641026
+      end_time: 0.9253846153846155
+      axis: [0.0, 0.0, 1.0]
+      origin: [0.0, 0.0, 0.0]
+    - type: rotation
+      angle: -0.048547687274453466
+      start_time: 0.9253856153846155
+      end_time: 1.0282051282051283
+      axis: [0.0, 0.0, 1.0]
+      origin: [0.0, 0.0, 0.0]
+    - type: rotation
+      angle: -0.48313751628984214
+      start_time: 1.0282061282051282
+      end_time: 1.1310256410256412
+      axis: [0.0, 0.0, 1.0]
+      origin: [0.0, 0.0, 0.0]
+    - type: rotation
+      angle: -0.8950610476605254
+      start_time: 1.131026641025641
+      end_time: 1.233846153846154
+      axis: [0.0, 0.0, 1.0]
+      origin: [0.0, 0.0, 0.0]
+    - type: rotation
+      angle: -1.2510808913301945
+      start_time: 1.233847153846154
+      end_time: 1.336666666666667
+      axis: [0.0, 0.0, 1.0]
+      origin: [0.0, 0.0, 0.0]
+    - type: rotation
+      angle: -1.5328694091529695
+      start_time: 1.3366676666666668
+      end_time: 1.4394871794871795
+      axis: [0.0, 0.0, 1.0]
+      origin: [0.0, 0.0, 0.0]
+    - type: rotation
+      angle: -1.7648111290255093
+      start_time: 1.4394881794871794
+      end_time: 1.5423076923076924
+      axis: [0.0, 0.0, 1.0]
+      origin: [0.0, 0.0, 0.0]
+    - type: rotation
+      angle: -1.8647806383651986
+      start_time: 1.5423086923076923
+      end_time: 1.6451282051282052
+      axis: [0.0, 0.0, 1.0]
+      origin: [0.0, 0.0, 0.0]
+    - type: rotation
+      angle: -1.8824891187043011
+      start_time: 1.6451292051282052
+      end_time: 1.747948717948718
+      axis: [0.0, 0.0, 1.0]
+      origin: [0.0, 0.0, 0.0]
+    - type: rotation
+      angle: -1.8064171995051856
+      start_time: 1.747949717948718
+      end_time: 1.850769230769231
+      axis: [0.0, 0.0, 1.0]
+      origin: [0.0, 0.0, 0.0]
+    - type: rotation
+      angle: -1.6222669553047373
+      start_time: 1.8507702307692309
+      end_time: 1.9535897435897438
+      axis: [0.0, 0.0, 1.0]
+      origin: [0.0, 0.0, 0.0]
+    - type: rotation
+      angle: -1.365415017085894
+      start_time: 1.9535907435897437
+      end_time: 2.0564102564102567
+      axis: [0.0, 0.0, 1.0]
+      origin: [0.0, 0.0, 0.0]
+    - type: rotation
+      angle: -1.024117571370251
+      start_time: 2.056411256410257
+      end_time: 2.1592307692307693
+      axis: [0.0, 0.0, 1.0]
+      origin: [0.0, 0.0, 0.0]
+    - type: rotation
+      angle: -0.6252702233134988
+      start_time: 2.1592317692307694
+      end_time: 2.2620512820512824
+      axis: [0.0, 0.0, 1.0]
+      origin: [0.0, 0.0, 0.0]
+    - type: rotation
+      angle: -0.201778825330301
+      start_time: 2.2620522820512825
+      end_time: 2.364871794871795
+      axis: [0.0, 0.0, 1.0]
+      origin: [0.0, 0.0, 0.0]
+    - type: rotation
+      angle: 0.23195817649381745
+      start_time: 2.364872794871795
+      end_time: 2.467692307692308
+      axis: [0.0, 0.0, 1.0]
+      origin: [0.0, 0.0, 0.0]
+    - type: rotation
+      angle: 0.6615732129999632
+      start_time: 2.467693307692308
+      end_time: 2.5705128205128207
+      axis: [0.0, 0.0, 1.0]
+      origin: [0.0, 0.0, 0.0]
+    - type: rotation
+      angle: 1.0528512261281469
+      start_time: 2.570513820512821
+      end_time: 2.673333333333334
+      axis: [0.0, 0.0, 1.0]
+      origin: [0.0, 0.0, 0.0]
+    - type: rotation
+      angle: 1.3758829701534134
+      start_time: 2.673334333333334
+      end_time: 2.7761538461538464
+      axis: [0.0, 0.0, 1.0]
+      origin: [0.0, 0.0, 0.0]
+    - type: rotation
+      angle: 1.6364307418155137
+      start_time: 2.7761548461538466
+      end_time: 2.878974358974359
+      axis: [0.0, 0.0, 1.0]
+      origin: [0.0, 0.0, 0.0]
+    - type: rotation
+      angle: 1.833924112124368
+      start_time: 2.878975358974359
+      end_time: 2.981794871794872
+      axis: [0.0, 0.0, 1.0]
+      origin: [0.0, 0.0, 0.0]
+    - type: rotation
+      angle: 1.8683394371115922
+      start_time: 2.9817958717948723
+      end_time: 3.0846153846153848
+      axis: [0.0, 0.0, 1.0]
+      origin: [0.0, 0.0, 0.0]
+    - type: rotation
+      angle: 1.8756242855962584
+      start_time: 3.084616384615385
+      end_time: 3.187435897435898
+      axis: [0.0, 0.0, 1.0]
+      origin: [0.0, 0.0, 0.0]
+    - type: rotation
+      angle: 1.7315367410744051
+      start_time: 3.187436897435898
+      end_time: 3.2902564102564105
+      axis: [0.0, 0.0, 1.0]
+      origin: [0.0, 0.0, 0.0]
+    - type: rotation
+      angle: 1.5273988760827297
+      start_time: 3.2902574102564106
+      end_time: 3.393076923076923
+      axis: [0.0, 0.0, 1.0]
+      origin: [0.0, 0.0, 0.0]
+    - type: rotation
+      angle: 1.2306665412013196
+      start_time: 3.3930779230769232
+      end_time: 3.495897435897436
+      axis: [0.0, 0.0, 1.0]
+      origin: [0.0, 0.0, 0.0]
+    - type: rotation
+      angle: 0.8609090356775209
+      start_time: 3.4958984358974363
+      end_time: 3.598717948717949
+      axis: [0.0, 0.0, 1.0]
+      origin: [0.0, 0.0, 0.0]
+    - type: rotation
+      angle: 0.4484972034672934
+      start_time: 3.598718948717949
+      end_time: 3.701538461538462
+      axis: [0.0, 0.0, 1.0]
+      origin: [0.0, 0.0, 0.0]
+    - type: rotation
+      angle: 0.021215197825863896
+      start_time: 3.701539461538462
+      end_time: 3.8043589743589745
+      axis: [0.0, 0.0, 1.0]
+      origin: [0.0, 0.0, 0.0]
+    - type: rotation
+      angle: -0.41552596195714386
+      start_time: 3.8043599743589747
+      end_time: 3.9071794871794876
+      axis: [0.0, 0.0, 1.0]
+      origin: [0.0, 0.0, 0.0]
+    - type: rotation
+      angle: -0.8327954425628503
+      start_time: 3.9071804871794877
+      end_time: 4.01
+      axis: [0.0, 0.0, 1.0]
+      origin: [0.0, 0.0, 0.0]
+    - type: rotation
+      angle: -1.1970897817334842
+      start_time: 4.010001
+      end_time: 4.112820512820513
+      axis: [0.0, 0.0, 1.0]
+      origin: [0.0, 0.0, 0.0]
+    - type: rotation
+      angle: -1.4917894139651953
+      start_time: 4.1128215128205134
+      end_time: 4.215641025641026
+      axis: [0.0, 0.0, 1.0]
+      origin: [0.0, 0.0, 0.0]
+    - type: rotation
+      angle: -1.7359910509347762
+      start_time: 4.215642025641026
+      end_time: 4.318461538461539
+      axis: [0.0, 0.0, 1.0]
+      origin: [0.0, 0.0, 0.0]
+    - type: rotation
+      angle: -1.8569846672044639
+      start_time: 4.318462538461539
+      end_time: 4.421282051282051
+      axis: [0.0, 0.0, 1.0]
+      origin: [0.0, 0.0, 0.0]
+    - type: rotation
+      angle: -1.8832115955201547
+      start_time: 4.421283051282051
+      end_time: 4.524102564102565
+      axis: [0.0, 0.0, 1.0]
+      origin: [0.0, 0.0, 0.0]
+    - type: rotation
+      angle: -1.8256178332175585
+      start_time: 4.524103564102565
+      end_time: 4.626923076923077
+      axis: [0.0, 0.0, 1.0]
+      origin: [0.0, 0.0, 0.0]
+    - type: rotation
+      angle: -1.6582206344044206
+      start_time: 4.6269240769230775
+      end_time: 4.72974358974359
+      axis: [0.0, 0.0, 1.0]
+      origin: [0.0, 0.0, 0.0]
+    - type: rotation
+      angle: -1.413339816229854
+      start_time: 4.72974458974359
+      end_time: 4.832564102564103
+      axis: [0.0, 0.0, 1.0]
+      origin: [0.0, 0.0, 0.0]
+    - type: rotation
+      angle: -1.0819278567199833
+      start_time: 4.832565102564103
+      end_time: 4.935384615384616
+      axis: [0.0, 0.0, 1.0]
+      origin: [0.0, 0.0, 0.0]
+    - type: rotation
+      angle: -0.6902226970533727
+      start_time: 4.935385615384616
+      end_time: 5.038205128205128
+      axis: [0.0, 0.0, 1.0]
+      origin: [0.0, 0.0, 0.0]
+    - type: rotation
+      angle: -0.27101352393605715
+      start_time: 5.038206128205128
+      end_time: 5.141025641025641
+      axis: [0.0, 0.0, 1.0]
+      origin: [0.0, 0.0, 0.0]
+    - type: rotation
+      angle: 0.1626986703925759
+      start_time: 5.1410266410256416
+      end_time: 5.243846153846154
+      axis: [0.0, 0.0, 1.0]
+      origin: [0.0, 0.0, 0.0]
+    - type: rotation
+      angle: 0.5957973925370421
+      start_time: 5.243847153846154
+      end_time: 5.346666666666668
+      axis: [0.0, 0.0, 1.0]
+      origin: [0.0, 0.0, 0.0]
+    - type: rotation
+      angle: 0.9936703175562318
+      start_time: 5.346667666666668
+      end_time: 5.449487179487179
+      axis: [0.0, 0.0, 1.0]
+      origin: [0.0, 0.0, 0.0]
+    - type: rotation
+      angle: 1.3266634511452056
+      start_time: 5.4494881794871795
+      end_time: 5.552307692307693
+      axis: [0.0, 0.0, 1.0]
+      origin: [0.0, 0.0, 0.0]
+    - type: rotation
+      angle: 1.6016894595440592
+      start_time: 5.552308692307693
+      end_time: 5.6551282051282055
+      axis: [0.0, 0.0, 1.0]
+      origin: [0.0, 0.0, 0.0]
+    - type: rotation
+      angle: 1.8122212198570256
+      start_time: 5.655129205128206
+      end_time: 5.757948717948718
+      axis: [0.0, 0.0, 1.0]
+      origin: [0.0, 0.0, 0.0]
+    - type: rotation
+      angle: 1.86524615300965
+      start_time: 5.757949717948718
+      end_time: 5.860769230769231
+      axis: [0.0, 0.0, 1.0]
+      origin: [0.0, 0.0, 0.0]
+    - type: rotation
+      angle: 1.8828925285803366
+      start_time: 5.860770230769231
+      end_time: 5.963589743589744
+      axis: [0.0, 0.0, 1.0]
+      origin: [0.0, 0.0, 0.0]
+    - type: rotation
+      angle: 1.7583863336750731
+      start_time: 5.963590743589744
+      end_time: 6.066410256410257
+      axis: [0.0, 0.0, 1.0]
+      origin: [0.0, 0.0, 0.0]
+    - type: rotation
+      angle: 1.5690156691001818
+      start_time: 6.066411256410257
+      end_time: 6.1692307692307695
+      axis: [0.0, 0.0, 1.0]
+      origin: [0.0, 0.0, 0.0]
+    - type: rotation
+      angle: 1.282986552284898
+      start_time: 6.16923176923077
+      end_time: 6.272051282051282
+      axis: [0.0, 0.0, 1.0]
+      origin: [0.0, 0.0, 0.0]
+    - type: rotation
+      angle: 0.9220338648409294
+      start_time: 6.272052282051282
+      end_time: 6.374871794871796
+      axis: [0.0, 0.0, 1.0]
+      origin: [0.0, 0.0, 0.0]
+    - type: rotation
+      angle: 0.5156850767085679
+      start_time: 6.374872794871796
+      end_time: 6.477692307692308
+      axis: [0.0, 0.0, 1.0]
+      origin: [0.0, 0.0, 0.0]
+    - type: rotation
+      angle: 0.0909927335294789
+      start_time: 6.4776933076923084
+      end_time: 6.580512820512821
+      axis: [0.0, 0.0, 1.0]
+      origin: [0.0, 0.0, 0.0]
+    - type: rotation
+      angle: -0.3473202141696481
+      start_time: 6.580513820512821
+      end_time: 6.683333333333334
+      axis: [0.0, 0.0, 1.0]
+      origin: [0.0, 0.0, 0.0]
+    - type: rotation
+      angle: -0.7693847908406042
+      start_time: 6.683334333333334
+      end_time: 6.786153846153846
+      axis: [0.0, 0.0, 1.0]
+      origin: [0.0, 0.0, 0.0]
+    - type: rotation
+      angle: -1.1414531031196011
+      start_time: 6.786154846153846
+      end_time: 6.888974358974359
+      axis: [0.0, 0.0, 1.0]
+      origin: [0.0, 0.0, 0.0]
+    - type: rotation
+      angle: -1.4488605504331735
+      start_time: 6.888975358974359
+      end_time: 6.991794871794872
+      axis: [0.0, 0.0, 1.0]
+      origin: [0.0, 0.0, 0.0]
+    - type: rotation
+      angle: -1.7044011834528199
+      start_time: 6.9917958717948725
+      end_time: 7.094615384615385
+      axis: [0.0, 0.0, 1.0]
+      origin: [0.0, 0.0, 0.0]
+    - type: rotation
+      angle: -1.8470659327471473
+      start_time: 7.094616384615385
+      end_time: 7.197435897435898
+      axis: [0.0, 0.0, 1.0]
+      origin: [0.0, 0.0, 0.0]
+    - type: rotation
+      angle: -1.881688771463354
+      start_time: 7.197436897435898
+      end_time: 7.300256410256409
+      axis: [0.0, 0.0, 1.0]
+      origin: [0.0, 0.0, 0.0]
+    - type: rotation
+      angle: -1.841977608497926
+      start_time: 7.3002574102564095
+      end_time: 7.403076923076924
+      axis: [0.0, 0.0, 1.0]
+      origin: [0.0, 0.0, 0.0]
+    - type: rotation
+      angle: -1.6919568389495585
+      start_time: 7.403077923076924
+      end_time: 7.505897435897436
+      axis: [0.0, 0.0, 1.0]
+      origin: [0.0, 0.0, 0.0]
+    - type: rotation
+      angle: -1.4593106225301247
+      start_time: 7.5058984358974365
+      end_time: 7.608717948717949
+      axis: [0.0, 0.0, 1.0]
+      origin: [0.0, 0.0, 0.0]
+    - type: rotation
+      angle: -1.1382225905284313
+      start_time: 7.608718948717949
+      end_time: 7.711538461538461
+      axis: [0.0, 0.0, 1.0]
+      origin: [0.0, 0.0, 0.0]
+    - type: rotation
+      angle: -0.7541678378018544
+      start_time: 7.711539461538461
+      end_time: 7.814358974358975
+      axis: [0.0, 0.0, 1.0]
+      origin: [0.0, 0.0, 0.0]
+    - type: rotation
+      angle: -0.3399572486151943
+      start_time: 7.814359974358975
+      end_time: 7.917179487179488
+      axis: [0.0, 0.0, 1.0]
+      origin: [0.0, 0.0, 0.0]
+    - type: rotation
+      angle: 0.0931822158475164
+      start_time: 7.917180487179488
+      end_time: 8.02
+      axis: [0.0, 0.0, 1.0]
+      origin: [0.0, 0.0, 0.0]
+    - type: rotation
+      angle: 0.5291940913466382
+      start_time: 8.020000999999999
+      end_time: 8.122820512820512
+      axis: [0.0, 0.0, 1.0]
+      origin: [0.0, 0.0, 0.0]
+    - type: rotation
+      angle: 0.9331288294006317
+      start_time: 8.122821512820511
+      end_time: 8.225641025641027
+      axis: [0.0, 0.0, 1.0]
+      origin: [0.0, 0.0, 0.0]
+    - type: rotation
+      angle: 1.2758514417195945
+      start_time: 8.225642025641026
+      end_time: 8.32846153846154
+      axis: [0.0, 0.0, 1.0]
+      origin: [0.0, 0.0, 0.0]
+    - type: rotation
+      angle: 1.5646789083391934
+      start_time: 8.328462538461539
+      end_time: 8.431282051282052
+      axis: [0.0, 0.0, 1.0]
+      origin: [0.0, 0.0, 0.0]
+    - type: rotation
+      angle: 1.787724155415387
+      start_time: 8.431283051282051
+      end_time: 8.534102564102565
+      axis: [0.0, 0.0, 1.0]
+      origin: [0.0, 0.0, 0.0]
+    - type: rotation
+      angle: 1.8598628563695385
+      start_time: 8.534103564102564
+      end_time: 8.636923076923077
+      axis: [0.0, 0.0, 1.0]
+      origin: [0.0, 0.0, 0.0]
+    - type: rotation
+      angle: 1.888237280239097
+      start_time: 8.636924076923076
+      end_time: 8.73974358974359
+      axis: [0.0, 0.0, 1.0]
+      origin: [0.0, 0.0, 0.0]
+    - type: rotation
+      angle: 1.7822038029106158
+      start_time: 8.739744589743589
+      end_time: 8.842564102564102
+      axis: [0.0, 0.0, 1.0]
+      origin: [0.0, 0.0, 0.0]
+    - type: rotation
+      angle: 1.608602556312742
+      start_time: 8.842565102564102
+      end_time: 8.945384615384615
+      axis: [0.0, 0.0, 1.0]
+      origin: [0.0, 0.0, 0.0]
+    - type: rotation
+      angle: 1.3335248819732817
+      start_time: 8.945385615384614
+      end_time: 9.04820512820513
+      axis: [0.0, 0.0, 1.0]
+      origin: [0.0, 0.0, 0.0]
+    - type: rotation
+      angle: 0.9818459666896642
+      start_time: 9.048206128205129
+      end_time: 9.151025641025642
+      axis: [0.0, 0.0, 1.0]
+      origin: [0.0, 0.0, 0.0]
+    - type: rotation
+      angle: 0.5822032596008544
+      start_time: 9.151026641025641
+      end_time: 9.253846153846155
+      axis: [0.0, 0.0, 1.0]
+      origin: [0.0, 0.0, 0.0]
+    - type: rotation
+      angle: 0.16068488364236444
+      start_time: 9.253847153846154
+      end_time: 9.356666666666666
+      axis: [0.0, 0.0, 1.0]
+      origin: [0.0, 0.0, 0.0]
+    - type: rotation
+      angle: -0.27861781112255635
+      start_time: 9.356667666666665
+      end_time: 9.45948717948718
+      axis: [0.0, 0.0, 1.0]
+      origin: [0.0, 0.0, 0.0]
+    - type: rotation
+      angle: -0.7049194474272236
+      start_time: 9.45948817948718
+      end_time: 9.562307692307693
+      axis: [0.0, 0.0, 1.0]
+      origin: [0.0, 0.0, 0.0]
+    - type: rotation
+      angle: -1.0842496215125506
+      start_time: 9.562308692307692
+      end_time: 9.665128205128205
+      axis: [0.0, 0.0, 1.0]
+      origin: [0.0, 0.0, 0.0]
+    - type: rotation
+      angle: -1.4041247394227092
+      start_time: 9.665129205128205
+      end_time: 9.767948717948718
+      axis: [0.0, 0.0, 1.0]
+      origin: [0.0, 0.0, 0.0]
+    - type: rotation
+      angle: -1.6701292458493326
+      start_time: 9.767949717948717
+      end_time: 9.870769230769232
+      axis: [0.0, 0.0, 1.0]
+      origin: [0.0, 0.0, 0.0]
+    - type: rotation
+      angle: -1.8350386956737506
+      start_time: 9.870770230769232
+      end_time: 9.973589743589745
+      axis: [0.0, 0.0, 1.0]
+      origin: [0.0, 0.0, 0.0]
+    - type: rotation
+      angle: -1.8778473813792158
+      start_time: 9.973590743589744
+      end_time: 10.076410256410256
+      axis: [0.0, 0.0, 1.0]
+      origin: [0.0, 0.0, 0.0]
+    - type: rotation
+      angle: -1.8555204157878085
+      start_time: 10.076411256410255
+      end_time: 10.179230769230768
+      axis: [0.0, 0.0, 1.0]
+      origin: [0.0, 0.0, 0.0]
+    - type: rotation
+      angle: -1.7234223145870682
+      start_time: 10.179231769230768
+      end_time: 10.282051282051283
+      axis: [0.0, 0.0, 1.0]
+      origin: [0.0, 0.0, 0.0]
+    - type: rotation
+      angle: -1.5032621605794558
+      start_time: 10.282052282051282
+      end_time: 10.384871794871795
+      axis: [0.0, 0.0, 1.0]
+      origin: [0.0, 0.0, 0.0]
+    - type: rotation
+      angle: -1.1929210326617374
+      start_time: 10.384872794871795
+      end_time: 10.487692307692308
+      axis: [0.0, 0.0, 1.0]
+      origin: [0.0, 0.0, 0.0]
+    - type: rotation
+      angle: -0.8170132716085767
+      start_time: 10.487693307692307
+      end_time: 10.59051282051282
+      axis: [0.0, 0.0, 1.0]
+      origin: [0.0, 0.0, 0.0]
+    - type: rotation
+      angle: -0.40854108421098445
+      start_time: 10.59051382051282
+      end_time: 10.693333333333335
+      axis: [0.0, 0.0, 1.0]
+      origin: [0.0, 0.0, 0.0]
+    - type: rotation
+      angle: 0.02350832242404799
+      start_time: 10.693334333333334
+      end_time: 10.796153846153846
+      axis: [0.0, 0.0, 1.0]
+      origin: [0.0, 0.0, 0.0]
+    - type: rotation
+      angle: 0.4618583871286095
+      start_time: 10.796154846153845
+      end_time: 10.898974358974359
+      axis: [0.0, 0.0, 1.0]
+      origin: [0.0, 0.0, 0.0]
+    - type: rotation
+      angle: 0.8713128154083805
+      start_time: 10.898975358974358
+      end_time: 11.001794871794871
+      axis: [0.0, 0.0, 1.0]
+      origin: [0.0, 0.0, 0.0]
+    - type: rotation
+      angle: 1.2234982393654672
+      start_time: 11.00179587179487
+      end_time: 11.104615384615386
+      axis: [0.0, 0.0, 1.0]
+      origin: [0.0, 0.0, 0.0]
+    - type: rotation
+      angle: 1.525453506728053
+      start_time: 11.104616384615385
+      end_time: 11.207435897435898
+      axis: [0.0, 0.0, 1.0]
+      origin: [0.0, 0.0, 0.0]
+    - type: rotation
+      angle: 1.760513393843763
+      start_time: 11.207436897435898
+      end_time: 11.310256410256411
+      axis: [0.0, 0.0, 1.0]
+      origin: [0.0, 0.0, 0.0]
+    - type: rotation
+      angle: 1.852181884570041
+      start_time: 11.31025741025641
+      end_time: 11.413076923076924
+      axis: [0.0, 0.0, 1.0]
+      origin: [0.0, 0.0, 0.0]
+    - type: rotation
+      angle: 1.8915730848921468
+      start_time: 11.413077923076923
+      end_time: 11.515897435897436
+      axis: [0.0, 0.0, 1.0]
+      origin: [0.0, 0.0, 0.0]
+    - type: rotation
+      angle: 1.8030306377038468
+      start_time: 11.515898435897435
+      end_time: 11.618717948717949
+      axis: [0.0, 0.0, 1.0]
+      origin: [0.0, 0.0, 0.0]
+    - type: rotation
+      angle: 1.646083418819948
+      start_time: 11.618718948717948
+      end_time: 11.721538461538461
+      axis: [0.0, 0.0, 1.0]
+      origin: [0.0, 0.0, 0.0]
+    - type: rotation
+      angle: 1.382209330295094
+      start_time: 11.72153946153846
+      end_time: 11.824358974358974
+      axis: [0.0, 0.0, 1.0]
+      origin: [0.0, 0.0, 0.0]
+    - type: rotation
+      angle: 1.0402591669976946
+      start_time: 11.824359974358973
+      end_time: 11.927179487179489
+      axis: [0.0, 0.0, 1.0]
+      origin: [0.0, 0.0, 0.0]
+    - type: rotation
+      angle: 0.647985676626031
+      start_time: 11.927180487179488
+      end_time: 12.030000000000001
+      axis: [0.0, 0.0, 1.0]
+      origin: [0.0, 0.0, 0.0]
+    - type: rotation
+      angle: 0.23019184201720932
+      start_time: 12.030001
+      end_time: 12.132820512820514
+      axis: [0.0, 0.0, 1.0]
+      origin: [0.0, 0.0, 0.0]
+    - type: rotation
+      angle: -0.20951694801717125
+      start_time: 12.132821512820513
+      end_time: 12.235641025641026
+      axis: [0.0, 0.0, 1.0]
+      origin: [0.0, 0.0, 0.0]
+    - type: rotation
+      angle: -0.639491272036671
+      start_time: 12.235642025641026
+      end_time: 12.338461538461539
+      axis: [0.0, 0.0, 1.0]
+      origin: [0.0, 0.0, 0.0]
+    - type: rotation
+      angle: -1.025560379296505
+      start_time: 12.338462538461538
+      end_time: 12.441282051282052
+      axis: [0.0, 0.0, 1.0]
+      origin: [0.0, 0.0, 0.0]
+    - type: rotation
+      angle: -1.3576254142019932
+      start_time: 12.441283051282051
+      end_time: 12.544102564102564
+      axis: [0.0, 0.0, 1.0]
+      origin: [0.0, 0.0, 0.0]
+    - type: rotation
+      angle: -1.6332718122468415
+      start_time: 12.544103564102564
+      end_time: 12.646923076923077
+      axis: [0.0, 0.0, 1.0]
+      origin: [0.0, 0.0, 0.0]
+    - type: rotation
+      angle: -1.8209047002043228
+      start_time: 12.646924076923076
+      end_time: 12.749743589743591
+      axis: [0.0, 0.0, 1.0]
+      origin: [0.0, 0.0, 0.0]
+    - type: rotation
+      angle: -1.8716129598583822
+      start_time: 12.74974458974359
+      end_time: 12.852564102564104
+      axis: [0.0, 0.0, 1.0]
+      origin: [0.0, 0.0, 0.0]
+    - type: rotation
+      angle: -1.8662973063108597
+      start_time: 12.852565102564103
+      end_time: 12.955384615384617
+      axis: [0.0, 0.0, 1.0]
+      origin: [0.0, 0.0, 0.0]
+    - type: rotation
+      angle: -1.7525572344091764
+      start_time: 12.955385615384616
+      end_time: 13.058205128205127
+      axis: [0.0, 0.0, 1.0]
+      origin: [0.0, 0.0, 0.0]
+    - type: rotation
+      angle: -1.5477021055563758
+      start_time: 13.058206128205127
+      end_time: 13.161025641025642
+      axis: [0.0, 0.0, 1.0]
+      origin: [0.0, 0.0, 0.0]
+    - type: rotation
+      angle: -1.239730643028496
+      start_time: 13.161026641025641
+      end_time: 13.263846153846155
+      axis: [0.0, 0.0, 1.0]
+      origin: [0.0, 0.0, 0.0]
+    - type: rotation
+      angle: -0.882311917417451
+      start_time: 13.263847153846154
+      end_time: 13.366666666666667
+      axis: [0.0, 0.0, 1.0]
+      origin: [0.0, 0.0, 0.0]
+
+  post_processing:
+  - frequency: 1
+    output_file_name: results/pitchingAF_forces_val2cumulative.dat
+    parameters:
+    - 0
+    - 0
+    physics: surface_force_and_moment
+    target_name:
+    - airfoil
+    type: surface
+ 
+  restart:
+    restart_data_base_name: restart/pitchingAF_val2cumulative.rst
+    restart_frequency: 100
+      #restart_time: 0.0912114 
+
+  solution_options:
+    name: myOptions
+    options:
+    - hybrid_factor:
+        specific_dissipation_rate: 1.0
+        turbulent_ke: 1.0
+        velocity: 1.0
+    - alpha_upw:
+        specific_dissipation_rate: 1.0
+        turbulent_ke: 1.0
+        velocity: 1.0
+    - upw_factor:
+        specific_dissipation_rate: 0.0
+        turbulent_ke: 0.0
+        velocity: 1.0
+    - limiter:
+        pressure: true
+        velocity: true
+        turbulent_ke: true
+        specific_dissipation_rate: true
+    - noc_correction:
+        pressure: true
+    - projected_nodal_gradient:
+        ndtw: element
+        pressure: element
+        specific_dissipation_rate: element
+        turbulent_ke: element
+        velocity: element
+    - relaxation_factor:
+        pressure: 0.3
+        specific_dissipation_rate: 0.7
+        turbulent_ke: 0.7
+        velocity: 0.7
+    - turbulence_model_constants:
+        SDRWallFactor: 0.625
+    projected_timescale_type: momentum_diag_inv
+    turbulence_model: sst
+  turbulence_averaging:
+    specifications:
+    - compute_q_criterion: true
+      compute_vorticity: true
+      name: one
+      target_name: [fluid-HEX, airfoil-HEX]
+    time_filter_interval: 100000.0
+  use_edges: true
+

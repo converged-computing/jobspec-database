@@ -1,0 +1,83 @@
+# -------- Monte's notes: -----------
+# ~/.profile is only run for login shells (when the terminal first starts up)
+# when bash is the default shell. So it doesn't get called by zsh, or if switching
+# from zsh to bash. Standard practice is to use ~/.profile to set environment
+# variables and call ~/.bashrc. If we call ~/.profile from ~/.zshrc that works fine,
+# but I prefer to leave that file with Ubuntu defaults and create ~/.profile_shared
+# that is called by both ~/.bashrc and ~/.zshrc. Uncomment the following line to 
+# check when this is being run:
+#
+# echo "Running ~/.profile_shared..."
+# -------- End Monte's notes -----------
+
+# Update path to include non-standard location of executables:
+# Nexus cluster - probably not needed any more (as of Apr 2024)
+export PATH=/usr/local/cuda-11.3/bin:$PATH
+
+# Aliases I want in both bash and zsh:
+# -a: hidden files, 
+# -A, hidden files but ignore . and ..
+# -l, show in a vertical list with extra info
+# -F, add / to end of folder names (I appreciate)
+# -C, order by columns instead of rows (eh boring)
+# -h, show file sizes in kb, gb, instead of just bytes (maybe good? I actually like it the original way)
+alias ll='ls -laF' # Show it all
+alias l='ls -lF'    # Show the basics in a short list
+alias lsa='ls -AF'   # Show it all, but in condensed ls format
+
+alias gitpass='git config --global credential.helper store && echo "Ready to save git credentials."'
+
+# Show Slurm jobs on a cluster. Number indicates spaces for the column info. "." is for right justified.
+# u: USER 
+# i: JOBID 
+# P: PARTITION 
+# q: QOS
+# a: Account
+# Q: Priority
+# T: STATE
+# R: NODE (or reason pending)
+# j: JOBNAME
+# M: TIME
+# l: TIME Requested 
+# C: CPUs Requested
+# m: MEM Requested
+# b: GPUS Requested
+# --me: just my jobs
+alias sq='squeue -o "%8u %9q %9a %10R %8j %.10M %.10l %3C %.4m %b"'
+alias sqa='squeue -o "%8u %12i %9P %9q %9a %4Q %7T %R %14j %.10M %.10l %3C %.4m %b"'
+#alias sqm='sqa --me'
+alias sqm='sqa --user=mhoover4' #Required for deepthought
+alias sqw='watch "squeue -o \"%8u %12i %9P %9q %9a %4Q %7T %R %14j %.10M %.10l %3C %.4m %b\" --user=mhoover4"'
+
+alias show_job='sacct -o jobname%18,MaxRSS,submit,start,end,state -j'
+alias show_job_all='sacct -o %14 -j'
+alias show_history='sacct -o jobid,jobname%18,MaxRSS,submit,start,elapsed,state --user=mhoover4 --starttime=today'
+alias show_qos='sacctmgr show qos format=Name%16,MaxWall,MaxJobsPerUser%7,MaxTRESPerJob%30,MaxTRESPerUser,Priority'
+alias show_assoc='sacctmgr show assoc user=$USER format=user%10,account%16,maxjobs,grpTRES,qos%36'
+alias show_nodes='sinfo -N -o "%20N %10c %10m %25f %32G %10t %P"' #helps to use with -p <partition name>
+
+alias userhost='echo ${USER}@${HOST}'
+
+# ----- Monte note: things added by installer scripts ------ #
+
+# homebrew on Macbook
+eval "$(/opt/homebrew/bin/brew shellenv)"
+
+# >>> conda initialize >>>
+# !! Contents within this block are managed by 'conda init' !!
+__conda_setup="$('/opt/homebrew/Caskroom/miniforge/base/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
+if [ $? -eq 0 ]; then
+    eval "$__conda_setup"
+else
+    if [ -f "/opt/homebrew/Caskroom/miniforge/base/etc/profile.d/conda.sh" ]; then
+        . "/opt/homebrew/Caskroom/miniforge/base/etc/profile.d/conda.sh"
+    else
+        export PATH="/opt/homebrew/Caskroom/miniforge/base/bin:$PATH"
+    fi
+fi
+unset __conda_setup
+
+if [ -f "/opt/homebrew/Caskroom/miniforge/base/etc/profile.d/mamba.sh" ]; then
+    . "/opt/homebrew/Caskroom/miniforge/base/etc/profile.d/mamba.sh"
+fi
+# <<< conda initialize <<<

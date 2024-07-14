@@ -1,0 +1,44 @@
+setup:
+  tf_seed: 7129
+dataset:
+  load:
+    name: cifar10
+    data_dir: "./data"
+    splits:
+      - train[:80%]
+      - train[80%:]
+      - test
+  prepare:
+    batch_size: 64
+    sizes: &image_sizes [32, 32, 3]
+    prefetch_buffer_size: auto
+    parallel_calls: auto
+    drop_remainder: true
+    task: classification
+    classes: &classes 10
+    keys:
+      - image
+      - label
+    shuffle:
+      seed: 2181
+      buffer_size: 10000
+      splits:
+        - train[:80%]
+    augmentation:
+      splits:
+        - train[:80%]
+        # - train[80%:]
+        # - test
+model:
+  name: mc_cifar10
+  input_shape: *image_sizes
+  head:
+    units: *classes
+    activation: softmax
+training:
+  loss: SparseCategoricalCrossentropy
+  metrics:
+    - SparseCategoricalAccuracy
+    - SparseTopKCategoricalAccuracy
+evaluation:
+  task: sparse_classification_multiclass

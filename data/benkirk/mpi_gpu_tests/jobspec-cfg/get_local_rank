@@ -1,0 +1,47 @@
+#!/bin/bash
+#
+# Copyright (C) 2002-2021 the Network-Based Computing Laboratory
+# (NBCL), The Ohio State University.
+#
+# Contact: Dr. D. K. Panda (panda@cse.ohio-state.edu)
+#
+# For detailed copyright and licensing information, please refer to the
+# copyright file COPYRIGHT in the top level directory.
+#
+# Name        : get_local_rank
+#
+# Description : This script is used to set the affinity between an MPI
+#               process and the GPU on the system.
+#
+#               The processes rank on a node is normally used to do this
+#               and different MPI launchers expose this information through
+#               different environment variables. For example, MVAPICH2 uses
+#               MV2_COMM_WORLD_LOCAL_RANK and OpenMPI uses
+#               OMPI_COMM_WORLD_LOCAL_RANK. For other MPI libraries, please
+#               set the LOCAL_RANK variable below to the appropriate one.
+
+export LOCAL_RANK=${PMI_LOCAL_RANK}
+export GLOBAL_RANK=${PMI_RANK}
+export my_CUDA_DEVICE=$(expr ${LOCAL_RANK} % 4)
+export CUDA_VISIBLE_DEVICES=${my_CUDA_DEVICE}
+
+printf "Global Rank %3d / Local Rank %3d / CUDA_VISIBLE_DEVICES=${CUDA_VISIBLE_DEVICES} / $(hostname)\n" ${GLOBAL_RANK} ${LOCAL_RANK}
+
+debug_env=yes
+
+if [[ ${debug_env} == "yes" ]]; then
+    envfile="env-${GLOBAL_RANK}-${PBS_JOBID}.out"
+    stracefile="strace-${GLOBAL_RANK}-${PBS_JOBID}.out"
+
+    ### Interrogate Environment
+    env | sort | uniq | egrep -v "_LM|_ModuleTable|Modules|lmod_sh" > ${envfile}
+
+    if [[ -x $* ]]; then
+        echo "# ldd $* " >> ${stracefile}
+        ldd $* >> ${stracefile} 2>&1
+        echo "# strace $* " >> ${stracefile}
+        strace $* >> ${stracefile} 2>&1
+    fi
+fi
+
+exec $*

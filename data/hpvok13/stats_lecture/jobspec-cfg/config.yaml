@@ -1,0 +1,43 @@
+# Configuration for Stock Price Estimation Model Training
+model:
+  input_dim: 5
+  d_model: 64
+  max_len: 1000
+  num_heads: 8
+  num_layers: 6
+  ff_dim: 128
+  dropout: 0.1
+  activation: gelu
+  layer_norm_eps: 0.00001
+  batch_first: True
+  bias: True
+# Training parameters
+dataset:
+  symbols_file: "symbols.csv"
+  seq_len: 500
+  dir: "data"
+  period: "60d"
+  interval: "2m"
+  download: False
+  columns: ["Datetime", "Open", "High", "Low", "Close", "Volume"]
+optimizer: 
+  fn: adam
+  lr: 0.001
+  momentum: 0.9
+  beta1: 0.9
+  beta2: 0.999
+criterion: mse_loss
+wandb: True
+compile:
+  disable: False
+  fullgraph: True
+  dynamic: null
+  backend: inductor
+  mode: "max-autotune"
+train:
+  matmul_precision: high
+  epochs: 30
+  batch_size: 32
+  num_workers: 4
+  log_freq: 500
+  model_dir: models

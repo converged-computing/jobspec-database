@@ -1,0 +1,49 @@
+setup:
+  tf_seed: 72142
+dataset:
+  load:
+    name: 'coco/2017_panoptic'
+    data_dir: "./data"
+    splits:
+      - train
+      - validation
+      - validation
+  prepare:
+    batch_size: 64
+    sizes: &image_sizes [512, 512, 3]
+    prefetch_buffer_size: auto
+    parallel_calls: auto
+    drop_remainder: true
+    task: classification_multilabel_from_detection
+    classes: &classes 133
+    keys:
+      - image
+      - panoptic_objects.label
+    validation:
+      key: panoptic_objects.label
+      kind: not_empty
+    shuffle:
+      seed: 1272
+      buffer_size: 8000
+      splits:
+        - train
+    augmentation:
+      splits:
+        - train
+        # - validation
+        # - validation
+    pad_values: [0, -1]
+model:
+  name: ml_coco17
+  input_shape: *image_sizes
+  head:
+    units: *classes
+    activation: sigmoid
+training:
+  loss: BinaryCrossentropy
+  metrics:
+    - BinaryAccuracy
+    - Precision
+    - Recall
+evaluation:
+  task: classification_multilabel

@@ -1,0 +1,202 @@
+##########
+# Analysis options
+##########
+
+# Specify tree file
+TREE_FILE = args[1]
+
+# Specify taxon file
+#TAXON_FILE = "crocs_taxa_range.tsv"
+TAXON_FILE = args[2]
+
+# Prior on BDPSTP
+BDP_PRIOR = args[3]
+
+# Hyperpriors (for time-varying models)
+BDP_HYPERPRIOR = args[4]
+
+# Should we estimate mass extinctions?
+NUM_EXPECTED_ME = args[5]
+
+# The probability of extinction at fossilization (treatment)
+treatment_option = args[6]
+
+# what type of age uncertainty should we include?
+# allowed are: none|tip|node|both
+age_uncertainty <- args[7]
+
+# Number of MCMC replicates
+NUM_REPS = args[8]
+
+# Number of MCMCMC chain
+NUM_CHAINS = args[9]
+
+# For reproducibility
+SEED = args[10]
+
+# The output directory
+OUTPUT_DIR = args[11]
+
+seed(SEED)
+
+# What should we condition the tree on?
+CONDITION = "time"
+
+# set number of speciation_rate regimes (only used for MRF models)
+NUM_INTERVALS = 100
+
+# number of breaks between regimes, for convenience (only used for MRF models)
+NUM_BREAKS = NUM_INTERVALS - 1
+
+# number of MCMC iterations
+NUM_MCMC_ITERATIONS = 100000
+#NUM_MCMC_ITERATIONS = 20
+
+# the thinning between MCMC samples
+SAMPLING_FREQ = 1
+
+
+##########
+# Get data
+##########
+
+observed_trees <- readTrees("data/" + TREE_FILE)
+observed_tree  <- observed_trees[1]
+
+taxa <- readTaxonData("data/" + TAXON_FILE,delim=TAB)
+
+# Get some useful variables from the data. We need these later on.
+num_fossils <- observed_tree.getFossils().size()
+num_species <- observed_tree.ntips()
+num_extant_taxa <- num_species - num_fossils
+root_height <- observed_tree.rootAge()
+
+
+moves = VectorMoves()
+monitors = VectorMonitors()
+
+
+####################
+# Data Preparation #
+####################
+
+if ( age_uncertainty == "both" || age_uncertainty == "tip" ) {
+
+  for ( this_taxon in taxa ) {
+
+    index = observed_tree.tipIndex(this_taxon)
+    min_age = this_taxon.getMinAge()
+    if ( min_age <= 0.005 ) {
+      min_age = 0.0
+    }
+    observed_tree.setAge( index, min_age )
+
+  }
+
+}
+
+##########
+# Constant parameters
+##########
+
+sampling_at_present <- num_extant_taxa / 25
+
+expected_number_of_mass_extinctions <- NUM_EXPECTED_ME
+
+##########
+# Mass extinction model
+##########
+# ME model will fill Mu with 0 if we do not want to infer mass extinctions
+# This only works for time-varying tree priors, otherwise we simply never declare Mu
+if (BDP_PRIOR != "CRBDP") {
+  source("src/ME.Rev")
+}
+
+ME_PREFIX = "_ME_prior_" + NUM_EXPECTED_ME
+
+##########
+# Treatment
+##########
+
+if ( treatment_option == 0 || treatment_option == 1 ) {
+  treatment_probability <- treatment_option
+} else {
+  treatment_probability ~ dnBeta(1,1)
+  moves.append( mvBetaProbability(treatment_probability, weight=3) )
+}
+
+
+
+##########
+# Tree model
+##########
+
+source("src/" + BDP_PRIOR + ".Rev")
+
+### clamp the model with the "observed" tree
+timetree.clamp( observed_tree )
+
+
+if ( age_uncertainty == "both" || age_uncertainty == "tip" ) {
+
+  fossils = timetree.getFossils()
+  for(i in 1:fossils.size()) {
+    t[i] := tmrca(timetree, clade(fossils[i]))
+
+    a[i] <- 0
+    b[i] <- 0
+    for ( this_taxon in taxa ) {
+
+      if ( this_taxon.getSpeciesName() == fossils[i].getSpeciesName() ) {
+        a[i] <- this_taxon.getMinAge()
+        b[i] <- this_taxon.getMaxAge()
+      }
+
+    }
+
+    F[i] ~ dnUniform(t[i] - b[i], t[i] - a[i])
+    F[i] ~ dnSoftBoundUniformNormal(min=t[i] - b[i], max=t[i] - a[i], sd=2.0, p=0.01)
+    F[i].clamp( 0 )
+    moves.append( mvFossilTipTimeUniform(timetree, root_height, min=a[i], max=b[i], tip=fossils[i].getSpeciesName(), weight=2) )
+    moves.append( mvFossilTipTimeSlideUniform(timetree, root_height, min=a[i], max=b[i], tip=fossils[i].getSpeciesName(), tune=true, weight=3) )
+  }
+#  moves.append( mvFossilTimeSlideUniform(timetree, root_height, weight=2*num_species) )
+}
+
+
+if ( age_uncertainty == "both" || age_uncertainty == "node" ) {
+  moves.append( mvNodeTimeSlideUniform(timetree, weight=2*num_species) )
+}
+
+
+##########
+# The model DAG
+##########
+
+### workspace model wrapper ###
+mymodel = model(sampling_at_present)
+
+##########
+# The monitors
+##########
+
+### set up the monitors that will output parameter values to file and screen
+monitors.append( mnModel(filename=OUTPUT_DIR + "/" + BDP_PRIOR + ME_PREFIX + "_" + TREE_FILE + ".log",printgen=SAMPLING_FREQ, separator = TAB) )
+monitors.append( mnFile(timetree , filename=OUTPUT_DIR + "/" + BDP_PRIOR + ME_PREFIX + "_" + TREE_FILE + ".trees", printgen=100, separator = TAB) )
+monitors.append( mnScreen(printgen=10) )
+
+##########
+# Run MCMC
+##########
+
+### workspace mcmc ###
+mymcmc = mcmcmc(mymodel, monitors, moves, nruns=NUM_REPS, nchains=NUM_CHAINS, tuneHeat=TRUE, swapInterval=1)
+
+### Use burnin to tune the MH proposals ###
+mymcmc.burnin(generations=1000, tuningInterval=100)
+
+### run the MCMC ###
+mymcmc.run(generations=NUM_MCMC_ITERATIONS)
+
+
+q()

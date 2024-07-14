@@ -1,0 +1,162 @@
+#!/bin/bash
+#
+#-----------------------------------------------------------------------------
+# Ethan Ho 2/8/2021
+#
+# Like Frontera's /share/doc/slurm/job.jupyter, but runs jupyter-notebook in a
+# Singularity container. The container must be saved as a SIF file, and its
+# POSIX path should be specified by setting the SIMG variable below.
+#
+# To submit the job, issue: "sbatch scripts/frontera.jupytersing -s /work/06634/eho/singularity_images/deeplabcut_2_1_10.sif"
+#
+# For more information, please consult the User Guide at:
+#
+# http://www.tacc.utexas.edu/user-services/user-guides/frontera-user-guide
+#-----------------------------------------------------------------------------
+#
+#SBATCH -J tvp_jupyter_sing           # Job name
+#SBATCH -o jupyter.out                # Name of stdout output file (%j expands to jobId)
+#SBATCH -p rtx
+#SBATCH -N 1                          # Total number of nodes requested (56 cores/node)
+#SBATCH -n 1                          # Total number of mpi tasks requested
+#SBATCH -t 02:00:00                   # Run time (hh:mm:ss) - 4 hours
+
+SIMG=/work/06634/eho/singularity_images/deeplabcut_2_1_10.sif
+
+#--------------------------------------------------------------------------
+# ---- You normally should not need to edit anything below this point -----
+#--------------------------------------------------------------------------
+
+# get command line options
+while getopts "i" opt
+do
+   case "$opt" in
+      a ) SIMG="$OPTARG" ;;
+      #? ) helpFunction ;;
+   esac
+done
+
+echo job $SLURM_JOB_ID execution at: `date`
+
+# our node name
+NODE_HOSTNAME=`hostname -s`
+echo "TACC: running on node $NODE_HOSTNAME"
+
+echo "TACC: unloading xalt"
+module unload xalt
+
+# load modules. These are specific to the container enho/deeplabcut:2.1.10
+module load cuda/10.0
+module load cudnn nccl tacc-singularity
+module list
+
+# mount options that are specific for enho/deeplabcut:2.1.10
+SING_MOUNT_OPTS="-B local_models:/opt/conda/lib/python3.7/site-packages/deeplabcut/pose_estimation_tensorflow/models/pretrained/"
+if [ ! -d ./local_models ]; then
+    echo "TACC: ERROR - could not find directory ./local_models required for Singularity mount"
+    exit 1
+fi
+
+# IPYTHON_BIN is a singularity exec command
+if [ ! -f ${SIMG} ]; then
+    echo "TACC: ERROR - could not find a SIF file at ${SIMG}"
+fi
+IPYTHON_BIN="singularity exec --nv --home $PWD ${SING_MOUNT_OPTS} ${SIMG} jupyter-notebook"
+echo "TACC: using IPYTHON_BIN ${IPYTHON_BIN}"
+
+NB_SERVERDIR=$HOME/.jupyter
+IP_CONFIG=$NB_SERVERDIR/jupyter_notebook_config.py
+
+# make .ipython dir for logs
+mkdir -p $NB_SERVERDIR
+
+rm -f $NB_SERVERDIR/.jupyter_address $NB_SERVERDIR/.jupyter_port $NB_SERVERDIR/.jupyter_status $NB_SERVERDIR/.jupyter_job_id $NB_SERVERDIR/.jupyter_job_start $NB_SERVERDIR/.jupyter_job_duration
+
+# launch ipython
+JUPYTER_LOGFILE=$NB_SERVERDIR/$NODE_HOSTNAME.log
+JUP_CONFIG_PY="/home1/00832/envision/tacc-tvp/server/scripts/frontera/jupyter.tvp.config.py"
+IPYTHON_ARGS="--config=${JUP_CONFIG_PY}"
+echo "TACC: using jupyter command: $IPYTHON_BIN $IPYTHON_ARGS"
+nohup $IPYTHON_BIN $IPYTHON_ARGS &> $JUPYTER_LOGFILE && rm $NB_SERVERDIR/.jupyter_lock &
+IPYTHON_PID=$!
+echo "$NODE_HOSTNAME $IPYTHON_PID" > $NB_SERVERDIR/.jupyter_lock
+sleep 60
+JUPYTER_TOKEN=`grep -m 1 'token=' $JUPYTER_LOGFILE | cut -d'?' -f 2`
+LOCAL_IPY_PORT=5902
+IPY_PORT_PREFIX=2
+#echo "TACC: remote ipython port prefix is $IPY_PORT_PREFIX"
+
+# use the ranges 10000 - 31999 for frontera
+LOGIN_IPY_PORT=`echo $NODE_HOSTNAME | perl -ne 'print (($2+1).$3.$1) if /c\d(\d\d)-(\d)(\d\d)/;'`
+echo "TACC: got login node jupyter port $LOGIN_IPY_PORT"
+
+# create reverse tunnel port to login nodes.  Make one tunnel for each login so the user can just
+# connect to maverick.tacc
+for i in `seq 4`; do
+    ssh -q -f -g -N -R $LOGIN_IPY_PORT:$NODE_HOSTNAME:$LOCAL_IPY_PORT login$i
+done
+echo "TACC: created reverse ports on Frontera logins"
+
+echo "Your jupyter notebook server is now running!"
+echo "Please point your favorite web browser to https://vis.tacc.utexas.edu:$LOGIN_IPY_PORT/?$JUPYTER_TOKEN"
+
+# Warn the user when their session is about to close
+# see if the user set their own runtime
+#TACC_RUNTIME=`qstat -j $JOB_ID | grep h_rt | perl -ne 'print $1 if /h_rt=(\d+)/'`  # qstat returns seconds
+TACC_RUNTIME=`squeue -l -j $SLURM_JOB_ID | grep $SLURM_QUEUE | awk '{print $7}'` # squeue returns HH:MM:SS
+if [ x"$TACC_RUNTIME" == "x" ]; then
+	TACC_Q_RUNTIME=`sinfo -p $SLURM_QUEUE | grep -m 1 $SLURM_QUEUE | awk '{print $3}'`
+	if [ x"$TACC_Q_RUNTIME" != "x" ]; then
+		# pnav: this assumes format hh:dd:ss, will convert to seconds below
+		#       if days are specified, this won't work
+		TACC_RUNTIME=$TACC_Q_RUNTIME
+	fi
+fi
+
+if [ "x$TACC_RUNTIME" != "x" ]; then
+  # there's a runtime limit, so warn the user when the session will die
+  # give 5 minute warning for runtimes > 5 minutes
+        H=`echo $TACC_RUNTIME | awk -F: '{print $1}'`
+        M=`echo $TACC_RUNTIME | awk -F: '{print $2}'`
+        S=`echo $TACC_RUNTIME | awk -F: '{print $3}'`
+        if [ "x$S" != "x" ]; then
+            # full HH:MM:SS present
+            H=$(($H * 3600))
+            M=$(($M * 60))
+            TACC_RUNTIME_SEC=$(($H + $M + $S))
+        elif [ "x$M" != "x" ]; then
+            # only HH:MM present, treat as MM:SS
+            H=$(($H * 60))
+            TACC_RUNTIME_SEC=$(($H + $M))
+        else
+            TACC_RUNTIME_SEC=$S
+        fi
+
+  if [ $TACC_RUNTIME_SEC -gt 300 ]; then
+        sleep $(($TACC_RUNTIME_SEC - 300)) && echo "$USER's VNC session on $VNC_DISPLAY will end in 5 minutes.  Please save your work now." | wall &
+    fi
+fi
+
+# info for TACC Visualization Portal
+echo "vis.tacc.utexas.edu" > $NB_SERVERDIR/.jupyter_address
+# pnav: abuse ipython_port file for now so that the URL gets built correctly in webserver/website/job/job.php and entered into the "go" button in resources/resources.php
+echo "$LOGIN_IPY_PORT/?$JUPYTER_TOKEN" > $NB_SERVERDIR/.jupyter_port
+echo "$SLURM_JOB_ID" > $NB_SERVERDIR/.jupyter_job_id
+# write job start time and duration (in seconds) to file
+date +%s > $NB_SERVERDIR/.jupyter_job_start
+echo "$TACC_RUNTIME_SEC" > $NB_SERVERDIR/.jupyter_job_duration
+sleep 5
+echo "success" > $NB_SERVERDIR/.jupyter_status
+
+# spin on .jupyter_lockfile to keep job alive
+while [ -f $NB_SERVERDIR/.jupyter_lock ]; do
+  sleep 30
+done
+
+
+# job is done!
+
+# wait a brief moment so ipython can clean up after itself
+sleep 1
+
+echo "TACC: job $SLURM_JOB_ID execution finished at: `date`"

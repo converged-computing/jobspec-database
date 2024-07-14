@@ -1,0 +1,142 @@
+# This configuration is used to benchmark HPC systems
+# It runs the benchmark model for a single file, over multiple epochs
+models:
+    - type: BasicBenchmark
+      name: cnn
+      leadtime_dependent: False
+      conv_size: 3
+      filter_sizes: [12, 5, 5]
+    - type: BasicBenchmark
+      name: cnn_f5_l4_c3
+      leadtime_dependent: False
+      conv_size: 3
+      filter_sizes: [5, 5, 5, 5]
+    - type: Unet
+      # This is the benchmark
+      name: unet_f16_l6_c1_p2
+      features: 16
+      layers: 6
+      conv_size: 1
+      pool_size: 2
+      activation: leakyrelu
+    - type: Unet
+      # Activation
+      name: unet_f16_l6_c1_p2_relu
+      features: 16
+      layers: 6
+      conv_size: 1
+      pool_size: 2
+      activation: relu
+    - type: Unet
+      # Feature ratio
+      name: unet_f16_l6_c1_p2_f1
+      features: 16
+      layers: 6
+      conv_size: 1
+      pool_size: 2
+      feature_ratio: 1
+      activation: leakyrelu
+    - type: Unet
+      # Feature ratio and leadtime model
+      name: unet_f16_l6_c1_p2_f1_bias
+      features: 16
+      layers: 6
+      conv_size: 1
+      pool_size: 2
+      feature_ratio: 1
+      activation: leakyrelu
+      leadtime_index: 14
+      bias_indices: [3, 10]
+    - type: Unet
+      # Upsampling
+      name: unet_f16_l6_c1_p2_nearest
+      features: 16
+      layers: 6
+      conv_size: 1
+      pool_size: 2
+      activation: leakyrelu
+      upsampling_type: upsampling_nearest
+    - type: Unet
+      # Conv size
+      name: unet_f16_l6_c3_p2
+      features: 16
+      layers: 6
+      conv_size: 3
+      pool_size: 2
+      activation: leakyrelu
+    - type: Unet
+      # Downsampling
+      name: unet_f16_l6_c1_p2_dmean
+      features: 16
+      layers: 6
+      conv_size: 1
+      pool_size: 2
+      activation: leakyrelu
+      downsampling_type: mean
+    - type: Unet
+      # Downsampling
+      name: unet_f16_l6_c1_p2_dmean_swish
+      features: 16
+      layers: 6
+      conv_size: 1
+      pool_size: 2
+      activation: swish
+      downsampling_type: mean
+    - type: Unet
+      # Downsampling and feature ratio
+      name: unet_f16_l6_c1_p2_f1_dmean
+      features: 16
+      layers: 6
+      conv_size: 1
+      pool_size: 2
+      feature_ratio: 1
+      activation: leakyrelu
+      downsampling_type: mean
+    - type: Unet
+      # Levels/pooling
+      name: unet_f16_l3_c1_p4
+      features: 16
+      layers: 3
+      conv_size: 1
+      pool_size: 4
+      activation: leakyrelu
+    - type: Unet
+      # This is the benchmark
+      name: unet_f16_l6_c1_p2_bias
+      features: 16
+      layers: 6
+      conv_size: 1
+      pool_size: 2
+      activation: leakyrelu
+      leadtime_index: 14
+      bias_indices: [3, 10]
+    - type: Dense
+      name: dense_f12_l6
+      features: 12
+      layers: 6
+      activation: leakyrelu
+    - type: SelectPredictor
+      name: raw
+      predictor_names: ["air_temperature_0.1_2m", "air_temperature_2m", "air_temperature_0.9_2m"]
+    - type: ElevCorr
+      name: raw_elev_corr
+      predictor_names: ["air_temperature_0.1_2m", "air_temperature_2m", "air_temperature_0.9_2m"]
+      predictor_name_altitude: altitude
+      predictor_name_model_altitude: model_altitude
+    - type: Today
+      name: today
+      with_leadtime: True
+      predictor_names: ["air_temperature_0.1_2m", "air_temperature_2m", "air_temperature_0.9_2m"]
+      predictor_name_altitude: altitude
+      predictor_name_model_altitude: model_altitude
+      predictor_name_bias_recent: bias_recent
+      predictor_name_bias_yesterday: bias_yesterday
+output:
+    quantiles: [0.1, 0.5, 0.9]
+loss:
+    type: quantile_score
+    trim: 32
+evaluators:
+    - type: aggregator
+tensorflow:
+    num_threads: 48

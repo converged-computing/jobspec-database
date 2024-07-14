@@ -1,0 +1,52 @@
+#!/usr/bin/python
+import os, sys, pickle, random, md5,re
+import numpy as np
+
+name 	= sys.argv[1]
+jobid	= int(name[6:])
+print "I'm job %d" %(jobid)
+
+f = open("jobs_%09d.pkl" % (jobid),"rb")
+	
+output_file = "output_%09d.txt"%(jobid)
+size = os.stat(output_file).st_size
+try:
+	f_output = open(output_file,"r")
+	output = f_output.readlines()
+	f_output.close()
+except:
+	output = []
+
+f_output = open(output_file,"a+")
+queue =	pickle.load(f)
+for job in queue:
+	isin = 0
+	for line in output:
+		match = re.search('^'+re.escape(ident),line)
+		if match:
+			isin = 1
+	if not isin:
+		m = "job_"+md5.new(job[0]+job[1]).digest().encode("hex")
+		os.mkdir(m)
+		os.chdir(m)
+		os.symlink("../nbody","nbody")
+		print "Running '%s' in directory '%s'" %(job[0], m)
+		os.system(job[0])
+		try:
+			f = open("out.txt","r")
+			outtxt = float(f.readline())
+			f.close()
+		except:
+			outtxt = 0
+		os.chdir("../")
+		os.system("rm -rf %s" %(m))
+		f_output.write("%s\t%e\n" %(job[1],outtxt))
+		f_output.flush()
+
+f_output.close()
+
+print "\n\nDone."
+
+
+
+		

@@ -1,0 +1,91 @@
+import subprocess
+
+PWD = os.getcwd()
+
+TMPDIR = os.environ.get("TMPDIR", "/tmp")
+SRCDIR = os.environ.get("SRCDIR", "%s/src" % PWD)
+CONFIG = os.environ.get("CONFIG", "config/config.json")
+DBPATH = os.environ.get("DBPATH", "/mnt/nfs/projects/ecosystem_biology/local_tools/IMP/dependencies/prokka/db")
+
+## Define configurations
+configfile: CONFIG
+
+MEMCORE = os.environ.get("MEMCORE", config['memory_per_core_gb'])
+THREADS = os.environ.get("THREADS", config['threads'])
+MEMTOTAL = os.environ.get("MEMTOTAL", config['memory_total_gb'])
+
+## Define input directories
+TS_DIR = os.environ.get("TS_DIR", "/mnt/nfs/projects/ecosystem_biology/LAO/time_series/IMP_analysis/LAO_TS")
+IGE_DIR = os.environ.get("IGE_DIR", "/mnt/nfs/projects/ecosystem_biology/LAO/time_series/IMP_analysis/LAO_TS/CRISPR_analysis/PlasmidPhageDereplication")
+
+## Define samples
+TS_SAMPLES = os.environ.get("TS_SAMPLES", "A01 A02 D01 D02 D03 D04 D05 D06 D07 D08 D09 D10 D11 D12 D13 D14 D15 D16 D17 D18 D19 D20 D21 D22 D23 D24 D25 D26 D27 D28 D29 D30 D31 D32 D33 D34 D35 D36 D37 D38 D39 D40 D41 D42 D43 D44 D45 D46 D47 D48 D49 D50 D51").split()
+
+## Define types of reads (MG/MT)
+TYPES = [ "mg", "mt" ]
+
+## Define output directory
+OUTDIR = os.environ.get("OUTDIR", "/scratch/users/smartinezarbas/CRISPR_results/PlasmidPhageMgeRemapping")
+
+workdir:
+    OUTDIR
+
+include:
+    '../rules/MgeRemapping/get_annotations.rule'
+
+include:
+    '../rules/MgeRemapping/run_bwa_index.rule'
+
+include:
+    '../rules/MgeRemapping/run_bwa.rule'
+
+include:
+    '../rules/MgeRemapping/run_bedtools_contig.rule'
+
+include:
+    '../rules/MgeRemapping/run_bedtools_gene.rule'
+
+include:
+    '../rules/MgeRemapping/get_abundance.rule'
+
+include:
+    '../rules/MgeRemapping/get_spacer2gene_target.rule'
+
+#include:
+#    '../rules/MgeRemapping/get_protein_seqs.rule'
+
+#include:
+#    '../rules/MgeRemapping/run_vizbin_all_mge.rule'
+
+# master command
+rule MgeRemapping:
+    input:
+        "Index/ALL_MGEs-merged.fa",
+        "Index/ALL_MGEs-merged.fa.amb",
+        "Index/ALL_MGEs-merged.fa.bwt",
+        "Index/ALL_MGEs-merged.fa.pac",
+        "Index/ALL_MGEs-merged.fa.ann",
+        "Index/ALL_MGEs-merged.fa.sa",
+        expand("Mappings/{ts_sample}.{type}.reads.sorted.bam", ts_sample=TS_SAMPLES, type=TYPES),
+        expand("Mappings/{ts_sample}.{type}.reads.sorted.bam.bai", ts_sample=TS_SAMPLES, type=TYPES),
+        expand("Calculations/ContigLevel/{ts_sample}.{type}.contig_coverage.txt", ts_sample=TS_SAMPLES, type=TYPES),
+        expand("Calculations/ContigLevel/{ts_sample}.{type}.contig_depth.txt", ts_sample=TS_SAMPLES, type=TYPES),
+        expand("Calculations/ContigLevel/{ts_sample}.{type}.contig_flagstat.txt", ts_sample=TS_SAMPLES, type=TYPES),
+        expand("Calculations/GeneLevel/{ts_sample}.{type}.annotation.bed.txt", ts_sample=TS_SAMPLES, type=TYPES),
+        expand("Calculations/GeneLevel/{ts_sample}.{type}.gene_depth_hist.txt", ts_sample=TS_SAMPLES, type=TYPES),
+        expand("Calculations/GeneLevel/{ts_sample}.{type}.gene_depth_avg.txt", ts_sample=TS_SAMPLES, type=TYPES),
+        expand("Calculations/GeneLevel/{ts_sample}.{type}.gene_len.txt", ts_sample=TS_SAMPLES, type=TYPES),
+        expand("Calculations/ContigLevel/ALL_{type}_contig_depth.txt", type = TYPES),
+        "Annotations/ALL_MGEs_annotation.gff",
+#        "Annotations/ALL_MGEs_annotation.faa",
+        "Annotations/ALL_MGEs_annotation2protospacer.tsv",
+#        "VizBin/ALL_MGEs-merged_gt1000.fa",
+#        "VizBin/ALL_MGEs-merged_gt1000_vizbin.txt"
+    output:
+        expand("DoneFiles/{ts_sample}.done", ts_sample=TS_SAMPLES),
+        "mge_remapping_workflow.done"
+    shell:
+        """
+        mkdir -p DoneFiles
+        touch {output}
+        """

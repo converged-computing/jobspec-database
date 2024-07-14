@@ -1,0 +1,36 @@
+{load_file("defvar.hoc")}
+strdef parameters
+parameters="./parameters/Control.hoc"
+
+default_var("coredat", "coredat")
+default_var("outdir", ".")
+default_var("mytstop", 150)
+default_var("coreneuron", 0)
+default_var("gpu", 0)
+default_var("mytstop", 150)
+default_var("dumpmodel", 0)
+// this is a clumsy way of reducing the size of the model for testing purposes
+// if you set it to a value other than -1 you should assume the model has no
+// scientific value.
+default_var("max_cells_per_type", -1)
+
+use_coreneuron = coreneuron
+use_gpu = gpu
+dump_coreneuron_model = dumpmodel
+max_cells_per_type_to_load = max_cells_per_type
+
+// create directory for writing dataset
+{
+    outdir = getcwd()
+    sprint(coredat, "%s/%s", outdir, coredat)
+    nrnpython("from commonutils import mkdir_p")
+    strdef cmd
+    sprint(cmd, "mkdir_p('%s')", coredat)
+    nrnpython(cmd)
+    sprint(cmd, "mkdir_p('%s/results')", outdir)
+    nrnpython(cmd)
+}
+
+load_file("main.hoc")
+
+

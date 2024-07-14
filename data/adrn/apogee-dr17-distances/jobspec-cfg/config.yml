@@ -1,0 +1,58 @@
+# flake8: noqa
+
+## This is a configuration file for Joaquin https://github.com/adrn/joaquin
+## When settings are required, they are noted, and will error if left
+## unmodified. Other parameters have defaults set in the file below.
+
+## Output path to store cache files and data products:
+output_path: /mnt/ceph/users/apricewhelan/projects/apogee-dr17-distances/output
+
+## Root path to cached APOGEE data:
+apogee_cache_path: /mnt/ceph/users/apricewhelan/apogee/
+
+## APOGEE-specific quantities:
+apogee_dr: dr17
+apogee_reduction: dr17
+
+## Gaia parallax zero-point adopted
+parallax_zpt: -0.03
+
+## Photometry used by Joaquin to train on / predict parallaxes:
+phot_names:
+  - phot_g_mean_mag
+  - phot_bp_mean_mag
+  - phot_rp_mean_mag
+  - J
+  - H
+  - K
+  - w1mpro
+  - w2mpro
+
+## Photometric colors used in to construct neighborhoods of similar stars:
+neighborhood_color_names:
+  - [phot_bp_mean_mag, phot_rp_mean_mag]
+  - [phot_rp_mean_mag, w1mpro]
+  - [H, w2mpro]
+  - [w1mpro, w2mpro]
+
+## Number of PCA components to use for making the neighborhoods:
+neighborhood_pca_components: 8
+
+## Maximum size of the neighborhood around each "stoop":
+max_neighborhood_size: 32768
+
+## Size of the testing subsample, the "block", around each "stoop":
+block_size: 2048
+
+## For cross-validation:
+Kfold_K: 4
+
+## Number of PCA components to use to patch the missing spectral pixels:
+patching_pca_components: 8
+
+## Maximum number of iterations to run the optimizer when training:
+optimize_train_maxiter: 16384
+Kfold_test_maxiter: 1024
+
+## Random number seed
+seed: null
