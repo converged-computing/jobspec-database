@@ -47,7 +47,7 @@ def remove_upper_outliers(data):
 
 
 def get_parser():
-    parser = argparse.ArgumentParser(description="Cyclometric Complexity Calculator")
+    parser = argparse.ArgumentParser(description="Cyclomatic Complexity Calculator")
     parser.add_argument(
         "input",
         help="Input directory",

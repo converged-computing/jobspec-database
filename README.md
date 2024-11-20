@@ -197,7 +197,7 @@ file,func,lineno,lloc,ccn,lines,comment,blank
 Next, generate a database for files in data.
 
 ```bash
-python scripts/cyclomatic-complexity.py --input ./data --db ./scripts/data/cyclometric-complexity-github.db
+python scripts/cyclomatic-complexity.py --input ./data --db ./scripts/data/cyclomatic-complexity-github.db
 ```
 
 **IMPORTANT** For the above and complexity calculation below, duplicates are not removed. We store the sha256 and sha1 so you can do this!
@@ -211,11 +211,71 @@ This database is kind of messy - not sure I like it as much as the one I generat
 
 ```bash
 cd ./lc
-python scripts/cyclomatic-complexity.py --input ./raw/jobdata_json --db ./data/cyclometric-complexity-lc.db
+python scripts/cyclomatic-complexity.py --input ./raw/jobdata_json --db ./data/cyclomatic-complexity-lc.db
 ```
 
 **IMPORTANT** Since this is a combination of json and .tar files (for which we extract members) the database has an extra column for the jobid, and the original filename path corresponds to the file here. The file that we *actually* read is parsed from the BatchScript directive of the json file, which is only the batch portion of the data to match what we use in GitHub.
 
+##### Reading Sqlite Databases
+
+Examples to read in the two databases:
+
+```python
+import sqlite3
+conn = sqlite3.connect("scripts/data/cyclomatic-complexity-github.db")
+cursor = conn.cursor()
+
+# This gets the field names and metadata
+cursor.execute('PRAGMA table_info(jobspecs);').fetchall()
+```
+```console
+[(0, 'id', 'INTEGER', 0, None, 1),
+ (1, 'name', 'TEXT', 0, None, 0),
+ (2, 'sha256', 'TEXT', 0, None, 0),
+ (3, 'sha1', 'TEXT', 0, None, 0),
+ (4, 'ccn', 'NUMBER', 0, None, 0)]
+```
+
+And this gets the jobspecs (one for example)
+
+```python
+query = cursor.execute("SELECT * from jobspecs;")
+query.fetchone()
+# rows = query.fetchall()
+```
+```console
+(1,
+ './data/ZIYU-DEEP/reprover-test/2gpu.sh',
+ '48ef130f0700b606c3b5d4b2a784cd78f97439b935bd7d7df4673d9683d420e1',
+ 'c88fdc41ae091734565c63ed67c51a45de66a07f',
+ 1)
+```
+
+Don't forget to close.
+
+```python
+conn.close()
+```
+
+And don't forget LC will have an extra field, for the name of the file plus the jobid
+since some are members in a tar.
+
+```python
+conn = sqlite3.connect("lc/data/cyclomatic-complexity-lc.db")
+cursor = conn.cursor()
+cursor.execute('PRAGMA table_info(jobspecs);').fetchall()
+```
+```console
+[(0, 'id', 'INTEGER', 0, None, 1),
+ (1, 'name', 'TEXT', 0, None, 0),
+ (2, 'jobid', 'TEXT', 0, None, 0),
+ (3, 'sha256', 'TEXT', 0, None, 0),
+ (4, 'sha1', 'TEXT', 0, None, 0),
+ (5, 'ccn', 'NUMBER', 0, None, 0)]
+```
+```python
+conn.close()
+```
 
 ## License
 
