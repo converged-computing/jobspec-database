@@ -109,7 +109,6 @@ def main():
                     content = "\n".join(utils.read_file(repo_path))
                 except:
                     continue
-                dir_path = os.path.dirname(repo_path)
 
                 # Tokenize the script, look for paths in the repository
                 tokens = [

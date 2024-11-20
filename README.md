@@ -150,12 +150,72 @@ python scripts/inspect-gemini.py --type wrong
 python scripts/inspect-gemini.py --type all --number 3
 ```
 
-#### 4. LC Jobspec Database
+#### 4. Cyclomatic Complexity
+
+Next, we want to calculate the cyclomatic complexity. Since these are akin to bash scripts, we can use [shellmetrics](https://github.com/shellspec/shellmetrics). It's not perfect, but I did a few spot checks and the result was what I'd want or expect - the more complex scripts (with arrays, etc) got a higher score. Since we know our database on LC is now in S3, let's instead write this to an SQL file with a table that can be queried based on path, sha1, or sha256. First, make sure the binary is on your path:
+
+```bash
+mkdir -p ./bin
+curl -fsSL https://git.io/shellmetrics > ./bin/shellmetrics
+chmod +x ./bin/shellmetrics
+export PATH=$PWD/bin:$PATH
+```
+
+Here is example output, when run manually. Note that I think we want the first section, which has the CCN "cognitive complexity number" for main, which is the main chunk. In the csv, that is the middle block and 4th column "1"
+
+```console
+$ shellmetrics data/abdullahrkw/FAU-FAPS/ViT/run-job.sh 
+==============================================================================
+  LLOC  CCN  Location
+------------------------------------------------------------------------------
+     5    1  <main> data/abdullahrkw/FAU-FAPS/ViT/run-job.sh
+------------------------------------------------------------------------------
+ 1 file(s), 1 function(s) analyzed. [bash 5.1.16(1)-release]
+
+==============================================================================
+ NLOC    NLOC  LLOC    LLOC    CCN Func File (lines:comment:blank)
+total     avg total     avg    avg  cnt
+------------------------------------------------------------------------------
+    5    5.00     5    5.00   1.00    1 data/abdullahrkw/FAU-FAPS/ViT/run-job.sh (20:14:1)
+------------------------------------------------------------------------------
+
+==============================================================================
+ NLOC    NLOC  LLOC    LLOC    CCN Func File    lines comment   blank
+total     avg total     avg    avg  cnt  cnt    total   total   total
+------------------------------------------------------------------------------
+    5    5.00     5    5.00   1.00    1    1       20      14       1
+------------------------------------------------------------------------------
+```
+```console
+$ shellmetrics --csv data/abdullahrkw/FAU-FAPS/ViT/run-job.sh 
+file,func,lineno,lloc,ccn,lines,comment,blank
+"data/abdullahrkw/FAU-FAPS/ViT/run-job.sh","<begin>",0,0,0,20,14,1
+"data/abdullahrkw/FAU-FAPS/ViT/run-job.sh","<main>",0,5,1,0,0,0
+"data/abdullahrkw/FAU-FAPS/ViT/run-job.sh","<end>",0,0,0,20,14,1
+```
+
+Next, generate a database for files in data.
+
+```bash
+python scripts/cyclomatic-complexity.py --input ./data --db ./scripts/data/cyclometric-complexity-github.db
+```
+
+**IMPORTANT** For the above and complexity calculation below, duplicates are not removed. We store the sha256 and sha1 so you can do this!
+
+#### 5. LC Jobspec Database
 
 This database is kind of messy - not sure I like it as much as the one I generated. Someone else can deal with it :)
 
 - Total unique jobspec jsons: 210351
 - Total with BatchScript: 116117
+
+```bash
+cd ./lc
+python scripts/cyclomatic-complexity.py --input ./raw/jobdata_json --db ./data/cyclometric-complexity-lc.db
+```
+
+**IMPORTANT** Since this is a combination of json and .tar files (for which we extract members) the database has an extra column for the jobid, and the original filename path corresponds to the file here. The file that we *actually* read is parsed from the BatchScript directive of the json file, which is only the batch portion of the data to match what we use in GitHub.
+
 
 ## License
 
