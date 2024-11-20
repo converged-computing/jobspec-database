@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 
+import numpy as np
 import argparse
 import fnmatch
 import hashlib
@@ -10,6 +11,8 @@ import shutil
 import sys
 import sqlite3
 import subprocess
+import seaborn as sns
+import matplotlib.pylab as plt
 
 from io import StringIO
 import csv
@@ -28,6 +31,14 @@ ccn NUMBER)
 insert_query = "INSERT INTO jobspecs(name, sha256, sha1, ccn) VALUES(?, ?, ?, ?)"
 
 
+def remove_upper_outliers(data):
+    """
+    Remove upper outliers
+    """
+    bound = np.percentile(data, [95])
+    return [x for x in data if x < bound[0]]
+
+
 def get_parser():
     parser = argparse.ArgumentParser(description="Cyclometric Complexity Calculator")
     parser.add_argument(
@@ -39,6 +50,11 @@ def get_parser():
         "--db",
         help="Output sqlite database",
         default=os.path.join(here, "data", "cyclomatic-complexity.db"),
+    )
+    parser.add_argument(
+        "--outdir",
+        help="Output directory",
+        default=os.path.join(here, "data"),
     )
     parser.add_argument(
         "--batch-size",
@@ -157,17 +173,44 @@ def main():
         if len(inserts) >= args.batch_size:
             print(f"\nInserting {len(inserts)} into database.")
             cursor.executemany(insert_query, inserts)
+            conn.commit()
             inserts = []
 
     # Last one? Probably.
     if inserts:
         cursor.executemany(insert_query, inserts)
-    cursor.close()
+        conn.commit()
 
     import IPython
 
     IPython.embed()
     sys.exit()
+
+    # Make some plots!
+    values = cursor.execute("SELECT ccn from jobspecs;").fetchall()
+    values = [x[0] for x in values]
+    values.sort()
+
+    # Plot with outliers removed
+    without_outliers = remove_upper_outliers(values)
+    number_outliers = len(values) - len(without_outliers)
+    # Above a value of 8
+    print(f"There are {number_outliers} upper outliers")
+
+    plt.figure(figsize=(6, 3))
+    sns.histplot(without_outliers, bins=5)
+    plt.title("Cyclomatic Complexity for JobSpecs")
+    plt.savefig(os.path.join(args.outdir, "cyclomatic-complexity.png"))
+    plt.clf()
+
+    # Plot the outliers too
+    max_value = np.max(without_outliers)
+    outliers = [x for x in values if x > max_value]
+    sns.histplot(outliers)
+    plt.title("Cyclomatic Complexity for JobSpecs (outliers)")
+    plt.savefig(os.path.join(args.outdir, "cyclomatic-complexity-outliers.png"))
+    plt.clf()
+    cursor.close()
 
 
 if __name__ == "__main__":
