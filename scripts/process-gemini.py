@@ -7,13 +7,8 @@ import numpy
 import sys
 import os
 import re
-import time
 import json
-import hashlib
 import fnmatch
-import argparse
-import pathlib
-import textwrap
 import argparse
 
 
@@ -402,7 +397,7 @@ def main():
     )
 
     # Can skip this since we already did it, and takes a while!
-    # plot_manual_resources_against_apps(matrix_filtered, columns)
+    # plot_manual_resources_against_apps(matrix_filtered, columns, args)
 
     # 2. Now we go back to bullet 2 - comparing our resources with Gemini.
     # We first need to map between the two. The set we are using is in "columns"
@@ -438,7 +433,7 @@ def main():
 
 ```python
 Manual: {resource_set}
-Gemini: {gemini_parsed}
+Gemini: {gemini_set}
 ```
 """
         visuals[filename] = visual
@@ -569,7 +564,7 @@ Gemini: {gemini_parsed}
     # 'total': 109709}
 
 
-def plot_manual_resources_against_apps(matrix_filtered, columns):
+def plot_manual_resources_against_apps(matrix_filtered, columns, args):
     """
     Plot the manual resources we parsed against Gemini application set
     """

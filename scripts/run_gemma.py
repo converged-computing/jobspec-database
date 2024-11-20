@@ -8,6 +8,8 @@ import pydantic
 import sys
 import time
 from typing import List, Dict
+from colorama import Fore, Back, Style
+from google.api_core.exceptions import DeadlineExceeded
 
 here = os.path.dirname(os.path.abspath(__file__))
 root = os.path.dirname(here)

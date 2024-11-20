@@ -304,8 +304,8 @@ def main():
 
     # For each answer (which has parsed resources, etc) assemble the mistral AI
     # expected training format.
-    instruct_outdir = os.path.join(args.output, 'instruct')
-    pretrain_outdir = os.path.join(args.output, 'pretrain')
+    instruct_outdir = os.path.join(args.output, "instruct")
+    pretrain_outdir = os.path.join(args.output, "pretrain")
     for dirname in instruct_outdir, pretrain_outdir:
         if not os.path.exists(dirname):
             os.makedirs(dirname)
@@ -320,8 +320,8 @@ def main():
         )
 
         # This is a json LINES file, weird
-        pout = open(output_pre_file, 'w')
-        iout = open(output_file, 'w')
+        pout = open(output_pre_file, "w")
+        iout = open(output_file, "w")
 
         for contender in chunk:
             answer = read_json(contender)
@@ -333,18 +333,19 @@ def main():
                 ).replace("-answer.json", "")
             )
             json.dump({"text": original}, pout)
-            pout.write('\n')
+            pout.write("\n")
             messages = {
-                    "messages": [
-                        {"role": "user", "content": prompt + original},
-                        {"role": "assistant", "content": answer},
-                    ]
-                }
+                "messages": [
+                    {"role": "user", "content": prompt + original},
+                    {"role": "assistant", "content": answer},
+                ]
+            }
             json.dump(messages, iout)
-            iout.write('\n')
+            iout.write("\n")
 
         pout.close()
         iout.close()
+
 
 if __name__ == "__main__":
     main()

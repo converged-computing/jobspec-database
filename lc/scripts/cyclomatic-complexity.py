@@ -1,34 +1,41 @@
 #!/usr/bin/env python3
 
 
-import numpy as np
 import argparse
+import csv
 import fnmatch
 import hashlib
+import json
 import os
-import statistics
 import shutil
-import sys
 import sqlite3
+import statistics
 import subprocess
-import seaborn as sns
-import matplotlib.pylab as plt
-
+import sys
+import tarfile
+import tempfile
 from io import StringIO
-import csv
+
+import matplotlib.pylab as plt
+import numpy as np
+import seaborn as sns
 
 here = os.path.abspath(os.path.dirname(__file__))
+root = os.path.dirname(here)
 
 create_sql = """CREATE TABLE IF NOT EXISTS jobspecs (
 id INTEGER PRIMARY KEY AUTOINCREMENT,
 name TEXT,
+jobid TEXT,
 sha256 TEXT,
 sha1 TEXT,
 ccn NUMBER)
 """
 
 # https://www.sqlite.org/limits.html
-insert_query = "INSERT INTO jobspecs(name, sha256, sha1, ccn) VALUES(?, ?, ?, ?)"
+insert_query = (
+    "INSERT INTO jobspecs(name, jobid, sha256, sha1, ccn) VALUES(?, ?, ?, ?, ?)"
+)
 
 
 def remove_upper_outliers(data):
@@ -44,17 +51,17 @@ def get_parser():
     parser.add_argument(
         "input",
         help="Input directory",
-        default=os.path.join(here, "data"),
+        default=os.path.join(root, "raw"),
     )
     parser.add_argument(
         "--db",
         help="Output sqlite database",
-        default=os.path.join(here, "data", "cyclomatic-complexity.db"),
+        default=os.path.join(root, "data", "cyclomatic-complexity.db"),
     )
     parser.add_argument(
         "--outdir",
         help="Output directory",
-        default=os.path.join(here, "data"),
+        default=os.path.join(root, "data"),
     )
     parser.add_argument(
         "--batch-size",
@@ -63,6 +70,17 @@ def get_parser():
         type=int,
     )
     return parser
+
+
+def get_tmpfile(prefix="", suffix=""):
+    """
+    Get temporary script file
+    """
+    tmpdir = tempfile.gettempdir()
+    prefix = os.path.join(tmpdir, os.path.basename(prefix))
+    fd, tmp_file = tempfile.mkstemp(prefix=prefix, suffix=suffix)
+    os.close(fd)
+    return tmp_file
 
 
 def content_hash(filename, algorithm="sha256"):
@@ -117,6 +135,15 @@ def calculate_complexity(filepath):
     return statistics.mean(ccns)
 
 
+def read_json(input_file):
+    """
+    Read json from an input file.
+    """
+    with open(input_file, "r") as filey:
+        data = json.loads(filey.read())
+    return data
+
+
 def calculate_digests(filepath):
     """
     Note that we aren't removing duplicates here.
@@ -124,6 +151,77 @@ def calculate_digests(filepath):
     sha256_digest = content_hash(filepath, "sha256")
     sha1_digest = content_hash(filepath, "sha1")
     return sha256_digest, sha1_digest
+
+
+def write_file(content, filename):
+    """
+    Write some text content to a file
+    """
+    with open(filename, "w") as fd:
+        fd.write(content)
+
+
+def path_to_prefix(indir, path):
+    return path.replace(indir + os.sep, "").replace(os.sep, "-").rsplit(".", 1)[0] + "-"
+
+
+def iter_jobspecs(indir):
+    """
+    The LC database has a combination of .tar.gz (members)
+    and json files, and we need to parse both.
+    """
+    # First process json files
+    files = list(recursive_find(indir, "*.json"))
+    total = len(files)
+    for i, filename in enumerate(files):
+        print(f"Processing {i} of {total} json files", end="\r")
+        # Only include those with batch script
+        content = read_json(filename)
+        if "BatchScript" not in content["scontrol"]:
+            continue
+        jobid = os.path.basename(filename).replace(".json", "")
+        script = content["scontrol"]["BatchScript"]
+        tmpfile = get_tmpfile(prefix=path_to_prefix(indir, filename), suffix=".sh")
+        write_file(script, tmpfile)
+
+        # file for reading, actual file name, and jobid
+        yield tmpfile, filename, jobid
+
+        # Clean up after we use it
+        if os.path.exists(tmpfile):
+            os.remove(tmpfile)
+
+    # Now read the tars
+    tarfiles = list(recursive_find(indir, "*.tar"))
+    total = len(tarfiles)
+    for i, filename in enumerate(tarfiles):
+        print(f"Processing {i} of {total} tarfiles", end="\r")
+        tar = tarfile.open(filename, "r")
+
+        # This is a tar info
+        for member in tar.getmembers():
+            if member.isdir() or not member.name.endswith("json"):
+                continue
+            prefix = path_to_prefix(indir, filename)
+            jobid = os.path.basename(member.name).replace(".json", "")
+            content = tar.extractfile(member).read()
+            if not content:
+                continue
+            content = json.loads(content)
+            if "BatchScript" not in content["scontrol"]:
+                continue
+            script = content["scontrol"]["BatchScript"]
+            tmpfile = get_tmpfile(prefix=prefix + jobid + "-", suffix=".sh")
+            write_file(script, tmpfile)
+
+            # file for reading, actual file name, and jobid
+            yield tmpfile, filename, jobid
+
+            # Clean up after we use it
+            if os.path.exists(tmpfile):
+                os.remove(tmpfile)
+
+        tar.close()
 
 
 def main():
@@ -152,22 +250,16 @@ def main():
     cursor = conn.cursor()
     cursor.execute(create_sql)
 
-    # Read in text, and as we go, generate content hash.
-    # We don't want to use duplicates (forks are disabled, but just being careful)
-    files = list(recursive_find(args.input))
-
     # Let's do batches of 1K, we can go higher but that's ok :)
     # https://www.sqlite.org/limits.html
     inserts = []
-    total = len(files)
-    for i, filename in enumerate(files):
-        # Skip jobspec associated files
-        print(f"{i}/{total}", end="\r")
-        if "jobspec-cfg" in filename:
-            continue
+    for parts in iter_jobspecs(args.input):
+        filename, name, jobid = parts
         sha256, sha1 = calculate_digests(filename)
         ccn = calculate_complexity(filename)
-        inserts.append((filename, sha256, sha1, ccn))
+        # We insert the name of the original path
+        # and not the parsed one
+        inserts.append((name, jobid, sha256, sha1, ccn))
 
         # Insert and reset
         if len(inserts) >= args.batch_size:
@@ -189,22 +281,22 @@ def main():
     # Plot with outliers removed
     without_outliers = remove_upper_outliers(values)
     number_outliers = len(values) - len(without_outliers)
-    # Above a value of 8
+    # There are 7354 upper outliers (above 2)
     print(f"There are {number_outliers} upper outliers")
 
     plt.figure(figsize=(6, 3))
-    sns.histplot(without_outliers, bins=8)
-    plt.title("Cyclomatic Complexity for JobSpecs")
+    sns.histplot(without_outliers, bins=5)
+    plt.title("Cyclomatic Complexity for LC JobSpecs")
     plt.savefig(os.path.join(args.outdir, "cyclomatic-complexity.png"))
     plt.clf()
 
-    # Plot the outliers too
-    max_value = np.max(without_outliers)
-    outliers = [x for x in values if x > max_value]
+    # Plot the outliers too (above 1.5)
+    outliers = [x for x in values if x > np.max(without_outliers)]
     sns.histplot(outliers)
-    plt.title("Cyclomatic Complexity for JobSpecs (outliers)")
+    plt.title("Cyclomatic Complexity for LC JobSpecs (outliers)")
     plt.savefig(os.path.join(args.outdir, "cyclomatic-complexity-outliers.png"))
     plt.clf()
+
     cursor.close()
 
 

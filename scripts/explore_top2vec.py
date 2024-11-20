@@ -4,9 +4,7 @@
 import argparse
 import os
 import sys
-import rse.utils.file as utils
 from top2vec import Top2Vec
-import matplotlib.pyplot as plt
 
 here = os.path.abspath(os.path.dirname(__file__))
 
@@ -127,16 +125,16 @@ def main():
 
             print(f"== {term}")
             fd.write(f"\n## {term}")
-            fd.write(f"\n```\n")
+            fd.write("\n```\n")
             for i, word in enumerate(words):
                 print(f"  {word}: {word_scores[i]}")
                 fd.write(f"  {word}: {word_scores[i]}\n")
-            fd.write(f"\n```\n")
+            fd.write("\n```\n")
 
         fd.write("\n## Not Learned\n")
-        fd.write(f"\n```\n")
+        fd.write("\n```\n")
         fd.write(" ".join(not_learned))
-        fd.write(f"\n```\n")
+        fd.write("\n```\n")
 
 
 if __name__ == "__main__":

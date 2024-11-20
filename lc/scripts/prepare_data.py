@@ -5,15 +5,12 @@
 # in one location.
 
 # chmod ugo+rwx
-import tensorflow as tf
 import tarfile
 import argparse
 import fnmatch
 import hashlib
-import io
 import os
 import re
-import string
 import sys
 import json
 
@@ -100,8 +97,6 @@ def main():
         sys.exit(f"{args.input} does not exist.")
 
     # Keep a count!
-    seen = set()
-    has_batch_script = set()
     digests = set()
     duplicates = 0
 
