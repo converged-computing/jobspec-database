@@ -277,6 +277,95 @@ cursor.execute('PRAGMA table_info(jobspecs);').fetchall()
 conn.close()
 ```
 
+#### 6. Summarizing 
+
+We want to look at, for each databases, what we have for:
+
+ - applications
+ - job managers
+ - length of jobs
+ 
+The first two will be tags based on presence of directives. The last will be a calculation.
+
+```bash
+python scripts/summarize-jobspecs.py --input ./data --db ./scripts/data/jobspec-summary-github.db
+```
+```console
+{'slurm': 23958,
+ 'pbs': 6381,
+ 'lsf': 2614,
+ 'oar': 145,
+ 'flux': 74,
+ 'cobalt': 630}
+```
+
+This saves to [scripts/data/jobspec-summary](scripts/data/jobspec-summary)
+
+##### Reading Sqlite Database
+
+Examples to read in the two database:
+
+```python
+import sqlite3
+conn = sqlite3.connect("./scripts/data/jobspec-summary-github.db")
+cursor = conn.cursor()
+
+# This gets the field names and metadata
+cursor.execute('PRAGMA table_info(jobspecs);').fetchall()
+```
+```console
+[(0, 'id', 'INTEGER', 0, None, 1),
+ (1, 'name', 'TEXT', 0, None, 0),
+
+# job manager tags
+ (2, 'manager_tags', 'TEXT', 0, None, 0),
+
+# these are tags from gemini without a template
+ (3, 'software_tags', 'TEXT', 0, None, 0),
+
+# These were tags with a template (nicer / cleaner set)
+ (4, 'software_tags_with_template', 'TEXT', 0, None, 0),
+ (5, 'length', 'NUMBER', 0, None, 0)]
+```
+
+Each of manager_tags and software_tags are json dumped lists.
+
+```python
+query = cursor.execute("SELECT * from jobspecs;")
+result = query.fetchone()
+# rows = query.fetchall()
+```
+```console
+(1,
+ './data/ZIYU-DEEP/reprover-test/2gpu.sh',
+
+# job manager tags
+ '["slurm"]',
+
+# these are tags from gemini without a template
+ '["rs", "head", "scontrol", "yt", "distributed", "node", "les", "main", "an", "run", "generator", "ame", "at", "srun", "nam", "python", "bash", "gp", "gt", "aria", "aml", "scrip", "ct", "re", "tact", "ed", "su", "vi", "tac", "ic", "li", "hostname", "ip", "go", "train", "env", "bin", "os", "export", "cc", "docker", "random", "training", "ml", "tr", "sh", "yaml", "hon", "gene", "od", "gpu", "host"]',
+
+# These were tags with a template (nicer / cleaner set)
+ '["python", "bash", "srun", "docker", "r"]',
+ 733)
+```
+
+To read in the tags:
+
+```console
+import json
+print(json.loads(result[2]))
+print(json.loads(result[3]))
+print(json.loads(result[4]))
+```
+```
+['slurm']
+['rs', 'head', 'scontrol', 'yt', 'distributed', 'node', 'les', 'main', 'an', 'run', 'generator', 'ame', 'at', 'srun', 'nam', 'python', 'bash', 'gp', 'gt', 'aria', 'aml', 'scrip', 'ct', 're', 'tact', 'ed', 'su', 'vi', 'tac', 'ic', 'li', 'hostname', 'ip', 'go', 'train', 'env', 'bin', 'os', 'export', 'cc', 'docker', 'random', 'training', 'ml', 'tr', 'sh', 'yaml', 'hon', 'gene', 'od', 'gpu', 'host']
+['python', 'bash', 'srun', 'docker', 'r']
+```
+
+And that's it! Go hither and jobspec, away!!!! ⚾️
+
 ## License
 
 HPCIC DevTools is distributed under the terms of the MIT license.
