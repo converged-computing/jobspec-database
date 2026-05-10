@@ -1,8 +1,8 @@
 # Job Specification Database
 
-This database is 🚧️ under developement! 🚧️
+[![DOI](https://zenodo.org/badge/805254424.svg)](https://doi.org/10.5281/zenodo.20112395)
 
-It will eventually be added to 🥑️ [Dinosaur Datasets](https://vsoch.github.io/datasets/). 🥑️
+It is a part of 🥑️ [Dinosaur Datasets](https://vsoch.github.io/datasets/). 🥑️
 
 ## Usage
 
